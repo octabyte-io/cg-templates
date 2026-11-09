@@ -4,6 +4,15 @@ The public directory of open-source apps that can be deployed on Cloudgate in on
 This file records what has been decided and what is still open. Individual decisions with
 their reasons are in `docs/adr/`.
 
+## Audience
+
+Mostly **non-technical people**: small business owners, marketers, creators, office managers.
+They know the product they pay for today (Zapier, Notion, Google Analytics), not Docker. So the
+public pages speak in plain language about what an app does and what it replaces, show real
+logos and real screenshots, and keep technical detail (compose files, ports, CLI, RAM) off the
+page. That detail lives in `cloudgate.yaml` for Cloudgate to use, not for visitors to read.
+Reference for tone and structure: octabyte.io and elest.io app pages.
+
 ## Goals
 
 1. **Search and AI visibility.** People searching "self-host n8n" or "open-source alternative
@@ -47,6 +56,7 @@ templates/
 | `website`, `source`, `docs` | `source` yes | Links |
 | `license` | yes | SPDX id where one exists |
 | `screenshots` | no | `{ src, alt }`, alt text required |
+| `features` | yes | 3–8 `{ title, text }` in plain language: what you can do with it |
 | `faq` | no | `{ q, a }` pairs; rendered and emitted as FAQ structured data |
 
 The Markdown body is free-form: headings, images, lists, links. "Last updated" comes from git,
@@ -85,4 +95,5 @@ meta tag, and tags, `alternativeTo` and the body text do that job.
 - Custom domain, and the hosted console URL the Deploy button opens.
 - Pull request previews: GitHub Pages cannot host them; Cloudflare Pages or Netlify could.
 - Whether to seed the catalogue from Dokploy's MIT-licensed templates, with attribution.
-- Visual design: prototypes in progress.
+- Visual design: first three prototypes (Field Guide, Manifest, Workbench) were rejected as
+  too technical; second round targets non-technical visitors.
