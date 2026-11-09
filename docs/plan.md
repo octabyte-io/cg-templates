@@ -95,5 +95,25 @@ meta tag, and tags, `alternativeTo` and the body text do that job.
 - Custom domain, and the hosted console URL the Deploy button opens.
 - Pull request previews: GitHub Pages cannot host them; Cloudflare Pages or Netlify could.
 - Whether to seed the catalogue from Dokploy's MIT-licensed templates, with attribution.
-- Visual design: first three prototypes (Field Guide, Manifest, Workbench) were rejected as
-  too technical; second round targets non-technical visitors.
+- Visual design: direction chosen (see below); final prototype under review.
+
+## Visual direction
+
+Chosen after three rounds of prototypes. Inspired by zed.dev's design language, kept in plain
+language for non-technical visitors:
+
+- A centred column framed by full-height hairlines, hairlines between sections with "+" marks
+  where they cross, a faint dot texture outside the frame.
+- A large modern grotesk headline; IBM Plex Serif light italic for section headings; IBM Plex
+  Sans body; IBM Plex Mono only for small facts and keyboard hints.
+- Neutral greys and one blueprint blue; bevelled primary buttons, outlined secondary buttons.
+- Hero: an animated demo of the Cloudgate deploy screen (pick app, pick server, Deploy, ready),
+  showing the finished state when motion is reduced.
+- "Why Cloudgate" tiles built from small pieces of real interface (backups, server location,
+  updates, team pricing) instead of icons.
+- Catalogue cards with real logos, a plain one-line description, "Easy / Some setup", and
+  "Replaces Zapier" with the brand's logo; sticky filters; "/" and Ctrl/Cmd-K search.
+- "Popular swaps" (Zapier to n8n, Notion to Outline...) with a short swap animation.
+- Blue footer with an outlined wordmark.
+- Motion only where it explains the product or answers an action; all of it respects
+  reduced-motion settings.
