@@ -328,7 +328,7 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 .wm{border-top:1px solid var(--footer-line);position:relative;padding-block:24px 8px;background-image:linear-gradient(var(--footer-line) 1px,transparent 1px),linear-gradient(90deg,var(--footer-line) 1px,transparent 1px);background-size:28px 28px;background-position:-1px -1px}
 .wm svg{display:block;width:100%;height:auto}
 .wm text{font:italic 300 190px var(--serif);fill:none;stroke:rgba(255,255,255,.55);stroke-width:1.2}
-.wm .cg-mark{color:rgba(255,255,255,.62)}
+.wm .cg-mark{color:#fff;opacity:.62}
 
 /* command palette */
 .pscrim{position:fixed;inset:0;z-index:60;background:var(--scrim);display:flex;justify-content:center;align-items:flex-start;
