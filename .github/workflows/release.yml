@@ -1,0 +1,194 @@
+# Publishes the Template catalogue and the website from main.
+#
+# 1. catalogue: when templates/ changed since the newest release (or on a manual
+#    run with "force"), packs templates/ into catalogue.zip with Cloudgate's own
+#    `template pack`, checks the zip as an install will read it, and publishes it
+#    as a new GitHub release marked latest. Every Cloudgate install reads
+#    https://github.com/octabyte-io/cg-templates/releases/latest/download/catalogue.zip
+#    (cloudgate ADR-0062, ADR-0072), so a release is the moment templates go live.
+#    Releases are never edited: a change is a new release.
+# 2. site: builds the website and deploys it to GitHub Pages, but only once Pages
+#    is turned on (Settings > Pages > Source: GitHub Actions). Until then the
+#    build still runs, so a broken site fails here, and the deploy is skipped.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'templates/**'
+      - 'site/**'
+      - '.github/workflows/release.yml'
+      - '.github/actions/**'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Publish a new catalogue release even if templates/ has not changed
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  catalogue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.publish.outputs.tag }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decide whether templates changed since the newest release
+        id: changed
+        run: |
+          latest=$(gh release view --json tagName --jq .tagName 2>/dev/null || true)
+          if [ "${{ inputs.force }}" = "true" ]; then
+            echo "Forced by hand."
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          elif [ -z "$latest" ]; then
+            echo "No release yet."
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          elif ! git rev-parse -q --verify "refs/tags/$latest" >/dev/null; then
+            echo "The newest release's tag $latest is not in this clone; publishing to be safe."
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$latest" HEAD -- templates; then
+            echo "templates/ is unchanged since $latest; no new catalogue."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "templates/ changed since $latest:"
+            git diff --stat "$latest" HEAD -- templates | tail -1
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: pnpm/action-setup@v4
+        if: steps.changed.outputs.publish == 'true'
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        if: steps.changed.outputs.publish == 'true'
+        with:
+          node-version: 22
+
+      - name: Build the Cloudgate CLI
+        if: steps.changed.outputs.publish == 'true'
+        id: cli
+        uses: ./.github/actions/cloudgate-cli
+        with:
+          ref: ${{ vars.CLOUDGATE_REF || 'main' }}
+
+      - name: Pack and check catalogue.zip
+        if: steps.changed.outputs.publish == 'true'
+        run: |
+          mkdir -p out
+          # Writes nothing, and fails, if any template would be hidden.
+          cloudgate template pack templates out/catalogue.zip --revision "${GITHUB_SHA::12}"
+          # Read the zip back exactly as an install reads it.
+          cloudgate template check out/catalogue.zip
+          (cd out && sha256sum catalogue.zip > catalogue.zip.sha256)
+
+      - name: Publish the release
+        if: steps.changed.outputs.publish == 'true'
+        id: publish
+        run: |
+          tag="v$(date -u +%Y.%m.%d)-${GITHUB_SHA::7}"
+          {
+            echo "Template catalogue built from ${GITHUB_SHA::12}, checked with the Cloudgate CLI from octabyte-io/cloudgate@${{ steps.cli.outputs.revision }}."
+            echo
+            echo "Cloudgate installs read the newest release through"
+            echo "\`https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/catalogue.zip\`."
+            echo
+            echo "| Template | Version |"
+            echo "|---|---|"
+            for f in templates/*/template.yaml; do
+              name=$(sed -n 's/^name: *//p' "$f" | head -1 | tr -d '"')
+              version=$(sed -n 's/^version: *//p' "$f" | head -1 | tr -d '"')
+              echo "| $name | $version |"
+            done
+          } > out/notes.md
+          gh release create "$tag" out/catalogue.zip out/catalogue.zip.sha256 \
+            --target "$GITHUB_SHA" \
+            --title "Catalogue $tag" \
+            --notes-file out/notes.md \
+            --latest
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Published $tag" >> "$GITHUB_STEP_SUMMARY"
+
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      pages: ${{ steps.pages.outputs.enabled }}
+    env:
+      # Where the site is served. Set the repository variables SITE_URL and
+      # BASE_PATH for a custom domain (e.g. https://templates.example.com and /).
+      SITE_URL: ${{ vars.SITE_URL || 'https://octabyte-io.github.io' }}
+      BASE_PATH: ${{ vars.BASE_PATH || '/cg-templates' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, so each app page's "Last updated" date comes from git.
+          fetch-depth: 0
+
+      - name: Is GitHub Pages turned on?
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" --jq .build_type >/dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "GitHub Pages is off: the site is built and checked, not deployed. Turn it on in Settings > Pages (Source: GitHub Actions)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: site/pnpm-lock.yaml
+
+      - name: Install fonts for share images
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-inter fonts-liberation
+
+      - name: Install dependencies
+        working-directory: site
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        working-directory: site
+        run: pnpm build
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.pages.outputs.enabled == 'true'
+        with:
+          path: site/dist
+
+  deploy:
+    needs: [catalogue, site]
+    if: needs.site.outputs.pages == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

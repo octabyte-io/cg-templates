@@ -11,6 +11,7 @@ on:
       - 'site/**'
       - 'starter-template/**'
       - '.github/workflows/check.yml'
+      - '.github/actions/**'
   push:
     branches: [main]
     paths:
@@ -18,6 +19,7 @@ on:
       - 'site/**'
       - 'starter-template/**'
       - '.github/workflows/check.yml'
+      - '.github/actions/**'
 
 permissions:
   contents: read
@@ -59,10 +61,15 @@ jobs:
         working-directory: site
         run: pnpm build
 
+      - name: Build the Cloudgate CLI
+        uses: ./.github/actions/cloudgate-cli
+        with:
+          ref: ${{ vars.CLOUDGATE_REF || 'main' }}
+
       - name: Check templates with Cloudgate
         run: |
           if find templates -mindepth 2 -maxdepth 2 -name template.yaml -not -path 'templates/.*' | grep -q .; then
-            npx --yes @octabyte-io/cloudgate template check templates
+            cloudgate template check templates
           else
             echo "No templates in templates/ yet; skipping Cloudgate's template check."
           fi

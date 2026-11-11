@@ -1,0 +1,41 @@
+# Builds the Cloudgate CLI from the cloudgate repository and puts `cloudgate` on PATH.
+#
+# Not `npx @octabyte-io/cloudgate`: the npm release is older than `template check`
+# and `template pack`, and its `latest` is a placeholder that prints a notice and
+# exits 0, so a check run through it passes without checking anything.
+#
+# The CLI bundles the backend's own Template check (ADR-0072), which is why the
+# backend's dependencies are installed too.
+name: Cloudgate CLI
+description: Build the Cloudgate CLI from source and add `cloudgate` to PATH.
+inputs:
+  ref:
+    description: The cloudgate branch, tag or commit to build.
+    required: false
+    default: main
+outputs:
+  revision:
+    description: The cloudgate commit the CLI was built from.
+    value: ${{ steps.build.outputs.revision }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: octabyte-io/cloudgate
+        ref: ${{ inputs.ref }}
+        path: .cloudgate
+        persist-credentials: false
+
+    - id: build
+      shell: bash
+      working-directory: .cloudgate
+      run: |
+        pnpm install --frozen-lockfile --filter "@octabyte-io/cloudgate..." --filter backend
+        pnpm --filter "@octabyte-io/cloudgate" build
+        mkdir -p "$RUNNER_TEMP/cloudgate-bin"
+        printf '#!/bin/sh\nexec node "%s/cli/bin/cloudgate.js" "$@"\n' "$PWD" > "$RUNNER_TEMP/cloudgate-bin/cloudgate"
+        chmod +x "$RUNNER_TEMP/cloudgate-bin/cloudgate"
+        echo "$RUNNER_TEMP/cloudgate-bin" >> "$GITHUB_PATH"
+        echo "revision=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        "$RUNNER_TEMP/cloudgate-bin/cloudgate" --version
