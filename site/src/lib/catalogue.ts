@@ -7,6 +7,9 @@ import { parse as parseYaml } from 'yaml';
 import { categoryById, type Category } from '../categories';
 import { productById, PRODUCTS, type Product } from '../products';
 
+/** The screenshot formats the site serves; each has a route in pages/screenshots/[id]/. */
+export const SCREENSHOT_EXTS = ['png', 'jpg', 'jpeg', 'webp'] as const;
+
 /**
  * The template catalogue as the site reads it (ADR-0003): Cloudgate's folder
  * (`template.yaml`, `cloudgate.yaml`, …) plus the website's `index.md` and
@@ -185,6 +188,11 @@ function readTemplate(id: string): Template {
         const file = path.join(folder, shot.src);
         if (!existsSync(file) || !file.startsWith(path.join(folder, 'screenshots') + path.sep)) {
           problems.push(`  ${rel}/index.md: screenshots.src ${shot.src} is not a file inside screenshots/`);
+        }
+        if (!(SCREENSHOT_EXTS as readonly string[]).includes(path.extname(file).slice(1))) {
+          problems.push(
+            `  ${rel}/index.md: screenshots.src ${shot.src} must be a ${SCREENSHOT_EXTS.join(', ')} file (lowercase extension)`,
+          );
         }
         return { file, path: `screenshots/${id}/${path.basename(shot.src)}`, alt: shot.alt };
       })
