@@ -89,31 +89,28 @@ meta tag, and tags, `alternativeTo` and the body text do that job.
 - Question-shaped headings ("What is X", "How to self-host X") and FAQ sections.
 - Every page complete as HTML without JavaScript.
 
+## Next step
+
+Build the Astro site in a new session, starting from `design/prototype/` and this plan:
+template folder format and schema, a few real example templates, home page, app page, search,
+and the GitHub Pages deploy.
+
 ## Open questions
 
 - Exact `cloudgate.yaml` format (waits on the Cloudgate side).
 - Custom domain, and the hosted console URL the Deploy button opens.
 - Pull request previews: GitHub Pages cannot host them; Cloudflare Pages or Netlify could.
 - Whether to seed the catalogue from Dokploy's MIT-licensed templates, with attribution.
-- Visual design: direction chosen (see below); final prototype under review.
+- Visual design: decided (see below).
 
 ## Visual direction
 
-Chosen after three rounds of prototypes. Inspired by zed.dev's design language, kept in plain
-language for non-technical visitors:
+**Approved: the "F3 Modern" prototype in [`design/prototype/`](../design/prototype/).** Its
+README describes the design system (structure, type, colour tokens, components, motion, copy)
+and what to carry over or fix when building. Build the Astro site to match it.
 
-- A centred column framed by full-height hairlines, hairlines between sections with "+" marks
-  where they cross, a faint dot texture outside the frame.
-- A large modern grotesk headline; IBM Plex Serif light italic for section headings; IBM Plex
-  Sans body; IBM Plex Mono only for small facts and keyboard hints.
-- Neutral greys and one blueprint blue; bevelled primary buttons, outlined secondary buttons.
-- Hero: an animated demo of the Cloudgate deploy screen (pick app, pick server, Deploy, ready),
-  showing the finished state when motion is reduced.
-- "Why Cloudgate" tiles built from small pieces of real interface (backups, server location,
-  updates, team pricing) instead of icons.
-- Catalogue cards with real logos, a plain one-line description, "Easy / Some setup", and
-  "Replaces Zapier" with the brand's logo; sticky filters; "/" and Ctrl/Cmd-K search.
-- "Popular swaps" (Zapier to n8n, Notion to Outline...) with a short swap animation.
-- Blue footer with an outlined wordmark.
-- Motion only where it explains the product or answers an action; all of it respects
-  reduced-motion settings.
+In short: a zed.dev-inspired framed layout (centred column with hairlines and "+" marks, dot
+texture outside), a large Geist headline with IBM Plex Serif italic section headings, neutral
+greys and one blueprint blue, "Why Cloudgate" tiles made of small pieces of real interface,
+catalogue cards with real logos and "Replaces Zapier", sticky filters, `/` and Ctrl/Cmd-K
+search, and a blue footer with an outlined wordmark.

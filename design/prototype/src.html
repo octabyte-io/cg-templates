@@ -1,0 +1,994 @@
+<title>Framed Catalogue Modern</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,300;1,400&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: a wider centred column bounded by full-height hairlines; hairline sections with "+" crosshairs; dot paper outside.
+   Hero and app screenshots break slightly out of the column onto a blueprint-grid stage with one deep shadow. */
+:root{
+  --paper:#eceff3; --dot:#d3d8e0; --bg:#fbfcfd; --card:#ffffff; --sunk:#f3f5f8;
+  --fg:#0e1320; --muted:#525a6a; --faint:#858e9e;
+  --line:#e1e5eb; --line-strong:#c7cdd7; --cross:#949cab;
+  --accent:#0751cf; --accent-hi:#2b6deb; --accent-lo:#043c9e; --accent-ink:#0751cf; --on-accent:#ffffff;
+  --tint:#eaf1fd; --grid:rgba(7,81,207,.075); --grid-strong:rgba(7,81,207,.14);
+  --ok:#17834a; --ok-bg:#e6f4ec; --warn:#a26300; --warn-bg:#fbf1dc;
+  --hdr:rgba(251,252,253,.74); --scrim:rgba(14,19,32,.38);
+  --shadow:0 1px 2px rgba(14,30,70,.06),0 48px 90px -40px rgba(14,40,110,.42);
+  --lift:0 10px 24px -14px rgba(14,30,70,.22);
+  --footer:#0751cf; --footer-ink:#ffffff; --footer-line:rgba(255,255,255,.22);
+  --canvas:#f5f7fa; --canvas-dot:#d0d6df;
+  --display:"Geist","Inter Tight",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --sans:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --col:1200px; --hh:60px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#05070c; --dot:#111725; --bg:#090c14; --card:#0e131e; --sunk:#0b1019;
+  --fg:#e8ecf4; --muted:#9ba4b6; --faint:#6b7488;
+  --line:#192030; --line-strong:#273046; --cross:#465169;
+  --accent:#2d68ee; --accent-hi:#4f86ff; --accent-lo:#1b49bd; --accent-ink:#88afff; --on-accent:#ffffff;
+  --tint:#0f1b36; --grid:rgba(90,140,255,.07); --grid-strong:rgba(90,140,255,.13);
+  --ok:#5fd394; --ok-bg:#0f2419; --warn:#f0bf63; --warn-bg:#2a1f0c;
+  --hdr:rgba(9,12,20,.72); --scrim:rgba(2,4,10,.62);
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 48px 100px -36px rgba(0,0,0,.85);
+  --lift:0 12px 28px -14px rgba(0,0,0,.7);
+  --footer:#143fae; --footer-ink:#ffffff; --footer-line:rgba(255,255,255,.18);
+  --canvas:#0b1019; --canvas-dot:#1f283a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#05070c; --dot:#111725; --bg:#090c14; --card:#0e131e; --sunk:#0b1019;
+  --fg:#e8ecf4; --muted:#9ba4b6; --faint:#6b7488;
+  --line:#192030; --line-strong:#273046; --cross:#465169;
+  --accent:#2d68ee; --accent-hi:#4f86ff; --accent-lo:#1b49bd; --accent-ink:#88afff; --on-accent:#ffffff;
+  --tint:#0f1b36; --grid:rgba(90,140,255,.07); --grid-strong:rgba(90,140,255,.13);
+  --ok:#5fd394; --ok-bg:#0f2419; --warn:#f0bf63; --warn-bg:#2a1f0c;
+  --hdr:rgba(9,12,20,.72); --scrim:rgba(2,4,10,.62);
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 48px 100px -36px rgba(0,0,0,.85);
+  --lift:0 12px 28px -14px rgba(0,0,0,.7);
+  --footer:#143fae; --footer-ink:#ffffff; --footer-line:rgba(255,255,255,.18);
+  --canvas:#0b1019; --canvas-dot:#1f283a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);background-image:radial-gradient(var(--dot) 1px,transparent 1.2px);background-size:8px 8px;color:var(--fg);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px;border-radius:4px}
+.frame{max-width:var(--col);margin:0 auto;background:var(--bg);border-inline:1px solid var(--line);min-height:100vh;position:relative}
+.pad{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:760px){.pad{padding-left:48px;padding-right:48px}}
+
+/* hairline sections with crosshair marks */
+.sec{border-top:1px solid var(--line);position:relative}
+.sec::before,.sec::after{content:"";position:absolute;top:-6px;width:11px;height:11px;z-index:2;pointer-events:none;
+  background:linear-gradient(var(--cross),var(--cross)) center/1px 100% no-repeat,linear-gradient(var(--cross),var(--cross)) center/100% 1px no-repeat}
+.sec::before{left:-6px}.sec::after{right:-6px}
+
+/* header: the only translucent surface */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .top{background:var(--hdr);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px)}}
+.top .in{display:flex;align-items:center;gap:24px;height:var(--hh)}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;font-weight:600;letter-spacing:-.01em;white-space:nowrap;font-size:15.5px}
+.brand svg{width:24px;height:24px;color:var(--accent-ink)}
+.brand em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--muted);letter-spacing:0}
+.nav{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+.nav a{text-decoration:none;transition:color .15s}.nav a:hover{color:var(--fg)}
+.top .sp{flex:1}
+.kbtn{display:flex;align-items:center;gap:10px;border:1px solid var(--line-strong);background:var(--card);border-radius:8px;height:34px;padding:0 6px 0 11px;color:var(--faint);font-size:13.5px;cursor:pointer;min-width:220px;transition:border-color .15s}
+.kbtn:hover{border-color:var(--cross)}
+.kbtn span{flex:1;text-align:left}
+kbd{font:500 11px/1 var(--mono);border:1px solid var(--line-strong);border-bottom-width:2px;border-radius:4px;padding:3px 5px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.btn kbd{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);color:#fff}
+
+/* buttons: bevelled primary, outlined chevron secondary */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 16px;border-radius:7px;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;border:1px solid var(--accent-lo);background:linear-gradient(var(--accent-hi),var(--accent) 50%);color:var(--on-accent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -2px 0 rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.14);transition:filter .15s,transform .08s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px);box-shadow:inset 0 2px 1px rgba(0,0,0,.22)}
+.btn.lg{height:46px;padding:0 22px;font-size:15px;border-radius:8px}
+.btn.sm{height:30px;padding:0 11px;font-size:13px;border-radius:6px}
+.btn.ghost{background:var(--card);color:var(--fg);border-color:var(--line-strong);box-shadow:inset 0 -1px 0 var(--line),0 1px 1px rgba(0,0,0,.04)}
+.btn.ghost:hover{filter:none;border-color:var(--cross)}
+.btn.ghost .chev{color:var(--faint)}
+.chev{width:12px;height:12px;flex:none}
+
+/* type */
+h1,h2,h3{margin:0;text-wrap:balance}
+.display{font:600 clamp(40px,6.4vw,80px)/1.0 var(--display);letter-spacing:-.045em}
+.h1{font:600 clamp(36px,5vw,60px)/1.02 var(--display);letter-spacing:-.04em}
+.h2{font:italic 300 clamp(28px,3.4vw,40px)/1.12 var(--serif);letter-spacing:-.015em}
+.h2s{font:400 22px/1.25 var(--serif)}
+.h3{font:600 16px/1.35 var(--sans);letter-spacing:-.01em}
+.kicker{font:italic 400 19px/1.3 var(--serif);color:var(--muted)}
+.lede{color:var(--muted);font-size:18px;line-height:1.55;max-width:52ch;margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono);font-size:12px}
+p{margin:0}
+
+/* hero */
+.hero{padding-block:88px 56px;display:grid;gap:28px}
+.hero .display{max-width:15ch}
+.hero .row2{display:flex;justify-content:space-between;align-items:flex-end;gap:24px 48px;flex-wrap:wrap}
+.hero .acts{display:flex;gap:10px;flex-wrap:wrap}
+.facts-strip{display:flex;flex-wrap:wrap;gap:6px 22px;font:12.5px var(--mono);color:var(--faint)}
+.facts-strip b{color:var(--fg);font-weight:500}
+
+/* stage: blueprint grid panel that breaks out of the column */
+.stagewrap{padding-block:0 72px}
+.stage{position:relative;border:1px solid var(--line);border-radius:16px;padding:clamp(14px,4.2vw,56px);
+  background-color:var(--sunk);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid-strong) 1px,transparent 1px),linear-gradient(90deg,var(--grid-strong) 1px,transparent 1px);
+  background-size:16px 16px,16px 16px,80px 80px,80px 80px;background-position:-1px -1px}
+@media (min-width:1360px){.stage{margin-inline:-64px}}
+.window{border:1px solid var(--line-strong);border-radius:10px;background:var(--card);overflow:hidden;box-shadow:var(--shadow)}
+.wbar{display:flex;align-items:center;gap:10px;height:40px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--sunk);font-size:13px;color:var(--muted)}
+.wbar b{font-weight:600;color:var(--fg)}
+.wbar>*{white-space:nowrap}
+.chosen>span{white-space:nowrap}
+.wbar .sp{flex:1}
+.wbar .pill{font:11.5px var(--mono);border:1px solid var(--line);border-radius:5px;padding:1px 7px;background:var(--card)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:var(--line-strong)}
+.dep{display:grid;grid-template-columns:210px 1fr 300px;min-height:360px}
+.dep>div{min-width:0}
+.dep .steps{border-right:1px solid var(--line);padding:16px 10px;background:var(--sunk);font-size:13.5px;display:grid;gap:2px;align-content:start}
+.dep .steps div{display:flex;gap:10px;align-items:center;padding:8px 10px;color:var(--muted);border-radius:6px}
+.dep .steps div.on{background:var(--card);color:var(--fg);box-shadow:0 0 0 1px var(--line)}
+.dep .steps .n{font:11px var(--mono);width:20px;height:20px;border:1px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;flex:none;background:var(--card)}
+.dep .steps .done .n{background:var(--accent);border-color:var(--accent);color:#fff}
+.dep .mid{padding:18px 20px;display:grid;gap:12px;align-content:start}
+.dep .lab{font-size:12.5px;color:var(--faint)}
+.chosen{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--card)}
+.chosen .h3{font-size:14.5px}
+.srv{display:grid;gap:6px}
+.srv label{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px;cursor:pointer;background:var(--card)}
+.srv label.on{border-color:var(--accent-hi);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-hi) 20%,transparent)}
+.srv input{accent-color:var(--accent);margin:0}
+.srv small{color:var(--faint);margin-left:auto;font:11.5px var(--mono)}
+.dep .side{border-left:1px solid var(--line);padding:18px 20px;display:grid;gap:12px;align-content:start;background:var(--bg)}
+.sumrow{display:flex;justify-content:space-between;font-size:13.5px;border-bottom:1px dashed var(--line);padding-bottom:8px;gap:10px}
+.sumrow span:first-child{color:var(--faint)}
+.log{font:12px/1.85 var(--mono);color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.log .ok{color:var(--ok)}
+.caption{display:flex;gap:10px 32px;flex-wrap:wrap;margin-top:22px;font-size:14px;color:var(--muted);justify-content:center}
+.caption b{font:500 12px var(--mono);color:var(--accent-ink);margin-right:6px}
+
+/* section heads */
+.shead{display:grid;gap:10px;padding-block:72px 32px}
+.shead .lede{font-size:16.5px}
+
+/* bento: hairline grid, live UI fragments instead of icons */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.bento>.tile{background:var(--bg);padding:32px 32px 36px;display:grid;gap:18px;align-content:start;min-width:0}
+.bento .t-a{grid-column:span 4}.bento .t-b{grid-column:span 2}.bento .t-c{grid-column:span 2}.bento .t-d{grid-column:span 4}
+.tile .tx{display:grid;gap:6px;max-width:44ch}
+.tile .tx p{color:var(--muted);font-size:14.5px}
+.frag{border:1px solid var(--line);border-radius:10px;background:var(--card);padding:16px;font-size:13.5px}
+.tl{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.tl div{display:grid;gap:6px;justify-items:center;text-align:center;min-width:0}
+.tl .d{font-size:12px;color:var(--faint)}
+.tl .b{width:100%;height:34px;border-radius:6px;background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 28%,transparent);display:grid;place-items:center;color:var(--ok);font-size:13px}
+.tl .b.next{background:transparent;border:1px dashed var(--line-strong);color:var(--faint)}
+.tl .h{font:11px var(--mono);color:var(--muted)}
+.frag .foot1{display:flex;justify-content:space-between;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;flex-wrap:wrap}
+.frag .foot1 b{color:var(--fg);font-weight:500}
+.server .r{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.server .r:last-child{border-bottom:0;padding-bottom:0}
+.server .r span:first-child{color:var(--faint)}
+.server .top1{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.server .top1 b{font-weight:600}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ok);margin-left:auto}
+.status i,.ease i{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.flag{width:20px;height:14px;border-radius:2px;background:linear-gradient(#111 33.3%,#d0021b 33.3% 66.6%,#f7c600 66.6%);flex:none}
+.notice{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.notice .acts{grid-column:2;display:flex;gap:8px;margin-top:4px}
+.notice .t{font-weight:500}
+.notice p{color:var(--muted);font-size:13px}
+.seats{display:flex;flex-wrap:wrap;gap:6px}
+.seats span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:500 11.5px var(--sans);background:var(--tint);color:var(--accent-ink);border:1px solid color-mix(in srgb,var(--accent-hi) 22%,transparent)}
+.price{display:grid;grid-template-columns:1fr auto;gap:6px 16px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px}
+.price span:nth-child(odd){color:var(--muted)}
+.price span:nth-child(even){font-family:var(--mono);font-size:13px;text-align:right}
+.price .tot{color:var(--fg)!important;font-weight:500}
+.ex{font:11px var(--mono);color:var(--faint)}
+
+/* catalogue */
+.cat .shead{justify-items:start}
+.fbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh));z-index:15;background:var(--bg);border-block:1px solid var(--line)}
+.fbar .in{display:flex;align-items:center;gap:14px;padding-block:12px}
+.seg{display:flex;padding:3px;gap:2px;background:var(--sunk);border:1px solid var(--line);border-radius:9px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1}
+.seg::-webkit-scrollbar{display:none}
+.seg button{border:0;background:none;padding:5px 10px;border-radius:6px;color:var(--muted);cursor:pointer;font-size:13px;white-space:nowrap;transition:color .15s,background .15s}
+.seg button:hover{color:var(--fg)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--fg);font-weight:500;box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(0,0,0,.08)}
+.sbox{display:flex;align-items:center;gap:8px;height:38px;width:230px;flex:none;border:1px solid var(--line-strong);border-radius:8px;background:var(--card);padding:0 6px 0 12px;min-width:0}
+.sbox:focus-within{border-color:var(--accent-hi);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-hi) 24%,transparent)}
+.sbox svg{width:15px;height:15px;color:var(--faint);flex:none}
+.sbox input{flex:1;min-width:0;border:0;background:transparent;outline:0;font:14px var(--sans);color:var(--fg);height:100%}
+.sbox input::placeholder{color:var(--faint)}
+.sbox input::-webkit-search-cancel-button{display:none}
+.gridwrap{padding-block:24px 56px;display:grid;gap:16px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{display:grid;grid-template-rows:auto 1fr auto;gap:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px;text-decoration:none;min-width:0;transition:transform .18s ease,border-color .18s,box-shadow .18s}
+.card:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--lift)}
+.card .ct{display:flex;align-items:center;gap:12px;min-width:0}
+.card .ctt{display:grid;min-width:0}
+.card .nm{font-weight:600;font-size:15.5px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .cc{font-size:12.5px;color:var(--faint)}
+.card .ds{font-size:14px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .cf{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;min-width:0}
+.rp{display:flex;align-items:center;gap:6px;color:var(--faint);min-width:0}
+.rp b{font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ease{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;white-space:nowrap;color:var(--muted)}
+.ease.easy i{color:var(--ok)}.ease.some i{color:var(--warn)}
+.ease.easy i,.ease.some i{background:currentColor}
+.lt{width:var(--s);height:var(--s);flex:none;display:grid;place-items:center;border-radius:calc(var(--s) * .24);background:var(--sunk);border:1px solid var(--line);font:600 calc(var(--s) * .4)/1 var(--sans);color:var(--muted)}
+.lt.y{background:#ffe01b;border-color:#e8cc00}
+.lt svg{display:block}
+.lgo{display:inline-grid;place-items:center;flex:none}.lgo svg{display:block}
+.tiny{display:inline-grid;place-items:center;flex:none;border:1px solid var(--line-strong);background:var(--sunk);border-radius:3px;font:500 9px/1 var(--mono);color:var(--muted)}
+.tiny.y{background:#ffe01b;border-color:#e5c800}
+.more{width:100%;height:42px;border:1px solid var(--line-strong);background:var(--card);border-radius:8px;cursor:pointer;font-size:14px;color:var(--muted);transition:color .15s,border-color .15s}
+.more:hover{color:var(--fg);border-color:var(--cross)}
+.empty{grid-column:1/-1;border:1px dashed var(--line-strong);border-radius:12px;padding:36px;text-align:center;color:var(--muted)}
+.fine{font-size:12.5px;color:var(--faint);text-align:center}
+
+/* swaps: horizontal row */
+.swaps .shead{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.swaps .shead>div{display:grid;gap:10px}
+.swrow{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 36px) / 4);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px;margin-bottom:60px;scrollbar-width:thin}
+.sw{scroll-snap-align:start;display:grid;grid-template-rows:auto auto 1fr auto;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;overflow:hidden;min-width:0;transition:transform .18s,border-color .18s,box-shadow .18s}
+.sw:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--lift)}
+.sw .art{display:flex;align-items:center;justify-content:center;gap:14px;padding:26px 12px;border-bottom:1px solid var(--line);
+  background-color:var(--sunk);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:14px 14px}
+.sw .art .lt{background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.sw .art .lt.y{background:#ffe01b}
+.sw .art .from{opacity:.75;filter:saturate(.7)}
+.sw .art svg.arr{width:22px;height:22px;color:var(--faint)}
+.sw .pair{padding:16px 18px 0;font:600 16.5px/1.3 var(--sans);letter-spacing:-.01em}
+.sw .pair span{color:var(--faint);font-weight:400;margin-inline:4px}
+.sw .why{padding:6px 18px 0;color:var(--muted);font-size:14px}
+.sw .go{padding:16px 18px;font-size:13.5px;color:var(--accent-ink);display:flex;align-items:center;gap:5px;font-weight:500}
+
+/* app page */
+.crumb{font-size:13px;color:var(--faint);display:flex;gap:8px;flex-wrap:wrap;padding-block:28px 0}
+.crumb a{text-decoration:none}.crumb a:hover{color:var(--fg)}
+.apphead{padding-block:28px 40px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start}
+.apphead .body{display:grid;gap:14px;min-width:0}
+.apphead .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 11px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:13px;color:var(--muted)}
+.chip b{color:var(--fg);font-weight:500}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px}
+.split>main,.split>aside{min-width:0}
+.blk{padding-block:40px;border-top:1px solid var(--line);display:grid;gap:16px}
+.blk:first-child{border-top:0;padding-top:8px}
+.prose{max-width:64ch;display:grid;gap:14px}
+.prose p{color:var(--muted);font-size:16px}
+.feat{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.feat li{padding:16px 18px;background:var(--card);font-size:14.5px;display:grid;gap:3px}
+.feat b{font-weight:600}
+.feat span{color:var(--muted);font-size:14px}
+.vs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.vs>div{padding:20px 22px;display:grid;gap:10px;align-content:start}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px;display:grid;gap:7px}
+.vs .t{font:italic 400 18px var(--serif)}
+.how{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.how>div{padding:20px 22px;display:grid;gap:6px;align-content:start}
+.how>div+div{border-left:1px solid var(--line)}
+.how .n{font:12px var(--mono);color:var(--accent-ink)}
+.how p{color:var(--muted);font-size:14px}
+.faq{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:16px 0;display:flex;justify-content:space-between;gap:16px;font-weight:500;font-size:15.5px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:18px/1 var(--mono);color:var(--faint)}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{padding:0 0 16px;color:var(--muted);max-width:64ch}
+.rel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sidecard{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh) + 24px);margin-top:8px;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+.sidecard .hd{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.sidecard .hd b{font-weight:600}
+.sidecard dl{margin:0;padding:4px 18px;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:16px}
+.sidecard dt{font-size:13px;color:var(--faint);padding:12px 0;border-bottom:1px solid var(--line)}
+.sidecard dd{margin:0;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;text-align:right;display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:flex-end;align-items:center}
+.sidecard dd.m{font-family:var(--mono);font-size:12.5px}
+.sidecard dt:nth-last-of-type(1),.sidecard dd:last-child{border-bottom:0}
+.sidecard .ft{padding:16px 18px;border-top:1px solid var(--line);background:var(--sunk);display:grid;gap:10px}
+.sidecard .ft p{font-size:12.5px;color:var(--faint);text-align:center}
+.sidecard .links{display:grid;gap:2px;padding:0 18px 14px}
+.sidecard .links a{color:var(--accent-ink);text-decoration:none;font-size:13.5px;display:flex;align-items:center;gap:4px;padding:3px 0}
+.sidecard .links a:hover{text-decoration:underline}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;white-space:nowrap}
+.mbar{display:none}
+
+/* n8n editor drawing */
+.editor svg{display:block;width:100%;height:auto}
+.e-bg{fill:var(--canvas)}
+.e-dot{fill:var(--canvas-dot)}
+.e-panel{fill:var(--card);stroke:var(--line)}
+.e-node{fill:var(--card);stroke:var(--line-strong);stroke-width:1.2}
+.e-trig{fill:var(--card);stroke:#ea4b71;stroke-width:1.4}
+.e-wire{fill:none;stroke:var(--faint);stroke-width:1.6}
+.e-txt{fill:var(--fg);font:500 12px var(--sans)}
+.e-sub{fill:var(--faint);font:11px var(--sans)}
+.e-mut{fill:var(--muted);font:12px var(--sans)}
+.e-plus{fill:var(--card);stroke:var(--line-strong)}
+.e-on{fill:var(--ok)}
+
+/* alternatives */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:600px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-weight:500;color:var(--faint);font-size:12.5px;background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td .who{display:flex;align-items:center;gap:10px;font-weight:600}
+.altlist{display:grid;gap:12px}
+.alt{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--card);align-items:center}
+.alt .ttl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.alt .ttl a{font:600 18px var(--sans);letter-spacing:-.01em;text-decoration:none}
+.alt .ttl a:hover{color:var(--accent-ink)}
+.alt p{color:var(--muted);font-size:14px;max-width:62ch;margin-top:4px}
+.alt .acts{display:flex;gap:8px}
+
+/* footer */
+.foot{background:var(--footer);color:var(--footer-ink);position:relative;overflow:hidden}
+.foot .frame2{max-width:var(--col);margin:0 auto;border-inline:1px solid var(--footer-line);position:relative}
+.foot .cols{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:24px;padding-block:48px 36px}
+.foot h4{margin:0 0 12px;font:italic 400 15px var(--serif);opacity:.85}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:14px}
+.foot a{text-decoration:none;opacity:.9}.foot a:hover{opacity:1;text-decoration:underline}
+.foot .meta{font-size:13.5px;opacity:.85;display:grid;gap:8px;align-content:start}
+.foot .meta b{font:600 17px var(--sans);letter-spacing:-.01em;opacity:1}
+.foot .proto{display:inline-block;border:1px solid var(--footer-line);border-radius:5px;padding:2px 8px;font:11.5px var(--mono);width:max-content}
+.wm{border-top:1px solid var(--footer-line);position:relative;padding-block:24px 8px;background-image:linear-gradient(var(--footer-line) 1px,transparent 1px),linear-gradient(90deg,var(--footer-line) 1px,transparent 1px);background-size:28px 28px;background-position:-1px -1px}
+.wm svg{display:block;width:100%;height:auto}
+.wm text{font:italic 300 190px var(--serif);fill:none;stroke:rgba(255,255,255,.55);stroke-width:1.2}
+.wm path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:.6}
+
+/* command palette */
+.pscrim{position:fixed;inset:0;z-index:60;background:var(--scrim);display:flex;justify-content:center;align-items:flex-start;
+  padding:calc(env(safe-area-inset-top,0px) + 12vh) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .14s ease-out}
+.pal{width:min(620px,100%);max-height:min(560px,76vh);display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:var(--bg);border:1px solid var(--line-strong);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;animation:pop .16s cubic-bezier(.2,.8,.2,1)}
+.pscrim.out{animation:fade .12s ease-in reverse forwards}.pscrim.out .pal{animation:pop .12s ease-in reverse forwards}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+.pin{display:flex;align-items:center;gap:10px;padding:0 14px;height:56px;border-bottom:1px solid var(--line)}
+.pin svg{width:18px;height:18px;color:var(--faint);flex:none}
+.pin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:16px var(--sans);color:var(--fg)}
+.pin input::placeholder{color:var(--faint)}
+.plist{overflow-y:auto;padding:6px;overscroll-behavior:contain}
+.pgrp{font-size:12px;color:var(--faint);padding:10px 10px 4px}
+.pgrp b{color:var(--muted);font-weight:500}
+.opt{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 10px;border-radius:8px;text-decoration:none;cursor:pointer}
+.opt .on1{display:grid;min-width:0}
+.opt .on1 b{font-weight:500;font-size:14.5px}
+.opt .on1 span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.opt .rt{font-size:12px;color:var(--faint);white-space:nowrap}
+.opt[aria-selected="true"]{background:var(--tint)}
+.opt[aria-selected="true"] .rt{color:var(--accent-ink)}
+.pnone{padding:28px 16px;text-align:center;color:var(--muted);font-size:14px}
+.pft{display:flex;gap:16px;align-items:center;padding:9px 14px;border-top:1px solid var(--line);background:var(--sunk);font-size:12px;color:var(--faint);flex-wrap:wrap}
+.pft span{display:inline-flex;gap:6px;align-items:center}
+
+/* deploy dialog */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:50;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.dlg{width:min(480px,100%);background:var(--bg);border:1px solid var(--line-strong);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;animation:pop .16s cubic-bezier(.2,.8,.2,1)}
+.dlg .wbar{justify-content:space-between;height:46px}
+.dlg .x{border:0;background:none;cursor:pointer;color:var(--faint);font-size:20px;line-height:1;padding:4px}
+.dlg .bd{padding:20px;display:grid;gap:14px}
+.dlg .ft{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px;border-top:1px solid var(--line);background:var(--sunk)}
+.dlg .tag{font:11px var(--mono);color:var(--warn);background:var(--warn-bg);border-radius:4px;padding:2px 7px}
+.field{display:grid;gap:6px;font-size:13px;color:var(--faint)}
+.field input{height:38px;border:1px solid var(--line-strong);border-radius:8px;background:var(--card);padding:0 12px;font:14px var(--sans);color:var(--fg)}
+.field input:focus{outline:0;border-color:var(--accent-hi);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-hi) 24%,transparent)}
+.prog{display:grid;gap:9px;font-size:14px}
+.prog div{display:flex;gap:10px;align-items:center;color:var(--faint)}
+.prog div.on{color:var(--fg)}
+.prog div.ok{color:var(--muted)}
+.prog i{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none;display:grid;place-items:center;font-style:normal;font-size:10px}
+.prog .on i{border-color:var(--accent-hi);border-top-color:transparent;animation:spin .8s linear infinite}
+.prog .ok i{background:var(--ok);border-color:var(--ok);color:#fff}
+.bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--accent);width:0;transition:width .5s}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.card:hover,.sw:hover{transform:none}}
+
+/* responsive */
+@media (max-width:1359px){.frame,.foot .frame2{overflow-x:clip}}
+@media (max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.dep{grid-template-columns:180px 1fr 260px}.swrow{grid-auto-columns:calc((100% - 24px) / 3)}.split{grid-template-columns:minmax(0,1fr) 300px;gap:32px}.kbtn{min-width:0}}
+@media (max-width:900px){
+  .nav{display:none}
+  .dep{grid-template-columns:1fr}.dep .steps{display:flex;border-right:0;border-bottom:1px solid var(--line);padding:8px;overflow-x:auto}
+  .dep .steps div{white-space:nowrap}.dep .side{border-left:0;border-top:1px solid var(--line)}
+  .split{grid-template-columns:1fr;gap:0}
+  .split>aside{order:-1}
+  .sidecard{position:static;margin:0 0 8px}
+  .sidecard .ft{display:none}
+  .bento{grid-template-columns:1fr 1fr}.bento .t-a,.bento .t-d{grid-column:1/-1}.bento .t-b,.bento .t-c{grid-column:span 1}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .swrow{grid-auto-columns:calc((100% - 12px) / 2)}
+  .foot .cols{grid-template-columns:1fr 1fr}
+  .fbar .in{flex-direction:column;align-items:stretch;gap:10px}
+  .sbox{width:auto}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;gap:12px;align-items:center;background:var(--bg);border-top:1px solid var(--line);
+    padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-shadow:0 -10px 30px -18px rgba(0,0,0,.35)}
+  .mbar .t{display:grid;min-width:0;flex:1;font-size:12.5px;color:var(--muted);line-height:1.35}
+  .mbar .t b{color:var(--fg);font-size:14.5px;font-weight:600}
+  .mspace{height:84px}
+}
+@media (max-width:640px){
+  .grid{grid-template-columns:1fr}
+  .bento{grid-template-columns:1fr}.bento .t-b,.bento .t-c{grid-column:1/-1}
+  .bento>.tile{padding:24px 16px 28px}
+  .tl{gap:4px}.tl .h{font-size:10px}
+  .seg{background:none;border:0;padding:0;gap:6px;border-radius:0}
+  .seg button{border:1px solid var(--line-strong);border-radius:999px;padding:5px 12px;background:var(--card)}
+  .seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg);box-shadow:none}
+  .feat{grid-template-columns:1fr}
+  .vs,.how{grid-template-columns:1fr}.vs>div+div,.how>div+div{border-left:0;border-top:1px solid var(--line)}
+  .rel{grid-template-columns:1fr}
+  .kbtn{min-width:0;padding:0 9px}.kbtn span,.kbtn kbd,.top .getcg{display:none}
+  .top .in{gap:12px}
+  .hero{padding-block:52px 36px;gap:22px}
+  .lede{font-size:16.5px}
+  .hero .acts .btn{flex:1}
+  .apphead{grid-template-columns:1fr;gap:18px}
+  .apphead .acts{display:none}
+  .alt{grid-template-columns:auto minmax(0,1fr);padding:16px}.alt .acts{grid-column:1/-1}
+  .brand em{display:none}
+  .swrow{grid-auto-columns:80%}
+  .shead{padding-block:52px 24px}
+  .caption{justify-content:flex-start;flex-direction:column;gap:6px}
+  .stagewrap{padding-block:0 48px}
+  .wbar .pill{display:none}
+}
+</style>
+
+<div class="frame" id="frame">
+  <header class="top">
+    <div class="in pad">
+      <a class="brand" href="#home" aria-label="Cloudgate Templates home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.5 20.5V10a8.5 8.5 0 0 1 17 0v10.5M7.5 20.5V10.5a4.5 4.5 0 0 1 9 0v10M2 20.5h20"/></svg>
+        Cloudgate <em>Templates</em>
+      </a>
+      <nav class="nav">
+        <a href="#home" data-scroll="catalogue">Apps</a>
+        <a href="#home" data-scroll="swaps">Popular swaps</a>
+        <a href="#home" data-scroll="why">Why Cloudgate</a>
+        <a href="#alternatives-zapier">Zapier alternatives</a>
+      </nav>
+      <span class="sp"></span>
+      <button class="kbtn" id="searchHint" aria-label="Search apps" aria-keyshortcuts="/ Control+K Meta+K"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg><span>Search apps</span><kbd id="modk">Ctrl K</kbd></button>
+      <a class="btn sm getcg" href="#home" data-scroll="catalogue">Get Cloudgate</a>
+    </div>
+  </header>
+  <div id="view"></div>
+</div>
+
+<footer class="foot">
+  <div class="frame2">
+    <div class="cols pad">
+      <div class="meta">
+        <b>Cloudgate Templates</b>
+        <span>Open-source apps you can run on your own server, set up in one click.</span>
+        <span class="proto">Prototype with sample data</span>
+      </div>
+      <div><h4>Browse</h4><ul>
+        <li><a href="#home" data-scroll="catalogue" data-cat="Websites">Websites</a></li>
+        <li><a href="#home" data-scroll="catalogue" data-cat="Team chat">Team chat</a></li>
+        <li><a href="#home" data-scroll="catalogue" data-cat="Automation">Automation</a></li>
+        <li><a href="#home" data-scroll="catalogue" data-cat="Analytics">Analytics</a></li>
+      </ul></div>
+      <div><h4>Popular swaps</h4><ul>
+        <li><a href="#alternatives-zapier">Zapier alternatives</a></li>
+        <li><a href="#app-outline">Notion alternative</a></li>
+        <li><a href="#app-plausible">Google Analytics alternative</a></li>
+        <li><a href="#app-mattermost">Slack alternative</a></li>
+      </ul></div>
+      <div><h4>Cloudgate</h4><ul>
+        <li><a href="#home" data-scroll="how">How it works</a></li>
+        <li><a href="#home" data-scroll="why">Why your own server</a></li>
+        <li><a href="#app-n8n">Example app page</a></li>
+      </ul></div>
+    </div>
+    <div class="wm" aria-hidden="true">
+      <svg viewBox="0 0 1100 230" preserveAspectRatio="xMidYMid meet">
+        <path d="M30 215V95a80 80 0 0 1 160 0v120M68 215V100a42 42 0 0 1 84 0v115M10 215h200" />
+        <text x="232" y="196">Cloudgate</text>
+      </svg>
+    </div>
+  </div>
+</footer>
+
+<div class="pscrim" id="pal" hidden>
+  <div class="pal" role="dialog" aria-modal="true" aria-label="Search apps">
+    <div class="pin"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg>
+      <input id="pq" type="text" autocomplete="off" spellcheck="false" placeholder="Search apps, or a tool you pay for" role="combobox" aria-expanded="true" aria-controls="plist" aria-autocomplete="list"><kbd>Esc</kbd></div>
+    <div class="plist" id="plist" role="listbox" aria-label="Results"></div>
+    <div class="pft"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <div class="wbar"><b id="dlgTitle">Deploy</b><span class="tag">Prototype · nothing is installed</span><button class="x" id="dlgClose" aria-label="Close">×</button></div>
+    <div id="dlgBody"></div>
+  </div>
+</div>
+
+<script>
+const LOGOS = __LOGOS__;
+const DARK = new Set(['#000000','#15171A','#292929','#4A154B']);
+const TOTAL = 512;
+
+const APPS = [
+ {s:'n8n',n:'n8n',logo:'n8n',c:'Automation',d:'Connect your apps and automate repetitive work with drag-and-drop workflows.',r:['Zapier','Make'],e:'Some setup',site:'n8n.io'},
+ {s:'activepieces',n:'Activepieces',c:'Automation',d:'Simple automations between the tools you already use, with ready-made steps.',r:['Zapier'],e:'Easy',site:'activepieces.com'},
+ {s:'node-red',n:'Node-RED',c:'Automation',d:'Wire up devices, apps and online services on a visual board.',r:['Zapier','IFTTT'],e:'Some setup',site:'nodered.org'},
+ {s:'wordpress',n:'WordPress',logo:'wordpress',c:'Websites',d:'Build a website or blog with themes, pages and thousands of add-ons.',r:['Wix','Squarespace'],e:'Easy',site:'wordpress.org'},
+ {s:'ghost',n:'Ghost',logo:'ghost',c:'Websites',d:'Publish a blog and paid newsletter, with members and email built in.',r:['Substack','Medium'],e:'Easy',site:'ghost.org'},
+ {s:'plausible',n:'Plausible',logo:'plausibleanalytics',c:'Analytics',d:'See who visits your website on one simple page, without cookie banners.',r:['Google Analytics'],e:'Easy',site:'plausible.io'},
+ {s:'umami',n:'Umami',logo:'umami',c:'Analytics',d:'Lightweight website stats: visitors, pages and where people came from.',r:['Google Analytics'],e:'Easy',site:'umami.is'},
+ {s:'matomo',n:'Matomo',logo:'matomo',c:'Analytics',d:'Full website analytics with goals, funnels and heatmaps.',r:['Google Analytics'],e:'Some setup',site:'matomo.org'},
+ {s:'metabase',n:'Metabase',logo:'metabase',c:'Analytics',d:'Ask questions about your business data and share charts with your team.',r:['Looker','Tableau'],e:'Some setup',site:'metabase.com'},
+ {s:'mattermost',n:'Mattermost',logo:'mattermost',c:'Team chat',d:'Channels, direct messages and calls for your team, in one place.',r:['Slack'],e:'Easy',site:'mattermost.com'},
+ {s:'rocketchat',n:'Rocket.Chat',logo:'rocketdotchat',c:'Team chat',d:'Team chat plus a live-chat window for your website visitors.',r:['Slack','Microsoft Teams'],e:'Some setup',site:'rocket.chat'},
+ {s:'outline',n:'Outline',logo:'outline',c:'Docs & wikis',d:'A fast, tidy wiki where your team writes and finds its documents.',r:['Notion','Confluence'],e:'Easy',site:'getoutline.com'},
+ {s:'baserow',n:'Baserow',logo:'baserow',c:'Docs & wikis',d:'Spreadsheet-style databases for lists, projects and inventories.',r:['Airtable'],e:'Easy',site:'baserow.io'},
+ {s:'nextcloud',n:'Nextcloud',logo:'nextcloud',c:'Files & photos',d:'Store, sync and share files, calendars and contacts across devices.',r:['Google Drive','Dropbox'],e:'Some setup',site:'nextcloud.com'},
+ {s:'immich',n:'Immich',logo:'immich',c:'Files & photos',d:'Back up phone photos and videos automatically, then browse by face or place.',r:['Google Photos','iCloud Photos'],e:'Easy',site:'immich.app'},
+ {s:'vaultwarden',n:'Vaultwarden',logo:'bitwarden',c:'Passwords',d:'A shared password manager for you and your team, works with Bitwarden apps.',r:['1Password','LastPass'],e:'Easy',site:'github.com/dani-garcia/vaultwarden'},
+ {s:'chatwoot',n:'Chatwoot',logo:'chatwoot',c:'Customers & sales',d:'Answer customers from chat, email and social in one shared inbox.',r:['Intercom','Zendesk'],e:'Some setup',site:'chatwoot.com'},
+ {s:'calcom',n:'Cal.com',logo:'caldotcom',c:'Customers & sales',d:'Let clients book time with you from a link, synced to your calendar.',r:['Calendly'],e:'Easy',site:'cal.com'},
+ {s:'odoo',n:'Odoo',logo:'odoo',c:'Customers & sales',d:'Sales pipeline, invoicing and stock in one suite of business apps.',r:['Salesforce','QuickBooks'],e:'Some setup',site:'odoo.com'},
+ {s:'listmonk',n:'listmonk',c:'Customers & sales',d:'Send newsletters and email campaigns to your subscriber lists.',r:['Mailchimp'],e:'Easy',site:'listmonk.app'},
+ {s:'automatisch',n:'Automatisch',c:'Automation',d:'Build simple if-this-then-that flows between your business apps.',r:['Zapier'],e:'Easy',site:'automatisch.io'},
+ {s:'huginn',n:'Huginn',c:'Automation',d:'Agents that watch websites and feeds for you and act on changes.',r:['Zapier','IFTTT'],e:'Some setup',site:'github.com/huginn/huginn'},
+];
+const PAID = {'Zapier':'zapier','Notion':'notion','Google Analytics':'googleanalytics','Slack':'slack','Mailchimp':'mailchimp'};
+const CATS = ['All','Websites','Team chat','Automation','Analytics','Docs & wikis','Files & photos','Passwords','Customers & sales'];
+const bySlug = Object.fromEntries(APPS.map(a=>[a.s,a]));
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* logos */
+function rawSvg(key,size){
+  const L=LOGOS[key]; if(!L) return '';
+  const fill = key==='mailchimp' ? '#1a1a1a' : DARK.has(L.hex.toUpperCase()) ? 'var(--fg)' : L.hex;
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="fill:${fill}" aria-hidden="true"><path d="${L.d}"/></svg>`;
+}
+function svgLogo(key,size){ /* small inline logo */
+  if(key==='mailchimp') return `<span class="tiny y" style="width:${size+2}px;height:${size+2}px">${rawSvg(key,size-3)}</span>`;
+  return `<span class="lgo">${rawSvg(key,size)}</span>`;
+}
+function tinyLetter(name,size){return `<span class="tiny" style="width:${size}px;height:${size}px">${esc(name[0].toUpperCase())}</span>`}
+function paidLogo(name,size){return PAID[name]?svgLogo(PAID[name],size):tinyLetter(name,size)}
+/* logo on a tile */
+function tileApp(a,box,size,cls=''){return `<span class="lt ${cls}" style="--s:${box}px">${a.logo?rawSvg(a.logo,size):esc(a.n[0].toUpperCase())}</span>`}
+function tilePaid(name,box,size,cls=''){const k=PAID[name];return `<span class="lt ${k==='mailchimp'?'y':''} ${cls}" style="--s:${box}px">${k?rawSvg(k,size):esc(name[0])}</span>`}
+const chev = `<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m4.5 2.5 3.5 3.5-3.5 3.5"/></svg>`;
+const arrow = `<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 8h11M9.5 4.5 13 8l-3.5 3.5"/></svg>`;
+const easeTag = a=>`<span class="ease ${a.e==='Easy'?'easy':'some'}"><i></i>${a.e==='Easy'?'Easy':'Some setup'}</span>`;
+
+function card(a){
+  return `<a class="card" href="#app-${a.s}">
+    <div class="ct">${tileApp(a,48,28)}<div class="ctt"><span class="nm">${esc(a.n)}</span><span class="cc">${esc(a.c)}</span></div></div>
+    <p class="ds">${esc(a.d)}</p>
+    <div class="cf"><span class="rp">Replaces ${paidLogo(a.r[0],13)}<b>${esc(a.r.join(', '))}</b></span>${easeTag(a)}</div>
+  </a>`;
+}
+
+/* ---------- HOME ---------- */
+const state={cat:'All',q:'',shown:20};
+const nights=[['Mon','02:00'],['Tue','02:00'],['Wed','02:00'],['Thu','02:00'],['Fri','02:00'],['Sat','02:00'],['Tonight','02:00']];
+function home(){
+  return `
+  <section class="hero pad">
+    <p class="kicker">Cloudgate Templates</p>
+    <h1 class="display">Open-source apps, ready to run on your own server</h1>
+    <div class="row2">
+      <p class="lede">Pick an app that does the job of a tool you pay for today, choose your server, and click Deploy. Cloudgate sets it up, backs it up and keeps it running.</p>
+      <div class="acts">
+        <a class="btn lg" href="#home" data-scroll="catalogue">Browse 512 apps</a>
+        <a class="btn lg ghost" href="#home" data-scroll="how">How it works ${chev}</a>
+      </div>
+    </div>
+    <div class="facts-strip"><span><b>512</b> apps</span><span><b>Free</b> to use</span><span>You pay only for your server</span></div>
+  </section>
+
+  <section class="stagewrap pad" id="how">
+    <div class="stage">
+      <div class="window" aria-label="Illustration of the Cloudgate deploy screen">
+        <div class="wbar"><span class="dots"><i></i><i></i><i></i></span><b>Cloudgate</b><span>/</span><span>New app</span><span class="sp"></span><span class="pill">acme-bakery</span></div>
+        <div class="dep">
+          <div class="steps">
+            <div class="done"><span class="n">✓</span>Choose an app</div>
+            <div class="on"><span class="n">2</span>Pick your server</div>
+            <div><span class="n">3</span>Deploy</div>
+          </div>
+          <div class="mid">
+            <span class="lab">App</span>
+            <div class="chosen">${tileApp(bySlug.n8n,36,22)}<div style="min-width:0"><div class="h3">n8n</div><div class="muted" style="font-size:13px">Automate work between your apps · replaces Zapier</div></div><span style="flex:1"></span><a class="muted" style="font-size:13px" href="#home" data-scroll="catalogue">Change</a></div>
+            <span class="lab">Server</span>
+            <div class="srv">
+              <label class="on"><input type="radio" name="hs" checked> Shop server <small>Germany · 2 apps</small></label>
+              <label><input type="radio" name="hs"> Home office box <small>Bristol · 5 apps</small></label>
+              <label><input type="radio" name="hs"> Connect another server <small>takes 2 min</small></label>
+            </div>
+            <span class="lab">Web address</span>
+            <div class="chosen" style="padding:9px 12px;font-size:13.5px"><span>automations.acmebakery.com</span><span style="flex:1"></span><span class="muted" style="font-size:12.5px">secure (https)</span></div>
+          </div>
+          <div class="side">
+            <div class="sumrow"><span>App</span><span>n8n</span></div>
+            <div class="sumrow"><span>Server</span><span>Shop server</span></div>
+            <div class="sumrow"><span>Backups</span><span>Every night</span></div>
+            <div class="sumrow"><span>Updates</span><span>Automatic</span></div>
+            <div class="sumrow"><span>App cost</span><span>Free</span></div>
+            <button class="btn" data-deploy="n8n" style="width:100%">Deploy n8n</button>
+            <div class="log">
+              <div><span class="ok">✓</span> Shop server is online</div>
+              <div><span class="ok">✓</span> Enough space for n8n</div>
+              <div>· Ready in about 2 minutes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span><b>1</b>Choose an app</span><span><b>2</b>Click Deploy and pick your server</span><span><b>3</b>Open your app and sign in</span></div>
+  </section>
+
+  <section class="sec" id="why">
+    <div class="shead pad"><h2 class="h2">Why run apps with Cloudgate</h2><p class="lede">The same jobs your paid tools do, without the monthly creep. Cloudgate looks after the boring parts.</p></div>
+    <div class="bento">
+      <div class="tile t-a pad">
+        <div class="tx"><h3 class="h3">Backups every night, without thinking about it</h3><p>Each app is copied at 2 in the morning and kept for 14 days. Restore any day in one click.</p></div>
+        <div class="frag" aria-label="Example backup history">
+          <div class="tl">${nights.map(([d,h],i)=>`<div><span class="d">${d}</span><span class="b ${i===6?'next':''}">${i===6?'·':'✓'}</span><span class="h">${h}</span></div>`).join('')}</div>
+          <div class="foot1"><span>Last backup <b>Sat 02:00</b>, finished in 3 min</span><span>14 days kept</span></div>
+        </div>
+      </div>
+      <div class="tile t-b pad">
+        <div class="tx"><h3 class="h3">Your data stays where you put it</h3><p>Customer lists and files live on your server, in the country you choose.</p></div>
+        <div class="frag server" aria-label="Example server card">
+          <div class="top1"><span class="flag" aria-hidden="true"></span><b>Shop server</b><span class="status"><i></i>Online</span></div>
+          <div class="r"><span>Location</span><span>Frankfurt, Germany</span></div>
+          <div class="r"><span>Apps running</span><span>n8n, Plausible</span></div>
+          <div class="r"><span>Data copied to</span><span>This server only</span></div>
+        </div>
+      </div>
+      <div class="tile t-c pad">
+        <div class="tx"><h3 class="h3">Updates that check first</h3><p>Cloudgate tests each update, installs it overnight and can undo it.</p></div>
+        <div class="frag notice" aria-label="Example update notice">
+          ${tileApp(bySlug.n8n,32,18)}
+          <div style="display:grid;gap:2px;min-width:0"><span class="t">n8n was updated overnight</span><p>Installed at 03:10. Your workflows kept running.</p></div>
+          <div class="acts"><span class="btn sm ghost" aria-hidden="true">What changed</span><span class="btn sm ghost" aria-hidden="true">Undo</span></div>
+        </div>
+      </div>
+      <div class="tile t-d pad">
+        <div class="tx"><h3 class="h3">Add the whole team. No per-seat pricing.</h3><p>The apps are free. Your only bill is the server, whether 2 people use it or 20.</p></div>
+        <div class="frag" aria-label="Example team pricing">
+          <div class="seats">${['AK','JB','LM','SR','TO','EV','PN','MC','RD','HW','CL','NB'].map(x=>`<span>${x}</span>`).join('')}</div>
+          <div class="price"><span>Team members</span><span>12</span><span>Price per person</span><span>€0</span><span class="tot">Your server, per month</span><span class="tot">€9</span></div>
+          <p class="ex" style="margin-top:10px">Example figures for a small business server</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec cat" id="catalogue">
+    <div class="shead pad"><h2 class="h2">Browse apps</h2><p class="lede">Search by what you want to do, or by the tool you pay for today.</p></div>
+    <div class="fbar"><div class="in pad">
+      <div class="seg" role="toolbar" aria-label="Filter by category">${CATS.map(c=>`<button data-tab="${esc(c)}" aria-pressed="${c===state.cat}">${esc(c)}</button>`).join('')}</div>
+      <label class="sbox"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg>
+        <input id="q" type="search" autocomplete="off" placeholder="Filter, e.g. Slack or newsletter" aria-label="Filter apps" value="${esc(state.q)}"></label>
+    </div></div>
+    <div class="gridwrap pad"><div class="grid" id="grid"></div><div id="moreWrap"></div></div>
+  </section>
+
+  <section class="sec swaps" id="swaps">
+    <div class="shead pad">
+      <div><h2 class="h2">Popular swaps</h2><p class="lede">The tools people most often replace first, and what they move to.</p></div>
+      <a class="btn ghost" href="#alternatives-zapier">All Zapier alternatives ${chev}</a>
+    </div>
+    <div class="pad"><div class="swrow">
+      ${[['Zapier','n8n','Automate work between your apps, with no limit on tasks.','#alternatives-zapier','See alternatives'],
+         ['Notion','outline','A team wiki that is quick to search and easy to keep tidy.','#app-outline','See Outline'],
+         ['Google Analytics','plausible','Simple visitor stats with no cookie banner needed.','#app-plausible','See Plausible'],
+         ['Slack','mattermost','Team channels and calls, with your full message history kept.','#app-mattermost','See Mattermost'],
+         ['Mailchimp','listmonk','Newsletters to any list size, without paying per subscriber.','#app-listmonk','See listmonk']]
+        .map(([p,s,w,h,g])=>{const a=bySlug[s];return `<a class="sw" href="${h}">
+          <div class="art">${tilePaid(p,60,32,'from')}${arrow}${tileApp(a,60,34)}</div>
+          <div class="pair">${esc(p)}<span>to</span>${esc(a.n)}</div>
+          <p class="why">${esc(w)}</p><span class="go">${esc(g)} ${chev}</span></a>`}).join('')}
+    </div></div>
+  </section>`;
+}
+function matches(a){
+  const q=state.q.trim().toLowerCase();
+  if(state.cat!=='All'&&a.c!==state.cat) return false;
+  if(!q) return true;
+  return [a.n,a.d,a.c,...a.r].join(' ').toLowerCase().includes(q);
+}
+function renderGrid(){
+  const g=document.getElementById('grid'); if(!g) return;
+  const list=APPS.filter(matches);
+  const filtered = state.cat!=='All'||state.q.trim();
+  const shown = filtered?list:list.slice(0,state.shown);
+  g.innerHTML = shown.length?shown.map(card).join(''):
+    `<div class="empty">No apps match “${esc(state.q)}”${state.cat!=='All'?` in ${esc(state.cat)}`:''}. Try a tool you pay for, like Zapier, Notion or Slack.</div>`;
+  const mw=document.getElementById('moreWrap');
+  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===state.cat));
+  if(filtered){mw.innerHTML=`<p class="fine">${list.length} sample app${list.length===1?'':'s'} shown · the full directory has 512</p>`;return;}
+  mw.innerHTML=`<button class="more" id="more">Load more (${TOTAL-shown.length} remaining)</button>${state.shown>=APPS.length?'<p class="fine" style="margin-top:8px">This prototype holds 22 sample apps.</p>':''}`;
+  document.getElementById('more').onclick=()=>{state.shown=APPS.length;renderGrid()};
+}
+
+/* ---------- APP PAGE ---------- */
+const N8N = {
+  overview:[`n8n lets you connect the online tools your business already uses and have them work together on their own. When a customer fills in a form, n8n can add them to a spreadsheet, send your team a chat message and email the customer a welcome note, without anyone copying and pasting.`,
+            `You build these workflows on a visual board by dragging blocks and joining them with lines. It works with more than 400 services, including Google Sheets, Gmail, Slack, Shopify, HubSpot and Stripe.`],
+  feats:[['Automate busywork','Move data between forms, spreadsheets, email and your CRM.'],['Start from a template','Pick one of hundreds of ready-made workflows and adjust it.'],['Run on a schedule','Send a weekly sales summary every Monday at 9.'],['Add AI steps','Summarise emails or sort support requests with an AI step.'],['Get notified when things break','n8n emails you if a workflow stops working.'],['Invite your team','Everyone can build and share workflows at no extra cost.']],
+  gain:['No monthly task limits: run as many automations as you like','Your customer data never passes through an outside company','One fixed server cost instead of a price that grows with use','Workflows can have branches, loops and conditions'],
+  diff:['The editor has more options, so plan an hour to learn it','A few niche apps have no ready-made block yet','You connect your own accounts once, the same as on Zapier','Help comes from the community and guides, not live chat'],
+  faq:[['Do I need to know how to code?','No. Most workflows are built by dragging blocks and choosing options from menus. Code is optional for advanced cases.'],
+       ['Can I move my Zaps from Zapier?','There is no automatic import, but most Zaps take a few minutes to rebuild, and n8n has templates for the common ones.'],
+       ['What does it cost?','n8n itself is free. You pay only for your server, which for a small business is typically a few euros a month.'],
+       ['What happens if my server goes down?','Cloudgate restarts the app automatically and keeps nightly backups, so you can restore everything in one click.']]
+};
+function editorSVG(){
+  const W=880,H=380;
+  const node=(x,y,lbl,sub,col,ic,trig)=>`<g transform="translate(${x},${y})">
+    <rect class="${trig?'e-trig':'e-node'}" width="78" height="78" rx="${trig?16:10}"/>
+    <rect x="23" y="23" width="32" height="32" rx="7" style="fill:${col};opacity:.14"/>
+    <text x="39" y="45" text-anchor="middle" style="fill:${col};font:600 15px var(--sans)">${ic}</text>
+    <text class="e-txt" x="39" y="98" text-anchor="middle">${lbl}</text>
+    <text class="e-sub" x="39" y="113" text-anchor="middle">${sub}</text></g>`;
+  const wire=(x1,y1,x2,y2)=>`<path class="e-wire" d="M${x1} ${y1} C ${x1+40} ${y1}, ${x2-40} ${y2}, ${x2} ${y2}"/><circle cx="${x2}" cy="${y2}" r="3" style="fill:var(--faint)"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Drawing of the n8n workflow editor: a form submission adds a row to a sheet, then messages Slack and emails the customer">
+    <defs><pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="e-dot" cx="1" cy="1" r="1"/></pattern></defs>
+    <rect class="e-bg" width="${W}" height="${H}"/><rect width="${W}" height="${H}" fill="url(#dots)"/>
+    <rect class="e-panel" x="-1" y="-1" width="${W+2}" height="40"/>
+    <text class="e-mut" x="16" y="24">Personal  /</text><text class="e-txt" x="92" y="24">New lead follow-up</text>
+    <text class="e-mut" x="${W-210}" y="24">Active</text>
+    <rect x="${W-164}" y="12" width="28" height="16" rx="8" class="e-on"/><circle cx="${W-144}" cy="20" r="6" style="fill:#fff"/>
+    <rect x="${W-120}" y="9" width="44" height="22" rx="4" class="e-plus"/><text class="e-mut" x="${W-98}" y="24" text-anchor="middle">Share</text>
+    <rect x="${W-68}" y="9" width="54" height="22" rx="4" style="fill:#ea4b71"/><text x="${W-41}" y="24" text-anchor="middle" style="fill:#fff;font:500 12px var(--sans)">Save</text>
+    <rect class="e-panel" x="-1" y="39" width="44" height="${H-38}"/>
+    ${[70,104,138,172].map(y=>`<rect x="13" y="${y}" width="18" height="18" rx="4" class="e-plus"/>`).join('')}
+    ${wire(178,170,262,170)}${wire(340,170,430,120)}${wire(340,170,430,240)}${wire(508,120,600,120)}
+    ${node(100,131,'Form submitted','Website form','#ea4b71','⚡',1)}
+    ${node(262,131,'Add row','Google Sheets','#1f9d55','▦')}
+    ${node(430,81,'Message team','Slack #sales','#7a3cc9','#')}
+    ${node(430,201,'Welcome email','Gmail','#d64a3a','✉')}
+    ${node(600,81,'Wait 2 days','then','#6b7280','◷')}
+    <g transform="translate(700,102)"><rect class="e-plus" width="36" height="36" rx="8" style="stroke-dasharray:4 3"/><text class="e-mut" x="18" y="24" text-anchor="middle" style="font-size:18px">+</text></g>
+    <path class="e-wire" d="M678 120 H700" style="stroke-dasharray:3 3"/>
+    <rect class="e-panel" x="${W-230}" y="${H-58}" width="214" height="42" rx="6"/>
+    <circle cx="${W-210}" cy="${H-37}" r="5" class="e-on"/>
+    <text class="e-mut" x="${W-196}" y="${H-33}">Last run: 4 min ago · succeeded</text>
+  </svg>`;
+}
+function appPage(slug){
+  const a=bySlug[slug]; if(!a) return notFound();
+  const rich = slug==='n8n';
+  const rel = APPS.filter(x=>x!==a&&(x.c===a.c||(rich&&['baserow','mattermost'].includes(x.s)))).slice(0,4);
+  const easeNote = a.e==='Easy'?'Ready to use right after setup.':(rich?'You build workflows by dragging blocks. No coding needed for most tasks.':'Takes a few extra minutes to configure after it starts.');
+  const steps = `<div class="how">
+      <div><span class="n">Step 1</span><b>Choose an app</b><p>You are here. ${esc(a.n)} is free to use.</p></div>
+      <div><span class="n">Step 2</span><b>Click Deploy and pick your server</b><p>Choose a server you have connected, or connect one in two minutes.</p></div>
+      <div><span class="n">Step 3</span><b>Open your app and sign in</b><p>Cloudgate gives you a secure web address. The first person to sign in becomes the owner.</p></div></div>`;
+  const faq = (rich?N8N.faq:[['Do I need technical skills?',`No. Cloudgate installs ${a.n}, gives it a secure address and keeps it backed up. You use it in your browser like any other online tool.`],['What does it cost?',`${a.n} is free. You pay only for your server.`],[`Can I move my data from ${a.r[0]}?`,`Most people export from ${a.r[0]} and import into ${a.n}. The official guides on ${a.site} walk through it.`]])
+      .map(([q,ans],i)=>`<details ${i===0?'open':''}><summary>${esc(q)}</summary><p>${esc(ans)}</p></details>`).join('');
+  return `
+  <div class="pad"><nav class="crumb" aria-label="Breadcrumb"><a href="#home">Apps</a><span>/</span><a href="#home" data-scroll="catalogue" data-cat="${esc(a.c)}">${esc(a.c)}</a><span>/</span><span style="color:var(--fg)">${esc(a.n)}</span></nav></div>
+  <section class="apphead pad">
+    ${tileApp(a,80,46)}
+    <div class="body">
+      <h1 class="h1">${esc(a.n)}</h1>
+      <p class="lede">${rich?'Connect your apps and automate repetitive work, on your own server.':esc(a.d)}</p>
+      <div class="chips">
+        <span class="chip">Replaces ${a.r.map(r=>`<b style="display:inline-flex;gap:5px;align-items:center">${paidLogo(r,13)}${esc(r)}</b>`).join(' ')}</span>
+        <span class="chip">${easeTag(a)}</span>
+        <span class="chip"><b>Free</b> app</span>
+      </div>
+      <div class="acts"><button class="btn lg" data-deploy="${a.s}">Deploy ${esc(a.n)}</button><a class="btn lg ghost" href="https://${a.site}" target="_blank" rel="noopener">Official website ${chev}</a></div>
+    </div>
+  </section>
+  ${rich?`<section class="stagewrap pad"><div class="stage"><div class="window editor"><div class="wbar"><span class="dots"><i></i><i></i><i></i></span><b>n8n</b><span>workflow editor, illustrated</span></div>${editorSVG()}</div></div></section>`:''}
+  <div class="sec pad split">
+    <main>
+      <div class="blk" style="padding-top:40px"><h2 class="h2">Overview</h2><div class="prose">${rich?N8N.overview.map(p=>`<p>${p}</p>`).join(''):`<p>${esc(a.d)} It is a popular open-source replacement for ${esc(a.r.join(' and '))}, and it runs on your own server so your information stays with you.</p><p>This is a short sample page. The full directory has a page like the <a href="#app-n8n">n8n page</a> for every app.</p>`}</div></div>
+      ${rich?`<div class="blk"><h2 class="h2">What you can do</h2><ul class="feat">${N8N.feats.map(([t,s])=>`<li><b>${t}</b><span>${s}</span></li>`).join('')}</ul></div>
+      <div class="blk"><h2 class="h2">Replaces Zapier and Make</h2><p class="muted" style="max-width:64ch">n8n does the same job as Zapier and Make. Here is what changes when you switch.</p>
+        <div class="vs"><div><span class="t">What you gain</span><ul>${N8N.gain.map(x=>`<li>${x}</li>`).join('')}</ul></div><div><span class="t">What is different</span><ul>${N8N.diff.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+        <a href="#alternatives-zapier" class="btn ghost" style="justify-self:start">Compare all Zapier alternatives ${chev}</a></div>`:''}
+      <div class="blk"><h2 class="h2">How it works</h2>${steps}</div>
+      <div class="blk"><h2 class="h2">Questions</h2><div class="faq">${faq}</div></div>
+      <div class="blk" style="padding-bottom:56px"><h2 class="h2">Related apps</h2><div class="rel">${rel.map(card).join('')}</div></div>
+    </main>
+    <aside><div class="sidecard">
+      <div class="hd">${tileApp(a,32,18)}<b>${esc(a.n)} at a glance</b></div>
+      <dl>
+        <dt>Category</dt><dd>${esc(a.c)}</dd>
+        <dt>Ease of use</dt><dd>${easeTag(a)}</dd>
+        <dt>App price</dt><dd>Free</dd>
+        <dt>You pay for</dt><dd>Your server only</dd>
+        <dt>Backups</dt><dd class="m">Nightly 02:00 · 14 days</dd>
+        <dt>Updates</dt><dd>Automatic, overnight</dd>
+      </dl>
+      <p style="padding:0 18px 12px;font-size:13px;color:var(--muted)">${esc(easeNote)}</p>
+      <div class="links"><a href="https://${a.site}" target="_blank" rel="noopener">Official website ${chev}</a>${rich?`<a href="https://community.n8n.io" target="_blank" rel="noopener">Community forum ${chev}</a><a href="https://n8n.io/workflows" target="_blank" rel="noopener">Workflow templates ${chev}</a>`:''}</div>
+      <div class="ft"><button class="btn lg" data-deploy="${a.s}" style="width:100%">Deploy ${esc(a.n)}</button><p>Ready in about 2 minutes</p></div>
+    </div></aside>
+  </div>
+  <div class="mspace"></div>
+  <div class="mbar"><div class="t"><b>${esc(a.n)}</b>Free app · ready in about 2 min</div><button class="btn lg" data-deploy="${a.s}">Deploy ${esc(a.n)}</button></div>`;
+}
+
+/* ---------- ALTERNATIVES ---------- */
+function altPage(){
+  const list=['n8n','activepieces','automatisch','node-red','huginn'].map(s=>bySlug[s]);
+  const good={n8n:'Most tasks, from simple to advanced, with branches and AI steps',activepieces:'Simple automations, closest to how Zapier feels',automatisch:'Basic two- or three-step flows for small teams','node-red':'Connecting devices, sensors and smart-office gear',huginn:'Watching websites and feeds and acting on changes'};
+  const long={n8n:'The most complete option. A visual board, hundreds of ready-made connections and templates for common Zaps. Plan an hour to learn it.',activepieces:'A clean step-by-step builder that will feel familiar if you have used Zapier. Fewer connections than n8n, but growing quickly.',automatisch:'A small, focused tool for straightforward automations. Good when you only need a handful of flows.','node-red':'Popular for connecting hardware and home or office devices. Less suited to marketing and sales tools.',huginn:'Agents that check websites, RSS feeds and inboxes on a schedule. Best for monitoring rather than everyday business flows.'};
+  return `
+  <div class="pad"><nav class="crumb" aria-label="Breadcrumb"><a href="#home">Apps</a><span>/</span><a href="#home" data-scroll="swaps">Popular swaps</a><span>/</span><span style="color:var(--fg)">Zapier</span></nav></div>
+  <section class="apphead pad">
+    ${tilePaid('Zapier',80,44)}
+    <div class="body"><h1 class="h1">Open-source alternatives to Zapier</h1>
+    <p class="lede">Zapier charges more as you run more tasks. These free apps do the same job of connecting your tools, and run on your own server for one fixed cost.</p>
+    <div class="chips"><span class="chip"><b>5</b> alternatives</span><span class="chip"><b>Free</b> apps</span><span class="chip">Our pick: <b>n8n</b></span></div></div>
+  </section>
+  <section class="sec pad">
+    <div class="blk" style="padding-top:40px"><h2 class="h2">At a glance</h2>
+      <div class="tablewrap"><table><thead><tr><th>App</th><th>Good for</th><th>Ease of use</th><th></th></tr></thead><tbody>
+      ${list.map(a=>`<tr><td><span class="who">${tileApp(a,32,18)}<a href="#app-${a.s}" style="text-decoration:none">${esc(a.n)}</a></span></td><td class="muted">${good[a.s]}</td><td>${easeTag(a)}</td><td style="text-align:right"><button class="btn sm" data-deploy="${a.s}">Deploy</button></td></tr>`).join('')}
+      </tbody></table></div></div>
+    <div class="blk"><h2 class="h2">The options</h2><div class="altlist">
+      ${list.map(a=>`<div class="alt">${tileApp(a,52,30)}
+        <div style="min-width:0"><div class="ttl"><a href="#app-${a.s}">${esc(a.n)}</a>${easeTag(a)}</div><p>${long[a.s]}</p></div>
+        <div class="acts"><button class="btn sm" data-deploy="${a.s}">Deploy ${esc(a.n)}</button><a class="btn sm ghost" href="#app-${a.s}">Details ${chev}</a></div></div>`).join('')}
+    </div></div>
+    <div class="blk" style="padding-bottom:56px"><h2 class="h2">Questions</h2><div class="faq">
+      <details open><summary>Which one should I pick?</summary><p>If you are not sure, start with n8n. It covers almost everything Zapier does. If you want something simpler, try Activepieces.</p></details>
+      <details><summary>Will my Zaps carry over?</summary><p>None of these import Zaps directly. Most simple Zaps take a few minutes to rebuild, and n8n and Activepieces have templates for the common ones.</p></details>
+      <details><summary>Is it really free?</summary><p>Yes. The apps are free and open source. You pay only for the server they run on, and one server can run several apps.</p></details>
+      <details><summary>Do I need a developer?</summary><p>No. Cloudgate installs and updates the app. You build automations in your browser.</p></details>
+    </div></div>
+  </section>`;
+}
+function notFound(){return `<section class="hero pad"><h1 class="h1">That page is not in this prototype</h1><p class="lede">Only a sample of apps is included.</p><div class="acts"><a class="btn" href="#home">Back to all apps</a></div></section>`}
+
+/* ---------- ROUTER ---------- */
+const view=document.getElementById('view');
+let pendingScroll=null;
+function route(){
+  const h=(location.hash||'#home').slice(1);
+  if(h.startsWith('app-')) view.innerHTML=appPage(h.slice(4));
+  else if(h==='alternatives-zapier') view.innerHTML=altPage();
+  else view.innerHTML=home();
+  renderGrid();
+  if(pendingScroll){const el=document.getElementById(pendingScroll);pendingScroll=null;if(el) el.scrollIntoView({block:'start'});}
+  else window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-scroll],[data-tab],[data-deploy],#searchHint');
+  if(!t) return;
+  if(t.dataset.deploy){e.preventDefault();openDeploy(t.dataset.deploy);return;}
+  if(t.dataset.tab){state.cat=t.dataset.tab;renderGrid();t.scrollIntoView({block:'nearest',inline:'nearest'});return;}
+  if(t.id==='searchHint'){openPal();return;}
+  if(t.dataset.scroll){
+    e.preventDefault();
+    if(t.dataset.cat){state.cat=t.dataset.cat;state.q='';}
+    const id=t.dataset.scroll;
+    if((location.hash||'#home')==='#home'&&document.getElementById(id)){renderGrid();const q=document.getElementById('q');if(q)q.value=state.q;document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+    else{pendingScroll=id;location.hash='home';}
+  }
+});
+document.addEventListener('input',e=>{if(e.target.id==='q'){state.q=e.target.value;renderGrid();}});
+
+/* ---------- COMMAND PALETTE ---------- */
+const pal=document.getElementById('pal'),pq=document.getElementById('pq'),plist=document.getElementById('plist');
+const isMac=/Mac|iPhone|iPad/.test(navigator.platform||'');
+document.getElementById('modk').textContent=isMac?'⌘K':'Ctrl K';
+let opts=[],sel=0,lastFocus=null;
+function palOpt(a,right,i){return `<a class="opt" role="option" id="opt-${i}" href="#app-${a.s}" data-i="${i}" aria-selected="${i===sel}">${tileApp(a,32,18)}<span class="on1"><b>${esc(a.n)}</b><span>${esc(a.d)}</span></span><span class="rt">${esc(right)}</span></a>`}
+function renderPal(){
+  const q=pq.value.trim().toLowerCase();
+  let html='';opts=[];
+  const push=(a,right)=>{html+=palOpt(a,right,opts.length);opts.push(a)};
+  if(!q){
+    html+=`<div class="pgrp">Popular swaps</div>`;
+    [['Zapier','n8n'],['Notion','outline'],['Google Analytics','plausible'],['Slack','mattermost'],['Mailchimp','listmonk']].forEach(([p,s])=>push(bySlug[s],'Replaces '+p));
+    html+=`<div class="pgrp">Apps</div>`;
+    ['wordpress','immich','vaultwarden','calcom'].forEach(s=>push(bySlug[s],bySlug[s].c));
+  } else {
+    const tools=[...new Set(APPS.flatMap(a=>a.r))].filter(t=>t.toLowerCase().includes(q));
+    const seen=new Set();
+    tools.forEach(t=>{html+=`<div class="pgrp">Replaces <b>${esc(t)}</b></div>`;APPS.filter(a=>a.r.includes(t)&&!seen.has(a.s)).forEach(a=>{seen.add(a.s);push(a,a.e==='Easy'?'Easy':'Some setup')})});
+    const rest=APPS.filter(a=>!seen.has(a.s)&&[a.n,a.d,a.c].join(' ').toLowerCase().includes(q));
+    if(rest.length){html+=`<div class="pgrp">Apps</div>`;rest.forEach(a=>push(a,a.c))}
+    if(!opts.length) html=`<div class="pnone">No apps match “${esc(pq.value)}”. Try a tool you pay for, like Zapier or Slack.</div>`;
+  }
+  plist.innerHTML=html;
+  sel=Math.min(sel,Math.max(0,opts.length-1));
+  markSel();
+}
+function markSel(){
+  plist.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-selected',+o.dataset.i===sel));
+  const cur=document.getElementById('opt-'+sel);
+  pq.setAttribute('aria-activedescendant',cur?cur.id:'');
+  if(cur) cur.scrollIntoView({block:'nearest'});
+}
+function openPal(){
+  if(!pal.hidden) return;
+  lastFocus=document.activeElement;pal.classList.remove('out');pal.hidden=false;pq.value='';sel=0;renderPal();pq.focus();
+}
+function closePal(){
+  if(pal.hidden) return;
+  pal.classList.add('out');
+  setTimeout(()=>{pal.hidden=true;pal.classList.remove('out');if(lastFocus&&lastFocus.focus)lastFocus.focus();},110);
+}
+pq.addEventListener('input',()=>{sel=0;renderPal()});
+pq.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'){e.preventDefault();sel=(sel+1)%Math.max(1,opts.length);markSel();}
+  else if(e.key==='ArrowUp'){e.preventDefault();sel=(sel-1+opts.length)%Math.max(1,opts.length);markSel();}
+  else if(e.key==='Enter'&&opts[sel]){e.preventDefault();const s=opts[sel].s;closePal();location.hash='app-'+s;}
+});
+plist.addEventListener('mousemove',e=>{const o=e.target.closest('.opt');if(o&&+o.dataset.i!==sel){sel=+o.dataset.i;markSel();}});
+plist.addEventListener('click',e=>{if(e.target.closest('.opt'))closePal();});
+pal.addEventListener('click',e=>{if(e.target===pal)closePal();});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){if(!pal.hidden){closePal();return;}if(!scrim.hidden){closeDeploy();return;}}
+  const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if((e.key==='k'||e.key==='K')&&(e.metaKey||e.ctrlKey)){e.preventDefault();pal.hidden?openPal():closePal();return;}
+  if(e.key==='/'&&!typing&&pal.hidden&&scrim.hidden){e.preventDefault();openPal();}
+});
+
+/* ---------- DEPLOY DIALOG ---------- */
+const scrim=document.getElementById('scrim'),dlgBody=document.getElementById('dlgBody');
+let timers=[];
+function openDeploy(slug){
+  const a=bySlug[slug];
+  document.getElementById('dlgTitle').textContent='Deploy '+a.n;
+  dlgBody.innerHTML=`<div class="bd">
+      <div class="chosen">${tileApp(a,40,24)}<div style="min-width:0"><div class="h3">${esc(a.n)}</div><div class="muted" style="font-size:13px">${esc(a.d)}</div></div></div>
+      <div class="field">Pick your server<div class="srv" id="dsrv">
+        <label class="on"><input type="radio" name="ds" checked> Shop server <small>Germany</small></label>
+        <label><input type="radio" name="ds"> Home office box <small>Bristol</small></label></div></div>
+      <label class="field" for="addr">Web address<input id="addr" value="${a.s.replace(/[^a-z0-9]/g,'')}.acmebakery.com"></label>
+    </div>
+    <div class="ft"><span class="muted" style="font-size:13px">Free app · nightly backups included</span><button class="btn" id="go">Deploy ${esc(a.n)}</button></div>`;
+  dlgBody.querySelectorAll('#dsrv input').forEach(i=>i.onchange=()=>dlgBody.querySelectorAll('#dsrv label').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked)));
+  dlgBody.querySelector('#go').onclick=()=>run(a);
+  scrim.hidden=false; dlgBody.querySelector('#go').focus();
+}
+function run(a){
+  const addr=dlgBody.querySelector('#addr').value||a.s+'.acmebakery.com';
+  const st=['Getting your server ready','Installing '+a.n,'Securing '+addr,'Starting '+a.n];
+  dlgBody.innerHTML=`<div class="bd"><div class="h2s">Setting up ${esc(a.n)}…</div><div class="bar"><span id="pb"></span></div>
+    <div class="prog" id="pg">${st.map(s=>`<div><i></i>${esc(s)}</div>`).join('')}</div></div>
+    <div class="ft"><span class="muted" style="font-size:13px">You can close this; setup continues.</span><button class="btn ghost sm" id="hide">Close</button></div>`;
+  dlgBody.querySelector('#hide').onclick=closeDeploy;
+  const rows=[...dlgBody.querySelectorAll('#pg div')],pb=dlgBody.querySelector('#pb');
+  rows.forEach((r,i)=>{timers.push(setTimeout(()=>{if(i){rows[i-1].className='ok';rows[i-1].querySelector('i').textContent='✓';}r.className='on';pb.style.width=((i+.5)/st.length*100)+'%';},i*800));});
+  timers.push(setTimeout(()=>done(a,addr),st.length*800+200));
+}
+function done(a,addr){
+  dlgBody.innerHTML=`<div class="bd"><div style="display:flex;gap:12px;align-items:center">${tileApp(a,44,26)}<div><div class="h2s">${esc(a.n)} is ready</div><div class="mono muted">${esc(addr)}</div></div></div>
+    <p class="muted" style="font-size:14px">The first account you create becomes the owner. Backups start tonight.</p></div>
+    <div class="ft"><button class="btn ghost sm" id="hide">Back to ${esc(a.n)} page</button><button class="btn" id="openit">Open ${esc(a.n)}</button></div>`;
+  dlgBody.querySelector('#hide').onclick=()=>{closeDeploy();if(location.hash!=='#app-'+a.s)location.hash='app-'+a.s;};
+  dlgBody.querySelector('#openit').onclick=()=>{dlgBody.querySelector('.bd p').textContent='In the real product this opens '+addr+' in a new tab. This prototype stops here.';};
+}
+function closeDeploy(){timers.forEach(clearTimeout);timers=[];scrim.hidden=true;}
+document.getElementById('dlgClose').onclick=closeDeploy;
+scrim.addEventListener('click',e=>{if(e.target===scrim)closeDeploy();});
+
+route();
+</script>
