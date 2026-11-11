@@ -1,0 +1,15 @@
+name: Baserow
+description: "Self-hosted Baserow: an open-source Airtable alternative. Build no-code databases that work like spreadsheets for customers, projects and stock."
+version: "2.4.2"
+tags: [airtable-alternative, no-code, database, spreadsheet, crm, inventory]
+links:
+  website: https://baserow.io
+  docs: https://baserow.io/docs/installation/install-with-docker
+  source: https://github.com/baserow/baserow
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  PUBLIC_URL: { value: "{{domains.baserow.url}}" }
+domains:
+  - { service: baserow, port: 80 }

@@ -1,0 +1,39 @@
+name: Ghost
+description: "Self-hosted Ghost, the open-source Substack alternative: publish a blog and paid newsletter on your own domain, with members and Stripe payments."
+version: "6.76.0"
+tags: [blog, newsletter, cms, paid newsletter, membership, substack alternative]
+links:
+  website: https://ghost.org
+  docs: https://docs.ghost.org
+  source: https://github.com/TryGhost/Ghost
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  GHOST_URL: { value: "{{domains.ghost.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  MAIL_FROM:
+    ask:
+      label: Sender email
+      description: The address Ghost sends sign-in links, staff invites and password resets from. Use one your email service lets you send from.
+      format: email
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: From your email sending service, for example smtp.mailgun.org, email-smtp.eu-west-1.amazonaws.com or smtp.postmarkapp.com.
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+  SMTP_USER:
+    ask:
+      label: Email server username
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+domains:
+  - { service: ghost, port: 2368 }

@@ -1,0 +1,26 @@
+name: Vaultwarden
+description: "Self-hosted Vaultwarden: an open-source password manager for your team that works with the free Bitwarden apps. A private 1Password or LastPass alternative."
+version: "1.37.5"
+tags: [password manager, bitwarden, self-hosted password manager, passkeys, team passwords, security]
+links:
+  website: https://github.com/dani-garcia/vaultwarden
+  docs: https://github.com/dani-garcia/vaultwarden/wiki
+  source: https://github.com/dani-garcia/vaultwarden
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  DOMAIN: { value: "{{domains.vaultwarden.url}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_TOKEN: { generate: base64 }
+  SIGNUPS_ALLOWED:
+    ask:
+      label: Allow sign-ups
+      description: >-
+        "true" lets anyone who can reach the Domain create an account. Once your
+        own accounts exist, turn sign-ups off on the admin page (/admin) and
+        invite people from there instead.
+      default: "true"
+      pattern: "true|false"
+domains:
+  - { service: vaultwarden, port: 80 }

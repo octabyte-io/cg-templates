@@ -1,0 +1,29 @@
+name: listmonk
+description: "Self-hosted listmonk, the open-source Mailchimp alternative: send newsletters and email campaigns to lists of any size, with no fee per subscriber."
+version: "6.2.0"
+tags: [newsletter, email marketing, mailing list, email campaigns, mailchimp alternative]
+links:
+  website: https://listmonk.app
+  docs: https://listmonk.app/docs/
+  source: https://github.com/knadh/listmonk
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ROOT_URL: { value: "{{domains.listmonk.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for scheduled campaigns, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: listmonk, port: 9000 }

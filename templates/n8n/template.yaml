@@ -1,0 +1,30 @@
+name: n8n
+description: "Self-hosted n8n: automate work between your apps with drag-and-drop workflows and AI steps, with no task limits. A fair-code alternative to Zapier and Make."
+version: "2.47.4"
+tags: [workflow automation, zapier alternative, make alternative, ai agents, no-code, integrations]
+links:
+  website: https://n8n.io
+  docs: https://docs.n8n.io/hosting/
+  source: https://github.com/n8n-io/n8n
+cloudgate: 0.1.0
+inputs:
+  DB_TYPE: { value: postgresdb }
+  N8N_HOST: { value: "{{domains.app.host}}" }
+  # n8n 2 listens on "::" by default, which fails where a container has no
+  # IPv6; Cloudgate's proxy reaches it over IPv4.
+  N8N_LISTEN_ADDRESS: { value: 0.0.0.0 }
+  N8N_PROTOCOL: { value: https }
+  N8N_PROXY_HOPS: { value: "1" }
+  WEBHOOK_URL: { value: "{{domains.app.url}}/" }
+  N8N_ENCRYPTION_KEY: { generate: hex }
+  # n8n 2 has no in-memory mode; the app has no volume, so files that
+  # workflows handle are kept in the database rather than on disk.
+  N8N_DEFAULT_BINARY_DATA_MODE: { value: database }
+  # Community nodes live on disk; reinstall them from the database on restart.
+  N8N_REINSTALL_MISSING_PACKAGES: { value: "true" }
+  GENERIC_TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used by schedule triggers, as an IANA name such as Europe/Berlin.
+      default: UTC
+  TZ: { value: "{{GENERIC_TIMEZONE}}" }

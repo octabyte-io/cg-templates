@@ -1,0 +1,18 @@
+name: Nextcloud
+description: "Self-hosted Nextcloud: an open-source Google Drive and Dropbox alternative to store, sync and share files, calendars and contacts on your own server."
+version: "35.0.2"
+tags: [file sharing, file sync, cloud storage, calendar, contacts, collaboration, self-hosted cloud]
+links:
+  website: https://nextcloud.com
+  docs: https://docs.nextcloud.com/server/latest/admin_manual/
+  source: https://github.com/nextcloud/server
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  NEXTCLOUD_HOST: { value: "{{domains.nextcloud.host}}" }
+  NEXTCLOUD_URL: { value: "{{domains.nextcloud.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: nextcloud, port: 80 }

@@ -1,0 +1,21 @@
+name: Immich
+description: "Self-hosted Immich: an open-source Google Photos alternative that backs up phone photos and videos automatically and finds any picture by face or place."
+version: "3.4.0"
+tags: [photos, photo backup, videos, photo library, face recognition, google photos alternative]
+links:
+  website: https://immich.app
+  docs: https://docs.immich.app
+  source: https://github.com/immich-app/immich
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  DB_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used to show when photos were taken, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: immich-server, port: 2283 }

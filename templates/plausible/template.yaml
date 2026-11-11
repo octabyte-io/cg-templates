@@ -1,0 +1,23 @@
+name: Plausible Analytics
+description: "Self-hosted Plausible Analytics: a simple, privacy-friendly Google Analytics alternative for small businesses. No cookies, so no cookie banner needed."
+version: "3.2.1"
+tags: [web analytics, google analytics alternative, privacy-friendly analytics, cookieless analytics, gdpr, website statistics]
+links:
+  website: https://plausible.io
+  docs: https://github.com/plausible/community-edition/wiki
+  source: https://github.com/plausible/analytics
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.plausible.url}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  TOTP_VAULT_KEY: { generate: base64 }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: plausible, port: 8000 }
+files:
+  - { path: clickhouse/logs.xml }
+  - { path: clickhouse/ipv4-only.xml }
+  - { path: clickhouse/low-resources.xml }
+  - { path: clickhouse/default-profile-low-resources-overrides.xml }

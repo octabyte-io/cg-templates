@@ -1,9 +1,0 @@
-name: Uptime Kuma
-description: "Get an alert the moment your website goes down, and show customers a status page."
-version: "1.23.16"
-tags: [monitoring, status-page, devtools]
-links:
-  website: https://uptime.kuma.pet
-  docs: https://github.com/louislam/uptime-kuma/wiki
-  source: https://github.com/louislam/uptime-kuma
-cloudgate: 0.1.0

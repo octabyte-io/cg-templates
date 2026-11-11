@@ -1,0 +1,17 @@
+version: 1
+services:
+  app:
+    kind: web
+    description: Metabase's web app and API.
+    source: { image: "metabase/metabase:v0.65.4.1" }
+    port: 3000
+    size: medium
+    env:
+      - MB_DB_CONNECTION_URI: db.url
+      - MB_SITE_URL
+      - MB_ENCRYPTION_SECRET_KEY
+      - MB_SESSION_SECRET_KEY
+  db:
+    kind: postgres
+    version: "16"
+    database: metabase

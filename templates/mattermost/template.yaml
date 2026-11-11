@@ -1,0 +1,16 @@
+name: Mattermost
+description: "Self-hosted Mattermost: open-source team chat with channels, threads and file sharing. A free Slack alternative that keeps your history on your server."
+version: "12.1.0"
+tags: [team-chat, slack-alternative, chat, messaging, collaboration, self-hosted]
+links:
+  website: https://mattermost.com
+  docs: https://docs.mattermost.com
+  source: https://github.com/mattermost/mattermost
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SITE_URL: { value: "{{domains.mattermost.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: mattermost, port: 8065 }

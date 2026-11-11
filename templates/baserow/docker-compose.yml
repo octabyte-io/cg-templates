@@ -1,0 +1,11 @@
+services:
+  baserow:
+    image: baserow/baserow:2.4.2
+    restart: unless-stopped
+    environment:
+      BASEROW_PUBLIC_URL: ${PUBLIC_URL}
+    volumes:
+      - baserow-data:/baserow/data
+
+volumes:
+  baserow-data:

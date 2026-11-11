@@ -1,0 +1,12 @@
+name: Umami
+description: "Self-hosted Umami: open-source, cookie-free website analytics and a light Google Analytics alternative. Track many sites from one simple dashboard."
+version: "3.4.1"
+tags: [web analytics, google analytics alternative, privacy, cookieless analytics, gdpr, website statistics]
+links:
+  website: https://umami.is
+  docs: https://umami.is/docs
+  source: https://github.com/umami-software/umami
+cloudgate: 0.1.0
+inputs:
+  APP_SECRET: { generate: hex }
+  TWO_FACTOR_ENCRYPTION_KEY: { generate: hex }

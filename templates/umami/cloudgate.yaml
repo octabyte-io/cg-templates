@@ -1,0 +1,15 @@
+version: 1
+services:
+  app:
+    kind: web
+    description: The Umami dashboard and the endpoint the tracking script sends to.
+    source: { image: "ghcr.io/umami-software/umami:3.4.1" }
+    port: 3000
+    env:
+      - DATABASE_URL: db.url
+      - APP_SECRET
+      - TWO_FACTOR_ENCRYPTION_KEY
+  db:
+    kind: postgres
+    version: "16"
+    database: umami

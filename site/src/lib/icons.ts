@@ -7,7 +7,7 @@ import type { Product } from '../products';
  * in the dark theme. Mailchimp's mark is dark on its yellow, so it gets the tile.
  */
 
-const DARK = new Set(['000000', '15171A', '181717', '292929', '4A154B', '191919', '0A0A0A']);
+const DARK = new Set(['000000', '15171A', '181717', '292929', '4A154B', '191919', '0A0A0A', '03363D', '172B4D']);
 
 type Icon = { path: string; hex: string; title: string };
 
