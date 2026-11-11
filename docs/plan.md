@@ -32,6 +32,7 @@ Reference for tone and structure: octabyte.io and elest.io app pages.
 | Who owns which field | `template.yaml` owns name, description, tags, links and app version; `index.md` holds only what the website needs. No field is written twice | [0003](adr/0003-a-folder-holds-cloudgates-template-beside-its-page-and-releases-publish-catalogue-zip.md) |
 | What Cloudgate reads | `catalogue.zip`, attached by CI to a GitHub release, holding only Cloudgate's files (Cloudgate ADR-0072) | [0003](adr/0003-a-folder-holds-cloudgates-template-beside-its-page-and-releases-publish-catalogue-zip.md) |
 | Generated files | `catalogue.zip`, its `catalogue.json` index and the site's search index are built, never written by hand | [0002](adr/0002-a-template-is-a-folder-of-markdown-and-yaml.md) |
+| First release's templates | 15 apps picked for licence, paying buyers, search demand and shape coverage; differs from Cloudgate's ADR-0066 list in six apps | [starter-templates.md](starter-templates.md) |
 
 ## Template folder
 
@@ -143,7 +144,8 @@ meta tag, and tags, `alternativeTo` and the body text do that job.
 ## Next step
 
 Build the Astro site in a new session, starting from `design/prototype/` and this plan:
-the template folder and `index.md` schema, a few real example templates, home page, app page,
+the template folder and `index.md` schema, a few real example templates (the first of
+[`starter-templates.md`](starter-templates.md), in its order), home page, app page,
 search, the GitHub Pages deploy, and the CI that checks pull requests and publishes
 `catalogue.zip`.
 
@@ -151,7 +153,8 @@ search, the GitHub Pages deploy, and the CI that checks pull requests and publis
 
 - Timing: Cloudgate reads `catalogue.zip` and its CLI check skips website files only once
   octabyte-io/cloudgate#1403 ships (ADR-0072). The first release waits for that, and holds the
-  15 starter templates Cloudgate's ADR-0066 names.
+  15 templates in [`starter-templates.md`](starter-templates.md), which replace the list in
+  Cloudgate's ADR-0066; that ADR and its `CHANGELOG.md` entry need amending to match.
 - Custom domain, and the hosted console URL the Deploy button opens.
 - Pull request previews: GitHub Pages cannot host them; Cloudflare Pages or Netlify could.
 - Whether to seed the catalogue from Dokploy's MIT-licensed templates, with attribution.
