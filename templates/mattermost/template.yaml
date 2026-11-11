@@ -1,7 +1,7 @@
 name: Mattermost
-description: "Channels, direct messages and calls for your team, in one place."
-version: "11.11.4"
-tags: [chat, collaboration, messaging]
+description: "Self-hosted Mattermost: open-source team chat with channels, threads and file sharing. A free Slack alternative that keeps your history on your server."
+version: "12.1.0"
+tags: [team-chat, slack-alternative, chat, messaging, collaboration, self-hosted]
 links:
   website: https://mattermost.com
   docs: https://docs.mattermost.com

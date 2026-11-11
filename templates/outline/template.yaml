@@ -1,7 +1,7 @@
 name: Outline
-description: "A fast, tidy wiki where your team writes and finds its documents."
+description: "Self-hosted Outline: a fast team wiki and knowledge base, and a Notion and Confluence alternative, where your team writes and finds its documents."
 version: "1.12.0"
-tags: [wiki, knowledge-base, collaboration]
+tags: [wiki, knowledge-base, team-wiki, notion-alternative, confluence-alternative, documentation]
 links:
   website: https://www.getoutline.com
   docs: https://docs.getoutline.com/s/hosting
@@ -17,7 +17,7 @@ inputs:
   OIDC_CLIENT_ID:
     ask:
       label: OIDC client ID
-      description: The client ID of the app you registered for Outline in your identity provider.
+      description: The client ID of the app you registered for Outline in your sign-in service (Google, Microsoft Entra, Okta, Authentik and others). Use <Outline's address>/auth/oidc.callback as its redirect URL.
   OIDC_CLIENT_SECRET:
     ask:
       label: OIDC client secret

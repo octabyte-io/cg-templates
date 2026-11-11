@@ -1,7 +1,7 @@
 name: Baserow
-description: "Spreadsheet-style databases for lists, projects and inventories."
+description: "Self-hosted Baserow: an open-source Airtable alternative. Build no-code databases that work like spreadsheets for customers, projects and stock."
 version: "2.4.2"
-tags: [database, spreadsheet, no-code]
+tags: [airtable-alternative, no-code, database, spreadsheet, crm, inventory]
 links:
   website: https://baserow.io
   docs: https://baserow.io/docs/installation/install-with-docker

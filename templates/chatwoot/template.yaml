@@ -1,10 +1,10 @@
 name: Chatwoot
-description: "Answer customers from chat, email and social in one shared inbox."
+description: "Self-hosted Chatwoot: an open-source Intercom and Zendesk alternative that puts website chat, email, WhatsApp and social messages in one shared inbox."
 version: "4.19.1"
-tags: [customer-support, live-chat, helpdesk]
+tags: [customer-support, live-chat, shared-inbox, helpdesk, intercom-alternative, whatsapp]
 links:
   website: https://www.chatwoot.com
-  docs: https://www.chatwoot.com/docs/self-hosted
+  docs: https://developers.chatwoot.com/self-hosted
   source: https://github.com/chatwoot/chatwoot
 cloudgate: 0.1.0
 compose: app
