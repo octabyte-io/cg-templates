@@ -1,0 +1,10 @@
+---
+import { EASE_LABEL, type Ease } from '../lib/catalogue';
+
+interface Props {
+  ease: Ease;
+}
+const { ease } = Astro.props;
+---
+
+<span class:list={['ease', ease === 'easy' ? 'easy' : 'some']}><i></i>{EASE_LABEL[ease]}</span>

@@ -1,0 +1,23 @@
+name: Ghost
+description: "Publish a blog and paid newsletter, with members and email built in."
+version: "6.0"
+tags: [blog, cms, newsletter]
+links:
+  website: https://ghost.org
+  docs: https://ghost.org/docs
+  source: https://github.com/TryGhost/Ghost
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Sender email
+      description: The address Ghost sends staff invites, password resets and newsletters from.
+      format: email
+domains:
+  - { service: ghost, port: 2368 }
+files:
+  - { path: config.production.json }

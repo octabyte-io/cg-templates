@@ -1,0 +1,11 @@
+name: Umami
+description: "Lightweight website stats: visitors, pages and where people came from."
+version: "2.19.0"
+tags: [analytics, privacy]
+links:
+  website: https://umami.is
+  docs: https://umami.is/docs
+  source: https://github.com/umami-software/umami
+cloudgate: 0.1.0
+inputs:
+  APP_SECRET: { generate: hex }

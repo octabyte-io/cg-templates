@@ -1,0 +1,105 @@
+---
+import Base from '../layouts/Base.astro';
+import Chev from '../components/Chev.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Faq from '../components/Faq.astro';
+import { CATEGORIES } from '../categories';
+import { GITHUB_REPO } from '../lib/catalogue';
+import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
+
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: 'Add an app', path: 'contribute/' },
+];
+
+const steps = [
+  {
+    name: 'Copy the starter folder',
+    text: 'On GitHub, copy each file in starter-template/ into templates/<your-app>/. The folder name is the app’s id and its web address, so pick it once: lowercase letters, digits and hyphens.',
+  },
+  {
+    name: 'Fill it in',
+    text: 'template.yaml and cloudgate.yaml tell Cloudgate how to run the app. index.md is the page people read here: a tagline, what it replaces, what you can do with it, and a few questions.',
+  },
+  {
+    name: 'Open a pull request',
+    text: 'Checks run on every pull request and say in plain English which file and field to change. A maintainer reviews it, and once merged the app appears here and in every Cloudgate install.',
+  },
+];
+
+const faq = [
+  {
+    q: 'Do I need to install anything?',
+    a: 'No. You can add every file from the GitHub website. If you want to check a template on your own computer first, run npx @octabyte-io/cloudgate template check templates/<your-app>.',
+  },
+  {
+    q: 'What makes a good app page?',
+    a: 'Plain language for someone who has never run a server: what the app does for a business, what it replaces, and an honest note on what is different. No ports, versions or code on the page.',
+  },
+  {
+    q: 'Which category should I choose?',
+    a: `One of: ${CATEGORIES.map((c) => c.name).join(', ')}. If none fits, say so in your pull request.`,
+  },
+  {
+    q: 'Can I use the app’s own logo?',
+    a: 'Yes, and please do: an SVG if the project publishes one, or a square PNG. Screenshots go in screenshots/ with alt text that describes them.',
+  },
+];
+---
+
+<Base
+  title="Add an app to Cloudgate Templates"
+  description="How to add an open-source app to the Cloudgate Templates directory: copy the starter folder, fill it in and open a pull request, all from your browser."
+  path="contribute/"
+  jsonLd={graph(
+    breadcrumbSchema(trail),
+    {
+      '@type': 'HowTo',
+      name: 'How to add an app to Cloudgate Templates',
+      step: steps.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, name: step.name, text: step.text })),
+    },
+    faqSchema(faq),
+  )}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead pad" style="grid-template-columns:1fr">
+    <div class="body">
+      <h1 class="h1">Add an app</h1>
+      <p class="lede">Every app here is a folder of a few small files. You can add one from your browser, without installing anything.</p>
+      <div class="acts">
+        <a class="btn lg" href={`${GITHUB_REPO}/tree/main/starter-template`}>Open the starter folder</a>
+        <a class="btn lg ghost" href={`${GITHUB_REPO}/issues/new`}>Request an app instead <Chev /></a>
+      </div>
+    </div>
+  </section>
+  <div class="sec pad">
+    <div class="blk" style="padding-top:40px">
+      <h2 class="h2">How it works</h2>
+      <ol class="how" style="list-style:none;margin:0;padding:0">
+        {
+          steps.map((step, index) => (
+            <li style="padding:20px 22px;display:grid;gap:6px;align-content:start">
+              <span class="n">Step {index + 1}</span>
+              <b>{step.name}</b>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <div class="blk">
+      <h2 class="h2">What goes in the folder</h2>
+      <pre class="code">templates/n8n/
+  template.yaml        <span class="c">name, description, tags, links, the values setup asks for</span>
+  cloudgate.yaml       <span class="c">what Cloudgate runs</span>
+  docker-compose.yml   <span class="c">only when the app needs one</span>
+  logo.svg             <span class="c">the app's own logo, square</span>
+  index.md             <span class="c">this website's page: tagline, category, what it replaces, features, questions</span>
+  screenshots/         <span class="c">optional</span></pre>
+    </div>
+    <div class="blk" style="padding-bottom:56px">
+      <h2 class="h2">Questions</h2>
+      <Faq items={faq} />
+    </div>
+  </div>
+</Base>

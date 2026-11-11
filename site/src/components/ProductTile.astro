@@ -1,0 +1,18 @@
+---
+import type { Product } from '../products';
+import { isYellow, productSvg } from '../lib/icons';
+
+/** A replaced product's mark on a tile (the prototype's `tilePaid`). */
+interface Props {
+  product: Product;
+  box: number;
+  size: number;
+  class?: string;
+}
+const { product, box, size, class: extra } = Astro.props;
+const svg = productSvg(product, size);
+---
+
+<span class:list={['lt', { y: isYellow(product) }, extra]} style={`--s:${box}px`}>
+  {svg ? <Fragment set:html={svg} /> : product.name.charAt(0).toUpperCase()}
+</span>

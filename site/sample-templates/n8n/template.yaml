@@ -1,0 +1,22 @@
+name: n8n
+description: "Connect your apps and automate repetitive work with drag-and-drop workflows."
+version: "1.110.1"
+tags: [automation, devtools, workflow]
+links:
+  website: https://n8n.io
+  docs: https://docs.n8n.io/hosting/
+  source: https://github.com/n8n-io/n8n
+cloudgate: 0.1.0
+inputs:
+  DB_TYPE: { value: postgresdb }
+  N8N_HOST: { value: "{{domains.app.host}}" }
+  N8N_PROTOCOL: { value: https }
+  N8N_PROXY_HOPS: { value: "1" }
+  N8N_RUNNERS_ENABLED: { value: "true" }
+  WEBHOOK_URL: { value: "{{domains.app.url}}/" }
+  N8N_ENCRYPTION_KEY: { generate: hex }
+  GENERIC_TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used by schedule triggers, as an IANA name such as Europe/Berlin.
+      default: UTC

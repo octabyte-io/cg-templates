@@ -1,0 +1,156 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppTile from '../../components/AppTile.astro';
+import Chev from '../../components/Chev.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Ease from '../../components/Ease.astro';
+import Faq from '../../components/Faq.astro';
+import ProductTile from '../../components/ProductTile.astro';
+import { alternativesPages, type Template } from '../../lib/catalogue';
+import type { Product } from '../../products';
+import { breadcrumbSchema, faqSchema, graph, itemListSchema } from '../../lib/schema';
+import { deployUrl, href } from '../../lib/site';
+
+export function getStaticPaths() {
+  return alternativesPages().map((page) => ({ params: { id: page.product.id }, props: page }));
+}
+
+interface Props {
+  product: Product;
+  apps: Template[];
+}
+
+const { product, apps } = Astro.props;
+const pick = apps[0];
+const simplest = apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
+const count = apps.length;
+const plural = count === 1 ? 'alternative' : 'alternatives';
+const lede =
+  product.lede ??
+  `${count === 1 ? 'This free app does' : 'These free apps do'} the same job as ${product.name}: ${product.job}. ${
+    count === 1 ? 'It runs' : 'They run'
+  } on your own server for one fixed cost, and your data stays with you.`;
+
+const faq = [
+  {
+    q: 'Which one should I pick?',
+    a:
+      count === 1
+        ? `${pick.name} is the open-source option for ${product.job} in the catalogue today.`
+        : `If you are not sure, start with ${pick.name}.${simplest ? ` If you want something simpler, try ${simplest.name}.` : ''}`,
+  },
+  {
+    q: `Will my ${product.name} data carry over?`,
+    a: `Not automatically. Most people export what they need from ${product.name} and bring it into the new app. Each app’s page links to its official guides.`,
+  },
+  {
+    q: 'Is it really free?',
+    a: 'Yes. The apps are free and open source. You pay only for the server they run on, and one server can run several apps.',
+  },
+  {
+    q: 'Do I need a developer?',
+    a: 'No. Cloudgate installs the app on your server and gives it a secure web address. You use it in your browser.',
+  },
+];
+
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: 'Alternatives', path: 'alternatives/' },
+  { name: product.name, path: `alternatives/${product.id}/` },
+];
+const title = `${count} open-source ${plural} to ${product.name}`;
+const description = `Free, self-hosted ${plural} to ${product.name} for ${product.job}: ${apps
+  .slice(0, 4)
+  .map((app) => app.name)
+  .join(', ')}. Run ${count === 1 ? 'it' : 'them'} on your own server with Cloudgate.`.slice(0, 160);
+---
+
+<Base
+  title={title}
+  description={description}
+  path={`alternatives/${product.id}/`}
+  jsonLd={graph(breadcrumbSchema(trail), itemListSchema(apps, `Open-source alternatives to ${product.name}`), faqSchema(faq))}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead pad">
+    <ProductTile product={product} box={80} size={44} />
+    <div class="body">
+      <h1 class="h1">Open-source alternatives to {product.name}</h1>
+      <p class="lede">{lede}</p>
+      <div class="chips">
+        <span class="chip"><b>{count}</b> {plural}</span>
+        <span class="chip"><b>Free</b> apps</span>
+        <span class="chip">Our pick: <b>{pick.name}</b></span>
+      </div>
+    </div>
+  </section>
+  <section class="sec pad">
+    <div class="blk" style="padding-top:40px">
+      <h2 class="h2">At a glance</h2>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th scope="col">App</th><th scope="col">Good for</th><th scope="col">Ease of use</th><th><span class="visually-hidden">Deploy</span></th></tr>
+          </thead>
+          <tbody>
+            {
+              apps.map((app) => (
+                <tr>
+                  <td>
+                    <span class="who">
+                      <AppTile template={app} box={32} size={18} />
+                      <a href={href(`templates/${app.id}/`)} style="text-decoration:none">
+                        {app.name}
+                      </a>
+                    </span>
+                  </td>
+                  <td class="muted">{app.goodFor ?? app.tagline}</td>
+                  <td>
+                    <Ease ease={app.ease} />
+                  </td>
+                  <td style="text-align:right">
+                    <a class="btn sm" href={deployUrl(app.id)} aria-label={`Deploy ${app.name}`}>
+                      Deploy
+                    </a>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="blk">
+      <h2 class="h2">The options</h2>
+      <div class="altlist">
+        {
+          apps.map((app) => (
+            <div class="alt">
+              <AppTile template={app} box={52} size={30} />
+              <div style="min-width:0">
+                <div class="ttl">
+                  <h3 style="font:inherit;margin:0"><a href={href(`templates/${app.id}/`)}>{app.name}</a></h3>
+                  <Ease ease={app.ease} />
+                </div>
+                <p>
+                  {app.description}
+                  {app.easeNote ? ` ${app.easeNote}` : ''}
+                </p>
+              </div>
+              <div class="acts">
+                <a class="btn sm" href={deployUrl(app.id)}>Deploy {app.name}</a>
+                <a class="btn sm ghost" href={href(`templates/${app.id}/`)}>
+                  Details <Chev />
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div class="blk" style="padding-bottom:56px">
+      <h2 class="h2">Questions</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,21 @@
+name: Vaultwarden
+description: "A shared password manager for you and your team that works with the Bitwarden apps."
+version: "1.34.3"
+tags: [passwords, security, privacy]
+links:
+  website: https://github.com/dani-garcia/vaultwarden
+  docs: https://github.com/dani-garcia/vaultwarden/wiki
+  source: https://github.com/dani-garcia/vaultwarden
+cloudgate: 0.1.0
+inputs:
+  DOMAIN: { value: "{{domains.app.url}}" }
+  ADMIN_TOKEN: { generate: base64 }
+  SIGNUPS_ALLOWED:
+    ask:
+      label: Allow sign-ups
+      description: >-
+        "true" lets anyone who can reach the Domain create an account. Set it
+        to "false" once your own accounts exist, and invite others from the
+        admin page.
+      default: "true"
+      pattern: "true|false"

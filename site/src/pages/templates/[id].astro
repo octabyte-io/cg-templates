@@ -1,0 +1,242 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppTile from '../../components/AppTile.astro';
+import Card from '../../components/Card.astro';
+import Chev from '../../components/Chev.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Ease from '../../components/Ease.astro';
+import Faq from '../../components/Faq.astro';
+import ProductMark from '../../components/ProductMark.astro';
+import { alternativesPages, getTemplates, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
+import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
+import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
+import { deployUrl, formatDate, href } from '../../lib/site';
+
+export function getStaticPaths() {
+  return getTemplates().map((template) => ({ params: { id: template.id }, props: { template } }));
+}
+
+interface Props {
+  template: Template;
+}
+
+const { template: a } = Astro.props;
+const related = relatedTemplates(a);
+const faq = appFaq(a);
+const steps = HOW_IT_WORKS(a);
+const replacedNames = a.alternativeTo.map((p) => p.name);
+const altPages = new Map(alternativesPages().map((page) => [page.product.id, page]));
+const mainAlt = a.alternativeTo.find((p) => (altPages.get(p.id)?.apps.length ?? 0) > 1);
+const easeNote =
+  a.easeNote ?? (a.ease === 'easy' ? 'Ready to use right after setup.' : 'Takes a few extra minutes to configure after it starts.');
+const deploy = deployUrl(a.id);
+
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: a.category.name, path: `categories/${a.category.id}/` },
+  { name: a.name, path: `templates/${a.id}/` },
+];
+
+const title = replacedNames.length
+  ? `${a.name}: free, self-hosted alternative to ${listNames(replacedNames.slice(0, 2))}`
+  : `${a.name}: ${a.tagline.replace(/\.$/, '')}`;
+
+const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, steps), faqSchema(faq));
+---
+
+<Base
+  title={title}
+  description={a.description}
+  path={`templates/${a.id}/`}
+  jsonLd={jsonLd}
+  ogImage={`og/${a.id}.png`}
+  ogType="article"
+  markdown={`templates/${a.id}.md`}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead pad">
+    <AppTile template={a} box={80} size={46} />
+    <div class="body">
+      <h1 class="h1">{a.name}</h1>
+      <p class="lede">{a.tagline}</p>
+      <div class="chips">
+        {
+          a.alternativeTo.length > 0 && (
+            <span class="chip">
+              Replaces
+              {a.alternativeTo.map((p) => (
+                <b style="display:inline-flex;gap:5px;align-items:center">
+                  <ProductMark product={p} />
+                  {p.name}
+                </b>
+              ))}
+            </span>
+          )
+        }
+        <span class="chip"><Ease ease={a.ease} /></span>
+        <span class="chip"><b>Free</b> app</span>
+      </div>
+      <div class="acts">
+        <a class="btn lg" href={deploy}>Deploy {a.name}</a>
+        {a.links.website && <a class="btn lg ghost" href={a.links.website} rel="noopener">Official website <Chev /></a>}
+      </div>
+    </div>
+  </section>
+
+  {
+    a.screenshots.length > 0 && (
+      <section class="stagewrap pad" aria-label={`${a.name} screenshots`}>
+        <div class="stage">
+          <div class="window">
+            <div class="wbar">
+              <b>{a.name}</b>
+              <span>{a.screenshots[0].alt}</span>
+            </div>
+            <img class="shot" src={href(a.screenshots[0].path)} alt={a.screenshots[0].alt} loading="eager" decoding="async" />
+          </div>
+        </div>
+        {a.screenshots.length > 1 && (
+          <div class="shots" style="margin-top:16px">
+            {a.screenshots.slice(1).map((shot) => (
+              <img src={href(shot.path)} alt={shot.alt} loading="lazy" decoding="async" />
+            ))}
+          </div>
+        )}
+      </section>
+    )
+  }
+
+  <div class="sec pad split">
+    <div>
+      <div class="blk" style="padding-top:40px">
+        <h2 class="h2">What is {a.name}?</h2>
+        <div class="prose">
+          <p>{a.description}</p>
+          {a.bodyHtml && <Fragment set:html={a.bodyHtml} />}
+        </div>
+      </div>
+
+      <div class="blk">
+        <h2 class="h2">What you can do with {a.name}</h2>
+        <ul class="feat">
+          {
+            a.features.map((feature) => (
+              <li>
+                <b>{feature.title}</b>
+                <span>{feature.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {
+        a.alternativeTo.length > 0 && (
+          <div class="blk">
+            <h2 class="h2">Replaces {listNames(replacedNames)}</h2>
+            <p class="muted" style="max-width:64ch">
+              {a.name} does the same job as {listNames(replacedNames)}.
+              {a.switching ? ' Here is what changes when you switch.' : ' It runs on your own server, so you pay one fixed server cost and your data stays with you.'}
+            </p>
+            {a.switching && (
+              <div class="vs">
+                <div>
+                  <span class="t">What you gain</span>
+                  <ul>
+                    {a.switching.gain.map((line) => (
+                      <li>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <span class="t">What is different</span>
+                  <ul>
+                    {a.switching.different.map((line) => (
+                      <li>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            {mainAlt && (
+              <a href={href(`alternatives/${mainAlt.id}/`)} class="btn ghost" style="justify-self:start">
+                Compare all {mainAlt.name} alternatives <Chev />
+              </a>
+            )}
+          </div>
+        )
+      }
+
+      <div class="blk">
+        <h2 class="h2">How to self-host {a.name}</h2>
+        <ol class="how" style="list-style:none;margin:0;padding:0">
+          {
+            steps.map((step, index) => (
+              <li style="padding:20px 22px;display:grid;gap:6px;align-content:start">
+                <span class="n">Step {index + 1}</span>
+                <b>{step.name}</b>
+                <p>{step.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="blk">
+        <h2 class="h2">Questions</h2>
+        <Faq items={faq} />
+      </div>
+
+      {
+        related.length > 0 && (
+          <div class="blk" style="padding-bottom:56px">
+            <h2 class="h2">Related apps</h2>
+            <div class="rel">
+              {related.map((template) => (
+                <Card template={template} />
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+
+    <aside aria-label={`${a.name} at a glance`}>
+      <div class="sidecard">
+        <div class="hd"><AppTile template={a} box={32} size={18} /><b>{a.name} at a glance</b></div>
+        <dl>
+          <dt>Category</dt><dd><a href={href(`categories/${a.category.id}/`)} style="text-decoration:none">{a.category.name}</a></dd>
+          <dt>Ease of use</dt><dd><Ease ease={a.ease} /></dd>
+          <dt>App price</dt><dd>Free</dd>
+          <dt>You pay for</dt><dd>Your server only</dd>
+          <dt>License</dt><dd class="m">{a.license}</dd>
+          {
+            a.updated && (
+              <>
+                <dt>Last updated</dt>
+                <dd>
+                  <time datetime={a.updated.toISOString()}>{formatDate(a.updated)}</time>
+                </dd>
+              </>
+            )
+          }
+        </dl>
+        <p style="padding:0 18px 12px;font-size:13px;color:var(--muted)">{easeNote}</p>
+        <div class="links">
+          {a.links.website && <a href={a.links.website} rel="noopener">Official website <Chev /></a>}
+          {a.links.docs && <a href={a.links.docs} rel="noopener">Documentation <Chev /></a>}
+          <a href={a.links.source} rel="noopener">Source code <Chev /></a>
+        </div>
+        <div class="ft">
+          <a class="btn lg" href={deploy} style="width:100%">Deploy {a.name}</a>
+          <p>Ready in a few minutes</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <div class="mspace"></div>
+  <div class="mbar">
+    <div class="t"><b>{a.name}</b>Free app · ready in a few minutes</div>
+    <a class="btn lg" href={deploy}>Deploy {a.name}</a>
+  </div>
+</Base>

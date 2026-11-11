@@ -1,0 +1,21 @@
+name: Plausible Analytics
+description: "See who visits your website on one simple page, without cookie banners."
+version: "3.0.1"
+tags: [analytics, privacy]
+links:
+  website: https://plausible.io
+  docs: https://github.com/plausible/community-edition/wiki
+  source: https://github.com/plausible/analytics
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.plausible.url}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  TOTP_VAULT_KEY: { generate: base64 }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: plausible, port: 8000 }
+files:
+  - { path: clickhouse/logs.xml }
+  - { path: clickhouse/ipv4-only.xml }

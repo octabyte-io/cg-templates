@@ -1,0 +1,27 @@
+---
+import { href } from '../lib/site';
+
+interface Props {
+  trail: { name: string; path: string }[];
+}
+const { trail } = Astro.props;
+---
+
+<div class="pad">
+  <nav class="crumb" aria-label="Breadcrumb">
+    {
+      trail.map((crumb, index) =>
+        index === trail.length - 1 ? (
+          <span aria-current="page" style="color:var(--fg)">
+            {crumb.name}
+          </span>
+        ) : (
+          <>
+            <a href={href(crumb.path)}>{crumb.name}</a>
+            <span aria-hidden="true">/</span>
+          </>
+        ),
+      )
+    }
+  </nav>
+</div>

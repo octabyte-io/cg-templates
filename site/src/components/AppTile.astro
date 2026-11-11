@@ -1,0 +1,17 @@
+---
+import type { Template } from '../lib/catalogue';
+import { href } from '../lib/site';
+
+/** An app's logo on its tile (the prototype's `tileApp`). */
+interface Props {
+  template: Template;
+  box: number;
+  size: number;
+  class?: string;
+}
+const { template, box, size, class: extra } = Astro.props;
+---
+
+<span class:list={['lt', extra]} style={`--s:${box}px`}>
+  <img src={href(template.logo.path)} alt="" width={size} height={size} loading="lazy" decoding="async" />
+</span>

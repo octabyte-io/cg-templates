@@ -1,0 +1,216 @@
+---
+import { href } from '../lib/site';
+
+/**
+ * The command palette (prototype: `/` or Ctrl/Cmd-K). It matches app names and
+ * the tools they replace, so "zap" finds the Zapier replacements. Its data is
+ * `search.json`, fetched the first time it opens; pages read fine without it.
+ */
+const searchUrl = href('search.json');
+---
+
+<div class="pscrim" id="pal" hidden data-search={searchUrl}>
+  <div class="pal" role="dialog" aria-modal="true" aria-label="Search apps">
+    <div class="pin">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+        ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
+      >
+      <input
+        id="pq"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Search apps, or a tool you pay for"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="plist"
+        aria-autocomplete="list"
+        aria-label="Search apps, or a tool you pay for"
+      /><kbd>Esc</kbd>
+    </div>
+    <div class="plist" id="plist" role="listbox" aria-label="Results"></div>
+    <div class="pft">
+      <span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  type Entry = {
+    id: string;
+    name: string;
+    description: string;
+    category: string;
+    replaces: string[];
+    ease: string;
+    logo: string;
+    url: string;
+  };
+  type Index = { apps: Entry[]; swaps: { product: string; app: string }[]; featured: string[] };
+
+  const pal = document.getElementById('pal') as HTMLElement;
+  const pq = document.getElementById('pq') as HTMLInputElement;
+  const plist = document.getElementById('plist') as HTMLElement;
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform || '');
+  document.querySelectorAll('[data-modk]').forEach((k) => (k.textContent = isMac ? '⌘K' : 'Ctrl K'));
+
+  let index: Index | null = null;
+  let loading: Promise<void> | null = null;
+  let opts: Entry[] = [];
+  let sel = 0;
+  let lastFocus: Element | null = null;
+
+  const esc = (s: string) =>
+    String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string);
+
+  function load() {
+    loading ??= fetch(pal.dataset.search as string)
+      .then((r) => r.json())
+      .then((data: Index) => {
+        index = data;
+      })
+      .catch(() => {
+        plist.innerHTML = '<div class="pnone">Search could not load. Browse the apps on the home page instead.</div>';
+      });
+    return loading;
+  }
+
+  function option(entry: Entry, right: string, i: number) {
+    return `<a class="opt" role="option" id="opt-${i}" href="${esc(entry.url)}" data-i="${i}" aria-selected="${i === sel}">
+      <span class="lt" style="--s:32px"><img src="${esc(entry.logo)}" alt="" width="18" height="18"></span>
+      <span class="on1"><b>${esc(entry.name)}</b><span>${esc(entry.description)}</span></span>
+      <span class="rt">${esc(right)}</span></a>`;
+  }
+
+  function render() {
+    if (!index) {
+      plist.innerHTML = '<div class="pnone">Loading…</div>';
+      return;
+    }
+    const byId = new Map(index.apps.map((a) => [a.id, a]));
+    const q = pq.value.trim().toLowerCase();
+    let html = '';
+    opts = [];
+    const push = (entry: Entry, right: string) => {
+      html += option(entry, right, opts.length);
+      opts.push(entry);
+    };
+    if (!q) {
+      if (index.swaps.length) {
+        html += '<div class="pgrp">Popular swaps</div>';
+        index.swaps.forEach((s) => {
+          const app = byId.get(s.app);
+          if (app) push(app, `Replaces ${s.product}`);
+        });
+      }
+      html += '<div class="pgrp">Apps</div>';
+      index.featured.forEach((id) => {
+        const app = byId.get(id);
+        if (app) push(app, app.category);
+      });
+    } else {
+      const tools = [...new Set(index.apps.flatMap((a) => a.replaces))].filter((t) => t.toLowerCase().includes(q));
+      const seen = new Set<string>();
+      tools.forEach((tool) => {
+        html += `<div class="pgrp">Replaces <b>${esc(tool)}</b></div>`;
+        index!.apps
+          .filter((a) => a.replaces.includes(tool) && !seen.has(a.id))
+          .forEach((a) => {
+            seen.add(a.id);
+            push(a, a.ease);
+          });
+      });
+      const rest = index.apps.filter(
+        (a) => !seen.has(a.id) && [a.name, a.description, a.category].join(' ').toLowerCase().includes(q),
+      );
+      if (rest.length) {
+        html += '<div class="pgrp">Apps</div>';
+        rest.forEach((a) => push(a, a.category));
+      }
+      if (!opts.length) {
+        html = `<div class="pnone">No apps match “${esc(pq.value)}”. Try a tool you pay for, like Zapier or Slack.</div>`;
+      }
+    }
+    plist.innerHTML = html;
+    sel = Math.min(sel, Math.max(0, opts.length - 1));
+    mark();
+  }
+
+  function mark() {
+    plist.querySelectorAll<HTMLElement>('.opt').forEach((o) => o.setAttribute('aria-selected', String(Number(o.dataset.i) === sel)));
+    const current = document.getElementById(`opt-${sel}`);
+    pq.setAttribute('aria-activedescendant', current ? current.id : '');
+    current?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function open() {
+    if (!pal.hidden) return;
+    lastFocus = document.activeElement;
+    pal.classList.remove('out');
+    pal.hidden = false;
+    pq.value = '';
+    sel = 0;
+    render();
+    pq.focus();
+    load().then(render);
+  }
+
+  function close() {
+    if (pal.hidden) return;
+    pal.classList.add('out');
+    setTimeout(() => {
+      pal.hidden = true;
+      pal.classList.remove('out');
+      (lastFocus as HTMLElement | null)?.focus?.();
+    }, 110);
+  }
+
+  pq.addEventListener('input', () => {
+    sel = 0;
+    render();
+  });
+  pq.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      sel = (sel + 1) % Math.max(1, opts.length);
+      mark();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      sel = (sel - 1 + opts.length) % Math.max(1, opts.length);
+      mark();
+    } else if (e.key === 'Enter' && opts[sel]) {
+      e.preventDefault();
+      location.href = opts[sel].url;
+    }
+  });
+  plist.addEventListener('mousemove', (e) => {
+    const o = (e.target as Element).closest<HTMLElement>('.opt');
+    if (o && Number(o.dataset.i) !== sel) {
+      sel = Number(o.dataset.i);
+      mark();
+    }
+  });
+  pal.addEventListener('click', (e) => {
+    if (e.target === pal) close();
+  });
+  document.addEventListener('click', (e) => {
+    if ((e.target as Element).closest('[data-open-palette]')) open();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !pal.hidden) {
+      close();
+      return;
+    }
+    const typing = /INPUT|TEXTAREA|SELECT/.test((document.activeElement as Element)?.tagName ?? '');
+    if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      if (pal.hidden) open();
+      else close();
+      return;
+    }
+    if (e.key === '/' && !typing && pal.hidden) {
+      e.preventDefault();
+      open();
+    }
+  });
+</script>

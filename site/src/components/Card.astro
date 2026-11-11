@@ -1,0 +1,52 @@
+---
+import type { Template } from '../lib/catalogue';
+import { href } from '../lib/site';
+import AppTile from './AppTile.astro';
+import ProductMark from './ProductMark.astro';
+import Ease from './Ease.astro';
+
+/** A catalogue card. `data-*` feed the home page's filter. */
+interface Props {
+  template: Template;
+  hidden?: boolean;
+}
+const { template, hidden } = Astro.props;
+const first = template.alternativeTo[0];
+---
+
+<a
+  class="card"
+  href={href(`templates/${template.id}/`)}
+  data-card
+  data-cat={template.category.id}
+  data-q={[
+    template.name,
+    template.description,
+    template.tagline,
+    template.category.name,
+    ...template.tags,
+    ...template.alternativeTo.map((p) => p.name),
+  ]
+    .join(' ')
+    .toLowerCase()}
+  hidden={hidden}
+>
+  <div class="ct">
+    <AppTile template={template} box={48} size={28} />
+    <div class="ctt"><span class="nm">{template.name}</span><span class="cc">{template.category.name}</span></div>
+  </div>
+  <p class="ds">{template.description}</p>
+  <div class="cf">
+    {
+      first ? (
+        <span class="rp">
+          Replaces <ProductMark product={first} />
+          <b>{template.alternativeTo.map((p) => p.name).join(', ')}</b>
+        </span>
+      ) : (
+        <span class="rp">Free app</span>
+      )
+    }
+    <Ease ease={template.ease} />
+  </div>
+</a>

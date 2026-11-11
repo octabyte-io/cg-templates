@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { getTemplates, usedCategories } from '../../lib/catalogue';
+import type { Category } from '../../categories';
+import { breadcrumbSchema, graph, itemListSchema } from '../../lib/schema';
+import { href } from '../../lib/site';
+
+export function getStaticPaths() {
+  return usedCategories().map((category) => ({ params: { id: category.id }, props: { category } }));
+}
+
+interface Props {
+  category: Category & { count: number };
+}
+
+const { category } = Astro.props;
+const apps = getTemplates().filter((template) => template.category.id === category.id);
+const others = usedCategories().filter((other) => other.id !== category.id);
+const replaced = [...new Set(apps.flatMap((app) => app.alternativeTo.map((p) => p.name)))];
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: category.name, path: `categories/${category.id}/` },
+];
+const title = `Open-source ${category.name.toLowerCase()} apps you can self-host`;
+const description = `${category.lede} ${apps.length} free ${apps.length === 1 ? 'app' : 'apps'}${
+  replaced.length ? `, replacing ${replaced.slice(0, 3).join(', ')}` : ''
+}.`.slice(0, 160);
+---
+
+<Base
+  title={title}
+  description={description}
+  path={`categories/${category.id}/`}
+  jsonLd={graph(breadcrumbSchema(trail), itemListSchema(apps, title))}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead pad" style="grid-template-columns:1fr">
+    <div class="body">
+      <h1 class="h1">{category.name}</h1>
+      <p class="lede">{category.lede}</p>
+      <div class="chips">
+        <span class="chip"><b>{apps.length}</b> {apps.length === 1 ? 'app' : 'apps'}</span>
+        <span class="chip"><b>Free</b> to use</span>
+        {replaced.length > 0 && <span class="chip">Replaces <b>{replaced.slice(0, 3).join(', ')}</b></span>}
+      </div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="gridwrap pad" style="padding-top:32px">
+      <div class="grid">{apps.map((app) => <Card template={app} />)}</div>
+    </div>
+  </section>
+  <section class="sec pad" style="padding-block:40px 64px">
+    <h2 class="h2" style="margin-bottom:20px">Other categories</h2>
+    <div class="idx">
+      {
+        others.map((other) => (
+          <a href={href(`categories/${other.id}/`)}>
+            <b>{other.name}</b>
+            <span>{other.lede}</span>
+            <small>
+              {other.count} {other.count === 1 ? 'app' : 'apps'}
+            </small>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Base>

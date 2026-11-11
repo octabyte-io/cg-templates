@@ -1,0 +1,180 @@
+---
+import '@fontsource/geist/400.css';
+import '@fontsource/geist/500.css';
+import '@fontsource/geist/600.css';
+import '@fontsource/ibm-plex-serif/400.css';
+import '@fontsource/ibm-plex-serif/300-italic.css';
+import '@fontsource/ibm-plex-serif/400-italic.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/site.css';
+import geistLatin from '@fontsource/geist/files/geist-latin-400-normal.woff2?url';
+import plexItalic from '@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-300-italic.woff2?url';
+import Palette from '../components/Palette.astro';
+import { alternativesPages, GITHUB_REPO, isSample, usedCategories } from '../lib/catalogue';
+import { absolute, GET_CLOUDGATE_URL, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+
+interface Props {
+  /** The page's own title; the site name is appended unless `bareTitle`. */
+  title: string;
+  description?: string;
+  /** Path under the base, e.g. `templates/n8n/`. */
+  path: string;
+  /** The page's JSON-LD graph, from `lib/schema.ts`'s `graph()`. */
+  jsonLd?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  bareTitle?: boolean;
+  noindex?: boolean;
+  /** A Markdown copy of this page, for AI tools. */
+  markdown?: string;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  path,
+  jsonLd,
+  ogImage = 'og/default.png',
+  ogType = 'website',
+  bareTitle = false,
+  noindex = false,
+  markdown,
+} = Astro.props;
+
+const fullTitle = bareTitle ? title : `${title} | ${SITE_NAME}`;
+const canonical = absolute(path);
+const image = absolute(ogImage);
+const onHome = path === '';
+const homeAnchor = (id: string) => (onHome ? `#${id}` : `${href()}#${id}`);
+const topAlternatives = alternativesPages()
+  .sort((a, b) => b.apps.length - a.apps.length)
+  .slice(0, 4);
+const footCategories = usedCategories().slice(0, 4);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {(noindex || isSample) && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <link rel="icon" href={href('favicon.svg')} type="image/svg+xml" />
+    <link rel="manifest" href={href('site.webmanifest')} />
+    <link rel="sitemap" href={href('sitemap-index.xml')} />
+    <link rel="alternate" type="text/plain" title="LLM summary" href={href('llms.txt')} />
+    {markdown && <link rel="alternate" type="text/markdown" title="This page as Markdown" href={href(markdown)} />}
+    <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={plexItalic} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#fbfcfd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#090c14" media="(prefers-color-scheme: dark)" />
+    <meta name="application-name" content={SITE_NAME} />
+    <meta name="author" content="Octabyte" />
+    <meta name="generator" content={Astro.generator} />
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="frame">
+      {
+        isSample && (
+          <div class="sample pad" role="note">
+            <b>Sample data.</b> These templates preview the site; real ones appear once the first is added to
+            <code>templates/</code>.
+          </div>
+        )
+      }
+      <header class="top">
+        <div class="in pad">
+          <a class="brand" href={href()} aria-label="Cloudgate Templates home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"
+              ><path d="M3.5 20.5V10a8.5 8.5 0 0 1 17 0v10.5M7.5 20.5V10.5a4.5 4.5 0 0 1 9 0v10M2 20.5h20"></path></svg
+            >
+            Cloudgate <em>Templates</em>
+          </a>
+          <nav class="nav" aria-label="Main">
+            <a href={homeAnchor('catalogue')}>Apps</a>
+            <a href={homeAnchor('swaps')}>Popular swaps</a>
+            <a href={homeAnchor('why')}>Why Cloudgate</a>
+            {topAlternatives[0] && <a href={href(`alternatives/${topAlternatives[0].product.id}/`)}>{topAlternatives[0].product.name} alternatives</a>}
+          </nav>
+          <span class="sp"></span>
+          <button class="kbtn" type="button" data-open-palette aria-label="Search apps" aria-keyshortcuts="/ Control+K Meta+K"
+            ><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+              ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
+            ><span>Search apps</span><kbd data-modk>Ctrl K</kbd></button
+          >
+          <a class="btn sm getcg" href={GET_CLOUDGATE_URL}>Get Cloudgate</a>
+        </div>
+      </header>
+      <main id="main">
+        <slot />
+      </main>
+    </div>
+
+    <footer class="foot">
+      <div class="frame2">
+        <div class="cols pad">
+          <div class="meta">
+            <b>Cloudgate Templates</b>
+            <span>Open-source apps you can run on your own server, set up in one click.</span>
+            {isSample && <span class="proto">Preview with sample data</span>}
+          </div>
+          <div>
+            <h4>Browse</h4>
+            <ul>
+              {footCategories.map((category) => <li><a href={href(`categories/${category.id}/`)}>{category.name}</a></li>)}
+              <li><a href={href('categories/')}>All categories</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Popular swaps</h4>
+            <ul>
+              {
+                topAlternatives.map((page) => (
+                  <li>
+                    <a href={href(`alternatives/${page.product.id}/`)}>{page.product.name} alternatives</a>
+                  </li>
+                ))
+              }
+              <li><a href={href('alternatives/')}>Every alternative</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Cloudgate</h4>
+            <ul>
+              <li><a href={homeAnchor('how')}>How it works</a></li>
+              <li><a href={homeAnchor('why')}>Why your own server</a></li>
+              <li><a href={href('contribute/')}>Add an app</a></li>
+              <li><a href={GITHUB_REPO}>Source on GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="wm" aria-hidden="true">
+          <svg viewBox="0 0 1100 230" preserveAspectRatio="xMidYMid meet">
+            <path d="M30 215V95a80 80 0 0 1 160 0v120M68 215V100a42 42 0 0 1 84 0v115M10 215h200"></path>
+            <text x="232" y="196">Cloudgate</text>
+          </svg>
+        </div>
+      </div>
+    </footer>
+
+    <Palette />
+  </body>
+</html>

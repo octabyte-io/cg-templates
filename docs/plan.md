@@ -28,35 +28,40 @@ Reference for tone and structure: octabyte.io and elest.io app pages.
 | --- | --- | --- |
 | Framework | Astro, static output | [0001](adr/0001-astro-static-site.md) |
 | Hosting | GitHub Pages, deployed by GitHub Actions, on a custom domain | [0001](adr/0001-astro-static-site.md) |
-| Template format | One folder per template: `index.md` + `cloudgate.yaml` + logo + optional screenshots | [0002](adr/0002-a-template-is-a-folder-of-markdown-and-yaml.md) |
+| Template format | Cloudgate's template folder (`template.yaml`, `cloudgate.yaml`, compose file, `files/`, logo) plus the website's `index.md` and `screenshots/` | [0002](adr/0002-a-template-is-a-folder-of-markdown-and-yaml.md), [0003](adr/0003-the-website-reads-cloudgates-template-folder-and-index-md-holds-only-page-content.md) |
 | Generated JSON | Built from the folders, never written by hand | [0002](adr/0002-a-template-is-a-folder-of-markdown-and-yaml.md) |
-| Cloudgate deploy format | Not fixed yet; lives only in `cloudgate.yaml` so it can change without touching page content | [0002](adr/0002-a-template-is-a-folder-of-markdown-and-yaml.md) |
+| Cloudgate deploy format | Fixed by Cloudgate's ADR-0062 and ADR-0072: `template.yaml` + `cloudgate.yaml`, checked by `cloudgate template check` | [0003](adr/0003-the-website-reads-cloudgates-template-folder-and-index-md-holds-only-page-content.md) |
 
 ## Template folder
 
 ```
 templates/
 └── n8n/
-    ├── index.md          # frontmatter fields + the page body in Markdown
-    ├── cloudgate.yaml    # how Cloudgate deploys it (format still changing)
-    ├── logo.svg          # SVG preferred; PNG at least 256x256
-    └── screenshots/      # optional
+    ├── template.yaml       # Cloudgate: name, description, version, tags, links, values, Domains
+    ├── cloudgate.yaml      # Cloudgate: the Services it creates
+    ├── docker-compose.yml  # Cloudgate: only when the app has a compose part
+    ├── files/              # Cloudgate: config files its containers read
+    ├── logo.svg            # SVG preferred; PNG square, at most 100 KB
+    ├── index.md            # website: page fields in front matter + the overview in Markdown
+    └── screenshots/        # website: optional
 ```
 
-`index.md` frontmatter (draft schema, enforced at build):
+From `template.yaml` the site reads `name`, `description` (50–160 characters, used as the meta
+description), `tags` and `links` (`source` required). Everything else on the page comes from
+`index.md` front matter (ADR-0003):
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `name` | yes | Product name as its authors write it |
 | `tagline` | yes | One line, under 70 characters |
-| `description` | yes | 50–160 characters; used as the meta description |
-| `category` | yes | One value from the fixed list in `site/src/categories.ts` |
-| `tags` | yes | Free-form, lowercase, 1–8 |
-| `alternativeTo` | no | Proprietary products it replaces; drives `/alternatives/<x>/` pages |
-| `website`, `source`, `docs` | `source` yes | Links |
+| `category` | yes | One id from the fixed list in `site/src/categories.ts` |
+| `alternativeTo` | no | Product ids from `site/src/products.ts`; drives `/alternatives/<id>/` pages |
+| `ease` | yes | `easy` (ready right after setup) or `some-setup` |
+| `easeNote` | no | One sentence on what "some setup" means for this app |
 | `license` | yes | SPDX id where one exists |
-| `screenshots` | no | `{ src, alt }`, alt text required |
 | `features` | yes | 3–8 `{ title, text }` in plain language: what you can do with it |
+| `goodFor` | no | One line for the alternatives comparison table |
+| `switching` | no | `{ gain: [...], different: [...] }`: what changes when you switch |
+| `screenshots` | no | `{ src, alt }`, alt text required |
 | `faq` | no | `{ q, a }` pairs; rendered and emitted as FAQ structured data |
 
 The Markdown body is free-form: headings, images, lists, links. "Last updated" comes from git,
@@ -65,7 +70,8 @@ meta tag, and tags, `alternativeTo` and the body text do that job.
 
 ## Contributor experience
 
-- Copy `templates/_template/`, fill it in, open a pull request. Works entirely in the browser.
+- Copy `starter-template/` to `templates/<id>/`, fill it in, open a pull request. Works entirely in the
+  browser. (Not `templates/_template/`: Cloudgate would pack it as a template, ADR-0003.)
 - CI validates every template and comments on the pull request in plain English
   (which file, which field, what to change).
 - Fixed category list; free-form tags.

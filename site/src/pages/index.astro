@@ -1,0 +1,318 @@
+---
+import Base from '../layouts/Base.astro';
+import AppTile from '../components/AppTile.astro';
+import ProductTile from '../components/ProductTile.astro';
+import Card from '../components/Card.astro';
+import Chev from '../components/Chev.astro';
+import { alternativesPages, getTemplate, getTemplates, popularSwaps, usedCategories } from '../lib/catalogue';
+import { graph, itemListSchema, websiteSchema } from '../lib/schema';
+import { deployUrl, href, SITE_DESCRIPTION } from '../lib/site';
+
+const templates = getTemplates();
+const total = templates.length;
+const categories = usedCategories();
+const swaps = popularSwaps();
+const topAlternatives = alternativesPages().sort((a, b) => b.apps.length - a.apps.length)[0];
+const PAGE = 20;
+
+// The stage shows a real app from the catalogue being set up; n8n when it is there.
+const featured = getTemplate('n8n') ?? templates[0];
+const replaced = featured?.alternativeTo[0];
+const second = templates.find((t) => t.id === 'plausible') ?? templates.find((t) => t.id !== featured?.id);
+const nights = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Tonight'];
+const seats = ['AK', 'JB', 'LM', 'SR', 'TO', 'EV', 'PN', 'MC', 'RD', 'HW', 'CL', 'NB'];
+
+const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source apps on Cloudgate'));
+---
+
+<Base
+  title="Open-source apps, ready to run on your own server | Cloudgate Templates"
+  bareTitle
+  description={SITE_DESCRIPTION}
+  path=""
+  jsonLd={jsonLd}
+>
+  <section class="hero pad">
+    <p class="kicker">Cloudgate Templates</p>
+    <h1 class="display">Open-source apps, ready to run on your own server</h1>
+    <div class="row2">
+      <p class="lede">
+        Pick an app that does the job of a tool you pay for today, choose your server, and click Deploy. Cloudgate
+        sets it up and keeps it running.
+      </p>
+      <div class="acts">
+        <a class="btn lg" href="#catalogue">Browse {total} apps</a>
+        <a class="btn lg ghost" href="#how">How it works <Chev /></a>
+      </div>
+    </div>
+    <div class="facts-strip"><span><b>{total}</b> apps</span><span><b>Free</b> to use</span><span>You pay only for your server</span></div>
+  </section>
+
+  {
+    featured && (
+      <section class="stagewrap pad" id="how" aria-labelledby="how-title">
+        <h2 id="how-title" class="visually-hidden">How it works</h2>
+        <div class="stage">
+          <div class="window" role="img" aria-label={`Illustration of the Cloudgate deploy screen, setting up ${featured.name}`}>
+            <div class="wbar">
+              <b>Cloudgate</b>
+              <span>/</span>
+              <span>New app</span>
+              <span class="sp" />
+              <span class="pill">acme-bakery</span>
+            </div>
+            <div class="dep" aria-hidden="true">
+              <div class="steps">
+                <div class="done"><span class="n">✓</span>Choose an app</div>
+                <div class="on"><span class="n">2</span>Pick your server</div>
+                <div><span class="n">3</span>Deploy</div>
+              </div>
+              <div class="mid">
+                <span class="lab">App</span>
+                <div class="chosen">
+                  <AppTile template={featured} box={36} size={22} />
+                  <div style="min-width:0">
+                    <div class="h3">{featured.name}</div>
+                    <div class="muted" style="font-size:13px">
+                      {featured.tagline}
+                    </div>
+                  </div>
+                  <span style="flex:1" />
+                  <span class="muted" style="font-size:13px">Change</span>
+                </div>
+                <span class="lab">Server</span>
+                <div class="srv">
+                  <label class="on"><input type="radio" name="hs" checked tabindex="-1" /> Shop server <small>Germany · 2 apps</small></label>
+                  <label><input type="radio" name="hs" tabindex="-1" /> Home office box <small>Bristol · 5 apps</small></label>
+                  <label><input type="radio" name="hs" tabindex="-1" /> Connect another server <small>takes 2 min</small></label>
+                </div>
+                <span class="lab">Web address</span>
+                <div class="chosen" style="padding:9px 12px;font-size:13.5px">
+                  <span>{featured.id.replace(/[^a-z0-9]/g, '')}.acmebakery.com</span>
+                  <span style="flex:1" />
+                  <span class="muted" style="font-size:12.5px">secure (https)</span>
+                </div>
+              </div>
+              <div class="side">
+                <div class="sumrow"><span>App</span><span>{featured.name}</span></div>
+                <div class="sumrow"><span>Server</span><span>Shop server</span></div>
+                {replaced && <div class="sumrow"><span>Replaces</span><span>{replaced.name}</span></div>}
+                <div class="sumrow"><span>Backups</span><span>Every night</span></div>
+                <div class="sumrow"><span>App cost</span><span>Free</span></div>
+                <span class="btn" style="width:100%">Deploy {featured.name}</span>
+                <div class="log">
+                  <div><span class="ok">✓</span> Shop server is online</div>
+                  <div><span class="ok">✓</span> Enough space for {featured.name}</div>
+                  <div>· Ready in a few minutes</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ol class="caption" style="list-style:none;padding:0;margin-block:22px 0">
+          <li><b>1</b>Choose an app</li>
+          <li><b>2</b>Click Deploy and pick your server</li>
+          <li><b>3</b>Open your app and sign in</li>
+        </ol>
+      </section>
+    )
+  }
+
+  <section class="sec" id="why" aria-labelledby="why-title">
+    <div class="shead pad">
+      <h2 class="h2" id="why-title">Why run apps with Cloudgate</h2>
+      <p class="lede">The same jobs your paid tools do, without the monthly creep. Cloudgate looks after the boring parts.</p>
+    </div>
+    <div class="bento">
+      <div class="tile t-a pad">
+        <div class="tx">
+          <h3 class="h3">Backups every night, without thinking about it</h3>
+          <p>Your app’s data is copied on a schedule and kept for as long as you choose. Restore any day when you need it.</p>
+        </div>
+        <div class="frag" role="img" aria-label="Example backup history: a backup every night at 02:00, 14 days kept">
+          <div class="tl" aria-hidden="true">
+            {
+              nights.map((day, i) => (
+                <div>
+                  <span class="d">{day}</span>
+                  <span class:list={['b', { next: i === 6 }]}>{i === 6 ? '·' : '✓'}</span>
+                  <span class="h">02:00</span>
+                </div>
+              ))
+            }
+          </div>
+          <div class="foot1" aria-hidden="true"><span>Last backup <b>Sat 02:00</b>, finished in 3 min</span><span>14 days kept</span></div>
+        </div>
+      </div>
+      <div class="tile t-b pad">
+        <div class="tx">
+          <h3 class="h3">Your data stays where you put it</h3>
+          <p>Customer lists and files live on your server, in the country you choose.</p>
+        </div>
+        <div class="frag server" role="img" aria-label="Example server card: Shop server in Frankfurt, Germany, online">
+          <div class="top1" aria-hidden="true"><span class="flag" /><b>Shop server</b><span class="status"><i />Online</span></div>
+          <div class="r" aria-hidden="true"><span>Location</span><span>Frankfurt, Germany</span></div>
+          <div class="r" aria-hidden="true"><span>Apps running</span><span>{[featured, second].filter(Boolean).map((t) => t!.name).join(', ')}</span></div>
+          <div class="r" aria-hidden="true"><span>Data copied to</span><span>This server only</span></div>
+        </div>
+      </div>
+      <div class="tile t-c pad">
+        <div class="tx">
+          <h3 class="h3">You see every change first</h3>
+          <p>Before Cloudgate creates or changes anything, it lists what will happen. Nothing runs until you say yes.</p>
+        </div>
+        {
+          featured && (
+            <div class="frag notice" role="img" aria-label={`Example: ready to set up ${featured.name}, with Review and Apply buttons`}>
+              <AppTile template={featured} box={32} size={18} />
+              <div style="display:grid;gap:2px;min-width:0" aria-hidden="true">
+                <span class="t">Ready to set up {featured.name}</span>
+                <p>Adds the app, its data store and a web address.</p>
+              </div>
+              <div class="acts" aria-hidden="true"><span class="btn sm ghost">Review</span><span class="btn sm">Apply</span></div>
+            </div>
+          )
+        }
+      </div>
+      <div class="tile t-d pad">
+        <div class="tx">
+          <h3 class="h3">Add the whole team. No per-seat pricing.</h3>
+          <p>The apps are free. Your only bill is the server, whether 2 people use it or 20.</p>
+        </div>
+        <div class="frag" role="img" aria-label="Example team pricing: 12 team members, nothing per person, one server bill">
+          <div class="seats" aria-hidden="true">{seats.map((x) => <span>{x}</span>)}</div>
+          <div class="price" aria-hidden="true">
+            <span>Team members</span><span>12</span><span>Price per person</span><span>€0</span><span class="tot">Your server, per month</span><span class="tot">€9</span>
+          </div>
+          <p class="ex" style="margin-top:10px">Example figures for a small business server</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec cat" id="catalogue" aria-labelledby="catalogue-title">
+    <div class="shead pad">
+      <h2 class="h2" id="catalogue-title">Browse apps</h2>
+      <p class="lede">Search by what you want to do, or by the tool you pay for today.</p>
+    </div>
+    <div class="fbar">
+      <div class="in pad">
+        <div class="seg" role="toolbar" aria-label="Filter by category">
+          <button type="button" data-tab="" aria-pressed="true">All</button>
+          {categories.map((category) => <button type="button" data-tab={category.id} aria-pressed="false">{category.name}</button>)}
+        </div>
+        <label class="sbox"
+          ><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+            ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
+          >
+          <input id="q" type="search" autocomplete="off" placeholder="Filter, e.g. Slack or newsletter" aria-label="Filter apps" /></label
+        >
+      </div>
+    </div>
+    <div class="gridwrap pad">
+      <div class="grid" id="grid">
+        {templates.map((template) => <Card template={template} />)}
+        <div class="empty" id="empty" hidden></div>
+      </div>
+      <div id="moreWrap" data-page={PAGE}>
+        <p class="fine" id="count" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  {
+    swaps.length > 0 && (
+      <section class="sec swaps" id="swaps" aria-labelledby="swaps-title">
+        <div class="shead pad">
+          <div>
+            <h2 class="h2" id="swaps-title">Popular swaps</h2>
+            <p class="lede">The tools people most often replace first, and what they move to.</p>
+          </div>
+          {topAlternatives && (
+            <a class="btn ghost" href={href(`alternatives/${topAlternatives.product.id}/`)}>
+              All {topAlternatives.product.name} alternatives <Chev />
+            </a>
+          )}
+        </div>
+        <div class="pad">
+          <div class="swrow">
+            {swaps.map((swap) => (
+              <a class="sw" href={href(swap.href)}>
+                <div class="art">
+                  <ProductTile product={swap.product} box={60} size={32} class="from" />
+                  <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M2 8h11M9.5 4.5 13 8l-3.5 3.5" />
+                  </svg>
+                  <AppTile template={swap.app} box={60} size={34} />
+                </div>
+                <div class="pair">
+                  {swap.product.name}
+                  <span>to</span>
+                  {swap.app.name}
+                </div>
+                <p class="why">{swap.why}</p>
+                <span class="go">
+                  {swap.go} <Chev />
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<script>
+  // Category tabs, the filter box and "Load more". Every card is in the HTML, so the page reads
+  // completely without JavaScript; this only narrows what is shown.
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-card]')];
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+  const input = document.getElementById('q') as HTMLInputElement;
+  const empty = document.getElementById('empty') as HTMLElement;
+  const wrap = document.getElementById('moreWrap') as HTMLElement;
+  const count = document.getElementById('count') as HTMLElement;
+  const page = Number(wrap.dataset.page);
+  const total = cards.length;
+  let cat = new URLSearchParams(location.search).get('category') ?? '';
+  let shown = page;
+  const more = document.createElement('button');
+  more.className = 'more';
+  more.type = 'button';
+  more.addEventListener('click', () => {
+    shown = total;
+    render();
+  });
+
+  function render() {
+    const q = input.value.trim().toLowerCase();
+    const filtered = Boolean(cat || q);
+    const matches = cards.filter((c) => (!cat || c.dataset.cat === cat) && (!q || (c.dataset.q ?? '').includes(q)));
+    const visible = filtered ? matches : matches.slice(0, shown);
+    cards.forEach((c) => (c.hidden = !visible.includes(c)));
+    tabs.forEach((t) => t.setAttribute('aria-pressed', String((t.dataset.tab ?? '') === cat)));
+    const catName = tabs.find((t) => t.dataset.tab === cat)?.textContent;
+    empty.hidden = matches.length > 0;
+    empty.textContent = `No apps match “${input.value}”${cat ? ` in ${catName}` : ''}. Try a tool you pay for, like Zapier, Notion or Slack.`;
+    more.remove();
+    if (filtered) {
+      count.textContent = `${matches.length} of ${total} apps shown`;
+    } else if (shown < total) {
+      count.textContent = '';
+      more.textContent = `Load more (${total - shown} remaining)`;
+      wrap.prepend(more);
+    } else {
+      count.textContent = `All ${total} apps shown`;
+    }
+  }
+
+  tabs.forEach((t) =>
+    t.addEventListener('click', () => {
+      cat = t.dataset.tab ?? '';
+      render();
+      t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }),
+  );
+  input.addEventListener('input', render);
+  render();
+</script>

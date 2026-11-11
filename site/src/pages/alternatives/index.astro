@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import ProductTile from '../../components/ProductTile.astro';
+import { alternativesPages } from '../../lib/catalogue';
+import { breadcrumbSchema, graph } from '../../lib/schema';
+import { href } from '../../lib/site';
+
+const pages = alternativesPages().sort((a, b) => b.apps.length - a.apps.length || a.product.name.localeCompare(b.product.name));
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: 'Alternatives', path: 'alternatives/' },
+];
+---
+
+<Base
+  title="Open-source alternatives to the tools you pay for"
+  description={`Free, self-hosted replacements for ${pages
+    .slice(0, 5)
+    .map((page) => page.product.name)
+    .join(', ')} and more, ready to run on your own server.`}
+  path="alternatives/"
+  jsonLd={graph(breadcrumbSchema(trail))}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead pad" style="grid-template-columns:1fr">
+    <div class="body">
+      <h1 class="h1">Open-source alternatives to the tools you pay for</h1>
+      <p class="lede">Find the free app that does the job of a tool you pay for today, and run it on your own server.</p>
+    </div>
+  </section>
+  <section class="sec pad" style="padding-block:40px 64px">
+    <div class="idx">
+      {
+        pages.map((page) => (
+          <a href={href(`alternatives/${page.product.id}/`)}>
+            <b>
+              <ProductTile product={page.product} box={32} size={18} />
+              {page.product.name} alternatives
+            </b>
+            <span>{page.apps.map((app) => app.name).join(', ')}</span>
+            <small>
+              {page.apps.length} {page.apps.length === 1 ? 'app' : 'apps'} for {page.product.job}
+            </small>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { getTemplates, usedCategories } from '../../lib/catalogue';
+import { breadcrumbSchema, graph } from '../../lib/schema';
+import { href } from '../../lib/site';
+
+const categories = usedCategories();
+const templates = getTemplates();
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: 'Categories', path: 'categories/' },
+];
+---
+
+<Base
+  title="Browse open-source apps by category"
+  description={`${templates.length} free apps you can run on your own server, by what they do: ${categories
+    .slice(0, 5)
+    .map((c) => c.name.toLowerCase())
+    .join(', ')} and more.`}
+  path="categories/"
+  jsonLd={graph(breadcrumbSchema(trail))}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead pad" style="grid-template-columns:1fr">
+    <div class="body">
+      <h1 class="h1">Browse apps by category</h1>
+      <p class="lede">{templates.length} free apps, grouped by the job they do.</p>
+    </div>
+  </section>
+  <section class="sec pad" style="padding-block:40px 64px">
+    <div class="idx">
+      {
+        categories.map((category) => (
+          <a href={href(`categories/${category.id}/`)}>
+            <b>{category.name}</b>
+            <span>{category.lede}</span>
+            <small>
+              {templates
+                .filter((t) => t.category.id === category.id)
+                .slice(0, 4)
+                .map((t) => t.name)
+                .join(', ')}
+            </small>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,26 @@
+---
+import type { Product } from '../products';
+import { isYellow, productSvg } from '../lib/icons';
+
+/** A replaced product's small inline mark (the prototype's `paidLogo`). */
+interface Props {
+  product: Product;
+  size?: number;
+}
+const { product, size = 13 } = Astro.props;
+const svg = productSvg(product, isYellow(product) ? size - 3 : size);
+---
+
+{
+  svg ? (
+    isYellow(product) ? (
+      <span class="tiny y" style={`width:${size + 2}px;height:${size + 2}px`} set:html={svg} />
+    ) : (
+      <span class="lgo" set:html={svg} />
+    )
+  ) : (
+    <span class="tiny" style={`width:${size}px;height:${size}px`}>
+      {product.name.charAt(0).toUpperCase()}
+    </span>
+  )
+}
