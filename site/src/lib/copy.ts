@@ -1,23 +1,40 @@
 import type { Template } from './catalogue';
+import { PLANS } from './site';
 
 /**
  * Copy more than one page states, so the app page, its Markdown copy and
  * llms-full.txt never answer the same question two ways. Plain language for
  * non-technical visitors (docs/plan.md): no ports, versions or licence jargon.
+ * Most visitors have no server and have never heard of Cloudgate, so the
+ * steps follow the Deploy button: account, server, setup, open.
  */
 
+/** What happens after "Deploy <app>", in order. Also the app page's HowTo. */
 export function HOW_IT_WORKS(template: Template): { name: string; text: string }[] {
   return [
-    { name: 'Choose an app', text: `You are here. ${template.name} is free to use.` },
     {
-      name: 'Click Deploy and pick your server',
-      text: 'Choose a server you have connected to Cloudgate, or connect one in a few minutes.',
+      name: 'Click Deploy and create your account',
+      text: `Deploy takes you to Cloudgate. Create an account, or log in if you have one. ${template.name} is free; Cloudgate starts with a ${PLANS.trialDays}-day free trial.`,
+    },
+    {
+      name: 'Choose a server',
+      text: 'No server? Get one from Cloudgate: pick a size and a country, and it goes on your monthly Cloudgate bill. Already have one? Connect it instead.',
+    },
+    {
+      name: `Cloudgate sets up ${template.name}`,
+      text: 'It prepares the server, makes the passwords the app needs and starts it. There is nothing to install and nothing to write down.',
     },
     {
       name: 'Open your app and sign in',
-      text: 'Cloudgate gives it a web address. Use your own domain and it gets https automatically.',
+      text: 'Your app gets a free web address to start, without https. Add your own domain, like app.yourshop.com, and Cloudgate secures it with https for you.',
     },
   ];
+}
+
+/** The cost answer, said the same way on every page that answers it. */
+export function costAnswer(appName?: string): string {
+  const app = appName ? `${appName} is free. To run it` : 'The apps are free. To run them';
+  return `${app} you need Cloudgate and a server. Hosted Cloudgate starts with a ${PLANS.trialDays}-day free trial, then costs $${PLANS.starter} a month (Starter) or $${PLANS.business} a month (Business). A server from Cloudgate is billed monthly on the same bill, and you see its price before you buy. Or install Cloudgate on a server of your own, for free.`;
 }
 
 /** A template's own questions, then the general ones it does not already answer. */
@@ -26,9 +43,13 @@ export function appFaq(template: Template): { q: string; a: string }[] {
   const general = [
     {
       q: 'Do I need technical skills?',
-      a: `No. Cloudgate installs ${template.name} on your server and gives it a web address. You use it in your browser like any other online tool.`,
+      a: `No. Click Deploy, create your Cloudgate account and choose a server, and Cloudgate sets up ${template.name} and gives it a web address. You use it in your browser like any other online tool.`,
     },
-    { q: 'What does it cost?', a: `${template.name} is free. You pay only for your server.` },
+    { q: 'What does it cost?', a: costAnswer(template.name) },
+    {
+      q: 'Do I need my own server?',
+      a: `No. When you deploy ${template.name}, Cloudgate can provide a server, billed monthly with your plan. If you already rent one, you can connect it instead.`,
+    },
     ...(first
       ? [
           {
@@ -40,7 +61,12 @@ export function appFaq(template: Template): { q: string; a: string }[] {
         ]
       : []),
   ];
-  const topics = [/skill|technical|code|developer/i, /cost|price|free|pay/i, /move|import|migrat|switch|carry/i];
+  const topics = [
+    /skill|technical|code|developer/i,
+    /cost|price|free|pay/i,
+    /own server|need a server|which server/i,
+    /move|import|migrat|switch|carry/i,
+  ];
   const covered = new Set(
     template.faq.flatMap((item) => topics.map((topic, index) => (topic.test(item.q) ? index : -1)).filter((i) => i >= 0)),
   );

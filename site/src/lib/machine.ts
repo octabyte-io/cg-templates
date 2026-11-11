@@ -1,6 +1,6 @@
 import { EASE_LABEL, isSample, listNames, type Template } from './catalogue';
 import { appFaq, HOW_IT_WORKS } from './copy';
-import { absolute } from './site';
+import { absolute, deployUrl } from './site';
 import type { Product } from '../products';
 
 /**
@@ -43,7 +43,7 @@ export function appMarkdown(template: Template, level = 1): string {
     `- Category: ${a.category.name}`,
     ...(replaced.length ? [`- Replaces: ${listNames(replaced)}`] : []),
     `- Ease of use: ${easeText(a)}`,
-    '- App price: Free. You pay only for your server.',
+    '- App price: Free. To run it you need Cloudgate (hosted, with a 30-day free trial, or free to install yourself) and a server, which Cloudgate can provide.',
     `- License: ${a.license}`,
     ...(a.goodFor ? [`- Good for: ${a.goodFor}`] : []),
     ...(a.links.website ? [`- Official website: ${a.links.website}`] : []),
@@ -64,7 +64,7 @@ export function appMarkdown(template: Template, level = 1): string {
     out.push(`${h(1)} Replaces ${listNames(replaced)}`, '');
     out.push(
       `${a.name} does the same job as ${listNames(replaced)}.${
-        a.switching ? ' Here is what changes when you switch.' : ' It runs on your own server, so you pay one fixed server cost and your data stays with you.'
+        a.switching ? ' Here is what changes when you switch.' : ' It runs on a server of your own, so the cost stays the same however many people use it, and your data stays with you.'
       }`,
       '',
     );
@@ -76,7 +76,7 @@ export function appMarkdown(template: Template, level = 1): string {
     }
   }
 
-  out.push(`${h(1)} How to self-host ${a.name}`, '');
+  out.push(`${h(1)} What happens when you click Deploy?`, '', `Deploy link: ${deployUrl(a.id)}`, '');
   HOW_IT_WORKS(a).forEach((step, index) => out.push(`${index + 1}. **${step.name}.** ${step.text}`));
   out.push('');
 
@@ -102,6 +102,6 @@ export function alternativesLede(product: Product, apps: Template[]): string {
     product.lede ??
     `${count === 1 ? 'This free app does' : 'These free apps do'} the same job as ${product.name}: ${product.job}. ${
       count === 1 ? 'It runs' : 'They run'
-    } on your own server for one fixed cost, and your data stays with you.`
+    } on a server of your own for one fixed monthly cost, and your data stays with you.`
   );
 }

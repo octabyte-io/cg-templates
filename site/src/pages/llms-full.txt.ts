@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { alternativesPages, getTemplates, GITHUB_REPO, isSample, listNames } from '../lib/catalogue';
 import { alternativesLede, appMarkdown, appUrl, SAMPLE_NOTE } from '../lib/machine';
-import { absolute, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, HOSTED_URL, PLANS, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 /** Every app page and every alternatives page, as one Markdown file. */
 function body(): string {
@@ -14,6 +14,8 @@ function body(): string {
     `Site: ${absolute()}`,
     `Index: ${absolute('llms.txt')}`,
     `Source: ${GITHUB_REPO}`,
+    '',
+    `Every app here is deployed with Cloudgate. Hosted Cloudgate (${HOSTED_URL}) starts with a ${PLANS.trialDays}-day free trial, then costs $${PLANS.starter} a month (Starter) or $${PLANS.business} a month (Business), and can provide the server, billed monthly on the same bill. Cloudgate can also be installed on your own server for free; it is source-available under the Elastic License 2.0. Plans and prices: ${absolute('get-cloudgate/')}`,
     '',
   ];
   if (isSample) out.push(SAMPLE_NOTE, '');

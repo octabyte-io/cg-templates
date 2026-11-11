@@ -7,18 +7,21 @@ import Ease from '../components/Ease.astro';
 import Faq from '../components/Faq.astro';
 import ProductTile from '../components/ProductTile.astro';
 import { alternativesPages, getTemplate, getTemplates, isSample } from '../lib/catalogue';
-import { absolute, href } from '../lib/site';
+import { costAnswer } from '../lib/copy';
+import { absolute, href, PLANS } from '../lib/site';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
 
 /*
  * Every claim here is checked against Cloudgate itself (CONTEXT.md and docs/adr in the
- * cloudgate repo): a template setup is a Plan reviewed and applied (ADR-0065), values are
- * made at setup (ADR-0064), a copy never updates from its template (CONTEXT "Template",
- * "Setup record"), a generated address is plain http and the user's own gets a Let's
- * Encrypt certificate (templates/setup/setup-domains.ts), backups run on a schedule to a
- * destination the user adds (in the console: Applications and managed databases, not yet Compose
- * stacks), and deleting keeps stored data unless asked. The hosted service (ADR-0052, ADR-0054,
- * ADR-0071) is unreleased, so this page describes self-hosted Cloudgate only.
+ * cloudgate repo). The page follows the Deploy button on hosted Cloudgate, the path most
+ * visitors take: an account and a 30-day trial (ADR-0054), a server bought from Cloudgate on
+ * the same monthly bill, charged from the day it is bought (ADR-0071), and a setup that runs
+ * without an Apply press in the get-started wizard only. In a console, a template setup is a
+ * Plan reviewed and applied (ADR-0065). Values are made at setup (ADR-0064), a copy never updates
+ * from its template, a generated address is plain http and the user's own gets a Let's Encrypt
+ * certificate, backups run on a schedule to a destination the user adds (not yet for Compose
+ * stacks), and deleting keeps stored data unless asked. A Bought Server is deleted when the
+ * subscription lapses (ADR-0052 as amended); servers people own are never touched.
  */
 
 const trail = [
@@ -46,20 +49,20 @@ const steps = [
       : 'Search for the tool you pay for today and you find the open-source apps that do the same job. Every app here is free to use.',
   },
   {
-    name: 'Pick your server',
-    text: 'Choose a server you have already connected, or connect one you rent from a hosting company. Cloudgate prepares a new server only after you confirm, and the server Cloudgate itself runs on can host your apps too.',
+    name: 'Click Deploy and create your account',
+    text: `Deploy takes you to Cloudgate. Create an account, or log in if you have one, and start a ${PLANS.trialDays}-day free trial. A card is needed to start it, and the plan is not charged until the trial ends.`,
   },
   {
-    name: 'Click Deploy and fill in a few details',
-    text: 'Give the app a name and a web address. Passwords and keys the app needs are made for you, so there is nothing to invent or write down.',
+    name: 'Choose a server, or get one from Cloudgate',
+    text: 'No server? Pick a size and a country, and Cloudgate provides one, billed monthly on the same bill as your plan. It is charged from the day you buy it; the free trial covers the plan. Already rent a server? Connect it instead.',
   },
   {
-    name: 'Check what Cloudgate will create, then apply',
-    text: 'Before anything is made, Cloudgate lists exactly what it will add: the app, where it keeps its data, and its web address. None of it is created until you press Apply.',
+    name: 'Cloudgate sets everything up',
+    text: `Cloudgate gets the server ready, makes the passwords and keys ${appName} needs, and starts it. There is nothing to install, nothing to invent and nothing to write down.`,
   },
   {
     name: 'Open your app at its web address',
-    text: 'Cloudgate starts the app and gives it a web address. Use your own, like crm.yourshop.com, and Cloudgate gets the https certificate for you once your domain points at the server.',
+    text: 'Your app starts on a free web address, which uses plain http. Add your own, like crm.yourshop.com, and Cloudgate gets the https certificate for you once your domain points at the server.',
   },
 ];
 
@@ -88,32 +91,36 @@ const daily = [
 
 const faq = [
   {
-    q: 'Do I need to know Docker or anything technical?',
-    a: 'No. Cloudgate does the technical setup on your server and you use the app in your browser, like any online tool. Some apps need a few minutes of setup inside the app once it is running; their page here marks them “Some setup”.',
+    q: 'Do I need to know anything technical?',
+    a: 'No. Cloudgate does the technical setup and you use the app in your browser, like any online tool. Some apps need a few minutes of setup inside the app once it is running; their page here marks them “Some setup”.',
   },
   {
-    q: 'What server do I need?',
-    a: 'A server you rent from a hosting company, running Ubuntu or Debian, which most offer as the default. Cloudgate connects to it and, once you confirm, installs what it needs. How big it should be depends on the apps you run, and one small server can run several. It can also be the same server Cloudgate is installed on.',
+    q: 'Do I need my own server?',
+    a: 'No. When you deploy, Cloudgate can provide a server, billed monthly with your plan. If you already rent one running Ubuntu or Debian, you can connect it instead, and one server can run several apps.',
   },
   {
     q: 'What does it cost?',
-    a: 'The apps are free, and Cloudgate is free to install on your own server. You pay only whoever rents you the server, and one server can run several apps.',
+    a: costAnswer(),
   },
   {
     q: 'Can I use my own web address?',
     a: 'Yes. Type it when you deploy, or add it later, then add one record where you bought your domain so the name points at your server. Cloudgate gets the https certificate for you. Until then the app works on a free temporary address, without https.',
   },
   {
-    q: 'What happens to my apps if I stop using Cloudgate?',
-    a: 'They are ordinary open-source apps on your server, and your data stays there. Cloudgate runs on your own server too, so there is no account that can be closed on you; without it, you look after the apps yourself, as you would any software.',
+    q: 'What happens to my apps if I stop paying for Cloudgate?',
+    a: 'Apps on a server you own keep running, and your data stays on that server; you look after them yourself from then on. A server bought from Cloudgate is deleted, with its data, when your subscription ends, so copy your data off first. If you install Cloudgate on your own server instead, there is no subscription to end.',
+  },
+  {
+    q: 'I already run Cloudgate. Can I deploy from my own console?',
+    a: 'Yes. Every app here is on your console’s Templates screen. Each app page also has a link that opens it in your console directly. In your own console, Cloudgate lists everything it will create first, and nothing happens until you press Apply.',
   },
 ];
 
 const howTo = {
   '@type': 'HowTo',
   '@id': `${absolute('how-it-works/')}#howto`,
-  name: 'How to run an open-source app on your own server with Cloudgate',
-  description: 'From choosing an app that replaces a paid tool to opening it at its own web address.',
+  name: 'How to deploy an open-source app with Cloudgate',
+  description: 'From choosing an app that replaces a paid tool to opening it at its own web address, with a server from Cloudgate or one you already have.',
   step: steps.map((step, index) => ({
     '@type': 'HowToStep',
     position: index + 1,
@@ -125,8 +132,8 @@ const howTo = {
 ---
 
 <Base
-  title="How to self-host an open-source app"
-  description="What happens from choosing an app to running it on your own server: pick a server, check what Cloudgate will create, then backups, updates and your team."
+  title="How to deploy an open-source app, step by step"
+  description="What happens when you click Deploy: create an account, get a server from Cloudgate or use your own, and open your app. Then backups, updates and your team."
   path="how-it-works/"
   noindex={isSample}
   jsonLd={graph(breadcrumbSchema(trail), howTo, faqSchema(faq))}
@@ -135,17 +142,17 @@ const howTo = {
 
   <section class="apphead pad intro">
     <div class="body">
-      <h1 class="h1">How to self-host an app with Cloudgate</h1>
+      <h1 class="h1">How to deploy an app with Cloudgate</h1>
       <p class="lede">
-        From the tool you pay for today to an open-source app doing the same job on your own server. Here is what
-        happens at each step, and what Cloudgate looks after once the app is running.
+        From the tool you pay for today to a free, open-source app doing the same job on a server of your own. You do
+        not need a server to start or any technical knowledge. Here is what happens at each step.
       </p>
       <div class="acts">
         <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
         <a class="btn lg ghost" href="#steps">See the steps <Chev /></a>
       </div>
       <div class="facts-strip">
-        <span><b>5</b> steps</span><span>Nothing is created until you say yes</span><span>The apps are <b>free</b></span>
+        <span><b>5</b> steps</span><span><b>{PLANS.trialDays}-day</b> free trial</span><span>The apps are <b>free</b></span>
       </div>
     </div>
   </section>
@@ -153,7 +160,7 @@ const howTo = {
   <section class="sec" id="steps" aria-labelledby="steps-title">
     <div class="shead pad">
       <h2 class="h2" id="steps-title">What happens when you deploy an app?</h2>
-      <p class="lede">Five steps, a few minutes of your time, and one moment where you say yes.</p>
+      <p class="lede">Five steps and a few minutes of your time. Cloudgate does the technical part.</p>
     </div>
 
     <ol class="flow">
@@ -199,12 +206,14 @@ const howTo = {
           <h3 class="h3">{steps[1].name}</h3>
           <p>{steps[1].text}</p>
         </div>
-        <div class="frag" role="img" aria-label="Example server choice: Shop server in Germany selected, or connect another, or use the server Cloudgate runs on">
-          <div class="srv" aria-hidden="true">
-            <label class="on"><input type="radio" name="how-srv" checked tabindex="-1" /> Shop server <small>Germany · online</small></label>
-            <label><input type="radio" name="how-srv" tabindex="-1" /> Connect a server you rent</label>
-            <label><input type="radio" name="how-srv" tabindex="-1" /> This server <small>where Cloudgate runs</small></label>
+        <div class="frag form" role="img" aria-label={`Example sign-up: email, password, and Start ${PLANS.trialDays}-day free trial`}>
+          <div class="fld" aria-hidden="true"><span class="lab">Email</span><span class="in">amira@acmebakery.com</span></div>
+          <div class="fld" aria-hidden="true"><span class="lab">Password</span><span class="in">••••••••••••</span></div>
+          <div class="fld" aria-hidden="true">
+            <span class="lab">Plan</span>
+            <span class="in auto"><span class="dot"></span>Starter, {PLANS.trialDays} days free</span>
           </div>
+          <span class="btn sm" aria-hidden="true">Start free trial</span>
         </div>
       </li>
 
@@ -214,14 +223,12 @@ const howTo = {
           <h3 class="h3">{steps[2].name}</h3>
           <p>{steps[2].text}</p>
         </div>
-        <div class="frag form" role="img" aria-label={`Example deploy form for ${appName}: name, web address ${address}, passwords made for you`}>
-          <div class="fld" aria-hidden="true"><span class="lab">Name</span><span class="in">{slug}</span></div>
-          <div class="fld" aria-hidden="true"><span class="lab">Web address</span><span class="in">{address}</span></div>
-          <div class="fld" aria-hidden="true">
-            <span class="lab">Passwords and keys</span>
-            <span class="in auto"><span class="dot"></span>Made for you</span>
+        <div class="frag" role="img" aria-label="Example server choice: get a server from Cloudgate in Germany, on your monthly bill, or use a server you already have">
+          <div class="srv" aria-hidden="true">
+            <label class="on"><input type="radio" name="how-srv" checked tabindex="-1" /> Get a server from Cloudgate <small>on your monthly bill</small></label>
+            <label><input type="radio" name="how-srv" tabindex="-1" /> Use a server I already have</label>
           </div>
-          <span class="btn sm" aria-hidden="true">Deploy {appName}</span>
+          <div class="fld where" aria-hidden="true"><span class="lab">Country</span><span class="in">Germany</span></div>
         </div>
       </li>
 
@@ -230,35 +237,33 @@ const howTo = {
           <span class="num">Step 4</span>
           <h3 class="h3">{steps[3].name}</h3>
           <p>{steps[3].text}</p>
-          <p class="aside">Change your mind and dismiss it, and the app is never made.</p>
+          <p class="aside">Run Cloudgate yourself? In your own console, Cloudgate lists everything it will create first, and nothing happens until you press Apply.</p>
         </div>
         <div class="stage">
-          <div class="window" role="img" aria-label={`Example review screen: Cloudgate will add ${appName}, its database and the web address ${address}. Nothing has been created yet. Buttons: Dismiss and Apply.`}>
+          <div class="window" role="img" aria-label={`Example setup screen: the server is ready, passwords are made, ${appName} is starting, and its free web address comes next.`}>
             <div class="wbar" aria-hidden="true">
               <b>Cloudgate</b>
               <span>/</span>
               <span>Acme Bakery</span>
               <span>/</span>
-              <span>Review</span>
+              <span>Setting up</span>
             </div>
             <div class="plan" aria-hidden="true">
               <div class="ph">
                 {featured && <AppTile template={featured} box={36} size={22} />}
                 <div>
-                  <b>Set up {appName}</b>
-                  <small>Cloudgate will add these to Shop server</small>
+                  <b>Setting up {appName}</b>
+                  <small>On your new server in Germany</small>
                 </div>
               </div>
               <ul>
-                <li><span class="add">Add</span><span>{appName}, the app itself</span></li>
-                <li><span class="add">Add</span><span>A database for its data</span></li>
-                <li><span class="add">Add</span><span>Web address <b>{address}</b></span></li>
-                <li><span class="add keep">Made</span><span>Passwords, never shown here</span></li>
+                <li><span class="add">Done</span><span>Server ready</span></li>
+                <li><span class="add">Done</span><span>Passwords and keys made, never shown here</span></li>
+                <li><span class="add">Done</span><span>{appName} started</span></li>
+                <li><span class="add keep">Next</span><span>Its free web address</span></li>
               </ul>
               <div class="pf">
-                <span class="still">Nothing has been created yet</span>
-                <span class="btn sm ghost">Dismiss</span>
-                <span class="btn sm">Apply</span>
+                <span class="still">Ready in a few minutes. You can close this page.</span>
               </div>
             </div>
           </div>
@@ -270,7 +275,7 @@ const howTo = {
           <span class="num">Step 5</span>
           <h3 class="h3">{steps[4].name}</h3>
           <p>{steps[4].text}</p>
-          <p class="aside">Until your domain points at the server, the app works on a free temporary address, without https.</p>
+          <p class="aside">Until you add your own domain, the app works on its free address, without https.</p>
         </div>
         <div class="frag open server" role="img" aria-label={`Example: ${appName} open at https://${address}, marked secure`}>
           <div class="bar" aria-hidden="true">
@@ -312,11 +317,12 @@ const howTo = {
 
   <section class="sec cta pad" aria-labelledby="cta-title">
     <h2 class="h2" id="cta-title">Ready to replace a tool you pay for?</h2>
-    <p class="lede">Find the app that does the same job, then get Cloudgate to run it on your server.</p>
+    <p class="lede">Find the app that does the same job and click Deploy. Cloudgate does the rest.</p>
     <div class="acts">
       <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
-      <a class="btn lg ghost" href={href('get-cloudgate/')}>Get Cloudgate <Chev /></a>
+      <a class="btn lg ghost" href={href('get-cloudgate/')}>Plans and prices <Chev /></a>
     </div>
+    <p class="fine">Prefer to run it all yourself? <a href={href('get-cloudgate/#self-host')}>Install Cloudgate on your own server for free</a>.</p>
   </section>
 </Base>
 
@@ -426,7 +432,10 @@ const howTo = {
     white-space: nowrap;
   }
 
-  /* Step 3: the few details asked */
+  /* Step 2: the account; step 3: the server */
+  .where {
+    margin-top: 12px;
+  }
   .form {
     display: grid;
     gap: 10px;
@@ -469,7 +478,7 @@ const howTo = {
     margin-top: 4px;
   }
 
-  /* Step 4, the one large picture: the review that comes before anything is made */
+  /* Step 4, the one large picture: Cloudgate doing the setup */
   .key {
     grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
   }

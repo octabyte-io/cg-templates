@@ -4,13 +4,14 @@ import AppTile from '../../components/AppTile.astro';
 import Card from '../../components/Card.astro';
 import Chev from '../../components/Chev.astro';
 import Crumbs from '../../components/Crumbs.astro';
+import ConsoleDeploy from '../../components/ConsoleDeploy.astro';
 import Ease from '../../components/Ease.astro';
 import Faq from '../../components/Faq.astro';
 import ProductMark from '../../components/ProductMark.astro';
 import { alternativesPages, getTemplates, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
 import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
-import { deployUrl, formatDate, href } from '../../lib/site';
+import { deployUrl, formatDate, href, PLANS } from '../../lib/site';
 
 export function getStaticPaths() {
   return getTemplates().map((template) => ({ params: { id: template.id }, props: { template } }));
@@ -54,9 +55,11 @@ const title = titles.find((t) => t.length <= 48) ?? titles[titles.length - 1];
 const sentences = [
   a.description.replace(/\s*$/, ''),
   replacedNames.length ? `A free, open-source alternative to ${listNames(replacedNames.slice(0, 2))}.` : 'Free and open source.',
-  'Self-host it with Cloudgate.',
 ];
-const description = sentences.reduce((out, next) => (`${out} ${next}`.length <= 160 ? `${out} ${next}` : out));
+const closers = ['Deploy it in a few clicks with Cloudgate, no server needed.', 'Deploy it in a few clicks with Cloudgate.', 'Deploy it with Cloudgate.'];
+const lead = sentences.reduce((out, next) => (`${out} ${next}`.length <= 160 ? `${out} ${next}` : out));
+const closer = closers.find((line) => `${lead} ${line}`.length <= 160);
+const description = closer ? `${lead} ${closer}` : lead;
 
 const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, steps), faqSchema(faq));
 ---
@@ -97,6 +100,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         <a class="btn lg" href={deploy}>Deploy {a.name}</a>
         {a.links.website && <a class="btn lg ghost" href={a.links.website} rel="noopener">Official website <Chev /></a>}
       </div>
+      <p class="dnote">No server needed to start: Cloudgate can provide one. <a href="#deploy">What happens when you click Deploy</a></p>
     </div>
   </section>
 
@@ -153,7 +157,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
             <h2 class="h2">Replaces {listNames(replacedNames)}</h2>
             <p class="muted" style="max-width:64ch">
               {a.name} does the same job as {listNames(replacedNames)}.
-              {a.switching ? ' Here is what changes when you switch.' : ' It runs on your own server, so you pay one fixed server cost and your data stays with you.'}
+              {a.switching ? ' Here is what changes when you switch.' : ' It runs on a server of your own, so the cost stays the same however many people use it, and your data stays with you.'}
             </p>
             {a.switching && (
               <div class="vs">
@@ -184,12 +188,15 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         )
       }
 
-      <div class="blk">
-        <h2 class="h2">How to self-host {a.name}</h2>
-        <ol class="how" style="list-style:none;margin:0;padding:0">
+      <div class="blk" id="deploy">
+        <h2 class="h2">What happens when you click Deploy?</h2>
+        <p class="muted" style="max-width:64ch">
+          You do not need a server or any technical knowledge. Four steps, and {a.name} is running at its own web address.
+        </p>
+        <ol class="dsteps">
           {
             steps.map((step, index) => (
-              <li style="padding:20px 22px;display:grid;gap:6px;align-content:start">
+              <li>
                 <span class="n">Step {index + 1}</span>
                 <b>{step.name}</b>
                 <p>{step.text}</p>
@@ -197,6 +204,13 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
             ))
           }
         </ol>
+        <div class="dfoot">
+          <a class="btn lg" href={deploy}>Deploy {a.name}</a>
+          <p class="muted">
+            {PLANS.trialDays}-day free trial, then from ${PLANS.starter} a month. <a href={href('get-cloudgate/')}>See plans and prices</a>
+          </p>
+        </div>
+        <ConsoleDeploy id={a.id} name={a.name} />
       </div>
 
       <div class="blk">
@@ -225,7 +239,8 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
           <dt>Category</dt><dd><a href={href(`categories/${a.category.id}/`)} style="text-decoration:none">{a.category.name}</a></dd>
           <dt>Ease of use</dt><dd><Ease ease={a.ease} /></dd>
           <dt>App price</dt><dd>Free</dd>
-          <dt>You pay for</dt><dd>Your server only</dd>
+          <dt>Cloudgate</dt><dd>{PLANS.trialDays}-day free trial</dd>
+          <dt>Server</dt><dd>Yours, or one from Cloudgate</dd>
           <dt>License</dt><dd class="m">{a.license}</dd>
           {
             a.updated && (
@@ -246,14 +261,91 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         </div>
         <div class="ft">
           <a class="btn lg" href={deploy} style="width:100%">Deploy {a.name}</a>
-          <p>Ready in a few minutes</p>
+          <p>Ready in a few minutes. No server? Cloudgate can provide one.</p>
+          <ConsoleDeploy id={a.id} name={a.name} center />
         </div>
       </div>
     </aside>
   </div>
   <div class="mspace"></div>
   <div class="mbar">
-    <div class="t"><b>{a.name}</b>Free app · ready in a few minutes</div>
+    <div class="t"><b>{a.name}</b>Free app, ready in a few minutes</div>
     <a class="btn lg" href={deploy}>Deploy {a.name}</a>
   </div>
 </Base>
+
+<style>
+  .dnote {
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .dnote a,
+  .dfoot a:not(.btn) {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+  }
+
+  /* What happens when you click Deploy: a real sequence, so numbered */
+  #deploy {
+    scroll-margin-top: calc(var(--hh) + 16px);
+  }
+  .dsteps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    overflow: hidden;
+  }
+  .dsteps > li {
+    padding: 20px 22px;
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    min-width: 0;
+  }
+  .dsteps > li:nth-child(even) {
+    border-left: 1px solid var(--line);
+  }
+  .dsteps > li:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+  .dsteps .n {
+    font: 12px var(--mono);
+    color: var(--accent-ink);
+  }
+  .dsteps b {
+    font-weight: 600;
+  }
+  .dsteps p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .dfoot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+    font-size: 14px;
+  }
+  @media (max-width: 640px) {
+    .dsteps {
+      grid-template-columns: 1fr;
+    }
+    .dsteps > li:nth-child(even) {
+      border-left: 0;
+    }
+    .dsteps > li + li {
+      border-top: 1px solid var(--line);
+    }
+    .dnote {
+      display: none;
+    }
+    .dfoot .btn {
+      width: 100%;
+    }
+  }
+</style>

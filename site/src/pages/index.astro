@@ -7,7 +7,8 @@ import Chev from '../components/Chev.astro';
 import Faq from '../components/Faq.astro';
 import { alternativesPages, getTemplate, getTemplates, listNames, popularSwaps, usedCategories } from '../lib/catalogue';
 import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
-import { href, SITE_DESCRIPTION } from '../lib/site';
+import { costAnswer } from '../lib/copy';
+import { href, PLANS, SITE_DESCRIPTION } from '../lib/site';
 
 const templates = getTemplates();
 const total = templates.length;
@@ -29,27 +30,31 @@ const exampleSwaps = swaps.slice(0, 3);
 const faq = [
   {
     q: 'What is Cloudgate Templates?',
-    a: `Cloudgate Templates is a free directory of ${total} open-source apps you can self-host${
+    a: `Cloudgate Templates is a free directory of ${total} open-source apps${
       exampleSwaps.length
         ? `, such as ${listNames(exampleSwaps.map((swap) => `${swap.app.name} instead of ${swap.product.name}`))}`
         : ''
-    }. Each app can be set up on your own server in a few clicks with Cloudgate, a free, self-hosted deployment platform.`,
+    }. Pick one and click Deploy, and Cloudgate, a deployment platform, sets it up on a server for you and gives it a web address.`,
   },
   {
-    q: 'What does self-hosting an app mean?',
-    a: 'Self-hosting means the app runs on a server you rent or own, instead of on the servers of the company that sells it. Your data stays on that server, in the country you choose, and nobody charges you per person to use it.',
+    q: 'Do I need my own server?',
+    a: 'No. When you deploy an app, Cloudgate can provide a server: pick a size and a country, and it is billed monthly on the same bill as your Cloudgate plan. If you already rent a server, you can connect it instead.',
   },
   {
-    q: 'Are the apps really free?',
-    a: 'Yes. Every app in Cloudgate Templates is open source and free to use, and Cloudgate is free to install on your own server. The only bill is the server, from any hosting company, and one server can run several apps.',
+    q: 'Do I need to be technical?',
+    a: 'No. Pick an app, click Deploy, create your Cloudgate account and choose a server. Cloudgate does the setup, and you use the app in your browser like any online tool. Some apps need a few minutes of setup inside the app itself; their pages are marked “Some setup”.',
+  },
+  {
+    q: 'What does it cost?',
+    a: costAnswer(),
   },
   {
     q: 'What is Cloudgate?',
-    a: 'Cloudgate is a self-hosted deployment platform: a console you open in your browser that sets up, runs and backs up apps and databases on servers you own, and gives each app a secure web address. It is source-available under the Elastic License 2.0 and free for individuals and businesses.',
+    a: 'Cloudgate is a deployment platform made by Octabyte: a console in your browser that sets up and runs apps on servers and gives each app a web address. You can use it hosted at cloudgate.octabyte.app, or install it on your own server for free. It is source-available under the Elastic License 2.0.',
   },
   {
-    q: 'Do I need to be technical to use these apps?',
-    a: 'No. Someone installs Cloudgate on a server once, which takes two commands and a few minutes. After that you choose an app, review what Cloudgate will create and click Apply, then use the app in your browser like any online tool.',
+    q: 'Is my app secure on its web address?',
+    a: 'Every app gets a free web address to start, which uses plain http, so it is not encrypted. Add your own domain, like crm.yourshop.com, and Cloudgate sets up https for it automatically.',
   },
   {
     q: 'Can I suggest or add an app?',
@@ -61,7 +66,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
 ---
 
 <Base
-  title="Open-source apps you can self-host in one click | Cloudgate"
+  title="Deploy free open-source apps in a few clicks | Cloudgate"
   bareTitle
   description={SITE_DESCRIPTION}
   path=""
@@ -72,15 +77,15 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     <h1 class="display">Open-source apps, ready to run on your own server</h1>
     <div class="row2">
       <p class="lede">
-        Pick a free app that does the job of a tool you pay for today, choose your server, and click Deploy.
-        Cloudgate sets it up, gives it a secure web address and keeps it running.
+        Pick a free app that does the job of a tool you pay for today and click Deploy. No server yet? Cloudgate can
+        provide one, so your app is live in minutes with nothing to install.
       </p>
       <div class="acts">
         <a class="btn lg" href="#catalogue">Browse {total} apps</a>
         <a class="btn lg ghost" href={href('how-it-works/')}>How it works <Chev /></a>
       </div>
     </div>
-    <div class="facts-strip"><span><b>{total}</b> apps</span><span><b>Free</b> to use</span><span>You pay only for your server</span></div>
+    <div class="facts-strip"><span><b>{total}</b> free apps</span><span><b>{PLANS.trialDays}-day</b> free trial</span><span>Server provided if you need one</span></div>
   </section>
 
   {
@@ -88,19 +93,20 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <section class="stagewrap pad" id="how" aria-labelledby="how-title">
         <h2 id="how-title" class="visually-hidden">How it works</h2>
         <div class="stage">
-          <div class="window" role="img" aria-label={`Illustration of the Cloudgate deploy screen, setting up ${featured.name}`}>
+          <div class="window" role="img" aria-label={`Illustration of the Cloudgate deploy screen for ${featured.name}: after creating an account, choose a server from Cloudgate or one you already have`}>
             <div class="wbar">
               <b>Cloudgate</b>
               <span>/</span>
               <span>New app</span>
               <span class="sp" />
-              <span class="pill">acme-bakery</span>
+              <span class="pill">Acme Bakery</span>
             </div>
             <div class="dep" aria-hidden="true">
               <div class="steps">
                 <div class="done"><span class="n">✓</span>Choose an app</div>
-                <div class="on"><span class="n">2</span>Pick your server</div>
-                <div><span class="n">3</span>Deploy</div>
+                <div class="done"><span class="n">✓</span>Create account</div>
+                <div class="on"><span class="n">3</span>Choose a server</div>
+                <div><span class="n">4</span>Live</div>
               </div>
               <div class="mid">
                 <span class="lab">App</span>
@@ -117,9 +123,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
                 </div>
                 <span class="lab">Server</span>
                 <div class="srv">
-                  <label class="on"><input type="radio" name="hs" checked tabindex="-1" /> Shop server <small>Germany · 2 apps</small></label>
-                  <label><input type="radio" name="hs" tabindex="-1" /> Home office box <small>Bristol · 5 apps</small></label>
-                  <label><input type="radio" name="hs" tabindex="-1" /> Connect another server <small>takes 2 min</small></label>
+                  <label class="on"><input type="radio" name="hs" checked tabindex="-1" /> Get a server from Cloudgate <small>on your monthly bill</small></label>
+                  <label><input type="radio" name="hs" tabindex="-1" /> Use a server I already have</label>
                 </div>
                 <span class="lab">Web address</span>
                 <div class="chosen" style="padding:9px 12px;font-size:13.5px">
@@ -130,14 +135,14 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
               </div>
               <div class="side">
                 <div class="sumrow"><span>App</span><span>{featured.name}</span></div>
-                <div class="sumrow"><span>Server</span><span>Shop server</span></div>
+                <div class="sumrow"><span>Server</span><span>New, from Cloudgate</span></div>
                 {replaced && <div class="sumrow"><span>Replaces</span><span>{replaced.name}</span></div>}
-                <div class="sumrow"><span>Backups</span><span>On your schedule</span></div>
                 <div class="sumrow"><span>App cost</span><span>Free</span></div>
+                <div class="sumrow"><span>Cloudgate</span><span>{PLANS.trialDays}-day free trial</span></div>
                 <span class="btn" style="width:100%">Deploy {featured.name}</span>
                 <div class="log">
-                  <div><span class="ok">✓</span> Shop server is online</div>
-                  <div><span class="ok">✓</span> Enough space for {featured.name}</div>
+                  <div><span class="ok">✓</span> Account created</div>
+                  <div><span class="ok">✓</span> {featured.name} chosen</div>
                   <div>· Ready in a few minutes</div>
                 </div>
               </div>
@@ -145,9 +150,10 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
           </div>
         </div>
         <ol class="caption" style="list-style:none;padding:0;margin-block:22px 0">
-          <li><b>1</b>Choose an app</li>
-          <li><b>2</b>Click Deploy and pick your server</li>
-          <li><b>3</b>Open your app and sign in</li>
+          <li><b>1</b>Pick an app and click Deploy</li>
+          <li><b>2</b>Create your account</li>
+          <li><b>3</b>Choose a server, or get one from us</li>
+          <li><b>4</b>Open your app</li>
         </ol>
       </section>
     )
@@ -156,13 +162,13 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   <section class="sec" id="why" aria-labelledby="why-title">
     <div class="shead pad">
       <h2 class="h2" id="why-title">Why run apps with Cloudgate</h2>
-      <p class="lede">The same jobs your paid tools do, without the monthly creep. Cloudgate looks after the boring parts.</p>
+      <p class="lede">The same jobs your paid tools do, without paying for every person. Cloudgate looks after the technical parts.</p>
     </div>
     <div class="bento">
       <div class="tile t-a pad">
         <div class="tx">
           <h3 class="h3">Backups on the schedule you choose</h3>
-          <p>Set it once, for example every night, and your app’s database and files are copied to storage you choose, away from the server. Restore any copy when you need it.</p>
+          <p>For apps that keep their data in a database Cloudgate runs, set a schedule once, for example every night, and copies go to storage you choose, away from the server. Restore any copy when you need it.</p>
         </div>
         <div class="frag" role="img" aria-label="Example backup history: a backup every night at 02:00, 14 days kept">
           <div class="tl" aria-hidden="true">
@@ -193,33 +199,26 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       </div>
       <div class="tile t-c pad">
         <div class="tx">
-          <h3 class="h3">You see every change first</h3>
-          <p>Before Cloudgate creates or changes anything, it lists what will happen. Nothing runs until you say yes.</p>
+          <h3 class="h3">No server? Cloudgate provides one</h3>
+          <p>Pick a size and a country when you deploy. The server goes on your monthly Cloudgate bill, and you see its price before you buy.</p>
         </div>
-        {
-          featured && (
-            <div class="frag notice" role="img" aria-label={`Example: ready to set up ${featured.name}, with Review and Apply buttons`}>
-              <AppTile template={featured} box={32} size={18} />
-              <div style="display:grid;gap:2px;min-width:0" aria-hidden="true">
-                <span class="t">Ready to set up {featured.name}</span>
-                <p>Adds the app, its data store and a web address.</p>
-              </div>
-              <div class="acts" aria-hidden="true"><span class="btn sm ghost">Review</span><span class="btn sm">Apply</span></div>
-            </div>
-          )
-        }
+        <div class="frag server" role="img" aria-label="Example monthly bill: Cloudgate Starter plan, a server from Cloudgate, and the app, which is free">
+          <div class="r" aria-hidden="true"><span>Cloudgate Starter</span><span>${PLANS.starter} a month</span></div>
+          <div class="r" aria-hidden="true"><span>Server from Cloudgate</span><span>Shown before you buy</span></div>
+          {featured && <div class="r" aria-hidden="true"><span>{featured.name}</span><span>Free</span></div>}
+        </div>
       </div>
       <div class="tile t-d pad">
         <div class="tx">
           <h3 class="h3">Add the whole team. No per-seat pricing.</h3>
-          <p>The apps are free. Your only bill is the server, whether 2 people use it or 20.</p>
+          <p>The apps are free, and Cloudgate does not charge per person. Your bill is the same whether 2 people use it or 20.</p>
         </div>
-        <div class="frag" role="img" aria-label="Example team pricing: 12 team members, nothing per person, one server bill">
+        <div class="frag" role="img" aria-label={`Example team pricing: 12 team members, nothing per person, Cloudgate Starter at $${PLANS.starter} a month plus the server`}>
           <div class="seats" aria-hidden="true">{seats.map((x) => <span>{x}</span>)}</div>
           <div class="price" aria-hidden="true">
-            <span>Team members</span><span>12</span><span>Price per person</span><span>€0</span><span class="tot">Your server, per month</span><span class="tot">€9</span>
+            <span>Team members</span><span>12</span><span>Price per person</span><span>$0</span><span class="tot">Cloudgate Starter, per month</span><span class="tot">${PLANS.starter}</span>
           </div>
-          <p class="ex" style="margin-top:10px">Example figures for a small business server</p>
+          <p class="ex" style="margin-top:10px">Plus your server, the same for 2 people or 20</p>
         </div>
       </div>
     </div>
@@ -299,11 +298,27 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
 
   <section class="sec pad" id="faq" aria-labelledby="faq-title">
     <div class="blk" style="border-top:0;padding-top:72px">
-      <h2 class="h2" id="faq-title">Questions about self-hosting</h2>
+      <h2 class="h2" id="faq-title">Questions before you deploy</h2>
       <Faq items={faq} />
+      <p class="muted selfhost">
+        Prefer to run everything yourself? <a href={href('get-cloudgate/')}>Install Cloudgate on your own server for free</a>, then
+        deploy any app here from your own console.
+      </p>
     </div>
   </section>
 </Base>
+
+<style>
+  .selfhost {
+    margin-top: 20px;
+    max-width: 64ch;
+    font-size: 14.5px;
+  }
+  .selfhost a {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+  }
+</style>
 
 <script>
   // Category tabs, the filter box and "Load more". Every card is in the HTML, so the page reads
