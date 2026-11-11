@@ -1,0 +1,18 @@
+name: Activepieces
+description: "Simple automations between the tools you already use, with ready-made steps."
+version: "0.93.0"
+tags: [automation, workflow, no-code]
+links:
+  website: https://www.activepieces.com
+  docs: https://www.activepieces.com/docs/install/overview
+  source: https://github.com/activepieces/activepieces
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  FRONTEND_URL: { value: "{{domains.activepieces.url}}" }
+  ENCRYPTION_KEY: { generate: password }
+  JWT_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: activepieces, port: 80 }

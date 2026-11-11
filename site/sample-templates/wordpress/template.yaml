@@ -1,0 +1,16 @@
+name: WordPress
+description: "Build a website or blog with themes, pages and thousands of add-ons."
+version: "6.9.4"
+tags: [website, blog, cms]
+links:
+  website: https://wordpress.org
+  docs: https://wordpress.org/documentation/
+  source: https://github.com/WordPress/WordPress
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: wordpress, port: 80 }

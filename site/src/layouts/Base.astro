@@ -47,8 +47,9 @@ const canonical = absolute(path);
 const image = absolute(ogImage);
 const onHome = path === '';
 const homeAnchor = (id: string) => (onHome ? `#${id}` : `${href()}#${id}`);
+// The swaps the home page shows come first, then the products with the most alternatives.
 const topAlternatives = alternativesPages()
-  .sort((a, b) => b.apps.length - a.apps.length)
+  .sort((a, b) => Number(Boolean(b.product.swap)) - Number(Boolean(a.product.swap)) || b.apps.length - a.apps.length)
   .slice(0, 4);
 const footCategories = usedCategories().slice(0, 4);
 ---

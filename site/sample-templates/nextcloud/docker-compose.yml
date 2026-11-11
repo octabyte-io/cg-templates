@@ -1,0 +1,56 @@
+services:
+  nextcloud:
+    image: nextcloud:35.0.2-apache
+    restart: unless-stopped
+    depends_on:
+      nextcloud-db:
+        condition: service_healthy
+      nextcloud-redis:
+        condition: service_started
+    environment:
+      POSTGRES_HOST: nextcloud-db
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: nextcloud-redis
+      REDIS_HOST_PASSWORD: ${REDIS_PASSWORD}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NEXTCLOUD_HOST}
+      OVERWRITEPROTOCOL: https
+      OVERWRITECLIURL: ${NEXTCLOUD_URL}
+      TRUSTED_PROXIES: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+      PHP_UPLOAD_LIMIT: 2G
+    volumes:
+      - nextcloud-files:/var/www/html
+
+  nextcloud-cron:
+    image: nextcloud:35.0.2-apache
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    depends_on:
+      - nextcloud
+    volumes:
+      - nextcloud-files:/var/www/html
+
+  nextcloud-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: nextcloud
+    volumes:
+      - nextcloud-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nextcloud"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  nextcloud-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+
+volumes:
+  nextcloud-files:
+  nextcloud-db-data:

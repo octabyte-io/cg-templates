@@ -1,0 +1,52 @@
+services:
+  activepieces:
+    image: activepieces/activepieces:0.93.0
+    restart: unless-stopped
+    depends_on:
+      activepieces-db:
+        condition: service_healthy
+      activepieces-redis:
+        condition: service_started
+    environment:
+      AP_ENVIRONMENT: prod
+      AP_FRONTEND_URL: ${FRONTEND_URL}
+      AP_ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      AP_JWT_SECRET: ${JWT_SECRET}
+      AP_ENGINE_EXECUTABLE_PATH: dist/packages/engine/main.js
+      AP_EXECUTION_MODE: UNSANDBOXED
+      AP_POSTGRES_HOST: activepieces-db
+      AP_POSTGRES_PORT: 5432
+      AP_POSTGRES_DATABASE: activepieces
+      AP_POSTGRES_USERNAME: activepieces
+      AP_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      AP_REDIS_HOST: activepieces-redis
+      AP_REDIS_PORT: 6379
+      AP_TELEMETRY_ENABLED: "false"
+    volumes:
+      - activepieces-cache:/usr/src/app/cache
+
+  activepieces-db:
+    image: pgvector/pgvector:0.8.7-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: activepieces
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: activepieces
+    volumes:
+      - activepieces-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U activepieces"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  activepieces-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - activepieces-redis-data:/data
+
+volumes:
+  activepieces-cache:
+  activepieces-db-data:
+  activepieces-redis-data:

@@ -1,0 +1,60 @@
+# template.yaml: what Cloudgate and the website read about your app.
+# Replace every value below. Lines starting with # are notes; you can delete them.
+
+# The app's name, written the way its makers write it (e.g. "WordPress", "n8n").
+name: My App
+
+# One plain sentence on what the app does for a business. 50 to 160 characters.
+# It is the text on the app's card and in search results, so write it for a
+# non-technical reader: "Connect your apps and automate repetitive work with
+# drag-and-drop workflows."
+description: "Say in one plain sentence what this app does for a small business."
+
+# The app's version this template installs, in quotes. Shown on the page only.
+version: "1.0.0"
+
+# A few lowercase words people might search for. At least one.
+tags: [example, replace-me]
+
+# Links to the app's own pages. source (where its code lives) is required.
+links:
+  website: https://example.com
+  docs: https://example.com/docs
+  source: https://github.com/example/my-app
+
+# The Cloudgate version this template is written for. Leave it as it is.
+cloudgate: 0.1.0
+
+# The name of the compose entry in cloudgate.yaml. Keep "app" if you use a
+# docker-compose.yml; delete this line (and size) if you do not.
+compose: app
+
+# The smallest server size the app runs on: xsmall, small, medium, large,
+# xlarge or 2xlarge. small is 1 GB of memory, medium 2 GB, large 4 GB.
+size: small
+
+# The settings the app needs. Each one is filled in at setup in one of three ways:
+#   generate: password | hex | base64 | uuid   Cloudgate makes a strong random value
+#   value: "fixed text"                         always the same; can use the app's
+#                                               address, e.g. "{{domains.my-app.url}}"
+#   ask: { label: ..., ... }                    the person installing types it in
+# Every ${NAME} in docker-compose.yml without a default needs a line here.
+inputs:
+  APP_URL: { value: "{{domains.my-app.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: Where the app sends password resets and alerts.
+      format: email
+
+# Which service in docker-compose.yml gets the web address, and the port the
+# app listens on inside its container. Never write the address itself: setup
+# picks it.
+domains:
+  - { service: my-app, port: 3000 }
+
+# Config files the app reads, kept under files/ next to this file. Delete this
+# section if there are none.
+files: []

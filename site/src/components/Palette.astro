@@ -46,7 +46,7 @@ const searchUrl = href('search.json');
     logo: string;
     url: string;
   };
-  type Index = { apps: Entry[]; swaps: { product: string; app: string }[]; featured: string[] };
+  type Index = { apps: Entry[]; replaces: Record<string, string[]>; swaps: { product: string; app: string }[]; featured: string[] };
 
   const pal = document.getElementById('pal') as HTMLElement;
   const pq = document.getElementById('pq') as HTMLInputElement;
@@ -113,8 +113,9 @@ const searchUrl = href('search.json');
       const seen = new Set<string>();
       tools.forEach((tool) => {
         html += `<div class="pgrp">Replaces <b>${esc(tool)}</b></div>`;
-        index!.apps
-          .filter((a) => a.replaces.includes(tool) && !seen.has(a.id))
+        (index!.replaces[tool] ?? [])
+          .map((id) => byId.get(id))
+          .filter((a): a is Entry => Boolean(a) && !seen.has(a!.id))
           .forEach((a) => {
             seen.add(a.id);
             push(a, a.ease);

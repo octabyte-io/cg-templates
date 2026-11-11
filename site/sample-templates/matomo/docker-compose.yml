@@ -1,0 +1,37 @@
+services:
+  matomo:
+    image: matomo:5.14.2-apache
+    restart: unless-stopped
+    depends_on:
+      matomo-db:
+        condition: service_healthy
+    environment:
+      MATOMO_DATABASE_HOST: matomo-db
+      MATOMO_DATABASE_ADAPTER: mysql
+      MATOMO_DATABASE_TABLES_PREFIX: matomo_
+      MATOMO_DATABASE_USERNAME: matomo
+      MATOMO_DATABASE_PASSWORD: ${DB_PASSWORD}
+      MATOMO_DATABASE_DBNAME: matomo
+    volumes:
+      - matomo-files:/var/www/html
+
+  matomo-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    command: ["--max-allowed-packet=64MB"]
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: matomo
+      MARIADB_USER: matomo
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - matomo-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  matomo-files:
+  matomo-db-data:

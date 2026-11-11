@@ -1,0 +1,68 @@
+# Checks every pull request that touches a template or the website:
+# the site's own rules for each template's index.md and template.yaml (plain-English
+# errors that name the file and field), a full type-check and build, and
+# Cloudgate's `template check` for the files Cloudgate reads.
+name: Check
+
+on:
+  pull_request:
+    paths:
+      - 'templates/**'
+      - 'site/**'
+      - 'starter-template/**'
+      - '.github/workflows/check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'templates/**'
+      - 'site/**'
+      - 'starter-template/**'
+      - '.github/workflows/check.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, so each app page's "Last updated" date comes from git.
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: site/pnpm-lock.yaml
+
+      # The share images are drawn at build time; librsvg needs installed fonts
+      # (Inter for the sans, Liberation Serif italic for the serif).
+      - name: Install fonts for share images
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-inter fonts-liberation
+
+      - name: Install dependencies
+        working-directory: site
+        run: pnpm install --frozen-lockfile
+
+      - name: Check and build the site
+        working-directory: site
+        run: pnpm build
+
+      - name: Check templates with Cloudgate
+        run: |
+          if find templates -mindepth 2 -maxdepth 2 -name template.yaml -not -path 'templates/.*' | grep -q .; then
+            npx --yes @octabyte-io/cloudgate template check templates
+          else
+            echo "No templates in templates/ yet; skipping Cloudgate's template check."
+          fi

@@ -1,0 +1,20 @@
+name: Automatisch
+description: "Build simple if-this-then-that flows between your business apps."
+version: "0.15.0"
+tags: [automation, workflow, no-code]
+links:
+  website: https://automatisch.io
+  docs: https://automatisch.io/docs
+  source: https://github.com/automatisch/automatisch
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_HOST: { value: "{{domains.automatisch.host}}" }
+  APP_URL: { value: "{{domains.automatisch.url}}" }
+  ENCRYPTION_KEY: { generate: hex }
+  WEBHOOK_SECRET_KEY: { generate: hex }
+  APP_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: automatisch, port: 3000 }

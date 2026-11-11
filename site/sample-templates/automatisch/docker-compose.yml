@@ -1,0 +1,70 @@
+services:
+  automatisch:
+    image: automatischio/automatisch:0.15.0
+    restart: unless-stopped
+    depends_on:
+      automatisch-db:
+        condition: service_healthy
+      automatisch-redis:
+        condition: service_started
+    environment:
+      HOST: ${APP_HOST}
+      PROTOCOL: https
+      PORT: 3000
+      API_URL: ${APP_URL}
+      APP_ENV: production
+      REDIS_HOST: automatisch-redis
+      POSTGRES_HOST: automatisch-db
+      POSTGRES_DATABASE: automatisch
+      POSTGRES_USERNAME: automatisch
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      WEBHOOK_SECRET_KEY: ${WEBHOOK_SECRET_KEY}
+      APP_SECRET_KEY: ${APP_SECRET_KEY}
+    volumes:
+      - automatisch-storage:/automatisch/storage
+
+  automatisch-worker:
+    image: automatischio/automatisch:0.15.0
+    restart: unless-stopped
+    depends_on:
+      - automatisch
+    environment:
+      APP_ENV: production
+      WORKER: "true"
+      REDIS_HOST: automatisch-redis
+      POSTGRES_HOST: automatisch-db
+      POSTGRES_DATABASE: automatisch
+      POSTGRES_USERNAME: automatisch
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      WEBHOOK_SECRET_KEY: ${WEBHOOK_SECRET_KEY}
+      APP_SECRET_KEY: ${APP_SECRET_KEY}
+    volumes:
+      - automatisch-storage:/automatisch/storage
+
+  automatisch-db:
+    image: postgres:16.15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: automatisch
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: automatisch
+    volumes:
+      - automatisch-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U automatisch"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  automatisch-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - automatisch-redis-data:/data
+
+volumes:
+  automatisch-storage:
+  automatisch-db-data:
+  automatisch-redis-data:

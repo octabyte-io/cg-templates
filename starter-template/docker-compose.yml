@@ -1,0 +1,38 @@
+# docker-compose.yml: the containers the app runs as.
+# Start from the app's official compose file and then:
+#   - pin every image to a version (never "latest");
+#   - remove "ports:" (Cloudgate routes the web address for you);
+#   - write each setting from template.yaml as ${NAME}.
+services:
+  my-app:
+    image: example/my-app:1.0.0
+    restart: unless-stopped
+    depends_on:
+      my-app-db:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      DATABASE_URL: postgres://my-app:${DB_PASSWORD}@my-app-db:5432/my-app
+    volumes:
+      - my-app-data:/data
+
+  my-app-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: my-app
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: my-app
+    volumes:
+      - my-app-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U my-app"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  my-app-data:
+  my-app-db-data:
