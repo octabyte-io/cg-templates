@@ -1,6 +1,6 @@
 name: Baserow
 description: "Spreadsheet-style databases for lists, projects and inventories."
-version: "2.4.1"
+version: "2.4.2"
 tags: [database, spreadsheet, no-code]
 links:
   website: https://baserow.io

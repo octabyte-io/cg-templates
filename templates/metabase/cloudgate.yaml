@@ -3,7 +3,7 @@ services:
   app:
     kind: web
     description: Metabase's web app and API.
-    source: { image: "metabase/metabase:v0.56.6" }
+    source: { image: "metabase/metabase:v0.65.4.1" }
     port: 3000
     size: medium
     env:

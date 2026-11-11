@@ -21,6 +21,10 @@ services:
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       WEBHOOK_SECRET_KEY: ${WEBHOOK_SECRET_KEY}
       APP_SECRET_KEY: ${APP_SECRET_KEY}
+      # Without this, every install starts with the public demo login
+      # user@automatisch.io / sample. With it, the first visitor creates the admin.
+      DISABLE_SEED_USER: "true"
+      TELEMETRY_ENABLED: "false"
     volumes:
       - automatisch-storage:/automatisch/storage
 
@@ -32,6 +36,7 @@ services:
     environment:
       APP_ENV: production
       WORKER: "true"
+      TELEMETRY_ENABLED: "false"
       REDIS_HOST: automatisch-redis
       POSTGRES_HOST: automatisch-db
       POSTGRES_DATABASE: automatisch

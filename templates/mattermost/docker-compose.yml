@@ -1,6 +1,6 @@
 services:
   mattermost:
-    image: mattermost/mattermost-team-edition:11.11.4
+    image: mattermost/mattermost-team-edition:12.1.0
     restart: unless-stopped
     depends_on:
       mattermost-db:
@@ -9,14 +9,12 @@ services:
       MM_SQLSETTINGS_DRIVERNAME: postgres
       MM_SQLSETTINGS_DATASOURCE: postgres://mattermost:${POSTGRES_PASSWORD}@mattermost-db:5432/mattermost?sslmode=disable&connect_timeout=10
       MM_SERVICESETTINGS_SITEURL: ${SITE_URL}
-      MM_BLEVESETTINGS_INDEXDIR: /mattermost/bleve-indexes
     volumes:
       - mattermost-config:/mattermost/config
       - mattermost-data:/mattermost/data
       - mattermost-logs:/mattermost/logs
       - mattermost-plugins:/mattermost/plugins
       - mattermost-client-plugins:/mattermost/client/plugins
-      - mattermost-bleve:/mattermost/bleve-indexes
 
   mattermost-db:
     image: postgres:17.11-alpine
@@ -39,5 +37,4 @@ volumes:
   mattermost-logs:
   mattermost-plugins:
   mattermost-client-plugins:
-  mattermost-bleve:
   mattermost-db-data:

@@ -1,20 +1,35 @@
 services:
   ghost:
-    image: ghost:6.0-alpine
+    image: ghost:6.76.0-alpine
     restart: unless-stopped
     depends_on:
       ghost-db:
         condition: service_healthy
     environment:
       NODE_ENV: production
+      url: ${GHOST_URL}
+      # Listen on IPv4: the image's default (::) fails where Docker has no IPv6.
+      server__host: 0.0.0.0
+      server__port: 2368
+      database__client: mysql
+      database__connection__host: ghost-db
+      database__connection__port: 3306
+      database__connection__user: ghost
       database__connection__password: ${DB_PASSWORD}
-      mail__from: ${ADMIN_EMAIL}
+      database__connection__database: ghost
+      # Ghost needs working email to send staff invites, password resets,
+      # member sign-in links and the code it asks for on a new device.
+      mail__transport: SMTP
+      mail__from: ${MAIL_FROM}
+      mail__options__host: ${SMTP_HOST}
+      mail__options__port: ${SMTP_PORT}
+      mail__options__auth__user: ${SMTP_USER}
+      mail__options__auth__pass: ${SMTP_PASSWORD}
     volumes:
       - ghost-content:/var/lib/ghost/content
-      - ../files/config.production.json:/var/lib/ghost/config.production.json:ro
 
   ghost-db:
-    image: mysql:8.4
+    image: mysql:8.4.13
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
@@ -24,9 +39,10 @@ services:
     volumes:
       - ghost-db-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 10s
       timeout: 5s
+      start_period: 30s
       retries: 10
 
 volumes:

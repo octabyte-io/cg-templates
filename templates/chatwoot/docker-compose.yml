@@ -6,7 +6,7 @@ services:
       chatwoot-db:
         condition: service_healthy
       chatwoot-redis:
-        condition: service_started
+        condition: service_healthy
     entrypoint: docker/entrypoints/rails.sh
     command: ["sh", "-c", "bundle exec rails db:chatwoot_prepare && bundle exec rails s -p 3000 -b 0.0.0.0"]
     environment:
@@ -26,12 +26,19 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     volumes:
       - chatwoot-storage:/app/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
 
   chatwoot-sidekiq:
     image: chatwoot/chatwoot:v4.19.1-ce
     restart: unless-stopped
     depends_on:
-      - chatwoot
+      chatwoot:
+        condition: service_healthy
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
     environment:
       NODE_ENV: production
@@ -70,8 +77,15 @@ services:
     image: redis:7.4.12-alpine
     restart: unless-stopped
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
     volumes:
       - chatwoot-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
   chatwoot-storage:

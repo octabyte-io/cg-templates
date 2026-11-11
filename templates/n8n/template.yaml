@@ -1,6 +1,6 @@
 name: n8n
 description: "Connect your apps and automate repetitive work with drag-and-drop workflows."
-version: "1.110.1"
+version: "2.47.4"
 tags: [automation, devtools, workflow]
 links:
   website: https://n8n.io
@@ -12,11 +12,16 @@ inputs:
   N8N_HOST: { value: "{{domains.app.host}}" }
   N8N_PROTOCOL: { value: https }
   N8N_PROXY_HOPS: { value: "1" }
-  N8N_RUNNERS_ENABLED: { value: "true" }
   WEBHOOK_URL: { value: "{{domains.app.url}}/" }
   N8N_ENCRYPTION_KEY: { generate: hex }
+  # n8n 2 has no in-memory mode; the app has no volume, so files that
+  # workflows handle are kept in the database rather than on disk.
+  N8N_DEFAULT_BINARY_DATA_MODE: { value: database }
+  # Community nodes live on disk; reinstall them from the database on restart.
+  N8N_REINSTALL_MISSING_PACKAGES: { value: "true" }
   GENERIC_TIMEZONE:
     ask:
       label: Time zone
       description: Used by schedule triggers, as an IANA name such as Europe/Berlin.
       default: UTC
+  TZ: { value: "{{GENERIC_TIMEZONE}}" }

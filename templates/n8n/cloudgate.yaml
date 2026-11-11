@@ -3,8 +3,9 @@ services:
   app:
     kind: web
     description: The n8n editor, API and webhook receiver.
-    source: { image: "n8nio/n8n:1.110.1" }
+    source: { image: "n8nio/n8n:2.47.4" }
     port: 5678
+    size: small
     env:
       - DB_TYPE
       - DB_POSTGRESDB_HOST: db.host
@@ -15,10 +16,12 @@ services:
       - N8N_HOST
       - N8N_PROTOCOL
       - N8N_PROXY_HOPS
-      - N8N_RUNNERS_ENABLED
       - WEBHOOK_URL
       - N8N_ENCRYPTION_KEY
+      - N8N_DEFAULT_BINARY_DATA_MODE
+      - N8N_REINSTALL_MISSING_PACKAGES
       - GENERIC_TIMEZONE
+      - TZ
   db:
     kind: postgres
     version: "16"

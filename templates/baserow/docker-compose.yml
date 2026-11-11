@@ -1,6 +1,6 @@
 services:
   baserow:
-    image: baserow/baserow:2.4.1
+    image: baserow/baserow:2.4.2
     restart: unless-stopped
     environment:
       BASEROW_PUBLIC_URL: ${PUBLIC_URL}
