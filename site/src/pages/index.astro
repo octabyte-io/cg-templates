@@ -314,5 +314,6 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     }),
   );
   input.addEventListener('input', render);
+  input.value = new URLSearchParams(location.search).get('q') ?? input.value;
   render();
 </script>
