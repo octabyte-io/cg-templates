@@ -1,7 +1,7 @@
 name: Uptime Kuma
-description: "Get an alert the moment your website goes down, and show customers a status page."
+description: "Uptime Kuma is a self-hosted uptime monitor: get an alert the moment your website goes down and show customers a status page. Free, open source."
 version: "2.5.9"
-tags: [monitoring, status-page, devtools]
+tags: [uptime monitoring, status page, website monitoring, pingdom alternative, uptimerobot alternative, ssl certificate monitoring]
 links:
   website: https://uptime.kuma.pet
   docs: https://github.com/louislam/uptime-kuma/wiki

@@ -1,7 +1,7 @@
 name: Automatisch
-description: "Build simple if-this-then-that flows between your business apps."
+description: "Automatisch is an open-source Zapier alternative for simple if-this-then-that flows between your business apps, self-hosted so your data stays with you."
 version: "0.15.0"
-tags: [automation, workflow, no-code]
+tags: [zapier alternative, workflow automation, no-code, integrations, open source]
 links:
   website: https://automatisch.io
   docs: https://automatisch.io/docs

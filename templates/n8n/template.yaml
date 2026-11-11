@@ -1,7 +1,7 @@
 name: n8n
-description: "Connect your apps and automate repetitive work with drag-and-drop workflows."
+description: "Self-hosted n8n: automate work between your apps with drag-and-drop workflows and AI steps, with no task limits. A fair-code alternative to Zapier and Make."
 version: "2.47.4"
-tags: [automation, devtools, workflow]
+tags: [workflow automation, zapier alternative, make alternative, ai agents, no-code, integrations]
 links:
   website: https://n8n.io
   docs: https://docs.n8n.io/hosting/

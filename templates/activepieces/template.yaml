@@ -1,7 +1,7 @@
 name: Activepieces
-description: "Simple automations between the tools you already use, with ready-made steps."
+description: "Activepieces is an open-source Zapier alternative: automate work between your apps with step-by-step flows, AI steps and approvals, with no task limits."
 version: "0.93.0"
-tags: [automation, workflow, no-code]
+tags: [zapier alternative, workflow automation, no-code, ai agents, integrations, open source]
 links:
   website: https://www.activepieces.com
   docs: https://www.activepieces.com/docs/install/overview

@@ -1,43 +1,56 @@
 ---
 tagline: Simple if-this-then-that flows between your business apps.
 category: automation
-alternativeTo: [zapier]
+alternativeTo: [zapier, ifttt, make]
 ease: easy
-easeNote: Flows are a trigger and a few steps, filled in from menus.
+easeNote: A flow is a trigger and a few steps, filled in from menus; you connect each app's account once.
 license: AGPL-3.0-only
-goodFor: Basic two- or three-step flows for small teams
+goodFor: Short two- or three-step flows for a small team
 features:
   - title: Build a flow in minutes
-    text: Choose what starts it, then add the steps that follow.
+    text: Choose what starts it, such as a new form entry or a paid invoice, then add the steps that follow.
   - title: Connect common apps
-    text: Gmail, Google Sheets, Slack, Notion, Stripe and more.
+    text: Ready-made steps for Gmail, Google Sheets, Slack, Notion, Stripe, HubSpot, Mailchimp and around 80 others.
   - title: Run on a schedule
     text: Start a flow every hour, every day or every week.
+  - title: Only act when it matters
+    text: A filter step lets a flow carry on only when the data matches your rules.
+  - title: Use AI in a step
+    text: Summarise or draft text with OpenAI, Anthropic, Mistral or your own AI model.
   - title: Check what happened
-    text: See each run and the data that passed through it.
+    text: See each run and the data that passed through every step.
 switching:
   gain:
-    - No monthly task limits
+    - No monthly task limits and no price per run
     - Your data stays on your own server
-    - A short list of options that is quick to learn
+    - A short list of options that is quick to learn and hand over
   different:
-    - Far fewer ready-made connections than Zapier
-    - Best for short, straightforward flows
+    - Far fewer ready-made connections than Zapier or Make
+    - Best for short, straightforward flows rather than complex ones
+    - Extra user accounts and roles need the paid enterprise edition
     - A smaller community than n8n or Activepieces
 faq:
-  - q: Do I need to know how to code?
-    a: No. You build flows by choosing apps and filling in forms.
-  - q: What does it cost?
-    a: Automatisch is free. You pay only for your server.
-  - q: Who can sign in?
-    a: The first person to open Automatisch's web address creates the admin account.
+  - q: Is Automatisch free?
+    a: Yes. Automatisch is open source under the AGPL-3.0 licence and free to self-host, so you pay only for your server. A few features, such as extra user accounts and roles, need a paid enterprise licence.
+  - q: Is Automatisch a good alternative to Zapier?
+    a: Automatisch is a good Zapier alternative for simple flows between common apps. It is built the same way, a trigger followed by actions, but it has far fewer ready-made connections, so check that your apps are on its list first.
   - q: When should I choose n8n or Activepieces instead?
-    a: When you need many different apps, flows with branches, or AI steps. Automatisch is best when you only need a handful of simple flows.
+    a: Choose n8n or Activepieces when you need many different apps, flows with several branches, or a whole team building automations. Automatisch suits a handful of simple flows that one person looks after.
+  - q: How do I self-host Automatisch?
+    a: With Cloudgate, you pick Automatisch from the catalogue and click install. Cloudgate sets up the app, its background worker, database and queue on your server, gives it a secure web address and generates its secret keys.
+  - q: Is my data private with self-hosted Automatisch?
+    a: Yes. Your flows, run history and app logins are stored in a database on your own server, and app logins are encrypted. Data leaves your server only when a flow sends it to an app you connected.
+  - q: What server size do I need for Automatisch?
+    a: Automatisch runs on a small server with 1 GB of memory, which is enough for a few flows running every few minutes.
 screenshots: []
 ---
 
-Automatisch connects your business apps with simple flows: when something happens in one app, do something in another. For example, when a new row is added to a Google Sheet, post a message in Slack, or when a payment arrives in Stripe, send a thank-you email.
+Automatisch is an open-source automation tool that connects your business apps with simple flows: when something happens in one app, it does something in another. For example, when a new row is added to a Google Sheet, it posts a message in Slack, or when a payment arrives in Stripe, it sends a thank-you email.
 
-It is a small, focused tool. There are fewer options than in larger automation apps, which makes it quick to learn and easy to hand over to colleagues. A small office, for example, could run three or four flows that save someone an hour of copying and pasting every week.
+It is a small, focused tool. There are fewer options than in larger automation apps such as n8n or Activepieces, which makes it quick to learn and easy to hand over to a colleague. A small office could run three or four flows that save someone an hour of copying and pasting every week: new web form entries into a spreadsheet, new customers into Mailchimp, and a daily reminder in the team chat.
 
-Cloudgate installs Automatisch on a server you connect and gives it a secure web address. The first person to sign in becomes the admin. Automatisch has ready-made connections for common tools such as Gmail, Google Sheets, Slack, Notion, Stripe, Discord and Telegram, and every run is logged so you can see what happened.
+Automatisch has ready-made connections for around 80 tools, including Gmail, Google Sheets, Google Calendar, Slack, Notion, Stripe, HubSpot, Pipedrive, Trello and Typeform, plus webhooks and web requests for anything else. Every run is logged so you can see what happened at each step. There is no phone app; you use it in your web browser.
+
+### How Cloudgate installs Automatisch
+
+Cloudgate installs Automatisch on a server you connect, with the database and queue it needs, and gives it a secure web address. The first person to open that address creates the admin account. Your flows and data stay on your own server.
