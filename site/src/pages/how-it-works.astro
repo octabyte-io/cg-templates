@@ -16,8 +16,9 @@ import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
  * made at setup (ADR-0064), a copy never updates from its template (CONTEXT "Template",
  * "Setup record"), a generated address is plain http and the user's own gets a Let's
  * Encrypt certificate (templates/setup/setup-domains.ts), backups run on a schedule to a
- * destination the user adds, and a lapsed plan touches nothing on the user's Servers
- * (ADR-0052) except a Bought Server (ADR-0071).
+ * destination the user adds (in the console: Applications and managed databases, not yet Compose
+ * stacks), and deleting keeps stored data unless asked. The hosted service (ADR-0052, ADR-0054,
+ * ADR-0071) is unreleased, so this page describes self-hosted Cloudgate only.
  */
 
 const trail = [
@@ -46,7 +47,7 @@ const steps = [
   },
   {
     name: 'Pick your server',
-    text: 'Choose a server you have already connected, or connect one you rent from a hosting company. Cloudgate prepares a new server only after you confirm. On the hosted version of Cloudgate you can also buy a server in the same step.',
+    text: 'Choose a server you have already connected, or connect one you rent from a hosting company. Cloudgate prepares a new server only after you confirm, and the server Cloudgate itself runs on can host your apps too.',
   },
   {
     name: 'Click Deploy and fill in a few details',
@@ -65,7 +66,7 @@ const steps = [
 const daily = [
   {
     q: 'How do backups work?',
-    a: 'You choose how often each app’s data is copied, for example every night, and where the copies go: storage you add, away from the server. Cloudgate keeps the number of copies you ask for, and you restore one from the same screen.',
+    a: 'You choose how often an app’s data is copied, for example every night, and where the copies go: storage you add, away from the server. Cloudgate keeps the number of copies you ask for, and you restore one from the same screen. Today this covers apps that keep their data in a database or storage Cloudgate manages; for apps made of several parts, backups are not in the console yet.',
     note: 'Nothing is copied until you set a schedule, so do this first.',
   },
   {
@@ -75,7 +76,7 @@ const daily = [
   },
   {
     q: 'How do I add my team?',
-    a: 'Invite people by email and give each one a role. You can limit someone to the apps they work on. The apps never charge per person, and Cloudgate’s hosted plans count servers, not people.',
+    a: 'Invite people by email and give each one a role. You can limit someone to the apps they work on. Neither the apps nor Cloudgate charge per person.',
     note: 'Twelve people cost the same as two.',
   },
   {
@@ -92,11 +93,11 @@ const faq = [
   },
   {
     q: 'What server do I need?',
-    a: 'A server you rent from a hosting company, running Ubuntu or Debian, which most offer as the default. Cloudgate connects to it and, once you confirm, installs what it needs. How big it should be depends on the apps you run, and one small server can run several. On the hosted version of Cloudgate you can buy a server in the same screen instead.',
+    a: 'A server you rent from a hosting company, running Ubuntu or Debian, which most offer as the default. Cloudgate connects to it and, once you confirm, installs what it needs. How big it should be depends on the apps you run, and one small server can run several. It can also be the same server Cloudgate is installed on.',
   },
   {
     q: 'What does it cost?',
-    a: 'The apps are free. You pay whoever rents you the server. Cloudgate itself is free to run on your own server, or you can use the hosted version, a monthly plan that counts servers and never people.',
+    a: 'The apps are free, and Cloudgate is free to install on your own server. You pay only whoever rents you the server, and one server can run several apps.',
   },
   {
     q: 'Can I use my own web address?',
@@ -104,7 +105,7 @@ const faq = [
   },
   {
     q: 'What happens to my apps if I stop using Cloudgate?',
-    a: 'They are ordinary open-source apps on your server, and your data stays there. If a hosted plan ends, nothing on your own servers is touched, but backups and other scheduled jobs stop. A server bought through Cloudgate is deleted once it is no longer paid for, with its data, so keep your own backups.',
+    a: 'They are ordinary open-source apps on your server, and your data stays there. Cloudgate runs on your own server too, so there is no account that can be closed on you; without it, you look after the apps yourself, as you would any software.',
   },
 ];
 
@@ -124,7 +125,7 @@ const howTo = {
 ---
 
 <Base
-  title="How Cloudgate deploys open-source apps on your own server"
+  title="How to self-host an open-source app"
   description="What happens from choosing an app to running it on your own server: pick a server, check what Cloudgate will create, then backups, updates and your team."
   path="how-it-works/"
   noindex={isSample}
@@ -134,7 +135,7 @@ const howTo = {
 
   <section class="apphead pad intro">
     <div class="body">
-      <h1 class="h1">How Cloudgate works</h1>
+      <h1 class="h1">How to self-host an app with Cloudgate</h1>
       <p class="lede">
         From the tool you pay for today to an open-source app doing the same job on your own server. Here is what
         happens at each step, and what Cloudgate looks after once the app is running.
@@ -198,11 +199,11 @@ const howTo = {
           <h3 class="h3">{steps[1].name}</h3>
           <p>{steps[1].text}</p>
         </div>
-        <div class="frag" role="img" aria-label="Example server choice: Shop server in Germany selected, or connect or buy another">
+        <div class="frag" role="img" aria-label="Example server choice: Shop server in Germany selected, or connect another, or use the server Cloudgate runs on">
           <div class="srv" aria-hidden="true">
             <label class="on"><input type="radio" name="how-srv" checked tabindex="-1" /> Shop server <small>Germany · online</small></label>
             <label><input type="radio" name="how-srv" tabindex="-1" /> Connect a server you rent</label>
-            <label><input type="radio" name="how-srv" tabindex="-1" /> Buy a server <small>hosted version</small></label>
+            <label><input type="radio" name="how-srv" tabindex="-1" /> This server <small>where Cloudgate runs</small></label>
           </div>
         </div>
       </li>

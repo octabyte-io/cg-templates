@@ -18,8 +18,8 @@ const trail = [
 /*
  * The cost example. Every figure is an example: round, plausible, in US dollars, and labelled as
  * such on the page. Per-seat tools are priced per person; the server side does not change with
- * the number of people. The Cloudgate line is the hosted service's Starter plan (CONTEXT.md:
- * "Starter", "Hosted plan": members are never counted), and is free when you run Cloudgate yourself.
+ * the number of people. Cloudgate itself costs nothing when you run it yourself, the only way to
+ * get it today: the hosted service (cloudgate ADR-0052, ADR-0054) is unreleased, so it is left out.
  */
 const TEAM = 12;
 const product = (id: string) => PRODUCTS.find((p) => p.id === id)!;
@@ -32,7 +32,7 @@ const paidAt = (people: number) => paid.reduce((sum, row) => sum + row.perSeat *
 const server = [
   { label: 'Server big enough for all three apps', cost: 20 },
   { label: 'Storage for backups', cost: 5 },
-  { label: 'Cloudgate hosted plan (free if you run Cloudgate yourself)', cost: 15 },
+  { label: 'Cloudgate, installed on the same server', cost: 0 },
 ];
 const serverTotal = server.reduce((sum, row) => sum + row.cost, 0);
 const paidTotal = paidAt(TEAM);
@@ -52,7 +52,7 @@ const faq = [
   },
   {
     q: 'Do I need to be technical?',
-    a: 'You need a server. You can connect one you already rent, or on Cloudgate’s hosted service buy one and pick where it is. After that you choose an app, check what Cloudgate will set up and click Apply. Apps marked “Some setup” need a few extra steps, which their pages explain.',
+    a: 'To use the apps, no. Someone needs to install Cloudgate on a rented server once, which takes two commands and a few minutes. After that you choose an app, check what Cloudgate will set up and click Apply. Apps marked “Some setup” need a few extra steps, which their pages explain.',
   },
   {
     q: 'Who keeps the apps up to date?',
@@ -60,11 +60,11 @@ const faq = [
   },
   {
     q: 'Does Cloudgate charge per person?',
-    a: 'No. Cloudgate is free to run on your own server. Its hosted service has monthly plans that count servers, never the people in your team.',
+    a: 'No. Cloudgate is free to install on your own server, and neither it nor the apps count the people in your team. Your server is the only bill.',
   },
   {
     q: 'What happens to my data if I stop using Cloudgate?',
-    a: 'It stays on your server. If a hosted plan ends, Cloudgate stops doing new work but leaves apps on your own servers running, and you can still download your settings. A server bought through Cloudgate is the exception: it is deleted with its data and backups once it is no longer paid for, so move your data first.',
+    a: 'It stays on your server. Cloudgate runs on your own server too, so there is no account to close and nothing is deleted for you. The apps are ordinary open-source software, and keep running until you remove them.',
   },
   {
     q: 'Is Cloudgate itself open source?',
@@ -72,7 +72,7 @@ const faq = [
   },
 ];
 
-const title = 'Why run open-source apps on your own server';
+const title = 'Self-hosting vs SaaS: what a small team pays';
 const description =
   'Per-seat tools charge for every person. See what a small team pays for open-source apps on one server, what Cloudgate looks after, and when not to switch.';
 ---
@@ -220,10 +220,10 @@ const description =
     <div class="blk half">
       <h2 class="h2">Where does your data live?</h2>
       <p class="body">
-        On your server, in the country you choose. Connect a server you already rent anywhere, or on Cloudgate’s hosted service
-        buy one and pick its location. Customer lists, messages and files stay there instead of in another company’s systems.
+        On your server, in the country you choose. Rent one from any hosting company, in the location you pick, and connect
+        it to Cloudgate. Customer lists, messages and files stay there instead of in another company’s systems.
       </p>
-      <div class="frag loc" role="img" aria-label="Example: choosing where a new server is, with Germany selected">
+      <div class="frag loc" role="img" aria-label="Example: choosing where to rent a server, with Germany selected">
         <span class="lab" aria-hidden="true">Where should your new server be?</span>
         <div class="srv" aria-hidden="true">
           <label class="on"><input type="radio" name="loc" checked tabindex="-1" /> Germany <small>Nuremberg</small></label>
@@ -238,7 +238,7 @@ const description =
         <li>The apps are open source. Nobody can raise their price or switch them off, and each app’s page names its licence.</li>
         <li>Your data sits on your server, not in a vendor’s account you have to export it out of.</li>
         <li>
-          If a Cloudgate hosted plan ends, your apps on your own server keep running and you can still download your settings.
+          Cloudgate runs on your server as well, so there is no Cloudgate account that can be closed or repriced on you.
         </li>
         <li>
           Cloudgate itself is free to run on your own server: it is source-available under the Elastic License 2.0.
@@ -256,7 +256,7 @@ const description =
       <div class="pad item">
         <div class="tx">
           <h3 class="h3">Backups on a schedule you set</h3>
-          <p>Choose how often your app’s data is copied, where to, and how many copies to keep. Restore one when you need it.</p>
+          <p>Choose how often an app’s database and files are copied, where to, and how many copies to keep. Restore one when you need it.</p>
         </div>
         <div class="frag rows" role="img" aria-label="Example backup settings: every night at 02:00, newest 14 kept, stored in your own storage">
           <div class="r" aria-hidden="true"><span>Runs</span><span>Every night at 02:00</span></div>
@@ -267,7 +267,7 @@ const description =
       <div class="pad item">
         <div class="tx">
           <h3 class="h3">A secure web address for each app</h3>
-          <p>Every app starts with a working address, secured with https. Use your own name, like chat.yourshop.com, when you are ready.</p>
+          <p>Every app starts with a free working address. Give it your own name, like chat.yourshop.com, and Cloudgate secures it with https for you.</p>
         </div>
         <div class="frag addr" role="img" aria-label="Example web address chat.acmebakery.com, secure (https), live">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"

@@ -2,7 +2,7 @@
 
 export const SITE_NAME = 'Cloudgate Templates';
 export const SITE_DESCRIPTION =
-  'Open-source apps that do the job of the tools you pay for, ready to run on your own server. Pick one, click Deploy, and Cloudgate sets it up.';
+  'Free, open-source apps that replace the tools you pay for, ready to self-host on your own server. Pick one, click Deploy, and Cloudgate sets it up.';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 

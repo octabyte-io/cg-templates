@@ -37,16 +37,33 @@ const trail = [
   { name: a.name, path: `templates/${a.id}/` },
 ];
 
-const title = replacedNames.length
-  ? `${a.name}: free, self-hosted alternative to ${listNames(replacedNames.slice(0, 2))}`
-  : `${a.name}: ${a.tagline.replace(/\.$/, '')}`;
+// The title leads with the search people make ("self-hosted alternative to Zapier") and falls back
+// to shorter wordings so it fits the roughly 60 characters a results page shows, " | Cloudgate"
+// included. The last wording is used even when it is longer.
+const titles = replacedNames.length
+  ? [
+      `${a.name}: free, self-hosted alternative to ${listNames(replacedNames.slice(0, 2))}`,
+      `${a.name}: free, self-hosted alternative to ${replacedNames[0]}`,
+      `${a.name}: self-hosted ${replacedNames[0]} alternative`,
+    ]
+  : [`${a.name}: ${a.tagline.replace(/\.$/, '')}`, `Self-host ${a.name}`];
+const title = titles.find((t) => t.length <= 48) ?? titles[titles.length - 1];
+
+// template.yaml's description is a card line (50-160 characters); the meta description adds what
+// a searcher wants to know next, and stops at a sentence so it is never cut mid-word.
+const sentences = [
+  a.description.replace(/\s*$/, ''),
+  replacedNames.length ? `A free, open-source alternative to ${listNames(replacedNames.slice(0, 2))}.` : 'Free and open source.',
+  'Self-host it with Cloudgate.',
+];
+const description = sentences.reduce((out, next) => (`${out} ${next}`.length <= 160 ? `${out} ${next}` : out));
 
 const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, steps), faqSchema(faq));
 ---
 
 <Base
   title={title}
-  description={a.description}
+  description={description}
   path={`templates/${a.id}/`}
   jsonLd={jsonLd}
   ogImage={`og/${a.id}.png`}

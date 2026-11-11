@@ -18,7 +18,7 @@ const trail = [
 ];
 
 const description =
-  'Cloudgate is a free console you open in your browser to run apps on a server you own. See what you need, how the install works and what to do next.';
+  'Cloudgate is a free, self-hosted platform for running apps on a server you own. See what you need, the two-command install and what to do next.';
 
 // docs/deploy.md §2: the clone and the one install script. Nothing else is needed to install.
 const installCommands = `git clone git@github.com:octabyte-io/cloudgate.git /opt/cloudgate
@@ -28,7 +28,7 @@ CLOUDGATE_PUBLIC_HOST=<public ip or hostname> bash /opt/cloudgate/deploy/install
 const spec = [
   ['System', 'Ubuntu 24.04'],
   ['Size', '2 vCPU, 4 GB memory, 40 GB disk'],
-  ['Processor', 'x86-64 (amd64); the installer stops on ARM'],
+  ['Processor', 'x86-64 (amd64) only; ARM is not supported'],
   ['Access', 'root over SSH'],
   ['Ports open inbound', '22, 80, 443, 3000, 4000'],
   ['DNS', 'none required (sslip.io)'],
@@ -71,6 +71,14 @@ const faq = [
     a: 'No. Without one, each app gets a free web address built from your server’s IP address, which is how Cloudgate’s own test installs reached their apps. You can give an app your own domain whenever you like.',
   },
   {
+    q: 'Is there a hosted version of Cloudgate?',
+    a: 'Not today. The only way to get Cloudgate is to install it on a server you control, which keeps the console, your apps and their data on machines you choose.',
+  },
+  {
+    q: 'What else can Cloudgate do besides installing apps from this catalogue?',
+    a: 'It is a full deployment platform. It can deploy your own code from GitHub, GitLab, Bitbucket or Gitea on every push, with preview copies of a change and one-click rollback. It runs managed Postgres, MySQL, MariaDB, MongoDB and Redis databases with scheduled backups. It checks that your apps are up and alerts you by email, Slack, Microsoft Teams, Discord or Telegram when one is not, and it shows logs and resource use for each app.',
+  },
+  {
     q: 'What if I get stuck?',
     a: 'Cloudgate’s deployment guide covers the install step by step, including what has gone wrong on real installs and how to fix it. If something is still broken, open an issue on Cloudgate’s GitHub page. Please report a security problem privately, as the project’s security policy describes, not in a public issue.',
   },
@@ -89,6 +97,14 @@ const cloudgate = {
   processorRequirements: '2 vCPU, x86-64',
   memoryRequirements: '4 GB',
   storageRequirements: '40 GB',
+  featureList: [
+    'One-click setup of open-source apps from the Cloudgate Templates catalogue',
+    'Deploy from GitHub, GitLab, Bitbucket or Gitea on every push, with preview deployments and rollback',
+    'Managed Postgres, MySQL, MariaDB, MongoDB and Redis databases with scheduled backups',
+    'Automatic https certificates for your own domains',
+    'Uptime checks and alerts by email, Slack, Microsoft Teams, Discord or Telegram',
+    'Team roles with access limited to chosen projects and apps',
+  ],
   license: LICENSE_URL,
   isAccessibleForFree: true,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -99,7 +115,7 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
 ---
 
 <Base
-  title="Get Cloudgate: free app hosting on your own server"
+  title="Install Cloudgate on your own server, free"
   description={description}
   path="get-cloudgate/"
   jsonLd={jsonLd}
@@ -148,10 +164,10 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
       <div class="tile pad">
         <div class="tx">
           <h3 class="h3">A domain name, if you like</h3>
-          <p>Not needed to start. Each app can get a free web address built from your server’s IP address, and you can use your own domain whenever you want.</p>
+          <p>Not needed to start. Each app can get a free web address built from your server’s IP address, without https. Use your own domain whenever you want, and Cloudgate gets its https certificate for you.</p>
         </div>
-        <div class="frag addr" role="img" aria-label="Example web addresses: n8n.203.0.113.10.sslip.io without a domain, n8n.acmebakery.com with your own">
-          <div class="r" aria-hidden="true"><span>Without a domain</span><span class="a">n8n.203.0.113.10.sslip.io</span></div>
+        <div class="frag addr" role="img" aria-label="Example web addresses: n8n-3f9a1c-203-0-113-10.sslip.io without a domain, n8n.acmebakery.com with your own">
+          <div class="r" aria-hidden="true"><span>Without a domain</span><span class="a">n8n-3f9a1c-203-0-113-10.sslip.io</span></div>
           <div class="r" aria-hidden="true"><span>With your own</span><span class="a">n8n.acmebakery.com</span></div>
         </div>
       </div>
@@ -179,7 +195,7 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
         <h2 class="h2" id="cost-title">How to get it, and what it costs</h2>
         <p>
           Today there is one way to get Cloudgate: install it on a server you control, yourself or with the help of
-          someone technical. The software is free for individuals and businesses alike. Its code is published under the
+          someone technical. The software is free for individuals and businesses alike. It is licensed under the
           <a href={LICENSE_URL}>Elastic License 2.0</a>, which lets anyone use, self-host and change it for free, but not
           offer it to other people as a hosted service.
         </p>

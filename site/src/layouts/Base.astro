@@ -16,7 +16,10 @@ import { alternativesPages, GITHUB_REPO, isSample, usedCategories } from '../lib
 import { absolute, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 interface Props {
-  /** The page's own title; the site name is appended unless `bareTitle`. */
+  /**
+   * The page's own title, search phrase first. " | Cloudgate" is appended unless `bareTitle`,
+   * kept short so the whole title fits the roughly 60 characters a results page shows.
+   */
   title: string;
   description?: string;
   /** Path under the base, e.g. `templates/n8n/`. */
@@ -43,7 +46,7 @@ const {
   markdown,
 } = Astro.props;
 
-const fullTitle = bareTitle ? title : `${title} | ${SITE_NAME}`;
+const fullTitle = bareTitle ? title : `${title} | Cloudgate`;
 const canonical = absolute(path);
 const image = absolute(ogImage);
 // The swaps the home page shows come first, then the products with the most alternatives.

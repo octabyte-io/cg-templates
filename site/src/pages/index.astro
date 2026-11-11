@@ -4,8 +4,9 @@ import AppTile from '../components/AppTile.astro';
 import ProductTile from '../components/ProductTile.astro';
 import Card from '../components/Card.astro';
 import Chev from '../components/Chev.astro';
-import { alternativesPages, getTemplate, getTemplates, popularSwaps, usedCategories } from '../lib/catalogue';
-import { graph, itemListSchema, websiteSchema } from '../lib/schema';
+import Faq from '../components/Faq.astro';
+import { alternativesPages, getTemplate, getTemplates, listNames, popularSwaps, usedCategories } from '../lib/catalogue';
+import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
 import { href, SITE_DESCRIPTION } from '../lib/site';
 
 const templates = getTemplates();
@@ -22,11 +23,45 @@ const second = templates.find((t) => t.id === 'plausible') ?? templates.find((t)
 const nights = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Tonight'];
 const seats = ['AK', 'JB', 'LM', 'SR', 'TO', 'EV', 'PN', 'MC', 'RD', 'HW', 'CL', 'NB'];
 
-const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source apps on Cloudgate'));
+// Answers written to be quoted as they stand: each one names its subject instead of saying "it",
+// and the examples come from the catalogue, so they stay true as apps are added.
+const exampleSwaps = swaps.slice(0, 3);
+const faq = [
+  {
+    q: 'What is Cloudgate Templates?',
+    a: `Cloudgate Templates is a free directory of ${total} open-source apps you can self-host${
+      exampleSwaps.length
+        ? `, such as ${listNames(exampleSwaps.map((swap) => `${swap.app.name} instead of ${swap.product.name}`))}`
+        : ''
+    }. Each app can be set up on your own server in a few clicks with Cloudgate, a free, self-hosted deployment platform.`,
+  },
+  {
+    q: 'What does self-hosting an app mean?',
+    a: 'Self-hosting means the app runs on a server you rent or own, instead of on the servers of the company that sells it. Your data stays on that server, in the country you choose, and nobody charges you per person to use it.',
+  },
+  {
+    q: 'Are the apps really free?',
+    a: 'Yes. Every app in Cloudgate Templates is open source and free to use, and Cloudgate is free to install on your own server. The only bill is the server, from any hosting company, and one server can run several apps.',
+  },
+  {
+    q: 'What is Cloudgate?',
+    a: 'Cloudgate is a self-hosted deployment platform: a console you open in your browser that sets up, runs and backs up apps and databases on servers you own, and gives each app a secure web address. It is source-available under the Elastic License 2.0 and free for individuals and businesses.',
+  },
+  {
+    q: 'Do I need to be technical to use these apps?',
+    a: 'No. Someone installs Cloudgate on a server once, which takes two commands and a few minutes. After that you choose an app, review what Cloudgate will create and click Apply, then use the app in your browser like any online tool.',
+  },
+  {
+    q: 'Can I suggest or add an app?',
+    a: 'Yes. Each app is a small folder of text files in the Cloudgate Templates repository on GitHub. Anyone can add one with a pull request from the GitHub website, without installing anything.',
+  },
+];
+
+const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source apps on Cloudgate'), faqSchema(faq));
 ---
 
 <Base
-  title="Open-source apps, ready to run on your own server | Cloudgate Templates"
+  title="Open-source apps you can self-host in one click | Cloudgate"
   bareTitle
   description={SITE_DESCRIPTION}
   path=""
@@ -37,8 +72,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     <h1 class="display">Open-source apps, ready to run on your own server</h1>
     <div class="row2">
       <p class="lede">
-        Pick an app that does the job of a tool you pay for today, choose your server, and click Deploy. Cloudgate
-        sets it up and keeps it running.
+        Pick a free app that does the job of a tool you pay for today, choose your server, and click Deploy.
+        Cloudgate sets it up, gives it a secure web address and keeps it running.
       </p>
       <div class="acts">
         <a class="btn lg" href="#catalogue">Browse {total} apps</a>
@@ -127,7 +162,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <div class="tile t-a pad">
         <div class="tx">
           <h3 class="h3">Backups on the schedule you choose</h3>
-          <p>Set it once, for example every night, and your app’s data is copied to storage you choose, away from the server. Restore any copy when you need it.</p>
+          <p>Set it once, for example every night, and your app’s database and files are copied to storage you choose, away from the server. Restore any copy when you need it.</p>
         </div>
         <div class="frag" role="img" aria-label="Example backup history: a backup every night at 02:00, 14 days kept">
           <div class="tl" aria-hidden="true">
@@ -261,6 +296,13 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       </section>
     )
   }
+
+  <section class="sec pad" id="faq" aria-labelledby="faq-title">
+    <div class="blk" style="border-top:0;padding-top:72px">
+      <h2 class="h2" id="faq-title">Questions about self-hosting</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
 </Base>
 
 <script>
