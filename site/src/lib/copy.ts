@@ -15,7 +15,7 @@ export function HOW_IT_WORKS(template: Template): { name: string; text: string }
     },
     {
       name: 'Open your app and sign in',
-      text: 'Cloudgate gives it a secure web address. The first person to sign in becomes the owner.',
+      text: 'Cloudgate gives it a web address. Use your own domain and it gets https automatically.',
     },
   ];
 }
@@ -26,7 +26,7 @@ export function appFaq(template: Template): { q: string; a: string }[] {
   const general = [
     {
       q: 'Do I need technical skills?',
-      a: `No. Cloudgate installs ${template.name} on your server and gives it a secure web address. You use it in your browser like any other online tool.`,
+      a: `No. Cloudgate installs ${template.name} on your server and gives it a web address. You use it in your browser like any other online tool.`,
     },
     { q: 'What does it cost?', a: `${template.name} is free. You pay only for your server.` },
     ...(first

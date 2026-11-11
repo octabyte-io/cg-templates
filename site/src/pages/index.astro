@@ -42,7 +42,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       </p>
       <div class="acts">
         <a class="btn lg" href="#catalogue">Browse {total} apps</a>
-        <a class="btn lg ghost" href="#how">How it works <Chev /></a>
+        <a class="btn lg ghost" href={href('how-it-works/')}>How it works <Chev /></a>
       </div>
     </div>
     <div class="facts-strip"><span><b>{total}</b> apps</span><span><b>Free</b> to use</span><span>You pay only for your server</span></div>
@@ -97,7 +97,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
                 <div class="sumrow"><span>App</span><span>{featured.name}</span></div>
                 <div class="sumrow"><span>Server</span><span>Shop server</span></div>
                 {replaced && <div class="sumrow"><span>Replaces</span><span>{replaced.name}</span></div>}
-                <div class="sumrow"><span>Backups</span><span>Every night</span></div>
+                <div class="sumrow"><span>Backups</span><span>On your schedule</span></div>
                 <div class="sumrow"><span>App cost</span><span>Free</span></div>
                 <span class="btn" style="width:100%">Deploy {featured.name}</span>
                 <div class="log">
@@ -126,8 +126,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     <div class="bento">
       <div class="tile t-a pad">
         <div class="tx">
-          <h3 class="h3">Backups every night, without thinking about it</h3>
-          <p>Your app’s data is copied on a schedule and kept for as long as you choose. Restore any day when you need it.</p>
+          <h3 class="h3">Backups on the schedule you choose</h3>
+          <p>Set it once, for example every night, and your app’s data is copied to storage you choose, away from the server. Restore any copy when you need it.</p>
         </div>
         <div class="frag" role="img" aria-label="Example backup history: a backup every night at 02:00, 14 days kept">
           <div class="tl" aria-hidden="true">
@@ -153,7 +153,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
           <div class="top1" aria-hidden="true"><span class="flag" /><b>Shop server</b><span class="status"><i />Online</span></div>
           <div class="r" aria-hidden="true"><span>Location</span><span>Frankfurt, Germany</span></div>
           <div class="r" aria-hidden="true"><span>Apps running</span><span>{[featured, second].filter(Boolean).map((t) => t!.name).join(', ')}</span></div>
-          <div class="r" aria-hidden="true"><span>Data copied to</span><span>This server only</span></div>
+          <div class="r" aria-hidden="true"><span>Backups go to</span><span>Storage you choose</span></div>
         </div>
       </div>
       <div class="tile t-c pad">

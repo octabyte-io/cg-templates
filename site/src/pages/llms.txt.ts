@@ -26,7 +26,7 @@ function body(): string {
     `- [All apps](${absolute('templates/')}): every app in the directory, filterable by category or by the tool it replaces.`,
     `- [How it works](${absolute('how-it-works/')}): what happens from choosing an app to running it on your own server.`,
     `- [Why Cloudgate](${absolute('why-cloudgate/')}): the case for running open-source apps on your own server, and when a paid tool is still the better choice.`,
-    `- [Get Cloudgate](${absolute('get-cloudgate/')}): what you need and how to install Cloudgate, which is free and open source.`,
+    `- [Get Cloudgate](${absolute('get-cloudgate/')}): what you need and how to install Cloudgate, which is free to self-host and source-available under the Elastic License 2.0.`,
     '',
   );
 

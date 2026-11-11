@@ -43,7 +43,7 @@ note on every page and sets `noindex`.
 |---|---|---|
 | `SITE_URL` | `https://octabyte-io.github.io` | The site's origin, for canonical URLs and the sitemap |
 | `BASE_PATH` | `/cg-templates` | The path it is served under; `/` on a custom domain |
-| `PUBLIC_DEPLOY_URL` | unset | Where "Deploy <app>" goes; may contain `{id}`. Unset, it goes to Get Cloudgate |
+| `PUBLIC_DEPLOY_URL` | unset | Where "Deploy <app>" goes; may contain `{id}`. Unset, it goes to the Get Cloudgate page |
 | `PUBLIC_GET_CLOUDGATE_URL` | the Cloudgate repository | Where "Get Cloudgate" goes |
 | `TEMPLATES_DIR` | `../templates` | Render another folder of templates |
 

@@ -1,0 +1,734 @@
+---
+import Base from '../layouts/Base.astro';
+import AppTile from '../components/AppTile.astro';
+import Chev from '../components/Chev.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Faq from '../components/Faq.astro';
+import ProductTile from '../components/ProductTile.astro';
+import { alternativesPages, getTemplate, isSample } from '../lib/catalogue';
+import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
+import { href } from '../lib/site';
+import { PRODUCTS } from '../products';
+
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: 'Why your own server', path: 'why-cloudgate/' },
+];
+
+/*
+ * The cost example. Every figure is an example: round, plausible, in US dollars, and labelled as
+ * such on the page. Per-seat tools are priced per person; the server side does not change with
+ * the number of people. The Cloudgate line is the hosted service's Starter plan (CONTEXT.md:
+ * "Starter", "Hosted plan": members are never counted), and is free when you run Cloudgate yourself.
+ */
+const TEAM = 12;
+const product = (id: string) => PRODUCTS.find((p) => p.id === id)!;
+const paid = [
+  { product: product('slack'), app: getTemplate('mattermost'), perSeat: 8, flat: 0, note: 'per person' },
+  { product: product('notion'), app: getTemplate('outline'), perSeat: 10, flat: 0, note: 'per person' },
+  { product: product('zapier'), app: getTemplate('n8n'), perSeat: 0, flat: 70, note: 'team plan, by tasks' },
+];
+const paidAt = (people: number) => paid.reduce((sum, row) => sum + row.perSeat * people + row.flat, 0);
+const server = [
+  { label: 'Server big enough for all three apps', cost: 20 },
+  { label: 'Storage for backups', cost: 5 },
+  { label: 'Cloudgate hosted plan (free if you run Cloudgate yourself)', cost: 15 },
+];
+const serverTotal = server.reduce((sum, row) => sum + row.cost, 0);
+const paidTotal = paidAt(TEAM);
+const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
+const growth = [5, TEAM, 20, 40].map((people) => ({ people, paid: paidAt(people), server: serverTotal }));
+const apps = paid.map((row) => row.app).filter((app) => app !== undefined);
+
+// A few alternatives pages to read next: the home page's swaps first, then the busiest.
+const nextReads = alternativesPages()
+  .sort((a, b) => Number(Boolean(b.product.swap)) - Number(Boolean(a.product.swap)) || b.apps.length - a.apps.length)
+  .slice(0, 3);
+
+const faq = [
+  {
+    q: 'Is running my own server really cheaper?',
+    a: 'Usually, once more than a few people use the tools. Per-seat tools cost more with every person you add, while one server costs the same for 2 people or 20. For one or two people on free plans, the savings are small, and the time you spend on the server counts too.',
+  },
+  {
+    q: 'Do I need to be technical?',
+    a: 'You need a server. You can connect one you already rent, or on Cloudgate’s hosted service buy one and pick where it is. After that you choose an app, check what Cloudgate will set up and click Apply. Apps marked “Some setup” need a few extra steps, which their pages explain.',
+  },
+  {
+    q: 'Who keeps the apps up to date?',
+    a: 'You decide. Cloudgate never updates an app on its own: setting one up copies its template once, and nothing changes afterwards until you choose to change it. That means no surprise changes, and also that keeping up to date is your job.',
+  },
+  {
+    q: 'Does Cloudgate charge per person?',
+    a: 'No. Cloudgate is free to run on your own server. Its hosted service has monthly plans that count servers, never the people in your team.',
+  },
+  {
+    q: 'What happens to my data if I stop using Cloudgate?',
+    a: 'It stays on your server. If a hosted plan ends, Cloudgate stops doing new work but leaves apps on your own servers running, and you can still download your settings. A server bought through Cloudgate is the exception: it is deleted with its data and backups once it is no longer paid for, so move your data first.',
+  },
+  {
+    q: 'Is Cloudgate itself open source?',
+    a: 'The apps in this catalogue are open source, and each app’s page names its licence. Cloudgate is source-available under the Elastic License 2.0: any person or business may use it, run it themselves and change it for free.',
+  },
+];
+
+const title = 'Why run open-source apps on your own server';
+const description =
+  'Per-seat tools charge for every person. See what a small team pays for open-source apps on one server, what Cloudgate looks after, and when not to switch.';
+---
+
+<Base
+  title={title}
+  description={description}
+  path="why-cloudgate/"
+  noindex={isSample}
+  jsonLd={graph(breadcrumbSchema(trail), faqSchema(faq))}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead pad" style="grid-template-columns:1fr">
+    <div class="body">
+      <h1 class="h1">Why run open-source apps on your own server</h1>
+      <p class="lede">
+        Most tools a small business pays for charge for every person, every month. Free, open-source apps can do the same
+        jobs on one server you rent. Cloudgate sets them up and looks after the dull parts. Here is the honest case,
+        including when it is not worth it.
+      </p>
+      <div class="chips">
+        <span class="chip"><b>One</b> server bill</span>
+        <span class="chip">No charge per person</span>
+        <span class="chip">Your data, in the country you choose</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="cost-title">
+    <div class="shead pad">
+      <h2 class="h2" id="cost-title">What does a team of {TEAM} pay?</h2>
+      <p class="lede">
+        A small team on three common tools, and the same jobs done by open-source apps on one server. The figures are examples,
+        rounded; your own prices will differ.
+      </p>
+    </div>
+    <div class="pad cost">
+      <div class="stage bill">
+        <div class="cols">
+          <div class="side paid">
+            <div class="hd">
+              <span class="t">Paying per seat</span>
+              <span class="ex">{TEAM} people, per month</span>
+            </div>
+            <ul class="lines">
+              {
+                paid.map((row) => (
+                  <li>
+                    <ProductTile product={row.product} box={32} size={18} />
+                    <span class="nm">
+                      {row.product.name}
+                      <small>{row.perSeat ? `${TEAM} × ${usd(row.perSeat)} ${row.note}` : row.note}</small>
+                    </span>
+                    <span class="amt">{usd(row.perSeat * TEAM + row.flat)}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <div class="total">
+              <span>Every month</span>
+              <b>{usd(paidTotal)}</b>
+              <span class="yr">About {usd(Math.round((paidTotal * 12) / 100) * 100)} a year, and more with each new person</span>
+            </div>
+          </div>
+          <div class="side own">
+            <div class="hd">
+              <span class="t">One server with Cloudgate</span>
+              <span class="ex">Any number of people, per month</span>
+            </div>
+            <ul class="lines">
+              {
+                apps.length > 0 && (
+                  <li>
+                    <span class="stack" aria-hidden="true">
+                      {apps.map((app) => (
+                        <AppTile template={app} box={32} size={18} />
+                      ))}
+                    </span>
+                    <span class="nm">
+                      {apps.map((app) => app.name).join(', ')}
+                      <small>Open-source apps</small>
+                    </span>
+                    <span class="amt">$0</span>
+                  </li>
+                )
+              }
+              {
+                server.map((row) => (
+                  <li>
+                    <span class="dot" aria-hidden="true" />
+                    <span class="nm">{row.label}</span>
+                    <span class="amt">{usd(row.cost)}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <div class="total">
+              <span>Every month</span>
+              <b>{usd(serverTotal)}</b>
+              <span class="yr">About {usd(serverTotal * 12)} a year, the same with 2 people or 20</span>
+            </div>
+          </div>
+        </div>
+        <div class="grow">
+          <table>
+            <caption>
+              <span class="t">As the team grows</span>
+              <span class="ex">Example monthly cost of the same three jobs</span>
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">People</th>
+                <th scope="col">Paying per seat</th>
+                <th scope="col">One server</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                growth.map((row) => (
+                  <tr class:list={{ cur: row.people === TEAM }}>
+                    <th scope="row">{row.people}</th>
+                    <td>
+                      <span class="bar" style={`--w:${(row.paid / growth[growth.length - 1].paid) * 100}%`} aria-hidden="true" />
+                      <span class="v">{usd(row.paid)}</span>
+                    </td>
+                    <td>
+                      <span class="bar own" style={`--w:${(row.server / growth[growth.length - 1].paid) * 100}%`} aria-hidden="true" />
+                      <span class="v">{usd(row.server)}</span>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="note">
+          Example figures in US dollars, rounded, not current prices. Tool prices depend on the plan you are on; the server you
+          need depends on the apps you run. Not counted: the time you spend looking after the server.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec pad pair" aria-label="Your data and leaving">
+    <div class="blk half">
+      <h2 class="h2">Where does your data live?</h2>
+      <p class="body">
+        On your server, in the country you choose. Connect a server you already rent anywhere, or on Cloudgate’s hosted service
+        buy one and pick its location. Customer lists, messages and files stay there instead of in another company’s systems.
+      </p>
+      <div class="frag loc" role="img" aria-label="Example: choosing where a new server is, with Germany selected">
+        <span class="lab" aria-hidden="true">Where should your new server be?</span>
+        <div class="srv" aria-hidden="true">
+          <label class="on"><input type="radio" name="loc" checked tabindex="-1" /> Germany <small>Nuremberg</small></label>
+          <label><input type="radio" name="loc" tabindex="-1" /> Finland <small>Helsinki</small></label>
+          <label><input type="radio" name="loc" tabindex="-1" /> United States <small>Virginia</small></label>
+        </div>
+      </div>
+    </div>
+    <div class="blk half">
+      <h2 class="h2">What if you want to leave?</h2>
+      <ul class="body list">
+        <li>The apps are open source. Nobody can raise their price or switch them off, and each app’s page names its licence.</li>
+        <li>Your data sits on your server, not in a vendor’s account you have to export it out of.</li>
+        <li>
+          If a Cloudgate hosted plan ends, your apps on your own server keep running and you can still download your settings.
+        </li>
+        <li>
+          Cloudgate itself is free to run on your own server: it is source-available under the Elastic License 2.0.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="care-title">
+    <div class="shead pad">
+      <h2 class="h2" id="care-title">What does Cloudgate take care of?</h2>
+      <p class="lede">The jobs that make running your own apps feel like work. You stay in charge of when things happen.</p>
+    </div>
+    <div class="care">
+      <div class="pad item">
+        <div class="tx">
+          <h3 class="h3">Backups on a schedule you set</h3>
+          <p>Choose how often your app’s data is copied, where to, and how many copies to keep. Restore one when you need it.</p>
+        </div>
+        <div class="frag rows" role="img" aria-label="Example backup settings: every night at 02:00, newest 14 kept, stored in your own storage">
+          <div class="r" aria-hidden="true"><span>Runs</span><span>Every night at 02:00</span></div>
+          <div class="r" aria-hidden="true"><span>Keeps</span><span>The newest 14</span></div>
+          <div class="r" aria-hidden="true"><span>Stored in</span><span>Your backup storage</span></div>
+        </div>
+      </div>
+      <div class="pad item">
+        <div class="tx">
+          <h3 class="h3">A secure web address for each app</h3>
+          <p>Every app starts with a working address, secured with https. Use your own name, like chat.yourshop.com, when you are ready.</p>
+        </div>
+        <div class="frag addr" role="img" aria-label="Example web address chat.acmebakery.com, secure (https), live">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"
+            ><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"></path></svg
+          >
+          <span class="host" aria-hidden="true">chat.acmebakery.com</span>
+          <span class="status" aria-hidden="true"><i></i>Live</span>
+        </div>
+      </div>
+      <div class="pad item">
+        <div class="tx">
+          <h3 class="h3">You see every change before it runs</h3>
+          <p>Setting up an app shows a list of what Cloudgate will create. Nothing is created until you click Apply.</p>
+        </div>
+        <div class="frag plan" role="img" aria-label="Example plan: create the chat app, its database and a web address, with an Apply button">
+          <ul aria-hidden="true">
+            <li><span class="plus">+</span>Chat app</li>
+            <li><span class="plus">+</span>Its database</li>
+            <li><span class="plus">+</span>Web address</li>
+          </ul>
+          <span class="btn sm" aria-hidden="true">Apply</span>
+        </div>
+      </div>
+      <div class="pad item">
+        <div class="tx">
+          <h3 class="h3">Team access without seat counting</h3>
+          <p>Invite your team and give each person a role. Limit someone to the projects and apps they need.</p>
+        </div>
+        <div class="frag rows" role="img" aria-label="Example team: an owner, an admin, and a member with access to one project">
+          <div class="r" aria-hidden="true"><span class="who"><i>AK</i>Amira</span><span>Owner</span></div>
+          <div class="r" aria-hidden="true"><span class="who"><i>JB</i>Jonas</span><span>Admin</span></div>
+          <div class="r" aria-hidden="true"><span class="who"><i>LM</i>Lena</span><span>Member · Shop project</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec pad" aria-labelledby="honest-title">
+    <div class="blk" style="border-top:0;padding-top:72px">
+      <h2 class="h2" id="honest-title">When is a paid tool still the better choice?</h2>
+      <p class="body">Your own server is not right for everyone. Be honest with yourself about these before you switch.</p>
+      <div class="vs">
+        <div>
+          <span class="t">A paid tool is better when</span>
+          <ul>
+            <li>Nobody on the team wants to own a server: its bill, its disk space, and deciding when to update each app.</li>
+            <li>You are one or two people on free plans. Most of the savings come from not paying per person.</li>
+            <li>You rely on a feature, integration or support contract that only the paid tool has.</li>
+            <li>You need someone to call when it breaks. Open-source apps are supported by their communities.</li>
+          </ul>
+        </div>
+        <div>
+          <span class="t">Your own server makes sense when</span>
+          <ul>
+            <li>Your team is growing and per-person prices keep adding up.</li>
+            <li>You want customer data in a country you choose, on a server you control.</li>
+            <li>You can live with some setup: apps marked “Some setup” need a few extra steps, such as connecting email.</li>
+            <li>You are happy to move your data over yourself. It does not carry over automatically.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    nextReads.length > 0 && (
+      <section class="sec pad" aria-labelledby="swaps-title">
+        <div class="blk" style="border-top:0;padding-top:72px">
+          <h2 class="h2" id="swaps-title">Which tools do people replace first?</h2>
+          <div class="idx">
+            {nextReads.map((page) => (
+              <a href={href(`alternatives/${page.product.id}/`)}>
+                <b>
+                  <ProductTile product={page.product} box={28} size={16} />
+                  {page.product.name} alternatives
+                </b>
+                <span>
+                  {page.apps
+                    .slice(0, 3)
+                    .map((app) => app.name)
+                    .join(', ')}
+                </span>
+                <small>
+                  {page.apps.length} {page.apps.length === 1 ? 'app' : 'apps'} for {page.product.job}
+                </small>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="sec pad" aria-labelledby="faq-title">
+    <div class="blk" style="border-top:0;padding-top:72px">
+      <h2 class="h2" id="faq-title">Questions</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section class="sec pad end" aria-labelledby="next-title">
+    <h2 class="h2" id="next-title">See what you could run</h2>
+    <p class="lede">Find the app that does the job of a tool you pay for today.</p>
+    <div class="acts">
+      <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
+      <a class="btn lg ghost" href={href('how-it-works/')}>How it works <Chev /></a>
+      <a class="btn lg ghost" href={href('get-cloudgate/')}>Get Cloudgate <Chev /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .body {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 64ch;
+  }
+  .list {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 8px;
+  }
+
+  /* The cost comparison: the page's one bold element, a bill on the blueprint stage. */
+  .cost {
+    padding-bottom: 72px;
+  }
+  .bill {
+    display: grid;
+    gap: 16px;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+  .side {
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    background: var(--card);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-width: 0;
+  }
+  .own {
+    border-color: color-mix(in srgb, var(--accent-hi) 55%, var(--line-strong));
+    box-shadow: var(--shadow);
+  }
+  .hd {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 6px 12px;
+    flex-wrap: wrap;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .t {
+    font: italic 400 19px/1.3 var(--serif);
+  }
+  .lines {
+    list-style: none;
+    margin: 0;
+    padding: 6px 18px;
+    display: grid;
+    align-content: start;
+  }
+  .lines li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 14px;
+  }
+  .lines li:last-child {
+    border-bottom: 0;
+  }
+  .nm {
+    display: grid;
+    min-width: 0;
+  }
+  .nm small {
+    color: var(--faint);
+    font-size: 12.5px;
+  }
+  .amt {
+    font: 13.5px var(--mono);
+    text-align: right;
+  }
+  .dot {
+    width: 32px;
+    display: grid;
+    place-items: center;
+  }
+  .dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .stack {
+    display: flex;
+  }
+  .stack :global(.lt) {
+    background: var(--card);
+    box-shadow: 0 0 0 2px var(--card);
+  }
+  .stack :global(.lt + .lt) {
+    margin-left: -10px;
+  }
+  .total {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 2px 12px;
+    padding: 16px 18px 18px;
+    border-top: 1px solid var(--line);
+    background: var(--sunk);
+    border-radius: 0 0 11px 11px;
+  }
+  .total > span:first-child {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .total b {
+    font: 500 clamp(34px, 4.4vw, 52px) / 1 var(--mono);
+    letter-spacing: -0.04em;
+  }
+  .own .total b {
+    color: var(--accent-ink);
+  }
+  .yr {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .grow {
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    background: var(--card);
+    overflow: hidden;
+  }
+  .grow table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+  .grow caption {
+    text-align: left;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .grow caption .ex {
+    display: block;
+    margin-top: 2px;
+  }
+  .grow th:first-child {
+    width: 88px;
+  }
+  .grow tbody th {
+    font: 500 13.5px var(--mono);
+    color: var(--fg);
+    background: none;
+  }
+  .grow td {
+    position: relative;
+  }
+  .grow .cur th,
+  .grow .cur td {
+    background: var(--tint);
+  }
+  .bar {
+    display: block;
+    height: 8px;
+    width: var(--w);
+    min-width: 4px;
+    border-radius: 4px;
+    background: var(--line-strong);
+    margin-bottom: 6px;
+  }
+  .bar.own {
+    background: var(--accent);
+  }
+  .v {
+    font: 13px var(--mono);
+  }
+  .note {
+    max-width: 80ch;
+    margin-top: 16px;
+    color: var(--faint);
+    font-size: 13px;
+  }
+
+  /* Data and leaving: two quiet columns. */
+  .pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0 48px;
+  }
+  .half {
+    border-top: 0;
+    padding-block: 72px;
+    align-content: start;
+  }
+  .loc {
+    display: grid;
+    gap: 10px;
+    max-width: 440px;
+  }
+  .lab {
+    font-size: 12.5px;
+    color: var(--faint);
+  }
+
+  /* What Cloudgate takes care of: a hairline grid of small fragments. */
+  .care {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+  }
+  .item {
+    background: var(--bg);
+    padding-block: 32px 36px;
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    min-width: 0;
+  }
+  .tx {
+    display: grid;
+    gap: 6px;
+    max-width: 48ch;
+  }
+  .tx p {
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .frag.rows {
+    padding-block: 6px;
+  }
+  .rows .r {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .rows .r:last-child {
+    border-bottom: 0;
+  }
+  .rows .r span:first-child {
+    color: var(--faint);
+  }
+  .rows .r span:last-child {
+    text-align: right;
+  }
+  .rows .who {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--fg) !important;
+  }
+  .who i {
+    font: normal 500 10.5px var(--sans);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--tint);
+    color: var(--accent-ink);
+  }
+  .addr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .addr svg {
+    width: 16px;
+    height: 16px;
+    color: var(--ok);
+    flex: none;
+  }
+  .host {
+    font: 13px var(--mono);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .plan {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .plan ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+  }
+  .plus {
+    font: 12px var(--mono);
+    color: var(--ok);
+    display: inline-block;
+    width: 18px;
+  }
+
+  .end {
+    padding-block: 72px 88px;
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+  }
+  .end .acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 900px) {
+    .cols,
+    .pair,
+    .care {
+      grid-template-columns: 1fr;
+    }
+    .half + .half {
+      border-top: 1px solid var(--line);
+    }
+  }
+  @media (max-width: 640px) {
+    .half {
+      padding-block: 48px;
+    }
+    .item {
+      padding-block: 24px 28px;
+    }
+    .grow th,
+    .grow td {
+      padding-inline: 12px;
+    }
+    .grow th:first-child {
+      width: 64px;
+    }
+    .end .acts .btn {
+      flex: 1;
+    }
+    .cost {
+      padding-bottom: 48px;
+    }
+  }
+</style>

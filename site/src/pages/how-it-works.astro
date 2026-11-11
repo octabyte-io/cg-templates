@@ -1,0 +1,667 @@
+---
+import Base from '../layouts/Base.astro';
+import AppTile from '../components/AppTile.astro';
+import Chev from '../components/Chev.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Ease from '../components/Ease.astro';
+import Faq from '../components/Faq.astro';
+import ProductTile from '../components/ProductTile.astro';
+import { alternativesPages, getTemplate, getTemplates, isSample } from '../lib/catalogue';
+import { absolute, href } from '../lib/site';
+import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
+
+/*
+ * Every claim here is checked against Cloudgate itself (CONTEXT.md and docs/adr in the
+ * cloudgate repo): a template setup is a Plan reviewed and applied (ADR-0065), values are
+ * made at setup (ADR-0064), a copy never updates from its template (CONTEXT "Template",
+ * "Setup record"), a generated address is plain http and the user's own gets a Let's
+ * Encrypt certificate (templates/setup/setup-domains.ts), backups run on a schedule to a
+ * destination the user adds, and a lapsed plan touches nothing on the user's Servers
+ * (ADR-0052) except a Bought Server (ADR-0071).
+ */
+
+const trail = [
+  { name: 'Apps', path: '' },
+  { name: 'How it works', path: 'how-it-works/' },
+];
+
+// The pictures follow one real swap from the catalogue: n8n for Zapier when it is there.
+const templates = getTemplates();
+const featured = getTemplate('n8n') ?? templates[0];
+const replaced = featured?.alternativeTo[0];
+const others = replaced
+  ? (alternativesPages().find((page) => page.product.id === replaced.id)?.apps ?? []).filter((t) => t.id !== featured?.id)
+  : [];
+const results = featured ? [featured, ...others].slice(0, 3) : [];
+const appName = featured?.name ?? 'your app';
+const slug = (featured?.id ?? 'app').replace(/[^a-z0-9]/g, '');
+const address = `${slug}.acmebakery.com`;
+
+const steps = [
+  {
+    name: 'Choose an app',
+    text: replaced
+      ? `Search for the tool you pay for today. Search for ${replaced.name} and you find ${appName}, which does the same job. Every app here is open source and free to use.`
+      : 'Search for the tool you pay for today and you find the open-source apps that do the same job. Every app here is free to use.',
+  },
+  {
+    name: 'Pick your server',
+    text: 'Choose a server you have already connected, or connect one you rent from a hosting company. Cloudgate prepares a new server only after you confirm. On the hosted version of Cloudgate you can also buy a server in the same step.',
+  },
+  {
+    name: 'Click Deploy and fill in a few details',
+    text: 'Give the app a name and a web address. Passwords and keys the app needs are made for you, so there is nothing to invent or write down.',
+  },
+  {
+    name: 'Check what Cloudgate will create, then apply',
+    text: 'Before anything is made, Cloudgate lists exactly what it will add: the app, where it keeps its data, and its web address. None of it is created until you press Apply.',
+  },
+  {
+    name: 'Open your app at its web address',
+    text: 'Cloudgate starts the app and gives it a web address. Use your own, like crm.yourshop.com, and Cloudgate gets the https certificate for you once your domain points at the server.',
+  },
+];
+
+const daily = [
+  {
+    q: 'How do backups work?',
+    a: 'You choose how often each app’s data is copied, for example every night, and where the copies go: storage you add, away from the server. Cloudgate keeps the number of copies you ask for, and you restore one from the same screen.',
+    note: 'Nothing is copied until you set a schedule, so do this first.',
+  },
+  {
+    q: 'Will my apps update by themselves?',
+    a: 'No. Cloudgate never updates an app on its own, and an app set up from this site does not change when its page here does. It stays on the version it was set up with until someone on your team changes it and deploys again.',
+    note: 'Take a backup before you change versions.',
+  },
+  {
+    q: 'How do I add my team?',
+    a: 'Invite people by email and give each one a role. You can limit someone to the apps they work on. The apps never charge per person, and Cloudgate’s hosted plans count servers, not people.',
+    note: 'Twelve people cost the same as two.',
+  },
+  {
+    q: 'Can I move or remove an app?',
+    a: 'Stop an app to take it offline without losing anything. Deleting it removes the app, and its stored data goes only if you ask. An app stays on the server it was set up on, so to move one, set it up on the new server, restore a backup into it, then delete the old one.',
+    note: 'There is no one-click move between servers.',
+  },
+];
+
+const faq = [
+  {
+    q: 'Do I need to know Docker or anything technical?',
+    a: 'No. Cloudgate does the technical setup on your server and you use the app in your browser, like any online tool. Some apps need a few minutes of setup inside the app once it is running; their page here marks them “Some setup”.',
+  },
+  {
+    q: 'What server do I need?',
+    a: 'A server you rent from a hosting company, running Ubuntu or Debian, which most offer as the default. Cloudgate connects to it and, once you confirm, installs what it needs. How big it should be depends on the apps you run, and one small server can run several. On the hosted version of Cloudgate you can buy a server in the same screen instead.',
+  },
+  {
+    q: 'What does it cost?',
+    a: 'The apps are free. You pay whoever rents you the server. Cloudgate itself is free to run on your own server, or you can use the hosted version, a monthly plan that counts servers and never people.',
+  },
+  {
+    q: 'Can I use my own web address?',
+    a: 'Yes. Type it when you deploy, or add it later, then add one record where you bought your domain so the name points at your server. Cloudgate gets the https certificate for you. Until then the app works on a free temporary address, without https.',
+  },
+  {
+    q: 'What happens to my apps if I stop using Cloudgate?',
+    a: 'They are ordinary open-source apps on your server, and your data stays there. If a hosted plan ends, nothing on your own servers is touched, but backups and other scheduled jobs stop. A server bought through Cloudgate is deleted once it is no longer paid for, with its data, so keep your own backups.',
+  },
+];
+
+const howTo = {
+  '@type': 'HowTo',
+  '@id': `${absolute('how-it-works/')}#howto`,
+  name: 'How to run an open-source app on your own server with Cloudgate',
+  description: 'From choosing an app that replaces a paid tool to opening it at its own web address.',
+  step: steps.map((step, index) => ({
+    '@type': 'HowToStep',
+    position: index + 1,
+    name: step.name,
+    text: step.text,
+    url: `${absolute('how-it-works/')}#step-${index + 1}`,
+  })),
+};
+---
+
+<Base
+  title="How Cloudgate deploys open-source apps on your own server"
+  description="What happens from choosing an app to running it on your own server: pick a server, check what Cloudgate will create, then backups, updates and your team."
+  path="how-it-works/"
+  noindex={isSample}
+  jsonLd={graph(breadcrumbSchema(trail), howTo, faqSchema(faq))}
+>
+  <Crumbs trail={trail} />
+
+  <section class="apphead pad intro">
+    <div class="body">
+      <h1 class="h1">How Cloudgate works</h1>
+      <p class="lede">
+        From the tool you pay for today to an open-source app doing the same job on your own server. Here is what
+        happens at each step, and what Cloudgate looks after once the app is running.
+      </p>
+      <div class="acts">
+        <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
+        <a class="btn lg ghost" href="#steps">See the steps <Chev /></a>
+      </div>
+      <div class="facts-strip">
+        <span><b>5</b> steps</span><span>Nothing is created until you say yes</span><span>The apps are <b>free</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="steps" aria-labelledby="steps-title">
+    <div class="shead pad">
+      <h2 class="h2" id="steps-title">What happens when you deploy an app?</h2>
+      <p class="lede">Five steps, a few minutes of your time, and one moment where you say yes.</p>
+    </div>
+
+    <ol class="flow">
+      <li class="step pad" id="step-1">
+        <div class="say">
+          <span class="num">Step 1</span>
+          <h3 class="h3">{steps[0].name}</h3>
+          <p>{steps[0].text}</p>
+        </div>
+        <div class="frag pick" role="img" aria-label={`Example search for ${replaced?.name ?? 'a paid tool'}, showing ${results.map((t) => t.name).join(', ')}`}>
+          <div class="q" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg>
+            <span>{replaced?.name ?? 'Zapier'}</span>
+          </div>
+          <ul aria-hidden="true">
+            {
+              results.map((t, i) => (
+                <li class:list={{ on: i === 0 }}>
+                  <AppTile template={t} box={32} size={20} />
+                  <span class="nm">
+                    <b>{t.name}</b>
+                    <small>
+                      {replaced ? (
+                        <>
+                          Replaces <ProductTile product={replaced} box={14} size={9} class="mini" /> {replaced.name}
+                        </>
+                      ) : (
+                        t.category.name
+                      )}
+                    </small>
+                  </span>
+                  <Ease ease={t.ease} />
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </li>
+
+      <li class="step pad" id="step-2">
+        <div class="say">
+          <span class="num">Step 2</span>
+          <h3 class="h3">{steps[1].name}</h3>
+          <p>{steps[1].text}</p>
+        </div>
+        <div class="frag" role="img" aria-label="Example server choice: Shop server in Germany selected, or connect or buy another">
+          <div class="srv" aria-hidden="true">
+            <label class="on"><input type="radio" name="how-srv" checked tabindex="-1" /> Shop server <small>Germany · online</small></label>
+            <label><input type="radio" name="how-srv" tabindex="-1" /> Connect a server you rent</label>
+            <label><input type="radio" name="how-srv" tabindex="-1" /> Buy a server <small>hosted version</small></label>
+          </div>
+        </div>
+      </li>
+
+      <li class="step pad" id="step-3">
+        <div class="say">
+          <span class="num">Step 3</span>
+          <h3 class="h3">{steps[2].name}</h3>
+          <p>{steps[2].text}</p>
+        </div>
+        <div class="frag form" role="img" aria-label={`Example deploy form for ${appName}: name, web address ${address}, passwords made for you`}>
+          <div class="fld" aria-hidden="true"><span class="lab">Name</span><span class="in">{slug}</span></div>
+          <div class="fld" aria-hidden="true"><span class="lab">Web address</span><span class="in">{address}</span></div>
+          <div class="fld" aria-hidden="true">
+            <span class="lab">Passwords and keys</span>
+            <span class="in auto"><span class="dot"></span>Made for you</span>
+          </div>
+          <span class="btn sm" aria-hidden="true">Deploy {appName}</span>
+        </div>
+      </li>
+
+      <li class="step key pad" id="step-4">
+        <div class="say">
+          <span class="num">Step 4</span>
+          <h3 class="h3">{steps[3].name}</h3>
+          <p>{steps[3].text}</p>
+          <p class="aside">Change your mind and dismiss it, and the app is never made.</p>
+        </div>
+        <div class="stage">
+          <div class="window" role="img" aria-label={`Example review screen: Cloudgate will add ${appName}, its database and the web address ${address}. Nothing has been created yet. Buttons: Dismiss and Apply.`}>
+            <div class="wbar" aria-hidden="true">
+              <b>Cloudgate</b>
+              <span>/</span>
+              <span>Acme Bakery</span>
+              <span>/</span>
+              <span>Review</span>
+            </div>
+            <div class="plan" aria-hidden="true">
+              <div class="ph">
+                {featured && <AppTile template={featured} box={36} size={22} />}
+                <div>
+                  <b>Set up {appName}</b>
+                  <small>Cloudgate will add these to Shop server</small>
+                </div>
+              </div>
+              <ul>
+                <li><span class="add">Add</span><span>{appName}, the app itself</span></li>
+                <li><span class="add">Add</span><span>A database for its data</span></li>
+                <li><span class="add">Add</span><span>Web address <b>{address}</b></span></li>
+                <li><span class="add keep">Made</span><span>Passwords, never shown here</span></li>
+              </ul>
+              <div class="pf">
+                <span class="still">Nothing has been created yet</span>
+                <span class="btn sm ghost">Dismiss</span>
+                <span class="btn sm">Apply</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="step pad" id="step-5">
+        <div class="say">
+          <span class="num">Step 5</span>
+          <h3 class="h3">{steps[4].name}</h3>
+          <p>{steps[4].text}</p>
+          <p class="aside">Until your domain points at the server, the app works on a free temporary address, without https.</p>
+        </div>
+        <div class="frag open server" role="img" aria-label={`Example: ${appName} open at https://${address}, marked secure`}>
+          <div class="bar" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"></path></svg>
+            <span><span class="muted">https://</span>{address}</span>
+          </div>
+          <div class="r" aria-hidden="true"><span>Status</span><span class="status"><i></i>Running</span></div>
+          <div class="r" aria-hidden="true"><span>Certificate</span><span>Issued automatically</span></div>
+          <div class="r" aria-hidden="true"><span>Server</span><span>Shop server, Germany</span></div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="sec" id="day-to-day" aria-labelledby="daily-title">
+    <div class="shead pad">
+      <h2 class="h2" id="daily-title">What happens once it is running?</h2>
+      <p class="lede">Cloudgate looks after the routine parts. A few choices stay yours, and here is where.</p>
+    </div>
+    <div class="daily">
+      {
+        daily.map((item) => (
+          <div class="pad">
+            <h3 class="h3">{item.q}</h3>
+            <p>{item.a}</p>
+            <p class="note">{item.note}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="sec" id="questions" aria-labelledby="faq-title">
+    <div class="pad faqwrap">
+      <h2 class="h2" id="faq-title">Common questions</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section class="sec cta pad" aria-labelledby="cta-title">
+    <h2 class="h2" id="cta-title">Ready to replace a tool you pay for?</h2>
+    <p class="lede">Find the app that does the same job, then get Cloudgate to run it on your server.</p>
+    <div class="acts">
+      <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
+      <a class="btn lg ghost" href={href('get-cloudgate/')}>Get Cloudgate <Chev /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    grid-template-columns: 1fr;
+    padding-bottom: 56px;
+  }
+  .intro .facts-strip {
+    margin-top: 10px;
+  }
+
+  /* The five steps: words on the left, a small piece of the real screen on the right. */
+  .flow {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .step {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 24px 64px;
+    align-items: center;
+    padding-block: 48px;
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: calc(var(--hh) + 16px);
+  }
+  .step:last-child {
+    border-bottom: 0;
+  }
+  .say {
+    display: grid;
+    gap: 8px;
+    max-width: 46ch;
+  }
+  .say .h3 {
+    font-size: 19px;
+  }
+  .say p {
+    color: var(--muted);
+    font-size: 15.5px;
+  }
+  .say .aside {
+    font-size: 14px;
+    color: var(--faint);
+  }
+  .num {
+    font: 12px var(--mono);
+    color: var(--accent-ink);
+  }
+  .step > .frag {
+    max-width: 460px;
+    width: 100%;
+    justify-self: end;
+  }
+
+  /* Step 1: a search and its results */
+  .pick .q {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    border: 1px solid var(--accent-hi);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-hi) 20%, transparent);
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+  .pick .q svg {
+    width: 15px;
+    height: 15px;
+    color: var(--faint);
+    flex: none;
+  }
+  .pick ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .pick li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  .pick li.on {
+    background: var(--tint);
+  }
+  .pick .nm {
+    display: grid;
+    min-width: 0;
+  }
+  .pick .nm b {
+    font-weight: 500;
+  }
+  .pick .nm small {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+
+  /* Step 3: the few details asked */
+  .form {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+  }
+  .fld {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+  }
+  .fld .lab {
+    font-size: 12.5px;
+    color: var(--faint);
+  }
+  .fld .in {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: 7px;
+    padding: 7px 11px;
+    background: var(--bg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .fld .in.auto {
+    border-style: dashed;
+    color: var(--muted);
+    background: transparent;
+  }
+  .fld .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    flex: none;
+  }
+  .form .btn {
+    margin-top: 4px;
+  }
+
+  /* Step 4, the one large picture: the review that comes before anything is made */
+  .key {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  }
+  .key .stage {
+    margin-inline: 0;
+    padding: clamp(14px, 3vw, 36px);
+  }
+  .plan {
+    padding: 18px 20px;
+    display: grid;
+    gap: 14px;
+  }
+  .ph {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ph div {
+    display: grid;
+    min-width: 0;
+  }
+  .ph b {
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .ph small {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .plan ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .plan li {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    padding: 10px 12px;
+    font-size: 13.5px;
+    min-width: 0;
+  }
+  .plan li + li {
+    border-top: 1px solid var(--line);
+  }
+  .plan li b {
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  .add {
+    flex: none;
+    width: 44px;
+    font: 11.5px var(--mono);
+    color: var(--ok);
+  }
+  .add.keep {
+    color: var(--faint);
+  }
+  .pf {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .still {
+    flex: 1;
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 12ch;
+  }
+
+  /* Step 5: the address bar */
+  .open .bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: var(--sunk);
+    border: 1px solid var(--line);
+    font-size: 13.5px;
+    margin-bottom: 6px;
+    min-width: 0;
+  }
+  .open .bar > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .open .bar svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    color: var(--ok);
+  }
+  .open .r .status {
+    margin-left: 0;
+  }
+
+  /* Day to day: quiet, words only, on the hairline grid */
+  .daily {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+  }
+  .daily > div {
+    background: var(--bg);
+    padding-block: 32px 36px;
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+  .daily p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 60ch;
+  }
+  .daily .note {
+    font-size: 13.5px;
+    color: var(--fg);
+    padding-top: 6px;
+  }
+
+  .faqwrap {
+    display: grid;
+    gap: 20px;
+    padding-block: 64px 56px;
+    max-width: 860px;
+  }
+
+  .cta {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+    padding-block: 72px 80px;
+    background-color: var(--sunk);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 16px 16px;
+    background-position: -1px -1px;
+  }
+  .cta .acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .cta .fine {
+    text-align: left;
+  }
+  .cta .fine a {
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 900px) {
+    .step,
+    .key {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding-block: 36px;
+    }
+    .step > .frag {
+      justify-self: start;
+      max-width: 520px;
+    }
+    .daily {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .intro .acts {
+      display: flex;
+    }
+    .intro .acts .btn,
+    .cta .acts .btn {
+      flex: 1;
+    }
+    .cta .acts {
+      width: 100%;
+    }
+    .daily > div {
+      padding-block: 24px 28px;
+    }
+    .faqwrap {
+      padding-block: 48px 40px;
+    }
+    .cta {
+      padding-block: 52px 60px;
+    }
+  }
+</style>

@@ -17,15 +17,17 @@ export function absolute(path = ''): string {
 }
 
 /**
- * Where "Get Cloudgate" and "Deploy <app>" go. The hosted console's address is
- * still an open question (docs/plan.md), so both are settings:
- * PUBLIC_DEPLOY_URL may contain `{id}`, e.g. https://console.example.com/templates/{id}.
+ * Where the Get Cloudgate page's install link and "Deploy <app>" go. The hosted
+ * console's address is still an open question (docs/plan.md), so both are
+ * settings: PUBLIC_DEPLOY_URL may contain `{id}`, e.g.
+ * https://console.example.com/templates/{id}. Unset, Deploy goes to the
+ * Get Cloudgate page, which explains how to install it.
  */
 export const GET_CLOUDGATE_URL = import.meta.env.PUBLIC_GET_CLOUDGATE_URL ?? 'https://github.com/octabyte-io/cloudgate';
 
 export function deployUrl(id: string): string {
   const template = import.meta.env.PUBLIC_DEPLOY_URL;
-  return template ? template.replace('{id}', encodeURIComponent(id)) : GET_CLOUDGATE_URL;
+  return template ? template.replace('{id}', encodeURIComponent(id)) : href('get-cloudgate/');
 }
 
 export function formatDate(date: Date): string {
