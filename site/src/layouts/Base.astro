@@ -10,9 +10,10 @@ import '@fontsource/ibm-plex-mono/500.css';
 import '../styles/site.css';
 import geistLatin from '@fontsource/geist/files/geist-latin-400-normal.woff2?url';
 import plexItalic from '@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-300-italic.woff2?url';
+import CloudgateMark from '../components/CloudgateMark.astro';
 import Palette from '../components/Palette.astro';
 import { alternativesPages, GITHUB_REPO, isSample, usedCategories } from '../lib/catalogue';
-import { absolute, GET_CLOUDGATE_URL, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 interface Props {
   /** The page's own title; the site name is appended unless `bareTitle`. */
@@ -45,8 +46,6 @@ const {
 const fullTitle = bareTitle ? title : `${title} | ${SITE_NAME}`;
 const canonical = absolute(path);
 const image = absolute(ogImage);
-const onHome = path === '';
-const homeAnchor = (id: string) => (onHome ? `#${id}` : `${href()}#${id}`);
 // The swaps the home page shows come first, then the products with the most alternatives.
 const topAlternatives = alternativesPages()
   .sort((a, b) => Number(Boolean(b.product.swap)) - Number(Boolean(a.product.swap)) || b.apps.length - a.apps.length)
@@ -104,15 +103,13 @@ const footCategories = usedCategories().slice(0, 4);
       <header class="top">
         <div class="in pad">
           <a class="brand" href={href()} aria-label="Cloudgate Templates home">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"
-              ><path d="M3.5 20.5V10a8.5 8.5 0 0 1 17 0v10.5M7.5 20.5V10.5a4.5 4.5 0 0 1 9 0v10M2 20.5h20"></path></svg
-            >
+            <CloudgateMark size={26} />
             Cloudgate <em>Templates</em>
           </a>
           <nav class="nav" aria-label="Main">
-            <a href={homeAnchor('catalogue')}>Apps</a>
-            <a href={homeAnchor('swaps')}>Popular swaps</a>
-            <a href={homeAnchor('why')}>Why Cloudgate</a>
+            <a href={href('templates/')} aria-current={path === 'templates/' ? 'page' : undefined}>Apps</a>
+            <a href={href('how-it-works/')} aria-current={path === 'how-it-works/' ? 'page' : undefined}>How it works</a>
+            <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why Cloudgate</a>
             {topAlternatives[0] && <a href={href(`alternatives/${topAlternatives[0].product.id}/`)}>{topAlternatives[0].product.name} alternatives</a>}
           </nav>
           <span class="sp"></span>
@@ -121,7 +118,7 @@ const footCategories = usedCategories().slice(0, 4);
               ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
             ><span>Search apps</span><kbd data-modk>Ctrl K</kbd></button
           >
-          <a class="btn sm getcg" href={GET_CLOUDGATE_URL}>Get Cloudgate</a>
+          <a class="btn sm getcg" href={href('get-cloudgate/')}>Get Cloudgate</a>
         </div>
       </header>
       <main id="main">
@@ -141,6 +138,7 @@ const footCategories = usedCategories().slice(0, 4);
             <h4>Browse</h4>
             <ul>
               {footCategories.map((category) => <li><a href={href(`categories/${category.id}/`)}>{category.name}</a></li>)}
+              <li><a href={href('templates/')}>All apps</a></li>
               <li><a href={href('categories/')}>All categories</a></li>
             </ul>
           </div>
@@ -160,8 +158,9 @@ const footCategories = usedCategories().slice(0, 4);
           <div>
             <h4>Cloudgate</h4>
             <ul>
-              <li><a href={homeAnchor('how')}>How it works</a></li>
-              <li><a href={homeAnchor('why')}>Why your own server</a></li>
+              <li><a href={href('how-it-works/')}>How it works</a></li>
+              <li><a href={href('why-cloudgate/')}>Why your own server</a></li>
+              <li><a href={href('get-cloudgate/')}>Get Cloudgate</a></li>
               <li><a href={href('contribute/')}>Add an app</a></li>
               <li><a href={GITHUB_REPO}>Source on GitHub</a></li>
             </ul>
@@ -169,7 +168,7 @@ const footCategories = usedCategories().slice(0, 4);
         </div>
         <div class="wm" aria-hidden="true">
           <svg viewBox="0 0 1100 230" preserveAspectRatio="xMidYMid meet">
-            <path d="M30 215V95a80 80 0 0 1 160 0v120M68 215V100a42 42 0 0 1 84 0v115M10 215h200"></path>
+            <CloudgateMark x={0} y={10} size={215} />
             <text x="232" y="196">Cloudgate</text>
           </svg>
         </div>

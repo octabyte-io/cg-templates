@@ -7,7 +7,7 @@ import type { Product } from '../../products';
 /**
  * Open Graph cards (1200×630 PNG), drawn as SVG and rasterised by sharp at
  * build time. They follow the approved prototype: the page background, a
- * blueprint-grid panel, one blue, the arch mark with "Cloudgate Templates".
+ * blueprint-grid panel, one blue, Cloudgate's own mark with "Cloudgate Templates".
  *
  * librsvg cannot read the site's woff2 fonts, so the cards name the site's
  * fonts first and fall back to fonts installed on the build machine:
@@ -32,7 +32,28 @@ const C = {
 const SANS = 'Geist, Inter, sans-serif';
 const SERIF = "'IBM Plex Serif', 'Liberation Serif', FreeSerif, serif";
 
-const ARCH = 'M3.5 20.5V10a8.5 8.5 0 0 1 17 0v10.5M7.5 20.5V10.5a4.5 4.5 0 0 1 9 0v10M2 20.5h20';
+/**
+ * Cloudgate's glyph, the same drawing as src/components/CloudgateMark.astro and
+ * public/favicon.svg (from the Cloudgate console), in its own violet. Its 64-unit
+ * grid is drawn into a 60-unit box starting at (2, 3.5).
+ */
+const MARK_INK = '#6d57e0';
+const CLOUD =
+  '<rect x="3" y="33" width="58" height="19" rx="9.5"/><circle cx="19" cy="34" r="9.5"/><circle cx="37" cy="28" r="13"/><circle cx="50" cy="35.5" r="8"/>';
+const MARK_DEFS = `<clipPath id="cga"><polygon points="0,0 25,0 17,64 0,64"/></clipPath>
+    <clipPath id="cgb"><polygon points="28,0 44,0 36,64 20,64"/></clipPath>
+    <clipPath id="cgc"><polygon points="47,0 64,0 64,64 39,64"/></clipPath>
+    <mask id="cgk" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/><circle cx="31.7" cy="34" r="2.8" fill="#000"/>
+      <path d="M30.6 35 L29.4 42.5 H33.2 L32.8 35 Z" fill="#000"/>
+    </mask>`;
+
+/** The mark at `size` pixels, its top left at the current origin. */
+function mark(size: number): string {
+  return `<g transform="scale(${size / 60}) translate(-2 -3.5)"><g fill="${MARK_INK}" mask="url(#cgk)">
+    <g clip-path="url(#cga)">${CLOUD}</g><g clip-path="url(#cgb)" opacity=".75">${CLOUD}</g><g clip-path="url(#cgc)" opacity=".5">${CLOUD}</g>
+  </g></g>`;
+}
 
 function esc(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -78,13 +99,14 @@ function defs(): string {
     <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
       <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#0e1320" flood-opacity=".14"/>
     </filter>
+    ${MARK_DEFS}
   </defs>`;
 }
 
-/** The arch mark, "Cloudgate" and the italic "Templates", top left. */
+/** Cloudgate's mark, "Cloudgate" and the italic "Templates", top left. */
 function brand(x: number, y: number): string {
   return `<g transform="translate(${x} ${y})">
-    <g transform="scale(1.6667)"><path d="${ARCH}" fill="none" stroke="${C.accent}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g transform="translate(0 -2)">${mark(42)}</g>
     <text x="54" y="29" font-family="${SANS}" font-weight="600" font-size="27" fill="${C.fg}">Cloudgate</text>
     <text x="196" y="29" font-family="${SERIF}" font-style="italic" font-size="29" fill="${C.muted}">Templates</text>
   </g>`;

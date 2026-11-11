@@ -1,0 +1,41 @@
+---
+/**
+ * Cloudgate's own glyph: a cloud cut into three diagonal leaves of a gate, with a
+ * keyhole in the middle leaf. The drawing is copied from the Cloudgate console
+ * (frontend/src/components/console/cloudgate-glyph.tsx in octabyte-io/cloudgate),
+ * which is the source of truth; change both together, along with
+ * public/favicon.svg and the brand() mark in src/pages/og/_render.ts.
+ *
+ * It paints in currentColor, so the caller's class sets the ink. The leaves step
+ * down in opacity rather than using three colours, so it stays one ink on any ground.
+ * Clip and mask ids are unique per use, because the header and footer both draw it.
+ */
+interface Props {
+  size?: number;
+  class?: string;
+  /** Position, when nested inside another SVG. */
+  x?: number;
+  y?: number;
+}
+const { size = 24, class: className, x, y } = Astro.props;
+const id = `cgm${Math.random().toString(36).slice(2, 8)}`;
+const cloud = '<rect x="3" y="33" width="58" height="19" rx="9.5"/><circle cx="19" cy="34" r="9.5"/><circle cx="37" cy="28" r="13"/><circle cx="50" cy="35.5" r="8"/>';
+---
+
+<svg viewBox="2 3.5 60 60" x={x} y={y} width={size} height={size} class:list={['cg-mark', className]} aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id={`${id}a`}><polygon points="0,0 25,0 17,64 0,64"></polygon></clipPath>
+    <clipPath id={`${id}b`}><polygon points="28,0 44,0 36,64 20,64"></polygon></clipPath>
+    <clipPath id={`${id}c`}><polygon points="47,0 64,0 64,64 39,64"></polygon></clipPath>
+    <mask id={`${id}k`} maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"></rect>
+      <circle cx="31.7" cy="34" r="2.8" fill="#000"></circle>
+      <path d="M30.6 35 L29.4 42.5 H33.2 L32.8 35 Z" fill="#000"></path>
+    </mask>
+  </defs>
+  <g fill="currentColor" mask={`url(#${id}k)`}>
+    <g clip-path={`url(#${id}a)`} set:html={cloud} />
+    <g clip-path={`url(#${id}b)`} opacity=".75" set:html={cloud} />
+    <g clip-path={`url(#${id}c)`} opacity=".5" set:html={cloud} />
+  </g>
+</svg>
