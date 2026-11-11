@@ -7,7 +7,7 @@ import Faq from '../components/Faq.astro';
 import ProductTile from '../components/ProductTile.astro';
 import { alternativesPages, getTemplate, isSample } from '../lib/catalogue';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
-import { href, PLANS } from '../lib/site';
+import { href } from '../lib/site';
 import { PRODUCTS } from '../products';
 
 const trail = [
@@ -19,8 +19,8 @@ const trail = [
  * The cost example. Every figure is an example: round, plausible, in US dollars, and labelled as
  * such on the page. Per-seat tools are priced per person; the server side does not change with
  * the number of people. The server figure is a generic example, never the price of a server bought
- * from Cloudgate. Cloudgate is hosted Starter (cloudgate ADR-0054), which is priced per plan, not
- * per person, and free when you install it yourself.
+ * from Cloudgate. The Cloudgate line is the free self-installed version; hosted Cloudgate's
+ * prices belong on Cloudgate's own website, so the note only says it is priced separately.
  */
 const TEAM = 12;
 const product = (id: string) => PRODUCTS.find((p) => p.id === id)!;
@@ -33,7 +33,7 @@ const paidAt = (people: number) => paid.reduce((sum, row) => sum + row.perSeat *
 const server = [
   { label: 'Server big enough for all three apps', cost: 20 },
   { label: 'Storage for backups', cost: 5 },
-  { label: `Cloudgate Starter, hosted (free if you install it yourself)`, cost: PLANS.starter },
+  { label: 'Cloudgate, installed on the same server', cost: 0 },
 ];
 const serverTotal = server.reduce((sum, row) => sum + row.cost, 0);
 const paidTotal = paidAt(TEAM);
@@ -49,7 +49,7 @@ const nextReads = alternativesPages()
 const faq = [
   {
     q: 'Is running apps on my own server really cheaper?',
-    a: 'Usually, once more than a few people use the tools. Per-seat tools cost more with every person you add, while one server and one Cloudgate plan cost the same for 2 people or 20. For one or two people on free plans, the savings are small.',
+    a: 'Usually, once more than a few people use the tools. Per-seat tools cost more with every person you add, while one server costs the same for 2 people or 20. For one or two people on free plans, the savings are small.',
   },
   {
     q: 'Do I need to be technical?',
@@ -60,12 +60,8 @@ const faq = [
     a: 'You decide. Cloudgate never updates an app on its own: setting one up copies its template once, and nothing changes afterwards until you choose to change it. That means no surprise changes, and also that keeping up to date is your job.',
   },
   {
-    q: 'Does Cloudgate charge per person?',
-    a: `No. Hosted Cloudgate is priced per plan: $${PLANS.starter} a month for Starter or $${PLANS.business} for Business, each with room for ${PLANS.servers} servers, however many people use them. Installed on your own server, Cloudgate is free. The apps do not count people either.`,
-  },
-  {
     q: 'What happens to my data if I stop using Cloudgate?',
-    a: 'On a server you own, it stays there and the apps keep running; you look after them yourself from then on. A server bought from Cloudgate is deleted, with its data, when your subscription ends, so copy your data off first. The apps are ordinary open-source software, so your data is never locked into a vendor’s format.',
+    a: 'On a server you own, it stays there. The apps are ordinary open-source software, so your data is never locked into a vendor’s format.',
   },
   {
     q: 'Is Cloudgate itself open source?',
@@ -212,8 +208,8 @@ const description =
       </div>
       <p class="note">
           Example figures in US dollars, rounded, not current prices. Tool prices depend on the plan you are on; the server you
-          need depends on the apps you run, and a server from Cloudgate shows its price before you buy. Cloudgate Starter is
-          ${PLANS.starter} a month after a {PLANS.trialDays}-day free trial. Not counted: the time you spend looking after your apps.
+          need depends on the apps you run. The Cloudgate line assumes you install it yourself; hosted Cloudgate is priced
+          separately. Not counted: the time you spend looking after your apps.
       </p>
     </div>
   </section>
@@ -239,9 +235,6 @@ const description =
       <ul class="body list">
         <li>The apps are open source. Nobody can raise their price or switch them off, and each app’s page names its licence.</li>
         <li>Your data sits on your server, not in a vendor’s account you have to export it out of.</li>
-        <li>
-          A server bought from Cloudgate is deleted when your subscription ends, so copy your data off before you go.
-        </li>
         <li>
           Want no account at all? Install Cloudgate on your own server for free. It is source-available under the Elastic
           License 2.0.
@@ -283,12 +276,12 @@ const description =
       <div class="pad item">
         <div class="tx">
           <h3 class="h3">A server when you need one</h3>
-          <p>No server? Get one from Cloudgate when you deploy, on the same monthly bill. Each plan has room for {PLANS.servers} servers, and room for each one more costs ${PLANS.addOn} a month.</p>
+          <p>No server? Get one from hosted Cloudgate when you deploy: pick a size and a country, and Cloudgate gets it ready.</p>
         </div>
-        <div class="frag rows" role="img" aria-label={`Hosted Cloudgate Starter: $${PLANS.starter} a month, up to ${PLANS.servers} servers, $${PLANS.addOn} a month for room for each extra server`}>
-          <div class="r" aria-hidden="true"><span>Starter plan</span><span>${PLANS.starter} a month</span></div>
-          <div class="r" aria-hidden="true"><span>Servers you can use</span><span>Up to {PLANS.servers}</span></div>
-          <div class="r" aria-hidden="true"><span>Room for one more</span><span>${PLANS.addOn} a month</span></div>
+        <div class="frag rows" role="img" aria-label="Example server from Cloudgate: small size, in Germany, ready">
+          <div class="r" aria-hidden="true"><span>Size</span><span>Small</span></div>
+          <div class="r" aria-hidden="true"><span>Country</span><span>Germany</span></div>
+          <div class="r" aria-hidden="true"><span>Status</span><span>Ready</span></div>
         </div>
       </div>
       <div class="pad item">
@@ -374,7 +367,7 @@ const description =
     <div class="acts">
       <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
       <a class="btn lg ghost" href={href('how-it-works/')}>How it works <Chev /></a>
-      <a class="btn lg ghost" href={href('get-cloudgate/')}>Plans and prices <Chev /></a>
+      <a class="btn lg ghost" href={href('get-cloudgate/')}>Ways to get Cloudgate <Chev /></a>
     </div>
   </section>
 </Base>

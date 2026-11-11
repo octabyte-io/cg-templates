@@ -5,12 +5,12 @@ import Crumbs from '../components/Crumbs.astro';
 import Faq from '../components/Faq.astro';
 import { isSample } from '../lib/catalogue';
 import { breadcrumbSchema, faqSchema, graph, ORGANIZATION } from '../lib/schema';
-import { absolute, CONTACT_URL, GET_CLOUDGATE_URL, HOSTED_URL, href, PLANS } from '../lib/site';
+import { absolute, CONTACT_URL, GET_CLOUDGATE_URL, HOSTED_URL, href } from '../lib/site';
 
 /*
- * Two ways to get Cloudgate. Hosted: the plans, trial and Add-on are cloudgate ADR-0054, and a
- * server bought from Cloudgate (ADR-0071) is billed monthly on the same invoice, from the day it
- * is bought, never named by its provider and never priced here. Self-hosted: every requirement,
+ * Two ways to get Cloudgate. Hosted is only pointed to: its plans, prices, trial and billing
+ * belong on Cloudgate's own website, not in this catalogue. Buying a server is hosted-only
+ * (cloudgate ADR-0071) and its provider is never named. Self-hosted: every requirement,
  * command and claim comes from Cloudgate's README.md, docs/deploy.md and LICENSE. Change them
  * there first; this page follows.
  */
@@ -37,56 +37,33 @@ const trail = [
   { name: 'Get Cloudgate', path: 'get-cloudgate/' },
 ];
 
-const title = 'Cloudgate pricing: hosted plans or self-host for free';
-const description = `Hosted Cloudgate from $${PLANS.starter} a month after a ${PLANS.trialDays}-day free trial, with a server provided if you need one. Or install Cloudgate on your own server for free.`;
+const title = 'Get Cloudgate: hosted, or on your own server for free';
+const description =
+  'Use hosted Cloudgate, with a server provided if you need one, or install Cloudgate on your own server for free. Then deploy any app from this catalogue.';
 
-const plans = [
-  {
-    name: 'Starter',
-    price: `$${PLANS.starter}`,
-    per: 'a month',
-    for: 'For running the apps your team uses every day.',
-    lines: [
-      `Room for ${PLANS.servers} servers and ${PLANS.clouds} cloud environments`,
-      'Every app in this catalogue',
-      'Get a server from Cloudgate, or connect your own',
-      'Scheduled backups, uptime alerts and team roles',
-    ],
-    cta: { label: 'Start free trial', href: SIGN_UP },
-  },
-  {
-    name: 'Business',
-    price: `$${PLANS.business}`,
-    per: 'a month',
-    for: 'For teams that manage sign-in and access centrally.',
-    lines: [
-      'Everything in Starter',
-      'Sign in with your company account (SSO)',
-      'Add and remove people from your directory automatically (SCIM)',
-      'Custom roles',
-      'A Cloudgate sign-in in front of any app (forward auth)',
-    ],
-    cta: { label: 'Start free trial', href: SIGN_UP },
-  },
-  {
-    name: 'Enterprise',
-    price: 'By arrangement',
-    per: '',
-    for: 'For larger deals, on hosted Cloudgate or your own.',
-    lines: [
-      'Server and cloud counts set for you, on hosted Cloudgate',
-      'Or a license key for Cloudgate on your own server, with every paid feature',
-      'Price and billing period agreed with you',
-    ],
-    cta: { label: 'Contact us', href: CONTACT_URL },
-  },
-];
+const SUPPORT = CONTACT_URL.replace(/^mailto:/, '');
 
-const fine = [
-  `Every plan is billed monthly. Starter and Business start with a ${PLANS.trialDays}-day free trial: a card is needed to start it, there is one trial per organization, and the plan is not charged until day ${PLANS.trialDays}. Cancel before then and you pay nothing for the plan.`,
-  `Need more room? $${PLANS.addOn} a month adds one server and one cloud environment to either plan.`,
-  'A server from Cloudgate is billed monthly on the same bill, from the day you buy it: the free trial covers the plan, not the server. You see its price before you buy.',
-  'Nobody is charged per person, and every app in this catalogue is free.',
+const ways = [
+  {
+    name: 'Hosted Cloudgate',
+    for: 'We run Cloudgate for you at cloudgate.octabyte.app.',
+    lines: [
+      'Nothing to install: create an account and start',
+      'Get a server from Cloudgate when you deploy, or connect your own',
+      'Every app in this catalogue, a click away',
+    ],
+    cta: { label: 'Create an account', href: SIGN_UP, ghost: false },
+  },
+  {
+    name: 'On your own server',
+    for: 'Install Cloudgate yourself, for free.',
+    lines: [
+      'Free for individuals and businesses',
+      'Source-available under the Elastic License 2.0',
+      'Needs a server and someone comfortable with a terminal, once',
+    ],
+    cta: { label: 'What you need', href: '#self-host', ghost: true },
+  },
 ];
 
 const after = [
@@ -114,20 +91,12 @@ const faq = [
     a: 'Choose hosted if you want to start today without a server or technical help: sign up, click Deploy on an app, and Cloudgate can provide the server. Install it yourself if someone on your team is comfortable running a server and you would rather pay nothing for Cloudgate.',
   },
   {
-    q: 'How does the free trial work?',
-    a: `Starter and Business both start with ${PLANS.trialDays} days free. A card is needed to start, and there is one trial per organization. You can switch between the two plans during the trial. If you cancel before day ${PLANS.trialDays}, the plan is not charged. A server you buy from Cloudgate during the trial is charged from the day you buy it.`,
-  },
-  {
     q: 'Do I need my own server?',
-    a: 'Not with hosted Cloudgate: when you deploy an app, Cloudgate can provide a server, billed monthly on the same bill, or you can connect one you rent. To install Cloudgate yourself you need a server for it, and that same server can run your apps too.',
-  },
-  {
-    q: 'What is a cloud environment?',
-    a: 'A place to run apps inside a cloud account you connect, such as your company’s AWS or Google Cloud account. Most people deploying apps from this catalogue use servers and never need one.',
+    a: 'Not with hosted Cloudgate: when you deploy an app, Cloudgate can provide a server, or you can connect one you rent. To install Cloudgate yourself you need a server for it, and that same server can run your apps too.',
   },
   {
     q: 'Is Cloudgate free?',
-    a: 'Installed on your own server, yes, for individuals and businesses alike. It is published under the Elastic License 2.0, which makes it source-available rather than open source: the one thing you may not do is offer Cloudgate to other people as a hosted service. Single sign-on, custom roles, white-labelling and a few other business features need an Enterprise license. Hosted Cloudgate is a paid service after the free trial.',
+    a: 'Installed on your own server, yes, for individuals and businesses alike. It is published under the Elastic License 2.0, which makes it source-available rather than open source: the one thing you may not do is offer Cloudgate to other people as a hosted service. A few business features, such as single sign-on, custom roles and white-labelling, need a paid licence. Hosted Cloudgate is a paid service.',
   },
   {
     q: 'Do I need a domain name?',
@@ -143,22 +112,6 @@ const faq = [
   },
 ];
 
-const offer = (name: string, price: number, text: string) => ({
-  '@type': 'Offer',
-  name,
-  description: text,
-  price: String(price),
-  priceCurrency: 'USD',
-  url: SIGN_UP,
-  priceSpecification: {
-    '@type': 'UnitPriceSpecification',
-    price: String(price),
-    priceCurrency: 'USD',
-    unitCode: 'MON',
-    referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' },
-  },
-});
-
 const cloudgate = {
   '@type': 'SoftwareApplication',
   '@id': `${absolute('get-cloudgate/')}#cloudgate`,
@@ -171,7 +124,7 @@ const cloudgate = {
   operatingSystem: 'Web browser; self-hosted on Ubuntu 24.04',
   featureList: [
     'One-click setup of open-source apps from the Cloudgate Templates catalogue',
-    'Servers provided by Cloudgate on hosted plans, billed monthly',
+    'Servers provided by hosted Cloudgate',
     'Deploy from GitHub, GitLab, Bitbucket or Gitea on every push, with preview deployments and rollback',
     'Managed Postgres, MySQL, MariaDB, MongoDB and Redis databases with scheduled backups',
     'Automatic https certificates for your own domains',
@@ -180,8 +133,6 @@ const cloudgate = {
   ],
   license: LICENSE_URL,
   offers: [
-    offer('Starter', PLANS.starter, `Hosted Cloudgate, billed monthly, with a ${PLANS.trialDays}-day free trial. Room for ${PLANS.servers} servers and ${PLANS.clouds} cloud environments.`),
-    offer('Business', PLANS.business, `Hosted Cloudgate with SSO, SCIM, custom roles and forward auth, billed monthly, with a ${PLANS.trialDays}-day free trial. Room for ${PLANS.servers} servers and ${PLANS.clouds} cloud environments.`),
     {
       '@type': 'Offer',
       name: 'Self-hosted',
@@ -204,16 +155,16 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
     <div class="body">
       <h1 class="h1">Get Cloudgate</h1>
       <p class="lede">
-        Cloudgate sets up the apps in this catalogue and keeps them running. Use it hosted, with a {PLANS.trialDays}-day free
-        trial and a server provided if you need one. Or install it on your own server, for free.
+        Cloudgate sets up the apps in this catalogue and keeps them running. Use it hosted, with a server provided if you
+        need one. Or install it on your own server, for free.
       </p>
       <div class="acts">
-        <a class="btn lg" href={SIGN_UP}>Start your free trial</a>
+        <a class="btn lg" href={SIGN_UP}>Create an account</a>
         <a class="btn lg ghost" href="#self-host">Self-host for free <Chev /></a>
       </div>
       <p class="facts-strip">
-        <span><b>{PLANS.trialDays}-day</b> free trial</span>
-        <span>From <b>${PLANS.starter}</b> a month</span>
+        <span><b>Nothing</b> to install</span>
+        <span><b>Server</b> provided if you need one</span>
         <span><b>Free</b> to self-host</span>
       </p>
     </div>
@@ -221,38 +172,32 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
 
   <section class="sec" id="hosted" aria-labelledby="hosted-title">
     <div class="shead pad">
-      <h2 class="h2" id="hosted-title">Hosted Cloudgate: plans and prices</h2>
+      <h2 class="h2" id="hosted-title">Two ways to use Cloudgate</h2>
       <p class="lede">
-        We run Cloudgate for you at cloudgate.octabyte.app. Pick an app, click Deploy, and choose a server from Cloudgate or
-        one you already have.
+        Most people use hosted Cloudgate: pick an app, click Deploy, and choose a server from Cloudgate or one you already
+        have. Prefer to run everything yourself? Install it on your own server.
       </p>
     </div>
     <div class="pad">
       <ul class="plans">
         {
-          plans.map((plan) => (
+          ways.map((way) => (
             <li>
-              <h3 class="h3">{plan.name}</h3>
-              <p class="amt">
-                <b>{plan.price}</b>
-                {plan.per && <span>{plan.per}</span>}
-              </p>
-              <p class="for">{plan.for}</p>
+              <h3 class="h3">{way.name}</h3>
+              <p class="for">{way.for}</p>
               <ul class="lines">
-                {plan.lines.map((line) => (
+                {way.lines.map((line) => (
                   <li>{line}</li>
                 ))}
               </ul>
-              <a class:list={['btn', { ghost: plan.name === 'Enterprise' }]} href={plan.cta.href}>
-                {plan.cta.label}
+              <a class:list={['btn', { ghost: way.cta.ghost }]} href={way.cta.href}>
+                {way.cta.label}
               </a>
             </li>
           ))
         }
       </ul>
-      <ul class="fine">
-        {fine.map((line) => <li>{line}</li>)}
-      </ul>
+      <p class="fine">Questions about Cloudgate? Email <a class="lnk" href={CONTACT_URL}>{SUPPORT}</a>.</p>
     </div>
   </section>
 
@@ -413,7 +358,7 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
       <h2 class="h2" id="faq-title">Questions</h2>
       <Faq items={faq} />
       <div class="end">
-        <a class="btn lg" href={SIGN_UP}>Start your free trial</a>
+        <a class="btn lg" href={SIGN_UP}>Create an account</a>
         <a class="btn lg ghost" href={DEPLOY_GUIDE}>Read the self-hosting guide <Chev /></a>
       </div>
     </div>
@@ -421,13 +366,13 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
 </Base>
 
 <style>
-  /* Hosted plans: three columns on one card, hairlines between, the honest small print under */
+  /* The two ways in: two columns on one card, hairlines between, the contact line under */
   .plans {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     border: 1px solid var(--line);
     border-radius: 12px;
     background: var(--card);
@@ -436,7 +381,7 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
   .plans > li {
     padding: 24px 24px 26px;
     display: grid;
-    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto;
     gap: 10px;
     min-width: 0;
   }
@@ -445,25 +390,6 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
   }
   .plans .h3 {
     font-size: 17px;
-  }
-  .plans .amt {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .plans .amt b {
-    font: 600 34px/1.1 var(--display);
-    letter-spacing: -0.03em;
-    font-variant-numeric: tabular-nums;
-  }
-  .plans > li:last-child .amt b {
-    font-size: 24px;
-    line-height: 1.5;
-  }
-  .plans .amt span {
-    color: var(--muted);
-    font-size: 14px;
   }
   .plans .for {
     color: var(--muted);
@@ -483,7 +409,7 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
   }
   .fine {
     margin: 0;
-    padding: 20px 0 64px 18px;
+    padding: 20px 0 64px;
     display: grid;
     gap: 6px;
     color: var(--muted);

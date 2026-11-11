@@ -1,5 +1,4 @@
 import type { Template } from './catalogue';
-import { PLANS } from './site';
 
 /**
  * Copy more than one page states, so the app page, its Markdown copy and
@@ -14,11 +13,11 @@ export function HOW_IT_WORKS(template: Template): { name: string; text: string }
   return [
     {
       name: 'Click Deploy and create your account',
-      text: `Deploy takes you to Cloudgate. Create an account, or log in if you have one. ${template.name} is free; Cloudgate starts with a ${PLANS.trialDays}-day free trial.`,
+      text: `Deploy takes you to Cloudgate. Create an account, or log in if you have one. ${template.name} itself is free.`,
     },
     {
       name: 'Choose a server',
-      text: 'No server? Get one from Cloudgate: pick a size and a country, and it goes on your monthly Cloudgate bill. Already have one? Connect it instead.',
+      text: 'No server? Get one from Cloudgate: pick a size and a country, and Cloudgate gets it ready. Already have one? Connect it instead.',
     },
     {
       name: `Cloudgate sets up ${template.name}`,
@@ -34,7 +33,7 @@ export function HOW_IT_WORKS(template: Template): { name: string; text: string }
 /** The cost answer, said the same way on every page that answers it. */
 export function costAnswer(appName?: string): string {
   const app = appName ? `${appName} is free. To run it` : 'The apps are free. To run them';
-  return `${app} you need Cloudgate and a server. Hosted Cloudgate starts with a ${PLANS.trialDays}-day free trial, then costs $${PLANS.starter} a month (Starter) or $${PLANS.business} a month (Business). A server from Cloudgate is billed monthly on the same bill, and you see its price before you buy. Or install Cloudgate on a server of your own, for free.`;
+  return `${app} you need Cloudgate and a server. Use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free.`;
 }
 
 /** A template's own questions, then the general ones it does not already answer. */
@@ -48,7 +47,7 @@ export function appFaq(template: Template): { q: string; a: string }[] {
     { q: 'What does it cost?', a: costAnswer(template.name) },
     {
       q: 'Do I need my own server?',
-      a: `No. When you deploy ${template.name}, Cloudgate can provide a server, billed monthly with your plan. If you already rent one, you can connect it instead.`,
+      a: `No. When you deploy ${template.name}, hosted Cloudgate can provide a server. If you already rent one, you can connect it instead.`,
     },
     ...(first
       ? [

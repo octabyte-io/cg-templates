@@ -8,7 +8,7 @@ import Faq from '../components/Faq.astro';
 import { alternativesPages, getTemplate, getTemplates, listNames, popularSwaps, usedCategories } from '../lib/catalogue';
 import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
 import { costAnswer } from '../lib/copy';
-import { href, PLANS, SITE_DESCRIPTION } from '../lib/site';
+import { href, SITE_DESCRIPTION } from '../lib/site';
 
 const templates = getTemplates();
 const total = templates.length;
@@ -38,7 +38,7 @@ const faq = [
   },
   {
     q: 'Do I need my own server?',
-    a: 'No. When you deploy an app, Cloudgate can provide a server: pick a size and a country, and it is billed monthly on the same bill as your Cloudgate plan. If you already rent a server, you can connect it instead.',
+    a: 'No. When you deploy an app, hosted Cloudgate can provide a server: pick a size and a country, and it is set up for you. If you already rent a server, you can connect it instead.',
   },
   {
     q: 'Do I need to be technical?',
@@ -85,7 +85,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
         <a class="btn lg ghost" href={href('how-it-works/')}>How it works <Chev /></a>
       </div>
     </div>
-    <div class="facts-strip"><span><b>{total}</b> free apps</span><span><b>{PLANS.trialDays}-day</b> free trial</span><span>Server provided if you need one</span></div>
+    <div class="facts-strip"><span><b>{total}</b> free apps</span><span><b>Nothing</b> to install</span><span>Server provided if you need one</span></div>
   </section>
 
   {
@@ -123,7 +123,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
                 </div>
                 <span class="lab">Server</span>
                 <div class="srv">
-                  <label class="on"><input type="radio" name="hs" checked tabindex="-1" /> Get a server from Cloudgate <small>on your monthly bill</small></label>
+                  <label class="on"><input type="radio" name="hs" checked tabindex="-1" /> Get a server from Cloudgate</label>
                   <label><input type="radio" name="hs" tabindex="-1" /> Use a server I already have</label>
                 </div>
                 <span class="lab">Web address</span>
@@ -138,7 +138,6 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
                 <div class="sumrow"><span>Server</span><span>New, from Cloudgate</span></div>
                 {replaced && <div class="sumrow"><span>Replaces</span><span>{replaced.name}</span></div>}
                 <div class="sumrow"><span>App cost</span><span>Free</span></div>
-                <div class="sumrow"><span>Cloudgate</span><span>{PLANS.trialDays}-day free trial</span></div>
                 <span class="btn" style="width:100%">Deploy {featured.name}</span>
                 <div class="log">
                   <div><span class="ok">✓</span> Account created</div>
@@ -200,23 +199,23 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <div class="tile t-c pad">
         <div class="tx">
           <h3 class="h3">No server? Cloudgate provides one</h3>
-          <p>Pick a size and a country when you deploy. The server goes on your monthly Cloudgate bill, and you see its price before you buy.</p>
+          <p>Pick a size and a country when you deploy, and Cloudgate gets the server ready for your app.</p>
         </div>
-        <div class="frag server" role="img" aria-label="Example monthly bill: Cloudgate Starter plan, a server from Cloudgate, and the app, which is free">
-          <div class="r" aria-hidden="true"><span>Cloudgate Starter</span><span>${PLANS.starter} a month</span></div>
-          <div class="r" aria-hidden="true"><span>Server from Cloudgate</span><span>Shown before you buy</span></div>
-          {featured && <div class="r" aria-hidden="true"><span>{featured.name}</span><span>Free</span></div>}
+        <div class="frag server" role="img" aria-label="Example server from Cloudgate: small size, in Germany, ready for the app">
+          <div class="r" aria-hidden="true"><span>Size</span><span>Small</span></div>
+          <div class="r" aria-hidden="true"><span>Country</span><span>Germany</span></div>
+          {featured && <div class="r" aria-hidden="true"><span>Ready for</span><span>{featured.name}</span></div>}
         </div>
       </div>
       <div class="tile t-d pad">
         <div class="tx">
           <h3 class="h3">Add the whole team. No per-seat pricing.</h3>
-          <p>The apps are free, and Cloudgate does not charge per person. Your bill is the same whether 2 people use it or 20.</p>
+          <p>The apps are free and charge nothing per person, so adding a colleague costs nothing.</p>
         </div>
-        <div class="frag" role="img" aria-label={`Example team pricing: 12 team members, nothing per person, Cloudgate Starter at $${PLANS.starter} a month plus the server`}>
+        <div class="frag" role="img" aria-label="Example team pricing: 12 team members, nothing per person, a free app">
           <div class="seats" aria-hidden="true">{seats.map((x) => <span>{x}</span>)}</div>
           <div class="price" aria-hidden="true">
-            <span>Team members</span><span>12</span><span>Price per person</span><span>$0</span><span class="tot">Cloudgate Starter, per month</span><span class="tot">${PLANS.starter}</span>
+            <span>Team members</span><span>12</span><span>Price per person</span><span>$0</span><span class="tot">App price</span><span class="tot">Free</span>
           </div>
           <p class="ex" style="margin-top:10px">Plus your server, the same for 2 people or 20</p>
         </div>

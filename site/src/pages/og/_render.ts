@@ -256,7 +256,7 @@ export async function renderDefaultCard(templates: Template[]): Promise<Buffer> 
     })
     .join('\n    ');
 
-  const facts = [`${count} free ${count === 1 ? 'app' : 'apps'}`, '30-day free trial', 'Server provided if you need one'];
+  const facts = [`${count} free ${count === 1 ? 'app' : 'apps'}`, 'Free to use', 'Server provided if you need one'];
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
   ${defs()}

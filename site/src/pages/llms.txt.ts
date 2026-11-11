@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { alternativesPages, getTemplates, GITHUB_REPO, isSample, listNames, usedCategories } from '../lib/catalogue';
 import { HOW_IT_WORKS } from '../lib/copy';
 import { appUrl, markdownUrl, SAMPLE_NOTE } from '../lib/machine';
-import { absolute, CONTACT_URL, deployUrl, HOSTED_URL, PLANS, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, CONTACT_URL, deployUrl, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 /** The llmstxt.org index: what the site is, then one line per page worth reading. */
 function body(): string {
@@ -26,9 +26,9 @@ function body(): string {
     'Facts about Cloudgate, the platform every app here is set up with:',
     '',
     '- Cloudgate is a deployment platform made by Octabyte: a console in the browser that sets up and runs apps and databases on servers, and gives each app a web address.',
-    `- There are two ways to get it. Hosted Cloudgate, run by Octabyte at ${HOSTED_URL}, is billed monthly: Starter costs $${PLANS.starter} a month and Business $${PLANS.business} a month, both with room for ${PLANS.servers} servers and ${PLANS.clouds} cloud environments, and Business adds SSO, SCIM, custom roles and forward auth. Both start with a ${PLANS.trialDays}-day free trial (a card is needed; one trial per organization). $${PLANS.addOn} a month adds room for one more server and cloud environment. Enterprise is by arrangement (${CONTACT_URL}).`,
-    '- Or install Cloudgate on your own server for free. It is source-available (not open source) under the Elastic License 2.0, free for individuals and businesses to use, self-host and change. Single sign-on, custom roles, white-labelling and a few other business features need an Enterprise license. The tested server is Ubuntu 24.04 on x86-64 with 2 vCPU, 4 GB memory and 40 GB disk, and the install is one script.',
-    '- On hosted Cloudgate, people without a server can buy one from Cloudgate when they deploy; it is billed monthly on the same bill, from the day it is bought, and the free trial covers the plan only. People who already rent a server can connect it instead.',
+    `- There are two ways to get it: use hosted Cloudgate, run by Octabyte at ${HOSTED_URL}, or install Cloudgate on your own server. Questions: ${CONTACT_URL}.`,
+    '- Or install Cloudgate on your own server for free. It is source-available (not open source) under the Elastic License 2.0, free for individuals and businesses to use, self-host and change. A few business features, such as single sign-on, custom roles and white-labelling, need a paid licence. The tested server is Ubuntu 24.04 on x86-64 with 2 vCPU, 4 GB memory and 40 GB disk, and the install is one script.',
+    '- On hosted Cloudgate, people without a server can get one from Cloudgate when they deploy. People who already rent a server can connect it instead.',
     `- Each app page has a Deploy button that opens hosted Cloudgate with the app chosen, for example ${templates[0] ? deployUrl(templates[0].id) : deployUrl('<id>')}. Passwords and keys are generated at setup. In a self-hosted console, setting up an app shows a list of everything Cloudgate will create, and nothing is created until the user applies it.`,
     '- Each app gets a free web address, which is plain http (not encrypted), or the user\'s own domain with an automatic https certificate. Cloudgate never updates an app on its own. The console does not yet back up apps made of several containers (Compose stacks).',
     '- Cloudgate also deploys code from GitHub, GitLab, Bitbucket or Gitea, runs managed Postgres, MySQL, MariaDB, MongoDB and Redis databases, and sends uptime alerts to email, Slack, Microsoft Teams, Discord or Telegram.',
@@ -36,7 +36,7 @@ function body(): string {
     `- [All apps](${absolute('templates/')}): every app in the directory, filterable by category or by the tool it replaces.`,
     `- [How it works](${absolute('how-it-works/')}): what happens from choosing an app and clicking Deploy to opening it at its own web address.`,
     `- [Why Cloudgate](${absolute('why-cloudgate/')}): the case for running open-source apps on your own server, and when a paid tool is still the better choice.`,
-    `- [Get Cloudgate](${absolute('get-cloudgate/')}): hosted Cloudgate's plans and prices, and how to install Cloudgate on your own server for free.`,
+    `- [Get Cloudgate](${absolute('get-cloudgate/')}): the two ways to get Cloudgate: hosted, or installed on your own server for free.`,
     '',
   );
 

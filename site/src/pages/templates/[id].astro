@@ -11,7 +11,7 @@ import ProductMark from '../../components/ProductMark.astro';
 import { alternativesPages, getTemplates, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
 import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
-import { deployUrl, formatDate, href, PLANS } from '../../lib/site';
+import { deployUrl, formatDate, href } from '../../lib/site';
 
 export function getStaticPaths() {
   return getTemplates().map((template) => ({ params: { id: template.id }, props: { template } }));
@@ -207,7 +207,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         <div class="dfoot">
           <a class="btn lg" href={deploy}>Deploy {a.name}</a>
           <p class="muted">
-            {PLANS.trialDays}-day free trial, then from ${PLANS.starter} a month. <a href={href('get-cloudgate/')}>See plans and prices</a>
+            New to Cloudgate? <a href={href('get-cloudgate/')}>See the ways to get it</a>
           </p>
         </div>
         <ConsoleDeploy id={a.id} name={a.name} />
@@ -239,7 +239,6 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
           <dt>Category</dt><dd><a href={href(`categories/${a.category.id}/`)} style="text-decoration:none">{a.category.name}</a></dd>
           <dt>Ease of use</dt><dd><Ease ease={a.ease} /></dd>
           <dt>App price</dt><dd>Free</dd>
-          <dt>Cloudgate</dt><dd>{PLANS.trialDays}-day free trial</dd>
           <dt>Server</dt><dd>Yours, or one from Cloudgate</dd>
           <dt>License</dt><dd class="m">{a.license}</dd>
           {

@@ -43,7 +43,7 @@ export function appMarkdown(template: Template, level = 1): string {
     `- Category: ${a.category.name}`,
     ...(replaced.length ? [`- Replaces: ${listNames(replaced)}`] : []),
     `- Ease of use: ${easeText(a)}`,
-    '- App price: Free. To run it you need Cloudgate (hosted, with a 30-day free trial, or free to install yourself) and a server, which Cloudgate can provide.',
+    '- App price: Free. To run it you need Cloudgate (hosted, or free to install yourself) and a server, which hosted Cloudgate can provide.',
     `- License: ${a.license}`,
     ...(a.goodFor ? [`- Good for: ${a.goodFor}`] : []),
     ...(a.links.website ? [`- Official website: ${a.links.website}`] : []),

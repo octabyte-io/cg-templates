@@ -22,13 +22,8 @@ export const HOSTED_URL = 'https://cloudgate.octabyte.app';
 /** Cloudgate's source, for people who install it on their own server. */
 export const GET_CLOUDGATE_URL = import.meta.env.PUBLIC_GET_CLOUDGATE_URL ?? 'https://github.com/octabyte-io/cloudgate';
 
-/**
- * Where an Enterprise enquiry goes. There is no sales address yet, so until
- * PUBLIC_CONTACT_URL is set the link opens a new issue on this catalogue's
- * GitHub repository with the title filled in.
- */
-export const CONTACT_URL =
-  import.meta.env.PUBLIC_CONTACT_URL ?? 'https://github.com/octabyte-io/cg-templates/issues/new?title=Cloudgate%20Enterprise%20enquiry';
+/** Where questions about Cloudgate go. PUBLIC_CONTACT_URL overrides it. */
+export const CONTACT_URL = import.meta.env.PUBLIC_CONTACT_URL ?? 'mailto:support@octabyte.io';
 
 /**
  * Where every "Deploy <app>" button goes: hosted Cloudgate's get-started
@@ -40,16 +35,6 @@ export function deployUrl(id: string): string {
   const template = import.meta.env.PUBLIC_DEPLOY_URL ?? `${HOSTED_URL}/get-started?template={id}`;
   return template.replace('{id}', encodeURIComponent(id));
 }
-
-/** The plans hosted Cloudgate sells (cloudgate ADR-0054). Monthly, in US dollars. */
-export const PLANS = {
-  trialDays: 30,
-  starter: 15,
-  business: 35,
-  servers: 3,
-  clouds: 3,
-  addOn: 5,
-} as const;
 
 export function formatDate(date: Date): string {
   return date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
