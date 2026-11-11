@@ -13,9 +13,8 @@ and the template catalogue every Cloudgate install reads.
 Every push to `main` that changes `templates/` publishes a new release with a `catalogue.zip`
 ([`.github/workflows/release.yml`](.github/workflows/release.yml)). Cloudgate installs read the newest one
 from `https://github.com/octabyte-io/cg-templates/releases/latest/download/catalogue.zip`, so merging a
-template is what makes it appear in every install. The zip is packed and checked with the Cloudgate CLI
-built from [`octabyte-io/cloudgate`](https://github.com/octabyte-io/cloudgate) (`main`, or the repository
-variable `CLOUDGATE_REF`). To publish again without a template change, run the Release workflow by hand
+template is what makes it appear in every install. The zip is packed and checked with a pinned release of the
+Cloudgate CLI (`@octabyte-io/cloudgate`; the repository variable `CLOUDGATE_CLI_VERSION` moves it). To publish again without a template change, run the Release workflow by hand
 with "force".
 
 The same workflow deploys the website to GitHub Pages once Pages is turned on (Settings > Pages >

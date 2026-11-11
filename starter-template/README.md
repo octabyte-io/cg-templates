@@ -17,7 +17,7 @@ Copy this folder to add an app to the Cloudgate Templates catalogue.
 3. **Check** it:
 
    ```sh
-   npx @octabyte-io/cloudgate template check templates/<your-app-id>
+   npx @octabyte-io/cloudgate@next template check templates/<your-app-id>
    ```
 
 4. **Open a pull request.** The checks run again there and say in plain words

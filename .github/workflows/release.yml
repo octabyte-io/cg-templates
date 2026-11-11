@@ -19,7 +19,6 @@ on:
       - 'templates/**'
       - 'site/**'
       - '.github/workflows/release.yml'
-      - '.github/actions/**'
   workflow_dispatch:
     inputs:
       force:
@@ -81,12 +80,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Build the Cloudgate CLI
+      # A pinned release, not `npx @octabyte-io/cloudgate`: npm's `latest` is a
+      # placeholder that prints a notice and exits 0, so a check run through it
+      # passes without checking anything. Set the repository variable
+      # CLOUDGATE_CLI_VERSION to move to a newer CLI.
+      - name: Install the Cloudgate CLI
         if: steps.changed.outputs.publish == 'true'
         id: cli
-        uses: ./.github/actions/cloudgate-cli
-        with:
-          ref: ${{ vars.CLOUDGATE_REF || 'main' }}
+        run: |
+          npm install -g "@octabyte-io/cloudgate@${{ vars.CLOUDGATE_CLI_VERSION || '0.0.2-beta.2' }}"
+          echo "version=$(cloudgate --version)" >> "$GITHUB_OUTPUT"
 
       - name: Pack and check catalogue.zip
         if: steps.changed.outputs.publish == 'true'
@@ -104,7 +107,7 @@ jobs:
         run: |
           tag="v$(date -u +%Y.%m.%d)-${GITHUB_SHA::7}"
           {
-            echo "Template catalogue built from ${GITHUB_SHA::12}, checked with the Cloudgate CLI from octabyte-io/cloudgate@${{ steps.cli.outputs.revision }}."
+            echo "Template catalogue built from ${GITHUB_SHA::12}, checked with the Cloudgate CLI ${{ steps.cli.outputs.version }}."
             echo
             echo "Cloudgate installs read the newest release through"
             echo "\`https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/catalogue.zip\`."

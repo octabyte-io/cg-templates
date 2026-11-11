@@ -4,5 +4,5 @@ One folder per app, named by its id. To add one, copy [`../starter-template/`](.
 and fill it in; [`../docs/plan.md`](../docs/plan.md) lists every field. Check a folder with:
 
 ```bash
-npx @octabyte-io/cloudgate template check templates/<id>
+npx @octabyte-io/cloudgate@next template check templates/<id>
 ```
