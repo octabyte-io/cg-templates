@@ -1,6 +1,8 @@
 # 2. A template is a folder of Markdown and YAML, and JSON is only ever generated
 
-Status: accepted
+Status: accepted, amended by [ADR-0003](0003-a-folder-holds-cloudgates-template-beside-its-page-and-releases-publish-catalogue-zip.md): the folder also holds
+Cloudgate's `template.yaml` and other template files, `template.yaml` owns name, description,
+tags and links, and the generated file Cloudgate reads is `catalogue.zip`.
 
 ## Context
 
