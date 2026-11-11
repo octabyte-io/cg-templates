@@ -1,18 +1,19 @@
 name: Outline
 description: "A fast, tidy wiki where your team writes and finds its documents."
-version: "0.86.1"
+version: "1.12.0"
 tags: [wiki, knowledge-base, collaboration]
 links:
   website: https://www.getoutline.com
   docs: https://docs.getoutline.com/s/hosting
   source: https://github.com/outline/outline
 cloudgate: 0.1.0
+compose: app
+size: medium
 inputs:
-  URL: { value: "{{domains.app.url}}" }
+  URL: { value: "{{domains.outline.url}}" }
   SECRET_KEY: { generate: hex }
   UTILS_SECRET: { generate: hex }
-  PGSSLMODE: { value: disable }
-  FILE_STORAGE: { value: s3 }
+  POSTGRES_PASSWORD: { generate: password }
   OIDC_CLIENT_ID:
     ask:
       label: OIDC client ID
@@ -40,3 +41,5 @@ inputs:
       description: Shown on Outline's sign-in page as "Continue with …".
       default: Single sign-on
       required: false
+domains:
+  - { service: outline, port: 3000 }

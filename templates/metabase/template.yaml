@@ -1,7 +1,7 @@
 name: Metabase
-description: "Ask questions about your business data and share charts with your team."
-version: "0.56.6"
-tags: [bi, analytics]
+description: "Self-hosted Metabase: open-source business intelligence and a free Tableau or Looker alternative. Build charts and dashboards from your data, no SQL needed."
+version: "0.65.4.1"
+tags: [business intelligence, dashboards, reporting, data visualization, tableau alternative, sql]
 links:
   website: https://www.metabase.com
   docs: https://www.metabase.com/docs/latest/
@@ -10,3 +10,4 @@ cloudgate: 0.1.0
 inputs:
   MB_SITE_URL: { value: "{{domains.app.url}}" }
   MB_ENCRYPTION_SECRET_KEY: { generate: base64 }
+  MB_SESSION_SECRET_KEY: { generate: hex }

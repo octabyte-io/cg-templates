@@ -14,5 +14,31 @@ inputs:
   SECRET_KEY_BASE: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+  MAILER_SENDER_EMAIL:
+    ask:
+      label: Send emails from
+      description: The address Chatwoot's emails come from, such as support@yourshop.com. Needed if you fill in an email server below.
+      format: email
+      required: false
+  SMTP_ADDRESS:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed to invite your team and reply to customers by email. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
 domains:
   - { service: chatwoot, port: 3000 }

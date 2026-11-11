@@ -15,6 +15,11 @@ services:
       - NEXTAUTH_SECRET
       - CALENDSO_ENCRYPTION_KEY
       - CALCOM_TELEMETRY_DISABLED
+      - EMAIL_FROM
+      - EMAIL_SERVER_HOST
+      - EMAIL_SERVER_PORT
+      - EMAIL_SERVER_USER
+      - EMAIL_SERVER_PASSWORD
   db:
     kind: postgres
     version: "16"

@@ -1,7 +1,7 @@
 name: Nextcloud
-description: "Store, sync and share files, calendars and contacts across devices."
+description: "Self-hosted Nextcloud: an open-source Google Drive and Dropbox alternative to store, sync and share files, calendars and contacts on your own server."
 version: "35.0.2"
-tags: [files, sync, calendar, collaboration]
+tags: [file sharing, file sync, cloud storage, calendar, contacts, collaboration, self-hosted cloud]
 links:
   website: https://nextcloud.com
   docs: https://docs.nextcloud.com/server/latest/admin_manual/

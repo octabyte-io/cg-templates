@@ -1,7 +1,7 @@
 name: Cal.com
-description: "Let clients book time with you from a link, synced to your calendar."
+description: "Self-hosted Cal.com, the open-source Calendly alternative: let clients book meetings from a link that checks your calendar, for freelancers and teams."
 version: "6.2.0"
-tags: [scheduling, booking, calendar]
+tags: [scheduling, booking, appointments, calendar, meeting scheduler, calendly alternative]
 links:
   website: https://cal.com
   docs: https://cal.com/docs/self-hosting/installation
@@ -9,7 +9,35 @@ links:
 cloudgate: 0.1.0
 inputs:
   NEXT_PUBLIC_WEBAPP_URL: { value: "{{domains.app.url}}" }
-  NEXTAUTH_URL: { value: "{{domains.app.url}}/api/auth" }
+  NEXTAUTH_URL: { value: "{{domains.app.url}}" }
   NEXTAUTH_SECRET: { generate: base64 }
+  # Must be exactly 32 characters (AES-256); a generated password is 32.
   CALENDSO_ENCRYPTION_KEY: { generate: password }
   CALCOM_TELEMETRY_DISABLED: { value: "1" }
+  EMAIL_FROM:
+    ask:
+      label: Sender email (optional)
+      description: The address booking confirmations are sent from. Leave the email questions empty to add them later on the app's variables page.
+      format: email
+      required: false
+  EMAIL_SERVER_HOST:
+    ask:
+      label: Email server (SMTP host, optional)
+      description: From your email sending service, for example smtp.postmarkapp.com or email-smtp.eu-west-1.amazonaws.com.
+      required: false
+  EMAIL_SERVER_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  EMAIL_SERVER_USER:
+    ask:
+      label: Email server username (optional)
+      required: false
+  EMAIL_SERVER_PASSWORD:
+    ask:
+      label: Email server password (optional)
+      secret: true
+      required: false

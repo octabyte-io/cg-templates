@@ -1,14 +1,14 @@
 name: Matomo
-description: "Full website analytics with goals, funnels and heatmaps."
+description: "Self-hosted Matomo: the open-source Google Analytics alternative with goals, funnels and e-commerce reports, and your visitors' data kept on your server."
 version: "5.14.2"
-tags: [analytics, privacy]
+tags: [web analytics, google analytics alternative, privacy, gdpr, ecommerce analytics, website statistics]
 links:
   website: https://matomo.org
   docs: https://matomo.org/docs/
   source: https://github.com/matomo-org/matomo
 cloudgate: 0.1.0
 compose: app
-size: small
+size: medium
 inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }

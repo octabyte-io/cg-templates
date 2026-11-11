@@ -1,24 +1,27 @@
 name: Gitea
-description: "Keep your team's code in one place, with reviews, issue tracking and automatic builds."
-version: "1.24.6"
-tags: [git, devtools]
+description: "Self-hosted Gitea: an open-source GitHub alternative for private code hosting, code reviews, issue tracking and automatic builds, for small software teams."
+version: "28.3.0"
+tags: [git, git server, code hosting, code review, issue tracker, ci, devtools]
 links:
   website: https://about.gitea.com
   docs: https://docs.gitea.com
   source: https://github.com/go-gitea/gitea
 cloudgate: 0.1.0
+compose: app
+size: small
 inputs:
-  GITEA__database__DB_TYPE: { value: postgres }
-  GITEA__server__ROOT_URL: { value: "{{domains.app.url}}/" }
-  GITEA__server__DOMAIN: { value: "{{domains.app.host}}" }
-  GITEA__server__DISABLE_SSH: { value: "true" }
-  GITEA__security__INSTALL_LOCK: { value: "true" }
-  GITEA__security__SECRET_KEY: { generate: hex }
-  GITEA__service__DISABLE_REGISTRATION:
+  ROOT_URL: { value: "{{domains.gitea.url}}/" }
+  DB_PASSWORD: { generate: password }
+  SECRET_KEY: { generate: hex }
+  DISABLE_REGISTRATION:
     ask:
       label: Turn off open sign-up
       description: >-
-        "true" lets only the admin create accounts, after the first one is made.
-        "false" lets anyone who can reach the Domain register.
+        Leave this "false" for now: the first account registered becomes the
+        admin. Once your team has accounts, change it to "true" in this app's
+        variables and redeploy, so only the admin can add people. "true" at
+        setup leaves nobody able to register, not even the admin.
       default: "false"
       pattern: "true|false"
+domains:
+  - { service: gitea, port: 3000 }

@@ -1,7 +1,7 @@
 name: WordPress
-description: "Build a website or blog with themes, pages and thousands of add-ons."
-version: "6.9.4"
-tags: [website, blog, cms]
+description: "Self-hosted WordPress, the open-source Wix and Squarespace alternative: build a website, blog or online shop with themes and thousands of plugins."
+version: "7.1.4"
+tags: [website builder, blog, cms, wordpress hosting, online shop, wix alternative]
 links:
   website: https://wordpress.org
   docs: https://wordpress.org/documentation/
@@ -14,3 +14,5 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
 domains:
   - { service: wordpress, port: 80 }
+files:
+  - { path: uploads.ini }

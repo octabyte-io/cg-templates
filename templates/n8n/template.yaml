@@ -10,6 +10,9 @@ cloudgate: 0.1.0
 inputs:
   DB_TYPE: { value: postgresdb }
   N8N_HOST: { value: "{{domains.app.host}}" }
+  # n8n 2 listens on "::" by default, which fails where a container has no
+  # IPv6; Cloudgate's proxy reaches it over IPv4.
+  N8N_LISTEN_ADDRESS: { value: 0.0.0.0 }
   N8N_PROTOCOL: { value: https }
   N8N_PROXY_HOPS: { value: "1" }
   WEBHOOK_URL: { value: "{{domains.app.url}}/" }

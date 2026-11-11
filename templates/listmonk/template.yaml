@@ -1,7 +1,7 @@
 name: listmonk
-description: "Send newsletters and email campaigns to your subscriber lists, without paying per subscriber."
-version: "5.1.0"
-tags: [newsletter, email]
+description: "Self-hosted listmonk, the open-source Mailchimp alternative: send newsletters and email campaigns to lists of any size, with no fee per subscriber."
+version: "6.2.0"
+tags: [newsletter, email marketing, mailing list, email campaigns, mailchimp alternative]
 links:
   website: https://listmonk.app
   docs: https://listmonk.app/docs/
@@ -10,10 +10,12 @@ cloudgate: 0.1.0
 compose: app
 size: small
 inputs:
+  ROOT_URL: { value: "{{domains.listmonk.url}}" }
   POSTGRES_PASSWORD: { generate: password }
   ADMIN_USER:
     ask:
       label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASSWORD: { generate: password }

@@ -1,14 +1,14 @@
 name: Immich
-description: "Back up phone photos and videos automatically, then browse by face or place."
-version: "3.3.1"
-tags: [photos, videos, backup]
+description: "Self-hosted Immich: an open-source Google Photos alternative that backs up phone photos and videos automatically and finds any picture by face or place."
+version: "3.4.0"
+tags: [photos, photo backup, videos, photo library, face recognition, google photos alternative]
 links:
   website: https://immich.app
   docs: https://docs.immich.app
   source: https://github.com/immich-app/immich
 cloudgate: 0.1.0
 compose: app
-size: large
+size: xlarge
 inputs:
   DB_PASSWORD: { generate: password }
   TIMEZONE:

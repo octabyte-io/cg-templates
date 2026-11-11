@@ -1,7 +1,7 @@
 name: Plausible Analytics
-description: "See who visits your website on one simple page, without cookie banners."
-version: "3.0.1"
-tags: [analytics, privacy]
+description: "Self-hosted Plausible Analytics: a simple, privacy-friendly Google Analytics alternative for small businesses. No cookies, so no cookie banner needed."
+version: "3.2.1"
+tags: [web analytics, google analytics alternative, privacy-friendly analytics, cookieless analytics, gdpr, website statistics]
 links:
   website: https://plausible.io
   docs: https://github.com/plausible/community-edition/wiki
@@ -19,3 +19,5 @@ domains:
 files:
   - { path: clickhouse/logs.xml }
   - { path: clickhouse/ipv4-only.xml }
+  - { path: clickhouse/low-resources.xml }
+  - { path: clickhouse/default-profile-low-resources-overrides.xml }
