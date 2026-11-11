@@ -1,0 +1,245 @@
+---
+/**
+ * The second way to deploy, for people who run Cloudgate themselves: a small
+ * link under a Deploy button. It asks once for their console's address,
+ * remembers it in this browser, and from then on links straight to the
+ * console's Templates screen with this app chosen (`/templates?template=<id>`).
+ * Without JavaScript it says where to find the app in the console instead.
+ */
+interface Props {
+  id: string;
+  name: string;
+  /** Centres the link, for the narrow deploy box. */
+  center?: boolean;
+}
+
+const { id, name, center = false } = Astro.props;
+const uid = `cd-${id}-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div class:list={['cdeploy', { center }]} data-console-deploy data-template={id}>
+  <details>
+    <summary>Run Cloudgate yourself? Deploy from your own console</summary>
+    <div class="cd-body">
+      <p class="cd-nojs">In your Cloudgate console, open Templates and choose {name}.</p>
+      <form class="cd-form" hidden novalidate>
+        <label for={`${uid}-url`}>Your Cloudgate console address</label>
+        <div class="cd-row">
+          <input
+            id={`${uid}-url`}
+            name="console"
+            type="url"
+            inputmode="url"
+            autocomplete="url"
+            spellcheck="false"
+            placeholder="https://cloudgate.example.com"
+            aria-describedby={`${uid}-help`}
+            required
+          />
+          <button class="btn sm" type="submit">Open {name}</button>
+        </div>
+        <p class="cd-help" id={`${uid}-help`} aria-live="polite">The address you open Cloudgate at. This browser remembers it.</p>
+      </form>
+    </div>
+  </details>
+  <p class="cd-saved" hidden>
+    <a class="cd-go" href="#">Deploy from your console at <span class="cd-host"></span></a>
+    <button class="cd-change" type="button">Change address</button>
+  </p>
+</div>
+
+<style>
+  .cdeploy {
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 0;
+  }
+  .cdeploy.center {
+    text-align: center;
+  }
+  .cdeploy summary {
+    display: inline;
+    cursor: pointer;
+    color: var(--accent-ink);
+    list-style: none;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent-ink) 35%, transparent);
+    text-underline-offset: 3px;
+  }
+  .cdeploy summary::-webkit-details-marker {
+    display: none;
+  }
+  .cdeploy summary:hover {
+    text-decoration-color: currentColor;
+  }
+  .cd-body {
+    margin-top: 10px;
+    text-align: left;
+  }
+  .cd-form {
+    display: grid;
+    gap: 6px;
+  }
+  .cd-form label {
+    font-weight: 500;
+    color: var(--fg);
+  }
+  .cd-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .cd-row input {
+    flex: 1 1 180px;
+    min-width: 0;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    background: var(--card);
+    color: var(--fg);
+    font: 14px var(--sans);
+  }
+  .cd-row input:focus-visible {
+    outline: 2px solid var(--accent-hi);
+    outline-offset: 0;
+    border-color: var(--accent-hi);
+  }
+  .cd-row input[aria-invalid='true'] {
+    border-color: var(--warn);
+  }
+  .cd-row .btn {
+    height: 36px;
+  }
+  .cd-help {
+    font-size: 12.5px;
+    color: var(--faint);
+  }
+  .cd-help.err {
+    color: var(--warn);
+  }
+  .cd-saved {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: baseline;
+  }
+  .center .cd-saved {
+    justify-content: center;
+  }
+  .cd-go {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+  .cd-change {
+    border: 0;
+    background: none;
+    padding: 0;
+    color: var(--faint);
+    font-size: 12.5px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>
+
+<script>
+  const KEY = 'cg-console-url';
+
+  function read(): string | null {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  }
+  function write(value: string): void {
+    try {
+      localStorage.setItem(KEY, value);
+    } catch {
+      // Private windows and blocked storage: the link still works this once.
+    }
+  }
+
+  /**
+   * A console address the way people type it, or null. A bare name gets https://; a bare IP
+   * address or host:port gets http://, as a fresh install's console (http://<ip>:3000) uses.
+   */
+  function parse(raw: string): URL | null {
+    const text = raw.trim();
+    if (!text) return null;
+    const scheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? '' : /^[\d.]+(:|\/|$)|:\d+/.test(text) ? 'http://' : 'https://';
+    try {
+      const url = new URL(scheme + text);
+      return url.protocol === 'http:' || url.protocol === 'https:' ? url : null;
+    } catch {
+      return null;
+    }
+  }
+  function target(base: URL, id: string): string {
+    return `${base.origin}${base.pathname.replace(/\/+$/, '')}/templates?template=${encodeURIComponent(id)}`;
+  }
+
+  const blocks = [...document.querySelectorAll<HTMLElement>('[data-console-deploy]')];
+
+  function render(): void {
+    const saved = parse(read() ?? '');
+    for (const block of blocks) {
+      const id = block.dataset.template ?? '';
+      const details = block.querySelector('details')!;
+      const savedRow = block.querySelector<HTMLElement>('.cd-saved')!;
+      const input = block.querySelector<HTMLInputElement>('input')!;
+      if (saved && !details.open) {
+        details.hidden = true;
+        savedRow.hidden = false;
+        block.querySelector<HTMLAnchorElement>('.cd-go')!.href = target(saved, id);
+        block.querySelector<HTMLElement>('.cd-host')!.textContent = saved.host;
+      } else {
+        details.hidden = false;
+        savedRow.hidden = true;
+      }
+      if (saved && !input.value) input.value = saved.origin + saved.pathname.replace(/\/+$/, '');
+    }
+  }
+
+  for (const block of blocks) {
+    const id = block.dataset.template ?? '';
+    const details = block.querySelector('details')!;
+    const form = block.querySelector<HTMLFormElement>('.cd-form')!;
+    const input = form.querySelector<HTMLInputElement>('input')!;
+    const help = form.querySelector<HTMLElement>('.cd-help')!;
+    const helpText = help.textContent ?? '';
+    block.querySelector<HTMLElement>('.cd-nojs')!.hidden = true;
+    form.hidden = false;
+
+    details.addEventListener('toggle', () => {
+      if (details.open) input.focus();
+    });
+    block.querySelector('.cd-change')!.addEventListener('click', () => {
+      details.hidden = false;
+      details.open = true;
+      block.querySelector<HTMLElement>('.cd-saved')!.hidden = true;
+    });
+    input.addEventListener('input', () => {
+      input.removeAttribute('aria-invalid');
+      help.classList.remove('err');
+      help.textContent = helpText;
+    });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const url = parse(input.value);
+      if (!url) {
+        input.setAttribute('aria-invalid', 'true');
+        help.classList.add('err');
+        help.textContent = 'Enter the address you open Cloudgate at, for example https://cloudgate.example.com.';
+        input.focus();
+        return;
+      }
+      write(url.origin + url.pathname.replace(/\/+$/, ''));
+      location.assign(target(url, id));
+    });
+  }
+
+  render();
+</script>

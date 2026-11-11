@@ -10,6 +10,7 @@ import { alternativesPages, type Template } from '../../lib/catalogue';
 import type { Product } from '../../products';
 import { breadcrumbSchema, faqSchema, graph, itemListSchema } from '../../lib/schema';
 import { deployUrl, href } from '../../lib/site';
+import { costAnswer } from '../../lib/copy';
 
 export function getStaticPaths() {
   return alternativesPages().map((page) => ({ params: { id: page.product.id }, props: page }));
@@ -29,7 +30,7 @@ const lede =
   product.lede ??
   `${count === 1 ? 'This free app does' : 'These free apps do'} the same job as ${product.name}: ${product.job}. ${
     count === 1 ? 'It runs' : 'They run'
-  } on your own server for one fixed cost, and your data stays with you.`;
+  } on a server of your own for one fixed monthly cost, and your data stays with you.`;
 
 const faq = [
   {
@@ -45,7 +46,7 @@ const faq = [
   },
   {
     q: 'Is it really free?',
-    a: 'Yes. The apps are free and open source. You pay only for the server they run on, and one server can run several apps.',
+    a: `Yes, the apps are free and open source. ${costAnswer().replace(/^The apps are free\. /, '')} One server can run several apps.`,
   },
   {
     q: 'Do I need a developer?',
@@ -62,7 +63,7 @@ const title = `${count} open-source ${plural} to ${product.name}`;
 const description = `Free, self-hosted ${plural} to ${product.name} for ${product.job}: ${apps
   .slice(0, 4)
   .map((app) => app.name)
-  .join(', ')}. Run ${count === 1 ? 'it' : 'them'} on your own server with Cloudgate.`.slice(0, 160);
+  .join(', ')}. Deploy ${count === 1 ? 'it' : 'them'} in a few clicks with Cloudgate.`.slice(0, 160);
 ---
 
 <Base

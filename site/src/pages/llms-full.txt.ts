@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { alternativesPages, getTemplates, GITHUB_REPO, isSample, listNames } from '../lib/catalogue';
 import { alternativesLede, appMarkdown, appUrl, SAMPLE_NOTE } from '../lib/machine';
-import { absolute, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 /** Every app page and every alternatives page, as one Markdown file. */
 function body(): string {
@@ -14,6 +14,8 @@ function body(): string {
     `Site: ${absolute()}`,
     `Index: ${absolute('llms.txt')}`,
     `Source: ${GITHUB_REPO}`,
+    '',
+    `Every app here is deployed with Cloudgate. Use hosted Cloudgate (${HOSTED_URL}), which can also provide the server, or install Cloudgate on your own server for free; it is source-available under the Elastic License 2.0. More: ${absolute('get-cloudgate/')}`,
     '',
   ];
   if (isSample) out.push(SAMPLE_NOTE, '');

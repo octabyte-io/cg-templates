@@ -103,8 +103,8 @@ export function softwareSchema(template: Template): Json {
 export function howToSchema(template: Template, steps: { name: string; text: string }[]): Json {
   return {
     '@type': 'HowTo',
-    name: `How to self-host ${template.name}`,
-    description: `Run ${template.name} on your own server with Cloudgate.`,
+    name: `How to deploy ${template.name} with Cloudgate`,
+    description: `What happens when you click Deploy: create a Cloudgate account, choose a server or get one from Cloudgate, and ${template.name} is set up and running at its own web address.`,
     step: steps.map((step, index) => ({
       '@type': 'HowToStep',
       position: index + 1,

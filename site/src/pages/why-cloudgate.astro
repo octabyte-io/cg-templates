@@ -18,8 +18,9 @@ const trail = [
 /*
  * The cost example. Every figure is an example: round, plausible, in US dollars, and labelled as
  * such on the page. Per-seat tools are priced per person; the server side does not change with
- * the number of people. Cloudgate itself costs nothing when you run it yourself, the only way to
- * get it today: the hosted service (cloudgate ADR-0052, ADR-0054) is unreleased, so it is left out.
+ * the number of people. The server figure is a generic example, never the price of a server bought
+ * from Cloudgate. The Cloudgate line is the free self-installed version; hosted Cloudgate's
+ * prices belong on Cloudgate's own website, so the note only says it is priced separately.
  */
 const TEAM = 12;
 const product = (id: string) => PRODUCTS.find((p) => p.id === id)!;
@@ -47,28 +48,24 @@ const nextReads = alternativesPages()
 
 const faq = [
   {
-    q: 'Is running my own server really cheaper?',
-    a: 'Usually, once more than a few people use the tools. Per-seat tools cost more with every person you add, while one server costs the same for 2 people or 20. For one or two people on free plans, the savings are small, and the time you spend on the server counts too.',
+    q: 'Is running apps on my own server really cheaper?',
+    a: 'Usually, once more than a few people use the tools. Per-seat tools cost more with every person you add, while one server costs the same for 2 people or 20. For one or two people on free plans, the savings are small.',
   },
   {
     q: 'Do I need to be technical?',
-    a: 'To use the apps, no. Someone needs to install Cloudgate on a rented server once, which takes two commands and a few minutes. After that you choose an app, check what Cloudgate will set up and click Apply. Apps marked “Some setup” need a few extra steps, which their pages explain.',
+    a: 'No. Pick an app, click Deploy, create your Cloudgate account and choose a server, which Cloudgate can provide. Cloudgate sets the app up, and you use it in your browser. Apps marked “Some setup” need a few extra steps, which their pages explain.',
   },
   {
     q: 'Who keeps the apps up to date?',
     a: 'You decide. Cloudgate never updates an app on its own: setting one up copies its template once, and nothing changes afterwards until you choose to change it. That means no surprise changes, and also that keeping up to date is your job.',
   },
   {
-    q: 'Does Cloudgate charge per person?',
-    a: 'No. Cloudgate is free to install on your own server, and neither it nor the apps count the people in your team. Your server is the only bill.',
-  },
-  {
     q: 'What happens to my data if I stop using Cloudgate?',
-    a: 'It stays on your server. Cloudgate runs on your own server too, so there is no account to close and nothing is deleted for you. The apps are ordinary open-source software, and keep running until you remove them.',
+    a: 'On a server you own, it stays there. The apps are ordinary open-source software, so your data is never locked into a vendor’s format.',
   },
   {
     q: 'Is Cloudgate itself open source?',
-    a: 'The apps in this catalogue are open source, and each app’s page names its licence. Cloudgate is source-available under the Elastic License 2.0: any person or business may use it, run it themselves and change it for free.',
+    a: 'The apps in this catalogue are open source, and each app’s page names its licence. Cloudgate is source-available under the Elastic License 2.0: anyone may install it on their own server and use it for free, or use the hosted version at cloudgate.octabyte.app.',
   },
 ];
 
@@ -90,8 +87,8 @@ const description =
       <h1 class="h1">Why run open-source apps on your own server</h1>
       <p class="lede">
         Most tools a small business pays for charge for every person, every month. Free, open-source apps can do the same
-        jobs on one server you rent. Cloudgate sets them up and looks after the dull parts. Here is the honest case,
-        including when it is not worth it.
+        jobs on one server, which Cloudgate can provide. Cloudgate sets the apps up and looks after the technical parts.
+        Here is the honest case, including when it is not worth it.
       </p>
       <div class="chips">
         <span class="chip"><b>One</b> server bill</span>
@@ -211,7 +208,8 @@ const description =
       </div>
       <p class="note">
           Example figures in US dollars, rounded, not current prices. Tool prices depend on the plan you are on; the server you
-          need depends on the apps you run. Not counted: the time you spend looking after the server.
+          need depends on the apps you run. The Cloudgate line assumes you install it yourself; hosted Cloudgate is priced
+          separately. Not counted: the time you spend looking after your apps.
       </p>
     </div>
   </section>
@@ -220,15 +218,15 @@ const description =
     <div class="blk half">
       <h2 class="h2">Where does your data live?</h2>
       <p class="body">
-        On your server, in the country you choose. Rent one from any hosting company, in the location you pick, and connect
-        it to Cloudgate. Customer lists, messages and files stay there instead of in another company’s systems.
+        On your server, in the country you choose. Get one from Cloudgate when you deploy, or connect one you already rent.
+        Customer lists, messages and files stay there instead of in a per-seat tool’s systems.
       </p>
       <div class="frag loc" role="img" aria-label="Example: choosing where to rent a server, with Germany selected">
         <span class="lab" aria-hidden="true">Where should your new server be?</span>
         <div class="srv" aria-hidden="true">
-          <label class="on"><input type="radio" name="loc" checked tabindex="-1" /> Germany <small>Nuremberg</small></label>
-          <label><input type="radio" name="loc" tabindex="-1" /> Finland <small>Helsinki</small></label>
-          <label><input type="radio" name="loc" tabindex="-1" /> United States <small>Virginia</small></label>
+          <label class="on"><input type="radio" name="loc" checked tabindex="-1" /> Germany</label>
+          <label><input type="radio" name="loc" tabindex="-1" /> Finland</label>
+          <label><input type="radio" name="loc" tabindex="-1" /> United States</label>
         </div>
       </div>
     </div>
@@ -238,10 +236,8 @@ const description =
         <li>The apps are open source. Nobody can raise their price or switch them off, and each app’s page names its licence.</li>
         <li>Your data sits on your server, not in a vendor’s account you have to export it out of.</li>
         <li>
-          Cloudgate runs on your server as well, so there is no Cloudgate account that can be closed or repriced on you.
-        </li>
-        <li>
-          Cloudgate itself is free to run on your own server: it is source-available under the Elastic License 2.0.
+          Want no account at all? Install Cloudgate on your own server for free. It is source-available under the Elastic
+          License 2.0.
         </li>
       </ul>
     </div>
@@ -279,16 +275,13 @@ const description =
       </div>
       <div class="pad item">
         <div class="tx">
-          <h3 class="h3">You see every change before it runs</h3>
-          <p>Setting up an app shows a list of what Cloudgate will create. Nothing is created until you click Apply.</p>
+          <h3 class="h3">A server when you need one</h3>
+          <p>No server? Get one from hosted Cloudgate when you deploy: pick a size and a country, and Cloudgate gets it ready.</p>
         </div>
-        <div class="frag plan" role="img" aria-label="Example plan: create the chat app, its database and a web address, with an Apply button">
-          <ul aria-hidden="true">
-            <li><span class="plus">+</span>Chat app</li>
-            <li><span class="plus">+</span>Its database</li>
-            <li><span class="plus">+</span>Web address</li>
-          </ul>
-          <span class="btn sm" aria-hidden="true">Apply</span>
+        <div class="frag rows" role="img" aria-label="Example server from Cloudgate: small size, in Germany, ready">
+          <div class="r" aria-hidden="true"><span>Size</span><span>Small</span></div>
+          <div class="r" aria-hidden="true"><span>Country</span><span>Germany</span></div>
+          <div class="r" aria-hidden="true"><span>Status</span><span>Ready</span></div>
         </div>
       </div>
       <div class="pad item">
@@ -374,7 +367,7 @@ const description =
     <div class="acts">
       <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
       <a class="btn lg ghost" href={href('how-it-works/')}>How it works <Chev /></a>
-      <a class="btn lg ghost" href={href('get-cloudgate/')}>Get Cloudgate <Chev /></a>
+      <a class="btn lg ghost" href={href('get-cloudgate/')}>Ways to get Cloudgate <Chev /></a>
     </div>
   </section>
 </Base>
