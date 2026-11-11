@@ -11,16 +11,16 @@ export interface Category {
 }
 
 export const CATEGORIES: Category[] = [
-  { id: 'websites', name: 'Websites', lede: 'Build a website, blog or online shop that you own, with no monthly platform fee.' },
-  { id: 'team-chat', name: 'Team chat', lede: 'Channels, direct messages and calls for your team, with the full history kept on your server.' },
-  { id: 'automation', name: 'Automation', lede: 'Connect the tools you already use and let repetitive work run on its own.' },
-  { id: 'analytics', name: 'Analytics', lede: 'See who visits your website and how your business is doing, without handing the data to an ad company.' },
-  { id: 'docs-wikis', name: 'Docs & wikis', lede: 'Write, organise and find your team’s documents, notes and lists in one place.' },
-  { id: 'files-photos', name: 'Files & photos', lede: 'Store, sync and share files and photos across your devices, on storage you control.' },
-  { id: 'passwords', name: 'Passwords', lede: 'Keep passwords safe and share them with your team, without a per-person subscription.' },
-  { id: 'customers-sales', name: 'Customers & sales', lede: 'Talk to customers, take bookings, send newsletters and track sales.' },
-  { id: 'monitoring', name: 'Monitoring', lede: 'Know the moment a website or service stops working, before your customers tell you.' },
-  { id: 'developer-tools', name: 'Developer tools', lede: 'Host your code and the tools your developers use, on your own server.' },
+  { id: 'websites', name: 'Websites', lede: 'Self-hosted website builders and blogs, so you own your site with no monthly platform fee.' },
+  { id: 'team-chat', name: 'Team chat', lede: 'Self-hosted team chat with channels, calls and your full message history on your own server.' },
+  { id: 'automation', name: 'Automation', lede: 'Open-source workflow automation that connects your tools and runs repetitive work, with no task limits.' },
+  { id: 'analytics', name: 'Analytics', lede: 'Privacy-friendly, self-hosted website analytics and dashboards, with no data handed to an ad company.' },
+  { id: 'docs-wikis', name: 'Docs & wikis', lede: 'Self-hosted wikis, team docs and spreadsheet-style databases, kept in one place you control.' },
+  { id: 'files-photos', name: 'Files & photos', lede: 'Self-hosted cloud storage and photo backup that syncs files across your devices, on your own disk.' },
+  { id: 'passwords', name: 'Passwords', lede: 'A self-hosted password manager to share your team’s logins safely, with no per-person subscription.' },
+  { id: 'customers-sales', name: 'Customers & sales', lede: 'Open-source tools for customer chat, bookings and newsletters, with no fee per agent or subscriber.' },
+  { id: 'monitoring', name: 'Monitoring', lede: 'Self-hosted uptime monitoring that alerts you when a website goes down, before your customers notice.' },
+  { id: 'developer-tools', name: 'Developer tools', lede: 'Self-hosted Git hosting and developer tools, so your code, reviews and builds stay on your server.' },
 ];
 
 export const categoryById = new Map(CATEGORIES.map((category) => [category.id, category]));

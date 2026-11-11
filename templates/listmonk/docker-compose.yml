@@ -1,8 +1,29 @@
 services:
   listmonk:
-    image: listmonk/listmonk:v5.1.0
+    image: listmonk/listmonk:v6.2.0
     restart: unless-stopped
-    command: [sh, -c, "./listmonk --install --idempotent --yes --config '' && ./listmonk --upgrade --yes --config '' && ./listmonk --config ''"]
+    command: [./listmonk, --config, ""]
+    depends_on:
+      listmonk-root-url:
+        condition: service_completed_successfully
+    environment:
+      LISTMONK_app__address: 0.0.0.0:9000
+      LISTMONK_db__host: listmonk-db
+      LISTMONK_db__port: 5432
+      LISTMONK_db__user: listmonk
+      LISTMONK_db__password: ${POSTGRES_PASSWORD}
+      LISTMONK_db__database: listmonk
+      LISTMONK_db__ssl_mode: disable
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      - listmonk-uploads:/listmonk/uploads
+
+  # Runs once at each start: creates the database tables and the admin account
+  # on the first start, and applies upgrades after an image update.
+  listmonk-install:
+    image: listmonk/listmonk:v6.2.0
+    restart: "no"
+    command: [sh, -c, "./listmonk --install --idempotent --yes --config '' && ./listmonk --upgrade --yes --config ''"]
     depends_on:
       listmonk-db:
         condition: service_healthy
@@ -16,12 +37,32 @@ services:
       LISTMONK_db__ssl_mode: disable
       LISTMONK_ADMIN_USER: ${ADMIN_USER}
       LISTMONK_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      TZ: ${TIMEZONE:-Etc/UTC}
-    volumes:
-      - listmonk-uploads:/listmonk/uploads
+
+  # listmonk keeps its public address (used in unsubscribe and tracking links)
+  # in the database, starting as http://localhost:9000. This sets it to the
+  # app's real address, and leaves it alone once someone has changed it.
+  listmonk-root-url:
+    image: postgres:17.11-alpine
+    restart: "no"
+    depends_on:
+      listmonk-install:
+        condition: service_completed_successfully
+    environment:
+      PGHOST: listmonk-db
+      PGUSER: listmonk
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: listmonk
+      ROOT_URL: ${ROOT_URL}
+    command:
+      - sh
+      - -c
+      - >-
+        echo "UPDATE settings SET value = to_jsonb(:'url'::text)
+        WHERE key = 'app.root_url' AND value = '\"http://localhost:9000\"'::jsonb;"
+        | psql -v ON_ERROR_STOP=1 -v url="$$ROOT_URL"
 
   listmonk-db:
-    image: postgres:17-alpine
+    image: postgres:17.11-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: listmonk

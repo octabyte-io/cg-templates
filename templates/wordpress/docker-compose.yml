@@ -12,6 +12,7 @@ services:
       WORDPRESS_DB_NAME: wordpress
     volumes:
       - wordpress-files:/var/www/html
+      - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
 
   wordpress-db:
     image: mariadb:11.8.9
