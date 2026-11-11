@@ -1,0 +1,341 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Faq from '../components/Faq.astro';
+import { GITHUB_REPO } from '../lib/catalogue';
+import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
+
+const trail = [
+  { name: 'Home', path: '' },
+  { name: 'Add a template', path: 'contribute/' },
+];
+
+const steps = [
+  {
+    name: 'Make a folder for the app',
+    text: 'Fork the repository and add a folder under templates/. Its name is the template id: lowercase letters, digits and hyphens, starting with a letter. The id never changes once published.',
+  },
+  {
+    name: 'Write its files',
+    text: 'A template.yaml, a cloudgate.yaml, at most one docker-compose.yml, any config files under files/, and a square logo. Add an index.md for this website.',
+  },
+  {
+    name: 'Check it as Cloudgate will read it',
+    text: 'Run cloudgate template check on the folder. It runs the same check a Cloudgate install runs, with no install and no key, and says why a template would be hidden.',
+  },
+  {
+    name: 'Open a pull request',
+    text: 'CI runs the same check on every template. A pull request merges only when it passes, and the next release of the catalogue carries the new template to every install.',
+  },
+];
+
+const faq = [
+  {
+    question: 'Which apps make a good template?',
+    answer:
+      'Open-source apps people run for themselves, with an official, versioned container image. A template should set up a working app on the first Apply, with nothing left to do but sign in.',
+  },
+  {
+    question: 'Why must every image name a version tag?',
+    answer:
+      'So that setting up a template today and next month gives the same app. A template using latest, or no tag, is refused by the check. Digests are not required.',
+  },
+  {
+    question: 'Can a template write a fixed domain name?',
+    answer:
+      "No. A template names the compose service and port a Domain points at, never its host. On a Server each Domain starts on a generated host the user may change at setup; in a cloud account, the user types it.",
+  },
+  {
+    question: 'Which config files can a template ship?',
+    answer:
+      'Text files its own containers read, listed in template.yaml under files and kept in the files/ folder: .conf, .cfg, .ini, .yaml, .yml, .json, .toml, .xml, .properties, .sql, .txt, .html, .css, .tmpl, or a Caddyfile. Scripts, programs, archives and hidden files are refused.',
+  },
+  {
+    question: 'Are index.md and screenshots part of the template?',
+    answer:
+      'No. They are this website’s files. The check skips them, and the catalogue a Cloudgate install downloads never holds them.',
+  },
+];
+
+const jsonLd = graph(
+  breadcrumbSchema(trail),
+  {
+    '@type': 'HowTo',
+    name: 'How to add a template to the Cloudgate catalogue',
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  },
+  faqSchema(faq),
+);
+---
+
+<Base
+  title="Add a template"
+  description="How to add an open-source app to the Cloudgate template catalogue: the folder layout, the files a template holds, and the check every template passes before it merges."
+  path="contribute/"
+  jsonLd={jsonLd}
+>
+  <div class="wrap page">
+    <Breadcrumbs trail={trail} />
+    <header class="head">
+      <h1>Add a template</h1>
+      <p>
+        A template is a folder with a few small files. If you can write a compose file for an app,
+        you can add it to the catalogue every Cloudgate install reads.
+      </p>
+    </header>
+
+    <div class="layout">
+      <div class="main">
+        <section aria-labelledby="steps-title" class="block">
+          <h2 id="steps-title">From folder to catalogue</h2>
+          <ol class="steps">
+            {
+              steps.map((step) => (
+                <li>
+                  <h3>{step.name}</h3>
+                  <p>{step.text}</p>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section aria-labelledby="layout-title" class="block">
+          <h2 id="layout-title">What goes in the folder</h2>
+          <pre class="tree"><code>templates/ghost/
+  template.yaml        <span>name, description, version, tags, links, values</span>
+  cloudgate.yaml       <span>the Project config: each Service and its kind</span>
+  docker-compose.yml   <span>only when the app has a compose part</span>
+  files/               <span>config files its containers read</span>
+  logo.svg             <span>square, at most 100 KB (or logo.png)</span>
+  index.md             <span>this website's page for it</span>
+  screenshots/         <span>optional, for this website</span></code></pre>
+        </section>
+
+        <section aria-labelledby="yaml-title" class="block">
+          <h2 id="yaml-title">template.yaml</h2>
+          <p>
+            What only a template has. Every field is checked strictly, so a misspelt field hides the
+            template and is named, rather than being skipped.
+          </p>
+          <pre><code>{`name: Ghost
+description: A publishing platform for blogs and newsletters.
+version: "5.96"
+tags: [blog, cms]
+links:
+  website: https://ghost.org
+  docs: https://ghost.org/docs
+  source: https://github.com/TryGhost/Ghost
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask: { label: Admin email, format: email }
+domains:
+  - { service: ghost, port: 2368 }`}</code></pre>
+          <p>
+            Each value the app needs has exactly one rule: <code>generate</code> it (a password, a
+            hex, base64 or UUID key, or a signed JWT), <code>ask</code> the user for it, or fix its
+            <code>value</code>. Values are made once, at setup, and saved like any typed value.
+          </p>
+        </section>
+
+        <section aria-labelledby="index-title" class="block">
+          <h2 id="index-title">index.md</h2>
+          <p>
+            The page this website shows for the template. Write what the app is, what setting it up
+            creates, and what to do after the first Deployment, such as creating the admin account.
+            Questions in its front matter appear on the page and in its structured data.
+          </p>
+          <pre><code>{`---
+faq:
+  - question: How do I create the first admin account?
+    answer: Open the Domain setup gave Ghost and add /ghost to the address.
+---
+
+## What you get
+
+Ghost runs as a compose part beside its own PostgreSQL database...`}</code></pre>
+        </section>
+
+        <section aria-labelledby="check-title" class="block">
+          <h2 id="check-title">Check it before you open a pull request</h2>
+          <pre><code>npx @octabyte-io/cloudgate template check templates/ghost</code></pre>
+          <p>
+            It prints each template with a tick, or a cross and why Cloudgate would hide it, and makes
+            no network request: the check is the CLI's own copy of Cloudgate's.
+          </p>
+        </section>
+
+        <div class="block">
+          <Faq items={faq} title="Questions about adding a template" />
+        </div>
+      </div>
+
+      <aside class="side">
+        <h2>Ready to start?</h2>
+        <p>Read the repository's README, then fork it and add your folder.</p>
+        <a class="button button-primary" href={`${GITHUB_REPO}/fork`}>Fork cg-templates</a>
+        <a class="button button-quiet" href={`${GITHUB_REPO}/issues/new`}>Request an app instead</a>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-top: 1.5rem;
+  }
+
+  .head {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 44rem;
+    margin-block: 1.5rem 3rem;
+  }
+
+  h1 {
+    font-size: var(--text-title);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .head p {
+    color: var(--tx-2);
+    font-size: var(--text-lead);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 17rem;
+    gap: clamp(2rem, 1rem + 3vw, 4.5rem);
+    align-items: start;
+  }
+
+  .main {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    min-width: 0;
+  }
+
+  .block {
+    display: grid;
+    gap: 1rem;
+    max-width: 46rem;
+  }
+
+  .block > h2 {
+    font-size: var(--text-h2);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .block > p {
+    max-width: var(--measure);
+    color: var(--tx-2);
+    line-height: 1.65;
+  }
+
+  .block code {
+    font-size: 0.875em;
+  }
+
+  pre {
+    margin: 0;
+    overflow-x: auto;
+    padding: 1rem 1.125rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--panel);
+    font-size: var(--text-meta);
+    line-height: 1.7;
+  }
+
+  pre code {
+    font-size: inherit;
+  }
+
+  .tree span {
+    color: var(--tx-3);
+  }
+
+  .steps {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps li {
+    position: relative;
+    padding-left: 2.75rem;
+    counter-increment: step;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border: 1px solid var(--brand-line);
+    border-radius: 50%;
+    background: var(--panel);
+    color: var(--brand-tx);
+    font-size: var(--text-meta);
+    font-weight: 600;
+  }
+
+  .steps h3 {
+    padding-top: 0.25rem;
+    font-size: var(--text-body);
+  }
+
+  .steps p {
+    margin-top: 0.25rem;
+    color: var(--tx-2);
+    line-height: 1.6;
+  }
+
+  .side {
+    position: sticky;
+    top: 5.25rem;
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    background: var(--brand-tint);
+  }
+
+  .side h2 {
+    font-size: var(--text-sect);
+  }
+
+  .side p {
+    color: var(--tx-2);
+    font-size: var(--text-ui);
+  }
+
+  @media (max-width: 60rem) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .side {
+      position: static;
+    }
+  }
+</style>

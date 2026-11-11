@@ -1,0 +1,9 @@
+name: Uptime Kuma
+description: A monitoring tool for websites, APIs, ports and certificates, with status pages and alerts to email, Slack, Telegram and dozens more.
+version: "1.23.16"
+tags: [monitoring, status-page, devtools]
+links:
+  website: https://uptime.kuma.pet
+  docs: https://github.com/louislam/uptime-kuma/wiki
+  source: https://github.com/louislam/uptime-kuma
+cloudgate: 0.1.0

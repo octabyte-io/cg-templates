@@ -1,0 +1,12 @@
+name: Metabase
+description: A business intelligence tool for asking questions about your data, building dashboards and sharing charts, with or without SQL.
+version: "0.56.6"
+tags: [bi, analytics]
+links:
+  website: https://www.metabase.com
+  docs: https://www.metabase.com/docs/latest/
+  source: https://github.com/metabase/metabase
+cloudgate: 0.1.0
+inputs:
+  MB_SITE_URL: { value: "{{domains.app.url}}" }
+  MB_ENCRYPTION_SECRET_KEY: { generate: base64 }

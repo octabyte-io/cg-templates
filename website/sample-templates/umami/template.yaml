@@ -1,0 +1,11 @@
+name: Umami
+description: Simple, privacy-focused website analytics with no cookies, a small tracking script, custom events and shareable dashboards.
+version: "2.19.0"
+tags: [analytics, privacy]
+links:
+  website: https://umami.is
+  docs: https://umami.is/docs
+  source: https://github.com/umami-software/umami
+cloudgate: 0.1.0
+inputs:
+  APP_SECRET: { generate: hex }

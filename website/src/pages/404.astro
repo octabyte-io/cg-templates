@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/site';
+---
+
+<Base title="Page not found" path="404/" noindex>
+  <div class="wrap page">
+    <h1>There is no page here</h1>
+    <p>
+      The address may be mistyped, or the template may have been renamed. A template's id never
+      changes once published, so search the catalogue for the app instead.
+    </p>
+    <form action={href('templates/')} method="get" role="search">
+      <label for="nf-q" class="visually-hidden">Search templates</label>
+      <input id="nf-q" name="q" type="search" placeholder="Search templates" />
+      <button class="button button-primary" type="submit">Search</button>
+    </form>
+    <p><a href={href()}>Go to the home page</a></p>
+  </div>
+</Base>
+
+<style>
+  .page {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 40rem;
+    padding-block: clamp(4rem, 3rem + 6vw, 8rem);
+  }
+
+  h1 {
+    font-size: var(--text-title);
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    color: var(--tx-2);
+    font-size: var(--text-lead);
+  }
+
+  form {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-s);
+    background: var(--panel);
+    color: var(--tx);
+    font: inherit;
+  }
+</style>

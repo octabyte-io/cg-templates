@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import TemplateGrid from '../../components/TemplateGrid.astro';
+import { getTags, getTemplates, type Tag } from '../../lib/catalogue';
+import { breadcrumbSchema, graph, itemListSchema } from '../../lib/schema';
+import { href } from '../../lib/site';
+
+export function getStaticPaths() {
+  return getTags().map((tag) => ({ params: { tag: tag.slug }, props: { tag } }));
+}
+
+interface Props {
+  tag: Tag;
+}
+
+const { tag } = Astro.props;
+const templates = getTemplates().filter((template) => template.tags.includes(tag.slug));
+const others = getTags().filter((other) => other.slug !== tag.slug);
+const lower = tag.name.toLowerCase();
+const names = templates.map((template) => template.name);
+const trail = [
+  { name: 'Home', path: '' },
+  { name: 'Tags', path: 'tags/' },
+  { name: tag.name, path: `tags/${tag.slug}/` },
+];
+const title = `Self-hosted ${lower} apps`;
+const description = `${templates.length} Cloudgate ${
+  templates.length === 1 ? 'template' : 'templates'
+} for self-hosted ${lower}: ${names.slice(0, 5).join(', ')}. Set one up on your own Server or cloud account.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  path={`tags/${tag.slug}/`}
+  jsonLd={graph(
+    breadcrumbSchema(trail),
+    { '@type': 'CollectionPage', name: title, description },
+    itemListSchema(templates, title),
+  )}
+>
+  <div class="wrap page">
+    <Breadcrumbs trail={trail} />
+    <header class="head">
+      <h1>{title}</h1>
+      <p>
+        {templates.length} {templates.length === 1 ? 'template' : 'templates'} tagged {lower}. Each
+        sets up the app in a Cloudgate Environment you pick, after you review the Plan.
+      </p>
+    </header>
+    <TemplateGrid templates={templates} headingLevel="h2" />
+    {
+      others.length > 0 && (
+        <nav class="others" aria-labelledby="others-title">
+          <h2 id="others-title">Other tags</h2>
+          <ul>
+            {others.map((other) => (
+              <li>
+                <a class="chip" href={href(`tags/${other.slug}/`)}>
+                  {other.name}
+                  <span class="chip-count">{other.count}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-top: 1.5rem;
+  }
+
+  .head {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 44rem;
+    margin-block: 1.5rem 2rem;
+  }
+
+  h1 {
+    font-size: var(--text-title);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .head p {
+    color: var(--tx-2);
+    font-size: var(--text-lead);
+  }
+
+  .others {
+    display: grid;
+    gap: 1rem;
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .others h2 {
+    font-size: var(--text-sect);
+  }
+
+  .others ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

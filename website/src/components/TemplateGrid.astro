@@ -1,0 +1,41 @@
+---
+import type { Template } from '../lib/catalogue';
+import TemplateCard from './TemplateCard.astro';
+
+interface Props {
+  templates: Template[];
+  headingLevel?: 'h2' | 'h3';
+  id?: string;
+}
+
+const { templates, headingLevel = 'h3', id } = Astro.props;
+---
+
+<ul class="grid" id={id}>
+  {
+    templates.map((template) => (
+      <li>
+        <TemplateCard template={template} headingLevel={headingLevel} />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+    gap: 0.875rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grid > li {
+    display: grid;
+  }
+
+  .grid > li[hidden] {
+    display: none;
+  }
+</style>

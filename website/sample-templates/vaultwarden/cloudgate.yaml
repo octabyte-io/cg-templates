@@ -1,0 +1,17 @@
+version: 1
+services:
+  app:
+    kind: web
+    description: The Vaultwarden API, web vault and admin page.
+    source: { image: "vaultwarden/server:1.34.3" }
+    port: 80
+    size: xsmall
+    env:
+      - DATABASE_URL: db.url
+      - DOMAIN
+      - ADMIN_TOKEN
+      - SIGNUPS_ALLOWED
+  db:
+    kind: postgres
+    version: "17"
+    database: vaultwarden

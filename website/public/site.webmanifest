@@ -1,0 +1,13 @@
+{
+  "name": "Cloudgate Templates",
+  "short_name": "Templates",
+  "description": "Ready-made templates for self-hosting open-source apps with Cloudgate.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#fbfbfb",
+  "theme_color": "#fbfbfb",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

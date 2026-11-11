@@ -1,0 +1,386 @@
+---
+import Base from '../layouts/Base.astro';
+import PlanReadout from '../components/PlanReadout.astro';
+import TemplateGrid from '../components/TemplateGrid.astro';
+import Faq from '../components/Faq.astro';
+import { getTags, getTemplates, GITHUB_REPO, planSize } from '../lib/catalogue';
+import { GENERAL_FAQ, SETUP_STEPS } from '../lib/copy';
+import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
+import { href, SITE_DESCRIPTION } from '../lib/site';
+
+const templates = getTemplates();
+const tags = getTags();
+// The hero shows the fullest Plan, so a first-time reader sees everything a setup can make.
+const featured = [...templates].sort((a, b) => planSize(b) - planSize(a))[0];
+const shown = templates.slice(0, 12);
+
+const jsonLd = graph(
+  websiteSchema(),
+  itemListSchema(templates, 'Cloudgate templates'),
+  faqSchema(GENERAL_FAQ),
+);
+---
+
+<Base
+  title="Cloudgate Templates: self-host open-source apps on your own Servers"
+  bareTitle
+  description={SITE_DESCRIPTION}
+  path=""
+  jsonLd={jsonLd}
+>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1>Self-host <span class="nowrap">open-source</span> apps from a <span class="nowrap">ready-made</span> template</h1>
+        <p class="lede">
+          Each template sets up an app, its database and its Domain in a Cloudgate Environment you
+          pick, on your own Server or cloud account. You read the Plan before anything is created.
+        </p>
+        <form class="search" action={href('templates/')} method="get" role="search">
+          <label for="hero-q" class="visually-hidden">Search templates</label>
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+            ><circle cx="8.75" cy="8.75" r="5.75"></circle><path d="m13 13 4.25 4.25"></path></svg
+          >
+          <input
+            id="hero-q"
+            name="q"
+            type="search"
+            placeholder={`Search ${templates.length} templates`}
+            autocomplete="off"
+          />
+          <button class="button button-primary" type="submit">Search</button>
+        </form>
+        <ul class="tags" aria-label="Popular tags">
+          {
+            tags.slice(0, 6).map((tag) => (
+              <li>
+                <a class="chip" href={href(`tags/${tag.slug}/`)}>
+                  {tag.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      {
+        featured && (
+          <div class="hero-plan">
+            <PlanReadout template={featured} animate headingLevel="h2" />
+            <p class="plan-note">
+              What setting up <a href={href(`templates/${featured.id}/`)}>{featured.name}</a>{' '}
+              shows you first.
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="catalogue-title">
+    <div class="wrap">
+      <div class="row-head">
+        <div class="section-head">
+          <h2 id="catalogue-title">Templates</h2>
+          <p>
+            Every image is pinned to a version, and every template passes Cloudgate's own check
+            before it is published.
+          </p>
+        </div>
+        <a class="button button-quiet" href={href('templates/')}
+          >Browse all {templates.length} templates</a
+        >
+      </div>
+      <TemplateGrid templates={shown} />
+    </div>
+  </section>
+
+  <section class="section steps-section" aria-labelledby="steps-title">
+    <div class="wrap steps-grid">
+      <div class="section-head">
+        <h2 id="steps-title">How setting up a template works</h2>
+        <p>
+          From your console, in four steps. After the last one the app is yours: the copy keeps no
+          link to the template and is never changed by it.
+        </p>
+      </div>
+      <ol class="steps">
+        {
+          SETUP_STEPS.map((step, index) => (
+            <li>
+              <span class="step-number" aria-hidden="true">
+                {index + 1}
+              </span>
+              <div>
+                <h3>{step.name}</h3>
+                <p>{step.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap faq-grid">
+      <Faq items={GENERAL_FAQ} title="Questions about templates" />
+      <aside class="request">
+        <h2>Missing an app?</h2>
+        <p>
+          Ask for it on GitHub, or add it yourself: a template is a folder with a few small files,
+          checked by Cloudgate before it merges.
+        </p>
+        <div class="request-actions">
+          <a class="button button-primary" href={href('contribute/')}>Add a template</a>
+          <a class="button button-quiet" href={`${GITHUB_REPO}/issues`}>Request an app</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background:
+      radial-gradient(60rem 30rem at 85% 10%, var(--sea), transparent 70%),
+      var(--ground);
+  }
+
+  /* A faint grid behind the Plan: the console's working surface, not a decoration of it. */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+    mask-image: radial-gradient(42rem 26rem at 80% 45%, #000 10%, transparent 75%);
+    -webkit-mask-image: radial-gradient(42rem 26rem at 80% 45%, #000 10%, transparent 75%);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: center;
+    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem);
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  h1 {
+    font-size: var(--text-hero);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 620;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .lede {
+    max-width: 36rem;
+    color: var(--tx-2);
+    font-size: var(--text-lead);
+    line-height: 1.55;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 34rem;
+    padding: 0.375rem 0.375rem 0.375rem 0.875rem;
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-m);
+    background: var(--panel);
+    box-shadow: var(--shadow-float);
+    color: var(--tx-3);
+  }
+
+  .search:focus-within {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-tint);
+  }
+
+  .search input {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.5rem;
+    border: 0;
+    background: none;
+    color: var(--tx);
+    font: inherit;
+    outline: none;
+  }
+
+  .search input::placeholder {
+    color: var(--tx-ph);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero-plan {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .plan-note {
+    color: var(--tx-3);
+    font-size: var(--text-meta);
+    text-align: right;
+  }
+
+  .row-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  .row-head .section-head {
+    margin-bottom: 0;
+  }
+
+  .steps-section {
+    border-block: 1px solid var(--line);
+    background: var(--panel-2);
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+  }
+
+  .steps {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-bottom: 1.75rem;
+  }
+
+  /* The rail joining the steps: they are a sequence, so they are drawn as one. */
+  .steps li:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: calc(1.125rem - 0.5px);
+    top: 2.5rem;
+    bottom: 0.25rem;
+    width: 1px;
+    background: var(--line-2);
+  }
+
+  .step-number {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--brand-line);
+    border-radius: 50%;
+    background: var(--panel);
+    color: var(--brand-tx);
+    font-weight: 600;
+    font-size: var(--text-ui);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .steps h3 {
+    padding-top: 0.375rem;
+    font-size: var(--text-body);
+    font-weight: 600;
+  }
+
+  .steps p {
+    margin-top: 0.375rem;
+    max-width: 34rem;
+    color: var(--tx-2);
+    line-height: 1.6;
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: start;
+  }
+
+  .request {
+    position: sticky;
+    top: 5.5rem;
+    display: grid;
+    gap: 0.875rem;
+    padding: 1.5rem;
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    background: var(--brand-tint);
+  }
+
+  .request h2 {
+    font-size: var(--text-sect);
+  }
+
+  .request p {
+    color: var(--tx-2);
+    line-height: 1.6;
+  }
+
+  .request-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.375rem;
+  }
+
+  @media (max-width: 60rem) {
+    .hero-grid,
+    .steps-grid,
+    .faq-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .plan-note {
+      text-align: left;
+    }
+
+    .request {
+      position: static;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .search .button {
+      padding-inline: 0.875rem;
+    }
+  }
+</style>

@@ -1,0 +1,25 @@
+{
+  "url": "{{domains.ghost.url}}",
+  "server": {
+    "host": "::",
+    "port": 2368
+  },
+  "database": {
+    "client": "mysql",
+    "connection": {
+      "host": "ghost-db",
+      "port": 3306,
+      "user": "ghost",
+      "database": "ghost"
+    }
+  },
+  "mail": {
+    "transport": "Direct"
+  },
+  "logging": {
+    "transports": ["stdout"]
+  },
+  "paths": {
+    "contentPath": "/var/lib/ghost/content"
+  }
+}
