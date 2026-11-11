@@ -67,6 +67,12 @@ const searchUrl = href('search.json');
     loading ??= fetch(pal.dataset.search as string)
       .then((r) => r.json())
       .then((data: Index) => {
+        // Links in the index are resolved against the index's own address, so they work from any page.
+        const base = new URL(pal.dataset.search as string, location.href);
+        data.apps.forEach((a) => {
+          a.url = new URL(a.url, base).href;
+          a.logo = new URL(a.logo, base).href;
+        });
         index = data;
       })
       .catch(() => {
