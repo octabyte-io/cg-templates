@@ -1,7 +1,9 @@
 # cg-templates
 
-The template catalogue for [Cloudgate](https://github.com/octabyte-io/cloudgate). Every Cloudgate install
-reads the newest release of this repository's catalogue (ADR-0062, ADR-0072).
+The public directory of open-source apps you can deploy on [Cloudgate](https://github.com/octabyte-io/cloudgate),
+and the template catalogue every Cloudgate install reads.
 
 - [`templates/`](templates/): one folder per template.
-- [`website/`](website/): the public catalogue site, built with Astro from those folders.
+- [`site/`](site/): the public website, built with Astro from those folders. See its README to run it.
+- [`docs/plan.md`](docs/plan.md): what has been decided, and [`docs/adr/`](docs/adr/) for why.
+- [`design/prototype/`](design/prototype/): the approved F3 Modern design; open its `index.html` in a browser.
