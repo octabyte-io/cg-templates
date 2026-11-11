@@ -17,6 +17,7 @@ on:
     branches: [main]
     paths:
       - 'templates/**'
+      - 'tools/**'
       - 'site/**'
       - '.github/workflows/release.yml'
   workflow_dispatch:
@@ -80,16 +81,18 @@ jobs:
         with:
           node-version: 22
 
-      # A pinned release, not `npx @octabyte-io/cloudgate`: npm's `latest` is a
-      # placeholder that prints a notice and exits 0, so a check run through it
-      # passes without checking anything. Set the repository variable
-      # CLOUDGATE_CLI_VERSION to move to a newer CLI.
+      # The vendored CLI (tools/cloudgate/README.md), not `npx @octabyte-io/cloudgate`:
+      # npm's `latest` is a placeholder that prints a notice and exits 0, so a check
+      # run through it passes without checking anything.
       - name: Install the Cloudgate CLI
         if: steps.changed.outputs.publish == 'true'
         id: cli
         run: |
-          npm install -g "@octabyte-io/cloudgate@${{ vars.CLOUDGATE_CLI_VERSION || '0.0.2-beta.2' }}"
-          echo "version=$(cloudgate --version)" >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/bin"
+          printf '#!/bin/sh\nexec node "%s/tools/cloudgate/cloudgate.mjs" "$@"\n' "$GITHUB_WORKSPACE" > "$RUNNER_TEMP/bin/cloudgate"
+          chmod +x "$RUNNER_TEMP/bin/cloudgate"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          echo "version=$("$RUNNER_TEMP/bin/cloudgate" --version)" >> "$GITHUB_OUTPUT"
 
       - name: Pack and check catalogue.zip
         if: steps.changed.outputs.publish == 'true'
