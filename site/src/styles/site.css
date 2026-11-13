@@ -20,6 +20,9 @@
   --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   --col:1200px; --hh:60px;
+  /* motion: strong ease-out for anything entering or responding, ease-in-out for things moving on screen */
+  --ease-out:cubic-bezier(.23,1,.32,1); --ease-in-out:cubic-bezier(.77,0,.175,1); --ease-drawer:cubic-bezier(.32,.72,0,1);
+  --rise:8px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --paper:#05070c; --dot:#111725; --bg:#090c14; --card:#0e131e; --sunk:#0b1019;
@@ -73,23 +76,25 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .nav{display:flex;gap:22px;font-size:14px;color:var(--muted)}
 .nav a{text-decoration:none;transition:color .15s}.nav a:hover,.nav a[aria-current=page]{color:var(--fg)}
 .top .sp{flex:1}
-.kbtn{display:flex;align-items:center;gap:10px;border:1px solid var(--line-strong);background:var(--card);border-radius:8px;height:34px;padding:0 6px 0 11px;color:var(--faint);font-size:13.5px;cursor:pointer;min-width:220px;transition:border-color .15s}
+.kbtn{display:flex;align-items:center;gap:10px;border:1px solid var(--line-strong);background:var(--card);border-radius:8px;height:34px;padding:0 6px 0 11px;color:var(--faint);font-size:13.5px;cursor:pointer;min-width:220px;transition:border-color .15s,transform .16s var(--ease-out)}
 .kbtn:hover{border-color:var(--cross)}
+.kbtn:active{transform:scale(.98)}
 .kbtn span{flex:1;text-align:left}
 kbd{font:500 11px/1 var(--mono);border:1px solid var(--line-strong);border-bottom-width:2px;border-radius:4px;padding:3px 5px;background:var(--sunk);color:var(--muted);white-space:nowrap}
 .btn kbd{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);color:#fff}
 
 /* buttons: bevelled primary, outlined chevron secondary */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 16px;border-radius:7px;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;border:1px solid var(--accent-lo);background:linear-gradient(var(--accent-hi),var(--accent) 50%);color:var(--on-accent);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -2px 0 rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.14);transition:filter .15s,transform .08s}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -2px 0 rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.14);transition:filter .15s,transform .16s var(--ease-out),box-shadow .16s var(--ease-out);touch-action:manipulation}
 .btn:hover{filter:brightness(1.08)}
-.btn:active{transform:translateY(1px);box-shadow:inset 0 2px 1px rgba(0,0,0,.22)}
+.btn:active{transform:translateY(1px) scale(.98);box-shadow:inset 0 2px 1px rgba(0,0,0,.22);transition-duration:.06s}
 .btn.lg{height:46px;padding:0 22px;font-size:15px;border-radius:8px}
 .btn.sm{height:30px;padding:0 11px;font-size:13px;border-radius:6px}
 .btn.ghost{background:var(--card);color:var(--fg);border-color:var(--line-strong);box-shadow:inset 0 -1px 0 var(--line),0 1px 1px rgba(0,0,0,.04)}
 .btn.ghost:hover{filter:none;border-color:var(--cross)}
 .btn.ghost .chev{color:var(--faint)}
-.chev{width:12px;height:12px;flex:none}
+.btn.ghost:active{box-shadow:inset 0 1px 2px rgba(0,0,0,.1)}
+.chev{width:12px;height:12px;flex:none;transition:transform .2s var(--ease-out)}
 
 /* type */
 h1,h2,h3{margin:0;text-wrap:balance}
@@ -195,7 +200,8 @@ p{margin:0}
 .fbar .in{display:flex;align-items:center;gap:14px;padding-block:12px}
 .seg{display:flex;padding:3px;gap:2px;background:var(--sunk);border:1px solid var(--line);border-radius:9px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1}
 .seg::-webkit-scrollbar{display:none}
-.seg button{border:0;background:none;padding:5px 10px;border-radius:6px;color:var(--muted);cursor:pointer;font-size:13px;white-space:nowrap;transition:color .15s,background .15s}
+.seg button{border:0;background:none;padding:5px 10px;border-radius:6px;color:var(--muted);cursor:pointer;font-size:13px;white-space:nowrap;transition:color .15s,background .15s,transform .16s var(--ease-out);position:relative;z-index:1;touch-action:manipulation}
+.seg button:active{transform:scale(.97)}
 .seg button:hover{color:var(--fg)}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--fg);font-weight:500;box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(0,0,0,.08)}
 .sbox{display:flex;align-items:center;gap:8px;height:38px;width:230px;flex:none;border:1px solid var(--line-strong);border-radius:8px;background:var(--card);padding:0 6px 0 12px;min-width:0}
@@ -206,8 +212,8 @@ p{margin:0}
 .sbox input::-webkit-search-cancel-button{display:none}
 .gridwrap{padding-block:24px 56px;display:grid;gap:16px}
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.card{display:grid;grid-template-rows:auto 1fr auto;gap:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px;text-decoration:none;min-width:0;transition:transform .18s ease,border-color .18s,box-shadow .18s}
-.card:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--lift)}
+.card{display:grid;grid-template-rows:auto 1fr auto;gap:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px;text-decoration:none;min-width:0;transition:transform .2s var(--ease-out),border-color .2s,box-shadow .2s}
+.card:active{transform:scale(.985)}
 .card .ct{display:flex;align-items:center;gap:12px;min-width:0}
 .card .ctt{display:grid;min-width:0}
 .card .nm{font-weight:600;font-size:15.5px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -225,7 +231,8 @@ p{margin:0}
 .lgo{display:inline-grid;place-items:center;flex:none}.lgo svg{display:block}
 .tiny{display:inline-grid;place-items:center;flex:none;border:1px solid var(--line-strong);background:var(--sunk);border-radius:3px;font:500 9px/1 var(--mono);color:var(--muted)}
 .tiny.y{background:#ffe01b;border-color:#e5c800}
-.more{width:100%;height:42px;border:1px solid var(--line-strong);background:var(--card);border-radius:8px;cursor:pointer;font-size:14px;color:var(--muted);transition:color .15s,border-color .15s}
+.more{width:100%;height:42px;border:1px solid var(--line-strong);background:var(--card);border-radius:8px;cursor:pointer;font-size:14px;color:var(--muted);transition:color .15s,border-color .15s,transform .16s var(--ease-out);touch-action:manipulation}
+.more:active{transform:scale(.99)}
 .more:hover{color:var(--fg);border-color:var(--cross)}
 .empty{grid-column:1/-1;border:1px dashed var(--line-strong);border-radius:12px;padding:36px;text-align:center;color:var(--muted)}
 .fine{font-size:12.5px;color:var(--faint);text-align:center}
@@ -234,11 +241,12 @@ p{margin:0}
 .swaps .shead{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
 .swaps .shead>div{display:grid;gap:10px}
 .swrow{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 36px) / 4);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px;margin-bottom:60px;scrollbar-width:thin}
-.sw{scroll-snap-align:start;display:grid;grid-template-rows:auto auto 1fr auto;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;overflow:hidden;min-width:0;transition:transform .18s,border-color .18s,box-shadow .18s}
-.sw:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--lift)}
+.sw{scroll-snap-align:start;display:grid;grid-template-rows:auto auto 1fr auto;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;overflow:hidden;min-width:0;transition:transform .2s var(--ease-out),border-color .2s,box-shadow .2s}
+.sw:active{transform:scale(.985)}
 .sw .art{display:flex;align-items:center;justify-content:center;gap:14px;padding:26px 12px;border-bottom:1px solid var(--line);
   background-color:var(--sunk);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:14px 14px}
-.sw .art .lt{background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.sw .art .lt{background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative}
+.sw .art>:last-child{z-index:1}
 .sw .art .lt.y{background:#ffe01b}
 .sw .art .from{opacity:.75;filter:saturate(.7)}
 .sw .art svg.arr{width:22px;height:22px;color:var(--faint)}
@@ -280,8 +288,11 @@ p{margin:0}
 .faq details{border-bottom:1px solid var(--line)}
 .faq summary{list-style:none;cursor:pointer;padding:16px 0;display:flex;justify-content:space-between;gap:16px;font-weight:500;font-size:15.5px}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";font:18px/1 var(--mono);color:var(--faint)}
-.faq details[open] summary::after{content:"\2212"}
+.faq summary .pm{position:relative;width:11px;height:11px;flex:none;margin-top:7px;color:var(--faint);transition:color .15s}
+.faq summary:hover .pm{color:var(--fg)}
+.faq summary .pm::before,.faq summary .pm::after{content:"";position:absolute;left:0;right:0;top:5px;height:1.5px;border-radius:1px;background:currentColor;transition:transform .3s var(--ease-out)}
+.faq summary .pm::after{transform:rotate(90deg)}
+.faq details[open] .pm::after{transform:rotate(180deg)}
 .faq details p{padding:0 0 16px;color:var(--muted);max-width:64ch}
 .rel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .sidecard{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh) + 24px);margin-top:8px;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
@@ -332,11 +343,15 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 
 /* command palette */
 .pscrim{position:fixed;inset:0;z-index:60;background:var(--scrim);display:flex;justify-content:center;align-items:flex-start;
-  padding:calc(env(safe-area-inset-top,0px) + 12vh) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .14s ease-out}
-.pal{width:min(620px,100%);max-height:min(560px,76vh);display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:var(--bg);border:1px solid var(--line-strong);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;animation:pop .16s cubic-bezier(.2,.8,.2,1)}
-.pscrim.out{animation:fade .12s ease-in reverse forwards}.pscrim.out .pal{animation:pop .12s ease-in reverse forwards}
+  padding:calc(env(safe-area-inset-top,0px) + 12vh) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .16s var(--ease-out)}
+.pal{width:min(620px,100%);max-height:min(560px,76vh);display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:var(--bg);border:1px solid var(--line-strong);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;animation:pop .2s var(--ease-out);transform-origin:50% 0}
+.pscrim.out{animation:fade-out .12s var(--ease-out) forwards}.pscrim.out .pal{animation:pop-out .12s var(--ease-out) forwards}
+/* Opened or closed from the keyboard (/, Ctrl/Cmd-K, Esc): no motion, it is used too often to wait for */
+.pscrim.instant,.pscrim.instant .pal{animation:none}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-@keyframes pop{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes fade-out{to{opacity:0}}
+@keyframes pop{from{opacity:0;transform:translateY(calc(var(--rise) * -.75)) scale(.97)}to{opacity:1;transform:none}}
+@keyframes pop-out{to{opacity:0;transform:translateY(calc(var(--rise) * -.5)) scale(.98)}}
 .pin{display:flex;align-items:center;gap:10px;padding:0 14px;height:56px;border-bottom:1px solid var(--line)}
 .pin svg{width:18px;height:18px;color:var(--faint);flex:none}
 .pin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:16px var(--sans);color:var(--fg)}
@@ -355,7 +370,6 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 .pft{display:flex;gap:16px;align-items:center;padding:9px 14px;border-top:1px solid var(--line);background:var(--sunk);font-size:12px;color:var(--faint);flex-wrap:wrap}
 .pft span{display:inline-flex;gap:6px;align-items:center}
 
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.card:hover,.sw:hover{transform:none}}
 
 /* responsive */
 @media (max-width:1359px){.frame,.foot .frame2{overflow-x:clip}}
@@ -425,8 +439,8 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 .shots img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 /* Category and alternatives index pages */
 .idx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.idx a{display:grid;gap:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px 18px;text-decoration:none;transition:transform .18s,border-color .18s,box-shadow .18s}
-.idx a:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--lift)}
+.idx a{display:grid;gap:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px 18px;text-decoration:none;transition:transform .2s var(--ease-out),border-color .2s,box-shadow .2s}
+.idx a:active{transform:scale(.985)}
 .idx b{font-weight:600;font-size:15.5px;letter-spacing:-.01em;display:flex;gap:10px;align-items:center}
 .idx span{color:var(--muted);font-size:14px}
 .idx small{color:var(--faint);font-size:12.5px}
@@ -435,9 +449,94 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 .notfound{padding-block:88px 96px;display:grid;gap:20px;justify-items:start}
 @media (max-width:900px){.idx{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.idx{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){.idx a:hover{transform:none}}
 /* The built site uses lists where the prototype used divs */
 .how>li+li{border-left:1px solid var(--line)}
 .how b{font-weight:600}
 .caption li{display:inline}
 @media (max-width:640px){.how>li+li{border-left:0;border-top:1px solid var(--line)}}
+
+/* ---------- Motion ----------
+   Small and purposeful (design/prototype/README.md). Transform and opacity only, ease-out curves, UI under 300ms.
+   Hover motion only where a real pointer can hover. With reduced motion, movement goes and fades stay. */
+.btn,.card,.sw,.idx a,.seg button,.more,.kbtn,.faq summary,.pal .opt{-webkit-tap-highlight-color:transparent}
+
+@media (hover:hover) and (pointer:fine){
+  .card:hover,.sw:hover,.idx a:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--lift)}
+  .card:hover:active,.sw:hover:active,.idx a:hover:active{transform:translateY(-1px) scale(.99)}
+  .btn.ghost:hover .chev,.sw:hover .go .chev,.sidecard .links a:hover .chev,.guide:hover .chev{transform:translateX(2px)}
+}
+
+/* Hero: the first thing on the home page settles in once, top to bottom */
+@keyframes rise{from{opacity:0;transform:translateY(var(--rise))}}
+@keyframes rise-far{from{opacity:0;transform:translateY(calc(var(--rise) * 2.5)) scale(.985)}}
+.hero>*{animation:rise .6s var(--ease-out) both}
+.hero>:nth-child(2){animation-delay:.06s}
+.hero>:nth-child(3){animation-delay:.12s}
+.hero>:nth-child(4){animation-delay:.18s}
+.hero+.stagewrap .stage{animation:rise-far .9s var(--ease-out) .22s both}
+
+/* Scroll reveal: [data-reveal] blocks rise in once as they reach the viewport (Base.astro). Without
+   JavaScript, or when printing, everything is simply there. --d staggers siblings. */
+[data-reveal]{transition:opacity .6s var(--ease-out),transform .6s var(--ease-out);transition-delay:calc(var(--d,0) * 70ms)}
+.js [data-reveal]:not(.in){opacity:0;transform:translateY(calc(var(--rise) * 1.5))}
+@media print{[data-reveal]{opacity:1!important;transform:none!important}}
+
+/* Why tiles: the small pieces of interface fill in after their tile arrives */
+.tl .b,.seats span,.reveal-rows>*{transition:opacity .35s var(--ease-out),transform .35s var(--ease-out);transition-delay:calc(var(--i,0) * 45ms + .25s)}
+.js .tile:not(.in) .tl .b,.js .tile:not(.in) .seats span{opacity:0;transform:scale(.9)}
+.js [data-reveal]:not(.in) .reveal-rows>*{opacity:0;transform:translateY(calc(var(--rise) * .5))}
+.status i{position:relative}
+.status i::after{content:"";position:absolute;inset:0;border-radius:50%;background:currentColor;opacity:0}
+.in .status i::after{animation:ping 2.4s var(--ease-out) 1s infinite}
+@keyframes ping{0%{opacity:.45;transform:scale(1)}60%,100%{opacity:0;transform:scale(2.6)}}
+
+/* Deploy demo on the home page stage (index.astro). It plays once when the stage is in view. */
+.dep .steps div,.dep .steps .n{transition:background-color .3s var(--ease-out),color .3s,border-color .3s,box-shadow .3s}
+.dep .steps div.live .n{background:var(--ok);border-color:var(--ok);color:#fff}
+.dbar{height:3px;border-radius:2px;background:var(--line);overflow:hidden;opacity:0;transition:opacity .2s var(--ease-out)}
+.dbar span{display:block;height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
+.window[data-phase="run"] .dbar{opacity:1}
+.window[data-phase="live"] .dbar{opacity:0;transition-delay:.4s}
+.window .side .btn.press{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 1px rgba(0,0,0,.22)}
+.live-dot{display:inline-flex;align-items:center;gap:6px;color:var(--ok)}
+.live-dot i{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+/* Catalogue: the selected category's background slides between tabs */
+.seg{position:relative}
+.seg-ind{position:absolute;left:0;top:3px;bottom:3px;width:0;border-radius:6px;background:var(--card);box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(0,0,0,.08);pointer-events:none;opacity:0}
+.seg.has-ind .seg-ind{opacity:1}
+.seg.has-ind.ready .seg-ind{transition:transform .28s var(--ease-out),width .28s var(--ease-out)}
+.seg.has-ind button[aria-pressed="true"]{background:none;box-shadow:none}
+
+/* FAQ answers open smoothly where the browser can animate to auto height; elsewhere they snap */
+@supports (interpolate-size:allow-keywords){
+  .faq details{interpolate-size:allow-keywords}
+  .faq details::details-content{block-size:0;overflow:clip;transition:block-size .3s var(--ease-out),content-visibility .3s allow-discrete}
+  .faq details[open]::details-content{block-size:auto}
+  .faq details p{opacity:0;transform:translateY(-4px);transition:opacity .3s var(--ease-out),transform .3s var(--ease-out)}
+  .faq details[open] p{opacity:1;transform:none}
+}
+
+@media (max-width:900px){
+  /* the phone Deploy bar comes up from the bottom edge once the page has settled */
+  .mbar{animation:bar-in .5s var(--ease-drawer) .35s both}
+}
+@keyframes bar-in{from{transform:translateY(100%)}}
+@media (max-width:640px){
+  .seg-ind{display:none}
+  .seg.has-ind button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  :root{--rise:0px}
+  .card:active,.sw:active,.idx a:active,.btn:active,.seg button:active,.more:active,.kbtn:active,
+  .card:hover,.sw:hover,.idx a:hover,.chev{transform:none!important}
+  .tl .b,.seats span{transform:none!important}
+  .hero+.stagewrap .stage{animation-name:fade}
+  .mbar,.in .status i::after{animation:none}
+  .seg.has-ind.ready .seg-ind,.faq summary .pm::before,.faq summary .pm::after{transition:none}
+}
+/* Popular swaps (index.astro): before a card has played, its app waits behind the paid tool */
+.sw .art svg.arr path{stroke-dasharray:1}
+.sw.pending .art>:last-child{opacity:0}
+.reveal-rows>:nth-child(2){--i:1}.reveal-rows>:nth-child(3){--i:2}.reveal-rows>:nth-child(4){--i:3}

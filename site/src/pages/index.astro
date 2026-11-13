@@ -93,7 +93,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <section class="stagewrap pad" id="how" aria-labelledby="how-title">
         <h2 id="how-title" class="visually-hidden">How it works</h2>
         <div class="stage">
-          <div class="window" role="img" aria-label={`Illustration of the Cloudgate deploy screen for ${featured.name}: after creating an account, choose a server from Cloudgate or one you already have`}>
+          <div class="window" data-demo role="img" aria-label={`Illustration of the Cloudgate deploy screen for ${featured.name}: after creating an account, choose a server from Cloudgate or one you already have`}>
             <div class="wbar">
               <b>Cloudgate</b>
               <span>/</span>
@@ -105,8 +105,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
               <div class="steps">
                 <div class="done"><span class="n">✓</span>Choose an app</div>
                 <div class="done"><span class="n">✓</span>Create account</div>
-                <div class="on"><span class="n">3</span>Choose a server</div>
-                <div><span class="n">4</span>Live</div>
+                <div class="on" data-step="3"><span class="n">3</span>Choose a server</div>
+                <div data-step="4"><span class="n">4</span>Live</div>
               </div>
               <div class="mid">
                 <span class="lab">App</span>
@@ -130,7 +130,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
                 <div class="chosen" style="padding:9px 12px;font-size:13.5px">
                   <span>{featured.id.replace(/[^a-z0-9]/g, '')}.acmebakery.com</span>
                   <span style="flex:1" />
-                  <span class="muted" style="font-size:12.5px">secure (https)</span>
+                  <span class="muted" style="font-size:12.5px" data-demo-addr>secure (https)</span>
                 </div>
               </div>
               <div class="side">
@@ -138,11 +138,16 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
                 <div class="sumrow"><span>Server</span><span>New, from Cloudgate</span></div>
                 {replaced && <div class="sumrow"><span>Replaces</span><span>{replaced.name}</span></div>}
                 <div class="sumrow"><span>App cost</span><span>Free</span></div>
-                <span class="btn" style="width:100%">Deploy {featured.name}</span>
+                <span class="btn" style="width:100%" data-demo-go data-live={`Open ${featured.name}`}>
+                  Deploy {featured.name}
+                </span>
+                <div class="dbar"><span /></div>
                 <div class="log">
                   <div><span class="ok">✓</span> Account created</div>
                   <div><span class="ok">✓</span> {featured.name} chosen</div>
-                  <div>· Ready in a few minutes</div>
+                  <div data-demo-log data-run={`· Setting up ${featured.name}…`} data-live={`${featured.name} is live`}>
+                    · Ready in a few minutes
+                  </div>
                 </div>
               </div>
             </div>
@@ -159,12 +164,12 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   }
 
   <section class="sec" id="why" aria-labelledby="why-title">
-    <div class="shead pad">
+    <div class="shead pad" data-reveal>
       <h2 class="h2" id="why-title">Why run apps with Cloudgate</h2>
       <p class="lede">The same jobs your paid tools do, without paying for every person. Cloudgate looks after the technical parts.</p>
     </div>
     <div class="bento">
-      <div class="tile t-a pad">
+      <div class="tile t-a pad" data-reveal>
         <div class="tx">
           <h3 class="h3">Backups on the schedule you choose</h3>
           <p>For apps that keep their data in a database Cloudgate runs, set a schedule once, for example every night, and copies go to storage you choose, away from the server. Restore any copy when you need it.</p>
@@ -175,7 +180,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
               nights.map((day, i) => (
                 <div>
                   <span class="d">{day}</span>
-                  <span class:list={['b', { next: i === 6 }]}>{i === 6 ? '·' : '✓'}</span>
+                  <span class:list={['b', { next: i === 6 }]} style={`--i:${i}`}>{i === 6 ? '·' : '✓'}</span>
                   <span class="h">02:00</span>
                 </div>
               ))
@@ -184,7 +189,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
           <div class="foot1" aria-hidden="true"><span>Last backup <b>Sat 02:00</b>, finished in 3 min</span><span>14 days kept</span></div>
         </div>
       </div>
-      <div class="tile t-b pad">
+      <div class="tile t-b pad" data-reveal style="--d:1">
         <div class="tx">
           <h3 class="h3">Your data stays where you put it</h3>
           <p>Customer lists and files live on your server, in the country you choose.</p>
@@ -196,24 +201,24 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
           <div class="r" aria-hidden="true"><span>Backups go to</span><span>Storage you choose</span></div>
         </div>
       </div>
-      <div class="tile t-c pad">
+      <div class="tile t-c pad" data-reveal>
         <div class="tx">
           <h3 class="h3">No server? Cloudgate provides one</h3>
           <p>Pick a size and a country when you deploy, and Cloudgate gets the server ready for your app.</p>
         </div>
-        <div class="frag server" role="img" aria-label="Example server from Cloudgate: small size, in Germany, ready for the app">
+        <div class="frag server reveal-rows" role="img" aria-label="Example server from Cloudgate: small size, in Germany, ready for the app">
           <div class="r" aria-hidden="true"><span>Size</span><span>Small</span></div>
-          <div class="r" aria-hidden="true"><span>Country</span><span>Germany</span></div>
-          {featured && <div class="r" aria-hidden="true"><span>Ready for</span><span>{featured.name}</span></div>}
+          <div class="r" aria-hidden="true" style="--i:1"><span>Country</span><span>Germany</span></div>
+          {featured && <div class="r" aria-hidden="true" style="--i:2"><span>Ready for</span><span>{featured.name}</span></div>}
         </div>
       </div>
-      <div class="tile t-d pad">
+      <div class="tile t-d pad" data-reveal style="--d:1">
         <div class="tx">
           <h3 class="h3">Add the whole team. No per-seat pricing.</h3>
           <p>The apps are free and charge nothing per person, so adding a colleague costs nothing.</p>
         </div>
         <div class="frag" role="img" aria-label="Example team pricing: 12 team members, nothing per person, a free app">
-          <div class="seats" aria-hidden="true">{seats.map((x) => <span>{x}</span>)}</div>
+          <div class="seats" aria-hidden="true">{seats.map((x, i) => <span style={`--i:${i}`}>{x}</span>)}</div>
           <div class="price" aria-hidden="true">
             <span>Team members</span><span>12</span><span>Price per person</span><span>$0</span><span class="tot">App price</span><span class="tot">Free</span>
           </div>
@@ -231,6 +236,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     <div class="fbar">
       <div class="in pad">
         <div class="seg" role="toolbar" aria-label="Filter by category">
+          <span class="seg-ind" aria-hidden="true" />
           <button type="button" data-tab="" aria-pressed="true">All</button>
           {categories.map((category) => <button type="button" data-tab={category.id} aria-pressed="false">{category.name}</button>)}
         </div>
@@ -270,11 +276,11 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
         <div class="pad">
           <div class="swrow">
             {swaps.map((swap) => (
-              <a class="sw" href={href(swap.href)}>
+              <a class="sw" href={href(swap.href)} data-swap>
                 <div class="art">
                   <ProductTile product={swap.product} box={60} size={32} class="from" />
                   <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-                    <path d="M2 8h11M9.5 4.5 13 8l-3.5 3.5" />
+                    <path d="M2 8h11M9.5 4.5 13 8l-3.5 3.5" pathLength="1" />
                   </svg>
                   <AppTile template={swap.app} box={60} size={34} />
                 </div>
@@ -332,21 +338,53 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   const total = cards.length;
   let cat = new URLSearchParams(location.search).get('category') ?? '';
   let shown = page;
+  const motion = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const seg = document.querySelector<HTMLElement>('.seg')!;
+  const ind = seg.querySelector<HTMLElement>('.seg-ind')!;
   const more = document.createElement('button');
   more.className = 'more';
   more.type = 'button';
   more.addEventListener('click', () => {
     shown = total;
-    render();
+    render(true);
   });
 
-  function render() {
+  /** Moves the sliding background under the selected category. */
+  function place() {
+    const on = tabs.find((t) => t.getAttribute('aria-pressed') === 'true');
+    if (!on) return;
+    ind.style.width = `${on.offsetWidth}px`;
+    ind.style.transform = `translateX(${on.offsetLeft}px)`;
+    seg.classList.add('has-ind');
+  }
+
+  /**
+   * Cards that a click brought into view rise in, a few at a time. Typing in the filter box
+   * shows results instantly: it happens on every keystroke, and motion there would only lag.
+   */
+  function enter(added: HTMLElement[]) {
+    if (!motion) return;
+    added.slice(0, 12).forEach((c, i) =>
+      c.animate(
+        [
+          { opacity: 0, transform: 'translateY(6px)' },
+          { opacity: 1, transform: 'none' },
+        ],
+        { duration: 280, delay: i * 25, easing: 'cubic-bezier(.23,1,.32,1)', fill: 'backwards' },
+      ),
+    );
+  }
+
+  function render(animate = false) {
+    const before = new Set(cards.filter((c) => !c.hidden));
     const q = input.value.trim().toLowerCase();
     const filtered = Boolean(cat || q);
     const matches = cards.filter((c) => (!cat || c.dataset.cat === cat) && (!q || (c.dataset.q ?? '').includes(q)));
     const visible = filtered ? matches : matches.slice(0, shown);
     cards.forEach((c) => (c.hidden = !visible.includes(c)));
     tabs.forEach((t) => t.setAttribute('aria-pressed', String((t.dataset.tab ?? '') === cat)));
+    place();
+    if (animate) enter(visible.filter((c) => !before.has(c)));
     const catName = tabs.find((t) => t.dataset.tab === cat)?.textContent;
     empty.hidden = matches.length > 0;
     empty.textContent = `No apps match “${input.value}”${cat ? ` in ${catName}` : ''}. Try a tool you pay for, like Zapier, Notion or Slack.`;
@@ -365,11 +403,146 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   tabs.forEach((t) =>
     t.addEventListener('click', () => {
       cat = t.dataset.tab ?? '';
-      render();
+      render(true);
       t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }),
   );
-  input.addEventListener('input', render);
+  input.addEventListener('input', () => render());
   input.value = new URLSearchParams(location.search).get('q') ?? input.value;
   render();
+  // Place it once without sliding, then let later changes slide. Fonts change tab widths when they load.
+  requestAnimationFrame(() => seg.classList.add('ready'));
+  document.fonts?.ready.then(place);
+  new ResizeObserver(place).observe(seg);
+</script>
+
+<script>
+  // The deploy demo on the stage: once it is in view, Deploy is pressed, the app is set up and goes
+  // live, in under three seconds, then it stays put. The HTML is the moment before, so without
+  // JavaScript or with reduced motion the picture is complete as it is.
+  const win = document.querySelector<HTMLElement>('[data-demo]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (win && !reduce && 'IntersectionObserver' in window) {
+    const q = <T extends HTMLElement>(s: string) => win.querySelector<T>(s)!;
+    const go = q('[data-demo-go]');
+    const log = q('[data-demo-log]');
+    const addr = q('[data-demo-addr]');
+    const bar = q('.dbar span');
+    const step3 = q('[data-step="3"]');
+    const step4 = q('[data-step="4"]');
+    const EASE = 'cubic-bezier(.23,1,.32,1)';
+
+    /** Swaps text with a short blur, so the two states read as one change. */
+    const swap = (el: HTMLElement, html: string) => {
+      el.innerHTML = html;
+      el.animate(
+        [
+          { opacity: 0, filter: 'blur(3px)', transform: 'translateY(3px)' },
+          { opacity: 1, filter: 'blur(0)', transform: 'none' },
+        ],
+        { duration: 260, easing: EASE },
+      );
+    };
+    const esc = (t: string) => t.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+
+    const play = () => {
+      const at = (ms: number, f: () => void) => setTimeout(f, ms);
+      at(0, () => go.classList.add('press'));
+      at(160, () => {
+        go.classList.remove('press');
+        win.dataset.phase = 'run';
+        step3.className = 'done';
+        step3.firstElementChild!.textContent = '✓';
+        step4.className = 'on';
+        swap(log, esc(log.dataset.run ?? ''));
+        bar.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], {
+          duration: 1700,
+          easing: 'cubic-bezier(.45,.05,.35,1)',
+          fill: 'forwards',
+        });
+      });
+      at(1950, () => {
+        win.dataset.phase = 'live';
+        step4.className = 'on live';
+        step4.firstElementChild!.textContent = '✓';
+        swap(log, `<span class="ok">✓</span> ${esc(log.dataset.live ?? '')}`);
+        swap(go, esc(go.dataset.live ?? ''));
+        swap(addr, '<span class="live-dot"><i></i>Live (https)</span>');
+      });
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          setTimeout(play, 500);
+        }
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(q('.side'));
+  }
+</script>
+
+<script>
+  // Popular swaps: as each card comes into view the paid tool steps back, the arrow draws, and the
+  // open-source app slides out from behind it into place. Hovering a card plays it again.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cardsWithSwap = [...document.querySelectorAll<HTMLElement>('[data-swap]')];
+  if (!reduce && cardsWithSwap.length && 'IntersectionObserver' in window) {
+    const EASE = 'cubic-bezier(.23,1,.32,1)';
+    const busy = new WeakSet<HTMLElement>();
+
+    const playSwap = (card: HTMLElement) => {
+      if (busy.has(card)) return;
+      busy.add(card);
+      const art = card.querySelector<HTMLElement>('.art')!;
+      const from = art.firstElementChild as HTMLElement;
+      const to = art.lastElementChild as HTMLElement;
+      const arrow = art.querySelector('svg.arr path')!;
+      const dx = from.getBoundingClientRect().left - to.getBoundingClientRect().left;
+      card.classList.remove('pending');
+      from.animate(
+        [
+          { transform: 'none', opacity: 0.75 },
+          { transform: 'translateX(-6px) scale(.94)', opacity: 0.3, offset: 0.35 },
+          { transform: 'none', opacity: 0.75 },
+        ],
+        { duration: 700, easing: EASE },
+      );
+      arrow.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
+        duration: 420,
+        delay: 120,
+        easing: EASE,
+        fill: 'backwards',
+      });
+      to.animate(
+        [
+          { transform: `translateX(${dx}px) scale(.9)`, opacity: 0 },
+          { transform: `translateX(${dx}px) scale(.9)`, opacity: 1, offset: 0.15 },
+          { transform: 'none', opacity: 1 },
+        ],
+        { duration: 700, easing: EASE },
+      ).onfinish = () => busy.delete(card);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => cardsWithSwap.indexOf(a.target as HTMLElement) - cardsWithSwap.indexOf(b.target as HTMLElement))
+          .forEach((e, k) => {
+            io.unobserve(e.target);
+            setTimeout(() => playSwap(e.target as HTMLElement), k * 90);
+          });
+      },
+      { threshold: 0.6 },
+    );
+    const hover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    cardsWithSwap.forEach((card) => {
+      card.classList.add('pending');
+      io.observe(card);
+      if (hover) card.addEventListener('mouseenter', () => !card.classList.contains('pending') && playSwap(card));
+    });
+  }
 </script>

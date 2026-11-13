@@ -819,6 +819,12 @@ const jsonLd = graph(breadcrumbSchema(trail), cloudgate, faqSchema(faq));
         }
       }
       button.textContent = done ? 'Copied' : 'Selected';
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        button.animate([{ filter: 'blur(2px)', opacity: 0.4 }, { filter: 'blur(0)', opacity: 1 }], {
+          duration: 200,
+          easing: 'cubic-bezier(.23,1,.32,1)',
+        });
+      }
       if (status) status.textContent = done ? 'Install commands copied' : 'Install commands selected; press Ctrl C to copy';
       window.setTimeout(() => (button.textContent = 'Copy'), 2000);
     });
