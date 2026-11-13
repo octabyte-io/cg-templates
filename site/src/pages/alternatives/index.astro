@@ -2,8 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import Crumbs from '../../components/Crumbs.astro';
 import ProductTile from '../../components/ProductTile.astro';
-import { alternativesPages } from '../../lib/catalogue';
-import { breadcrumbSchema, graph } from '../../lib/schema';
+import { alternativesPages, lastUpdated } from '../../lib/catalogue';
+import { breadcrumbSchema, graph, pageListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
 
 const pages = alternativesPages().sort((a, b) => b.apps.length - a.apps.length || a.product.name.localeCompare(b.product.name));
@@ -14,13 +14,21 @@ const trail = [
 ---
 
 <Base
-  title="Open-source alternatives to the tools you pay for"
+  title="Open-source alternatives to tools you pay for"
   description={`Free, self-hosted replacements for ${pages
     .slice(0, 5)
     .map((page) => page.product.name)
     .join(', ')} and more, ready to run on your own server.`}
   path="alternatives/"
-  jsonLd={graph(breadcrumbSchema(trail))}
+  pageType="CollectionPage"
+  dateModified={lastUpdated(pages.flatMap((page) => page.apps))}
+  jsonLd={graph(
+    breadcrumbSchema(trail),
+    pageListSchema(
+      'Open-source alternatives to tools you pay for',
+      pages.map((page) => ({ name: `${page.product.name} alternatives`, path: `alternatives/${page.product.id}/` })),
+    ),
+  )}
 >
   <Crumbs trail={trail} />
   <section class="apphead one pad">

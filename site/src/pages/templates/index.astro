@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import Chev from '../../components/Chev.astro';
 import Crumbs from '../../components/Crumbs.astro';
-import { alternativesPages, getTemplates, isSample, usedCategories } from '../../lib/catalogue';
+import { alternativesPages, getTemplates, isSample, lastUpdated, usedCategories } from '../../lib/catalogue';
 import { breadcrumbSchema, graph, itemListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
 
@@ -26,6 +26,8 @@ const description = `All ${total} free, open-source apps you can run on your own
   description={description}
   path="templates/"
   noindex={isSample}
+  pageType="CollectionPage"
+  dateModified={lastUpdated(templates)}
   jsonLd={graph(breadcrumbSchema(trail), itemListSchema(templates, title))}
 >
   <Crumbs trail={trail} />

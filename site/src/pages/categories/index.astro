@@ -1,8 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Crumbs from '../../components/Crumbs.astro';
-import { getTemplates, usedCategories } from '../../lib/catalogue';
-import { breadcrumbSchema, graph } from '../../lib/schema';
+import { getTemplates, lastUpdated, usedCategories } from '../../lib/catalogue';
+import { breadcrumbSchema, graph, pageListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
 
 const categories = usedCategories();
@@ -20,7 +20,15 @@ const trail = [
     .map((c) => c.name.toLowerCase())
     .join(', ')} and more.`}
   path="categories/"
-  jsonLd={graph(breadcrumbSchema(trail))}
+  pageType="CollectionPage"
+  dateModified={lastUpdated(templates)}
+  jsonLd={graph(
+    breadcrumbSchema(trail),
+    pageListSchema(
+      'Open-source app categories',
+      categories.map((category) => ({ name: category.name, path: `categories/${category.id}/` })),
+    ),
+  )}
 >
   <Crumbs trail={trail} />
   <section class="apphead one pad">

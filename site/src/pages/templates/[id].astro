@@ -48,6 +48,7 @@ const titles = replacedNames.length
       `${a.name}: free, self-hosted alternative to ${listNames(replacedNames.slice(0, 2))}`,
       `${a.name}: free, self-hosted alternative to ${replacedNames[0]}`,
       `${a.name}: self-hosted ${replacedNames[0]} alternative`,
+      `${a.name}: ${replacedNames[0]} alternative`,
     ]
   : [`${a.name}: ${a.tagline.replace(/\.$/, '')}`, `Self-host ${a.name}`];
 const title = titles.find((t) => t.length <= 48) ?? titles[titles.length - 1];
@@ -74,6 +75,8 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
   ogImage={`og/${a.id}.png`}
   ogType="article"
   markdown={`templates/${a.id}.md`}
+  pageType="ItemPage"
+  dateModified={a.updated}
 >
   <Crumbs trail={trail} />
   <section class="apphead pad">

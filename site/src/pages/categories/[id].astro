@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import Crumbs from '../../components/Crumbs.astro';
-import { getTemplates, usedCategories } from '../../lib/catalogue';
+import { getTemplates, lastUpdated, usedCategories } from '../../lib/catalogue';
 import type { Category } from '../../categories';
 import { breadcrumbSchema, graph, itemListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
@@ -23,7 +23,7 @@ const trail = [
   { name: 'Home', path: '' },
   { name: category.name, path: `categories/${category.id}/` },
 ];
-const title = `Open-source ${category.name.toLowerCase()} apps you can self-host`;
+const title = `Open-source ${category.name.toLowerCase()} apps to self-host`;
 const description = `${category.lede} ${apps.length} free ${apps.length === 1 ? 'app' : 'apps'}${
   replaced.length ? `, replacing ${replaced.slice(0, 3).join(', ')}` : ''
 }.`.slice(0, 160);
@@ -33,6 +33,8 @@ const description = `${category.lede} ${apps.length} free ${apps.length === 1 ? 
   title={title}
   description={description}
   path={`categories/${category.id}/`}
+  pageType="CollectionPage"
+  dateModified={lastUpdated(apps)}
   jsonLd={graph(breadcrumbSchema(trail), itemListSchema(apps, title))}
 >
   <Crumbs trail={trail} />
