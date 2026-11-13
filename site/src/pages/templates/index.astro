@@ -14,7 +14,7 @@ const total = templates.length;
 const categories = usedCategories();
 const alternatives = alternativesPages();
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: 'All apps', path: 'templates/' },
 ];
 const title = 'All open-source apps you can self-host';
@@ -31,7 +31,7 @@ const description = `All ${total} free, open-source apps you can run on your own
   jsonLd={graph(breadcrumbSchema(trail), itemListSchema(templates, title))}
 >
   <Crumbs trail={trail} />
-  <section class="apphead pad" style="grid-template-columns:1fr">
+  <section class="apphead one pad">
     <div class="body">
       <h1 class="h1">All {total} self-hosted apps</h1>
       <p class="lede">
@@ -58,7 +58,7 @@ const description = `All ${total} free, open-source apps you can run on your own
           ><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
             ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
           >
-          <input id="q" type="search" autocomplete="off" placeholder="Filter, e.g. Slack or newsletter" aria-label="Filter apps" /></label
+          <input id="q" type="search" autocomplete="off" placeholder="Filter, e.g. Slack" aria-label="Filter apps" /></label
         >
       </div>
     </div>
@@ -75,11 +75,15 @@ const description = `All ${total} free, open-source apps you can run on your own
         </div>
       </div>
       <p class="fine" id="count" aria-live="polite">All {total} apps shown</p>
+      <p class="fine legend">
+        <span><span class="ease easy"><i></i>Easy</span>: ready to use right after setup.</span>
+        <span><span class="ease some"><i></i>Some setup</span>: a few extra minutes of setup inside the app.</span>
+      </p>
     </div>
   </section>
 
-  <section class="sec pad" aria-labelledby="more-title" style="padding-block:40px 64px">
-    <h2 class="h2" id="more-title" style="margin-bottom:20px">Other ways to browse</h2>
+  <section class="sec pad more-browse" aria-labelledby="more-title">
+    <h2 class="h2" id="more-title">Other ways to browse</h2>
     <div class="idx">
       <a href={href('categories/')}>
         <b>By category</b>
@@ -94,13 +98,19 @@ const description = `All ${total} free, open-source apps you can run on your own
       <a href={href('contribute/')}>
         <b>Add an app</b>
         <span>Missing an app? Add it from your browser, without installing anything.</span>
-        <small>How it works</small>
+        <small>From your browser, in a few minutes</small>
       </a>
     </div>
   </section>
 </Base>
 
 <style>
+  .more-browse {
+    padding-block: 40px 64px;
+  }
+  .more-browse .h2 {
+    margin-bottom: 20px;
+  }
   .empty .msg {
     color: var(--fg);
     font-weight: 500;
@@ -117,7 +127,7 @@ const description = `All ${total} free, open-source apps you can run on your own
     gap: 8px;
     margin-top: 18px;
   }
-  @media (max-width: 640px) {
+  @media (max-width:40em) {
     .empty {
       padding: 28px 18px;
     }
@@ -186,7 +196,7 @@ const description = `All ${total} free, open-source apps you can run on your own
     input.focus();
   });
   render();
-  // Bring the selected tab into view on phones, where the tabs scroll sideways.
+  // Bring the selected tab into view on phones, where the tabs scroll sideways (above 640px they wrap).
   // Scrolls only the tab row, never the page.
   const picked = cat ? tabs.find((t) => t.dataset.tab === cat) : undefined;
   const row = picked?.parentElement;

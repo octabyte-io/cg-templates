@@ -7,9 +7,11 @@ import { href } from '../lib/site';
  * `search.json`, fetched the first time it opens; pages read fine without it.
  */
 const searchUrl = href('search.json');
+const allUrl = href('templates/');
+const addUrl = href('contribute/');
 ---
 
-<div class="pscrim" id="pal" hidden data-search={searchUrl}>
+<div class="pscrim" id="pal" hidden data-search={searchUrl} data-all={allUrl} data-add={addUrl}>
   <div class="pal" role="dialog" aria-modal="true" aria-label="Search apps">
     <div class="pin">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
@@ -40,6 +42,8 @@ const searchUrl = href('search.json');
     id: string;
     name: string;
     description: string;
+    tagline: string;
+    ink: boolean;
     category: string;
     replaces: string[];
     ease: string;
@@ -63,6 +67,13 @@ const searchUrl = href('search.json');
   const esc = (s: string) =>
     String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string);
 
+  // While the palette is open the page behind it cannot be reached: Tab stays inside the dialog,
+  // and screen readers see only the dialog (aria-modal alone does not stop Tab).
+  const behind = [...document.body.children].filter((el) => el !== pal && el.tagName !== 'SCRIPT') as HTMLElement[];
+  function setInert(on: boolean) {
+    behind.forEach((el) => (el.inert = on));
+  }
+
   function load() {
     loading ??= fetch(pal.dataset.search as string)
       .then((r) => r.json())
@@ -76,15 +87,15 @@ const searchUrl = href('search.json');
         index = data;
       })
       .catch(() => {
-        plist.innerHTML = '<div class="pnone">Search could not load. Browse the apps on the home page instead.</div>';
+        plist.innerHTML = `<div class="pnone"><p>Search could not load.</p><p class="pnone-acts"><a class="btn sm ghost" href="${esc(pal.dataset.all ?? '')}">Browse all apps</a></p></div>`;
       });
     return loading;
   }
 
   function option(entry: Entry, right: string, i: number) {
     return `<a class="opt" role="option" id="opt-${i}" href="${esc(entry.url)}" data-i="${i}" aria-selected="${i === sel}">
-      <span class="lt" style="--s:32px"><img src="${esc(entry.logo)}" alt="" width="18" height="18"></span>
-      <span class="on1"><b>${esc(entry.name)}</b><span>${esc(entry.description)}</span></span>
+      <span class="lt${entry.ink ? ' ink' : ''}" style="--s:32px"><img src="${esc(entry.logo)}" alt="" width="18" height="18"></span>
+      <span class="on1"><b>${esc(entry.name)}</b><span>${esc(entry.tagline)}</span></span>
       <span class="rt">${esc(right)}</span></a>`;
   }
 
@@ -135,7 +146,8 @@ const searchUrl = href('search.json');
         rest.forEach((a) => push(a, a.category));
       }
       if (!opts.length) {
-        html = `<div class="pnone">No apps match “${esc(pq.value)}”. Try a tool you pay for, like Zapier or Slack.</div>`;
+        html = `<div class="pnone"><p>No apps match “${esc(pq.value)}”. Try a tool you pay for, like Zapier or Slack.</p>
+          <p class="pnone-acts"><a class="btn sm ghost" href="${esc(pal.dataset.all ?? '')}">Browse all apps</a><a class="btn sm ghost" href="${esc(pal.dataset.add ?? '')}">Add an app</a></p></div>`;
       }
     }
     plist.innerHTML = html;
@@ -157,6 +169,7 @@ const searchUrl = href('search.json');
     pal.classList.remove('out');
     pal.classList.toggle('instant', instant);
     pal.hidden = false;
+    setInert(true);
     pq.value = '';
     sel = 0;
     render();
@@ -169,6 +182,7 @@ const searchUrl = href('search.json');
     const done = () => {
       pal.hidden = true;
       pal.classList.remove('out');
+      setInert(false);
       (lastFocus as HTMLElement | null)?.focus?.();
     };
     if (instant) return done();

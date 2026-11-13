@@ -2,12 +2,14 @@
 import Base from '../../layouts/Base.astro';
 import AppTile from '../../components/AppTile.astro';
 import Card from '../../components/Card.astro';
+import Check from '../../components/Check.astro';
 import Chev from '../../components/Chev.astro';
 import Crumbs from '../../components/Crumbs.astro';
 import ConsoleDeploy from '../../components/ConsoleDeploy.astro';
 import Ease from '../../components/Ease.astro';
 import Faq from '../../components/Faq.astro';
 import ProductMark from '../../components/ProductMark.astro';
+import ProductTile from '../../components/ProductTile.astro';
 import { alternativesPages, getTemplates, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
 import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
@@ -33,7 +35,7 @@ const easeNote =
 const deploy = deployUrl(a.id);
 
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: a.category.name, path: `categories/${a.category.id}/` },
   { name: a.name, path: `templates/${a.id}/` },
 ];
@@ -88,7 +90,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
             <span class="chip">
               Replaces
               {a.alternativeTo.map((p) => (
-                <b style="display:inline-flex;gap:5px;align-items:center">
+                <b class="chipmark">
                   <ProductMark product={p} />
                   {p.name}
                 </b>
@@ -120,7 +122,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
           </div>
         </div>
         {a.screenshots.length > 1 && (
-          <div class="shots" style="margin-top:16px">
+          <div class="shots">
             {a.screenshots.slice(1).map((shot) => (
               <img src={href(shot.path)} alt={shot.alt} loading="lazy" decoding="async" />
             ))}
@@ -129,10 +131,52 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
       </section>
     )
   }
+  {
+    a.screenshots.length === 0 && (
+      // No screenshot yet: the stage still shows the app at a glance, the tool it replaces and what
+      // it does, so the page does not open straight into prose. Everything here is said again below.
+      <section class="stagewrap pad" aria-hidden="true">
+        <div class="stage">
+          <div class="window glance">
+            <div class="wbar">
+              <b>{a.name}</b>
+              <span>{a.category.name}</span>
+            </div>
+            <div class="gl">
+              <div class="gl-art">
+                {a.alternativeTo[0] && (
+                  <>
+                    <ProductTile product={a.alternativeTo[0]} box={72} size={38} class="from" />
+                    <svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3">
+                      <path d="M2 8h11M9.5 4.5 13 8l-3.5 3.5" />
+                    </svg>
+                  </>
+                )}
+                <AppTile template={a} box={88} size={50} loading="eager" />
+              </div>
+              <div class="gl-tx">
+                <p class="gl-tag">
+                  {replacedNames.length ? `Does the job of ${listNames(replacedNames)}` : `A free ${a.category.name.toLowerCase()} app`}
+                </p>
+                <ul>
+                  {a.features.slice(0, 4).map((feature) => (
+                    <li>
+                      <Check />
+                      {feature.title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <div class="sec pad split">
     <div>
-      <div class="blk" style="padding-top:40px">
+      <div class="blk first">
         <h2 class="h2">What is {a.name}?</h2>
         <div class="prose">
           <p>{a.description}</p>
@@ -158,7 +202,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         a.alternativeTo.length > 0 && (
           <div class="blk">
             <h2 class="h2">Replaces {listNames(replacedNames)}</h2>
-            <p class="muted" style="max-width:64ch">
+            <p class="muted measure">
               {a.name} does the same job as {listNames(replacedNames)}.
               {a.switching ? ' Here is what changes when you switch.' : ' It runs on a server of your own, so the cost stays the same however many people use it, and your data stays with you.'}
             </p>
@@ -183,7 +227,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
               </div>
             )}
             {mainAlt && (
-              <a href={href(`alternatives/${mainAlt.id}/`)} class="btn ghost" style="justify-self:start">
+              <a href={href(`alternatives/${mainAlt.id}/`)} class="btn ghost start">
                 Compare all {mainAlt.name} alternatives <Chev />
               </a>
             )}
@@ -193,7 +237,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
 
       <div class="blk" id="deploy">
         <h2 class="h2">What happens when you click Deploy?</h2>
-        <p class="muted" style="max-width:64ch">
+        <p class="muted measure">
           You do not need a server or any technical knowledge. Four steps, and {a.name} is running at its own web address.
         </p>
         <ol class="dsteps">
@@ -223,7 +267,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
 
       {
         related.length > 0 && (
-          <div class="blk" style="padding-bottom:56px">
+          <div class="blk last">
             <h2 class="h2">Related apps</h2>
             <div class="rel">
               {related.map((template) => (
@@ -239,11 +283,11 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
       <div class="sidecard">
         <div class="hd"><AppTile template={a} box={32} size={18} /><b>{a.name} at a glance</b></div>
         <dl>
-          <dt>Category</dt><dd><a href={href(`categories/${a.category.id}/`)} style="text-decoration:none">{a.category.name}</a></dd>
+          <dt>Category</dt><dd><a class="plain" href={href(`categories/${a.category.id}/`)}>{a.category.name}</a></dd>
           <dt>Ease of use</dt><dd><Ease ease={a.ease} /></dd>
           <dt>App price</dt><dd>Free</dd>
           <dt>Server</dt><dd>Yours, or one from Cloudgate</dd>
-          <dt>License</dt><dd class="m">{a.license}</dd>
+          <dt>Code</dt><dd title={`Licence: ${a.license}`}>Open source</dd>
           {
             a.updated && (
               <>
@@ -255,14 +299,14 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
             )
           }
         </dl>
-        <p style="padding:0 18px 12px;font-size:13px;color:var(--muted)">{easeNote}</p>
+        <p class="enote">{easeNote}</p>
         <div class="links">
           {a.links.website && <a href={a.links.website} rel="noopener">Official website <Chev /></a>}
           {a.links.docs && <a href={a.links.docs} rel="noopener">Documentation <Chev /></a>}
           <a href={a.links.source} rel="noopener">Source code <Chev /></a>
         </div>
         <div class="ft">
-          <a class="btn lg" href={deploy} style="width:100%">Deploy {a.name}</a>
+          <a class="btn lg wide" href={deploy}>Deploy {a.name}</a>
           <p>Ready in a few minutes. No server? Cloudgate can provide one.</p>
           <ConsoleDeploy id={a.id} name={a.name} center />
         </div>
@@ -271,14 +315,95 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
   </div>
   <div class="mspace"></div>
   <div class="mbar">
-    <div class="t"><b>{a.name}</b>Free app, ready in a few minutes</div>
+    <div class="t"><b>{a.name}</b><span>Free app</span></div>
     <a class="btn lg" href={deploy}>Deploy {a.name}</a>
   </div>
 </Base>
 
 <style>
+  .chipmark {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .shots {
+    margin-top: 16px;
+  }
+  .measure {
+    max-width: 64ch;
+  }
+  .start {
+    justify-self: start;
+  }
+  .enote {
+    padding: 0 18px 12px;
+    font-size: var(--t-sm);
+    color: var(--muted);
+  }
+
+  /* The app at a glance, on the stage, until the template has a screenshot */
+  .gl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: 32px;
+    padding: clamp(24px, 4vw, 48px);
+  }
+  .gl-art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 32px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background-color: var(--sunk);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 14px 14px;
+  }
+  .gl-art :global(.lt.from) {
+    opacity: 0.75;
+    filter: saturate(0.7);
+    background: var(--card);
+  }
+  .gl-art .arr {
+    width: 26px;
+    height: 26px;
+    color: var(--faint);
+  }
+  .gl-art :global(.lt) {
+    background: var(--card);
+    box-shadow: var(--shadow-sm);
+  }
+  .gl-tag {
+    font: italic 300 clamp(1.25rem, 2.2vw, 1.625rem) / 1.25 var(--serif);
+    margin-bottom: 18px;
+  }
+  .gl-tx ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+    font-size: var(--t-base);
+  }
+  .gl-tx li {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .gl-tx :global(.ck) {
+    color: var(--ok);
+    flex: none;
+  }
+  @media (max-width:47.5em) {
+    .gl {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
   .dnote {
-    font-size: 13.5px;
+    font-size: .875rem;
     color: var(--muted);
   }
   .dnote a,
@@ -298,7 +423,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: var(--r-lg);
     background: var(--card);
     overflow: hidden;
   }
@@ -316,7 +441,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
     border-top: 1px solid var(--line);
   }
   .dsteps .n {
-    font: 12px var(--mono);
+    font: .75rem var(--mono);
     color: var(--accent-ink);
   }
   .dsteps b {
@@ -324,16 +449,16 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
   }
   .dsteps p {
     color: var(--muted);
-    font-size: 14px;
+    font-size: .875rem;
   }
   .dfoot {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 10px 18px;
-    font-size: 14px;
+    font-size: .875rem;
   }
-  @media (max-width: 640px) {
+  @media (max-width:40em) {
     .dsteps {
       grid-template-columns: 1fr;
     }

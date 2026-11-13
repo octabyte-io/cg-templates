@@ -30,7 +30,7 @@ export const PRODUCTS: Product[] = [
     name: 'Zapier',
     icon: 'zapier',
     job: 'connecting your tools',
-    lede: 'n8n is the self-hosted Zapier alternative we recommend, free and fair-code: it connects your apps with no limit on tasks. Zapier charges more as you run more tasks; a self-hosted app runs for one fixed server cost.',
+    lede: 'n8n is the self-hosted Zapier alternative we recommend: free to run yourself, with its code public, and it connects your apps with no limit on tasks. Zapier charges more as you run more tasks; a self-hosted app runs for one fixed server cost.',
     pick: 'n8n',
     swap: { to: 'n8n', why: 'Automate work between your apps, with no limit on tasks.' },
   },
@@ -39,7 +39,7 @@ export const PRODUCTS: Product[] = [
     name: 'Make',
     icon: 'make',
     job: 'automating work between apps',
-    lede: 'n8n is a free, fair-code Make alternative for automating work between your apps, with branches, loops and AI steps. Make’s price rises as your scenarios run more often; self-hosted n8n has no usage limit.',
+    lede: 'n8n is a free Make alternative for automating work between your apps, with branches, loops and AI steps, and its code is public. Make’s price rises as your scenarios run more often; self-hosted n8n has no usage limit.',
     pick: 'n8n',
   },
   {

@@ -58,7 +58,7 @@ const faq = [
 ];
 
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: 'Alternatives', path: 'alternatives/' },
   { name: product.name, path: `alternatives/${product.id}/` },
 ];
@@ -99,12 +99,12 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
     </div>
   </section>
   <section class="sec pad">
-    <div class="blk" style="padding-top:40px">
+    <div class="blk first">
       <h2 class="h2">At a glance</h2>
       <div class="tablewrap">
-        <table>
+        <table class="stack">
           <thead>
-            <tr><th scope="col">App</th><th scope="col">Good for</th><th scope="col">Ease of use</th><th><span class="visually-hidden">Deploy</span></th></tr>
+            <tr><th scope="col">App</th><th scope="col">Good for</th><th scope="col">Ease of use</th></tr>
           </thead>
           <tbody>
             {
@@ -113,7 +113,7 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
                   <td>
                     <span class="who">
                       <AppTile template={app} box={32} size={18} />
-                      <a href={href(`templates/${app.id}/`)} style="text-decoration:none">
+                      <a class="plain" href={href(`templates/${app.id}/`)}>
                         {app.name}
                       </a>
                     </span>
@@ -121,11 +121,6 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
                   <td class="muted">{app.goodFor ?? app.tagline}</td>
                   <td>
                     <Ease ease={app.ease} />
-                  </td>
-                  <td style="text-align:right">
-                    <a class="btn sm" href={deployUrl(app.id)} aria-label={`Deploy ${app.name}`}>
-                      Deploy
-                    </a>
                   </td>
                 </tr>
               ))
@@ -141,13 +136,13 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
           apps.map((app) => (
             <div class="alt">
               <AppTile template={app} box={52} size={30} />
-              <div style="min-width:0">
+              <div class="grow">
                 <div class="ttl">
-                  <h3 style="font:inherit;margin:0"><a href={href(`templates/${app.id}/`)}>{app.name}</a></h3>
+                  <h3 class="nm"><a href={href(`templates/${app.id}/`)}>{app.name}</a></h3>
                   <Ease ease={app.ease} />
                 </div>
                 <p>
-                  {app.description}
+                  {app.tagline}
                   {app.easeNote ? ` ${app.easeNote}` : ''}
                 </p>
               </div>
@@ -162,9 +157,16 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
         }
       </div>
     </div>
-    <div class="blk" style="padding-bottom:56px">
+    <div class="blk last">
       <h2 class="h2">Questions</h2>
       <Faq items={faq} />
     </div>
   </section>
 </Base>
+
+<style>
+  .nm {
+    font: inherit;
+    margin: 0;
+  }
+</style>

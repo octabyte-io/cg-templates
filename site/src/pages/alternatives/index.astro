@@ -8,7 +8,7 @@ import { href } from '../../lib/site';
 
 const pages = alternativesPages().sort((a, b) => b.apps.length - a.apps.length || a.product.name.localeCompare(b.product.name));
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: 'Alternatives', path: 'alternatives/' },
 ];
 ---
@@ -31,13 +31,13 @@ const trail = [
   )}
 >
   <Crumbs trail={trail} />
-  <section class="apphead pad" style="grid-template-columns:1fr">
+  <section class="apphead one pad">
     <div class="body">
       <h1 class="h1">Open-source alternatives to the tools you pay for</h1>
       <p class="lede">Find the free app that does the job of a tool you pay for today, and run it on your own server.</p>
     </div>
   </section>
-  <section class="sec pad" style="padding-block:40px 64px">
+  <section class="sec browse pad">
     <div class="idx">
       {
         pages.map((page) => (

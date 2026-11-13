@@ -20,7 +20,7 @@ const apps = getTemplates().filter((template) => template.category.id === catego
 const others = usedCategories().filter((other) => other.id !== category.id);
 const replaced = [...new Set(apps.flatMap((app) => app.alternativeTo.map((p) => p.name)))];
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: category.name, path: `categories/${category.id}/` },
 ];
 const title = `Open-source ${category.name.toLowerCase()} apps to self-host`;
@@ -38,7 +38,7 @@ const description = `${category.lede} ${apps.length} free ${apps.length === 1 ? 
   jsonLd={graph(breadcrumbSchema(trail), itemListSchema(apps, title))}
 >
   <Crumbs trail={trail} />
-  <section class="apphead pad" style="grid-template-columns:1fr">
+  <section class="apphead one pad">
     <div class="body">
       <h1 class="h1">{category.name}</h1>
       <p class="lede">{category.lede}</p>
@@ -50,12 +50,12 @@ const description = `${category.lede} ${apps.length} free ${apps.length === 1 ? 
     </div>
   </section>
   <section class="sec">
-    <div class="gridwrap pad" style="padding-top:32px">
+    <div class="gridwrap tight pad">
       <div class="grid">{apps.map((app) => <Card template={app} />)}</div>
     </div>
   </section>
-  <section class="sec pad" style="padding-block:40px 64px">
-    <h2 class="h2" style="margin-bottom:20px">Other categories</h2>
+  <section class="sec browse pad">
+    <h2 class="h2">Other categories</h2>
     <div class="idx">
       {
         others.map((other) => (

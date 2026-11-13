@@ -7,7 +7,7 @@ import Ease from '../components/Ease.astro';
 import Faq from '../components/Faq.astro';
 import ProductTile from '../components/ProductTile.astro';
 import { alternativesPages, getTemplate, getTemplates, isSample } from '../lib/catalogue';
-import { costAnswer } from '../lib/copy';
+import { costAnswer, HOW_IT_WORKS } from '../lib/copy';
 import { absolute, href } from '../lib/site';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
 
@@ -25,7 +25,7 @@ import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
  */
 
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: 'How it works', path: 'how-it-works/' },
 ];
 
@@ -41,6 +41,8 @@ const appName = featured?.name ?? 'your app';
 const slug = (featured?.id ?? 'app').replace(/[^a-z0-9]/g, '');
 const address = `${slug}.acmebakery.com`;
 
+// After choosing an app, the steps are named as every app page and the home page name them (HOW_IT_WORKS).
+const named = featured ? HOW_IT_WORKS(featured).map((step) => step.name) : [];
 const steps = [
   {
     name: 'Choose an app',
@@ -49,19 +51,19 @@ const steps = [
       : 'Search for the tool you pay for today and you find the open-source apps that do the same job. Every app here is free to use.',
   },
   {
-    name: 'Click Deploy and create your account',
+    name: named[0] ?? 'Click Deploy and create your account',
     text: `Deploy takes you to Cloudgate. Create an account, or log in if you have one. The app itself is free.`,
   },
   {
-    name: 'Choose a server, or get one from Cloudgate',
+    name: named[1] ?? 'Choose a server',
     text: 'No server? Pick a size and a country, and Cloudgate provides one and gets it ready. Already rent a server? Connect it instead.',
   },
   {
-    name: 'Cloudgate sets everything up',
+    name: named[2] ?? 'Cloudgate sets up your app',
     text: `Cloudgate gets the server ready, makes the passwords and keys ${appName} needs, and starts it. There is nothing to install, nothing to invent and nothing to write down.`,
   },
   {
-    name: 'Open your app at its web address',
+    name: named[3] ?? 'Open your app and sign in',
     text: 'Your app starts on a free web address, which uses plain http. Add your own, like crm.yourshop.com, and Cloudgate gets the https certificate for you once your domain points at the server.',
   },
 ];
@@ -156,11 +158,11 @@ const howTo = {
   <section class="sec" id="steps" aria-labelledby="steps-title">
     <div class="shead pad">
       <h2 class="h2" id="steps-title">What happens when you deploy an app?</h2>
-      <p class="lede">Five steps and a few minutes of your time. Cloudgate does the technical part.</p>
+      <p class="lede">Choose an app, then four steps and a few minutes of your time. Cloudgate does the technical part.</p>
     </div>
 
     <ol class="flow">
-      <li class="step pad" data-reveal id="step-1">
+      <li class="step pad" id="step-1">
         <div class="say">
           <span class="num">Step 1</span>
           <h3 class="h3">{steps[0].name}</h3>
@@ -196,24 +198,24 @@ const howTo = {
         </div>
       </li>
 
-      <li class="step pad" data-reveal id="step-2">
+      <li class="step pad" id="step-2">
         <div class="say">
           <span class="num">Step 2</span>
           <h3 class="h3">{steps[1].name}</h3>
           <p>{steps[1].text}</p>
         </div>
         <div class="frag form" role="img" aria-label="Example sign-up: name, email, password, and Create account">
-          <div class="fld" aria-hidden="true"><span class="lab">Email</span><span class="in">amira@acmebakery.com</span></div>
+          <div class="fld" aria-hidden="true"><span class="lab">Email</span><span class="in">you@yourshop.com</span></div>
           <div class="fld" aria-hidden="true"><span class="lab">Password</span><span class="in">••••••••••••</span></div>
           <div class="fld" aria-hidden="true">
             <span class="lab">Name</span>
-            <span class="in">Amira Haddad</span>
+            <span class="in">Your name</span>
           </div>
           <span class="btn sm" aria-hidden="true">Create account</span>
         </div>
       </li>
 
-      <li class="step pad" data-reveal id="step-3">
+      <li class="step pad" id="step-3">
         <div class="say">
           <span class="num">Step 3</span>
           <h3 class="h3">{steps[2].name}</h3>
@@ -221,14 +223,14 @@ const howTo = {
         </div>
         <div class="frag" role="img" aria-label="Example server choice: get a server from Cloudgate in Germany, or use a server you already have">
           <div class="srv" aria-hidden="true">
-            <label class="on"><input type="radio" name="how-srv" checked tabindex="-1" /> Get a server from Cloudgate</label>
-            <label><input type="radio" name="how-srv" tabindex="-1" /> Use a server I already have</label>
+            <span class="on"><i class="rd" />Get a server from Cloudgate</span>
+            <span><i class="rd" />Use a server I already have</span>
           </div>
           <div class="fld where" aria-hidden="true"><span class="lab">Country</span><span class="in">Germany</span></div>
         </div>
       </li>
 
-      <li class="step key pad" data-reveal id="step-4">
+      <li class="step key pad" id="step-4">
         <div class="say">
           <span class="num">Step 4</span>
           <h3 class="h3">{steps[3].name}</h3>
@@ -266,7 +268,7 @@ const howTo = {
         </div>
       </li>
 
-      <li class="step pad" data-reveal id="step-5">
+      <li class="step pad" id="step-5">
         <div class="say">
           <span class="num">Step 5</span>
           <h3 class="h3">{steps[4].name}</h3>
@@ -356,18 +358,18 @@ const howTo = {
     max-width: 46ch;
   }
   .say .h3 {
-    font-size: 19px;
+    font-size: 1.1875rem;
   }
   .say p {
     color: var(--muted);
-    font-size: 15.5px;
+    font-size: 1rem;
   }
   .say .aside {
-    font-size: 14px;
+    font-size: .875rem;
     color: var(--faint);
   }
   .num {
-    font: 12px var(--mono);
+    font: .75rem var(--mono);
     color: var(--accent-ink);
   }
   .step > .frag {
@@ -384,9 +386,9 @@ const howTo = {
     height: 38px;
     border: 1px solid var(--accent-hi);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-hi) 20%, transparent);
-    border-radius: 8px;
+    border-radius: var(--r-md);
     padding: 0 12px;
-    font-size: 14px;
+    font-size: .875rem;
   }
   .pick .q svg {
     width: 15px;
@@ -407,7 +409,7 @@ const howTo = {
     gap: 12px;
     align-items: center;
     padding: 8px;
-    border-radius: 8px;
+    border-radius: var(--r-md);
   }
   .pick li.on {
     background: var(--tint);
@@ -423,7 +425,7 @@ const howTo = {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 12.5px;
+    font-size: .8125rem;
     color: var(--faint);
     white-space: nowrap;
   }
@@ -443,7 +445,7 @@ const howTo = {
     width: 100%;
   }
   .fld .lab {
-    font-size: 12.5px;
+    font-size: .8125rem;
     color: var(--faint);
   }
   .fld .in {
@@ -451,7 +453,7 @@ const howTo = {
     align-items: center;
     gap: 8px;
     border: 1px solid var(--line-strong);
-    border-radius: 7px;
+    border-radius: var(--r-sm);
     padding: 7px 11px;
     background: var(--bg);
     overflow: hidden;
@@ -498,10 +500,10 @@ const howTo = {
   }
   .ph b {
     font-weight: 600;
-    font-size: 15px;
+    font-size: .9375rem;
   }
   .ph small {
-    font-size: 13px;
+    font-size: .8125rem;
     color: var(--muted);
   }
   .plan ul {
@@ -509,14 +511,14 @@ const howTo = {
     margin: 0;
     padding: 0;
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: var(--r-md);
   }
   .plan li {
     display: flex;
     gap: 12px;
     align-items: baseline;
     padding: 10px 12px;
-    font-size: 13.5px;
+    font-size: .875rem;
     min-width: 0;
   }
   .plan li + li {
@@ -529,7 +531,7 @@ const howTo = {
   .add {
     flex: none;
     width: 44px;
-    font: 11.5px var(--mono);
+    font: .75rem var(--mono);
     color: var(--ok);
   }
   .add.keep {
@@ -543,7 +545,7 @@ const howTo = {
   }
   .still {
     flex: 1;
-    font-size: 13px;
+    font-size: .8125rem;
     color: var(--muted);
     min-width: 12ch;
   }
@@ -555,10 +557,10 @@ const howTo = {
     gap: 8px;
     height: 38px;
     padding: 0 12px;
-    border-radius: 999px;
+    border-radius: var(--r-pill);
     background: var(--sunk);
     border: 1px solid var(--line);
-    font-size: 13.5px;
+    font-size: .875rem;
     margin-bottom: 6px;
     min-width: 0;
   }
@@ -594,11 +596,11 @@ const howTo = {
   }
   .daily p {
     color: var(--muted);
-    font-size: 15px;
+    font-size: .9375rem;
     max-width: 60ch;
   }
   .daily .note {
-    font-size: 13.5px;
+    font-size: .875rem;
     color: var(--fg);
     padding-top: 6px;
   }
@@ -634,7 +636,7 @@ const howTo = {
     color: var(--accent-ink);
   }
 
-  @media (max-width: 900px) {
+  @media (max-width:56.25em) {
     .step,
     .key {
       grid-template-columns: 1fr;
@@ -649,7 +651,7 @@ const howTo = {
       grid-template-columns: 1fr;
     }
   }
-  @media (max-width: 640px) {
+  @media (max-width:40em) {
     .intro .acts {
       display: flex;
     }

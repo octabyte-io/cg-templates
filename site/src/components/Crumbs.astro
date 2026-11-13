@@ -12,7 +12,7 @@ const { trail } = Astro.props;
     {
       trail.map((crumb, index) =>
         index === trail.length - 1 ? (
-          <span aria-current="page" style="color:var(--fg)">
+          <span aria-current="page">
             {crumb.name}
           </span>
         ) : (

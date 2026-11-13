@@ -8,10 +8,12 @@ interface Props {
   box: number;
   size: number;
   class?: string;
+  /** `eager` for a logo near the top of the page. */
+  loading?: 'lazy' | 'eager';
 }
-const { template, box, size, class: extra } = Astro.props;
+const { template, box, size, class: extra, loading = 'lazy' } = Astro.props;
 ---
 
-<span class:list={['lt', extra]} style={`--s:${box}px`}>
-  <img src={href(template.logo.path)} alt="" width={size} height={size} loading="lazy" decoding="async" />
+<span class:list={['lt', { ink: template.logo.ink }, extra]} style={`--s:${box}px`}>
+  <img src={href(template.logo.path)} alt="" width={size} height={size} loading={loading} decoding="async" />
 </span>

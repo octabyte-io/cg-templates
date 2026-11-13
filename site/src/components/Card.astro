@@ -35,13 +35,19 @@ const first = template.alternativeTo[0];
     <AppTile template={template} box={48} size={28} />
     <div class="ctt"><span class="nm">{template.name}</span><span class="cc">{template.category.name}</span></div>
   </div>
-  <p class="ds">{template.description}</p>
+  <p class="ds">{template.tagline}</p>
   <div class="cf">
     {
       first ? (
         <span class="rp">
           Replaces <ProductMark product={first} />
-          <b>{template.alternativeTo.map((p) => p.name).join(', ')}</b>
+          <b>{first.name}</b>
+          {template.alternativeTo.length > 1 && (
+            <span class="plus">
+              +{template.alternativeTo.length - 1}
+              <span class="visually-hidden">more: {template.alternativeTo.slice(1).map((p) => p.name).join(', ')}</span>
+            </span>
+          )}
         </span>
       ) : (
         <span class="rp">Free app</span>
