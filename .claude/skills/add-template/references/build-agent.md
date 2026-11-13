@@ -29,10 +29,17 @@ Note anything a visitor would care about (default admin login, first-run wizard,
 
 ## Write the folder
 
-Use the **compose form** (`cloudgate.yaml` = `app: { kind: compose, managed: console }`) so
-`template try` actually starts the app; that's how this template gets proven. Only use the managed
-form (`kind: web` + `kind: postgres`) if the app genuinely can't run as compose, and say why in
-your report.
+Every template is **Docker Compose**: `cloudgate.yaml` stays
+`app: { kind: compose, managed: console }` and the app is a `docker-compose.yml`, so `template try`
+actually starts it. Never use the managed form (`kind: web` + `kind: postgres`), even though a few
+older templates do.
+
+If the app **can't** run as Docker Compose, stop and report `NOT POSSIBLE IN COMPOSE` with the
+concrete reason and its source. Real reasons: no official or maintained container image; a
+desktop, mobile or SaaS-only app; it needs privileged mode, host networking, kernel modules, a GPU
+or Kubernetes; its licence forbids redistribution as a self-hosted image. "The official docs prefer
+another install method" is not a reason if a maintained image exists. Delete anything you created
+under `templates/<id>/` before reporting.
 
 - `template.yaml`: name as the makers write it, `version` = the main image tag, `links` (website,
   docs, source required), `size`, `domains`, `inputs`. Put a draft `description` (50–160 chars) and
@@ -55,7 +62,7 @@ your report.
 
 It runs `template check`, then `template try` with the CLI version CI pins, and ends with
 `RESULT <id> check=… try=…`. Exit 0 pass, 1 template problem, 2 this machine can't tell (no
-Docker, registry rate limit), 3 no compose part.
+Docker, registry rate limit), 3 no compose file (fix it: every template is compose).
 
 On exit 1, read the check output or `${TMPDIR:-/tmp}/add-template/<id>/try.log` (it holds
 `docker compose ps` and the logs), fix the cause and run it again. Up to three honest attempts:
@@ -67,7 +74,7 @@ On exit 2, don't keep retrying; report `env` and the orchestrator verifies it in
 
 ## Report back (your final message)
 
-- `RESULT` line and exit code.
+- `RESULT` line and exit code, or `NOT POSSIBLE IN COMPOSE` and why.
 - Image(s) and versions used, size, inputs, and what a first-time user sees (admin setup).
 - On failure: the cause in one or two plain sentences and the last relevant log lines (≤ 20).
 - Anything you need changed in a file you don't own.

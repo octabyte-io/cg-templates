@@ -13,7 +13,7 @@
 #   1  the template is wrong (check failed, or try failed for a reason in the template)
 #   2  this machine cannot prove it (no Docker, or the image registry refused or rate-limited
 #      the pull); the template itself may be fine, so let CI's Try workflow decide
-#   3  check passed but there is no compose part, so try started nothing
+#   3  there is no docker-compose.yml; every template must be compose, so this is a build error
 set -uo pipefail
 
 id="${1:?usage: verify.sh <template id> [timeout minutes]}"

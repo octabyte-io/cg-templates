@@ -84,15 +84,20 @@ The build agent runs `scripts/verify.sh <id>`, whose last line is
 `RESULT <id> check=… try=…` and exit code:
 
 - **0, pass**: the template is proven. Mark it passed.
+- **Not possible in compose**: the build agent found the app can't run as Docker Compose (for
+  example no official container image, a desktop-only or SaaS-only app, or it needs host access
+  Cloudgate can't give: privileged mode, host networking, kernel modules, a GPU, Kubernetes). It
+  writes nothing to `templates/<id>/` beyond what you then delete. Mark it **not possible**, keep
+  the reason, and drop it like a failed template. With a single template, tell the user straight
+  away instead of opening an empty PR.
 - **1, fail**: the agent already tried to fix it (up to three honest attempts: wrong port, missing
   env, healthcheck, image tag). If it still fails, mark it failed and keep its logs from
   `${TMPDIR:-/tmp}/add-template/<id>/try.log` for the PR.
 - **2, env**: this machine couldn't prove it (no Docker, registry rate limit, network). Not the
   template's fault. Verify it in CI instead (below).
-- **3, none**: no compose part, so `try` started nothing. New templates should use the compose form
-  precisely so `try` can prove them; send it back to the build agent unless the agent explained why
-  the managed form (`kind: web` + `kind: postgres`) is the only sensible one, in which case it
-  counts as passed on `check` alone and the PR says so.
+- **3, none**: no `docker-compose.yml`. Every template is Docker Compose (see the rules below), so
+  send it back to the build agent. It either writes the compose file or reports the app as
+  **not possible in compose**, with the reason.
 
 **CI fallback for `env`:** commit what you have to the branch, push, and run the Try workflow on
 that branch with the ids (`.github/workflows/try.yml`, `workflow_dispatch`, input `templates`
@@ -108,7 +113,7 @@ When all agents (except the audit) are done:
    (keep the rest of the build agent's file as is). `description` must be 50–160 characters.
    Make each `index.md` `alternativeTo` match `$W/alternatives.json` (the Alternatives agent's
    decision wins; drop the line if it's empty), and drop `switching` if `alternativeTo` went.
-2. **Drop every failed template completely**, so the PR holds only what works: delete
+2. **Drop every failed or not-possible template completely**, so the PR holds only what works: delete
    `templates/<id>/`, remove its entry from every `site/src/alternatives/<product>.md` `apps:` map,
    and remove any product (from `products.ts`) and alternatives file that the Alternatives agent
    created only for it. `$W/alternatives.json` lists exactly what it touched for each template, so
@@ -150,6 +155,10 @@ broken internal link); leave bigger site-wide findings for the PR's notes. Rebui
 - **Images.** Screenshots come from the app's own official sources and only when their licence
   allows reuse, credited; otherwise a capture of the running app with made-up data, or none. Never
   from review sites, blogs or stock.
+- **Docker Compose only.** Every template is a `docker-compose.yml` with `cloudgate.yaml` set to
+  `app: { kind: compose, managed: console }`, never the managed form (`kind: web` + a database),
+  so `template try` can start it and prove it. An app that can't be done this way is reported as
+  not possible, not built another way.
 - **Pinned versions.** Every image tag is a real, current release, never `latest`; `version` in
   `template.yaml` matches the main image.
 - **Licences, honestly.** Fair-code or source-available apps are not called "open source".

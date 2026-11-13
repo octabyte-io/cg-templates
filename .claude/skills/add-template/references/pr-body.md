@@ -16,9 +16,18 @@ Adds <n> of <m> requested apps to the catalogue. Each one passed `cloudgate temp
 | Plane | `plane` | ✅ | ✅ | ✅ | Joined Jira, Asana; new ClickUp page | ✅ |
 | Huly | `huly` | ✅ | ❌ | ✅ | Skipped (no clear paid equivalent) | ❌ |
 | Foo | `foo` | ✅ | ☁️ CI | ✅ | Joined Notion | ✅ |
+| Bar | `bar` | ⛔ | — | — | — | ❌ |
 
-✅ passed · ❌ failed · ☁️ CI: verified by the Try workflow because Docker wasn't available
-locally · — not reached
+✅ passed · ❌ failed · ⛔ not possible as Docker Compose · ☁️ CI: verified by the Try workflow
+because Docker wasn't available locally · — not reached
+
+## Not possible as Docker Compose
+
+| App | Why |
+| --- | --- |
+| Bar | <the concrete reason, with a link to the source> |
+
+(Leave this section out when every app could be built.)
 
 ## Failed
 
