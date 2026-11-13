@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import AppTile from '../components/AppTile.astro';
 import ProductTile from '../components/ProductTile.astro';
 import Card from '../components/Card.astro';
+import FilterBar from '../components/FilterBar.astro';
 import Check from '../components/Check.astro';
 import Chev from '../components/Chev.astro';
 import Faq from '../components/Faq.astro';
@@ -281,20 +282,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <h2 class="h2" id="catalogue-title">Browse apps</h2>
       <p class="lede">Search by what you want to do, or by the tool you pay for today.</p>
     </div>
-    <div class="fbar">
-      <div class="in pad">
-        <div class="seg" role="toolbar" aria-label="Filter by category">
-          <button type="button" data-tab="" aria-pressed="true">All</button>
-          {categories.map((category) => <button type="button" data-tab={category.id} aria-pressed="false">{category.name}</button>)}
-        </div>
-        <label class="sbox"
-          ><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
-            ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
-          >
-          <input id="q" type="search" autocomplete="off" placeholder="Filter, e.g. Slack" aria-label="Filter apps" /></label
-        >
-      </div>
-    </div>
+    <FilterBar categories={categories} total={total} />
     <div class="gridwrap pad">
       <div class="grid" id="grid">
         {templates.map((template) => <Card template={template} />)}
@@ -415,7 +403,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     cards.forEach((c) => (c.hidden = !visible.includes(c)));
     tabs.forEach((t) => t.setAttribute('aria-pressed', String((t.dataset.tab ?? '') === cat)));
     if (animate) enter(visible.filter((c) => !before.has(c)));
-    const catName = tabs.find((t) => t.dataset.tab === cat)?.textContent;
+    const catName = tabs.find((t) => t.dataset.tab === cat)?.dataset.label;
     empty.hidden = matches.length > 0;
     const raw = input.value.trim();
     emptyMsg.textContent = raw ? `No apps match “${raw}”${cat ? ` in ${catName}` : ''}.` : `No apps in ${catName} yet.`;

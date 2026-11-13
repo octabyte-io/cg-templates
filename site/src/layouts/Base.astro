@@ -149,13 +149,13 @@ const footCategories = usedCategories().slice(0, 4);
         <div class="in pad">
           <a class="brand" href={href()} aria-label="Cloudgate Templates home">
             <CloudgateMark size={26} />
-            Cloudgate <em>Templates</em>
+            Cloudgate<span class="bar" aria-hidden="true"></span><span class="sub">Templates</span>
           </a>
           <nav class="nav" aria-label="Main">
             <a href={href('templates/')} aria-current={path === 'templates/' ? 'page' : undefined}>Apps</a>
             <a href={href('how-it-works/')} aria-current={path === 'how-it-works/' ? 'page' : undefined}>How it works</a>
-            <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why self-host</a>
-            {topAlternatives[0] && <a href={href(`alternatives/${topAlternatives[0].product.id}/`)}>{topAlternatives[0].product.name} alternatives</a>}
+            <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why Cloudgate</a>
+            <a href={href('alternatives/')} aria-current={path === 'alternatives/' ? 'page' : path.startsWith('alternatives/') ? 'true' : undefined}>Alternatives</a>
           </nav>
           <span class="sp"></span>
           <button class="kbtn" type="button" data-open-palette aria-label="Search apps" aria-keyshortcuts="/ Control+K Meta+K"
@@ -175,8 +175,8 @@ const footCategories = usedCategories().slice(0, 4);
         <nav class="mnav pad" id="mnav" aria-label="Menu" hidden>
           <a href={href('templates/')} aria-current={path === 'templates/' ? 'page' : undefined}>Apps</a>
           <a href={href('how-it-works/')} aria-current={path === 'how-it-works/' ? 'page' : undefined}>How it works</a>
-          <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why self-host</a>
-          <a href={href('alternatives/')} aria-current={path === 'alternatives/' ? 'page' : undefined}>Alternatives</a>
+          <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why Cloudgate</a>
+          <a href={href('alternatives/')} aria-current={path === 'alternatives/' ? 'page' : path.startsWith('alternatives/') ? 'true' : undefined}>Alternatives</a>
           <a class="btn lg" href={cloudgate()}>Get Cloudgate</a>
         </nav>
       </header>
@@ -200,7 +200,7 @@ const footCategories = usedCategories().slice(0, 4);
               <li><a href={href('templates/')}>All apps</a></li>
               <li><a href={href('categories/')}>All categories</a></li>
               <li><a href={href('how-it-works/')}>How it works</a></li>
-              <li><a href={href('why-cloudgate/')}>Why self-host</a></li>
+              <li><a href={href('why-cloudgate/')}>Why Cloudgate</a></li>
               <li><a href={href('contribute/')}>Add an app</a></li>
             </ul>
           </div>

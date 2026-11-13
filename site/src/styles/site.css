@@ -68,9 +68,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .top .in{display:flex;align-items:center;gap:24px;height:var(--hh)}
 .brand{display:flex;align-items:center;gap:9px;text-decoration:none;font-weight:600;letter-spacing:-.01em;white-space:nowrap;font-size:1rem}
 .brand svg{width:26px;height:26px;color:var(--brand-mark)}
-.brand em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--muted);letter-spacing:0}
+.brand .bar{width:1px;height:16px;background:var(--line-strong);margin-inline:3px}
+.brand .sub{font-weight:400;color:var(--muted)}
 .nav{display:flex;gap:22px;font-size:.875rem;color:var(--muted)}
-.nav a{text-decoration:none;transition:color .15s}.nav a:hover,.nav a[aria-current=page]{color:var(--fg)}
+.nav a{text-decoration:none;transition:color .15s}.nav a:hover,.nav a[aria-current]{color:var(--fg)}
 .top .sp{flex:1}
 /* phones and tablets: the main links move into a menu under the header */
 .mbtn{display:none;align-items:center;justify-content:center;width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--fg);cursor:pointer;border-radius:var(--r-md);touch-action:manipulation}
@@ -78,7 +79,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mbtn .x,.mbtn[aria-expanded="true"] .bars{display:none}.mbtn[aria-expanded="true"] .x{display:block}
 .mnav{border-top:1px solid var(--line);padding-block:8px 16px;display:grid;background:var(--bg)}
 .mnav a{display:flex;align-items:center;min-height:48px;text-decoration:none;font-size:1rem;border-bottom:1px solid var(--line)}
-.mnav a[aria-current=page]{font-weight:600}
+.mnav a[aria-current]{font-weight:600}
 .mnav .btn{margin-top:14px;border-bottom:1px solid var(--accent-lo);justify-content:center}
 @media (min-width:56.3125em){.mnav{display:none!important}}
 .kbtn{display:flex;align-items:center;gap:10px;border:1px solid var(--line-strong);background:var(--card);border-radius:var(--r-md);min-height:34px;padding:0 6px 0 11px;color:var(--faint);font-size:.875rem;cursor:pointer;min-width:220px;transition:border-color .15s,transform .16s var(--ease-out)}
@@ -203,14 +204,16 @@ p{margin:0}
 /* catalogue */
 .cat .shead{justify-items:start}
 .fbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh));z-index:15;background:var(--bg);border-block:1px solid var(--line)}
-.fbar .in{display:flex;align-items:center;gap:14px;padding-block:12px}
-.seg{display:flex;flex-wrap:wrap;padding:3px;gap:2px;background:var(--sunk);border:1px solid var(--line);border-radius:var(--r-md);min-width:0;flex:1}
-.seg button{border:0;background:none;padding:5px 10px;border-radius:var(--r-sm);color:var(--muted);cursor:pointer;font-size:.8125rem;white-space:nowrap;transition:color .15s,background .15s,transform .16s var(--ease-out);position:relative;z-index:1;touch-action:manipulation}
+.fbar .in{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-block:14px}
+/* category chips: one quiet row of pills; the count says how much is behind each */
+.seg{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.seg button{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--card);min-height:32px;padding:0 12px;border-radius:var(--r-pill);color:var(--muted);cursor:pointer;font-size:.8125rem;white-space:nowrap;transition:color .15s,background .15s,border-color .15s,transform .16s var(--ease-out);touch-action:manipulation}
 .seg button:active{transform:scale(.97)}
-.seg button:focus-visible{outline-offset:-2px}
-.seg button:hover{color:var(--fg)}
-.seg button[aria-pressed="true"]{background:var(--card);color:var(--fg);font-weight:500;box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(0,0,0,.08)}
-.sbox{display:flex;align-items:center;gap:8px;min-height:38px;width:230px;flex:none;border:1px solid var(--line-strong);border-radius:var(--r-md);background:var(--card);padding:0 6px 0 12px;min-width:0}
+.seg button:hover{color:var(--fg);border-color:var(--line-strong)}
+.seg .n{font-size:.75rem;color:var(--faint);font-variant-numeric:tabular-nums}
+.seg button[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg);font-weight:500}
+.seg button[aria-pressed="true"] .n{color:color-mix(in srgb,var(--bg) 65%,transparent)}
+.sbox{display:flex;align-items:center;gap:10px;min-height:42px;width:100%;max-width:560px;border:1px solid var(--line-strong);border-radius:var(--r-md);background:var(--card);padding:0 6px 0 12px;min-width:0}
 .sbox:focus-within{border-color:var(--accent-hi);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-hi) 24%,transparent)}
 .sbox svg{width:15px;height:15px;color:var(--faint);flex:none}
 .sbox input{flex:1;min-width:0;border:0;background:transparent;outline:0;font:.875rem var(--sans);color:var(--fg);height:100%}
@@ -407,8 +410,8 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .swrow{grid-auto-columns:calc((100% - 12px) / 2)}
   .foot .cols{grid-template-columns:1fr 1fr}
-  .fbar .in{flex-direction:column;align-items:stretch;gap:10px}
-  .sbox{width:auto}
+  .fbar .in{gap:10px}
+  .sbox{max-width:none}
   .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;gap:12px;align-items:center;background:var(--bg);border-top:1px solid var(--line);
     padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-shadow:0 -10px 30px -18px rgba(0,0,0,.35)}
   .mbar .t{display:grid;min-width:0;flex:1;font-size:.8125rem;color:var(--muted);line-height:1.35}
@@ -423,12 +426,11 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .bento{grid-template-columns:1fr}.bento .t-b,.bento .t-c{grid-column:1/-1}
   .bento>.tile{padding:24px 16px 28px}
   .tl{gap:4px}.tl .h{font-size:.625rem}
-  .seg{background:none;border:0;padding:2px;gap:6px;border-radius:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .seg{padding:2px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .seg::-webkit-scrollbar{display:none}
   /* the chips scroll sideways: the fade says there are more */
   .seg{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
-  .seg button{border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:0 14px;min-height:44px;background:var(--card)}
-  .seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg);box-shadow:none}
+  .seg button{padding:0 14px;min-height:44px}
   .feat{grid-template-columns:1fr}
   .vs,.how{grid-template-columns:1fr}.vs>div+div,.how>div+div{border-left:0;border-top:1px solid var(--line)}
   .rel{grid-template-columns:1fr}
@@ -448,7 +450,7 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .hero .acts .btn{flex:1}
   .apphead{grid-template-columns:1fr;gap:18px}
   .apphead .acts{display:none}
-  .brand em{display:none}
+  .brand .bar{margin-inline:1px}
   .swrow{grid-auto-columns:80%}
   .shead{padding-block:52px 24px}
   .caption{justify-content:flex-start;flex-direction:column;gap:6px}
