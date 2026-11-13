@@ -9,7 +9,7 @@ const { items } = Astro.props;
   {
     items.map((item, index) => (
       <details open={index === 0}>
-        <summary>{item.q}</summary>
+        <summary>{item.q}<span class="pm" aria-hidden="true" /></summary>
         <p>{item.a}</p>
       </details>
     ))

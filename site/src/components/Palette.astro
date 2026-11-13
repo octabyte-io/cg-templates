@@ -150,10 +150,12 @@ const searchUrl = href('search.json');
     current?.scrollIntoView({ block: 'nearest' });
   }
 
-  function open() {
+  // Opened or closed from the keyboard, the palette appears and goes instantly; from a click it pops.
+  function open(instant = false) {
     if (!pal.hidden) return;
     lastFocus = document.activeElement;
     pal.classList.remove('out');
+    pal.classList.toggle('instant', instant);
     pal.hidden = false;
     pq.value = '';
     sel = 0;
@@ -162,14 +164,17 @@ const searchUrl = href('search.json');
     load().then(render);
   }
 
-  function close() {
+  function close(instant = false) {
     if (pal.hidden) return;
-    pal.classList.add('out');
-    setTimeout(() => {
+    const done = () => {
       pal.hidden = true;
       pal.classList.remove('out');
       (lastFocus as HTMLElement | null)?.focus?.();
-    }, 110);
+    };
+    if (instant) return done();
+    pal.classList.remove('instant');
+    pal.classList.add('out');
+    setTimeout(done, 120);
   }
 
   pq.addEventListener('input', () => {
@@ -201,23 +206,24 @@ const searchUrl = href('search.json');
     if (e.target === pal) close();
   });
   document.addEventListener('click', (e) => {
-    if ((e.target as Element).closest('[data-open-palette]')) open();
+    // detail is 0 when the button was pressed with Enter or Space.
+    if ((e.target as Element).closest('[data-open-palette]')) open(e.detail === 0);
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !pal.hidden) {
-      close();
+      close(true);
       return;
     }
     const typing = /INPUT|TEXTAREA|SELECT/.test((document.activeElement as Element)?.tagName ?? '');
     if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      if (pal.hidden) open();
-      else close();
+      if (pal.hidden) open(true);
+      else close(true);
       return;
     }
     if (e.key === '/' && !typing && pal.hidden) {
       e.preventDefault();
-      open();
+      open(true);
     }
   });
 </script>
