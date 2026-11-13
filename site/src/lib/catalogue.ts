@@ -326,3 +326,9 @@ export function listNames(names: string[]): string {
 
 export const GITHUB_REPO = 'https://github.com/octabyte-io/cg-templates';
 export const CLOUDGATE_REPO = 'https://github.com/octabyte-io/cloudgate';
+
+/** When the newest of these templates last changed, for a list page's `dateModified` and sitemap. */
+export function lastUpdated(templates: Template[]): Date | undefined {
+  const times = templates.map((template) => template.updated?.getTime() ?? 0).filter(Boolean);
+  return times.length ? new Date(Math.max(...times)) : undefined;
+}

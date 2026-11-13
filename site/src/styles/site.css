@@ -330,7 +330,7 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 .foot{background:var(--footer);color:var(--footer-ink);position:relative;overflow:hidden}
 .foot .frame2{max-width:var(--col);margin:0 auto;border-inline:1px solid var(--footer-line);position:relative}
 .foot .cols{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:24px;padding-block:48px 36px}
-.foot h4{margin:0 0 12px;font:italic 400 15px var(--serif);opacity:.85}
+.foot h2{margin:0 0 12px;font:italic 400 15px var(--serif);opacity:.85}
 .foot ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:14px}
 .foot a{text-decoration:none;opacity:.9}.foot a:hover{opacity:1;text-decoration:underline}
 .foot .meta{font-size:13.5px;opacity:.85;display:grid;gap:8px;align-content:start}

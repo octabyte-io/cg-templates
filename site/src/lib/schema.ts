@@ -16,7 +16,49 @@ export const ORGANIZATION: Json = {
   '@id': 'https://github.com/octabyte-io#organization',
   name: 'Octabyte',
   url: 'https://github.com/octabyte-io',
+  logo: { '@type': 'ImageObject', url: absolute('favicon.svg') },
+  sameAs: ['https://github.com/octabyte-io', 'https://github.com/octabyte-io/cloudgate', 'https://github.com/octabyte-io/cg-templates'],
 };
+
+/** What kind of page a `WebPage` node says this is. */
+export type PageType = 'WebPage' | 'CollectionPage' | 'AboutPage' | 'FAQPage' | 'ItemPage';
+
+/**
+ * Adds the page itself to a page's graph: a `WebPage` (or subtype) node tied to the site, its
+ * breadcrumb, its main entity and its image, so an engine reads one connected set of facts rather
+ * than loose nodes. `Base.astro` calls it for every indexable page.
+ */
+export function withPage(
+  jsonLd: string | undefined,
+  page: { type: PageType; url: string; name: string; description: string; image: string; dateModified?: Date },
+): string {
+  const doc = jsonLd
+    ? (JSON.parse(jsonLd) as { '@graph': Json[] })
+    : { '@context': 'https://schema.org', '@graph': [ORGANIZATION] };
+  const nodes = doc['@graph'];
+  const breadcrumb = nodes.find((node) => node['@type'] === 'BreadcrumbList');
+  if (breadcrumb && !breadcrumb['@id']) breadcrumb['@id'] = `${page.url}#breadcrumb`;
+  const main = nodes.find((node) => ['SoftwareApplication', 'ItemList', 'HowTo'].includes(String(node['@type'])));
+  if (main && !main['@id']) main['@id'] = `${page.url}#main`;
+  if (!nodes.some((node) => node['@type'] === 'WebSite')) {
+    nodes.push({ '@type': 'WebSite', '@id': `${absolute()}#website`, name: SITE_NAME, url: absolute() });
+  }
+  nodes.push({
+    '@type': page.type,
+    '@id': `${page.url}#webpage`,
+    url: page.url,
+    name: page.name,
+    description: page.description,
+    inLanguage: 'en',
+    isPartOf: { '@id': `${absolute()}#website` },
+    publisher: { '@id': ORGANIZATION['@id'] },
+    primaryImageOfPage: { '@type': 'ImageObject', url: page.image, width: 1200, height: 630 },
+    ...(breadcrumb ? { breadcrumb: { '@id': breadcrumb['@id'] } } : {}),
+    ...(main ? { mainEntity: { '@id': main['@id'] } } : {}),
+    ...(page.dateModified ? { dateModified: page.dateModified.toISOString() } : {}),
+  });
+  return JSON.stringify(doc).replace(/</g, '\\u003c');
+}
 
 export function websiteSchema(): Json {
   return {
@@ -68,6 +110,21 @@ export function itemListSchema(templates: Template[], name: string): Json {
       position: index + 1,
       url: absolute(`templates/${template.id}/`),
       name: template.name,
+    })),
+  };
+}
+
+/** An `ItemList` of pages on this site, for list pages that link to other list pages. */
+export function pageListSchema(name: string, pages: { name: string; path: string }[]): Json {
+  return {
+    '@type': 'ItemList',
+    name,
+    numberOfItems: pages.length,
+    itemListElement: pages.map((page, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: absolute(page.path),
+      name: page.name,
     })),
   };
 }
