@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { alternativesPages, getTemplates, GITHUB_REPO, isSample, listNames } from '../lib/catalogue';
+import { alternativesPages, getTemplates, IMPORT_LABEL, licenceKind, GITHUB_REPO, isSample, listNames } from '../lib/catalogue';
 import { alternativesLede, appMarkdown, appUrl, SAMPLE_NOTE } from '../lib/machine';
 import { absolute, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
@@ -26,18 +26,24 @@ function body(): string {
   const alternatives = alternativesPages();
   if (alternatives.length) {
     out.push('## Alternatives', '');
-    for (const { product, apps } of alternatives) {
+    for (const { product, apps, copy } of alternatives) {
       const pick = apps[0];
       const simplest = apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
       out.push(
-        `### Open-source alternatives to ${product.name}`,
+        `### ${apps.some((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} alternatives to ${product.name}`,
         '',
         `Page: ${absolute(`alternatives/${product.id}/`)}`,
         '',
         alternativesLede(product, apps),
         '',
-        ...apps.map((app) => `- [${app.name}](${appUrl(app)}): ${app.tagline}`),
+        ...(copy ? [`#### Why look for a ${product.name} alternative?`, '', copy.whyMarkdown, ''] : []),
+        ...apps.map((app) =>
+          copy?.apps[app.id]
+            ? `- [${app.name}](${appUrl(app)}): ${app.tagline} ${copy.apps[app.id].fit} Import from ${product.name}: ${IMPORT_LABEL[copy.apps[app.id].import].toLowerCase()}.`
+            : `- [${app.name}](${appUrl(app)}): ${app.tagline}`,
+        ),
         '',
+        ...(copy ? [`#### Moving from ${product.name}`, '', copy.moving, '', ...copy.faq.flatMap((item) => [`**${item.q}** ${item.a}`, ''])] : []),
         apps.length === 1
           ? `${pick.name} is the open-source option for ${product.job} in the directory today.`
           : `If you are not sure, start with ${pick.name}.${simplest ? ` If you want something simpler, try ${simplest.name}.` : ''} All of them: ${listNames(apps.map((app) => app.name))}.`,

@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { alternativesPages, getTemplates, GITHUB_REPO, isSample, listNames, usedCategories } from '../lib/catalogue';
+import { alternativesPages, getTemplates, GITHUB_REPO, isSample, listNames, usedCategories, licenceKind } from '../lib/catalogue';
 import { HOW_IT_WORKS } from '../lib/copy';
 import { appUrl, markdownUrl, SAMPLE_NOTE } from '../lib/machine';
 import { absolute, CONTACT_URL, deployUrl, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
@@ -52,7 +52,7 @@ function body(): string {
     out.push('## Alternatives', '');
     for (const { product, apps } of alternatives) {
       out.push(
-        `- [Open-source alternatives to ${product.name}](${absolute(`alternatives/${product.id}/`)}): ${listNames(apps.map((app) => app.name))}, for ${product.job}.`,
+        `- [${apps.some((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} alternatives to ${product.name}](${absolute(`alternatives/${product.id}/`)}): ${listNames(apps.map((app) => app.name))}, for ${product.job}.`,
       );
     }
     out.push('');

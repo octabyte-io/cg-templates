@@ -28,7 +28,10 @@ const faq = appFaq(a);
 const steps = HOW_IT_WORKS(a);
 const replacedNames = a.alternativeTo.map((p) => p.name);
 const altPages = new Map(alternativesPages().map((page) => [page.product.id, page]));
-const mainAlt = a.alternativeTo.find((p) => (altPages.get(p.id)?.apps.length ?? 0) > 1);
+// Link the alternatives page that compares the most apps, or else the first product's page.
+const mainAlt =
+  a.alternativeTo.find((p) => (altPages.get(p.id)?.apps.length ?? 0) > 1) ?? a.alternativeTo.find((p) => altPages.has(p.id));
+const mainAltMany = mainAlt ? (altPages.get(mainAlt.id)?.apps.length ?? 0) > 1 : false;
 const easeNote =
   a.easeNote ?? (a.ease === 'easy' ? 'Ready to use right after setup.' : 'Takes a few extra minutes to configure after it starts.');
 const deploy = deployUrl(a.id);
@@ -164,7 +167,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
             )}
             {mainAlt && (
               <a href={href(`alternatives/${mainAlt.id}/`)} class="btn ghost start">
-                Compare all {mainAlt.name} alternatives <Chev />
+                {mainAltMany ? `Compare all ${mainAlt.name} alternatives` : `Moving from ${mainAlt.name} to ${a.name}`} <Chev />
               </a>
             )}
           </div>

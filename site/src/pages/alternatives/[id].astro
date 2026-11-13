@@ -6,7 +6,15 @@ import Crumbs from '../../components/Crumbs.astro';
 import Ease from '../../components/Ease.astro';
 import Faq from '../../components/Faq.astro';
 import ProductTile from '../../components/ProductTile.astro';
-import { alternativesPages, lastUpdated, listNames, type Template } from '../../lib/catalogue';
+import {
+  alternativesPages,
+  IMPORT_LABEL,
+  lastUpdated,
+  licenceKind,
+  listNames,
+  type AlternativeCopy,
+  type Template,
+} from '../../lib/catalogue';
 import type { Product } from '../../products';
 import { breadcrumbSchema, faqSchema, graph, itemListSchema } from '../../lib/schema';
 import { deployUrl, href } from '../../lib/site';
@@ -19,37 +27,55 @@ export function getStaticPaths() {
 interface Props {
   product: Product;
   apps: Template[];
+  copy?: AlternativeCopy;
 }
 
-const { product, apps } = Astro.props;
+const { product, apps, copy } = Astro.props;
 const pick = apps[0];
 const simplest = apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
 const count = apps.length;
 const plural = count === 1 ? 'alternative' : 'alternatives';
 const names = listNames(apps.map((app) => app.name));
+const kinds = new Map(apps.map((app) => [app.id, licenceKind(app.license)]));
+const openApps = apps.filter((app) => kinds.get(app.id)!.openSource);
+// "Open-source" only when at least one app is; a page of source-available apps says "self-hosted".
+const kindWord = openApps.length ? 'open-source' : 'self-hosted';
+const KindWord = kindWord.charAt(0).toUpperCase() + kindWord.slice(1);
+const freeLine =
+  openApps.length === count
+    ? `All ${count === 1 ? 'of it is' : `${count} are`} free and open source.`
+    : `All ${count} are free to self-host. ${listNames(openApps.map((a) => a.name)) || 'None'} ${openApps.length === 1 ? 'is' : 'are'} open source; ${listNames(
+        apps.filter((a) => !kinds.get(a.id)!.openSource).map((a) => `${a.name} (${kinds.get(a.id)!.label.toLowerCase()})`),
+      )} ${count - openApps.length === 1 ? 'publishes its code' : 'publish their code'} under a licence that limits reselling it as a service.`;
+
 // The first sentence answers "what is the open-source <Product> alternative?" on its own, so an
 // answer engine can quote it as it stands (see `Product.lede`).
 const lede =
   product.lede ??
-  `${names} ${count === 1 ? 'is a free, open-source alternative' : 'are free, open-source alternatives'} to ${
+  `${names} ${count === 1 ? `is a free, ${kindWord} alternative` : `are free, ${kindWord} alternatives`} to ${
     product.name
   } for ${product.job}. ${count === 1 ? 'It runs' : 'They run'} on a server of your own for one fixed monthly cost, and your data stays with you.`;
 
 const faq = [
   {
-    q: `What is the best open-source alternative to ${product.name}?`,
+    q: `What is the best ${kindWord} alternative to ${product.name}?`,
     a:
       count === 1
-        ? `${pick.name} is the free, open-source alternative to ${product.name} for ${product.job} in the catalogue today.`
-        : `Start with ${pick.name}.${simplest ? ` If you want something simpler, try ${simplest.name}.` : ''} All ${count} are free and open source: ${names}.`,
+        ? `${pick.name} is the free, ${kindWord} alternative to ${product.name} for ${product.job} in the catalogue today.${copy ? ` ${copy.apps[pick.id]?.fit ?? ''}` : ''}`.trim()
+        : `Start with ${pick.name}.${simplest ? ` If you want something simpler, try ${simplest.name}.` : ''} ${count === 1 ? '' : freeLine}`.trim(),
   },
-  {
-    q: `Will my ${product.name} data carry over?`,
-    a: `Not automatically. Most people export what they need from ${product.name} and bring it into the new app. Each app’s page links to its official guides.`,
-  },
+  ...(copy?.faq ?? []),
+  ...(copy
+    ? []
+    : [
+        {
+          q: `Will my ${product.name} data carry over?`,
+          a: `Not automatically. Most people export what they need from ${product.name} and bring it into the new app. Each app’s page links to its official guides.`,
+        },
+      ]),
   {
     q: 'Is it really free?',
-    a: `Yes, the apps are free and open source. ${costAnswer().replace(/^The apps are free\. /, '')} One server can run several apps.`,
+    a: `Yes, the ${count === 1 ? 'app is' : 'apps are'} free. ${costAnswer().replace(/^The apps are free\. /, '')} One server can run several apps.`,
   },
   {
     q: 'Do I need a developer?',
@@ -62,19 +88,31 @@ const trail = [
   { name: 'Alternatives', path: 'alternatives/' },
   { name: product.name, path: `alternatives/${product.id}/` },
 ];
-const title = `${count} open-source ${plural} to ${product.name}`;
+const title = `${count} ${kindWord} ${plural} to ${product.name}`;
 // Answer first (which apps), then what the page helps with; it stops at a sentence, never mid-word.
 const descLead = `Free, self-hosted ${plural} to ${product.name} for ${product.job}: ${listNames(
   apps.slice(0, 4).map((app) => app.name),
 )}.`;
 const descCloser = [
-  count === 1
-    ? 'Deploy it in a few clicks with Cloudgate, no server needed.'
-    : 'Compare them, then deploy one in a few clicks with Cloudgate.',
+  count === 1 ? 'Why people switch, how to move and how to deploy it with Cloudgate.' : 'Compare them, then deploy one in a few clicks with Cloudgate.',
+  count === 1 ? 'Deploy it in a few clicks with Cloudgate, no server needed.' : 'Compare them and deploy one with Cloudgate.',
   `Deploy ${count === 1 ? 'it' : 'them'} in a few clicks with Cloudgate.`,
   'Deploy with Cloudgate.',
 ].find((line) => `${descLead} ${line}`.length <= 160);
 const description = descCloser ? `${descLead} ${descCloser}` : descLead;
+
+const thumb = (app: Template) => {
+  const shot = app.screenshots[0];
+  if (!shot) return undefined;
+  const at = (w: number) => href(`screenshots/${app.id}/${shot.name}-${w}.webp`);
+  return {
+    src: at(shot.widths[0]),
+    srcset: shot.widths.slice(0, 2).map((w) => `${at(w)} ${w}w`).join(', '),
+    width: shot.width,
+    height: shot.height,
+    alt: shot.alt,
+  };
+};
 ---
 
 <Base
@@ -83,17 +121,17 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
   path={`alternatives/${product.id}/`}
   pageType="CollectionPage"
   dateModified={lastUpdated(apps)}
-  jsonLd={graph(breadcrumbSchema(trail), itemListSchema(apps, `Open-source alternatives to ${product.name}`), faqSchema(faq))}
+  jsonLd={graph(breadcrumbSchema(trail), itemListSchema(apps, `${KindWord} alternatives to ${product.name}`), faqSchema(faq))}
 >
   <Crumbs trail={trail} />
   <section class="apphead pad">
     <ProductTile product={product} box={80} size={44} />
     <div class="body">
-      <h1 class="h1">Open-source alternatives to {product.name}</h1>
+      <h1 class="h1">{KindWord} {plural} to {product.name}</h1>
       <p class="lede">{lede}</p>
       <div class="chips">
         <span class="chip"><b>{count}</b> {plural}</span>
-        <span class="chip"><b>Free</b> apps</span>
+        <span class="chip"><b>Free</b> {count === 1 ? 'app' : 'apps'}</span>
         <span class="chip">Our pick: <b>{pick.name}</b></span>
       </div>
     </div>
@@ -102,15 +140,21 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
     <div class="blk first">
       <h2 class="h2">At a glance</h2>
       <div class="tablewrap">
-        <table class="stack">
+        <table class="cmp">
           <thead>
-            <tr><th scope="col">App</th><th scope="col">Good for</th><th scope="col">Ease of use</th></tr>
+            <tr>
+              <th scope="col">App</th>
+              <th scope="col">Good for</th>
+              <th scope="col">Code</th>
+              {copy && <th scope="col">Import from {product.name}</th>}
+              <th scope="col">Ease of use</th>
+            </tr>
           </thead>
           <tbody>
             {
               apps.map((app) => (
                 <tr>
-                  <td>
+                  <td class="c-app">
                     <span class="who">
                       <AppTile template={app} box={32} size={18} />
                       <a class="plain" href={href(`templates/${app.id}/`)}>
@@ -118,8 +162,18 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
                       </a>
                     </span>
                   </td>
-                  <td class="muted">{app.goodFor ?? app.tagline}</td>
-                  <td>
+                  <td class="c-for muted">{app.goodFor ?? app.tagline}</td>
+                  <td class="c-code">
+                    <span class="lab">Code</span>
+                    {kinds.get(app.id)!.label}
+                  </td>
+                  {copy && (
+                    <td class="c-imp">
+                      <span class="lab">Import from {product.name}</span>
+                      {IMPORT_LABEL[copy.apps[app.id]?.import ?? 'no']}
+                    </td>
+                  )}
+                  <td class="c-ease">
                     <Ease ease={app.ease} />
                   </td>
                 </tr>
@@ -129,34 +183,100 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
         </table>
       </div>
     </div>
+
+    {
+      copy && (
+        <div class="blk">
+          <h2 class="h2">Why look for a {product.name} alternative?</h2>
+          <div class="prose" set:html={copy.whyHtml} />
+        </div>
+      )
+    }
+
     <div class="blk">
-      <h2 class="h2">The options</h2>
-      <div class="altlist">
+      <h2 class="h2">{count === 1 ? `How ${pick.name} compares` : `The ${plural}, compared`}</h2>
+      <div class="opts">
         {
-          apps.map((app) => (
-            <div class="alt">
-              <AppTile template={app} box={52} size={30} />
-              <div class="grow">
-                <div class="ttl">
-                  <h3 class="nm"><a href={href(`templates/${app.id}/`)}>{app.name}</a></h3>
-                  <Ease ease={app.ease} />
+          apps.map((app, i) => {
+            const shot = thumb(app);
+            const fit = copy?.apps[app.id]?.fit;
+            // An app's switching notes are written against the product it replaces first.
+            const switching = app.alternativeTo[0]?.id === product.id ? app.switching : undefined;
+            return (
+              <article class="opt">
+                <div class="otx">
+                  <div class="ttl">
+                    <AppTile template={app} box={40} size={22} />
+                    <h3 class="nm">
+                      <a href={href(`templates/${app.id}/`)}>{app.name}</a>
+                    </h3>
+                    {i === 0 && count > 1 && <span class="pickb">Our pick</span>}
+                  </div>
+                  <p class="tag">{app.tagline}</p>
+                  {fit && <p class="fit">{fit}</p>}
+                  {switching && (
+                    <div class="sw2">
+                      <div>
+                        <span class="t">What you gain</span>
+                        <ul>
+                          {switching.gain.slice(0, 3).map((line) => (
+                            <li>{line}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <span class="t">What is different</span>
+                        <ul>
+                          {switching.different.slice(0, 3).map((line) => (
+                            <li>{line}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                  <div class="meta">
+                    <Ease ease={app.ease} />
+                    <span>{kinds.get(app.id)!.label} · {app.license}</span>
+                  </div>
+                  <div class="acts">
+                    <a class="btn sm" href={deployUrl(app.id)}>
+                      Deploy {app.name}
+                    </a>
+                    <a class="btn sm ghost" href={href(`templates/${app.id}/`)}>
+                      About {app.name} <Chev />
+                    </a>
+                  </div>
                 </div>
-                <p>
-                  {app.tagline}
-                  {app.easeNote ? ` ${app.easeNote}` : ''}
-                </p>
-              </div>
-              <div class="acts">
-                <a class="btn sm" href={deployUrl(app.id)}>Deploy {app.name}</a>
-                <a class="btn sm ghost" href={href(`templates/${app.id}/`)}>
-                  Details <Chev />
-                </a>
-              </div>
-            </div>
-          ))
+                {shot && (
+                  <a class="oshot" href={href(`templates/${app.id}/`)} tabindex="-1" aria-hidden="true">
+                    <img
+                      src={shot.src}
+                      srcset={shot.srcset}
+                      sizes="(min-width: 960px) 420px, 100vw"
+                      width={shot.width}
+                      height={shot.height}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                )}
+              </article>
+            );
+          })
         }
       </div>
     </div>
+
+    {
+      copy && (
+        <div class="blk">
+          <h2 class="h2">Moving from {product.name}</h2>
+          <div class="prose" set:html={copy.movingHtml} />
+        </div>
+      )
+    }
+
     <div class="blk last">
       <h2 class="h2">Questions</h2>
       <Faq items={faq} />
@@ -166,7 +286,173 @@ const description = descCloser ? `${descLead} ${descCloser}` : descLead;
 
 <style>
   .nm {
-    font: inherit;
+    font: 600 1.125rem var(--sans);
+    letter-spacing: -0.01em;
     margin: 0;
+  }
+  .nm a {
+    text-decoration: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nm a:hover {
+      color: var(--accent-ink);
+    }
+  }
+
+  /* The comparison table; on phones each row becomes a small card. */
+  .cmp .lab {
+    display: none;
+  }
+  @media (max-width: 40em) {
+    .cmp thead {
+      display: none;
+    }
+    .cmp tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .cmp tr:last-child {
+      border-bottom: 0;
+    }
+    .cmp td {
+      padding: 0;
+      border: 0;
+    }
+    .cmp .c-ease {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .cmp .c-for,
+    .cmp .c-code,
+    .cmp .c-imp {
+      grid-column: 1 / -1;
+    }
+    .cmp .lab {
+      display: inline;
+      color: var(--faint);
+      margin-right: 8px;
+    }
+    .cmp .lab::after {
+      content: ':';
+    }
+  }
+
+  .opts {
+    display: grid;
+    gap: 16px;
+  }
+  .opt {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: 28px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--card);
+    align-items: start;
+  }
+  .otx {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+  .ttl {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .pickb {
+    font: 500 0.75rem var(--sans);
+    color: var(--accent-ink);
+    border: 1px solid color-mix(in srgb, var(--accent-hi) 40%, transparent);
+    background: color-mix(in srgb, var(--accent-hi) 8%, transparent);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+  .tag {
+    font: italic 300 1.125rem / 1.35 var(--serif);
+  }
+  .fit {
+    color: var(--muted);
+    font-size: 0.9375rem;
+    max-width: 62ch;
+  }
+  .sw2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--sunk);
+  }
+  .sw2 .t {
+    font: italic 400 0.9375rem var(--serif);
+  }
+  .sw2 ul {
+    margin: 6px 0 0;
+    padding-left: 16px;
+    color: var(--muted);
+    font-size: 0.8125rem;
+    display: grid;
+    gap: 5px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: var(--faint);
+  }
+  .acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .oshot {
+    display: block;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--sunk);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .oshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .oshot:hover {
+      transform: translateY(-2px);
+    }
+  }
+  @media (max-width: 60em) {
+    .opt {
+      grid-template-columns: 1fr;
+    }
+    .oshot {
+      order: -1;
+    }
+  }
+  @media (max-width: 40em) {
+    .opt {
+      padding: 18px 16px;
+    }
+    .sw2 {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .oshot {
+      transition: none;
+    }
   }
 </style>
