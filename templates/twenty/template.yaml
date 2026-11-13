@@ -1,0 +1,17 @@
+name: Twenty
+description: "Self-hosted Twenty, the open-source Salesforce alternative: one CRM for your companies, contacts and sales deals, with a pipeline board and email sync."
+version: "2.58.0"
+tags: [crm, open source crm, self-hosted crm, sales pipeline, salesforce alternative, hubspot alternative, pipedrive alternative]
+links:
+  website: https://twenty.com
+  docs: https://docs.twenty.com/developers/self-host/capabilities/docker-compose
+  source: https://github.com/twentyhq/twenty
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SERVER_URL: { value: "{{domains.twenty.url}}" }
+  ENCRYPTION_KEY: { generate: base64 }
+  PG_DATABASE_PASSWORD: { generate: password }
+domains:
+  - { service: twenty, port: 3000 }
