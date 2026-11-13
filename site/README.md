@@ -43,6 +43,10 @@ note on every page and sets `noindex`.
 |---|---|---|
 | `SITE_URL` | `https://octabyte-io.github.io` | The site's origin, for canonical URLs and the sitemap |
 | `BASE_PATH` | `/cg-templates` | The path it is served under; `/` on a custom domain |
+
+The Release workflow sets `SITE_URL` and `BASE_PATH` from where GitHub Pages serves the site: the custom
+domain's root when one is set in Settings > Pages, otherwise `https://octabyte-io.github.io/cg-templates/`.
+Repository variables of the same names override that.
 | `PUBLIC_DEPLOY_URL` | unset | Where "Deploy <app>" goes; may contain `{id}`. Unset, it goes to the Get Cloudgate page |
 | `PUBLIC_GET_CLOUDGATE_URL` | the Cloudgate repository | Where "Get Cloudgate" goes |
 | `TEMPLATES_DIR` | `../templates` | Render another folder of templates |
@@ -57,9 +61,8 @@ breadcrumb, its main entity and its last-updated date, so the graph reads as one
 also writes a sitemap with `<lastmod>` from git history, `robots.txt`, `llms.txt`, `llms-full.txt`,
 `templates.json` and a Markdown copy of each app page at `/templates/<id>.md`.
 
-Crawlers read `robots.txt` only at a domain's root, so while the site is served under `/cg-templates/`
-on GitHub Pages its own `robots.txt` is not read; the robots meta tags still apply, and the sitemap has
-to be submitted in Google Search Console and Bing Webmaster Tools. A custom domain (`BASE_PATH=/`) fixes
-this.
+Crawlers read `robots.txt` only at a domain's root. On the custom domain the site is served at the root,
+so its `robots.txt` and the sitemap it names are found; served under `/cg-templates/` on
+`octabyte-io.github.io` they would not be, and the sitemap would have to be submitted by hand.
 
 Content changes go through the SearchFit plugin: see `../CLAUDE.md`.
