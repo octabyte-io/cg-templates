@@ -14,7 +14,7 @@ import CloudgateMark from '../components/CloudgateMark.astro';
 import Palette from '../components/Palette.astro';
 import { alternativesPages, GITHUB_REPO, isSample, usedCategories } from '../lib/catalogue';
 import { withPage, type PageType } from '../lib/schema';
-import { absolute, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, cloudgate, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 interface Props {
   /**
@@ -154,7 +154,7 @@ const footCategories = usedCategories().slice(0, 4);
           <nav class="nav" aria-label="Main">
             <a href={href('templates/')} aria-current={path === 'templates/' ? 'page' : undefined}>Apps</a>
             <a href={href('how-it-works/')} aria-current={path === 'how-it-works/' ? 'page' : undefined}>How it works</a>
-            <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why Cloudgate</a>
+            <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why self-host</a>
             {topAlternatives[0] && <a href={href(`alternatives/${topAlternatives[0].product.id}/`)}>{topAlternatives[0].product.name} alternatives</a>}
           </nav>
           <span class="sp"></span>
@@ -163,7 +163,7 @@ const footCategories = usedCategories().slice(0, 4);
               ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
             ><span>Search apps</span><kbd data-modk>Ctrl K</kbd></button
           >
-          <a class="btn sm getcg" href={href('get-cloudgate/')}>Get Cloudgate</a>
+          <a class="btn sm getcg" href={cloudgate()}>Get Cloudgate</a>
           <button class="mbtn" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menu" data-menu
             ><svg class="bars" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"
               ><path d="M3 6h14M3 10h14M3 14h14"></path></svg
@@ -175,9 +175,9 @@ const footCategories = usedCategories().slice(0, 4);
         <nav class="mnav pad" id="mnav" aria-label="Menu" hidden>
           <a href={href('templates/')} aria-current={path === 'templates/' ? 'page' : undefined}>Apps</a>
           <a href={href('how-it-works/')} aria-current={path === 'how-it-works/' ? 'page' : undefined}>How it works</a>
-          <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why Cloudgate</a>
+          <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why self-host</a>
           <a href={href('alternatives/')} aria-current={path === 'alternatives/' ? 'page' : undefined}>Alternatives</a>
-          <a class="btn lg" href={href('get-cloudgate/')}>Get Cloudgate</a>
+          <a class="btn lg" href={cloudgate()}>Get Cloudgate</a>
         </nav>
       </header>
       <main id="main">
@@ -199,6 +199,9 @@ const footCategories = usedCategories().slice(0, 4);
               {footCategories.map((category) => <li><a href={href(`categories/${category.id}/`)}>{category.name}</a></li>)}
               <li><a href={href('templates/')}>All apps</a></li>
               <li><a href={href('categories/')}>All categories</a></li>
+              <li><a href={href('how-it-works/')}>How it works</a></li>
+              <li><a href={href('why-cloudgate/')}>Why self-host</a></li>
+              <li><a href={href('contribute/')}>Add an app</a></li>
             </ul>
           </div>
           <div>
@@ -217,11 +220,12 @@ const footCategories = usedCategories().slice(0, 4);
           <div>
             <h2>Cloudgate</h2>
             <ul>
-              <li><a href={href('how-it-works/')}>How it works</a></li>
-              <li><a href={href('why-cloudgate/')}>Why Cloudgate</a></li>
-              <li><a href={href('get-cloudgate/')}>Get Cloudgate</a></li>
-              <li><a href={href('contribute/')}>Add an app</a></li>
-              <li><a href={GITHUB_REPO}>Source on GitHub</a></li>
+              <li><a href={cloudgate()}>What is Cloudgate</a></li>
+              <li><a href={cloudgate('features')}>Features</a></li>
+              <li><a href={cloudgate('pricing')}>Pricing</a></li>
+              <li><a href={cloudgate('self-hosted')}>Self-host Cloudgate</a></li>
+              <li><a href={cloudgate('docs')}>Docs</a></li>
+              <li><a href={GITHUB_REPO}>Templates on GitHub</a></li>
             </ul>
           </div>
         </div>

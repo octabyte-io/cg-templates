@@ -33,7 +33,7 @@ export function HOW_IT_WORKS(template: Template): { name: string; text: string }
 /** The cost answer, said the same way on every page that answers it. */
 export function costAnswer(appName?: string): string {
   const app = appName ? `${appName} is free. To run it` : 'The apps are free. To run them';
-  return `${app} you need Cloudgate and a server. Use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free.`;
+  return `${app} you need Cloudgate and a server. Use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing.`;
 }
 
 /** A template's own questions, then the general ones it does not already answer. */

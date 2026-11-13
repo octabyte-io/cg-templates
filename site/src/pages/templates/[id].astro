@@ -12,7 +12,7 @@ import Screens from '../../components/Screens.astro';
 import { alternativesPages, getTemplates, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
 import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
-import { deployUrl, formatDate, href } from '../../lib/site';
+import { cloudgate, deployUrl, formatDate, href } from '../../lib/site';
 
 export function getStaticPaths() {
   return getTemplates().map((template) => ({ params: { id: template.id }, props: { template } }));
@@ -193,7 +193,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         <div class="dfoot">
           <a class="btn lg" href={deploy}>Deploy {a.name}</a>
           <p class="muted">
-            New to Cloudgate? <a href={href('get-cloudgate/')}>See the ways to get it</a>
+            New to Cloudgate? <a href={cloudgate()}>See what Cloudgate is</a>
           </p>
         </div>
         <ConsoleDeploy id={a.id} name={a.name} />

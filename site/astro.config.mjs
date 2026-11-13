@@ -45,6 +45,14 @@ export default defineConfig({
   trailingSlash: 'always',
   build: { format: 'directory' },
   compressHTML: true,
+  /*
+   * Pages that moved to Cloudgate's own website (cloudgate.octabyte.io). A static build writes each
+   * as a page that sends visitors and crawlers on, with a canonical link to the new address, and
+   * leaves it out of the sitemap.
+   */
+  redirects: {
+    '/get-cloudgate': 'https://cloudgate.octabyte.io/self-hosted',
+  },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [
     sitemap({

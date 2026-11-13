@@ -7,12 +7,12 @@ import Faq from '../components/Faq.astro';
 import ProductTile from '../components/ProductTile.astro';
 import { alternativesPages, getTemplate, isSample } from '../lib/catalogue';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
-import { HOSTED_URL, href } from '../lib/site';
+import { cloudgate, href } from '../lib/site';
 import { PRODUCTS } from '../products';
 
 const trail = [
   { name: 'Home', path: '' },
-  { name: 'Why Cloudgate', path: 'why-cloudgate/' },
+  { name: 'Why self-host', path: 'why-cloudgate/' },
 ];
 
 /*
@@ -65,13 +65,13 @@ const faq = [
   },
   {
     q: 'Is Cloudgate itself open source?',
-    a: 'The apps in this catalogue are open source, and each app’s page names its licence. Cloudgate is source-available under the Elastic License 2.0: anyone may install it on their own server and use it for free, or use the hosted version at cloudgate.octabyte.app.',
+    a: 'The apps in this catalogue are open source, and each app’s page names its licence. Cloudgate is source-available under the Elastic License 2.0: anyone may install it on their own server and use it for free, or use the hosted version. Cloudgate’s website, cloudgate.octabyte.io, explains both.',
   },
 ];
 
 const title = 'Self-hosting vs SaaS: what a small team pays';
 const description =
-  'Per-seat tools charge for every person. See what a small team pays for open-source apps on one server, what Cloudgate looks after, and when not to switch.';
+  'Per-seat tools charge for every person. See what a small team pays for open-source apps on one server instead, where the data lives, and when not to switch.';
 ---
 
 <Base
@@ -88,8 +88,9 @@ const description =
       <h1 class="h1">Why run open-source apps on your own server</h1>
       <p class="lede">
         Most tools a small business pays for charge for every person, every month. Free, open-source apps can do the same
-        jobs on one server, which Cloudgate can provide. Cloudgate sets the apps up and looks after the technical parts.
-        Here is the honest case, including when it is not worth it.
+        jobs on one server, which Cloudgate can provide. Cloudgate sets the apps up and
+        <a href={cloudgate('features')}>looks after the technical parts</a>. Here is the honest case, including when it is
+        not worth it.
       </p>
       <div class="chips">
         <span class="chip"><b>One</b> server bill</span>
@@ -211,8 +212,7 @@ const description =
           Example figures in US dollars, rounded, not current prices. Tool prices depend on the plan you are on; the server you
           need depends on the apps you run. The right-hand side assumes you install Cloudgate on the server yourself, for
           free. With hosted Cloudgate, which can also provide the server, add its price: see
-          <a href={HOSTED_URL}>{HOSTED_URL.replace('https://', '')}</a>. Not counted: the time you spend looking after your
-          apps.
+          <a href={cloudgate('pricing')}>Cloudgate pricing</a>. Not counted: the time you spend looking after your apps.
       </p>
     </div>
   </section>
@@ -243,61 +243,6 @@ const description =
           License 2.0.
         </li>
       </ul>
-    </div>
-  </section>
-
-  <section class="sec" aria-labelledby="care-title">
-    <div class="shead pad">
-      <h2 class="h2" id="care-title">What does Cloudgate take care of?</h2>
-      <p class="lede">The jobs that make running your own apps feel like work. You stay in charge of when things happen.</p>
-    </div>
-    <div class="care">
-      <div class="pad item">
-        <div class="tx">
-          <h3 class="h3">Backups on a schedule you set</h3>
-          <p>Choose how often an app’s database and files are copied, where to, and how many copies to keep. Restore one when you need it.</p>
-        </div>
-        <div class="frag rows reveal-rows" role="img" aria-label="Example backup settings: every night at 02:00, newest 14 kept, stored in your own storage">
-          <div class="r" aria-hidden="true"><span>Runs</span><span>Every night at 02:00</span></div>
-          <div class="r" aria-hidden="true"><span>Keeps</span><span>The newest 14</span></div>
-          <div class="r" aria-hidden="true"><span>Stored in</span><span>Your backup storage</span></div>
-        </div>
-      </div>
-      <div class="pad item">
-        <div class="tx">
-          <h3 class="h3">A secure web address for each app</h3>
-          <p>Every app starts with a free working address. Give it your own name, like chat.yourshop.com, and Cloudgate secures it with https for you.</p>
-        </div>
-        <div class="frag addr" role="img" aria-label="Example web address chat.acmebakery.com, secure (https), live">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"
-            ><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"></path></svg
-          >
-          <span class="host" aria-hidden="true">chat.acmebakery.com</span>
-          <span class="status" aria-hidden="true"><i></i>Live</span>
-        </div>
-      </div>
-      <div class="pad item">
-        <div class="tx">
-          <h3 class="h3">A server when you need one</h3>
-          <p>No server? Get one from hosted Cloudgate when you deploy: pick a size and a country, and Cloudgate gets it ready.</p>
-        </div>
-        <div class="frag rows reveal-rows" role="img" aria-label="Example server from Cloudgate: small size, in Germany, ready">
-          <div class="r" aria-hidden="true"><span>Size</span><span>Small</span></div>
-          <div class="r" aria-hidden="true"><span>Country</span><span>Germany</span></div>
-          <div class="r" aria-hidden="true"><span>Status</span><span>Ready</span></div>
-        </div>
-      </div>
-      <div class="pad item">
-        <div class="tx">
-          <h3 class="h3">Team access without seat counting</h3>
-          <p>Invite your team and give each person a role. Limit someone to the projects and apps they need.</p>
-        </div>
-        <div class="frag rows reveal-rows" role="img" aria-label="Example team: an owner, an admin, and a member with access to one project">
-          <div class="r" aria-hidden="true"><span class="who"><i>AK</i>Amira</span><span>Owner</span></div>
-          <div class="r" aria-hidden="true"><span class="who"><i>JB</i>Jonas</span><span>Admin</span></div>
-          <div class="r" aria-hidden="true"><span class="who"><i>LM</i>Lena</span><span>Member · Shop project</span></div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -370,7 +315,7 @@ const description =
     <div class="acts">
       <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
       <a class="btn lg ghost" href={href('how-it-works/')}>How it works <Chev /></a>
-      <a class="btn lg ghost" href={href('get-cloudgate/')}>Ways to get Cloudgate <Chev /></a>
+      <a class="btn lg ghost" href={cloudgate('self-hosted')}>Self-host Cloudgate <Chev /></a>
     </div>
   </section>
 </Base>
@@ -591,107 +536,6 @@ const description =
     color: var(--faint);
   }
 
-  /* What Cloudgate takes care of: a hairline grid of small fragments. */
-  .care {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--line);
-    border-top: 1px solid var(--line);
-  }
-  .item {
-    background: var(--bg);
-    padding-block: 32px 36px;
-    display: grid;
-    gap: 18px;
-    align-content: start;
-    min-width: 0;
-  }
-  .tx {
-    display: grid;
-    gap: 6px;
-    max-width: 48ch;
-  }
-  .tx p {
-    color: var(--muted);
-    font-size: .9375rem;
-  }
-  .frag.rows {
-    padding-block: 6px;
-  }
-  .rows .r {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px dashed var(--line);
-    font-size: .8125rem;
-  }
-  .rows .r:last-child {
-    border-bottom: 0;
-  }
-  .rows .r span:first-child {
-    color: var(--faint);
-  }
-  .rows .r span:last-child {
-    text-align: right;
-  }
-  .rows .who {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--fg) !important;
-  }
-  .who i {
-    font: normal 500 .6875rem var(--sans);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: var(--tint);
-    color: var(--accent-ink);
-  }
-  .addr {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
-  }
-  .addr svg {
-    width: 16px;
-    height: 16px;
-    color: var(--ok);
-    flex: none;
-  }
-  .host {
-    font: .8125rem var(--mono);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-  }
-  .plan {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .plan ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 4px;
-    font-size: .8125rem;
-  }
-  .plus {
-    font: .75rem var(--mono);
-    color: var(--ok);
-    display: inline-block;
-    width: 18px;
-  }
-
   .end {
     padding-block: 72px 88px;
     display: grid;
@@ -707,8 +551,7 @@ const description =
 
   @media (max-width:56.25em) {
     .cols,
-    .pair,
-    .care {
+    .pair {
       grid-template-columns: 1fr;
     }
     .half + .half {
@@ -718,9 +561,6 @@ const description =
   @media (max-width:40em) {
     .half {
       padding-block: 48px;
-    }
-    .item {
-      padding-block: 24px 28px;
     }
     .grow th,
     .grow td {
