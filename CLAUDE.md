@@ -31,6 +31,10 @@ What SearchFit must not override:
 - **No SearchFit promotion.** Leave out the "powered by SearchFit.ai" footers and SearchFit.ai links its
   templates end with. They never go into the site, a commit or a PR.
 
+To add apps to the catalogue, use the `add-template` skill (`.claude/skills/add-template/`): it runs
+research, SearchFit content, alternatives pages, the template and its check and try in parallel, and
+opens one PR.
+
 After a change, run `pnpm build` in `site/` (it checks types and every template).
 
 SearchFit is plain Markdown (skills, commands and three agents): no scripts, hooks or MCP servers. The
