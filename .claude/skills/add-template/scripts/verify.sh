@@ -22,6 +22,7 @@ root="$(git rev-parse --show-toplevel)"
 dir="$root/templates/$id"
 log_dir="${TMPDIR:-/tmp}/add-template/$id"
 mkdir -p "$log_dir"
+: >"$log_dir/pull.log"
 
 [ -f "$dir/template.yaml" ] || { echo "No $dir/template.yaml"; echo "RESULT $id check=fail try=skipped"; exit 1; }
 
@@ -53,13 +54,23 @@ if ! docker info >/dev/null 2>&1; then
   echo "RESULT $id check=pass try=env"; exit 2
 fi
 
+# Pull the images first, one at a time with a backoff, so Docker Hub's per-window rate limit
+# (likely when several agents pull at once) doesn't turn into a false "env" verdict.
+for image in $(sed -n 's/^ *image: *["'"'"']\{0,1\}\([^"'"'"' ]*\).*/\1/p' "$dir/docker-compose.yml" | sort -u); do
+  for attempt in 1 2 3; do
+    if docker pull -q "$image" >>"$log_dir/pull.log" 2>&1; then echo "pulled $image"; break; fi
+    echo "pull of $image failed (attempt $attempt)" | tee -a "$log_dir/pull.log"
+    [ "$attempt" -lt 3 ] && sleep 60
+  done
+done
+
 echo "== template try (timeout ${timeout_min}m)"
 run_cli template try "$dir" --timeout "$timeout_min" 2>&1 | tee "$log_dir/try.log"
 status=${PIPESTATUS[0]}
 if [ "$status" -eq 0 ]; then echo "RESULT $id check=pass try=pass"; exit 0; fi
 
 # A pull the registry refused is this machine's problem, not the template's.
-if grep -qiE '429 Too Many Requests|toomanyrequests|rate limit|TLS handshake timeout|i/o timeout|no such host|connection reset by peer|proxyconnect' "$log_dir/try.log"; then
+if cat "$log_dir/try.log" "$log_dir/pull.log" 2>/dev/null | grep -qiE '429 Too Many Requests|toomanyrequests|rate limit|TLS handshake timeout|i/o timeout|no such host|connection reset by peer|proxyconnect'; then
   echo "The image pull failed for a network or registry reason (see $log_dir/try.log)."
   echo "RESULT $id check=pass try=env"; exit 2
 fi

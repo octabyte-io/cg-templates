@@ -60,7 +60,13 @@ agent owns them and sees every template at once, which avoids two agents overwri
 
 Launch agents in the background and in the same message where they're independent. Brief each one
 by pointing it at its reference file plus the specifics: template id, app name, workspace path,
-repo path, how to reach SearchFit. Agents never commit, push or open PRs.
+repo path, how to reach SearchFit. Agents never commit, push or open PRs. Pass facts that change
+wording rules (the licence kind, the first-run admin) from one agent's report to the next brief.
+
+If the GitHub API is refused for a third-party repo (common in cloud sessions), agents read
+`https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>`, list tags with
+`git ls-remote --tags`, and confirm image tags with Docker Hub's API
+(`https://hub.docker.com/v2/repositories/<ns>/<repo>/tags/<tag>`). Say so in each brief.
 
 ### Who owns which file
 
@@ -94,7 +100,10 @@ The build agent runs `scripts/verify.sh <id>`, whose last line is
   env, healthcheck, image tag). If it still fails, mark it failed and keep its logs from
   `${TMPDIR:-/tmp}/add-template/<id>/try.log` for the PR.
 - **2, env**: this machine couldn't prove it (no Docker, registry rate limit, network). Not the
-  template's fault. Verify it in CI instead (below).
+  template's fault. If Docker works and the cause was a pull (Docker Hub's `429`), run
+  `scripts/verify.sh <id>` yourself once more after the other agents have pulled (a few minutes
+  later): the limit is per window and usually clears. Only if that fails too, verify it in CI
+  (below).
 - **3, none**: no `docker-compose.yml`. Every template is Docker Compose (see the rules below), so
   send it back to the build agent. It either writes the compose file or reports the app as
   **not possible in compose**, with the reason.
@@ -110,13 +119,14 @@ template. This is the same check the PR would run, so it's a real verdict.
 When all agents (except the audit) are done:
 
 1. For each template, write `description` and `tags` from `$W/seo.json` into `template.yaml`
-   (keep the rest of the build agent's file as is). `description` must be 50–160 characters.
+   (keep the rest of the build agent's file as is). `description` must be 50–160 characters;
+   tags are lowercase phrases with spaces.
    Make each `index.md` `alternativeTo` match `$W/alternatives.json` (the Alternatives agent's
    decision wins; drop the line if it's empty), and drop `switching` if `alternativeTo` went.
 2. **Drop every failed or not-possible template completely**, so the PR holds only what works: delete
    `templates/<id>/`, remove its entry from every `site/src/alternatives/<product>.md` `apps:` map,
    and remove any product (from `products.ts`) and alternatives file that the Alternatives agent
-   created only for it. `$W/alternatives.json` lists exactly what it touched for each template, so
+   created only for it, and restore any file in its `files_edited` from the copy it saved. `$W/alternatives.json` lists exactly what it touched for each template, so
    this is mechanical. If a failed template was a product's `pick`, re-point the `pick` (and the
    lede that names it) to an app that stays, or remove the page if no app stays.
 3. `cd site && pnpm install --frozen-lockfile` (first time) then `pnpm build`. It checks types and
@@ -161,6 +171,11 @@ broken internal link); leave bigger site-wide findings for the PR's notes. Rebui
   not possible, not built another way.
 - **Pinned versions.** Every image tag is a real, current release, never `latest`; `version` in
   `template.yaml` matches the main image.
-- **Licences, honestly.** Fair-code or source-available apps are not called "open source".
+- **Licences, honestly.** Fair-code or source-available apps are not called "open source",
+  in the copy or in what the layout generates around it. Check the licence at the release tag
+  the template pins: some apps changed licence recently (NocoDB went from AGPL-3.0 to the
+  Sustainable Use License in January 2026), and older pages about them still say open source.
+  A licence with no SPDX id uses the catalogue's short name (`SUL-1.0`, `BUSL-1.1`), which
+  `licenceKind()` in `site/src/lib/catalogue.ts` labels for the layout.
 - **Categories are fixed.** Use one from `site/src/categories.ts`; if none fits, use the closest
   and flag it in the PR rather than adding a category.

@@ -14,18 +14,22 @@ path, and how to reach SearchFit.
 - Each such product needs `site/src/alternatives/<id>.md` with an `apps:` entry for **every** app
   that names it (the build fails on a missing or extra entry), `moving`, `faq`, and a body on what
   the product is and why people look for an alternative. Read two existing files first, e.g.
-  `pingdom.md` and `zapier.md`, and the `Product` interface comments in `products.ts` (lede, pick,
-  swap rules).
+  `pingdom.md` and `zapier.md`, the `Product` interface comments in `products.ts` (lede, pick,
+  swap rules), and `site/src/pages/alternatives/[id].astro`, which generates the title, `h1`, meta
+  description, first FAQ and licence line, so you don't repeat them.
 
 ## Decide, per template
 
 Read `research.md`'s "what it replaces". Then for each product:
 
 - **Existing product page** (id already in `products.ts`): add the app to that file's `apps:`
-  (`fit`: an honest 1–3 sentence comparison; `import`: yes/partial/no). Keep the page's `pick`
+  (`fit`: an honest 1–3 sentence comparison; `import`: `yes`, `partly` or `no`, the only values
+  the build accepts). Keep the page's `pick`
   unless the new app is clearly the better recommendation for most readers, and if you change it,
   rewrite the lede to match. Update `faq`/`moving`/body only if the new app makes something there
-  untrue or incomplete.
+  untrue or incomplete; a page that goes from one app to several usually needs `moving` and the
+  app-specific FAQs to cover every app. Before editing an existing file, copy it to
+  `$W/backup/` so it can be restored if the template fails.
 - **New product**: add it only if it's a real, well-known paid product that people search
   "<product> alternative" for, and the app is a fair replacement for its main job. Then add the
   product to `products.ts` (id, name, Simple Icons slug if one exists, `job`, `lede`, `pick`) and
@@ -38,12 +42,17 @@ matches your decisions at the end and report any id that should be added or remo
 
 ## Through SearchFit
 
+Run the SearchFit skills against the fields you write (`lede`, `fit`, `moving`, `faq`, body); the
+layout owns the title, headings and schema, so check those in `dist/` after `pnpm build` instead
+of rewriting them. Leave out the SearchFit.ai line every skill output ends with.
+
 Brief with `searchfit-seo:content-brief` ("<product> alternative", "open source <product>
 alternative", "self-hosted <product>"), write, then `searchfit-seo:on-page-seo` and
 `searchfit-seo:ai-visibility`: the lede's first sentence answers "what is the best open-source
 <product> alternative?" on its own and names the pick; FAQ answers start with the answer. Use
-`searchfit-seo:internal-linking` to check the new page is linked from the apps' pages (the layout
-does this when `alternativeTo` is set) and, where natural, from related alternatives pages.
+`searchfit-seo:internal-linking` only to confirm the app's page links to the alternatives page (the
+layout does this when `alternativeTo` is set) and, where the app truly fits, from related
+alternatives pages; the site-wide link audit is the audit agent's job.
 
 Same rules as every page: facts only (from `research.md`), honest trade-offs, plain words, no
 hype, no SearchFit footers, fair-code/source-available apps not called open source.
@@ -55,6 +64,7 @@ hype, no SearchFit footers, fair-code/source-available apps not called open sour
   "products_added": ["clickup"],
   "files_created": ["site/src/alternatives/clickup.md"],
   "apps_entries": {"site/src/alternatives/asana.md": "plane", "site/src/alternatives/clickup.md": "plane"},
+  "files_edited": {"site/src/alternatives/asana.md": "$W/backup/asana.md"},
   "picks_set": {"clickup": "plane"},
   "alternativeTo": ["clickup", "asana"]
 }

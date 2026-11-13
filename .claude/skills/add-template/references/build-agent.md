@@ -17,15 +17,19 @@ You were given: the app name, template id, repo path, workspace `$W`.
 ## Research the install (yourself, now)
 
 - The app's **official** self-hosting docs and its official `docker-compose.yml` / Docker
-  instructions (repo, docs site). Start from those, not from a blog.
+  instructions (repo, docs site). Start from those, not from a blog. When the project ships
+  several, start from the one its docs call the production or quickstart setup, keep its worker
+  and cache services (they're how the app runs for real), and drop optional extras (reverse
+  proxies, TLS, backups, watchtower). Repos differ between branches: use the default branch or
+  the release tag you pin.
 - The latest **stable** release and its image tag on the registry the project documents
   (Docker Hub, GHCR). Check the tag exists. Pin it, and pin databases/caches to a specific
   version too (e.g. `postgres:17.x-alpine`, `redis:7.x-alpine`), matching what the app supports.
 - Required environment variables, secrets, the port the web UI listens on, persistent paths,
   first-run behaviour (admin created how?), and a sensible minimum `size`.
 
-Note anything a visitor would care about (default admin login, first-run wizard, memory needs) in
-`$W/build-notes.md`; the content agent may use it.
+Note anything a visitor would care about (default admin login, first-run wizard, memory needs,
+the licence in the release you pin) in `$W/build-notes.md`; the content agent may use it.
 
 ## Write the folder
 
@@ -45,10 +49,16 @@ under `templates/<id>/` before reporting.
   docs, source required), `size`, `domains`, `inputs`. Put a draft `description` (50–160 chars) and
   `tags`; the content agent's SEO versions replace them later.
 - `inputs`: `generate` every secret and password; `value` with `{{domains.<service>.url}}` for the
-  app's own URL; `ask` only for what a person must type (an admin email). Every `${NAME}` in the
+  app's own URL; `ask` only for what a person must type (an admin email). `generate: password`
+  is letters and digits only, so don't pre-create an admin whose password the app requires to
+  have symbols; leave admin creation to the app's own first-run sign-up and say so in
+  `build-notes.md`. Every `${NAME}` in the
   compose file without a default needs an input.
 - `docker-compose.yml`: from the official file; no `ports:`; `restart: unless-stopped`; named
   volumes for data; healthchecks on databases with `depends_on: condition: service_healthy`.
+  An app healthcheck must call a tool the image really has (`wget` on Alpine/busybox, `curl`
+  elsewhere, often neither on distroless images): check the official compose or the image's
+  layers before adding one.
 - `test-values.yaml` if an `ask` input needs a realistic value to start.
 - `logo.svg` (or square `logo.png`), under 100 KB, from the project's repo or press kit. Not
   redrawn. If only a non-square logo exists, pad it to square.
@@ -70,7 +80,8 @@ wrong internal port, a missing required env var, a healthcheck that's too strict
 doesn't exist, the app needing its URL. Don't "fix" by weakening the check (e.g. pointing the
 domain at a container that isn't the app). If it still fails, stop and report the cause.
 
-On exit 2, don't keep retrying; report `env` and the orchestrator verifies it in CI.
+On exit 2, don't retry (the script already retried each pull); report `env` and the
+orchestrator retries once later or verifies it in CI.
 
 ## Report back (your final message)
 

@@ -25,7 +25,9 @@ ease: easy
 easeNote: Say in one sentence what someone does after setup, if anything.
 
 # The app's licence. Use the SPDX id where there is one, e.g. MIT, Apache-2.0,
-# GPL-3.0-only, AGPL-3.0-only, MPL-2.0, BSD-3-Clause.
+# GPL-3.0-only, AGPL-3.0-only, MPL-2.0, BSD-3-Clause. A licence with no SPDX id uses the
+# catalogue's short name: SUL-1.0 (Sustainable Use License, "fair-code"), BUSL-1.1, Elastic-2.0.
+# Those are shown as fair-code or source-available, never "open source" (licenceKind()).
 license: MIT
 
 # Optional. One line for the comparison table on "alternatives to" pages:
@@ -53,7 +55,8 @@ switching:
     - Another honest difference
     - A third honest difference
 
-# 3 or 4 questions a non-technical visitor would ask, answered plainly.
+# 5 to 7 questions a non-technical visitor would ask, answered plainly; each answer starts
+# with the answer ("Yes,", "No," or the fact) so it can be quoted on its own.
 faq:
   - q: Do I need to know how to code?
     a: No. Explain briefly how people use it.
