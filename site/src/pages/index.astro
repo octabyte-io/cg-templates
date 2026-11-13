@@ -3,11 +3,12 @@ import Base from '../layouts/Base.astro';
 import AppTile from '../components/AppTile.astro';
 import ProductTile from '../components/ProductTile.astro';
 import Card from '../components/Card.astro';
+import Check from '../components/Check.astro';
 import Chev from '../components/Chev.astro';
 import Faq from '../components/Faq.astro';
 import { alternativesPages, getTemplate, getTemplates, listNames, popularSwaps, usedCategories } from '../lib/catalogue';
 import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
-import { costAnswer } from '../lib/copy';
+import { costAnswer, HOW_IT_WORKS } from '../lib/copy';
 import { href, SITE_DESCRIPTION } from '../lib/site';
 
 const templates = getTemplates();
@@ -15,12 +16,14 @@ const total = templates.length;
 const categories = usedCategories();
 const swaps = popularSwaps();
 const topAlternatives = alternativesPages().sort((a, b) => b.apps.length - a.apps.length)[0];
-const PAGE = 20;
+// The home page shows a first screenful; the rest are a click away, and all of them are on /templates/.
+const PAGE = 8;
 
 // The stage shows a real app from the catalogue being set up; n8n when it is there.
 const featured = getTemplate('n8n') ?? templates[0];
 const replaced = featured?.alternativeTo[0];
 const second = templates.find((t) => t.id === 'plausible') ?? templates.find((t) => t.id !== featured?.id);
+const steps = featured ? HOW_IT_WORKS(featured) : [];
 const nights = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Tonight'];
 const seats = ['AK', 'JB', 'LM', 'SR', 'TO', 'EV', 'PN', 'MC', 'RD', 'HW', 'CL', 'NB'];
 
@@ -73,7 +76,6 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   jsonLd={jsonLd}
 >
   <section class="hero pad">
-    <p class="kicker">Cloudgate Templates</p>
     <h1 class="display">Open-source apps, ready to run on your own server</h1>
     <div class="row2">
       <p class="lede">
@@ -93,7 +95,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <section class="stagewrap pad" id="how" aria-labelledby="how-title">
         <h2 id="how-title" class="visually-hidden">How it works</h2>
         <div class="stage">
-          <div class="window" data-demo role="img" aria-label={`Illustration of the Cloudgate deploy screen for ${featured.name}: after creating an account, choose a server from Cloudgate or one you already have`}>
+          <div class="window demo" data-demo role="img" aria-label={`Illustration of the Cloudgate deploy screen for ${featured.name}: after creating an account, choose a server from Cloudgate or one you already have`}>
             <div class="wbar">
               <b>Cloudgate</b>
               <span>/</span>
@@ -101,36 +103,32 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
               <span class="sp" />
               <span class="pill">Acme Bakery</span>
             </div>
-            <div class="dep" aria-hidden="true">
+            <div class="dep" aria-hidden="true" inert>
               <div class="steps">
-                <div class="done"><span class="n">✓</span>Choose an app</div>
-                <div class="done"><span class="n">✓</span>Create account</div>
-                <div class="on" data-step="3"><span class="n">3</span>Choose a server</div>
-                <div data-step="4"><span class="n">4</span>Live</div>
+                <div class="done"><span class="n"><Check /></span>Create account</div>
+                <div class="on" data-step="2"><span class="n">2</span>Choose a server</div>
+                <div data-step="3"><span class="n">3</span>Set up</div>
+                <div data-step="4"><span class="n">4</span>Open app</div>
               </div>
               <div class="mid">
                 <span class="lab">App</span>
                 <div class="chosen">
-                  <AppTile template={featured} box={36} size={22} />
-                  <div style="min-width:0">
+                  <AppTile template={featured} box={36} size={22} loading="eager" />
+                  <div class="grow">
                     <div class="h3">{featured.name}</div>
-                    <div class="muted" style="font-size:13px">
-                      {featured.tagline}
-                    </div>
+                    <div class="muted small">{featured.tagline}</div>
                   </div>
-                  <span style="flex:1" />
-                  <span class="muted" style="font-size:13px">Change</span>
+                  <span class="muted small">Change</span>
                 </div>
                 <span class="lab">Server</span>
                 <div class="srv">
-                  <label class="on"><input type="radio" name="hs" checked tabindex="-1" /> Get a server from Cloudgate</label>
-                  <label><input type="radio" name="hs" tabindex="-1" /> Use a server I already have</label>
+                  <span class="on"><i class="rd" />Get a server from Cloudgate</span>
+                  <span><i class="rd" />Use a server I already have</span>
                 </div>
-                <span class="lab">Web address</span>
-                <div class="chosen" style="padding:9px 12px;font-size:13.5px">
-                  <span>{featured.id.replace(/[^a-z0-9]/g, '')}.acmebakery.com</span>
-                  <span style="flex:1" />
-                  <span class="muted" style="font-size:12.5px" data-demo-addr>secure (https)</span>
+                <span class="lab">Your domain</span>
+                <div class="chosen addr">
+                  <span class="grow">{featured.id.replace(/[^a-z0-9]/g, '')}.acmebakery.com</span>
+                  <span class="muted small" data-demo-addr>https, set up for you</span>
                 </div>
               </div>
               <div class="side">
@@ -138,13 +136,13 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
                 <div class="sumrow"><span>Server</span><span>New, from Cloudgate</span></div>
                 {replaced && <div class="sumrow"><span>Replaces</span><span>{replaced.name}</span></div>}
                 <div class="sumrow"><span>App cost</span><span>Free</span></div>
-                <span class="btn" style="width:100%" data-demo-go data-live={`Open ${featured.name}`}>
+                <span class="btn wide" data-demo-go data-live={`Open ${featured.name}`}>
                   Deploy {featured.name}
                 </span>
                 <div class="dbar"><span /></div>
                 <div class="log">
-                  <div><span class="ok">✓</span> Account created</div>
-                  <div><span class="ok">✓</span> {featured.name} chosen</div>
+                  <div><span class="ok"><Check /></span> Account created</div>
+                  <div><span class="ok"><Check /></span> {featured.name} chosen</div>
                   <div data-demo-log data-run={`· Setting up ${featured.name}…`} data-live={`${featured.name} is live`}>
                     · Ready in a few minutes
                   </div>
@@ -153,18 +151,23 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
             </div>
           </div>
         </div>
-        <ol class="caption" style="list-style:none;padding:0;margin-block:22px 0">
-          <li><b>1</b>Pick an app and click Deploy</li>
-          <li><b>2</b>Create your account</li>
-          <li><b>3</b>Choose a server, or get one from us</li>
-          <li><b>4</b>Open your app</li>
+        <ol class="caption">
+          <li>
+            <b>1</b>Choose an app
+          </li>
+          {steps.map((step, index) => (
+            <li>
+              <b>{index + 2}</b>
+              {step.name}
+            </li>
+          ))}
         </ol>
       </section>
     )
   }
 
   <section class="sec" id="why" aria-labelledby="why-title">
-    <div class="shead pad" data-reveal>
+    <div class="shead pad">
       <h2 class="h2" id="why-title">Why run apps with Cloudgate</h2>
       <p class="lede">The same jobs your paid tools do, without paying for every person. Cloudgate looks after the technical parts.</p>
     </div>
@@ -180,7 +183,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
               nights.map((day, i) => (
                 <div>
                   <span class="d">{day}</span>
-                  <span class:list={['b', { next: i === 6 }]} style={`--i:${i}`}>{i === 6 ? '·' : '✓'}</span>
+                  <span class:list={['b', { next: i === 6 }]} style={`--i:${i}`}>{i === 6 ? '·' : <Check />}</span>
                   <span class="h">02:00</span>
                 </div>
               ))
@@ -208,8 +211,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
         </div>
         <div class="frag server reveal-rows" role="img" aria-label="Example server from Cloudgate: small size, in Germany, ready for the app">
           <div class="r" aria-hidden="true"><span>Size</span><span>Small</span></div>
-          <div class="r" aria-hidden="true" style="--i:1"><span>Country</span><span>Germany</span></div>
-          {featured && <div class="r" aria-hidden="true" style="--i:2"><span>Ready for</span><span>{featured.name}</span></div>}
+          <div class="r" aria-hidden="true"><span>Country</span><span>Germany</span></div>
+          {featured && <div class="r" aria-hidden="true"><span>Ready for</span><span>{featured.name}</span></div>}
         </div>
       </div>
       <div class="tile t-d pad" data-reveal style="--d:1">
@@ -222,39 +225,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
           <div class="price" aria-hidden="true">
             <span>Team members</span><span>12</span><span>Price per person</span><span>$0</span><span class="tot">App price</span><span class="tot">Free</span>
           </div>
-          <p class="ex" style="margin-top:10px">Plus your server, the same for 2 people or 20</p>
+          <p class="ex">Plus your server, the same for 2 people or 20</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec cat" id="catalogue" aria-labelledby="catalogue-title">
-    <div class="shead pad">
-      <h2 class="h2" id="catalogue-title">Browse apps</h2>
-      <p class="lede">Search by what you want to do, or by the tool you pay for today.</p>
-    </div>
-    <div class="fbar">
-      <div class="in pad">
-        <div class="seg" role="toolbar" aria-label="Filter by category">
-          <span class="seg-ind" aria-hidden="true" />
-          <button type="button" data-tab="" aria-pressed="true">All</button>
-          {categories.map((category) => <button type="button" data-tab={category.id} aria-pressed="false">{category.name}</button>)}
-        </div>
-        <label class="sbox"
-          ><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
-            ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
-          >
-          <input id="q" type="search" autocomplete="off" placeholder="Filter, e.g. Slack or newsletter" aria-label="Filter apps" /></label
-        >
-      </div>
-    </div>
-    <div class="gridwrap pad">
-      <div class="grid" id="grid">
-        {templates.map((template) => <Card template={template} />)}
-        <div class="empty" id="empty" hidden></div>
-      </div>
-      <div id="moreWrap" data-page={PAGE}>
-        <p class="fine" id="count" aria-live="polite"></p>
       </div>
     </div>
   </section>
@@ -301,8 +273,50 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     )
   }
 
+  <section class="sec cat" id="catalogue" aria-labelledby="catalogue-title">
+    <div class="shead pad">
+      <h2 class="h2" id="catalogue-title">Browse apps</h2>
+      <p class="lede">Search by what you want to do, or by the tool you pay for today.</p>
+    </div>
+    <div class="fbar">
+      <div class="in pad">
+        <div class="seg" role="toolbar" aria-label="Filter by category">
+          <button type="button" data-tab="" aria-pressed="true">All</button>
+          {categories.map((category) => <button type="button" data-tab={category.id} aria-pressed="false">{category.name}</button>)}
+        </div>
+        <label class="sbox"
+          ><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+            ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
+          >
+          <input id="q" type="search" autocomplete="off" placeholder="Filter, e.g. Slack" aria-label="Filter apps" /></label
+        >
+      </div>
+    </div>
+    <div class="gridwrap pad">
+      <div class="grid" id="grid">
+        {templates.map((template) => <Card template={template} />)}
+        <div class="empty" id="empty" hidden>
+          <p class="msg" id="emptyMsg"></p>
+          <p class="hint">Try a tool you pay for, like Zapier, Notion or Slack. If the app you need is missing, you can add it.</p>
+          <div class="eacts">
+            <button type="button" class="btn sm ghost" id="clear">Clear the filter</button>
+            <a class="btn sm ghost" href={href('contribute/')}>Add an app <Chev /></a>
+          </div>
+        </div>
+      </div>
+      <div id="moreWrap" data-page={PAGE}>
+        <p class="fine" id="count" aria-live="polite"></p>
+      </div>
+      <p class="fine legend">
+        <span><span class="ease easy"><i></i>Easy</span>: ready to use right after setup.</span>
+        <span><span class="ease some"><i></i>Some setup</span>: a few extra minutes of setup inside the app.</span>
+        <a href={href('templates/')}>See all {total} apps on one page</a>
+      </p>
+    </div>
+  </section>
+
   <section class="sec pad" id="faq" aria-labelledby="faq-title">
-    <div class="blk" style="border-top:0;padding-top:72px">
+    <div class="blk faqblk">
       <h2 class="h2" id="faq-title">Questions before you deploy</h2>
       <Faq items={faq} />
       <p class="muted selfhost">
@@ -314,10 +328,33 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
 </Base>
 
 <style>
+  .faqblk {
+    border-top: 0;
+    padding-top: 72px;
+  }
+  .empty .msg {
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .empty .hint {
+    margin: 6px auto 0;
+    max-width: 52ch;
+  }
+  .eacts {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .legend a {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+  }
   .selfhost {
     margin-top: 20px;
     max-width: 64ch;
-    font-size: 14.5px;
+    font-size: var(--t-base);
   }
   .selfhost a {
     color: var(--accent-ink);
@@ -332,6 +369,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tab]')];
   const input = document.getElementById('q') as HTMLInputElement;
   const empty = document.getElementById('empty') as HTMLElement;
+  const emptyMsg = document.getElementById('emptyMsg') as HTMLElement;
+  const clear = document.getElementById('clear') as HTMLButtonElement;
   const wrap = document.getElementById('moreWrap') as HTMLElement;
   const count = document.getElementById('count') as HTMLElement;
   const page = Number(wrap.dataset.page);
@@ -339,8 +378,6 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   let cat = new URLSearchParams(location.search).get('category') ?? '';
   let shown = page;
   const motion = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const seg = document.querySelector<HTMLElement>('.seg')!;
-  const ind = seg.querySelector<HTMLElement>('.seg-ind')!;
   const more = document.createElement('button');
   more.className = 'more';
   more.type = 'button';
@@ -348,15 +385,6 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     shown = total;
     render(true);
   });
-
-  /** Moves the sliding background under the selected category. */
-  function place() {
-    const on = tabs.find((t) => t.getAttribute('aria-pressed') === 'true');
-    if (!on) return;
-    ind.style.width = `${on.offsetWidth}px`;
-    ind.style.transform = `translateX(${on.offsetLeft}px)`;
-    seg.classList.add('has-ind');
-  }
 
   /**
    * Cards that a click brought into view rise in, a few at a time. Typing in the filter box
@@ -383,11 +411,11 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     const visible = filtered ? matches : matches.slice(0, shown);
     cards.forEach((c) => (c.hidden = !visible.includes(c)));
     tabs.forEach((t) => t.setAttribute('aria-pressed', String((t.dataset.tab ?? '') === cat)));
-    place();
     if (animate) enter(visible.filter((c) => !before.has(c)));
     const catName = tabs.find((t) => t.dataset.tab === cat)?.textContent;
     empty.hidden = matches.length > 0;
-    empty.textContent = `No apps match “${input.value}”${cat ? ` in ${catName}` : ''}. Try a tool you pay for, like Zapier, Notion or Slack.`;
+    const raw = input.value.trim();
+    emptyMsg.textContent = raw ? `No apps match “${raw}”${cat ? ` in ${catName}` : ''}.` : `No apps in ${catName} yet.`;
     more.remove();
     if (filtered) {
       count.textContent = `${matches.length} of ${total} apps shown`;
@@ -408,12 +436,14 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     }),
   );
   input.addEventListener('input', () => render());
+  clear.addEventListener('click', () => {
+    cat = '';
+    input.value = '';
+    render();
+    input.focus();
+  });
   input.value = new URLSearchParams(location.search).get('q') ?? input.value;
   render();
-  // Place it once without sliding, then let later changes slide. Fonts change tab widths when they load.
-  requestAnimationFrame(() => seg.classList.add('ready'));
-  document.fonts?.ready.then(place);
-  new ResizeObserver(place).observe(seg);
 </script>
 
 <script>
@@ -428,8 +458,10 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     const log = q('[data-demo-log]');
     const addr = q('[data-demo-addr]');
     const bar = q('.dbar span');
+    const step2 = q('[data-step="2"]');
     const step3 = q('[data-step="3"]');
     const step4 = q('[data-step="4"]');
+    const tick = (step: HTMLElement) => (step.firstElementChild!.innerHTML = q('.steps .done .n').innerHTML);
     const EASE = 'cubic-bezier(.23,1,.32,1)';
 
     /** Swaps text with a short blur, so the two states read as one change. */
@@ -451,9 +483,9 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       at(160, () => {
         go.classList.remove('press');
         win.dataset.phase = 'run';
-        step3.className = 'done';
-        step3.firstElementChild!.textContent = '✓';
-        step4.className = 'on';
+        step2.className = 'done';
+        tick(step2);
+        step3.className = 'on';
         swap(log, esc(log.dataset.run ?? ''));
         bar.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], {
           duration: 1700,
@@ -463,9 +495,11 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       });
       at(1950, () => {
         win.dataset.phase = 'live';
+        step3.className = 'done';
+        tick(step3);
         step4.className = 'on live';
-        step4.firstElementChild!.textContent = '✓';
-        swap(log, `<span class="ok">✓</span> ${esc(log.dataset.live ?? '')}`);
+        tick(step4);
+        swap(log, `<span class="ok">${q('.log .ok').innerHTML}</span> ${esc(log.dataset.live ?? '')}`);
         swap(go, esc(go.dataset.live ?? ''));
         swap(addr, '<span class="live-dot"><i></i>Live (https)</span>');
       });
@@ -486,7 +520,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
 
 <script>
   // Popular swaps: as each card comes into view the paid tool steps back, the arrow draws, and the
-  // open-source app slides out from behind it into place. Hovering a card plays it again.
+  // open-source app slides out from behind it into place. It plays once.
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cardsWithSwap = [...document.querySelectorAll<HTMLElement>('[data-swap]')];
   if (!reduce && cardsWithSwap.length && 'IntersectionObserver' in window) {
@@ -538,11 +572,9 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       },
       { threshold: 0.6 },
     );
-    const hover = matchMedia('(hover: hover) and (pointer: fine)').matches;
     cardsWithSwap.forEach((card) => {
       card.classList.add('pending');
       io.observe(card);
-      if (hover) card.addEventListener('mouseenter', () => !card.classList.contains('pending') && playSwap(card));
     });
   }
 </script>

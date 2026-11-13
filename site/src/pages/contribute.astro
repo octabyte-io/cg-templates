@@ -8,7 +8,7 @@ import { GITHUB_REPO } from '../lib/catalogue';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
 
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: 'Add an app', path: 'contribute/' },
 ];
 
@@ -62,7 +62,7 @@ const faq = [
   )}
 >
   <Crumbs trail={trail} />
-  <section class="apphead pad" style="grid-template-columns:1fr">
+  <section class="apphead one pad">
     <div class="body">
       <h1 class="h1">Add an app</h1>
       <p class="lede">Every app here is a folder of a few small files. You can add one from your browser, without installing anything.</p>
@@ -73,12 +73,12 @@ const faq = [
     </div>
   </section>
   <div class="sec pad">
-    <div class="blk" style="padding-top:40px">
+    <div class="blk first">
       <h2 class="h2">How it works</h2>
-      <ol class="how" style="list-style:none;margin:0;padding:0">
+      <ol class="how">
         {
           steps.map((step, index) => (
-            <li style="padding:20px 22px;display:grid;gap:6px;align-content:start">
+            <li>
               <span class="n">Step {index + 1}</span>
               <b>{step.name}</b>
               <p>{step.text}</p>
@@ -89,7 +89,7 @@ const faq = [
     </div>
     <div class="blk">
       <h2 class="h2">What goes in the folder</h2>
-      <pre class="code">templates/n8n/
+      <pre class="code" tabindex="0" role="region" aria-label="What goes in a template folder">templates/n8n/
   template.yaml        <span class="c">name, description, tags, links, the values setup asks for</span>
   cloudgate.yaml       <span class="c">what Cloudgate runs</span>
   docker-compose.yml   <span class="c">only when the app needs one</span>
@@ -97,7 +97,7 @@ const faq = [
   index.md             <span class="c">this website's page: tagline, category, what it replaces, features, questions</span>
   screenshots/         <span class="c">optional</span></pre>
     </div>
-    <div class="blk" style="padding-bottom:56px">
+    <div class="blk last">
       <h2 class="h2">Questions</h2>
       <Faq items={faq} />
     </div>

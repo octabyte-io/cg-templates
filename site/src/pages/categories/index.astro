@@ -8,7 +8,7 @@ import { href } from '../../lib/site';
 const categories = usedCategories();
 const templates = getTemplates();
 const trail = [
-  { name: 'Apps', path: '' },
+  { name: 'Home', path: '' },
   { name: 'Categories', path: 'categories/' },
 ];
 ---
@@ -23,13 +23,13 @@ const trail = [
   jsonLd={graph(breadcrumbSchema(trail))}
 >
   <Crumbs trail={trail} />
-  <section class="apphead pad" style="grid-template-columns:1fr">
+  <section class="apphead one pad">
     <div class="body">
       <h1 class="h1">Browse apps by category</h1>
       <p class="lede">{templates.length} free apps, grouped by the job they do.</p>
     </div>
   </section>
-  <section class="sec pad" style="padding-block:40px 64px">
+  <section class="sec browse pad">
     <div class="idx">
       {
         categories.map((category) => (

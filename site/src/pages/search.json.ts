@@ -12,10 +12,12 @@ export const GET: APIRoute = () => {
       id: t.id,
       name: t.name,
       description: t.description,
+      tagline: t.tagline,
       category: t.category.name,
       replaces: t.alternativeTo.map((p) => p.name),
       ease: EASE_LABEL[t.ease],
       logo: href(t.logo.path),
+      ink: t.logo.ink,
       url: href(`templates/${t.id}/`),
     })),
     // For each replaced tool, its apps in the alternatives page's order (its pick first).

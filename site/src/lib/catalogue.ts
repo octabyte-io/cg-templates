@@ -130,7 +130,8 @@ export interface Template {
   switching?: { gain: string[]; different: string[] };
   faq: { q: string; a: string }[];
   screenshots: { file: string; path: string; alt: string }[];
-  logo: { file: string; ext: 'svg' | 'png'; path: string };
+  /** `ink`: an SVG drawn only in black or near-black, which needs a light tile in the dark theme. */
+  logo: { file: string; ext: 'svg' | 'png'; path: string; ink: boolean };
   /** The overview: `index.md`'s body as Markdown and as HTML. */
   bodyMarkdown: string;
   bodyHtml: string;
@@ -147,6 +148,24 @@ function splitFrontmatter(source: string): { data: unknown; body: string } {
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(source);
   if (!match) return { data: {}, body: source };
   return { data: parseYaml(match[1]) ?? {}, body: source.slice(match[0].length) };
+}
+
+/**
+ * True when every fill and stroke colour in an SVG is black or nearly so (or it sets none, so it
+ * draws in black). Such a logo vanishes on the dark theme's dark tiles.
+ */
+function isInkOnly(svg: string): boolean {
+  const colours = [...svg.matchAll(/(?:fill|stroke)\s*[=:]\s*["']?\s*(#[0-9a-f]{3,8}|[a-z]+)/gi)]
+    .map((m) => m[1].toLowerCase())
+    .filter((c) => c !== 'none' && c !== 'transparent');
+  const dark = (c: string) => {
+    if (c === 'black') return true;
+    if (!c.startsWith('#')) return false;
+    const hex = c.length === 4 ? [...c.slice(1)].map((x) => x + x).join('') : c.slice(1, 7);
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b < 60;
+  };
+  return colours.every(dark);
 }
 
 function lastCommit(folder: string): Date | undefined {
@@ -222,7 +241,12 @@ function readTemplate(id: string): Template {
     switching: p.switching && (p.switching.gain.length || p.switching.different.length) ? p.switching : undefined,
     faq: p.faq,
     screenshots,
-    logo: { file: path.join(folder, `logo.${logoExt}`), ext: logoExt, path: `logos/${id}.${logoExt}` },
+    logo: {
+      file: path.join(folder, `logo.${logoExt}`),
+      ext: logoExt,
+      path: `logos/${id}.${logoExt}`,
+      ink: logoExt === 'svg' && isInkOnly(read(path.join(folder, 'logo.svg')) ?? ''),
+    },
     bodyMarkdown: body.trim(),
     bodyHtml: body.trim() ? (marked.parse(body, { async: false }) as string) : '',
     updated: lastCommit(folder) ?? statSync(folder).mtime,
@@ -295,7 +319,7 @@ export function popularSwaps(): { product: Product; app: Template; why: string; 
         app,
         why: product.swap.why,
         href: many ? `alternatives/${product.id}/` : `templates/${app.id}/`,
-        go: many ? 'See alternatives' : `See ${app.name}`,
+        go: many ? `See ${product.name} alternatives` : `See ${app.name}`,
       },
     ];
   });

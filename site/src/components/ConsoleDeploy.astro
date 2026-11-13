@@ -50,7 +50,7 @@ const uid = `cd-${id}-${Math.random().toString(36).slice(2, 8)}`;
 
 <style>
   .cdeploy {
-    font-size: 13px;
+    font-size: .8125rem;
     color: var(--muted);
     min-width: 0;
   }
@@ -95,10 +95,10 @@ const uid = `cd-${id}-${Math.random().toString(36).slice(2, 8)}`;
     height: 36px;
     padding: 0 10px;
     border: 1px solid var(--line-strong);
-    border-radius: 6px;
+    border-radius: var(--r-sm);
     background: var(--card);
     color: var(--fg);
-    font: 14px var(--sans);
+    font: .875rem var(--sans);
   }
   .cd-row input:focus-visible {
     outline: 2px solid var(--accent-hi);
@@ -112,7 +112,7 @@ const uid = `cd-${id}-${Math.random().toString(36).slice(2, 8)}`;
     height: 36px;
   }
   .cd-help {
-    font-size: 12.5px;
+    font-size: .8125rem;
     color: var(--faint);
   }
   .cd-help.err {
@@ -137,7 +137,7 @@ const uid = `cd-${id}-${Math.random().toString(36).slice(2, 8)}`;
     background: none;
     padding: 0;
     color: var(--faint);
-    font-size: 12.5px;
+    font-size: .8125rem;
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 3px;
