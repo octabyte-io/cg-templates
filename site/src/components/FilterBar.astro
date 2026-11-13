@@ -1,0 +1,41 @@
+---
+/**
+ * The catalogue's filter bar: a search box, then one chip per category with how many apps it
+ * holds. Shared by the home page and the all-apps page; their scripts read [data-tab] and #q.
+ */
+import type { Category } from '../categories';
+
+interface Props {
+  categories: (Category & { count: number })[];
+  total: number;
+}
+const { categories, total } = Astro.props;
+---
+
+<div class="fbar">
+  <div class="in pad">
+    <label class="sbox"
+      ><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+        ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
+      >
+      <input
+        id="q"
+        type="search"
+        autocomplete="off"
+        placeholder="Search apps, or a tool you pay for like Slack"
+        aria-label="Search apps by name, job or the tool they replace"
+      /></label
+    >
+    <div class="seg" role="toolbar" aria-label="Filter by category">
+      <button type="button" data-tab="" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button>
+      {
+        categories.map((category) => (
+          <button type="button" data-tab={category.id} data-label={category.name} aria-pressed="false">
+            {category.name}
+            <span class="n">{category.count}</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</div>

@@ -42,7 +42,7 @@ function body(): string {
     '',
     `- [All apps](${absolute('templates/')}): every app in the directory, filterable by category or by the tool it replaces.`,
     `- [How it works](${absolute('how-it-works/')}): what happens from choosing an app and clicking Deploy to opening it at its own web address.`,
-    `- [Why self-host](${absolute('why-cloudgate/')}): what a small team pays for per-seat tools against open-source apps on one server, and when a paid tool is still the better choice.`,
+    `- [Why Cloudgate](${absolute('why-cloudgate/')}): what a small team pays for per-seat tools against open-source apps on one server, and when a paid tool is still the better choice.`,
     '',
   );
 
