@@ -13,6 +13,7 @@ import plexItalic from '@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-30
 import CloudgateMark from '../components/CloudgateMark.astro';
 import Palette from '../components/Palette.astro';
 import { alternativesPages, GITHUB_REPO, isSample, usedCategories } from '../lib/catalogue';
+import { withPage, type PageType } from '../lib/schema';
 import { absolute, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 interface Props {
@@ -32,6 +33,10 @@ interface Props {
   noindex?: boolean;
   /** A Markdown copy of this page, for AI tools. */
   markdown?: string;
+  /** What the page's `WebPage` node says it is. */
+  pageType?: PageType;
+  /** When what the page shows last changed, for its `WebPage` node. */
+  dateModified?: Date;
 }
 
 const {
@@ -44,11 +49,18 @@ const {
   bareTitle = false,
   noindex = false,
   markdown,
+  pageType = 'WebPage',
+  dateModified,
 } = Astro.props;
 
 const fullTitle = bareTitle ? title : `${title} | Cloudgate`;
 const canonical = absolute(path);
 const image = absolute(ogImage);
+const indexable = !noindex && !isSample;
+// Every indexable page states what it is, as one connected graph (lib/schema.ts, withPage).
+const pageJsonLd = indexable
+  ? withPage(jsonLd, { type: pageType, url: canonical, name: fullTitle, description, image, dateModified })
+  : jsonLd;
 // The swaps the home page shows come first, then the products with the most alternatives.
 const topAlternatives = alternativesPages()
   .sort((a, b) => Number(Boolean(b.product.swap)) - Number(Boolean(a.product.swap)) || b.apps.length - a.apps.length)
@@ -64,7 +76,13 @@ const footCategories = usedCategories().slice(0, 4);
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {(noindex || isSample) && <meta name="robots" content="noindex" />}
+    {
+      indexable ? (
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      ) : (
+        <meta name="robots" content="noindex" />
+      )
+    }
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:title" content={fullTitle} />
@@ -90,7 +108,7 @@ const footCategories = usedCategories().slice(0, 4);
     <meta name="application-name" content={SITE_NAME} />
     <meta name="author" content="Octabyte" />
     <meta name="generator" content={Astro.generator} />
-    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
+    {pageJsonLd && <script type="application/ld+json" set:html={pageJsonLd} />}
     <script is:inline>
       // Scroll reveal for [data-reveal] (site.css, "Motion"). Runs in the head so hidden-until-seen
       // blocks never flash; without IntersectionObserver nothing is hidden.
@@ -162,7 +180,7 @@ const footCategories = usedCategories().slice(0, 4);
             {isSample && <span class="proto">Preview with sample data</span>}
           </div>
           <div>
-            <h4>Browse</h4>
+            <h2>Browse</h2>
             <ul>
               {footCategories.map((category) => <li><a href={href(`categories/${category.id}/`)}>{category.name}</a></li>)}
               <li><a href={href('templates/')}>All apps</a></li>
@@ -170,7 +188,7 @@ const footCategories = usedCategories().slice(0, 4);
             </ul>
           </div>
           <div>
-            <h4>Popular swaps</h4>
+            <h2>Popular swaps</h2>
             <ul>
               {
                 topAlternatives.map((page) => (
@@ -183,7 +201,7 @@ const footCategories = usedCategories().slice(0, 4);
             </ul>
           </div>
           <div>
-            <h4>Cloudgate</h4>
+            <h2>Cloudgate</h2>
             <ul>
               <li><a href={href('how-it-works/')}>How it works</a></li>
               <li><a href={href('why-cloudgate/')}>Why your own server</a></li>

@@ -50,6 +50,16 @@ note on every page and sets `noindex`.
 ## For search engines and AI tools
 
 Every page is complete HTML without JavaScript, with a canonical URL, Open Graph tags, an Open Graph
-image and JSON-LD (`SoftwareApplication`, `HowTo`, `FAQPage`, `BreadcrumbList`, `ItemList`). The build
-also writes a sitemap, `robots.txt`, `llms.txt`, `llms-full.txt`, `templates.json` and a Markdown copy
-of each app page at `/templates/<id>.md`.
+image, a robots meta tag that allows large image previews and full snippets, and JSON-LD
+(`SoftwareApplication`, `HowTo`, `FAQPage`, `BreadcrumbList`, `ItemList`). `Base.astro` adds a `WebPage`
+node (or `ItemPage`, `CollectionPage`, `AboutPage`) to each indexable page, tied to the site, its
+breadcrumb, its main entity and its last-updated date, so the graph reads as one set of facts. The build
+also writes a sitemap with `<lastmod>` from git history, `robots.txt`, `llms.txt`, `llms-full.txt`,
+`templates.json` and a Markdown copy of each app page at `/templates/<id>.md`.
+
+Crawlers read `robots.txt` only at a domain's root, so while the site is served under `/cg-templates/`
+on GitHub Pages its own `robots.txt` is not read; the robots meta tags still apply, and the sitemap has
+to be submitted in Google Search Console and Bing Webmaster Tools. A custom domain (`BASE_PATH=/`) fixes
+this.
+
+Content changes go through the SearchFit plugin: see `../CLAUDE.md`.
