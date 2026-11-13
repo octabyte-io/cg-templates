@@ -1,0 +1,22 @@
+name: Stirling PDF
+description: "Self-hosted Stirling PDF: edit, merge, convert, sign and OCR PDFs in your browser, on your own server, without uploading documents to a third-party website."
+version: "3.3.0"
+tags: [adobe acrobat alternative, pdf editor, ilovepdf alternative, smallpdf alternative, merge pdf, ocr pdf, pdf tools]
+links:
+  website: https://www.stirling.com
+  docs: https://docs.stirlingpdf.com
+  source: https://github.com/Stirling-Tools/Stirling-PDF
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.stirling-pdf.url}}" }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-zA-Z0-9][a-zA-Z0-9_.-]{2,49}"
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: stirling-pdf, port: 8080 }
