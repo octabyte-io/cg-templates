@@ -30,13 +30,13 @@ function body(): string {
       const pick = apps[0];
       const simplest = apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
       out.push(
-        `### ${apps.some((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} alternatives to ${product.name}`,
+        `### ${apps.every((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} alternatives to ${product.name}`,
         '',
         `Page: ${absolute(`alternatives/${product.id}/`)}`,
         '',
         alternativesLede(product, apps),
         '',
-        ...(copy ? [`#### Why look for a ${product.name} alternative?`, '', copy.whyMarkdown, ''] : []),
+        ...(copy ? [`#### Why look for an alternative to ${product.name}?`, '', copy.whyMarkdown, ''] : []),
         ...apps.map((app) =>
           copy?.apps[app.id]
             ? `- [${app.name}](${appUrl(app)}): ${app.tagline} ${copy.apps[app.id].fit} Import from ${product.name}: ${IMPORT_LABEL[copy.apps[app.id].import].toLowerCase()}.`

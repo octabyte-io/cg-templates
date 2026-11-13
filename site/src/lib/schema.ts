@@ -1,4 +1,4 @@
-import type { Template } from './catalogue';
+import { licenceKind, type Template } from './catalogue';
 
 type Faq = { q: string; a: string };
 import { absolute, SITE_DESCRIPTION, SITE_NAME } from './site';
@@ -140,7 +140,7 @@ export function softwareSchema(template: Template): Json {
     applicationSubCategory: template.category.name,
     license: template.license,
     ...(template.alternativeTo.length
-      ? { alternativeHeadline: `Open-source alternative to ${template.alternativeTo.map((p) => p.name).join(', ')}` }
+      ? { alternativeHeadline: `${licenceKind(template.license).openSource ? 'Open-source' : 'Self-hosted'} alternative to ${template.alternativeTo.map((p) => p.name).join(', ')}` }
       : {}),
     ...(template.screenshots.length
       ? {

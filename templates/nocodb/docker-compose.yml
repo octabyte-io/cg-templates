@@ -1,0 +1,71 @@
+services:
+  nocodb:
+    image: nocodb/nocodb:2026.10.1
+    restart: unless-stopped
+    depends_on:
+      nocodb-db:
+        condition: service_healthy
+      nocodb-redis:
+        condition: service_healthy
+    environment:
+      NC_DB: pg://nocodb-db:5432?u=nocodb&p=${POSTGRES_PASSWORD}&d=nocodb
+      NC_REDIS_URL: redis://nocodb-redis:6379
+      # The public address: invitation and password-reset emails link to it.
+      NC_SITE_URL: ${SITE_URL}
+      NC_AUTH_JWT_SECRET: ${JWT_SECRET}
+      # Background jobs (imports, exports, webhooks) run in nocodb-worker.
+      NC_DISABLE_MUX: "true"
+    volumes:
+      - nocodb-data:/usr/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --tries=1 --spider http://localhost:8080/api/v1/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  nocodb-worker:
+    image: nocodb/nocodb:2026.10.1
+    restart: unless-stopped
+    depends_on:
+      nocodb:
+        condition: service_healthy
+    environment:
+      NC_DB: pg://nocodb-db:5432?u=nocodb&p=${POSTGRES_PASSWORD}&d=nocodb
+      NC_REDIS_URL: redis://nocodb-redis:6379
+      NC_SITE_URL: ${SITE_URL}
+      NC_AUTH_JWT_SECRET: ${JWT_SECRET}
+      NC_WORKER_CONTAINER: "true"
+    volumes:
+      - nocodb-data:/usr/app/data
+
+  nocodb-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nocodb
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: nocodb
+    volumes:
+      - nocodb-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nocodb -d nocodb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  nocodb-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - nocodb-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  nocodb-data:
+  nocodb-db-data:
+  nocodb-redis-data:

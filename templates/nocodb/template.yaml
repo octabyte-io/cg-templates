@@ -1,0 +1,17 @@
+name: NocoDB
+description: "Self-hosted NocoDB: a no-code database that works like a spreadsheet, with linked tables and kanban, calendar and form views. A fair-code Airtable alternative."
+version: "2026.10.1"
+tags: [airtable alternative, no-code database, self-hosted nocodb, spreadsheet database, kanban board, online forms]
+links:
+  website: https://nocodb.com
+  docs: https://nocodb.com/docs/self-hosting/installation/quickstart
+  source: https://github.com/nocodb/nocodb
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SITE_URL: { value: "{{domains.nocodb.url}}" }
+  JWT_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: nocodb, port: 8080 }

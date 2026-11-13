@@ -13,7 +13,8 @@ description: "Say in one plain sentence what this app does for a small business.
 # The app's version this template installs, in quotes. Shown on the page only.
 version: "1.0.0"
 
-# A few lowercase words people might search for. At least one.
+# A few lowercase phrases people might search for, with spaces, not hyphens
+# ("airtable alternative", "no-code database"). At least one.
 tags: [example, replace-me]
 
 # Links to the app's own pages. source (where its code lives) is required.
