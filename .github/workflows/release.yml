@@ -17,7 +17,6 @@ on:
     branches: [main]
     paths:
       - 'templates/**'
-      - 'tools/**'
       - 'site/**'
       - '.github/workflows/release.yml'
   workflow_dispatch:
@@ -29,6 +28,10 @@ on:
 
 permissions:
   contents: read
+
+env:
+  # The Cloudgate CLI release CI uses; keep it the same in check.yml, release.yml and try.yml.
+  CLOUDGATE_CLI: '@octabyte-io/cloudgate@0.0.2-beta.3'
 
 concurrency:
   group: release
@@ -81,18 +84,14 @@ jobs:
         with:
           node-version: 22
 
-      # The vendored CLI (tools/cloudgate/README.md), not `npx @octabyte-io/cloudgate`:
-      # npm's `latest` is a placeholder that prints a notice and exits 0, so a check
-      # run through it passes without checking anything.
+      # A named release, never npm's `latest`: that tag is a placeholder that prints a
+      # notice and exits 0, so a check run through it would pass without checking anything.
       - name: Install the Cloudgate CLI
         if: steps.changed.outputs.publish == 'true'
         id: cli
         run: |
-          mkdir -p "$RUNNER_TEMP/bin"
-          printf '#!/bin/sh\nexec node "%s/tools/cloudgate/cloudgate.mjs" "$@"\n' "$GITHUB_WORKSPACE" > "$RUNNER_TEMP/bin/cloudgate"
-          chmod +x "$RUNNER_TEMP/bin/cloudgate"
-          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-          echo "version=$("$RUNNER_TEMP/bin/cloudgate" --version)" >> "$GITHUB_OUTPUT"
+          npm install --global --no-fund --no-audit "$CLOUDGATE_CLI"
+          echo "version=$(cloudgate --version)" >> "$GITHUB_OUTPUT"
 
       - name: Pack and check catalogue.zip
         if: steps.changed.outputs.publish == 'true'
