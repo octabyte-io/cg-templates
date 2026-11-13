@@ -4,6 +4,7 @@ import path from 'node:path';
 import { z } from 'astro/zod';
 import { marked } from 'marked';
 import { parse as parseYaml } from 'yaml';
+import { imageSize } from './image-size';
 import { categoryById, type Category } from '../categories';
 import { productById, PRODUCTS, type Product } from '../products';
 
@@ -89,7 +90,15 @@ const indexRules = z.strictObject({
     .optional(),
   faq: z.array(z.strictObject({ q: plain('the question'), a: plain('the answer') })).default([]),
   screenshots: z
-    .array(z.strictObject({ src: plain('a path inside screenshots/'), alt: plain('alt text describing the image') }))
+    .array(
+      z.strictObject({
+        src: plain('a path inside screenshots/'),
+        alt: plain('alt text describing the image'),
+        caption: z.string().optional(),
+        credit: z.strictObject({ text: plain('who made the image, and its license'), url: z.url().optional() }).optional(),
+      }),
+    )
+    .max(4, 'has more than 4 screenshots; keep the strongest 4')
     .default([]),
 });
 
@@ -112,6 +121,25 @@ export type Ease = 'easy' | 'some-setup';
 
 export const EASE_LABEL: Record<Ease, string> = { easy: 'Easy', 'some-setup': 'Some setup' };
 
+export interface Screenshot {
+  file: string;
+  /** The original's URL path, e.g. `screenshots/n8n/workflow.webp`. */
+  path: string;
+  /** Its stem, which names the resized copies: `screenshots/n8n/workflow-1280.webp`. */
+  name: string;
+  alt: string;
+  caption?: string;
+  /** Who made it. Without one, the image is Cloudgate's own capture of the app. */
+  credit?: { text: string; url?: string };
+  width: number;
+  height: number;
+  /** The widths the site renders it at, smallest first; never wider than the original. */
+  widths: number[];
+}
+
+/** The widths screenshots are resized to. */
+export const SHOT_WIDTHS = [800, 1400, 2400] as const;
+
 export interface Template {
   id: string;
   name: string;
@@ -129,7 +157,7 @@ export interface Template {
   features: { title: string; text: string }[];
   switching?: { gain: string[]; different: string[] };
   faq: { q: string; a: string }[];
-  screenshots: { file: string; path: string; alt: string }[];
+  screenshots: Screenshot[];
   /** `ink`: an SVG drawn only in black or near-black, which needs a light tile in the dark theme. */
   logo: { file: string; ext: 'svg' | 'png'; path: string; ink: boolean };
   /** The overview: `index.md`'s body as Markdown and as HTML. */
@@ -213,7 +241,26 @@ function readTemplate(id: string): Template {
             `  ${rel}/index.md: screenshots.src ${shot.src} must be a ${SCREENSHOT_EXTS.join(', ')} file (lowercase extension)`,
           );
         }
-        return { file, path: `screenshots/${id}/${path.basename(shot.src)}`, alt: shot.alt };
+        const size = existsSync(file) ? imageSize(file) : null;
+        if (existsSync(file) && !size) problems.push(`  ${rel}/index.md: screenshots.src ${shot.src} could not be read as an image`);
+        if (size && size.width < 800) {
+          problems.push(`  ${rel}/index.md: screenshots.src ${shot.src} is ${size.width}px wide; it needs to be at least 800px`);
+        }
+        const width = size?.width ?? 0;
+        const widths: number[] = SHOT_WIDTHS.filter((w) => w < width);
+        widths.push(Math.min(width, SHOT_WIDTHS[SHOT_WIDTHS.length - 1]));
+        const name = path.basename(shot.src, path.extname(shot.src));
+        return {
+          file,
+          path: `screenshots/${id}/${path.basename(shot.src)}`,
+          name,
+          alt: shot.alt,
+          caption: shot.caption,
+          credit: shot.credit,
+          width,
+          height: size?.height ?? 0,
+          widths,
+        } satisfies Screenshot;
       })
     : [];
 

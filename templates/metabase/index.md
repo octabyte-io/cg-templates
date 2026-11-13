@@ -47,7 +47,13 @@ faq:
     a: Cloudgate starts Metabase on a server with 2 GB of memory, which suits a small team. Many users, large data sets or heavy dashboards need a bigger server.
   - q: Is my data safe with self-hosted Metabase?
     a: Yes, your questions, dashboards and connection details stay on your own server, and saved database passwords are encrypted with a key Cloudgate generates. Metabase reads your business data where it lives and does not copy it elsewhere.
-screenshots: []
+screenshots:
+  - src: screenshots/dashboard.webp
+    alt: "A Metabase dashboard of business health with a donut chart of orders by category, revenue per quarter, a goal progress bar, a map of revenue by state, bar and line charts and a pivot table"
+    caption: "A dashboard built from saved questions: charts, a map, a goal and a pivot table."
+    credit:
+      text: "Metabase · AGPL-3.0"
+      url: https://github.com/metabase/metabase/blob/master/docs/images/metabase-product-screenshot-updated.png
 ---
 
 Metabase is an open-source business intelligence tool that turns the data your business already collects into charts and dashboards anyone on your team can read. You pick what you want to see, such as orders per week or revenue by region, and Metabase draws it. No spreadsheets to update by hand.

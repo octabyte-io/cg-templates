@@ -43,7 +43,13 @@ faq:
     a: The easiest way is to set up this template on Cloudgate. Cloudgate installs Vaultwarden with its database on your server and gives it the secure web address the Bitwarden apps require.
   - q: How do I manage users and sign-ups?
     a: Use the admin page at your web address followed by /admin, signed in with the admin token Cloudgate generated, which you find among this app's variables in Cloudgate. There you can invite people, turn off open sign-up and add email settings for invitations.
-screenshots: []
+screenshots:
+  - src: screenshots/vault.webp
+    alt: "The vault in the Bitwarden web app served by Vaultwarden, listing logins, a card and a secure note, with filters by type and folder"
+    caption: "The vault in the web app, with logins, cards, notes and folders."
+  - src: screenshots/item.webp
+    alt: "A saved login opened in the Vaultwarden web vault, with the username, a hidden password, the website and buttons to copy them"
+    caption: "A saved login, with buttons to copy the username and password."
 ---
 
 Vaultwarden is an open-source password manager server that works with the free Bitwarden apps, so your team can keep and share passwords on your own server instead of paying per person for 1Password or LastPass. It stores passwords, passkeys, card details and secure notes in an encrypted vault and fills in logins for you on websites and in apps.

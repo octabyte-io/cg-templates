@@ -142,7 +142,18 @@ export function softwareSchema(template: Template): Json {
     ...(template.alternativeTo.length
       ? { alternativeHeadline: `Open-source alternative to ${template.alternativeTo.map((p) => p.name).join(', ')}` }
       : {}),
-    ...(template.screenshots.length ? { screenshot: template.screenshots.map((shot) => absolute(shot.path)) } : {}),
+    ...(template.screenshots.length
+      ? {
+          screenshot: template.screenshots.map((shot) => ({
+            '@type': 'ImageObject',
+            contentUrl: absolute(shot.path),
+            caption: shot.caption ?? shot.alt,
+            width: shot.width,
+            height: shot.height,
+            ...(shot.credit ? { creditText: shot.credit.text } : {}),
+          })),
+        }
+      : {}),
     image: absolute(template.logo.path),
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Linux, Docker',

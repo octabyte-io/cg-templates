@@ -47,7 +47,16 @@ faq:
     a: Matomo recommends 2 CPUs and 2 GB of memory for websites with up to about 100,000 page views a month, so Cloudgate starts it on a 2 GB server. Busier websites need a larger server.
   - q: Is my visitors' data private with Matomo?
     a: Yes, every report is stored in your own database on your own server, and Matomo shares nothing with third parties. You own the data and can delete or export it at any time.
-screenshots: []
+screenshots:
+  - src: screenshots/visitors.webp
+    alt: "The Matomo visitors overview for a coffee shop website, with a visits-over-time chart and tiles for visits, pageviews, time on site and bounce rate"
+    caption: "The visitors overview: visits over time, pageviews, time on site and bounce rate."
+  - src: screenshots/acquisition.webp
+    alt: "The Matomo acquisition report, listing visits by channel type (search engines, direct entry, social networks, websites and AI assistants) and by referrer"
+    caption: "Where visits come from, including a channel for AI assistants."
+  - src: screenshots/goals.webp
+    alt: "The Matomo goals overview with conversions over time, the total conversions and the conversion rate"
+    caption: "Goals: conversions and the conversion rate, per goal and in total."
 ---
 
 Matomo is an open-source web analytics platform, formerly called Piwik, that gives you reports much like Google Analytics while keeping your visitors' data on your own server. It shows who visits your website, where they came from, which pages they read and what they do before they buy or sign up.

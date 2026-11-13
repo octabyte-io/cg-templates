@@ -45,7 +45,13 @@ faq:
     a: Yes. Your code is stored on your own server, and a private project is visible only to the people and teams you choose.
   - q: How do I stop strangers from signing up?
     a: Register your own account first; it becomes the admin. Then set the "Turn off open sign-up" variable to true in Cloudgate and redeploy, and add new people from Gitea's site administration page.
-screenshots: []
+screenshots:
+  - src: screenshots/repository.webp
+    alt: "A Gitea repository page for a shop website, with the file list, the latest commit, the rendered README and tabs for issues, pull requests, actions, packages, projects, releases and wiki"
+    caption: "A repository: files, the last commit and the README, with issues, pull requests and Actions one tab away."
+  - src: screenshots/issues.webp
+    alt: "The Gitea issues list for the same repository, with five open issues labelled bug, content and shop"
+    caption: "The issue tracker, with labels, milestones and filters."
 ---
 
 Gitea is an open-source, self-hosted Git server that gives your team private code hosting, code reviews, issue tracking and automatic builds on your own server, much like GitHub or Bitbucket. It stores your code with the full history of every change and gives your team one place to review changes, track bugs and plan work. If your developers have used GitHub, they will find their way around in minutes.

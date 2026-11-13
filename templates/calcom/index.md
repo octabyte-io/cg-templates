@@ -43,7 +43,10 @@ faq:
     a: Yes. Your bookings and your clients' names and email addresses are stored in a database on your own server. Calendar and video services you connect receive only the meeting details they need.
   - q: What server size do I need?
     a: A medium server (2 GB of memory) is the smallest that runs Cal.com comfortably, since it needs more memory than most apps when it starts.
-screenshots: []
+screenshots:
+  - src: screenshots/booking.webp
+    alt: "A Cal.com booking page for a one-hour group coffee tasting, with a November calendar of available days and a list of open time slots for the selected day"
+    caption: "A public booking page: the visitor picks a day, then one of the free times."
 ---
 
 Cal.com is an open-source scheduling tool that lets clients book meetings with you from a link, without the usual back-and-forth of emails. You set when you are available and what kinds of meetings you offer, and clients choose a free slot that suits them. The booking goes straight into your calendar.

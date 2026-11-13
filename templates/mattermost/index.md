@@ -41,7 +41,10 @@ faq:
     a: Yes. Messages and files are stored in the database and storage on your own server, not with Mattermost. Notifications to phones pass through Mattermost's notification service, and you can choose in the settings whether they show the message text.
   - q: What server size does Mattermost need?
     a: Cloudgate installs Mattermost on a server with at least 2 GB of memory, which suits a small team. Give it more memory and disk as your team, history and shared files grow.
-screenshots: []
+screenshots:
+  - src: screenshots/channel.webp
+    alt: "A Mattermost channel called Roastery in a coffee company’s workspace, with a short team conversation and the list of channels on the left"
+    caption: "A channel in Mattermost: the conversation in the middle, channels and direct messages on the left."
 ---
 
 Mattermost is an open-source team chat app that gives your team channels, direct messages and threads on a server you control. If your team has used Slack, they will know their way around within minutes: conversations live in channels for each team, project or topic, and people can share files, react with emoji and reply in threads.

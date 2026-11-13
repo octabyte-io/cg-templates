@@ -44,7 +44,13 @@ faq:
     a: There is no official phone app, but the dashboard works in a phone's web browser. Most people get alerts on their phone through Telegram, Slack, Pushover or SMS instead.
   - q: What server size do I need for Uptime Kuma?
     a: Uptime Kuma is light. Cloudgate's smallest size, with 512 MB of memory, is enough to watch a typical small business's websites.
-screenshots: []
+screenshots:
+  - src: screenshots/monitor.webp
+    alt: "An Uptime Kuma monitor for a website, showing it is up, the recent checks as green bars, response time and uptime figures, and a response-time chart"
+    caption: "One monitor: its status, recent checks, response time and uptime."
+  - src: screenshots/dashboard.webp
+    alt: "The Uptime Kuma dashboard with five monitors, counts of up, down and paused monitors, and a list of recent up and down events"
+    caption: "The dashboard: every monitor at a glance and the latest events, including a short outage."
 ---
 
 Uptime Kuma is an open-source uptime monitoring tool that checks your websites and online services around the clock and tells you the moment one stops working, so you hear about it before your customers do. You add a website by pasting its address and choosing how often to check it, as often as every 20 seconds.

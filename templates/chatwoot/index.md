@@ -46,7 +46,13 @@ faq:
     a: Yes. Conversations, contacts and attachments are stored on your own server, not with Chatwoot. Messages still pass through the services you connect, such as WhatsApp or Facebook.
   - q: Do I need an email service?
     a: Yes, if you want to invite teammates or answer customers by email. During setup you can enter the details of an email sending service such as Mailgun, Brevo or your email provider's SMTP server.
-screenshots: []
+screenshots:
+  - src: screenshots/inbox.webp
+    alt: "The Chatwoot inbox: a list of conversations from website chat, Facebook, WhatsApp and email on the left, an open conversation in the middle and the contact’s details on the right"
+    caption: "One inbox for every channel: website chat, email, Facebook and WhatsApp conversations side by side."
+    credit:
+      text: "Chatwoot · MIT"
+      url: https://github.com/chatwoot/chatwoot/blob/master/.github/screenshots/dashboard.png
 ---
 
 Chatwoot is an open-source customer support app that brings every customer conversation into one shared inbox. Messages from the chat window on your website, your support email address, WhatsApp, Facebook, Instagram and Telegram all arrive in the same place, so nobody has to check five apps to see who is waiting for an answer.

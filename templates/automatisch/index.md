@@ -42,7 +42,10 @@ faq:
     a: Yes. Your flows, run history and app logins are stored in a database on your own server, and app logins are encrypted. Data leaves your server only when a flow sends it to an app you connected.
   - q: What server size do I need for Automatisch?
     a: Automatisch runs on a small server with 1 GB of memory, which is enough for a few flows running every few minutes.
-screenshots: []
+screenshots:
+  - src: screenshots/flow.webp
+    alt: "An Automatisch flow with three steps: a webhook trigger for a new website lead, a Google Sheets action that adds the lead to a sheet, and a Slack action that posts to the sales channel"
+    caption: "A three-step flow: a webhook catches a new lead, Google Sheets stores it and Slack tells the sales channel."
 ---
 
 Automatisch is an open-source automation tool that connects your business apps with simple flows: when something happens in one app, it does something in another. For example, when a new row is added to a Google Sheet, it posts a message in Slack, or when a payment arrives in Stripe, it sends a thank-you email.
