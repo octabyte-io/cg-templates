@@ -1,0 +1,116 @@
+# Starts templates on Docker, the way a Cloudgate Server would, with the Cloudgate
+# CLI's `template try`: it makes each template's values as setup does (asked inputs
+# from the folder's test-values.yaml, else their default, else a sample), runs
+# `docker compose up --wait`, checks that every Domain answers without a 5xx, prints
+# the containers' logs when something fails, and removes everything.
+#
+# - Pull requests: only the templates the pull request adds or changes, one job each.
+#   A change to this workflow tries every template.
+# - Run workflow (Actions > Try > Run workflow): every template, or the ids you list.
+name: Try
+
+on:
+  pull_request:
+    paths:
+      - 'templates/**'
+      - '.github/workflows/try.yml'
+  workflow_dispatch:
+    inputs:
+      templates:
+        description: Template ids to try, separated by spaces (empty tries every template)
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: try-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The Cloudgate CLI release CI uses; keep it the same in check.yml, release.yml and try.yml.
+  # Always a named version: npm's `latest` is a placeholder that exits 0 without checking.
+  CLOUDGATE_CLI: '@octabyte-io/cloudgate@0.0.2-beta.3'
+
+jobs:
+  pick:
+    name: Pick templates
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ids: ${{ steps.pick.outputs.ids }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pick the templates to try
+        id: pick
+        env:
+          EVENT: ${{ github.event_name }}
+          WANTED: ${{ inputs.templates }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          all=$(find templates -mindepth 2 -maxdepth 2 -name template.yaml | cut -d/ -f2 | sort)
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            if [ -n "$WANTED" ]; then
+              ids=$(printf '%s\n' $WANTED | sort -u)
+              for id in $ids; do
+                if ! printf '%s\n' "$all" | grep -qx "$id"; then
+                  echo "::error::There is no template '$id' (no templates/$id/template.yaml)."
+                  exit 1
+                fi
+              done
+            else
+              ids=$all
+            fi
+          else
+            changed=$(git diff --name-only "$BASE...$HEAD")
+            if printf '%s\n' "$changed" | grep -qx '.github/workflows/try.yml'; then
+              echo "This workflow changed, so every template is tried."
+              ids=$all
+            else
+              # Templates the pull request touches that still exist (a deleted one has nothing to try).
+              ids=$(printf '%s\n' "$changed" | sed -n 's#^templates/\([^/]*\)/.*#\1#p' | sort -u \
+                | while read -r id; do [ -f "templates/$id/template.yaml" ] && echo "$id"; done)
+            fi
+          fi
+          json=$(printf '%s\n' $ids | jq -R . | jq -sc 'map(select(length > 0))')
+          echo "ids=$json" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Templates to try"
+            if [ "$json" = "[]" ]; then echo "None: no template changed."; else printf -- '- `%s`\n' $ids; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Trying: $json"
+
+  try:
+    name: Try ${{ matrix.id }}
+    needs: pick
+    if: needs.pick.outputs.ids != '[]'
+    runs-on: ubuntu-latest
+    # The CLI's own limit (--timeout) fires first and still removes the stack.
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        id: ${{ fromJSON(needs.pick.outputs.ids) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install the Cloudgate CLI
+        run: |
+          npm install --global --no-fund --no-audit "$CLOUDGATE_CLI"
+          cloudgate --version
+
+      # The id goes through env, not ${{ }} in the script: it comes from a folder
+      # name in the pull request.
+      - name: Try the template
+        env:
+          ID: ${{ matrix.id }}
+        run: cloudgate template try "templates/$ID" --timeout 20

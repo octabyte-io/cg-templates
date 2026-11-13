@@ -8,7 +8,6 @@ on:
   pull_request:
     paths:
       - 'templates/**'
-      - 'tools/**'
       - 'site/**'
       - 'starter-template/**'
       - '.github/workflows/check.yml'
@@ -16,13 +15,16 @@ on:
     branches: [main]
     paths:
       - 'templates/**'
-      - 'tools/**'
       - 'site/**'
       - 'starter-template/**'
       - '.github/workflows/check.yml'
 
 permissions:
   contents: read
+
+env:
+  # The Cloudgate CLI release CI uses; keep it the same in check.yml, release.yml and try.yml.
+  CLOUDGATE_CLI: '@octabyte-io/cloudgate@0.0.2-beta.3'
 
 concurrency:
   group: check-${{ github.ref }}
@@ -61,16 +63,12 @@ jobs:
         working-directory: site
         run: pnpm build
 
-      # The vendored CLI (tools/cloudgate/README.md), not `npx @octabyte-io/cloudgate`:
-      # npm's `latest` is a placeholder that prints a notice and exits 0, so a check
-      # run through it passes without checking anything.
+      # A named release, never npm's `latest`: that tag is a placeholder that prints a
+      # notice and exits 0, so a check run through it would pass without checking anything.
       - name: Install the Cloudgate CLI
         run: |
-          mkdir -p "$RUNNER_TEMP/bin"
-          printf '#!/bin/sh\nexec node "%s/tools/cloudgate/cloudgate.mjs" "$@"\n' "$GITHUB_WORKSPACE" > "$RUNNER_TEMP/bin/cloudgate"
-          chmod +x "$RUNNER_TEMP/bin/cloudgate"
-          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-          "$RUNNER_TEMP/bin/cloudgate" --version
+          npm install --global --no-fund --no-audit "$CLOUDGATE_CLI"
+          cloudgate --version
 
       - name: Check templates with Cloudgate
         run: |
