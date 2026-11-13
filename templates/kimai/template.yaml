@@ -1,0 +1,25 @@
+name: Kimai
+description: "Kimai is self-hosted, open-source time tracking: log hours by customer and project, watch budgets, and turn billable time into reports and invoices."
+version: "2.72.0"
+tags: [time tracking, timesheet software, harvest alternative, toggl alternative, clockify alternative, invoicing, open source time tracking]
+links:
+  website: https://www.kimai.org
+  docs: https://www.kimai.org/documentation/
+  source: https://github.com/kimai/kimai
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  KIMAI_URL: { value: "{{domains.kimai.url}}" }
+  KIMAI_HOST: { value: "{{domains.kimai.host}}" }
+  APP_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email (or the username admin). Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: kimai, port: 8001 }
