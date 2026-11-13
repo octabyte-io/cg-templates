@@ -7,6 +7,11 @@ links:
   docs: https://umami.is/docs
   source: https://github.com/umami-software/umami
 cloudgate: 0.1.0
+compose: app
+size: small
 inputs:
+  DB_PASSWORD: { generate: password }
   APP_SECRET: { generate: hex }
   TWO_FACTOR_ENCRYPTION_KEY: { generate: hex }
+domains:
+  - { service: umami, port: 3000 }

@@ -7,9 +7,12 @@ links:
   docs: https://cal.com/docs/self-hosting/installation
   source: https://github.com/calcom/cal.com
 cloudgate: 0.1.0
+compose: app
+size: medium
 inputs:
-  NEXT_PUBLIC_WEBAPP_URL: { value: "{{domains.app.url}}" }
-  NEXTAUTH_URL: { value: "{{domains.app.url}}" }
+  DB_PASSWORD: { generate: password }
+  NEXT_PUBLIC_WEBAPP_URL: { value: "{{domains.calcom.url}}" }
+  NEXTAUTH_URL: { value: "{{domains.calcom.url}}" }
   NEXTAUTH_SECRET: { generate: base64 }
   # Must be exactly 32 characters (AES-256); a generated password is 32.
   CALENDSO_ENCRYPTION_KEY: { generate: password }
@@ -41,3 +44,5 @@ inputs:
       label: Email server password (optional)
       secret: true
       required: false
+domains:
+  - { service: calcom, port: 3000 }

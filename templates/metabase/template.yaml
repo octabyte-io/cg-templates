@@ -7,7 +7,12 @@ links:
   docs: https://www.metabase.com/docs/latest/
   source: https://github.com/metabase/metabase
 cloudgate: 0.1.0
+compose: app
+size: medium
 inputs:
-  MB_SITE_URL: { value: "{{domains.app.url}}" }
+  DB_PASSWORD: { generate: password }
+  MB_SITE_URL: { value: "{{domains.metabase.url}}" }
   MB_ENCRYPTION_SECRET_KEY: { generate: base64 }
   MB_SESSION_SECRET_KEY: { generate: hex }
+domains:
+  - { service: metabase, port: 3000 }
