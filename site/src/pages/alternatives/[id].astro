@@ -38,8 +38,9 @@ const plural = count === 1 ? 'alternative' : 'alternatives';
 const names = listNames(apps.map((app) => app.name));
 const kinds = new Map(apps.map((app) => [app.id, licenceKind(app.license)]));
 const openApps = apps.filter((app) => kinds.get(app.id)!.openSource);
-// "Open-source" only when at least one app is; a page of source-available apps says "self-hosted".
-const kindWord = openApps.length ? 'open-source' : 'self-hosted';
+// "Open-source" only when every app is; a page with a fair-code or source-available app says
+// "self-hosted", so the title never calls that app open source.
+const kindWord = openApps.length === count ? 'open-source' : 'self-hosted';
 const KindWord = kindWord.charAt(0).toUpperCase() + kindWord.slice(1);
 const freeLine =
   openApps.length === count
