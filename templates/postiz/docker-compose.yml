@@ -1,0 +1,188 @@
+# From Postiz's official compose (github.com/gitroomhq/postiz-docker-compose).
+# Kept: Postiz, its Postgres and Redis, and Temporal (required since v2.12) with
+# its own Postgres and Elasticsearch (Postiz's search attributes need it: without
+# it Temporal refuses them and Postiz's backend does not start). Dropped as
+# optional: Temporal UI, Temporal admin tools, Spotlight.
+#
+# Each social network needs its own developer app keys. They are optional: add
+# them later as variables of this stack (e.g. X_API_KEY) and redeploy.
+services:
+  postiz:
+    image: ghcr.io/gitroomhq/postiz-app:v2.26.0
+    restart: unless-stopped
+    depends_on:
+      postiz-db:
+        condition: service_healthy
+      postiz-redis:
+        condition: service_healthy
+      postiz-temporal:
+        condition: service_healthy
+    environment:
+      MAIN_URL: ${POSTIZ_URL}
+      FRONTEND_URL: ${POSTIZ_URL}
+      NEXT_PUBLIC_BACKEND_URL: ${POSTIZ_URL}/api
+      BACKEND_INTERNAL_URL: http://localhost:3000
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgresql://postiz:${POSTGRES_PASSWORD}@postiz-db:5432/postiz
+      REDIS_URL: redis://postiz-redis:6379
+      TEMPORAL_ADDRESS: postiz-temporal:7233
+      IS_GENERAL: "true"
+      # The first account can always be created; after that, sign-up is closed
+      # unless this is set to "false".
+      DISABLE_REGISTRATION: ${DISABLE_REGISTRATION:-true}
+      RUN_CRON: "true"
+      STORAGE_PROVIDER: local
+      UPLOAD_DIRECTORY: /uploads
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: /uploads
+      API_LIMIT: "30"
+      # Social networks (optional; each needs its own developer app).
+      X_API_KEY: ${X_API_KEY:-}
+      X_API_SECRET: ${X_API_SECRET:-}
+      LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID:-}
+      LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET:-}
+      REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID:-}
+      REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      THREADS_APP_ID: ${THREADS_APP_ID:-}
+      THREADS_APP_SECRET: ${THREADS_APP_SECRET:-}
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID:-}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET:-}
+      INSTAGRAM_APP_ID: ${INSTAGRAM_APP_ID:-}
+      INSTAGRAM_APP_SECRET: ${INSTAGRAM_APP_SECRET:-}
+      YOUTUBE_CLIENT_ID: ${YOUTUBE_CLIENT_ID:-}
+      YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET:-}
+      TIKTOK_CLIENT_ID: ${TIKTOK_CLIENT_ID:-}
+      TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET:-}
+      PINTEREST_CLIENT_ID: ${PINTEREST_CLIENT_ID:-}
+      PINTEREST_CLIENT_SECRET: ${PINTEREST_CLIENT_SECRET:-}
+      DRIBBBLE_CLIENT_ID: ${DRIBBBLE_CLIENT_ID:-}
+      DRIBBBLE_CLIENT_SECRET: ${DRIBBBLE_CLIENT_SECRET:-}
+      TUMBLR_CLIENT_ID: ${TUMBLR_CLIENT_ID:-}
+      TUMBLR_CLIENT_SECRET: ${TUMBLR_CLIENT_SECRET:-}
+      GOOGLE_GMB_CLIENT_ID: ${GOOGLE_GMB_CLIENT_ID:-}
+      GOOGLE_GMB_CLIENT_SECRET: ${GOOGLE_GMB_CLIENT_SECRET:-}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID:-}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET:-}
+      DISCORD_BOT_TOKEN_ID: ${DISCORD_BOT_TOKEN_ID:-}
+      SLACK_ID: ${SLACK_ID:-}
+      SLACK_SECRET: ${SLACK_SECRET:-}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET:-}
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-}
+      TELEGRAM_BOT_NAME: ${TELEGRAM_BOT_NAME:-}
+      MASTODON_URL: ${MASTODON_URL:-https://mastodon.social}
+      MASTODON_CLIENT_ID: ${MASTODON_CLIENT_ID:-}
+      MASTODON_CLIENT_SECRET: ${MASTODON_CLIENT_SECRET:-}
+      TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID:-}
+      TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET:-}
+      KICK_CLIENT_ID: ${KICK_CLIENT_ID:-}
+      KICK_SECRET: ${KICK_SECRET:-}
+      # Optional AI writing help.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - postiz-config:/config
+      - postiz-uploads:/uploads
+    # From the official file, but asks through /api/ so it also fails when the
+    # backend is down (nginx then answers 502).
+    healthcheck:
+      test: ["CMD", "node", "-e", "const r=require('http').get('http://localhost:5000/api/',res=>process.exit(res.statusCode<500?0:1));r.on('error',()=>process.exit(1));r.setTimeout(4000,()=>{r.destroy();process.exit(1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  postiz-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postiz
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postiz
+    volumes:
+      - postiz-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postiz -d postiz"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postiz-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - postiz-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postiz-temporal:
+    image: temporalio/auto-setup:1.28.1
+    restart: unless-stopped
+    depends_on:
+      postiz-temporal-db:
+        condition: service_healthy
+      postiz-temporal-es:
+        condition: service_healthy
+    environment:
+      DB: postgres12
+      DB_PORT: "5432"
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: ${TEMPORAL_DB_PASSWORD}
+      POSTGRES_SEEDS: postiz-temporal-db
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/postiz.yaml
+      ENABLE_ES: "true"
+      ES_SEEDS: postiz-temporal-es
+      ES_VERSION: v7
+      TEMPORAL_NAMESPACE: default
+    volumes:
+      - ../files/temporal/dynamicconfig.yaml:/etc/temporal/config/dynamicconfig/postiz.yaml:ro
+    healthcheck:
+      test: ["CMD", "temporal", "operator", "cluster", "health", "--address", "postiz-temporal:7233"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  postiz-temporal-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: ${TEMPORAL_DB_PASSWORD}
+    volumes:
+      - postiz-temporal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postiz-temporal-es:
+    image: elasticsearch:7.17.27
+    restart: unless-stopped
+    environment:
+      cluster.routing.allocation.disk.threshold_enabled: "true"
+      cluster.routing.allocation.disk.watermark.low: 512mb
+      cluster.routing.allocation.disk.watermark.high: 256mb
+      cluster.routing.allocation.disk.watermark.flood_stage: 128mb
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms256m -Xmx256m
+      xpack.security.enabled: "false"
+    volumes:
+      - postiz-temporal-es-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+volumes:
+  postiz-config:
+  postiz-uploads:
+  postiz-db-data:
+  postiz-redis-data:
+  postiz-temporal-db-data:
+  postiz-temporal-es-data:

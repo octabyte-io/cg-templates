@@ -1,0 +1,9 @@
+# Temporal settings from Postiz's official docker-compose (gitroomhq/postiz-docker-compose).
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+# Lets Postiz use the search attributes (postId, organizationId) it registers at
+# start-up without waiting for Temporal's cache to refresh.
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: true
+    constraints: {}
