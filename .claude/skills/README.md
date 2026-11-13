@@ -23,3 +23,11 @@ one, or test one with evals. Unlike the folders above it ships Python scripts (`
 `claude` CLI. New skills it makes for this repo go in `.claude/skills/<name>/`.
 
 To update, copy `skills/skill-creator` from a newer upstream commit and change the commit above.
+
+## add-template
+
+`add-template/` is this repo's own skill, written with skill-creator. Give it one or more app names
+and it researches each app, writes its page and alternatives copy through SearchFit, builds and
+proves the template with `cloudgate template check` and `template try`, audits the whole site, and
+opens one PR with a pass/fail table. Its parallel agents' briefs are in `add-template/references/`;
+`scripts/verify.sh` runs check and try with the CLI version CI pins.
