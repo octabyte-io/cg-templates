@@ -133,20 +133,8 @@ p{margin:0}
 .wbar{display:flex;align-items:center;gap:10px;height:40px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--sunk);font-size:.8125rem;color:var(--muted)}
 .wbar b{font-weight:600;color:var(--fg)}
 .wbar>*{white-space:nowrap}
-.chosen>span{white-space:nowrap}
 .wbar .sp{flex:1}
 .wbar .pill{font:.75rem var(--mono);border:1px solid var(--line);border-radius:var(--r-sm);padding:1px 7px;background:var(--card)}
-.dep{display:grid;grid-template-columns:210px 1fr 300px;min-height:360px}
-.dep>div{min-width:0}
-.dep .steps{border-right:1px solid var(--line);padding:16px 10px;background:var(--sunk);font-size:.875rem;display:grid;gap:2px;align-content:start}
-.dep .steps div{display:flex;gap:10px;align-items:center;padding:8px 10px;color:var(--muted);border-radius:var(--r-sm)}
-.dep .steps div.on{background:var(--card);color:var(--fg);box-shadow:0 0 0 1px var(--line)}
-.dep .steps .n{font:.6875rem var(--mono);width:20px;height:20px;border:1px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;flex:none;background:var(--card)}
-.dep .steps .done .n{background:var(--accent);border-color:var(--accent);color:#fff}
-.dep .mid{padding:18px 20px;display:grid;gap:12px;align-content:start}
-.dep .lab{font-size:.8125rem;color:var(--faint)}
-.chosen{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;background:var(--card)}
-.chosen .h3{font-size:.9375rem}
 .srv{display:grid;gap:6px}
 .srv>span{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;font-size:.875rem;background:var(--card)}
 .srv>span.on{border-color:var(--accent-hi);box-shadow:inset 0 0 0 1px var(--accent-hi)}
@@ -154,13 +142,6 @@ p{margin:0}
 .srv .rd{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none;background:var(--card)}
 .srv .on .rd{border:4px solid var(--accent)}
 .srv small{color:var(--faint);margin-left:auto;font:.75rem var(--mono)}
-.dep .side{border-left:1px solid var(--line);padding:18px 20px;display:grid;gap:12px;align-content:start;background:var(--bg)}
-.sumrow{display:flex;justify-content:space-between;font-size:.875rem;border-bottom:1px dashed var(--line);padding-bottom:8px;gap:10px}
-.sumrow span:first-child{color:var(--faint)}
-.log{font:.75rem/1.85 var(--mono);color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
-.log .ok{color:var(--ok)}
-.caption{display:flex;gap:10px 32px;flex-wrap:wrap;margin-top:22px;font-size:.875rem;color:var(--muted);justify-content:center}
-.caption b{font:500 .75rem var(--mono);color:var(--accent-ink);margin-right:6px}
 
 /* section heads */
 .shead{display:grid;gap:10px;padding-block:72px 32px}
@@ -396,12 +377,10 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 
 /* responsive */
 @media (max-width:1359px){.frame,.foot .frame2{overflow-x:clip}}
-@media (max-width:68.75em){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.dep{grid-template-columns:180px 1fr 260px}.swrow{grid-auto-columns:calc((100% - 24px) / 3)}.split{grid-template-columns:minmax(0,1fr) 300px;gap:32px}.kbtn{min-width:0}}
+@media (max-width:68.75em){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.swrow{grid-auto-columns:calc((100% - 24px) / 3)}.split{grid-template-columns:minmax(0,1fr) 300px;gap:32px}.kbtn{min-width:0}}
 @media (max-width:56.25em){
   .nav{display:none}
   .mbtn{display:flex}
-  .dep{grid-template-columns:1fr}.dep .steps{display:flex;border-right:0;border-bottom:1px solid var(--line);padding:8px;overflow-x:auto}
-  .dep .steps div{white-space:nowrap}.dep .side{border-left:0;border-top:1px solid var(--line)}
   .split{grid-template-columns:1fr;gap:0}
   .split>aside{order:-1}
   .sidecard{position:static;margin:0 0 8px}
@@ -453,7 +432,6 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .brand .bar{margin-inline:1px}
   .swrow{grid-auto-columns:80%}
   .shead{padding-block:52px 24px}
-  .caption{justify-content:flex-start;flex-direction:column;gap:6px}
   .stagewrap{padding-block:0 48px}
   .wbar .pill{display:none}
 }
@@ -489,7 +467,6 @@ ol.how{list-style:none;margin:0;padding:0}
 .how>li{padding:20px 22px;display:grid;gap:6px;align-content:start}
 .how>li+li{border-left:1px solid var(--line)}
 .how b{font-weight:600}
-.caption li{display:inline}
 @media (max-width:40em){.how>li+li{border-left:0;border-top:1px solid var(--line)}}
 
 
@@ -498,13 +475,9 @@ ol.how{list-style:none;margin:0;padding:0}
 .small{font-size:var(--t-sm)}
 .btn.wide{width:100%}
 .ck{width:1em;height:1em;display:inline-block;vertical-align:-.125em;flex:none}
-.dep .steps .n .ck{width:12px;height:12px}
 .tl .b .ck{width:14px;height:14px}
-.chosen.addr{padding:9px 12px;font-size:.875rem}
-.caption{list-style:none;padding:0;margin-block:22px 0}
 .ex{margin-top:10px}
 /* the demo is a picture: nothing in it looks clickable */
-.window.demo,.window.demo *{cursor:default}
 
 /* ---------- Motion ----------
    Small and purposeful (design/prototype/README.md). Transform and opacity only, ease-out curves, UI under 300ms.
@@ -537,14 +510,7 @@ ol.how{list-style:none;margin:0;padding:0}
 .js .tile:not(.is-in) .tl .b,.js .tile:not(.is-in) .seats span{opacity:0;transform:scale(.9)}
 .js [data-reveal]:not(.is-in) .reveal-rows>*{opacity:0;transform:translateY(calc(var(--rise) * .5))}
 
-/* Deploy demo on the home page stage (index.astro). It plays once when the stage is in view. */
-.dep .steps div,.dep .steps .n{transition:background-color .3s var(--ease-out),color .3s,border-color .3s,box-shadow .3s}
-.dep .steps div.live .n{background:var(--ok);border-color:var(--ok);color:#fff}
-.dbar{height:3px;border-radius:2px;background:var(--line);overflow:hidden;opacity:0;transition:opacity .2s var(--ease-out)}
-.dbar span{display:block;height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
-.window[data-phase="run"] .dbar{opacity:1}
-.window[data-phase="live"] .dbar{opacity:0;transition-delay:.4s}
-.window .side .btn.press{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 1px rgba(0,0,0,.22)}
+/* The "Live" dot on the home page stage (Blueprint.astro). */
 .live-dot{display:inline-flex;align-items:center;gap:6px;color:var(--ok)}
 .live-dot i{width:7px;height:7px;border-radius:50%;background:currentColor}
 
