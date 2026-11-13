@@ -9,7 +9,7 @@ import Ease from '../../components/Ease.astro';
 import Faq from '../../components/Faq.astro';
 import ProductMark from '../../components/ProductMark.astro';
 import Screens from '../../components/Screens.astro';
-import { alternativesPages, getTemplates, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
+import { alternativesPages, getTemplates, licenceKind, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
 import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
 import { deployUrl, formatDate, href } from '../../lib/site';
@@ -57,9 +57,12 @@ const title = titles.find((t) => t.length <= 48) ?? titles[titles.length - 1];
 
 // template.yaml's description is a card line (50-160 characters); the meta description adds what
 // a searcher wants to know next, and stops at a sentence so it is never cut mid-word.
+const licence = licenceKind(a.license);
 const sentences = [
   a.description.replace(/\s*$/, ''),
-  replacedNames.length ? `A free, open-source alternative to ${listNames(replacedNames.slice(0, 2))}.` : 'Free and open source.',
+  licence.openSource
+    ? replacedNames.length ? `A free, open-source alternative to ${listNames(replacedNames.slice(0, 2))}.` : 'Free and open source.'
+    : replacedNames.length ? `A free, self-hosted alternative to ${listNames(replacedNames.slice(0, 2))}.` : 'Free to self-host.',
 ];
 const closers = ['Deploy it in a few clicks with Cloudgate, no server needed.', 'Deploy it in a few clicks with Cloudgate.', 'Deploy it with Cloudgate.'];
 const lead = sentences.reduce((out, next) => (`${out} ${next}`.length <= 160 ? `${out} ${next}` : out));
@@ -226,7 +229,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
           <dt>Ease of use</dt><dd><Ease ease={a.ease} /></dd>
           <dt>App price</dt><dd>Free</dd>
           <dt>Server</dt><dd>Yours, or one from Cloudgate</dd>
-          <dt>Code</dt><dd title={`Licence: ${a.license}`}>Open source</dd>
+          <dt>Code</dt><dd title={`Licence: ${a.license}`}>{licence.label}</dd>
           {
             a.updated && (
               <>

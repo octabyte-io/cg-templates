@@ -43,8 +43,8 @@ const kindWord = openApps.length ? 'open-source' : 'self-hosted';
 const KindWord = kindWord.charAt(0).toUpperCase() + kindWord.slice(1);
 const freeLine =
   openApps.length === count
-    ? `All ${count === 1 ? 'of it is' : `${count} are`} free and open source.`
-    : `All ${count} are free to self-host. ${listNames(openApps.map((a) => a.name)) || 'None'} ${openApps.length === 1 ? 'is' : 'are'} open source; ${listNames(
+    ? `${count === 1 ? 'It is' : count === 2 ? 'Both are' : `All ${count} are`} free and open source.`
+    : `${count === 2 ? 'Both' : `All ${count}`} are free to self-host. ${listNames(openApps.map((a) => a.name)) || 'None'} ${openApps.length === 1 ? 'is' : 'are'} open source; ${listNames(
         apps.filter((a) => !kinds.get(a.id)!.openSource).map((a) => `${a.name} (${kinds.get(a.id)!.label.toLowerCase()})`),
       )} ${count - openApps.length === 1 ? 'publishes its code' : 'publish their code'} under a licence that limits reselling it as a service.`;
 
@@ -187,7 +187,7 @@ const thumb = (app: Template) => {
     {
       copy && (
         <div class="blk">
-          <h2 class="h2">Why look for a {product.name} alternative?</h2>
+          <h2 class="h2">Why look for an alternative to {product.name}?</h2>
           <div class="prose" set:html={copy.whyHtml} />
         </div>
       )

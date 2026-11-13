@@ -36,7 +36,7 @@ function body(): string {
         '',
         alternativesLede(product, apps),
         '',
-        ...(copy ? [`#### Why look for a ${product.name} alternative?`, '', copy.whyMarkdown, ''] : []),
+        ...(copy ? [`#### Why look for an alternative to ${product.name}?`, '', copy.whyMarkdown, ''] : []),
         ...apps.map((app) =>
           copy?.apps[app.id]
             ? `- [${app.name}](${appUrl(app)}): ${app.tagline} ${copy.apps[app.id].fit} Import from ${product.name}: ${IMPORT_LABEL[copy.apps[app.id].import].toLowerCase()}.`
