@@ -135,11 +135,6 @@ jobs:
     timeout-minutes: 15
     outputs:
       pages: ${{ steps.pages.outputs.enabled }}
-    env:
-      # Where the site is served. Set the repository variables SITE_URL and
-      # BASE_PATH for a custom domain (e.g. https://templates.example.com and /).
-      SITE_URL: ${{ vars.SITE_URL || 'https://octabyte-io.github.io' }}
-      BASE_PATH: ${{ vars.BASE_PATH || '/cg-templates' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -157,6 +152,29 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
             echo "GitHub Pages is off: the site is built and checked, not deployed. Turn it on in Settings > Pages (Source: GitHub Actions)." >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      # Where Pages serves the site: https://<owner>.github.io/<repo>/, or the root of the
+      # custom domain set in Settings > Pages. The repository variables SITE_URL and
+      # BASE_PATH override it.
+      - uses: actions/configure-pages@v5
+        id: configure
+        if: steps.pages.outputs.enabled == 'true'
+
+      - name: Decide the site's URL
+        env:
+          PAGES_ORIGIN: ${{ steps.configure.outputs.origin }}
+          PAGES_BASE_PATH: ${{ steps.configure.outputs.base_path }}
+          VAR_SITE_URL: ${{ vars.SITE_URL }}
+          VAR_BASE_PATH: ${{ vars.BASE_PATH }}
+        run: |
+          # Canonical URLs are always https, even before Pages enforces it on a new domain.
+          origin=${PAGES_ORIGIN/#http:\/\//https://}
+          if [ -n "$PAGES_ORIGIN" ]; then base=${PAGES_BASE_PATH:-/}; else base=; fi
+          site_url=${VAR_SITE_URL:-${origin:-https://octabyte-io.github.io}}
+          base_path=${VAR_BASE_PATH:-${base:-/cg-templates}}
+          echo "SITE_URL=$site_url" >> "$GITHUB_ENV"
+          echo "BASE_PATH=$base_path" >> "$GITHUB_ENV"
+          echo "Building for ${site_url}${base_path%/}/" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: pnpm/action-setup@v4
         with:

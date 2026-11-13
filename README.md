@@ -18,4 +18,5 @@ template is what makes it appear in every install. The zip is packed and checked
 with "force".
 
 The same workflow deploys the website to GitHub Pages once Pages is turned on (Settings > Pages >
-Source: GitHub Actions); until then it only builds it.
+Source: GitHub Actions); until then it only builds it. It builds for the address Pages reports, so a
+custom domain set in Settings > Pages is picked up on the next run (Actions > Release > Run workflow).
