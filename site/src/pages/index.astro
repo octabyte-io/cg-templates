@@ -9,7 +9,7 @@ import Faq from '../components/Faq.astro';
 import { alternativesPages, getTemplate, getTemplates, listNames, popularSwaps, usedCategories } from '../lib/catalogue';
 import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
 import { costAnswer, HOW_IT_WORKS } from '../lib/copy';
-import { href, SITE_DESCRIPTION } from '../lib/site';
+import { cloudgate, href, SITE_DESCRIPTION } from '../lib/site';
 
 const templates = getTemplates();
 const total = templates.length;
@@ -53,7 +53,7 @@ const faq = [
   },
   {
     q: 'What is Cloudgate?',
-    a: 'Cloudgate is a deployment platform made by Octabyte: a console in your browser that sets up and runs apps on servers and gives each app a web address. You can use it hosted at cloudgate.octabyte.app, or install it on your own server for free. It is source-available under the Elastic License 2.0.',
+    a: 'Cloudgate is a deployment platform made by Octabyte: a console in your browser that sets up and runs apps on servers and gives each app a web address. You can use it hosted, or install it on your own server for free. Its features, pricing and docs are at cloudgate.octabyte.io.',
   },
   {
     q: 'Is my app secure on its web address?',
@@ -168,8 +168,11 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
 
   <section class="sec" id="why" aria-labelledby="why-title">
     <div class="shead pad">
-      <h2 class="h2" id="why-title">Why run apps with Cloudgate</h2>
-      <p class="lede">The same jobs your paid tools do, without paying for every person. Cloudgate looks after the technical parts.</p>
+      <h2 class="h2" id="why-title">Why run these apps on your own server</h2>
+      <p class="lede">
+        The same jobs your paid tools do, without paying for every person. Cloudgate looks after the technical parts:
+        <a href={cloudgate('features')}>see what Cloudgate does</a>.
+      </p>
     </div>
     <div class="bento">
       <div class="tile t-a pad" data-reveal>
@@ -320,7 +323,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <h2 class="h2" id="faq-title">Questions before you deploy</h2>
       <Faq items={faq} />
       <p class="muted selfhost">
-        Prefer to run everything yourself? <a href={href('get-cloudgate/')}>Install Cloudgate on your own server for free</a>, then
+        Prefer to run everything yourself? <a href={cloudgate('self-hosted')}>Install Cloudgate on your own server for free</a>, then
         deploy any app here from your own console.
       </p>
     </div>

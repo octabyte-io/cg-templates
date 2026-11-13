@@ -8,7 +8,7 @@ import Faq from '../components/Faq.astro';
 import ProductTile from '../components/ProductTile.astro';
 import { alternativesPages, getTemplate, getTemplates, isSample } from '../lib/catalogue';
 import { costAnswer, HOW_IT_WORKS } from '../lib/copy';
-import { absolute, href } from '../lib/site';
+import { absolute, cloudgate, href } from '../lib/site';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
 
 /*
@@ -20,8 +20,8 @@ import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
  * Plan reviewed and applied (ADR-0065). Values are made at setup (ADR-0064), a copy never updates
  * from its template, a generated address is plain http and the user's own gets a Let's Encrypt
  * certificate, backups run on a schedule to a destination the user adds (not yet for Compose
- * stacks), and deleting keeps stored data unless asked. Plans, prices and billing belong on
- * Cloudgate's own website, not here.
+ * stacks), and deleting keeps stored data unless asked. Plans, prices, billing and what Cloudgate
+ * does once an app is running belong on Cloudgate's own website (cloudgate.octabyte.io), not here.
  */
 
 const trail = [
@@ -68,29 +68,6 @@ const steps = [
   },
 ];
 
-const daily = [
-  {
-    q: 'How do backups work?',
-    a: 'You choose how often an app’s data is copied, for example every night, and where the copies go: storage you add, away from the server. Cloudgate keeps the number of copies you ask for, and you restore one from the same screen. Today this covers apps that keep their data in a database or storage Cloudgate manages; for apps made of several parts, backups are not in the console yet.',
-    note: 'Nothing is copied until you set a schedule, so do this first.',
-  },
-  {
-    q: 'Will my apps update by themselves?',
-    a: 'No. Cloudgate never updates an app on its own, and an app set up from this site does not change when its page here does. It stays on the version it was set up with until someone on your team changes it and deploys again.',
-    note: 'Take a backup before you change versions.',
-  },
-  {
-    q: 'How do I add my team?',
-    a: 'Invite people by email and give each one a role. You can limit someone to the apps they work on. Neither the apps nor Cloudgate charge per person.',
-    note: 'Twelve people cost the same as two.',
-  },
-  {
-    q: 'Can I move or remove an app?',
-    a: 'Stop an app to take it offline without losing anything. Deleting it removes the app, and its stored data goes only if you ask. An app stays on the server it was set up on, so to move one, set it up on the new server, restore a backup into it, then delete the old one.',
-    note: 'There is no one-click move between servers.',
-  },
-];
-
 const faq = [
   {
     q: 'Do I need to know anything technical?',
@@ -103,6 +80,10 @@ const faq = [
   {
     q: 'What does it cost?',
     a: costAnswer(),
+  },
+  {
+    q: 'Will my apps update by themselves?',
+    a: 'No. Cloudgate never updates an app on its own, and an app set up from this site does not change when its page here does. It stays on the version it was set up with until someone on your team changes it and deploys again. Take a backup before you change versions.',
   },
   {
     q: 'Can I use my own web address?',
@@ -131,7 +112,7 @@ const howTo = {
 
 <Base
   title="How to deploy an open-source app, step by step"
-  description="What happens when you click Deploy: create an account, get a server from Cloudgate or use your own, and open your app. Then backups, updates and your team."
+  description="What happens when you click Deploy on an open-source app: create a Cloudgate account, get a server or connect your own, and open your app at its own web address."
   path="how-it-works/"
   noindex={isSample}
   jsonLd={graph(breadcrumbSchema(trail), howTo, faqSchema(faq))}
@@ -288,24 +269,6 @@ const howTo = {
     </ol>
   </section>
 
-  <section class="sec" id="day-to-day" aria-labelledby="daily-title">
-    <div class="shead pad">
-      <h2 class="h2" id="daily-title">What happens once it is running?</h2>
-      <p class="lede">Cloudgate looks after the routine parts. A few choices stay yours, and here is where.</p>
-    </div>
-    <div class="daily">
-      {
-        daily.map((item) => (
-          <div class="pad">
-            <h3 class="h3">{item.q}</h3>
-            <p>{item.a}</p>
-            <p class="note">{item.note}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
-
   <section class="sec" id="questions" aria-labelledby="faq-title">
     <div class="pad faqwrap">
       <h2 class="h2" id="faq-title">Common questions</h2>
@@ -318,9 +281,13 @@ const howTo = {
     <p class="lede">Find the app that does the same job and click Deploy. Cloudgate does the rest.</p>
     <div class="acts">
       <a class="btn lg" href={`${href()}#catalogue`}>Browse apps</a>
-      <a class="btn lg ghost" href={href('get-cloudgate/')}>Ways to get Cloudgate <Chev /></a>
+      <a class="btn lg ghost" href={href('alternatives/')}>Browse by the tool you replace <Chev /></a>
     </div>
-    <p class="fine">Prefer to run it all yourself? <a href={href('get-cloudgate/#self-host')}>Install Cloudgate on your own server for free</a>.</p>
+    <p class="fine">
+      Backups, teams and everything else Cloudgate does once your app is running are on
+      <a href={cloudgate('features')}>Cloudgate's features page</a>. Prefer to run it all yourself?
+      <a href={cloudgate('self-hosted')}>Install Cloudgate on your own server for free</a>.
+    </p>
   </section>
 </Base>
 
@@ -579,32 +546,6 @@ const howTo = {
     margin-left: 0;
   }
 
-  /* Day to day: quiet, words only, on the hairline grid */
-  .daily {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--line);
-    border-top: 1px solid var(--line);
-  }
-  .daily > div {
-    background: var(--bg);
-    padding-block: 32px 36px;
-    display: grid;
-    gap: 8px;
-    align-content: start;
-  }
-  .daily p {
-    color: var(--muted);
-    font-size: .9375rem;
-    max-width: 60ch;
-  }
-  .daily .note {
-    font-size: .875rem;
-    color: var(--fg);
-    padding-top: 6px;
-  }
-
   .faqwrap {
     display: grid;
     gap: 20px;
@@ -647,9 +588,6 @@ const howTo = {
       justify-self: start;
       max-width: 520px;
     }
-    .daily {
-      grid-template-columns: 1fr;
-    }
   }
   @media (max-width:40em) {
     .intro .acts {
@@ -661,9 +599,6 @@ const howTo = {
     }
     .cta .acts {
       width: 100%;
-    }
-    .daily > div {
-      padding-block: 24px 28px;
     }
     .faqwrap {
       padding-block: 48px 40px;

@@ -16,11 +16,19 @@ export function absolute(path = ''): string {
   return new URL(href(path), import.meta.env.SITE).toString();
 }
 
+/**
+ * Cloudgate's own website: what Cloudgate is, its features, pricing, docs and self-hosting. Product
+ * content lives there; this site is the template catalogue and links to it.
+ */
+export const CLOUDGATE_URL = 'https://cloudgate.octabyte.io';
+
+/** A page on Cloudgate's website: `cloudgate('pricing')`. */
+export function cloudgate(path = ''): string {
+  return path ? `${CLOUDGATE_URL}/${path.replace(/^\//, '')}` : `${CLOUDGATE_URL}/`;
+}
+
 /** Hosted Cloudgate, run by Octabyte: where a visitor without Cloudgate signs up and deploys. */
 export const HOSTED_URL = 'https://cloudgate.octabyte.app';
-
-/** Cloudgate's source, for people who install it on their own server. */
-export const GET_CLOUDGATE_URL = import.meta.env.PUBLIC_GET_CLOUDGATE_URL ?? 'https://github.com/octabyte-io/cloudgate';
 
 /** Where questions about Cloudgate go. PUBLIC_CONTACT_URL overrides it. */
 export const CONTACT_URL = import.meta.env.PUBLIC_CONTACT_URL ?? 'mailto:support@octabyte.io';
