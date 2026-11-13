@@ -421,7 +421,7 @@ export function alternativesPages(): { product: Product; apps: Template[]; copy?
 
 /** How an app's code is shared: the words a visitor understands, from its SPDX licence id. */
 export function licenceKind(license: string): { label: string; openSource: boolean } {
-  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause)/i.test(license)) {
+  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI)/i.test(license)) {
     return { label: license.startsWith('SUL') ? 'Fair-code' : 'Source-available', openSource: false };
   }
   return { label: 'Open source', openSource: true };
