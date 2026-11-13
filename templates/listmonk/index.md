@@ -44,7 +44,13 @@ faq:
     a: Yes. Your subscriber lists, campaigns and statistics are stored in a database on your own server. The email sending service you choose sees only the emails it delivers.
   - q: What server size do I need?
     a: A small server (1 GB of memory) is enough for most businesses, as listmonk uses very little memory even with large lists.
-screenshots: []
+screenshots:
+  - src: screenshots/dashboard.webp
+    alt: "The listmonk dashboard with counts of lists, subscribers and campaigns, charts of campaign views and link clicks, and a list of scheduled campaigns"
+    caption: "The dashboard: lists, subscribers and campaigns, with views and clicks over time."
+    credit:
+      text: "listmonk · AGPL-3.0"
+      url: https://github.com/knadh/listmonk/blob/master/docs/site/static/static/images/splash.webp
 ---
 
 listmonk is an open-source newsletter and mailing list manager that sends email campaigns to your subscribers without charging per contact. You keep your contact lists in it, write emails in a visual editor, and send them now or on a schedule. Each campaign shows how many people opened it and clicked its links.

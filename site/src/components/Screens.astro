@@ -1,0 +1,273 @@
+---
+import type { Template } from '../lib/catalogue';
+import { href } from '../lib/site';
+
+/**
+ * The app page's stage: the template's screenshots in one window. With several, the window bar
+ * holds a tab for each and one shows at a time; without JavaScript they stack. Every pane sits in
+ * the same grid cell, so the window keeps the tallest one's height and switching never moves the
+ * page. Each pane's footer says what it shows and who made the image.
+ */
+interface Props {
+  template: Template;
+}
+
+const { template: a } = Astro.props;
+const shots = a.screenshots;
+const many = shots.length > 1;
+const uid = `scr-${a.id}`;
+// The stage is the page's width, up to the frame plus the stage's overhang on wide screens.
+const sizes = '(min-width: 1360px) 1330px, (min-width: 760px) calc(100vw - 96px), 100vw';
+const label = (name: string) => {
+  const words = name.replace(/[-_]+/g, ' ').trim();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+};
+const srcset = (shot: (typeof shots)[number]) =>
+  shot.widths.map((w) => `${href(`screenshots/${a.id}/${shot.name}-${w}.webp`)} ${w}w`).join(', ');
+---
+
+<section class="stagewrap pad" aria-label={`${a.name} screenshots`}>
+  <div class="stage">
+    <div class="window scr" data-screens={many ? '' : undefined}>
+      <div class="wbar">
+        <b>{a.name}</b>
+        {
+          many ? (
+            <div class="stabs" role="tablist" aria-label={`${a.name} screens`}>
+              {shots.map((shot, i) => (
+                <button
+                  type="button"
+                  role="tab"
+                  id={`${uid}-t${i}`}
+                  aria-controls={`${uid}-p${i}`}
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  tabindex={i === 0 ? 0 : -1}
+                >
+                  {label(shot.name)}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <span class="stitle">{label(shots[0].name)}</span>
+          )
+        }
+      </div>
+      <div class="panes">
+        {
+          shots.map((shot, i) => (
+            <figure
+              class="pane"
+              id={`${uid}-p${i}`}
+              role={many ? 'tabpanel' : undefined}
+              aria-labelledby={many ? `${uid}-t${i}` : undefined}
+              data-active={i === 0 ? '' : undefined}
+            >
+              <a class="full" href={href(shot.path)} title="Open the full-size image">
+              <img
+                src={href(`screenshots/${a.id}/${shot.name}-${shot.widths[Math.min(1, shot.widths.length - 1)]}.webp`)}
+                srcset={srcset(shot)}
+                sizes={sizes}
+                width={shot.width}
+                height={shot.height}
+                alt={shot.alt}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                fetchpriority={i === 0 ? 'high' : undefined}
+                decoding="async"
+              />
+              </a>
+              <figcaption>
+                <span class="what">{shot.caption ?? shot.alt}</span>
+                <span class="who">
+                  {shot.credit ? (
+                    shot.credit.url ? (
+                      <a href={shot.credit.url} rel="noopener">
+                        {shot.credit.text}
+                      </a>
+                    ) : (
+                      shot.credit.text
+                    )
+                  ) : (
+                    'Captured by Cloudgate, with sample data'
+                  )}
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Tabs for a window with several screenshots (WAI-ARIA tabs, automatic activation). A click
+  // cross-fades; the arrow keys switch at once, since keyboard actions are never animated.
+  for (const win of document.querySelectorAll<HTMLElement>('[data-screens]')) {
+    const tabs = [...win.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panes = [...win.querySelectorAll<HTMLElement>('.pane')];
+    const show = (next: number, instant: boolean) => {
+      win.toggleAttribute('data-instant', instant);
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === next));
+        tab.tabIndex = i === next ? 0 : -1;
+      });
+      panes.forEach((pane, i) => pane.toggleAttribute('data-active', i === next));
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', (event) => show(i, event.detail === 0));
+      tab.addEventListener('keydown', (event) => {
+        const at = tabs.indexOf(document.activeElement as HTMLButtonElement);
+        const to =
+          event.key === 'ArrowRight' ? (at + 1) % tabs.length
+          : event.key === 'ArrowLeft' ? (at - 1 + tabs.length) % tabs.length
+          : event.key === 'Home' ? 0
+          : event.key === 'End' ? tabs.length - 1
+          : -1;
+        if (to < 0) return;
+        event.preventDefault();
+        tabs[to].focus();
+        show(to, true);
+      });
+    });
+  }
+</script>
+
+<style>
+  .scr .wbar {
+    gap: 14px;
+  }
+  .stitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* The tabs are a segmented control in the window bar; without JavaScript every pane shows. */
+  .stabs {
+    display: none;
+    margin-left: auto;
+    gap: 2px;
+    padding: 2px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--bg);
+  }
+  :global(.js) .stabs {
+    display: flex;
+  }
+  .stabs button {
+    flex: none;
+    border: 0;
+    background: none;
+    padding: 3px 10px;
+    border-radius: var(--r-sm);
+    color: var(--muted);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      color 0.15s,
+      background-color 0.15s,
+      transform 0.16s var(--ease-out);
+    touch-action: manipulation;
+  }
+  .stabs button:active {
+    transform: scale(0.97);
+  }
+  .stabs button:focus-visible {
+    outline-offset: -2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .stabs button:hover {
+      color: var(--fg);
+    }
+  }
+  .stabs button[aria-selected='true'] {
+    background: var(--card);
+    color: var(--fg);
+    font-weight: 500;
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .panes {
+    display: grid;
+  }
+  .pane {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    min-width: 0;
+    background: var(--sunk);
+  }
+  .pane + .pane {
+    border-top: 1px solid var(--line);
+  }
+  :global(.js) [data-screens] .pane {
+    grid-area: 1 / 1;
+    border-top: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.18s var(--ease-out),
+      visibility 0s linear 0.18s;
+  }
+  :global(.js) [data-screens] .pane[data-active] {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.18s var(--ease-out);
+  }
+  :global(.js) [data-screens][data-instant] .pane {
+    transition: none;
+  }
+  .full {
+    display: block;
+    cursor: zoom-in;
+  }
+  .full:focus-visible {
+    outline-offset: -3px;
+  }
+  .pane img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--sunk);
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+    margin-top: auto;
+    padding: 10px 14px;
+    border-top: 1px solid var(--line);
+    background: var(--sunk);
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+  .what {
+    color: var(--fg);
+    max-width: 72ch;
+  }
+  .who {
+    font: 0.75rem var(--mono);
+    color: var(--faint);
+  }
+  .who a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .who a:hover {
+      color: var(--muted);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stabs button:active {
+      transform: none;
+    }
+  }
+</style>

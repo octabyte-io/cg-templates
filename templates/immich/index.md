@@ -43,7 +43,13 @@ faq:
     a: Immich recommends 8 GB of memory and 4 CPU cores, so Cloudgate asks for a server that size. Plan the disk for your whole library plus about 10 to 20 percent for thumbnails and converted videos.
   - q: Who is the admin?
     a: The first person to open Immich's web address creates the admin account, so do this right after setup. The admin can then add family members or colleagues, each with a private library.
-screenshots: []
+screenshots:
+  - src: screenshots/overview.webp
+    alt: "A collage of Immich screens: the web timeline, a map of where photos were taken, a photo with its details panel, and the mobile app’s timeline, search, library and backup screens"
+    caption: "The web app and the phone app: the timeline, the map, a photo’s details and automatic backup."
+    credit:
+      text: "Immich · AGPL-3.0"
+      url: https://github.com/immich-app/immich/blob/main/design/immich-screenshots.png
 ---
 
 Immich is an open-source photo and video backup app that copies the pictures from your phone to your own server automatically and lets you browse them on any device, much like Google Photos or iCloud Photos. Once the app is set up, every new photo and video uploads in the background, in its original quality.

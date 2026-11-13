@@ -47,7 +47,13 @@ faq:
     a: Yes, all statistics are stored on your own server and are not shared with Plausible or anyone else. Plausible counts visits without cookies and without storing IP addresses.
   - q: What server size do I need for Plausible?
     a: Plausible recommends at least 2 GB of memory, so Cloudgate starts it on a server of that size. The server's processor must support the SSE 4.2 or NEON instructions its statistics database needs, which almost all current servers do.
-screenshots: []
+screenshots:
+  - src: screenshots/dashboard.webp
+    alt: "The Plausible dashboard with unique visitors, total visits, pageviews, views per visit, bounce rate and visit duration, a visitors chart, and lists of top sources and top pages"
+    caption: "Everything on one page: the headline numbers, the visitors chart, top sources and top pages."
+    credit:
+      text: "Plausible · AGPL-3.0"
+      url: https://github.com/plausible/analytics/blob/master/.github/plausible-analytics-dashboard.webp
 ---
 
 Plausible Analytics is an open-source, privacy-friendly web analytics tool that shows how many people visit your website, which pages they read and where they came from, all on one simple page. It is a lighter alternative to Google Analytics: the numbers that matter are at the top, and you click any of them to dig in.

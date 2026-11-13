@@ -43,7 +43,13 @@ faq:
     a: Yes. Your tables, files and settings are stored on your own server, not with Baserow, and you decide who gets an account.
   - q: What server size does Baserow need?
     a: Cloudgate installs Baserow on a server with at least 2 GB of memory, which suits a small team. Large tables, many users or heavy file use need more memory.
-screenshots: []
+screenshots:
+  - src: screenshots/grid.webp
+    alt: "A Baserow table of project tasks in grid view, with status, priority, project, assignee and due date columns"
+    caption: "A table in grid view: each column has a type, such as a single select for status or a link to another table."
+    credit:
+      text: "Baserow · CC BY-SA 4.0"
+      url: https://github.com/baserow/baserow/blob/master/docs/assets/screenshot.png
 ---
 
 Baserow is an open-source no-code database that looks and feels like a spreadsheet but works like a database. Each table holds one kind of thing, such as customers, orders or equipment, and tables can be linked, so you can see every order a customer has placed straight from their row.

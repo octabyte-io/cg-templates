@@ -4,6 +4,7 @@ import path from 'node:path';
 import { z } from 'astro/zod';
 import { marked } from 'marked';
 import { parse as parseYaml } from 'yaml';
+import { imageSize } from './image-size';
 import { categoryById, type Category } from '../categories';
 import { productById, PRODUCTS, type Product } from '../products';
 
@@ -89,7 +90,15 @@ const indexRules = z.strictObject({
     .optional(),
   faq: z.array(z.strictObject({ q: plain('the question'), a: plain('the answer') })).default([]),
   screenshots: z
-    .array(z.strictObject({ src: plain('a path inside screenshots/'), alt: plain('alt text describing the image') }))
+    .array(
+      z.strictObject({
+        src: plain('a path inside screenshots/'),
+        alt: plain('alt text describing the image'),
+        caption: z.string().optional(),
+        credit: z.strictObject({ text: plain('who made the image, and its license'), url: z.url().optional() }).optional(),
+      }),
+    )
+    .max(4, 'has more than 4 screenshots; keep the strongest 4')
     .default([]),
 });
 
@@ -112,6 +121,25 @@ export type Ease = 'easy' | 'some-setup';
 
 export const EASE_LABEL: Record<Ease, string> = { easy: 'Easy', 'some-setup': 'Some setup' };
 
+export interface Screenshot {
+  file: string;
+  /** The original's URL path, e.g. `screenshots/n8n/workflow.webp`. */
+  path: string;
+  /** Its stem, which names the resized copies: `screenshots/n8n/workflow-1280.webp`. */
+  name: string;
+  alt: string;
+  caption?: string;
+  /** Who made it. Without one, the image is Cloudgate's own capture of the app. */
+  credit?: { text: string; url?: string };
+  width: number;
+  height: number;
+  /** The widths the site renders it at, smallest first; never wider than the original. */
+  widths: number[];
+}
+
+/** The widths screenshots are resized to. */
+export const SHOT_WIDTHS = [800, 1400, 2400] as const;
+
 export interface Template {
   id: string;
   name: string;
@@ -129,7 +157,7 @@ export interface Template {
   features: { title: string; text: string }[];
   switching?: { gain: string[]; different: string[] };
   faq: { q: string; a: string }[];
-  screenshots: { file: string; path: string; alt: string }[];
+  screenshots: Screenshot[];
   /** `ink`: an SVG drawn only in black or near-black, which needs a light tile in the dark theme. */
   logo: { file: string; ext: 'svg' | 'png'; path: string; ink: boolean };
   /** The overview: `index.md`'s body as Markdown and as HTML. */
@@ -213,7 +241,26 @@ function readTemplate(id: string): Template {
             `  ${rel}/index.md: screenshots.src ${shot.src} must be a ${SCREENSHOT_EXTS.join(', ')} file (lowercase extension)`,
           );
         }
-        return { file, path: `screenshots/${id}/${path.basename(shot.src)}`, alt: shot.alt };
+        const size = existsSync(file) ? imageSize(file) : null;
+        if (existsSync(file) && !size) problems.push(`  ${rel}/index.md: screenshots.src ${shot.src} could not be read as an image`);
+        if (size && size.width < 800) {
+          problems.push(`  ${rel}/index.md: screenshots.src ${shot.src} is ${size.width}px wide; it needs to be at least 800px`);
+        }
+        const width = size?.width ?? 0;
+        const widths: number[] = SHOT_WIDTHS.filter((w) => w < width);
+        widths.push(Math.min(width, SHOT_WIDTHS[SHOT_WIDTHS.length - 1]));
+        const name = path.basename(shot.src, path.extname(shot.src));
+        return {
+          file,
+          path: `screenshots/${id}/${path.basename(shot.src)}`,
+          name,
+          alt: shot.alt,
+          caption: shot.caption,
+          credit: shot.credit,
+          width,
+          height: size?.height ?? 0,
+          widths,
+        } satisfies Screenshot;
       })
     : [];
 
@@ -288,9 +335,74 @@ export function usedCategories(): (Category & { count: number })[] {
 }
 
 /** Every product some template replaces, with the templates that replace it (its pick first). */
-export function alternativesPages(): { product: Product; apps: Template[] }[] {
+// ---------- Alternatives pages ----------
+
+/** How importing from the product works for one app: a whole export, some of it, or nothing. */
+export type ImportSupport = 'yes' | 'partly' | 'no';
+
+export const IMPORT_LABEL: Record<ImportSupport, string> = { yes: 'Yes', partly: 'Partly', no: 'No' };
+
+/** An alternatives page's own copy, from `src/alternatives/<product id>.md`. */
+export interface AlternativeCopy {
+  /** Why people look for an alternative, as HTML (the file's body). */
+  whyHtml: string;
+  whyMarkdown: string;
+  /** How each app on the page compares with the product, keyed by template id. */
+  apps: Record<string, { fit: string; import: ImportSupport }>;
+  /** How to move from the product, as HTML and Markdown. */
+  movingHtml: string;
+  moving: string;
+  faq: { q: string; a: string }[];
+}
+
+const alternativeRules = z.strictObject({
+  apps: z.record(
+    z.string(),
+    z.strictObject({ fit: plain('how the app compares, in one to three sentences'), import: z.enum(['yes', 'partly', 'no']) }),
+  ),
+  moving: plain('how to move from the product, one paragraph'),
+  faq: z.array(z.strictObject({ q: plain('the question'), a: plain('the answer') })).default([]),
+});
+
+const alternativesDir = path.join(siteRoot, 'src', 'alternatives');
+
+function readAlternativeCopy(product: Product, apps: Template[]): AlternativeCopy | undefined {
+  const file = path.join(alternativesDir, `${product.id}.md`);
+  const source = read(file);
+  const rel = `site/src/alternatives/${product.id}.md`;
+  // Sample templates do not match the real catalogue's pages, so their copy is optional.
+  if (source === null) {
+    if (isSample) return undefined;
+    throw new Error(`The ${product.name} alternatives page needs ${rel}, with why people switch, how each app compares and how to move.`);
+  }
+  const { data, body } = splitFrontmatter(source);
+  const parsed = alternativeRules.safeParse(data);
+  if (!parsed.success) throw new Error(`${rel} is not valid:\n${explain(rel, parsed.error)}`);
+  if (!body.trim()) throw new Error(`${rel} needs a body: why people look for an alternative to ${product.name}.`);
+  if (!isSample) {
+    const onPage = new Set(apps.map((app) => app.id));
+    const missing = apps.filter((app) => !parsed.data.apps[app.id]).map((app) => app.id);
+    const extra = Object.keys(parsed.data.apps).filter((id) => !onPage.has(id));
+    if (missing.length) throw new Error(`${rel}: apps needs an entry for ${missing.join(', ')}`);
+    if (extra.length) throw new Error(`${rel}: apps lists ${extra.join(', ')}, which do not replace ${product.name}`);
+  }
+  const html = (md: string) => marked.parse(md, { async: false }) as string;
+  return {
+    whyMarkdown: body.trim(),
+    whyHtml: html(body),
+    apps: parsed.data.apps,
+    moving: parsed.data.moving.trim(),
+    movingHtml: html(parsed.data.moving),
+    faq: parsed.data.faq,
+  };
+}
+
+let altCache: { product: Product; apps: Template[]; copy?: AlternativeCopy }[] | undefined;
+
+export function alternativesPages(): { product: Product; apps: Template[]; copy?: AlternativeCopy }[] {
+  if (altCache) return [...altCache];
   const templates = getTemplates();
-  return PRODUCTS.map((product) => {
+  altCache = PRODUCTS.map((product) => {
     const apps = templates
       .filter((template) => template.alternativeTo.some((p) => p.id === product.id))
       .sort((a, b) => {
@@ -301,7 +413,18 @@ export function alternativesPages(): { product: Product; apps: Template[] }[] {
         return rank(a) - rank(b) || a.name.localeCompare(b.name);
       });
     return { product, apps };
-  }).filter((page) => page.apps.length > 0);
+  })
+    .filter((page) => page.apps.length > 0)
+    .map((page) => ({ ...page, copy: readAlternativeCopy(page.product, page.apps) }));
+  return [...altCache];
+}
+
+/** How an app's code is shared: the words a visitor understands, from its SPDX licence id. */
+export function licenceKind(license: string): { label: string; openSource: boolean } {
+  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause)/i.test(license)) {
+    return { label: license.startsWith('SUL') ? 'Fair-code' : 'Source-available', openSource: false };
+  }
+  return { label: 'Open source', openSource: true };
 }
 
 /** The home page's popular swaps: products with a `swap` whose target app exists. */

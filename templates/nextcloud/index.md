@@ -44,7 +44,13 @@ faq:
     a: Cloudgate asks for a server with at least 2 GB of memory. Choose the disk size by how many files your team stores, with room to grow.
   - q: Who is the admin?
     a: The first person to open Nextcloud's web address creates the admin account, so do this right after setup. The admin then adds everyone else.
-screenshots: []
+screenshots:
+  - src: screenshots/files.webp
+    alt: "Nextcloud Files showing a shared folder for a coffee company, with a note at the top, recently changed photos and folders for accounts, marketing, menus, photos, the shop and the team handbook"
+    caption: "Nextcloud Files: folders, recent files and a note at the top of the folder."
+  - src: screenshots/dashboard.webp
+    alt: "The Nextcloud dashboard greeting the user, with a widget of recommended files"
+    caption: "The dashboard, with widgets you can add and arrange."
 ---
 
 Nextcloud is an open-source file sharing and collaboration platform that lets you store, sync and share files, calendars and contacts on your own server instead of Google Drive or Dropbox. Files you save in a folder on your computer appear on your phone and in the browser, and you can share any file or folder with a link.

@@ -8,7 +8,8 @@ cg-templates is the Cloudgate template catalogue (`templates/`) and its public A
 The site exists to be found by search engines and quoted by answer engines (AI assistants), so any work
 that writes or changes content goes through the SearchFit plugin (`searchfit-seo`, enabled in `.claude/settings.json` from Anthropic's `knowledge-work-plugins` marketplace). Content
 means page copy, titles and meta descriptions, headings, FAQs, a template's `index.md` and the
-descriptions in its `template.yaml`, `src/products.ts` and `src/categories.ts` copy, structured data,
+descriptions in its `template.yaml`, `src/products.ts` and `src/categories.ts` copy, the alternatives pages' copy in
+`src/alternatives/`, structured data,
 `llms.txt`, and new pages.
 
 | The work | Use |

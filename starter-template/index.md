@@ -62,8 +62,15 @@ faq:
   - q: Who is the admin?
     a: The first person to open the app's web address creates the admin account.
 
-# Optional. Pictures in a screenshots/ folder next to this file, each with a
-# description of what it shows: { src: screenshots/editor.png, alt: "..." }
+# Optional, but they make the page: up to 4 pictures of the app in a screenshots/
+# folder next to this file (PNG, JPEG or WebP, at least 800px wide; 2400px wide is
+# ideal). The first one leads the page. Use the project's own screenshots only when
+# their license allows it, and credit them; otherwise capture the running app with
+# made-up sample data, and leave credit out.
+#   - src: screenshots/editor.png
+#     alt: What the picture shows, for people who cannot see it.
+#     caption: One sentence on what this screen does.   # optional
+#     credit: { text: "My App · MIT", url: https://... } # only for someone else's image
 screenshots: []
 ---
 

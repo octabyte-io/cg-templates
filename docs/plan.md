@@ -61,7 +61,7 @@ description), `tags` and `links` (`source` required). Everything else on the pag
 | `features` | yes | 3–8 `{ title, text }` in plain language: what you can do with it |
 | `goodFor` | no | One line for the alternatives comparison table |
 | `switching` | no | `{ gain: [...], different: [...] }`: what changes when you switch |
-| `screenshots` | no | `{ src, alt }`, alt text required |
+| `screenshots` | no | up to 4 of `{ src, alt, caption?, credit?: { text, url? } }`, alt text required; at least 800px wide. The site resizes them to WebP. Credit an image that is not Cloudgate's own capture |
 | `faq` | no | `{ q, a }` pairs; rendered and emitted as FAQ structured data |
 
 The Markdown body is free-form: headings, images, lists, links. "Last updated" comes from git,

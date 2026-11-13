@@ -46,7 +46,13 @@ faq:
     a: No, the self-hosted Umami does not import Google Analytics history. Keep your old Google Analytics reports for comparison and start fresh in Umami.
   - q: What server size do I need for Umami?
     a: A small server is enough for most small business websites, because Umami is one light app plus a PostgreSQL database. Cloudgate sets up both, and you can move to a bigger server later if your traffic grows.
-screenshots: []
+screenshots:
+  - src: screenshots/dashboard.webp
+    alt: "The Umami overview for a coffee shop website, with visitors, visits, views, bounce rate and visit duration, and a daily bar chart of visitors and views"
+    caption: "The overview: the headline numbers and a chart of visitors and views by day."
+  - src: screenshots/pages-and-sources.webp
+    alt: "The Umami pages and sources reports, listing the most visited paths and the referring sites with their visitor counts"
+    caption: "Top pages and the sites that send visitors."
 ---
 
 Umami is an open-source, privacy-focused web analytics tool that counts the people who visit your website and shows where they came from, which pages they read and what devices they use. Everything fits on one clear dashboard, and one Umami can track as many websites as you like.

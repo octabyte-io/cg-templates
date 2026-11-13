@@ -47,7 +47,13 @@ faq:
     a: Yes. Your pages, posts, customer details and form entries are stored on your own server. Plugins you add may send data to their own services, so check what each one does.
   - q: What server size do I need?
     a: A small server (1 GB of memory) runs a typical business website. Choose a larger one for a busy online shop or a site with many plugins.
-screenshots: []
+screenshots:
+  - src: screenshots/editor.webp
+    alt: "The WordPress block editor with a coffee shop blog post, including a heading, a list, a quote and a button, and the post settings panel on the right"
+    caption: "The block editor: headings, lists, quotes and buttons are blocks, with the post settings on the right."
+  - src: screenshots/posts.webp
+    alt: "The WordPress admin posts list with published posts and a draft, showing author, categories and dates"
+    caption: "The posts list in WordPress admin."
 ---
 
 WordPress is an open-source website builder and content management system that lets anyone create and run a website, blog or online shop. It powers everything from one-page sites for a local café to large online shops and news sites. You pick a theme for the design, then add pages, blog posts and images with a visual editor.

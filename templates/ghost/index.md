@@ -46,7 +46,16 @@ faq:
     a: Yes. Your posts, member list and analytics are stored on your own server, not on a publishing platform. Only the services you connect, such as Stripe for payments and Mailgun for newsletters, receive the data they need to do their job.
   - q: What server size do I need?
     a: A small server (1 GB of memory) is enough to start. Choose a larger one if your site gets a lot of traffic or you send newsletters to tens of thousands of readers.
-screenshots: []
+screenshots:
+  - src: screenshots/posts.webp
+    alt: "The Ghost admin posts list for a coffee blog, showing scheduled, draft and published posts with their feature images"
+    caption: "The posts list in Ghost admin, with drafts, scheduled and published posts."
+  - src: screenshots/editor.webp
+    alt: "The Ghost editor with a feature image, the post title and the opening paragraph of a coffee blog post"
+    caption: "The editor: a feature image, the title and the text, with nothing else in the way."
+  - src: screenshots/site.webp
+    alt: "The published post on a Ghost site using the default theme, with Sign in and Subscribe buttons in the header"
+    caption: "The post on the published site, with Sign in and Subscribe for members."
 ---
 
 Ghost is an open-source publishing platform that lets you run a website, a blog and an email newsletter from one place, and charge readers for memberships. You write a post once, and Ghost puts it on your site and sends it to your subscribers by email.

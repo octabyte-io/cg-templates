@@ -344,13 +344,6 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   table.stack td:nth-child(2){grid-column:1/-1;grid-row:2}
   table.stack td:nth-child(3){grid-column:2;grid-row:1}
 }
-.altlist{display:grid;gap:12px}
-.alt{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;padding:20px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);align-items:center}
-.alt .ttl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.alt .ttl a{font:600 1.125rem var(--sans);letter-spacing:-.01em;text-decoration:none}
-.alt .ttl a:hover{color:var(--accent-ink)}
-.alt p{color:var(--muted);font-size:.875rem;max-width:62ch;margin-top:4px}
-.alt .acts{display:flex;gap:8px}
 
 /* footer */
 .foot{background:var(--footer);color:var(--footer-ink);position:relative;overflow:hidden}
@@ -455,7 +448,6 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .hero .acts .btn{flex:1}
   .apphead{grid-template-columns:1fr;gap:18px}
   .apphead .acts{display:none}
-  .alt{grid-template-columns:auto minmax(0,1fr);padding:16px}.alt .acts{grid-column:1/-1}
   .brand em{display:none}
   .swrow{grid-auto-columns:80%}
   .shead{padding-block:52px 24px}
@@ -477,9 +469,6 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 .prose code{font:.8125rem var(--mono);background:var(--sunk);border:1px solid var(--line);border-radius:var(--r-xs);padding:1px 5px}
 .prose img{max-width:100%;height:auto;border-radius:var(--r-lg);border:1px solid var(--line)}
 /* A real screenshot on the stage */
-.shot{display:block;width:100%;height:auto}
-.shots{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
-.shots img{width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card)}
 /* Category and alternatives index pages */
 .idx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .idx a{display:grid;gap:6px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);padding:16px 18px;text-decoration:none;transition:transform .2s var(--ease-out),border-color .2s,box-shadow .2s}

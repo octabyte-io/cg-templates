@@ -45,7 +45,10 @@ faq:
     a: Yes. Outline imports exports from Notion and Confluence, along with Word, Markdown and HTML files. Notion databases do not carry over as databases, so check them after the import.
   - q: Is my data private with Outline?
     a: Yes. Your documents, images and attachments are stored on your own server, not with Outline. Only the pages you choose to publish are visible on the web.
-screenshots: []
+screenshots:
+  - src: screenshots/document.webp
+    alt: "An Outline document called Opening and closing checklist, with task lists and a table, inside a Café operations collection in the sidebar"
+    caption: "A document in Outline, with checklists, a table and the collection it lives in."
 ---
 
 Outline is a team wiki and knowledge base where your team writes, organises and finds its documents: the handbook, how-to guides, policies and meeting notes. Documents are grouped into collections, such as Sales or Onboarding, and anyone can search across all of them as they type.

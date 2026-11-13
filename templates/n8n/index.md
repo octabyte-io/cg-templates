@@ -47,7 +47,10 @@ faq:
     a: Yes. Your workflows, run history and saved app logins stay in a database on your own server, and logins are encrypted with a key only your installation holds. Data leaves the server only when a workflow sends it to an app you connected.
   - q: What server size do I need for n8n?
     a: n8n runs on a server with 1 GB of memory for light use. If you run many workflows at once or handle large files, choose 2 GB or more.
-screenshots: []
+screenshots:
+  - src: screenshots/workflow.webp
+    alt: "An n8n workflow that takes a contact form, classifies the message with an AI model, then adds sales leads to a Google Sheet and posts them to Slack, or replies to support requests by Gmail"
+    caption: "A workflow on the canvas: a form submission is classified by an AI model, then routed to Sheets and Slack or to a Gmail reply."
 ---
 
 n8n is a workflow automation tool that connects the apps your business already uses and does the repetitive work between them, on a visual board where you drag and join blocks. Its code is public under a fair-code licence, and you can host it yourself with no limit on how many workflows you run.

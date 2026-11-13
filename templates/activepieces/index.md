@@ -47,7 +47,13 @@ faq:
     a: Yes. Your flows, run history and saved app logins are kept in a database on your own server, and logins are encrypted. Data leaves your server only when a flow sends it to an app you connected.
   - q: What server size do I need for Activepieces?
     a: Activepieces needs a server with at least 2 GB of memory, because it runs a database and a job queue next to the app.
-screenshots: []
+screenshots:
+  - src: screenshots/flow-builder.webp
+    alt: "The Activepieces flow builder: a webhook trigger feeding a router that splits into three branches, with the test data of the trigger open in a side panel"
+    caption: "A flow in the builder: a webhook trigger, a router with a branch per event, and the last test run open on the right."
+    credit:
+      text: "Activepieces docs · MIT"
+      url: https://github.com/activepieces/activepieces/blob/main/docs/resources/screenshots/event-destination-flow.png
 ---
 
 Activepieces is an open-source automation tool that connects the online apps your business uses and does the repetitive work between them, in flows you build step by step. If you have used Zapier, you will feel at home straight away: choose what starts a flow, such as a new form entry or a new email, then add the steps that should follow and fill each one in from menus.
