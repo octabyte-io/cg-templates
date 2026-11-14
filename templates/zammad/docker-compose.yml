@@ -1,0 +1,143 @@
+# From the official zammad-docker-compose docker-compose.yml. Left out: zammad-backup
+# (optional backups) and the published port; Cloudgate routes the web address to zammad-nginx.
+x-zammad: &zammad-service
+  image: ghcr.io/zammad/zammad:7.2.3-0000
+  init: true
+  restart: unless-stopped
+  environment:
+    MEMCACHE_SERVERS: zammad-memcached:11211
+    POSTGRESQL_DB: zammad_production
+    POSTGRESQL_HOST: zammad-postgresql
+    POSTGRESQL_USER: zammad
+    POSTGRESQL_PASS: ${POSTGRES_PASS}
+    POSTGRESQL_PORT: "5432"
+    POSTGRESQL_OPTIONS: "?pool=50"
+    # zammad-postgresql creates the database up front; Zammad's role can't create databases.
+    POSTGRESQL_DB_CREATE: "false"
+    REDIS_URL: redis://zammad-redis:6379
+    ELASTICSEARCH_ENABLED: "true"
+    ELASTICSEARCH_HOST: zammad-elasticsearch
+    ELASTICSEARCH_PORT: "9200"
+    # Cloudgate serves the app over HTTPS and passes plain HTTP to nginx; without this
+    # Zammad doesn't set its secure session cookie and sign-in fails with a CSRF error.
+    NGINX_SERVER_SCHEME: https
+    ZAMMAD_HTTP_TYPE: https
+    ZAMMAD_FQDN: ${ZAMMAD_FQDN}
+    TZ: UTC
+  volumes:
+    - zammad-storage:/opt/zammad/storage
+  depends_on:
+    zammad-memcached:
+      condition: service_healthy
+    zammad-postgresql:
+      condition: service_healthy
+    zammad-redis:
+      condition: service_healthy
+
+services:
+  # Runs at each start: creates or migrates the database and search index, then exits.
+  zammad-init:
+    <<: *zammad-service
+    command: ["zammad-init"]
+    restart: on-failure
+    user: 0:0
+
+  zammad-railsserver:
+    <<: *zammad-service
+    command: ["zammad-railsserver"]
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:3000"]
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+
+  zammad-websocket:
+    <<: *zammad-service
+    command: ["zammad-websocket"]
+
+  zammad-scheduler:
+    <<: *zammad-service
+    command: ["zammad-scheduler"]
+
+  zammad-nginx:
+    <<: *zammad-service
+    # Zammad's nginx config also listens on IPv6, which stops nginx from starting on a server
+    # whose kernel has no IPv6; drop that line only there, then start as the image does.
+    entrypoint: ["bash", "-c"]
+    command:
+      - >-
+        [ -e /proc/net/if_inet6 ] || sed -i '/listen \[::\]/d' /opt/zammad/contrib/nginx/zammad.conf;
+        exec /docker-entrypoint.sh zammad-nginx
+    init: false
+    expose:
+      - "8080"
+    depends_on:
+      zammad-railsserver:
+        condition: service_healthy
+
+  zammad-elasticsearch:
+    image: elasticsearch:9.5.5
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+    volumes:
+      - zammad-elasticsearch-data:/usr/share/elasticsearch/data
+
+  zammad-postgresql:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      # The image's bootstrap role is a superuser, so Zammad gets its own role (files/postgresql-initdb.sql).
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASS}
+      ZAMMAD_DB: zammad_production
+      ZAMMAD_DB_USER: zammad
+      ZAMMAD_DB_PASS: ${POSTGRES_PASS}
+    volumes:
+      - zammad-postgresql-data:/var/lib/postgresql/data
+      - ../files/postgresql-initdb.sql:/docker-entrypoint-initdb.d/10-create-zammad-role.sql:ro
+    healthcheck:
+      # Connects as Zammad's own role, so it is healthy only once that role and database exist.
+      test:
+        - CMD-SHELL
+        - >-
+          PGPASSWORD="$${ZAMMAD_DB_PASS}"
+          psql --no-password --quiet --output /dev/null --variable ON_ERROR_STOP=1
+          --host 127.0.0.1 --username "$${ZAMMAD_DB_USER}"
+          --dbname "$${ZAMMAD_DB}" --command "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
+
+  zammad-redis:
+    image: redis:8.10.3-alpine
+    restart: unless-stopped
+    volumes:
+      - zammad-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  zammad-memcached:
+    image: memcached:1.6.45-alpine
+    restart: unless-stopped
+    command: memcached -m 256M
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "11211"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+volumes:
+  zammad-storage:
+  zammad-elasticsearch-data:
+  zammad-postgresql-data:
+  zammad-redis-data:

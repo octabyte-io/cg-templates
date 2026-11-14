@@ -1,0 +1,16 @@
+name: draw.io
+description: "Self-hosted draw.io: draw flowcharts, org charts, network and UML diagrams in your browser, and open Visio and Lucidchart files. Diagrams stay on your device."
+version: "32.6.10"
+tags: [self-hosted draw.io, visio alternative, lucidchart alternative, flowchart maker, diagram editor, org chart, network diagram]
+links:
+  website: https://www.drawio.com
+  docs: https://www.drawio.com/doc/
+  source: https://github.com/jgraph/drawio
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The editor's public address, with the trailing slash the image expects.
+  DRAWIO_SERVER_URL: { value: "{{domains.drawio.url}}/" }
+domains:
+  - { service: drawio, port: 8080 }

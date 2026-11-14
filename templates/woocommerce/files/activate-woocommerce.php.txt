@@ -1,0 +1,40 @@
+<?php
+/**
+ * Plugin Name: Activate WooCommerce once
+ * Description: Switches on WooCommerce the first time an administrator opens the dashboard after
+ *              WordPress is set up. It does it once only, so WooCommerce can be switched off later.
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+add_action(
+	'admin_init',
+	function () {
+		if ( wp_installing() || get_option( 'cloudgate_woocommerce_activated' ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+
+		$plugin = 'woocommerce/woocommerce.php';
+		if ( ! file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+			return;
+		}
+
+		// Recorded first, so a failing activation is never retried on every page load.
+		update_option( 'cloudgate_woocommerce_activated', time() );
+
+		if ( is_plugin_active( $plugin ) ) {
+			return;
+		}
+		$result = activate_plugin( $plugin );
+		if ( is_wp_error( $result ) || wp_doing_ajax() ) {
+			return;
+		}
+
+		// Reload the dashboard so WooCommerce starts as it does on every other page.
+		wp_safe_redirect( admin_url() );
+		exit;
+	}
+);

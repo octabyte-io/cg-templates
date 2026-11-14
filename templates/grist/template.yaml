@@ -1,0 +1,22 @@
+name: Grist
+description: "Grist is a self-hosted relational spreadsheet with linked tables, Python formulas, forms, charts and access rules, for teams outgrowing a shared spreadsheet."
+version: "1.7.22"
+tags: [airtable alternative, relational spreadsheet, spreadsheet database, google sheets alternative, no-code database, self-hosted spreadsheet]
+links:
+  website: https://www.getgrist.com
+  docs: https://support.getgrist.com/self-managed/
+  source: https://github.com/gristlabs/grist-core
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_HOME_URL: { value: "{{domains.grist.url}}" }
+  GRIST_SESSION_SECRET: { generate: hex }
+  GRIST_BOOT_KEY: { generate: password }
+  OWNER_EMAIL:
+    ask:
+      label: Owner email
+      description: The email of the person who runs Grist. It becomes the installation admin and owns the team site.
+      format: email
+domains:
+  - { service: grist, port: 8484 }

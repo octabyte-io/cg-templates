@@ -1,0 +1,65 @@
+services:
+  prestashop:
+    image: prestashop/prestashop:9.2.1-apache
+    restart: unless-stopped
+    # PrestaShop 9's installer renames the "admin" folder to a random name itself, and stops
+    # with an error if the image renamed it first (PS_FOLDER_ADMIN). So the image's start-up
+    # script runs an init script that gives the installer's folder the ADMIN_FOLDER name.
+    command:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /tmp/init-scripts
+        cat > /tmp/init-scripts/10-admin-folder <<'EOF'
+        #!/bin/sh
+        made=$$(cd /var/www/html && ls -d admin[0-9]* 2>/dev/null | head -n 1)
+        if [ -n "$$made" ] && [ ! -e "/var/www/html/$$ADMIN_FOLDER" ]; then
+          mv "/var/www/html/$$made" "/var/www/html/$$ADMIN_FOLDER"
+          find /var/www/html/var/cache -mindepth 1 -delete
+          echo "* Back office folder renamed to $$ADMIN_FOLDER"
+        fi
+        EOF
+        chmod +x /tmp/init-scripts/10-admin-folder
+        exec /tmp/docker_run.sh
+    depends_on:
+      prestashop-db:
+        condition: service_healthy
+    environment:
+      DB_SERVER: prestashop-db
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWD: ${DB_PASSWORD}
+      DB_PREFIX: ps_
+      # Installs the shop on first start (no setup wizard), with this address and admin.
+      PS_INSTALL_AUTO: 1
+      PS_DOMAIN: ${PS_DOMAIN}
+      PS_ENABLE_SSL: 1
+      ADMIN_MAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWD: ${ADMIN_PASSWORD}
+      # The back office lives at https://<domain>/<ADMIN_FOLDER>/.
+      ADMIN_FOLDER: ${ADMIN_FOLDER}
+    volumes:
+      # PrestaShop's code, its settings (written by the installer), modules, themes and images.
+      - prestashop-files:/var/www/html
+
+  prestashop-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: prestashop
+      MARIADB_USER: prestashop
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - prestashop-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  prestashop-files:
+  prestashop-db-data:

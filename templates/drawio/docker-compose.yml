@@ -1,0 +1,13 @@
+services:
+  drawio:
+    # The official image (github.com/jgraph/docker-drawio), built from each
+    # draw.io release. Tomcat serves the editor on 8080; the image's own
+    # self-signed HTTPS on 8443 is not used, since Cloudgate handles HTTPS.
+    image: jgraph/drawio:32.6.10
+    restart: unless-stopped
+    environment:
+      # The public address, with a trailing slash (used for embed, viewer and
+      # sign-in links).
+      DRAWIO_SERVER_URL: ${DRAWIO_SERVER_URL}
+    # No volumes: draw.io keeps no data on the server. Diagrams are saved to
+    # the user's own device or to a cloud storage they connect in the editor.

@@ -1,0 +1,12 @@
+# OpenProject's own proxy (proxy/Caddyfile.template in opf/openproject-docker-compose,
+# stable/17): sends the collaborative-editing socket to hocuspocus and everything else
+# to the web container.
+:80 {
+    reverse_proxy /hocuspocus* hocuspocus:1234
+
+    reverse_proxy * http://web:8080 {
+        # Pass on the scheme and client address set by the proxy in front (Cloudgate's).
+        header_up X-Forwarded-Proto {header.X-Forwarded-Proto}
+        header_up X-Forwarded-For {header.X-Forwarded-For}
+    }
+}

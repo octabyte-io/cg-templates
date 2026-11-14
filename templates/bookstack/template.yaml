@@ -1,0 +1,24 @@
+name: BookStack
+description: "BookStack is a free, open-source, self-hosted team wiki that organises your docs into shelves, books, chapters and pages, in place of Confluence."
+version: "26.09.3"
+tags: [team wiki, knowledge base, documentation, confluence alternative, open source wiki, self-hosted wiki, notion alternative]
+links:
+  website: https://www.bookstackapp.com
+  docs: https://www.bookstackapp.com/docs/
+  source: https://codeberg.org/bookstack/bookstack
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.bookstack.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times shown in the app, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: bookstack, port: 80 }
