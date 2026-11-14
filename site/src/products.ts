@@ -450,6 +450,38 @@ export const PRODUCTS: Product[] = [
     lede: 'Open WebUI is a self-hosted Claude Team alternative: a shared AI chat for your team that can use Claude models through Anthropic’s API, with other models alongside. Claude Team is priced per seat; Open WebUI has no seat price, so you pay for your server and the AI you use, though Claude’s own apps have features it does not match.',
     pick: 'open-webui',
   },
+  {
+    id: 'typeform',
+    name: 'Typeform',
+    icon: 'typeform',
+    job: 'online forms and surveys',
+    lede: 'Formbricks is a free, open-source Typeform alternative for surveys and feedback forms, with logic, custom styling and unlimited responses when you host it yourself. Typeform’s plans cap how many responses you collect each month; self-hosted Formbricks has no response limit and keeps the answers on your server, though it is less focused on polished conversational forms.',
+    pick: 'formbricks',
+  },
+  {
+    id: 'google-forms',
+    name: 'Google Forms',
+    icon: 'googleforms',
+    job: 'online forms and surveys',
+    lede: 'Formbricks is a free, open-source Google Forms alternative that adds survey logic, your own styling and pop-up surveys on your website. Google Forms keeps your answers in a Google account and offers simple design and branching; self-hosted Formbricks keeps the answers on your own server, though it needs a server to run.',
+    pick: 'formbricks',
+  },
+  {
+    id: 'surveymonkey',
+    name: 'SurveyMonkey',
+    icon: 'surveymonkey',
+    job: 'online surveys',
+    lede: 'Formbricks is a free, open-source SurveyMonkey alternative for customer surveys, NPS and feedback, with logic, several languages and unlimited responses. SurveyMonkey keeps many features for paid plans and prices its team plans per user; self-hosted Formbricks has no per-user or per-response price, though it has no respondent panel or benchmark data.',
+    pick: 'formbricks',
+  },
+  {
+    id: 'qualtrics',
+    name: 'Qualtrics',
+    icon: 'qualtrics',
+    job: 'surveys and experience research',
+    lede: 'Formbricks is a free, open-source Qualtrics alternative for running surveys, NPS and in-app feedback on your own server. Qualtrics is an enterprise research platform priced through sales; the free edition of Formbricks covers the surveys themselves, while its dashboards, AI analysis, single sign-on and team roles need a paid licence.',
+    pick: 'formbricks',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));
