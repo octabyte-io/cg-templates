@@ -27,7 +27,7 @@ mkdir -p "$log_dir"
 [ -f "$dir/template.yaml" ] || { echo "No $dir/template.yaml"; echo "RESULT $id check=fail try=skipped"; exit 1; }
 
 cli="$(sed -n "s/^ *CLOUDGATE_CLI: *'\(.*\)'.*/\1/p" "$root/.github/workflows/check.yml" | head -1)"
-[ -n "$cli" ] || cli='@octabyte-io/cloudgate@next'
+[ -n "$cli" ] || cli='@octabyte-io/cloudgate'
 run_cli() { npx -y "$cli" "$@"; }
 
 echo "== template check ($cli)"
