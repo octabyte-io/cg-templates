@@ -1,0 +1,28 @@
+services:
+  siyuan:
+    image: b3log/siyuan:v3.8.10
+    restart: unless-stopped
+    # The image's entrypoint takes the workspace path and starts the server;
+    # since v3.7.0 the "serve" subcommand must be given explicitly.
+    command: ["serve", "--workspace=/siyuan/workspace/"]
+    environment:
+      # The lock screen password every visitor must type before seeing any
+      # notes. SiYuan refuses to serve the workspace over the network without it.
+      SIYUAN_ACCESS_AUTH_CODE: ${SIYUAN_ACCESS_AUTH_CODE}
+      TZ: ${TIMEZONE}
+      # The image creates and switches to this user, and owns the workspace.
+      PUID: "1000"
+      PGID: "1000"
+    volumes:
+      # The whole workspace: notes, assets, settings and the search index.
+      - siyuan-workspace:/siyuan/workspace
+    healthcheck:
+      # Alpine image: busybox wget. /api/system/version answers without signing in.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:6806/api/system/version"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  siyuan-workspace:

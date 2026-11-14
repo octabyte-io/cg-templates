@@ -1,0 +1,82 @@
+# Monica 4 (the stable line; v5 "Chandler" is still in beta), from the official image's
+# Apache example: https://github.com/monicahq/docker
+x-monica-env: &monica-env
+  APP_ENV: production
+  APP_DEBUG: "false"
+  # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+  # It encrypts stored data, so it must never change after the first start.
+  APP_KEY: base64:${APP_KEY}
+  HASH_SALT: ${HASH_SALT}
+  APP_URL: ${APP_URL}
+  # Cloudgate's proxy sits in front on a private network; trust it so Monica sees
+  # the visitor's https address.
+  APP_TRUSTED_PROXIES: "*"
+  # Monica always lets the first account register, even with sign-ups turned off.
+  APP_DISABLE_SIGNUP: ${DISABLE_SIGNUPS:-true}
+  DB_CONNECTION: mysql
+  DB_HOST: monica-db
+  DB_PORT: "3306"
+  DB_DATABASE: monica
+  DB_USERNAME: monica
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_USE_UTF8MB4: "true"
+  CACHE_DRIVER: database
+  SESSION_DRIVER: file
+  QUEUE_CONNECTION: sync
+  LOG_CHANNEL: stderr
+  CHECK_VERSION: "false"
+  # No mail server is set up: add MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
+  # and MAIL_FROM_ADDRESS on the app's variables page to send reminder emails.
+  MAIL_MAILER: smtp
+  MAIL_FROM_NAME: Monica
+
+services:
+  monica:
+    # The official image (Apache + PHP on port 80). On every start it waits for the
+    # database, runs the migrations and creates the API (OAuth) keys, then serves the app.
+    image: monica:4.1.2-apache
+    restart: unless-stopped
+    depends_on:
+      monica-db:
+        condition: service_healthy
+        restart: true
+    environment: *monica-env
+    volumes:
+      # Uploaded photos and documents, and the OAuth keys.
+      - monica-data:/var/www/html/storage
+
+  monica-cron:
+    # The same image running its bundled cron.sh: Laravel's scheduler, which sends
+    # reminders and runs Monica's periodic jobs every minute.
+    image: monica:4.1.2-apache
+    restart: unless-stopped
+    command: ["cron.sh"]
+    depends_on:
+      monica:
+        condition: service_started
+    environment: *monica-env
+    volumes:
+      - monica-data:/var/www/html/storage
+
+  monica-db:
+    image: mariadb:11.4.10
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: monica
+      MARIADB_USER: monica
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - monica-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  monica-data:
+  monica-db-data:

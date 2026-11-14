@@ -1,0 +1,47 @@
+services:
+  navidrome:
+    image: navidrome/navidrome:0.64.2
+    restart: unless-stopped
+    environment:
+      # The address people open, used in share links.
+      ND_BASEURL: ${BASE_URL}
+    volumes:
+      # The SQLite database, cache and artwork.
+      - navidrome-data:/data
+      # The music library, shared with FileBrowser Quantum below. Navidrome notices
+      # new files by itself and adds them to the library.
+      - navidrome-music:/music
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:4533/ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # FileBrowser Quantum: upload music from the browser at its own address,
+  # into the same volume Navidrome plays from. Its default settings serve /srv
+  # with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets the
+  # password of the user "admin" (created on first start, and set back to this
+  # value on every start). Runs as root so it can write to the shared volume,
+  # which both images create owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - navidrome-music:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  navidrome-data:
+  navidrome-music:
+  filebrowser-data:
