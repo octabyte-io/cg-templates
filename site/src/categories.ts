@@ -23,6 +23,9 @@ export const CATEGORIES: Category[] = [
   { id: 'files-photos', name: 'Files & photos', lede: 'Self-hosted cloud storage and photo backup that syncs files across your devices, on your own disk.' },
   { id: 'passwords', name: 'Passwords', lede: 'A self-hosted password manager to share your team’s logins safely, with no per-person subscription.' },
   { id: 'customers-sales', name: 'Customers & sales', lede: 'Open-source tools for your CRM, customer chat, bookings, newsletters, social posts and billable hours, with no fee per user.' },
+  { id: 'help-desk', name: 'Help desk', lede: 'Self-hosted help desks and shared inboxes, so your team answers customer email together with no fee per agent.' },
+  { id: 'finance', name: 'Finance', lede: 'Self-hosted accounting, invoicing and budgeting, so your books and bank data stay on your own server with no monthly subscription.' },
+  { id: 'events', name: 'Events & tickets', lede: 'Self-hosted event pages and ticket sales, so you keep the booking fees an event platform would take.' },
   { id: 'monitoring', name: 'Monitoring', lede: 'Self-hosted uptime monitoring that alerts you when a website goes down, before your customers notice.' },
   { id: 'developer-tools', name: 'Developer tools', lede: 'Self-hosted Git hosting and developer tools, so your code, reviews and builds stay on your server.' },
 ];

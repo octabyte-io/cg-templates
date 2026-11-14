@@ -1,0 +1,29 @@
+name: FreeScout
+description: "Self-hosted FreeScout is a free, open-source shared inbox and help desk: your team answers customer email together, with no fee per agent."
+version: "1.8.251"
+tags: [help scout alternative, zendesk alternative, shared inbox, help desk, customer support email, freshdesk alternative]
+links:
+  website: https://freescout.net
+  docs: https://github.com/freescout-help-desk/freescout/wiki
+  source: https://github.com/freescout-help-desk/freescout
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.freescout.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in the help desk, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: freescout, port: 80 }

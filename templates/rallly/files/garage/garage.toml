@@ -1,0 +1,18 @@
+# Garage, the S3-compatible store where Rallly keeps uploaded images
+# (profile pictures, space icons, branding). From rallly-selfhosted's
+# config/garage.toml, bound to IPv4 (0.0.0.0) instead of [::] so it starts
+# on hosts without IPv6. rpc_secret comes from GARAGE_RPC_SECRET.
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+
+db_engine = "sqlite"
+replication_factor = 1
+rpc_bind_addr = "0.0.0.0:3901"
+
+[s3_api]
+api_bind_addr = "0.0.0.0:3900"
+s3_region = "garage"
+root_domain = ".s3.garage.localhost"
+
+[admin]
+api_bind_addr = "0.0.0.0:3903"

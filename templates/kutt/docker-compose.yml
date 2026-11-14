@@ -1,0 +1,27 @@
+# Kutt's default setup (docker-compose.yml upstream): one container with the
+# built-in SQLite database, kept in the kutt-data volume.
+services:
+  kutt:
+    image: kutt/kutt:v3.2.6
+    restart: unless-stopped
+    environment:
+      DEFAULT_DOMAIN: ${DEFAULT_DOMAIN}
+      JWT_SECRET: ${JWT_SECRET}
+      DB_CLIENT: better-sqlite3
+      # Cloudgate serves every Domain over HTTPS, so short links on extra domains use https too.
+      CUSTOM_DOMAIN_USE_HTTPS: "true"
+      DB_FILENAME: /var/lib/kutt/data.sqlite
+    volumes:
+      - kutt-data:/var/lib/kutt
+      # Optional theme and images (see "Customize" in Kutt's README).
+      - kutt-custom:/kutt/custom
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/v2/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  kutt-data:
+  kutt-custom:

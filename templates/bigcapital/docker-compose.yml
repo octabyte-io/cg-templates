@@ -1,0 +1,218 @@
+# From upstream's docker-compose.prod.yml (v0.25.45). Left out: watchtower auto-update and
+# the optional ClickHouse analytics store (CLICKHOUSE_ENABLED defaults to false). Upstream
+# builds its MariaDB, Redis and migration images; here they are the stock images with the
+# same settings, and the migration runs from the server image as upstream's Dockerfile does.
+
+services:
+  # Upstream's Envoy proxy: /api goes to the API server, the rest to the web app.
+  bigcapital:
+    image: envoyproxy/envoy:v1.30.11
+    restart: unless-stopped
+    depends_on:
+      bigcapital-server:
+        condition: service_healthy
+      bigcapital-webapp:
+        condition: service_started
+    volumes:
+      - ../files/envoy.yaml:/etc/envoy/envoy.yaml:ro
+
+  bigcapital-webapp:
+    image: bigcapitalhq/webapp:v0.25.45
+    restart: unless-stopped
+
+  bigcapital-server:
+    image: bigcapitalhq/server:v0.25.45
+    restart: unless-stopped
+    depends_on:
+      bigcapital-migrate:
+        condition: service_completed_successfully
+      bigcapital-redis:
+        condition: service_healthy
+      bigcapital-storage-setup:
+        condition: service_completed_successfully
+      bigcapital-gotenberg:
+        condition: service_started
+    # The storage key id is "GK" and 24 hex characters, made from a generated value.
+    command:
+      - sh
+      - -c
+      - S3_ACCESS_KEY_ID="GK$$(printf '%s' "$$S3_KEY_SEED" | cut -c1-24)" exec node packages/server/dist/main.js
+    environment:
+      BASE_URL: ${BASE_URL}
+      APP_JWT_SECRET: ${APP_JWT_SECRET}
+
+      DB_HOST: bigcapital-db
+      DB_USER: bigcapital
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_CHARSET: utf8
+      SYSTEM_DB_NAME: bigcapital_system
+      TENANT_DB_NAME_PERFIX: bigcapital_tenant_
+
+      REDIS_HOST: bigcapital-redis
+      REDIS_PORT: "6379"
+      QUEUE_HOST: bigcapital-redis
+      QUEUE_PORT: "6379"
+
+      GOTENBERG_URL: http://bigcapital-gotenberg:3000
+      GOTENBERG_DOCS_URL: http://bigcapital-server:3000/public/
+
+      S3_REGION: garage
+      S3_KEY_SEED: ${S3_KEY_SEED}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      S3_ENDPOINT: http://bigcapital-garage:3900
+      S3_BUCKET: bigcapital
+      S3_FORCE_PATH_STYLE: "true"
+
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_SECURE: ${MAIL_SECURE}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_FROM_NAME: Bigcapital
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+
+      SIGNUP_DISABLED: ${SIGNUP_DISABLED}
+      SIGNUP_ALLOWED_DOMAINS: ${SIGNUP_ALLOWED_DOMAINS}
+      SIGNUP_ALLOWED_EMAILS: ${SIGNUP_ALLOWED_EMAILS}
+      SIGNUP_EMAIL_CONFIRMATION: "false"
+
+      CLICKHOUSE_ENABLED: "false"
+      EXCHANGE_RATE_SERVICE: open-exchange-rate
+      BANK_FEED_ENABLED: "false"
+      THROTTLE_GLOBAL_TTL: "60000"
+      THROTTLE_GLOBAL_LIMIT: "300"
+      THROTTLE_AUTH_TTL: "60000"
+      THROTTLE_AUTH_LIMIT: "30"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/system_db', (r) => process.exit(r.statusCode >= 200 && r.statusCode < 300 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  # Runs at each start: creates and upgrades the system and organization databases.
+  bigcapital-migrate:
+    image: bigcapitalhq/server:v0.25.45
+    restart: "no"
+    working_dir: /app/packages/server
+    command: [sh, -c, "node dist/cli.js system:migrate:latest && node dist/cli.js tenants:migrate:latest"]
+    depends_on:
+      bigcapital-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: bigcapital-db
+      DB_USER: bigcapital
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_CHARSET: utf8
+      SYSTEM_DB_NAME: bigcapital_system
+      TENANT_DB_NAME_PERFIX: bigcapital_tenant_
+
+  bigcapital-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: bigcapital_system
+      MARIADB_USER: bigcapital
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - bigcapital-db-data:/var/lib/mysql
+      - ../files/mariadb-grant.sql:/docker-entrypoint-initdb.d/10-grant.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  bigcapital-redis:
+    image: redis:6.2.21-alpine
+    restart: unless-stopped
+    volumes:
+      - bigcapital-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Makes PDFs of invoices, receipts and reports.
+  bigcapital-gotenberg:
+    image: gotenberg/gotenberg:7.10.2
+    restart: unless-stopped
+
+  # S3-compatible storage for attachments, as in upstream's compose file.
+  bigcapital-garage:
+    image: dxflrs/garage:v1.3.1
+    restart: unless-stopped
+    environment:
+      GARAGE_CONFIG_FILE: /etc/garage.toml
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN}
+    volumes:
+      - ../files/garage.toml:/etc/garage.toml:ro
+      - bigcapital-garage-data:/var/lib/garage
+
+  # Upstream asks you to run docker/garage/setup.sh once by hand and paste the key it
+  # prints. This does the same through Garage's admin API on every start, with a key
+  # Cloudgate generated, and changes nothing once storage is ready: give the node a layout
+  # role, import the access key, create the bucket and allow the key on it.
+  bigcapital-storage-setup:
+    image: curlimages/curl:8.17.0
+    restart: "no"
+    depends_on:
+      bigcapital-garage:
+        condition: service_started
+    environment:
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN}
+      S3_KEY_SEED: ${S3_KEY_SEED}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      S3_BUCKET: bigcapital
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -eu
+
+        api="http://bigcapital-garage:3903/v1"
+        auth="Authorization: Bearer $$GARAGE_ADMIN_TOKEN"
+        json="Content-Type: application/json"
+        key_id="GK$$(printf '%s' "$$S3_KEY_SEED" | cut -c1-24)"
+        bucket="$$S3_BUCKET"
+
+        call() { curl -fsS -H "$$auth" -H "$$json" "$$@"; }
+
+        echo "Waiting for Garage..."
+        i=0
+        until status="$$(call "$$api/status" 2>/dev/null)"; do
+          i=$$((i + 1)); [ "$$i" -lt 60 ] || { echo "Garage did not answer"; exit 1; }
+          sleep 2
+        done
+
+        if printf '%s' "$$status" | grep -q '"layoutVersion": 0'; then
+          node="$$(printf '%s' "$$status" | sed -n 's/^ *"node": *"\([0-9a-f]*\)".*/\1/p' | head -n1)"
+          echo "Assigning the layout to node $$node"
+          call -X POST -d "[{\"id\":\"$$node\",\"zone\":\"dc1\",\"capacity\":10000000000,\"tags\":[]}]" "$$api/layout" >/dev/null
+          call -X POST -d '{"version":1}' "$$api/layout/apply" >/dev/null
+        fi
+
+        if call "$$api/key?id=$$key_id" >/dev/null 2>&1; then
+          echo "Access key already there"
+        else
+          echo "Importing the access key"
+          call -X POST -d "{\"accessKeyId\":\"$$key_id\",\"secretAccessKey\":\"$$S3_SECRET_ACCESS_KEY\",\"name\":\"bigcapital\"}" "$$api/key/import" >/dev/null
+        fi
+
+        if ! info="$$(call "$$api/bucket?globalAlias=$$bucket" 2>/dev/null)"; then
+          echo "Creating bucket $$bucket"
+          info="$$(call -X POST -d "{\"globalAlias\":\"$$bucket\"}" "$$api/bucket")"
+        fi
+        bucket_id="$$(printf '%s' "$$info" | sed -n 's/^ *"id": *"\([0-9a-f]*\)".*/\1/p' | head -n1)"
+
+        call -X POST -d "{\"bucketId\":\"$$bucket_id\",\"accessKeyId\":\"$$key_id\",\"permissions\":{\"read\":true,\"write\":true,\"owner\":true}}" "$$api/bucket/allow" >/dev/null
+        echo "Garage is ready: bucket $$bucket, key $$key_id"
+
+volumes:
+  bigcapital-db-data:
+  bigcapital-redis-data:
+  bigcapital-garage-data:

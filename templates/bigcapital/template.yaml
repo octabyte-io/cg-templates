@@ -1,0 +1,75 @@
+name: Bigcapital
+description: "Self-hosted Bigcapital: open-source accounting for small businesses, with invoices, bills, inventory and financial reports, in place of QuickBooks or Xero."
+version: "0.25.45"
+tags: [accounting software, quickbooks alternative, xero alternative, invoicing, bookkeeping, inventory management, financial reports]
+links:
+  website: https://bigcapital.app
+  docs: https://docs.bigcapital.app
+  source: https://github.com/bigcapitalhq/bigcapital
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  BASE_URL: { value: "{{domains.bigcapital.url}}" }
+  APP_JWT_SECRET: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  GARAGE_RPC_SECRET: { generate: hex }
+  GARAGE_ADMIN_TOKEN: { generate: hex }
+  S3_KEY_SEED: { generate: hex }
+  S3_SECRET_ACCESS_KEY: { generate: hex }
+  SIGNUP_DISABLED:
+    ask:
+      label: Turn off sign-up
+      description: "false while you and your team create your accounts; change it to true afterwards so nobody else who finds the address can sign up."
+      default: "false"
+      pattern: "true|false"
+  SIGNUP_ALLOWED_EMAILS:
+    ask:
+      label: Still allowed to sign up (emails)
+      description: Optional. Only used when sign-up is turned off. Email addresses that can still create an account, separated by commas.
+      required: false
+  SIGNUP_ALLOWED_DOMAINS:
+    ask:
+      label: Still allowed to sign up (email domains)
+      description: Optional. Only used when sign-up is turned off. Email domains whose addresses can still create an account, such as yourcompany.com, separated by commas.
+      required: false
+  MAIL_FROM_ADDRESS:
+    ask:
+      label: Send emails from
+      description: The address Bigcapital's emails come from, such as billing@yourcompany.com. Needed if you fill in an email server below.
+      format: email
+      required: false
+  MAIL_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed to email invoices, invite your team and reset passwords. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  MAIL_SECURE:
+    ask:
+      label: Email server uses TLS from the start
+      description: "true for port 465, false for port 587 (STARTTLS)."
+      default: "false"
+      pattern: "true|false"
+      required: false
+  MAIL_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: bigcapital, port: 8080 }
+files:
+  - { path: envoy.yaml }
+  - { path: garage.toml }
+  - { path: mariadb-grant.sql }

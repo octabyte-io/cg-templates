@@ -1,0 +1,18 @@
+name: Kutt
+description: "Kutt is a self-hosted link shortener: short, branded links on your own domain, with a QR code and click stats for each one."
+version: "v3.2.6"
+tags: [url shortener, link shortener, bitly alternative, branded short links, qr code links, link click stats, rebrandly alternative]
+links:
+  website: https://kutt.to
+  docs: https://github.com/thedevs-network/kutt#readme
+  source: https://github.com/thedevs-network/kutt
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Kutt builds every short link as https://<DEFAULT_DOMAIN>/<address>, so it
+  # wants the bare host, not a URL.
+  DEFAULT_DOMAIN: { value: "{{domains.kutt.host}}" }
+  JWT_SECRET: { generate: hex }
+domains:
+  - { service: kutt, port: 3000 }

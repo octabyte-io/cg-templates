@@ -76,7 +76,7 @@ const faq = [
       ]),
   {
     q: 'Is it really free?',
-    a: `Yes, the ${count === 1 ? 'app is' : 'apps are'} free. ${costAnswer().replace(/^The apps are free\. /, '')} One server can run several apps.`,
+    a: copy?.cost ?? `Yes, the ${count === 1 ? 'app is' : 'apps are'} free. ${costAnswer().replace(/^The apps are free\. /, '')} One server can run several apps.`,
   },
   {
     q: 'Do I need a developer?',

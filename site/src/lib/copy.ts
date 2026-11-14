@@ -61,7 +61,7 @@ export function appFaq(template: Template): { q: string; a: string }[] {
       : []),
   ];
   const topics = [
-    /skill|technical|code|developer/i,
+    /skill|technical|\bcode\b|developer/i,
     /cost|price|free|pay/i,
     /own server|need a server|which server/i,
     /move|import|migrat|switch|carry/i,
