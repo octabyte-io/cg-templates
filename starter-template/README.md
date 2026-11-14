@@ -17,8 +17,8 @@ Copy this folder to add an app to the Cloudgate Templates catalogue.
 3. **Check** it, then **try** it on your own Docker (Node 22 or newer):
 
    ```sh
-   npx @octabyte-io/cloudgate@next template check templates/<your-app-id>
-   npx @octabyte-io/cloudgate@next template try templates/<your-app-id>
+   npx @octabyte-io/cloudgate template check templates/<your-app-id>
+   npx @octabyte-io/cloudgate template try templates/<your-app-id>
    ```
 
    `try` starts the app the way a Cloudgate Server would and checks that every

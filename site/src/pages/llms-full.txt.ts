@@ -45,7 +45,7 @@ function body(): string {
         '',
         ...(copy ? [`#### Moving from ${product.name}`, '', copy.moving, '', ...copy.faq.flatMap((item) => [`**${item.q}** ${item.a}`, ''])] : []),
         apps.length === 1
-          ? `${pick.name} is the open-source option for ${product.job} in the directory today.`
+          ? `${pick.name} is the ${licenceKind(pick.license).openSource ? 'open-source' : 'self-hosted'} option for ${product.job} in the directory today.`
           : `If you are not sure, start with ${pick.name}.${simplest ? ` If you want something simpler, try ${simplest.name}.` : ''} All of them: ${listNames(apps.map((app) => app.name))}.`,
         '',
       );

@@ -31,7 +31,7 @@ concurrency:
 env:
   # The Cloudgate CLI release CI uses; keep it the same in check.yml, release.yml and try.yml.
   # Always a named version: npm's `latest` is a placeholder that exits 0 without checking.
-  CLOUDGATE_CLI: '@octabyte-io/cloudgate@0.0.2-beta.3'
+  CLOUDGATE_CLI: '@octabyte-io/cloudgate@0.1.0'
 
 jobs:
   pick:

@@ -1,0 +1,20 @@
+name: Postiz
+description: "Self-hosted Postiz schedules social media posts to X, LinkedIn, Instagram and more from one calendar."
+version: "2.26.0"
+tags: [social media scheduler, buffer alternative, hootsuite alternative, later alternative, open source social media scheduler, schedule social media posts, social media management]
+links:
+  website: https://postiz.com
+  docs: https://docs.postiz.com
+  source: https://github.com/gitroomhq/postiz-app
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  POSTIZ_URL: { value: "{{domains.postiz.url}}" }
+  JWT_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  TEMPORAL_DB_PASSWORD: { generate: password }
+domains:
+  - { service: postiz, port: 5000 }
+files:
+  - { path: temporal/dynamicconfig.yaml }

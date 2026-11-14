@@ -1,0 +1,24 @@
+name: Plane
+description: "Self-hosted Plane Community Edition: an open-source Jira and Linear alternative to plan sprints and track work items on boards, lists and timelines."
+version: "1.4.3"
+tags: [jira alternative, linear alternative, project management, issue tracker, sprint planning, kanban board, self-hosted project management]
+links:
+  website: https://plane.so
+  docs: https://developers.plane.so/self-hosting/overview
+  source: https://github.com/makeplane/plane
+cloudgate: 0.1.0
+compose: app
+# Plane's self-hosting docs ask for at least 4 GB of memory (8 GB for production).
+size: large
+inputs:
+  WEB_URL: { value: "{{domains.proxy.url}}" }
+  SECRET_KEY: { generate: hex }
+  LIVE_SERVER_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  RABBITMQ_PASSWORD: { generate: password }
+  MINIO_ACCESS_KEY: { generate: password }
+  MINIO_SECRET_KEY: { generate: password }
+# Plane's own proxy sends /api, /auth, /god-mode, /spaces, /live and uploads to
+# the right container, so it is the service that gets the web address.
+domains:
+  - { service: proxy, port: 80 }
