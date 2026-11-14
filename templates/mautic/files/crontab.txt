@@ -1,0 +1,22 @@
+# Mautic's scheduled jobs, run by the mautic-cron container as www-data.
+# The official image's crontab (docker-mautic common/templates/mautic_cron),
+# plus segment emails (broadcasts) and background contact imports, which
+# Mautic's docs list as cron jobs but the image leaves out.
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+BASH_ENV=/tmp/cron.env
+
+# Segments Update - every 15 min
+0,15,30,45 * * * * php /var/www/html/bin/console mautic:segments:update 2>&1 | tee /tmp/stdout
+
+# Campaigns Update - every 15 min starting at 5 past the hour
+5,20,35,50 * * * * php /var/www/html/bin/console mautic:campaigns:update 2>&1 | tee /tmp/stdout
+
+# Trigger Update - every 15 min starting at 10 past the hour
+10,25,40,55 * * * * php /var/www/html/bin/console mautic:campaigns:trigger 2>&1 | tee /tmp/stdout
+
+# Segment (broadcast) emails, including scheduled ones - every 5 min
+2-59/5 * * * * php /var/www/html/bin/console mautic:broadcasts:send 2>&1 | tee /tmp/stdout
+
+# Import Contacts in the background - every 3 min
+*/3 * * * * php /var/www/html/bin/console mautic:import 2>&1 | tee /tmp/stdout

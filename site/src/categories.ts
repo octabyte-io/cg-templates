@@ -27,7 +27,8 @@ export const CATEGORIES: Category[] = [
   { id: 'help-desk', name: 'Help desk', lede: 'Self-hosted help desks and shared inboxes, so your team answers customer email together with no fee per agent.' },
   { id: 'finance', name: 'Finance', lede: 'Self-hosted accounting, invoicing and budgeting, so your books and bank data stay on your own server with no monthly subscription.' },
   { id: 'events', name: 'Events & tickets', lede: 'Self-hosted event pages and ticket sales, so you keep the booking fees an event platform would take.' },
-  { id: 'monitoring', name: 'Monitoring', lede: 'Self-hosted uptime monitoring that alerts you when a website goes down, before your customers notice.' },
+  { id: 'inventory-assets', name: 'Inventory & assets', lede: 'Self-hosted asset tracking and inventory software, so you know who has each laptop, licence and item, with no fee per asset.' },
+  { id: 'monitoring', name: 'Monitoring', lede: 'Self-hosted monitoring that alerts you when a website goes down or a web page, price or stock level changes.' },
   { id: 'developer-tools', name: 'Developer tools', lede: 'Self-hosted Git hosting and developer tools, so your code, reviews and builds stay on your server.' },
 ];
 

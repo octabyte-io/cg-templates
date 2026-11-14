@@ -1,0 +1,51 @@
+services:
+  open-notebook:
+    # The multi-container image (not :*-single); SurrealDB runs as its own
+    # service below, as in the project's docker-compose.yml.
+    image: lfnovo/open_notebook:1.15.1
+    restart: unless-stopped
+    depends_on:
+      surrealdb:
+        condition: service_healthy
+    environment:
+      # The web address is public, so sign-in is on: this password unlocks the
+      # web UI and the REST API.
+      OPEN_NOTEBOOK_PASSWORD: ${OPEN_NOTEBOOK_PASSWORD}
+      # Encrypts the AI provider keys you add in Manage > Models. Changing it
+      # later makes stored keys unreadable.
+      OPEN_NOTEBOOK_ENCRYPTION_KEY: ${OPEN_NOTEBOOK_ENCRYPTION_KEY}
+      # Only port 8502 gets the web address; the browser reaches the API
+      # through the frontend's /api forwarding at the same URL.
+      API_URL: ${API_URL}
+      CORS_ORIGINS: ${API_URL}
+      SURREAL_URL: ws://surrealdb:8000/rpc
+      SURREAL_USER: root
+      SURREAL_PASSWORD: ${SURREAL_PASSWORD}
+      SURREAL_NAMESPACE: open_notebook
+      SURREAL_DATABASE: open_notebook
+    volumes:
+      - open-notebook-data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:5055/health && curl -fsS -o /dev/null http://localhost:8502/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+  surrealdb:
+    image: surrealdb/surrealdb:v2.7.0
+    restart: unless-stopped
+    command: ["start", "--log", "info", "--user", "root", "--pass", "${SURREAL_PASSWORD}", "rocksdb:/mydata/mydatabase.db"]
+    # The image runs as a non-root user that can't write to a fresh volume.
+    user: root
+    volumes:
+      - open-notebook-db-data:/mydata
+    healthcheck:
+      test: ["CMD", "/surreal", "isready", "--endpoint", "http://localhost:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  open-notebook-data:
+  open-notebook-db-data:

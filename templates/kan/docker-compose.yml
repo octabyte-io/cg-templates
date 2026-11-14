@@ -1,0 +1,53 @@
+# From kanbn/kan's docker-compose.yml (v0.7.0): a one-off migrate container,
+# the web app and PostgreSQL. Ports, container names and build sections are
+# removed (Cloudgate routes the web address), and optional extras (OAuth, S3,
+# Redis rate limiting, Trello import) are left out.
+services:
+  kan-migrate:
+    image: ghcr.io/kanbn/kan-migrate:0.7.0
+    restart: "no"
+    depends_on:
+      kan-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_URL: postgresql://kan:${POSTGRES_PASSWORD}@kan-db:5432/kan_db
+
+  kan:
+    image: ghcr.io/kanbn/kan:0.7.0
+    restart: unless-stopped
+    depends_on:
+      kan-migrate:
+        condition: service_completed_successfully
+    environment:
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      POSTGRES_URL: postgresql://kan:${POSTGRES_PASSWORD}@kan-db:5432/kan_db
+      # Email and password sign-in, so the first account can be made without
+      # an email server. Without it (and no OAuth provider) nobody can sign up.
+      NEXT_PUBLIC_ALLOW_CREDENTIALS: "true"
+      NEXT_PUBLIC_DISABLE_SIGN_UP: ${DISABLE_SIGN_UP:-false}
+      # Optional: email for invitations, magic links and password resets.
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_SECURE: ${SMTP_SECURE:-true}
+      EMAIL_FROM: ${EMAIL_FROM}
+
+  kan-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kan_db
+      POSTGRES_USER: kan
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - kan-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kan -d kan_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kan-db-data:

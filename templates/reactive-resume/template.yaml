@@ -1,0 +1,24 @@
+name: Reactive Resume
+description: "Reactive Resume is a self-hosted resume builder: write resumes and cover letters, check them against job posts, export PDFs and track applications."
+version: "6.1.1"
+tags: [resume.io alternative, resume builder, cv builder, cover letter builder, job application tracker, ats resume builder, zety alternative]
+links:
+  website: https://rxresu.me
+  docs: https://docs.rxresu.me/self-hosting/docker
+  source: https://github.com/reactive-resume/reactive-resume
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.reactive-resume.url}}" }
+  AUTH_SECRET: { generate: hex }
+  ENCRYPTION_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  DISABLE_SIGNUPS:
+    ask:
+      label: Turn off new sign-ups
+      description: Type true once your own account exists, so nobody else can create an account.
+      default: "false"
+      required: false
+domains:
+  - { service: reactive-resume, port: 3000 }

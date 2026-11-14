@@ -1,0 +1,18 @@
+services:
+  linkstack:
+    image: linkstackorg/linkstack:v4.8.8
+    restart: unless-stopped
+    environment:
+      # Cloudgate serves the app over HTTPS and forwards plain HTTP to port 80.
+      # This makes LinkStack write https:// links, so pages show no mixed-content
+      # errors (the fix LinkStack's reverse-proxy docs describe).
+      FORCE_HTTPS: "true"
+      PHP_MEMORY_LIMIT: 256M
+      UPLOAD_MAX_FILESIZE: 8M
+    volumes:
+      # The whole app lives here: its settings (.env), the SQLite database,
+      # uploaded images and themes. LinkStack's built-in updater writes here too.
+      - linkstack-data:/htdocs
+
+volumes:
+  linkstack-data:

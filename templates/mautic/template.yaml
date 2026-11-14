@@ -1,0 +1,19 @@
+name: Mautic
+description: "Mautic is free, self-hosted marketing automation: email campaigns, segments, forms, landing pages and lead scoring, with no per-contact fee."
+version: "7.2.2"
+tags: [marketing automation, hubspot alternative, mailchimp alternative, activecampaign alternative, email marketing, lead scoring]
+links:
+  website: https://mautic.org
+  docs: https://docs.mautic.org/en/latest/
+  source: https://github.com/mautic/mautic
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: mautic, port: 80 }
+files:
+  - { path: forwarded-proto.conf }
+  - { path: crontab.txt }

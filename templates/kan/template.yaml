@@ -1,0 +1,58 @@
+name: Kan
+description: "Self-hosted Kan: an open-source Trello alternative with kanban boards, lists, cards, labels, checklists and comments for your team."
+version: "0.7.0"
+tags: [trello alternative, kanban board, open source kanban, project management, task board, team task board]
+links:
+  website: https://kan.bn
+  docs: https://docs.kan.bn/guides/self-hosting/introduction
+  source: https://github.com/kanbn/kan
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  NEXT_PUBLIC_BASE_URL: { value: "{{domains.kan.url}}" }
+  # Kan asks for 32 or more characters; a generated password is 32.
+  BETTER_AUTH_SECRET: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  DISABLE_SIGN_UP:
+    ask:
+      label: Invite-only sign-up
+      description: "true lets only people invited to a workspace create an account. Leave it false until you have made your own account."
+      default: "false"
+      pattern: "true|false"
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Kan works without email; add an email sending service, for example smtp.resend.com, to send workspace invitations and password resets. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 465 works with most email services.
+      default: "465"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_SECURE:
+    ask:
+      label: Use implicit TLS
+      description: "true for port 465; false for port 587 (STARTTLS) or 25."
+      default: "true"
+      pattern: "true|false"
+      required: false
+  EMAIL_FROM:
+    ask:
+      label: Sender
+      description: "The address emails come from, for example Kan <kan@example.com>."
+      required: false
+domains:
+  - { service: kan, port: 3000 }

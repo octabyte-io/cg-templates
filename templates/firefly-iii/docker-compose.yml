@@ -1,0 +1,76 @@
+# From the official compose file (github.com/firefly-iii/docker, docker-compose.yml with
+# its .env and database.env), pinned to one release. The optional data importer is left out.
+services:
+  firefly-iii:
+    # Listens on 8080 and has its own healthcheck (curl on localhost:8080/healthcheck).
+    # Database migrations run on every start.
+    image: fireflyiii/core:version-6.7.9
+    restart: unless-stopped
+    stop_signal: SIGINT
+    depends_on:
+      firefly-iii-db:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL}
+      # Cloudgate's proxy sits in front; trust it so Firefly III builds https links.
+      TRUSTED_PROXIES: "**"
+      TZ: ${TIMEZONE:-Etc/UTC}
+      DEFAULT_LANGUAGE: en_US
+      DB_CONNECTION: mysql
+      DB_HOST: firefly-iii-db
+      DB_PORT: "3306"
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: ${DB_PASSWORD}
+      STATIC_CRON_TOKEN: ${STATIC_CRON_TOKEN}
+      LOG_CHANNEL: stack
+      APP_LOG_LEVEL: notice
+      MAIL_MAILER: log
+      # The image's nginx also listens on [::]:8080 by default and won't start on a server
+      # without IPv6; Cloudgate's container network is IPv4, so listen on IPv4 only.
+      NGINX_LISTEN_IP_PROTOCOL: ipv4
+    volumes:
+      - firefly-iii-upload:/var/www/html/storage/upload
+
+  firefly-iii-db:
+    # The official file uses mariadb:lts; this is that release, pinned.
+    image: mariadb:12.3.3
+    restart: unless-stopped
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+      MARIADB_USER: firefly
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: firefly
+    volumes:
+      - firefly-iii-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # Runs Firefly III's daily jobs (recurring transactions, bill reminders, exchange rates)
+  # by calling its cron URL at 03:00 UTC, as the official file does. The official one
+  # installs tzdata with apk at every start; this one runs on UTC and needs no download.
+  firefly-iii-cron:
+    image: alpine:3.24.4
+    restart: unless-stopped
+    init: true
+    environment:
+      STATIC_CRON_TOKEN: ${STATIC_CRON_TOKEN}
+    command:
+      - sh
+      - -c
+      - >-
+        echo "0 3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$$STATIC_CRON_TOKEN; echo"
+        | crontab - && exec crond -f -L /dev/stdout
+    depends_on:
+      - firefly-iii
+
+volumes:
+  firefly-iii-upload:
+  firefly-iii-db-data:

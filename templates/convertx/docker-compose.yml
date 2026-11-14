@@ -1,0 +1,32 @@
+services:
+  convertx:
+    # The official image: the ConvertX web app plus every converter it drives
+    # (FFmpeg, LibreOffice, Calibre, ImageMagick, Pandoc, Inkscape, TeX Live...),
+    # so it is large (about 1.5 GB to download).
+    image: ghcr.io/c4illin/convertx:v0.20.0
+    restart: unless-stopped
+    environment:
+      # Signs the sign-in tokens. Without it a new random value is used at each
+      # start, which signs everyone out on every restart.
+      JWT_SECRET: ${JWT_SECRET}
+      # The first visitor creates the first account; after that nobody else can
+      # sign up. Accounts stay closed unless you set this to true.
+      ACCOUNT_REGISTRATION: ${ACCOUNT_REGISTRATION:-false}
+      # Cloudgate serves the app over HTTPS, so sign-in cookies stay secure-only.
+      HTTP_ALLOWED: "false"
+      # Everyone must sign in to convert files.
+      ALLOW_UNAUTHENTICATED: "false"
+      # Uploaded and converted files older than this many hours are deleted.
+      AUTO_DELETE_EVERY_N_HOURS: "24"
+    volumes:
+      # The user database, uploads and converted files.
+      - convertx-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  convertx-data:

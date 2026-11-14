@@ -1,0 +1,18 @@
+name: Open Notebook
+description: "Self-hosted Open Notebook: an open-source NotebookLM alternative to chat with your documents, take notes and make podcasts with the AI you choose."
+version: "1.15.1"
+tags: [notebooklm alternative, gemini notebook alternative, ai research assistant, chat with your documents, ai podcast generator, private ai notes, self-hosted ai]
+links:
+  website: https://www.open-notebook.ai
+  docs: https://github.com/lfnovo/open-notebook/tree/main/docs
+  source: https://github.com/lfnovo/open-notebook
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  API_URL: { value: "{{domains.open-notebook.url}}" }
+  OPEN_NOTEBOOK_PASSWORD: { generate: password }
+  OPEN_NOTEBOOK_ENCRYPTION_KEY: { generate: hex }
+  SURREAL_PASSWORD: { generate: password }
+domains:
+  - { service: open-notebook, port: 8502 }
