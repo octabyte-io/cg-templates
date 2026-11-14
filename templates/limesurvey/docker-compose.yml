@@ -1,0 +1,70 @@
+services:
+  limesurvey:
+    # LimeSurvey publishes no image of its own; martialblog/limesurvey is the long-standing community
+    # image (github.com/martialblog/docker-limesurvey). It builds the official release tarball into
+    # php:8.4-apache, runs as www-data and listens on 8080. Pinned to the latest stable release,
+    # 7.9.1 (build 261102).
+    image: martialblog/limesurvey:7.9.1-261102-apache
+    restart: unless-stopped
+    depends_on:
+      limesurvey-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      DB_TYPE: mysql
+      DB_HOST: limesurvey-db
+      DB_PORT: "3306"
+      DB_NAME: limesurvey
+      DB_USERNAME: limesurvey
+      DB_PASSWORD: ${DB_PASSWORD}
+      # On the first start the entrypoint runs LimeSurvey's console installer, which creates the
+      # tables and the "admin" super-administrator with this password. Later starts only run the
+      # database updates, so a password changed in LimeSurvey stays changed.
+      ADMIN_USER: admin
+      ADMIN_NAME: Administrator
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      LIMESURVEY_URL: ${LIMESURVEY_URL}
+      # The keys for LimeSurvey's data encryption (encrypted participant and response fields).
+      # The app's config folder is rebuilt from them in every new container, so they must stay the
+      # same for the life of the app: other keys make encrypted data unreadable.
+      ENCRYPT_SECRET_BOX_KEY: ${ENCRYPT_SECRET_BOX_KEY}
+      ENCRYPT_NONCE_SEED: ${ENCRYPT_NONCE_SEED}
+    # A secretbox nonce is 24 bytes (48 hex characters), so it is the first 48 characters of a
+    # generated hex value. The public URL (the app's address with one trailing slash) makes links
+    # in invitation emails absolute and marks the address as a trusted host. Then the image's own
+    # entrypoint writes config.php and security.php, installs or updates, and starts Apache.
+    entrypoint:
+      - bash
+      - -c
+      - |
+        export ENCRYPT_NONCE="$${ENCRYPT_NONCE_SEED:0:48}"
+        export PUBLIC_URL="$${LIMESURVEY_URL%/}/"
+        exec /usr/local/bin/entrypoint.sh apache2-foreground
+    volumes:
+      # Uploaded files, survey and admin themes, and plugins. Docker fills the new volume from the
+      # image's own upload folder on the first start.
+      - limesurvey-upload:/var/www/html/upload
+
+  limesurvey-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: limesurvey
+      MARIADB_USER: limesurvey
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - limesurvey-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  limesurvey-upload:
+  limesurvey-db-data:

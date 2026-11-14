@@ -1,0 +1,25 @@
+name: HumHub
+description: "Self-hosted HumHub: an open-source social intranet with spaces, news feeds, profiles and phone apps for your company, school or club."
+version: "1.19.4"
+tags: [humhub, social intranet, enterprise social network, workplace from meta alternative, viva engage alternative, yammer alternative, community platform]
+links:
+  website: https://www.humhub.com
+  docs: https://docs.humhub.org
+  source: https://github.com/humhub/humhub
+cloudgate: 0.1.0
+compose: app
+# One container runs PHP, the web server, the scheduler and two queue workers, next to MariaDB;
+# 2 GB keeps both comfortable.
+size: medium
+inputs:
+  HUMHUB_URL: { value: "{{domains.humhub.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the "admin" account; HumHub sends its notifications and password resets there.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: humhub, port: 80 }

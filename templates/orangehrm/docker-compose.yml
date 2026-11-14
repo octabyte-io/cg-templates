@@ -1,0 +1,99 @@
+services:
+  orangehrm:
+    # The official image (Apache + PHP 8.3 on port 80, built from the Dockerfile in
+    # orangehrm/orangehrm), pinned to the latest stable release of OrangeHRM Starter.
+    image: orangehrm/orangehrm:5.9
+    restart: unless-stopped
+    depends_on:
+      orangehrm-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ORGANIZATION_NAME: ${ORGANIZATION_NAME:-My Company}
+      COUNTRY: ${COUNTRY:-US}
+    # The image only serves the web installer. On the first start this runs OrangeHRM's own
+    # command-line installer instead (installer/cli_install.php, which reads
+    # installer/cli_install_config.yaml): it fills the empty database, creates the organization
+    # and the "admin" user with the generated password, and writes lib/confs/Conf.php. The
+    # installer deletes its config file when it is done. Later starts find Conf.php and skip it.
+    # The generated password has no symbol, so OrangeHRM's password policy asks the admin to
+    # choose a stronger one right after the first sign-in.
+    # Apache is also told to trust the X-Forwarded-Proto header from Cloudgate's proxy, so
+    # OrangeHRM builds https:// links and redirects.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        cd /var/www/html
+        cat > /etc/apache2/conf-enabled/cloudgate-proxy.conf <<'EOF'
+        SetEnvIf X-Forwarded-Proto "^https$$" HTTPS=on
+        EOF
+        if [ ! -f lib/confs/Conf.php ]; then
+          echo "Installing OrangeHRM on the empty database..."
+          php -r '
+            $$c = [
+              "database" => [
+                "hostName" => "orangehrm-db", "hostPort" => 3306, "databaseName" => "orangehrm",
+                "privilegedDatabaseUser" => "orangehrm",
+                "privilegedDatabasePassword" => getenv("DB_PASSWORD"),
+                "useSameDbUserForOrangeHRM" => "y", "orangehrmDatabaseUser" => null,
+                "orangehrmDatabasePassword" => null, "isExistingDatabase" => "y",
+                "enableDataEncryption" => "n",
+              ],
+              "organization" => ["name" => getenv("ORGANIZATION_NAME"), "country" => strtoupper(getenv("COUNTRY"))],
+              "admin" => [
+                "adminUserName" => getenv("ADMIN_USERNAME"), "adminPassword" => getenv("ADMIN_PASSWORD"),
+                "adminEmployeeFirstName" => "Admin", "adminEmployeeLastName" => "User",
+                "workEmail" => getenv("ADMIN_EMAIL"), "contactNumber" => null,
+                "registrationConsent" => false,
+              ],
+              "license" => ["agree" => "y"],
+            ];
+            file_put_contents("installer/cli_install_config.yaml", json_encode($$c, JSON_PRETTY_PRINT));
+          '
+          php installer/cli_install.php
+          rm -f installer/cli_install_config.yaml
+          test -f lib/confs/Conf.php
+          chown -R www-data:www-data lib/confs src/cache src/log src/config
+        fi
+        exec docker-php-entrypoint apache2-foreground
+    volumes:
+      # Conf.php (the database connection) and the encryption key folder. Everything else,
+      # including employee photos and attachments, lives in the database.
+      - orangehrm-confs:/var/www/html/lib/confs
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/web/index.php/auth/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
+
+  orangehrm-db:
+    # OrangeHRM 5.9 supports MariaDB 5.5 to 12.0 (installer/config/system_requirements.php).
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: orangehrm
+      MARIADB_USER: orangehrm
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - orangehrm-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  orangehrm-confs:
+  orangehrm-db-data:

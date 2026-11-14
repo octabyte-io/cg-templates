@@ -1,0 +1,25 @@
+<?php
+// Fills in Piwigo's web installer (install.php) once, from the command line, with the
+// database settings and the webmaster account "admin". Run by piwigo-install in
+// docker-compose.yml before the web server starts, so the installer is never open to visitors.
+$_GET = ['language' => 'en_UK'];
+$_POST = [
+  'install' => 'true',
+  'dbhost' => 'piwigo-db',
+  'dbuser' => 'piwigo',
+  'dbpasswd' => getenv('DB_PASSWORD'),
+  'dbname' => 'piwigo',
+  'prefix' => 'piwigo_',
+  'admin_name' => 'admin',
+  'admin_pass1' => getenv('ADMIN_PASSWORD'),
+  'admin_pass2' => getenv('ADMIN_PASSWORD'),
+  'admin_mail' => getenv('ADMIN_EMAIL'),
+];
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_SERVER['HTTP_HOST'] = 'localhost';
+$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+$_SERVER['SCRIPT_NAME'] = '/install.php';
+$_SERVER['PHP_SELF'] = '/install.php';
+$_SERVER['REQUEST_URI'] = '/install.php?language=en_UK';
+chdir('/var/www/html/piwigo');
+include './install.php';

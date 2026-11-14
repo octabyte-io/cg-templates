@@ -1,0 +1,37 @@
+name: MediaCMS
+description: "MediaCMS is a self-hosted video platform: upload, share and embed videos, with private and group-only access, instead of Vimeo or YouTube."
+version: "7.2.0"
+tags: [self-hosted video platform, youtube alternative, vimeo alternative, video hosting, private video portal, open source video cms]
+links:
+  website: https://mediacms.io
+  docs: https://github.com/mediacms-io/mediacms/tree/main/docs
+  source: https://github.com/mediacms-io/mediacms
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  FRONTEND_HOST: { value: "{{domains.mediacms.url}}" }
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-zA-Z0-9_.-]{3,30}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the admin account.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  ALLOW_SIGNUPS:
+    ask:
+      label: Allow new sign-ups
+      description: Type false once your own account exists, so nobody else can create an account.
+      default: "true"
+      required: false
+domains:
+  - { service: mediacms, port: 80 }
+files:
+  - { path: local_settings.txt }
