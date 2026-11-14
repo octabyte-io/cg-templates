@@ -1,0 +1,56 @@
+services:
+  wikijs:
+    # Wiki.js 3.x, the current stable line, from the registry its install guide uses
+    # (https://docs.js.wiki/setup/installation). Pinned to a patch release; never `latest`,
+    # which 3.x no longer publishes.
+    image: ghcr.io/requarks/wiki:3.3.1
+    restart: unless-stopped
+    depends_on:
+      wikijs-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: wikijs-db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: ${DB_PASSWORD}
+      DB_NAME: wiki
+      DB_SSL: "false"
+      # Read only on the first start against an empty database, which creates the root
+      # administrator with this email and password. Ignored (with a log warning) afterwards.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASS: ${ADMIN_PASSWORD}
+    volumes:
+      # Pages, users and uploads live in PostgreSQL; this keeps the data folder (local
+      # storage targets, the Git sync repository, caches) across restarts.
+      - wikijs-data:/wiki/data
+    healthcheck:
+      # /_live answers once the HTTP server listens, after migrations ran (official compose).
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:3000/_live"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 5m
+
+  wikijs-db:
+    # Wiki.js 3.x supports PostgreSQL 17 and 18 only, and needs the ltree and pg_trgm
+    # extensions, which the official image includes.
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wikijs
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: wiki
+    volumes:
+      # The parent of PGDATA, as the postgres image expects from 18 on.
+      - wikijs-db-data:/var/lib/postgresql
+    healthcheck:
+      # Over TCP, so it cannot pass while the image's temporary init server is running.
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "wikijs", "-d", "wiki"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  wikijs-data:
+  wikijs-db-data:

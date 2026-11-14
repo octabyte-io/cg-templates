@@ -1,0 +1,74 @@
+services:
+  passbolt:
+    # Official Passbolt Community Edition image, from docker-compose-ce.yaml in
+    # github.com/passbolt/passbolt_docker. Not the -non-root variant: there the JWT key folder
+    # stays writable by the app, so Passbolt's install check fails and the first start falls
+    # back to bare migrations. This image locks the keys down at start and installs cleanly.
+    image: passbolt/passbolt:5.18.0-1-ce
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 and refuses to start on a server without it.
+    # On such a server, drop the IPv6 listen lines, then start as the image does.
+    command:
+      - bash
+      - -c
+      - >-
+        if [ ! -e /proc/net/if_inet6 ]; then
+        sed -i '/listen \[::\]/d' /etc/nginx/sites-available/nginx-passbolt.conf /etc/nginx/snippets/passbolt-ssl.conf;
+        fi;
+        exec /docker-entrypoint.sh
+    depends_on:
+      passbolt-db:
+        condition: service_healthy
+    environment:
+      APP_FULL_BASE_URL: ${APP_FULL_BASE_URL}
+      DATASOURCES_DEFAULT_HOST: passbolt-db
+      DATASOURCES_DEFAULT_PORT: 3306
+      DATASOURCES_DEFAULT_USERNAME: passbolt
+      DATASOURCES_DEFAULT_PASSWORD: ${DB_PASSWORD}
+      DATASOURCES_DEFAULT_DATABASE: passbolt
+      # Invitations, account recovery and notifications all go out by email.
+      EMAIL_DEFAULT_FROM: ${EMAIL_FROM}
+      EMAIL_DEFAULT_FROM_NAME: Passbolt
+      EMAIL_TRANSPORT_DEFAULT_HOST: ${SMTP_HOST}
+      EMAIL_TRANSPORT_DEFAULT_PORT: ${SMTP_PORT}
+      EMAIL_TRANSPORT_DEFAULT_USERNAME: ${SMTP_USERNAME}
+      EMAIL_TRANSPORT_DEFAULT_PASSWORD: ${SMTP_PASSWORD}
+      # "true" turns on STARTTLS; empty turns it off (Passbolt treats any other text as on).
+      EMAIL_TRANSPORT_DEFAULT_TLS: ${SMTP_TLS}
+      # Cloudgate's proxy terminates HTTPS in front of the container; trust its
+      # X-Forwarded-* headers so Passbolt sees the visitor's https address and IP.
+      PASSBOLT_SECURITY_PROXIES_ACTIVE: "true"
+    volumes:
+      # The server's OpenPGP key pair and the JWT key pair, generated on the first start.
+      # Losing them makes every stored secret unreadable by the server: back them up.
+      - passbolt-gpg:/etc/passbolt/gpg
+      - passbolt-jwt:/etc/passbolt/jwt
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/healthcheck/status.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+
+  passbolt-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: "true"
+      MARIADB_DATABASE: passbolt
+      MARIADB_USER: passbolt
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - passbolt-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  passbolt-gpg:
+  passbolt-jwt:
+  passbolt-db-data:

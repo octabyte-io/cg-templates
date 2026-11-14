@@ -1,0 +1,74 @@
+# Based on HeyForm's Docker Compose setup (docs.heyform.net/open-source/self-hosting, "Connect
+# MongoDB with username and password") and docker-compose.test.yml at tag v3.0.6: the app,
+# MongoDB and a Redis-compatible store for its job queue. Redis replaces the docs' KeyDB, whose
+# images are built per CPU type (HeyForm's own development compose file uses Redis).
+
+services:
+  heyform:
+    image: heyform/community-edition:v3.0.6
+    restart: unless-stopped
+    depends_on:
+      heyform-mongo:
+        condition: service_healthy
+      heyform-redis:
+        condition: service_healthy
+    environment:
+      APP_HOMEPAGE_URL: ${APP_HOMEPAGE_URL}
+      # Cloudgate's proxy sits one hop in front of the app.
+      TRUST_PROXY: "1"
+      SESSION_KEY: ${SESSION_KEY}
+      FORM_ENCRYPTION_KEY: ${FORM_ENCRYPTION_KEY}
+      # Encrypts saved integration API keys and OAuth tokens.
+      INTEGRATION_ENCRYPTION_KEY: ${INTEGRATION_ENCRYPTION_KEY}
+      MONGO_URI: mongodb://heyform-mongo:27017/heyform?authSource=admin
+      MONGO_USER: heyform
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      REDIS_HOST: heyform-redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      # No email server is set up, so sign-ups skip the emailed confirmation code.
+      VERIFY_USER_EMAIL: "false"
+      APP_DISABLE_REGISTRATION: ${DISABLE_SIGNUPS:-false}
+    volumes:
+      - heyform-uploads:/app/packages/server/static/upload
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9157/health/ready >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # MongoDB 4.4 is the last release that runs on CPUs without AVX; HeyForm's driver supports it.
+  heyform-mongo:
+    image: mongo:4.4.29
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: heyform
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - heyform-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  heyform-redis:
+    image: redis:7.4.7-alpine
+    restart: unless-stopped
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - heyform-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASSWORD\" redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  heyform-uploads:
+  heyform-mongo-data:
+  heyform-redis-data:

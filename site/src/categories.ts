@@ -14,6 +14,7 @@ export const CATEGORIES: Category[] = [
   { id: 'websites', name: 'Websites', lede: 'Self-hosted website builders and blogs, so you own your site with no monthly platform fee.' },
   { id: 'online-stores', name: 'E-commerce', lede: 'Self-hosted online store software for selling products on your own website, with no platform fee on your sales.' },
   { id: 'team-chat', name: 'Team chat', lede: 'Self-hosted team chat with channels, calls and your full message history on your own server.' },
+  { id: 'communities', name: 'Community forums', lede: 'Self-hosted community forums and Q&A sites, where your customers or members ask questions and find answers on your own domain.' },
   { id: 'ai', name: 'AI', lede: 'Self-hosted AI chat for your team, connected to the AI provider you choose, with your chats and documents kept on your own server.' },
   { id: 'automation', name: 'Automation', lede: 'Open-source workflow automation that connects your tools and runs repetitive work, with no task limits.' },
   { id: 'analytics', name: 'Analytics', lede: 'Privacy-friendly, self-hosted website analytics and dashboards, with no data handed to an ad company.' },

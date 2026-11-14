@@ -1,0 +1,29 @@
+name: Dolibarr
+description: "Self-hosted Dolibarr ERP & CRM: customers, quotes, orders, invoices, stock and bank accounts in one app for small businesses and associations."
+version: "24.0.2"
+tags: [quickbooks alternative, open source erp, free erp for small business, crm and invoicing, inventory management, dolibarr erp crm, odoo alternative]
+links:
+  website: https://www.dolibarr.org
+  docs: https://wiki.dolibarr.org
+  source: https://github.com/Dolibarr/dolibarr
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DOLI_URL_ROOT: { value: "{{domains.dolibarr.url}}" }
+  DOLI_INSTANCE_UNIQUE_ID: { generate: hex }
+  DOLI_CRON_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  DOLI_COMPANY_NAME:
+    ask:
+      label: Company name
+      description: Your company's name, shown on quotes and invoices. You can change it later under Setup > Company.
+  DOLI_COMPANY_COUNTRYCODE:
+    ask:
+      label: Country code
+      description: Your company's country as two capital letters, such as US, GB, FR or DE. Dolibarr uses it for taxes and the chart of accounts.
+      pattern: "[A-Z]{2}"
+domains:
+  - { service: dolibarr, port: 80 }
