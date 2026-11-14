@@ -1,0 +1,17 @@
+name: Penpot
+description: "Self-hosted Penpot: open-source design and prototyping with components, design tokens and free developer handoff, as an alternative to Figma."
+version: "2.19.1"
+tags: [figma alternative, open source design tool, ui design, prototyping, design system, adobe xd alternative]
+links:
+  website: https://penpot.app
+  docs: https://help.penpot.app/technical-guide/getting-started/
+  source: https://github.com/penpot/penpot
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  PENPOT_PUBLIC_URI: { value: "{{domains.penpot-frontend.url}}" }
+  PENPOT_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: penpot-frontend, port: 8080 }

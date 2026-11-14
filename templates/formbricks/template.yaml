@@ -1,0 +1,27 @@
+name: Formbricks
+description: "Self-hosted Formbricks: surveys, feedback forms and website pop-up surveys with unlimited responses."
+version: "6.2.0"
+tags: [typeform alternative, google forms alternative, survey tool, online forms, customer feedback, nps survey, qualtrics alternative]
+links:
+  website: https://formbricks.com
+  docs: https://formbricks.com/docs/self-hosting/setup/docker
+  source: https://github.com/formbricks/formbricks
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  WEBAPP_URL: { value: "{{domains.formbricks.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  BETTER_AUTH_SECRET: { generate: hex }
+  ENCRYPTION_KEY: { generate: hex }
+  CRON_SECRET: { generate: hex }
+  HUB_API_KEY: { generate: hex }
+  CUBEJS_API_SECRET: { generate: hex }
+  AUTHZED_TOKEN: { generate: hex }
+  AUTHZED_DATABASE_PASSWORD: { generate: password }
+domains:
+  - { service: formbricks, port: 3000 }
+files:
+  - { path: authzed-bootstrap.sql }
+  - { path: cube/cube.js }
+  - { path: cube/schema/FeedbackRecords.js }

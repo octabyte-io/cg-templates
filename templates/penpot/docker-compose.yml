@@ -1,0 +1,99 @@
+# From Penpot's official docker/images/docker-compose.yaml (2.19.1). Dropped: the Traefik
+# example, the Mailpit test mail server, the optional MCP (AI assistant) server and the
+# Admin Console (a proprietary Enterprise image; Penpot's Docker guide says it can be turned off
+# with disable-admin-console and Penpot keeps working as usual).
+# Flags: email verification is off so people can sign up without a mail server; registration
+# and password login are on by default. Secure session cookies stay on (Cloudgate serves HTTPS).
+x-flags: &penpot-flags
+  PENPOT_FLAGS: disable-email-verification enable-prepl-server disable-admin-console
+
+x-uri: &penpot-public-uri
+  PENPOT_PUBLIC_URI: ${PENPOT_PUBLIC_URI}
+
+x-body-size: &penpot-http-body-size
+  PENPOT_HTTP_SERVER_MAX_BODY_SIZE: 367001600
+  PENPOT_HTTP_SERVER_MAX_MULTIPART_BODY_SIZE: 367001600
+
+x-secret-key: &penpot-secret-key
+  PENPOT_SECRET_KEY: ${PENPOT_SECRET_KEY}
+
+x-database: &penpot-database
+  PENPOT_DATABASE_URI: postgresql://penpot-postgres/penpot
+  PENPOT_DATABASE_USERNAME: penpot
+  PENPOT_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+
+services:
+  penpot-frontend:
+    image: penpotapp/frontend:2.19.1
+    restart: unless-stopped
+    volumes:
+      - penpot-assets:/opt/data/assets
+    depends_on:
+      - penpot-backend
+      - penpot-exporter
+    environment:
+      <<: [*penpot-flags, *penpot-http-body-size, *penpot-public-uri]
+      # nginx listens on IPv4 only, so it also starts on hosts with IPv6 turned off (as the
+      # official compose suggests for them); Cloudgate reaches it over Docker's IPv4 network.
+      PENPOT_DISABLE_IPV6_LISTEN: "true"
+
+  penpot-backend:
+    image: penpotapp/backend:2.19.1
+    restart: unless-stopped
+    volumes:
+      - penpot-assets:/opt/data/assets
+    depends_on:
+      penpot-postgres:
+        condition: service_healthy
+      penpot-valkey:
+        condition: service_healthy
+    environment:
+      <<: [*penpot-flags, *penpot-public-uri, *penpot-http-body-size, *penpot-secret-key, *penpot-database]
+      PENPOT_REDIS_URI: redis://penpot-valkey/0
+      PENPOT_OBJECTS_STORAGE_BACKEND: fs
+      PENPOT_OBJECTS_STORAGE_FS_DIRECTORY: /opt/data/assets
+      PENPOT_TELEMETRY_ENABLED: "true"
+      PENPOT_TELEMETRY_REFERER: compose
+
+  penpot-exporter:
+    image: penpotapp/exporter:2.19.1
+    restart: unless-stopped
+    depends_on:
+      penpot-valkey:
+        condition: service_healthy
+    environment:
+      <<: [*penpot-flags, *penpot-secret-key, *penpot-public-uri]
+      PENPOT_INTERNAL_URI: http://penpot-frontend:8080
+      PENPOT_REDIS_URI: redis://penpot-valkey/0
+
+  penpot-postgres:
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    stop_signal: SIGINT
+    environment:
+      POSTGRES_INITDB_ARGS: --data-checksums
+      POSTGRES_DB: penpot
+      POSTGRES_USER: penpot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - penpot-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U penpot"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+
+  penpot-valkey:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    environment:
+      VALKEY_EXTRA_FLAGS: --maxmemory 128mb --maxmemory-policy volatile-lfu
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  penpot-assets:
+  penpot-postgres-data:

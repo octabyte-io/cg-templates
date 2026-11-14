@@ -1,0 +1,42 @@
+services:
+  docuseal:
+    image: docuseal/docuseal:3.3.6
+    restart: unless-stopped
+    depends_on:
+      docuseal-db:
+        condition: service_healthy
+    environment:
+      # The app's own address, used in the links of signing-request emails.
+      APP_URL: ${APP_URL}
+      HOST: ${APP_HOST}
+      # Cloudgate serves the app over HTTPS in front of the container.
+      FORCE_SSL: "true"
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      DATABASE_URL: postgresql://docuseal:${POSTGRES_PASSWORD}@docuseal-db:5432/docuseal
+    volumes:
+      - docuseal-data:/data/docuseal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/up || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  docuseal-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docuseal
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: docuseal
+    volumes:
+      - docuseal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docuseal"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  docuseal-data:
+  docuseal-db-data:

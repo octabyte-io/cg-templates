@@ -1,0 +1,49 @@
+services:
+  kimai:
+    # The Apache production image (the docs' "stable"/"2" tags), pinned to one release.
+    # It listens on 8001 and has its own healthcheck (curl on 127.0.0.1:8001).
+    image: kimai/kimai2:2.72.0
+    restart: unless-stopped
+    depends_on:
+      kimai-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: mysql://kimai:${DB_PASSWORD}@kimai-db:3306/kimai?charset=utf8mb4&serverVersion=8.4.13
+      APP_SECRET: ${APP_SECRET}
+      # Only answer for the app's own address (plus 127.0.0.1 and localhost, which the
+      # image's healthcheck uses).
+      TRUSTED_HOSTS: '^(127\.0\.0\.1|localhost|${KIMAI_HOST})$$'
+      # Cloudgate's proxy sits in front on a private network; trust it so Kimai sees
+      # the visitor's https address.
+      TRUSTED_PROXIES: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      # Used for links in emails sent outside a web request.
+      DEFAULT_URI: ${KIMAI_URL}
+      # Created on the first start only, with the username "admin"; later starts leave it alone.
+      ADMINMAIL: ${ADMIN_EMAIL}
+      ADMINPASS: ${ADMIN_PASSWORD}
+    volumes:
+      - kimai-data:/opt/kimai/var/data
+      - kimai-plugins:/opt/kimai/var/plugins
+
+  kimai-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    command: ["--default-storage-engine=innodb"]
+    environment:
+      MYSQL_DATABASE: kimai
+      MYSQL_USER: kimai
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - kimai-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -uroot -p$$MYSQL_ROOT_PASSWORD ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  kimai-data:
+  kimai-plugins:
+  kimai-db-data:

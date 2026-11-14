@@ -1,0 +1,255 @@
+# Based on Formbricks' production compose file (docker/docker-compose.yml at tag 6.2.0): the app,
+# its PostgreSQL (with pgvector), Valkey, Formbricks Hub and its worker, Cube for analytics and
+# SpiceDB for permissions. The optional AI services (taxonomy, vLLM) are left out.
+
+x-formbricks-env: &formbricks-env
+  WEBAPP_URL: ${WEBAPP_URL}
+  BETTER_AUTH_URL: ${WEBAPP_URL}
+  DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@formbricks-db:5432/formbricks?schema=public
+  BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+  CRON_SECRET: ${CRON_SECRET}
+  REDIS_URL: redis://formbricks-redis:6379
+  HUB_API_KEY: ${HUB_API_KEY}
+  HUB_API_URL: http://formbricks-hub:8080
+  CUBEJS_API_URL: http://formbricks-cube:4000
+  CUBEJS_API_SECRET: ${CUBEJS_API_SECRET}
+  CUBEJS_JWT_ISSUER: formbricks-web
+  CUBEJS_JWT_AUDIENCE: formbricks-cube
+  # No email server is set up, so sign-up email verification and password reset stay off.
+  EMAIL_VERIFICATION_DISABLED: "1"
+  PASSWORD_RESET_DISABLED: "1"
+  AUTHZED_ENABLED: "true"
+  AUTHZED_ENDPOINT: formbricks-spicedb:50051
+  AUTHZED_TOKEN: ${AUTHZED_TOKEN}
+  AUTHZED_SYSTEM_KEY: formbricks
+  AUTHZED_INSECURE: "true"
+  AUTHZED_CONSISTENCY: fully_consistent
+
+# Formbricks' AuthZed commands check the app's settings; these placeholders are the
+# official compose file's, and are not used for anything.
+x-authzed-env: &authzed-env
+  DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@formbricks-db:5432/formbricks?schema=public
+  ENCRYPTION_KEY: authzed-initialize-unused
+  CUBEJS_API_SECRET: authzed-initialize-unused
+  CUBEJS_API_URL: http://localhost
+  HUB_API_KEY: authzed-initialize-unused
+  HUB_API_URL: http://localhost
+  REDIS_URL: redis://localhost
+  LOG_LEVEL: fatal
+  AUTHZED_ENABLED: "true"
+  AUTHZED_ENDPOINT: formbricks-spicedb:50051
+  AUTHZED_TOKEN: ${AUTHZED_TOKEN}
+  AUTHZED_SYSTEM_KEY: formbricks
+  AUTHZED_INSECURE: "true"
+  AUTHZED_CONSISTENCY: fully_consistent
+
+x-hub-env: &hub-env
+  DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@formbricks-db:5432/formbricks?sslmode=disable
+
+services:
+  formbricks:
+    image: ghcr.io/formbricks/formbricks:6.2.0
+    restart: unless-stopped
+    depends_on:
+      formbricks-db:
+        condition: service_healthy
+      formbricks-redis:
+        condition: service_healthy
+      formbricks-cube:
+        condition: service_healthy
+      formbricks-authzed-initialize:
+        condition: service_completed_successfully
+    environment:
+      <<: *formbricks-env
+      # formbricks-migrate below applies the database migrations before the app starts.
+      SKIP_STARTUP_MIGRATION: "true"
+
+  # Runs once at each start: applies Formbricks' database migrations.
+  formbricks-migrate:
+    image: ghcr.io/formbricks/formbricks:6.2.0
+    restart: "no"
+    entrypoint: ["sh", "-c"]
+    command:
+      - "node /home/nextjs/validate-env.mjs && node packages/database/dist/scripts/apply-migrations.js"
+    depends_on:
+      formbricks-db:
+        condition: service_healthy
+    environment:
+      <<: *formbricks-env
+
+  # Runs once at each start: prepares the permissions data in SpiceDB (does nothing when it's ready).
+  formbricks-authzed-initialize:
+    image: ghcr.io/formbricks/formbricks:6.2.0
+    restart: "no"
+    entrypoint: ["formbricks-authzed"]
+    command: ["upgrade", "prepare"]
+    environment:
+      <<: *authzed-env
+    depends_on:
+      formbricks-migrate:
+        condition: service_completed_successfully
+      formbricks-spicedb:
+        condition: service_healthy
+
+  formbricks-db:
+    image: pgvector/pgvector:0.8.7-pg18
+    restart: unless-stopped
+    # Docker's default 64 MB /dev/shm is too small for parallel queries on analytics charts.
+    shm_size: 512mb
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: formbricks
+    volumes:
+      - formbricks-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+
+  # Runs once at each start: creates SpiceDB's own database and login in formbricks-db.
+  formbricks-authzed-db-bootstrap:
+    image: pgvector/pgvector:0.8.7-pg18
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - >-
+        psql "$$POSTGRES_ADMIN_URL" -v ON_ERROR_STOP=1
+        -v database_name=spicedb -v database_username=spicedb
+        -v database_password="$$AUTHZED_DATABASE_PASSWORD"
+        -f /authzed-bootstrap.sql
+    environment:
+      POSTGRES_ADMIN_URL: postgresql://postgres:${POSTGRES_PASSWORD}@formbricks-db:5432/postgres?sslmode=disable
+      AUTHZED_DATABASE_PASSWORD: ${AUTHZED_DATABASE_PASSWORD}
+    volumes:
+      - ../files/authzed-bootstrap.sql:/authzed-bootstrap.sql:ro
+    depends_on:
+      formbricks-db:
+        condition: service_healthy
+
+  formbricks-spicedb-migrate:
+    image: authzed/spicedb:v1.57.0
+    restart: "no"
+    command: datastore migrate head
+    environment:
+      SPICEDB_DATASTORE_ENGINE: postgres
+      SPICEDB_DATASTORE_CONN_URI: postgresql://spicedb:${AUTHZED_DATABASE_PASSWORD}@formbricks-db:5432/spicedb?sslmode=disable
+    depends_on:
+      formbricks-authzed-db-bootstrap:
+        condition: service_completed_successfully
+
+  formbricks-spicedb:
+    image: authzed/spicedb:v1.57.0
+    restart: unless-stopped
+    command: serve
+    mem_limit: 512m
+    environment:
+      SPICEDB_DATASTORE_ENGINE: postgres
+      SPICEDB_DATASTORE_CONN_URI: postgresql://spicedb:${AUTHZED_DATABASE_PASSWORD}@formbricks-db:5432/spicedb?sslmode=disable
+      SPICEDB_GRPC_PRESHARED_KEY: ${AUTHZED_TOKEN}
+      SPICEDB_LOG_FORMAT: json
+      SPICEDB_LOG_LEVEL: info
+      SPICEDB_TELEMETRY_ENDPOINT: ""
+    depends_on:
+      formbricks-spicedb-migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/grpc_health_probe", "-addr=localhost:50051"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  formbricks-redis:
+    image: valkey/valkey:8.1.9-alpine
+    restart: unless-stopped
+    command: valkey-server --appendonly yes --maxmemory-policy noeviction
+    volumes:
+      - formbricks-redis-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  # Runs once at each start, after Formbricks' migrations: Hub's own database tables.
+  formbricks-hub-migrate:
+    image: ghcr.io/formbricks/hub:0.14.3
+    restart: "no"
+    entrypoint: ["sh", "-c"]
+    command:
+      - '/usr/local/bin/goose -dir /app/migrations postgres "$$DATABASE_URL" up && /usr/local/bin/river migrate-up --database-url "$$DATABASE_URL"'
+    environment:
+      <<: *hub-env
+    depends_on:
+      formbricks-migrate:
+        condition: service_completed_successfully
+
+  # Formbricks Hub: the feedback API the app uses internally.
+  formbricks-hub:
+    image: ghcr.io/formbricks/hub:0.14.3
+    restart: unless-stopped
+    depends_on:
+      formbricks-hub-migrate:
+        condition: service_completed_successfully
+      formbricks-db:
+        condition: service_healthy
+    environment:
+      <<: *hub-env
+      API_KEY: ${HUB_API_KEY}
+
+  # Runs Hub's background jobs, such as webhooks.
+  formbricks-hub-worker:
+    image: ghcr.io/formbricks/hub:0.14.3
+    restart: unless-stopped
+    entrypoint: ["/app/hub-worker"]
+    depends_on:
+      formbricks-hub-migrate:
+        condition: service_completed_successfully
+      formbricks-db:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+    environment:
+      <<: *hub-env
+
+  # Cube: answers the analytics queries behind Formbricks' charts. The image has no shell.
+  formbricks-cube:
+    image: ghcr.io/formbricks/cube:1.8.8-3
+    restart: unless-stopped
+    depends_on:
+      formbricks-hub-migrate:
+        condition: service_completed_successfully
+      formbricks-db:
+        condition: service_healthy
+    environment:
+      CUBEJS_DB_TYPE: postgres
+      CUBEJS_DB_HOST: formbricks-db
+      CUBEJS_DB_NAME: formbricks
+      CUBEJS_DB_USER: postgres
+      CUBEJS_DB_PASS: ${POSTGRES_PASSWORD}
+      CUBEJS_DB_PORT: "5432"
+      CUBEJS_API_SECRET: ${CUBEJS_API_SECRET}
+      CUBEJS_JWT_ISSUER: formbricks-web
+      CUBEJS_JWT_AUDIENCE: formbricks-cube
+      CUBEJS_DEFAULT_API_SCOPES: meta,data
+      CUBEJS_EXTERNAL_DEFAULT: "false"
+      CUBEJS_CACHE_AND_QUEUE_DRIVER: memory
+      CUBEJS_DB_QUERY_TIMEOUT: 60s
+    volumes:
+      - ../files/cube/cube.js:/cube/conf/cube.js:ro
+      - ../files/cube/schema/FeedbackRecords.js:/cube/conf/model/FeedbackRecords.js:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:4000/readyz', (res) => { res.resume(); process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  formbricks-db-data:
+  formbricks-redis-data:
