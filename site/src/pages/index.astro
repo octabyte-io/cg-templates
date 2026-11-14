@@ -7,9 +7,10 @@ import FilterBar from '../components/FilterBar.astro';
 import Check from '../components/Check.astro';
 import Chev from '../components/Chev.astro';
 import Faq from '../components/Faq.astro';
+import Blueprint from '../components/Blueprint.astro';
 import { alternativesPages, getTemplate, getTemplates, listNames, popularSwaps, usedCategories } from '../lib/catalogue';
 import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
-import { costAnswer, HOW_IT_WORKS } from '../lib/copy';
+import { costAnswer } from '../lib/copy';
 import { cloudgate, href, SITE_DESCRIPTION } from '../lib/site';
 
 const templates = getTemplates();
@@ -20,11 +21,17 @@ const topAlternatives = alternativesPages().sort((a, b) => b.apps.length - a.app
 // The home page shows a first screenful; the rest are a click away, and all of them are on /templates/.
 const PAGE = 8;
 
-// The stage shows a real app from the catalogue being set up; n8n when it is there.
-const featured = getTemplate('n8n') ?? templates[0];
-const replaced = featured?.alternativeTo[0];
+// The stage draws how deploying works with real apps from the catalogue: n8n first when it is there,
+// then a few apps people often swap to. Each needs a screenshot; the address is an example on the
+// stage's sample business.
+const STAGE_ADDRESS: Record<string, string> = { n8n: 'n8n', outline: 'wiki', plausible: 'stats', calcom: 'book' };
+const stageApps = [...new Set(['n8n', 'outline', 'plausible', 'calcom', ...templates.map((t) => t.id)])]
+  .map((id) => getTemplate(id))
+  .filter((t): t is NonNullable<typeof t> => Boolean(t && t.screenshots.length > 0))
+  .slice(0, 4)
+  .map((template) => ({ template, address: `${STAGE_ADDRESS[template.id] ?? template.id.replace(/[^a-z0-9]/g, '')}.acmebakery.com` }));
+const featured = stageApps[0]?.template ?? templates[0];
 const second = templates.find((t) => t.id === 'plausible') ?? templates.find((t) => t.id !== featured?.id);
-const steps = featured ? HOW_IT_WORKS(featured) : [];
 const nights = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Tonight'];
 const seats = ['AK', 'JB', 'LM', 'SR', 'TO', 'EV', 'PN', 'MC', 'RD', 'HW', 'CL', 'NB'];
 
@@ -92,77 +99,10 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   </section>
 
   {
-    featured && (
+    stageApps.length > 0 && (
       <section class="stagewrap pad" id="how" aria-labelledby="how-title">
-        <h2 id="how-title" class="visually-hidden">How it works</h2>
-        <div class="stage">
-          <div class="window demo" data-demo role="img" aria-label={`Illustration of the Cloudgate deploy screen for ${featured.name}: after creating an account, choose a server from Cloudgate or one you already have`}>
-            <div class="wbar">
-              <b>Cloudgate</b>
-              <span>/</span>
-              <span>New app</span>
-              <span class="sp" />
-              <span class="pill">Acme Bakery</span>
-            </div>
-            <div class="dep" aria-hidden="true" inert>
-              <div class="steps">
-                <div class="done"><span class="n"><Check /></span>Create account</div>
-                <div class="on" data-step="2"><span class="n">2</span>Choose a server</div>
-                <div data-step="3"><span class="n">3</span>Set up</div>
-                <div data-step="4"><span class="n">4</span>Open app</div>
-              </div>
-              <div class="mid">
-                <span class="lab">App</span>
-                <div class="chosen">
-                  <AppTile template={featured} box={36} size={22} loading="eager" />
-                  <div class="grow">
-                    <div class="h3">{featured.name}</div>
-                    <div class="muted small">{featured.tagline}</div>
-                  </div>
-                  <span class="muted small">Change</span>
-                </div>
-                <span class="lab">Server</span>
-                <div class="srv">
-                  <span class="on"><i class="rd" />Get a server from Cloudgate</span>
-                  <span><i class="rd" />Use a server I already have</span>
-                </div>
-                <span class="lab">Your domain</span>
-                <div class="chosen addr">
-                  <span class="grow">{featured.id.replace(/[^a-z0-9]/g, '')}.acmebakery.com</span>
-                  <span class="muted small" data-demo-addr>https, set up for you</span>
-                </div>
-              </div>
-              <div class="side">
-                <div class="sumrow"><span>App</span><span>{featured.name}</span></div>
-                <div class="sumrow"><span>Server</span><span>New, from Cloudgate</span></div>
-                {replaced && <div class="sumrow"><span>Replaces</span><span>{replaced.name}</span></div>}
-                <div class="sumrow"><span>App cost</span><span>Free</span></div>
-                <span class="btn wide" data-demo-go data-live={`Open ${featured.name}`}>
-                  Deploy {featured.name}
-                </span>
-                <div class="dbar"><span /></div>
-                <div class="log">
-                  <div><span class="ok"><Check /></span> Account created</div>
-                  <div><span class="ok"><Check /></span> {featured.name} chosen</div>
-                  <div data-demo-log data-run={`· Setting up ${featured.name}…`} data-live={`${featured.name} is live`}>
-                    · Ready in a few minutes
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <ol class="caption">
-          <li>
-            <b>1</b>Choose an app
-          </li>
-          {steps.map((step, index) => (
-            <li>
-              <b>{index + 2}</b>
-              {step.name}
-            </li>
-          ))}
-        </ol>
+        <h2 id="how-title" class="visually-hidden">How to deploy an open-source app with Cloudgate</h2>
+        <Blueprint apps={stageApps} total={total} />
       </section>
     )
   }
@@ -435,78 +375,6 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
   });
   input.value = new URLSearchParams(location.search).get('q') ?? input.value;
   render();
-</script>
-
-<script>
-  // The deploy demo on the stage: once it is in view, Deploy is pressed, the app is set up and goes
-  // live, in under three seconds, then it stays put. The HTML is the moment before, so without
-  // JavaScript or with reduced motion the picture is complete as it is.
-  const win = document.querySelector<HTMLElement>('[data-demo]');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (win && !reduce && 'IntersectionObserver' in window) {
-    const q = <T extends HTMLElement>(s: string) => win.querySelector<T>(s)!;
-    const go = q('[data-demo-go]');
-    const log = q('[data-demo-log]');
-    const addr = q('[data-demo-addr]');
-    const bar = q('.dbar span');
-    const step2 = q('[data-step="2"]');
-    const step3 = q('[data-step="3"]');
-    const step4 = q('[data-step="4"]');
-    const tick = (step: HTMLElement) => (step.firstElementChild!.innerHTML = q('.steps .done .n').innerHTML);
-    const EASE = 'cubic-bezier(.23,1,.32,1)';
-
-    /** Swaps text with a short blur, so the two states read as one change. */
-    const swap = (el: HTMLElement, html: string) => {
-      el.innerHTML = html;
-      el.animate(
-        [
-          { opacity: 0, filter: 'blur(3px)', transform: 'translateY(3px)' },
-          { opacity: 1, filter: 'blur(0)', transform: 'none' },
-        ],
-        { duration: 260, easing: EASE },
-      );
-    };
-    const esc = (t: string) => t.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
-
-    const play = () => {
-      const at = (ms: number, f: () => void) => setTimeout(f, ms);
-      at(0, () => go.classList.add('press'));
-      at(160, () => {
-        go.classList.remove('press');
-        win.dataset.phase = 'run';
-        step2.className = 'done';
-        tick(step2);
-        step3.className = 'on';
-        swap(log, esc(log.dataset.run ?? ''));
-        bar.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], {
-          duration: 1700,
-          easing: 'cubic-bezier(.45,.05,.35,1)',
-          fill: 'forwards',
-        });
-      });
-      at(1950, () => {
-        win.dataset.phase = 'live';
-        step3.className = 'done';
-        tick(step3);
-        step4.className = 'on live';
-        tick(step4);
-        swap(log, `<span class="ok">${q('.log .ok').innerHTML}</span> ${esc(log.dataset.live ?? '')}`);
-        swap(go, esc(go.dataset.live ?? ''));
-        swap(addr, '<span class="live-dot"><i></i>Live (https)</span>');
-      });
-    };
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          io.disconnect();
-          setTimeout(play, 500);
-        }
-      },
-      { threshold: 0.6 },
-    );
-    io.observe(q('.side'));
-  }
 </script>
 
 <script>

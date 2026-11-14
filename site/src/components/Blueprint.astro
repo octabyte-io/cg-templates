@@ -1,0 +1,651 @@
+---
+import type { Template } from '../lib/catalogue';
+import { href } from '../lib/site';
+import AppTile from './AppTile.astro';
+
+/**
+ * The home page stage: how deploying works, drawn as a plan on the blueprint grid. Three parts
+ * (the app, its server, its address) join with lines, and a leader drops to the app's real
+ * screenshot. It draws once when it comes into view, then shows a few other apps and stops; the
+ * buttons above it pick an app and stop that. The HTML is the finished drawing for the first app,
+ * so without JavaScript, or with reduced motion, the picture is complete as it is.
+ */
+interface Props {
+  /** Apps to show, first one first. Each needs a screenshot; `address` is its example web address. */
+  apps: { template: Template; address: string }[];
+  /** How many apps the catalogue has, for the link to all of them. */
+  total: number;
+}
+
+const { apps, total } = Astro.props;
+const lock = 'M5.5 7V5a2.5 2.5 0 0 1 5 0v2';
+const replaces = (t: Template) => t.alternativeTo[0]?.name;
+const describe = (t: Template, address: string) =>
+  `How deploying works: pick an app such as ${t.name}${replaces(t) ? `, which replaces ${replaces(t)}` : ''}, and click Deploy. ` +
+  `Cloudgate sets it up on a server, either one from Cloudgate or one you already have, and it opens at your own address, like ${address}, with https.`;
+const data = apps.map(({ template: t, address }) => ({ name: t.name, address, text: describe(t, address) }));
+// Most screenshots are about 16:10; a much wider one is shown whole instead of cropped.
+const wide = (t: Template) => t.screenshots[0].width / t.screenshots[0].height > 1.8;
+const first = apps[0];
+---
+
+<div class="stage bpw" data-bp data-apps={JSON.stringify(data)}>
+  <div class="bp-pick" role="group" aria-label="Show the setup for" hidden>
+    <span class="lbl">Show it with</span>
+    {
+      apps.map(({ template: t }, i) => (
+        <button type="button" data-i={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+          <AppTile template={t} box={24} size={14} loading="eager" />
+          {t.name}
+        </button>
+      ))
+    }
+    <a class="bp-all" href={href('templates/')}>or browse all {total} apps</a>
+  </div>
+  <p class="visually-hidden" data-bp-desc aria-live="polite">{data[0].text}</p>
+  <div class="bp" aria-hidden="true">
+    <div class="bp-row">
+      <div class="node bp-part">
+        <span class="nd-line"></span><i class="cn c1"></i><i class="cn c2"></i><i class="cn c3"></i><i class="cn c4"></i>
+        <span class="num">1  The app you pick</span>
+        <div class="whats">
+          {
+            apps.map(({ template: t }, i) => (
+              <div class="what" data-what={i} hidden={i !== 0}>
+                <AppTile template={t} box={40} size={24} loading="eager" />
+                <div>
+                  <b>{t.name}</b>
+                  <small>{replaces(t) ? `Replaces ${replaces(t)}. Free.` : 'Free to use.'}</small>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+        <div class="sub">Chosen from the catalogue</div>
+      </div>
+      <div class="conn bp-part"><span class="ln"></span><span class="tag">Deploy</span></div>
+      <div class="node bp-part">
+        <span class="nd-line"></span><i class="cn c1"></i><i class="cn c2"></i><i class="cn c3"></i><i class="cn c4"></i>
+        <span class="num">2  The server it runs on</span>
+        <div class="what">
+          <span class="srvicon"><span></span><span></span><span></span></span>
+          <div><b>Your server</b><small>From Cloudgate, or one you already have</small></div>
+        </div>
+        <div class="sub"><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i></span><span data-bp-setup>Set up, nothing to install</span></div>
+      </div>
+      <div class="conn bp-part"><span class="ln"></span><span class="tag">Address</span></div>
+      <div class="node bp-part">
+        <span class="nd-line"></span><i class="cn c1"></i><i class="cn c2"></i><i class="cn c3"></i><i class="cn c4"></i>
+        <span class="num">3  Where you open it</span>
+        <div class="what">
+          <span class="lt padlock" style="--s:40px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"></rect><path d={lock}></path></svg>
+          </span>
+          <div><b data-bp-addr>{first.address}</b><small>Your own domain, with https</small></div>
+        </div>
+        <div class="sub"><span class="live-dot" data-bp-live><i></i>Live</span></div>
+      </div>
+    </div>
+    <div class="bp-out">
+      <span class="leader bp-part"></span>
+      <div class="browser bp-part">
+        <div class="baddr">
+          <span class="bdots"><i></i><i></i><i></i></span>
+          <span class="url">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"></rect><path d={lock}></path></svg>
+            <span data-bp-url>{first.address}</span>
+          </span>
+        </div>
+        <div class="shots">
+          {
+            apps.map(({ template: t }, i) => {
+              const shot = t.screenshots[0];
+              return (
+                <img
+                  class:list={{ cur: i === 0, fit: wide(t) }}
+                  src={href(`screenshots/${t.id}/${shot.name}-${shot.widths[0]}.webp`)}
+                  srcset={shot.widths.map((w) => `${href(`screenshots/${t.id}/${shot.name}-${w}.webp`)} ${w}w`).join(', ')}
+                  sizes="(min-width: 860px) 760px, 100vw"
+                  width={shot.width}
+                  height={shot.height}
+                  alt=""
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              );
+            })
+          }
+        </div>
+      </div>
+      <span class="note bp-part" data-bp-note>{first.template.name}, running on your server</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bp-pick {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    margin-bottom: 22px;
+  }
+  .bp-pick[hidden] {
+    display: none;
+  }
+  .lbl,
+  .num,
+  .tag,
+  .note {
+    font: var(--t-xs) var(--mono);
+    color: var(--accent-ink);
+  }
+  .lbl {
+    margin-right: 4px;
+  }
+  .bp-pick button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px 0 5px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--card);
+    color: var(--muted);
+    font: var(--t-sm) var(--sans);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.16s var(--ease-out);
+  }
+  .bp-pick button:active {
+    transform: scale(0.97);
+  }
+  .bp-pick button[aria-pressed='true'] {
+    color: var(--fg);
+    border-color: var(--accent-hi);
+    box-shadow: inset 0 0 0 1px var(--accent-hi);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .bp-pick button:hover {
+      color: var(--fg);
+      border-color: var(--line-strong);
+    }
+  }
+  .bp-pick :global(.lt) {
+    border-radius: 50%;
+  }
+  .bp-all {
+    font-size: var(--t-sm);
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+    margin-left: 4px;
+  }
+
+  .bp {
+    display: grid;
+    gap: 0;
+  }
+  .bp-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 112px minmax(0, 1fr) 112px minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .node {
+    position: relative;
+    padding: 16px;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    border-radius: var(--r-md);
+    min-width: 0;
+  }
+  .nd-line {
+    position: absolute;
+    inset: 0;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-md);
+    pointer-events: none;
+  }
+  .cn {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 0 solid var(--accent-ink);
+    opacity: 0.6;
+  }
+  .c1 { top: -1px; left: -1px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .c2 { top: -1px; right: -1px; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .c3 { bottom: -1px; left: -1px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .c4 { bottom: -1px; right: -1px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+  .whats {
+    display: grid;
+  }
+  .whats > * {
+    grid-area: 1 / 1;
+  }
+  .what {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+  }
+  .what[hidden] {
+    display: none;
+  }
+  .what > div {
+    min-width: 0;
+  }
+  .what b {
+    display: block;
+    font: 600 var(--t-lg) / 1.3 var(--sans);
+    overflow-wrap: anywhere;
+  }
+  .what small {
+    display: block;
+    color: var(--muted);
+    font-size: var(--t-sm);
+    line-height: 1.4;
+  }
+  .sub {
+    font-size: var(--t-sm);
+    color: var(--muted);
+    border-top: 1px dashed var(--line);
+    padding-top: 8px;
+    min-height: 2.4em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .srvicon {
+    width: 40px;
+    height: 40px;
+    flex: none;
+    display: grid;
+    gap: 3px;
+    align-content: center;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--sunk);
+  }
+  .srvicon span {
+    height: 7px;
+    border-radius: 2px;
+    border: 1px solid var(--line-strong);
+    background: var(--card);
+    position: relative;
+  }
+  .srvicon span::after {
+    content: '';
+    position: absolute;
+    right: 3px;
+    top: 1.5px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+  .padlock {
+    color: var(--ok);
+  }
+  .padlock svg {
+    width: 18px;
+    height: 18px;
+  }
+  .dots {
+    display: inline-flex;
+    gap: 4px;
+  }
+  .dots i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .dots i.on {
+    background: var(--accent);
+  }
+  .live-dot i {
+    position: relative;
+  }
+  .live-dot i::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0;
+  }
+  .live-dot.ping i::after {
+    animation: bp-ping 0.9s var(--ease-out) 0.1s 1;
+  }
+  @keyframes bp-ping {
+    from { opacity: 0.45; transform: scale(1); }
+    to { opacity: 0; transform: scale(3.2); }
+  }
+  .conn {
+    position: relative;
+    height: 40px;
+    align-self: center;
+    display: grid;
+    place-items: center;
+  }
+  .ln {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 50%;
+    border-top: 1.5px solid color-mix(in srgb, var(--accent-ink) 60%, transparent);
+    transform-origin: left;
+  }
+  .ln::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -5px;
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid color-mix(in srgb, var(--accent-ink) 60%, transparent);
+    border-right: 1.5px solid color-mix(in srgb, var(--accent-ink) 60%, transparent);
+    transform: rotate(45deg);
+  }
+  .tag {
+    position: relative;
+    top: -16px;
+    background: var(--sunk);
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+  .bp-out {
+    display: grid;
+    justify-items: center;
+  }
+  .leader {
+    width: 0;
+    height: 28px;
+    border-left: 1.5px dashed color-mix(in srgb, var(--accent-ink) 60%, transparent);
+    transform-origin: top;
+  }
+  .browser {
+    width: min(100%, 760px);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-lg);
+    background: var(--card);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .baddr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--sunk);
+    font-size: var(--t-sm);
+  }
+  .bdots {
+    display: flex;
+    gap: 6px;
+    flex: none;
+  }
+  .bdots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .url {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: var(--r-sm);
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--fg);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .url svg {
+    width: 12px;
+    height: 12px;
+    flex: none;
+    color: var(--ok);
+  }
+  .shots {
+    display: grid;
+    background: #f1f1f1;
+  }
+  .shots img {
+    grid-area: 1 / 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top center;
+    opacity: 0;
+  }
+  .shots img.cur {
+    opacity: 1;
+  }
+  .shots img.fit {
+    object-fit: contain;
+    object-position: center;
+  }
+  .note {
+    margin-top: 10px;
+  }
+  /* Until it is drawn, the parts wait unseen; with reduced motion or no JavaScript they never hide. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) [data-bp]:not(.drawn) .bp-part {
+      opacity: 0;
+    }
+  }
+  @media (max-width: 53.75em) {
+    .bp-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .conn {
+      height: 56px;
+    }
+    .ln {
+      left: 50%;
+      right: auto;
+      top: 6px;
+      bottom: 6px;
+      border-top: 0;
+      border-left: 1.5px solid color-mix(in srgb, var(--accent-ink) 60%, transparent);
+      transform-origin: top;
+    }
+    .ln::after {
+      right: auto;
+      left: -5px;
+      top: auto;
+      bottom: 0;
+      transform: rotate(135deg);
+    }
+    .tag {
+      top: 0;
+      justify-self: start;
+      margin-left: calc(50% + 14px);
+    }
+  }
+</style>
+
+<script>
+  // Draws the plan once it is in view, then shows the other apps and stops. A button picks an app
+  // and stops the autoplay. Everything here is transform and opacity; with reduced motion the
+  // drawing is skipped and the buttons swap apps instantly.
+  const root = document.querySelector<HTMLElement>('[data-bp]');
+  if (root) {
+    const apps: { name: string; address: string; text: string }[] = JSON.parse(root.dataset.apps ?? '[]');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const EASE = 'cubic-bezier(.23,1,.32,1)';
+    const INOUT = 'cubic-bezier(.65,0,.35,1)';
+    const q = <T extends Element = HTMLElement>(s: string) => root.querySelector<T & HTMLElement>(s)!;
+    const qa = (s: string) => [...root.querySelectorAll<HTMLElement>(s)];
+    const buttons = qa('.bp-pick button');
+    const whats = qa('[data-what]');
+    const shots = qa('.shots img');
+    const dots = qa('.dots i');
+    const setup = q('[data-bp-setup]');
+    const setupText = setup.textContent ?? '';
+    let timers: number[] = [];
+    let anims: Animation[] = [];
+    let cur = 0;
+    const at = (ms: number, f: () => void) => timers.push(window.setTimeout(f, ms));
+    const anim = (el: Element | null, k: Keyframe[], o: KeyframeAnimationOptions) => {
+      if (reduce || !el) return null;
+      const a = el.animate(k, o);
+      anims.push(a);
+      return a;
+    };
+    const stop = () => {
+      timers.forEach(clearTimeout);
+      timers = [];
+      anims.forEach((a) => a.finish());
+      anims = [];
+    };
+    const ping = (el: HTMLElement) => {
+      if (reduce) return;
+      el.classList.remove('ping');
+      void el.offsetWidth;
+      el.classList.add('ping');
+    };
+    const fadeIn = (el: Element | null, ms: number, delay = 0) =>
+      anim(el, [{ opacity: 0 }, { opacity: 1 }], { duration: ms, delay, easing: EASE, fill: 'backwards' });
+
+    /** Text changes with a short blur, so the two states read as one change. */
+    const swapText = (el: HTMLElement, text: string, delay: number) => {
+      if (reduce) {
+        el.textContent = text;
+        return;
+      }
+      at(delay, () => {
+        el.textContent = text;
+        anim(el, [{ opacity: 0, filter: 'blur(3px)', transform: 'translateY(4px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], {
+          duration: 280,
+          easing: EASE,
+        });
+      });
+    };
+
+    /** Shows app i: its name leads, its address and screen follow, the server's dots refill. */
+    const show = (i: number) => {
+      if (i === cur) return;
+      const prev = cur;
+      cur = i;
+      const app = apps[i];
+      buttons.forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+      q('[data-bp-desc]').textContent = app.text;
+      whats.forEach((w, j) => (w.hidden = j !== i));
+      anim(whats[i], [{ opacity: 0, filter: 'blur(3px)', transform: 'translateY(4px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], {
+        duration: 280,
+        easing: EASE,
+      });
+      swapText(q('[data-bp-addr]'), app.address, 70);
+      swapText(q('[data-bp-url]'), app.address, 120);
+      swapText(q('[data-bp-note]'), `${app.name}, running on your server`, 120);
+      shots.forEach((s, j) => s.classList.toggle('cur', j === i));
+      anim(shots[i], [{ opacity: 0, transform: 'scale(1.01)' }, { opacity: 1, transform: 'none' }], { duration: 380, delay: 120, easing: EASE, fill: 'backwards' });
+      anim(shots[prev], [{ opacity: 1 }, { opacity: 0 }], { duration: 380, delay: 120, easing: EASE, fill: 'backwards' });
+      if (!reduce) {
+        dots.forEach((d) => d.classList.remove('on'));
+        dots.forEach((d, j) => at(120 + j * 110, () => d.classList.add('on')));
+        at(480, () => ping(q('[data-bp-live]')));
+      }
+    };
+
+    /** The first drawing: each part settles in, the lines draw between them, the screen rises last. */
+    const draw = () => {
+      const parts = qa('.bp-part');
+      parts.forEach((p) => (p.style.opacity = '0'));
+      root.classList.add('drawn');
+      const vertical = matchMedia('(max-width: 53.75em)').matches;
+      dots.forEach((d) => d.classList.remove('on'));
+      setup.textContent = 'Setting up';
+      const [n1, c1, n2, c2, n3, leader, browser, note] = parts;
+      const node = (el: HTMLElement, t: number) =>
+        at(t, () => {
+          el.style.opacity = '';
+          anim(el, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: EASE });
+          el.querySelectorAll('.cn').forEach((k, i) =>
+            anim(k, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 0.6, transform: 'none' }], { duration: 300, delay: 60 + i * 30, easing: EASE, fill: 'backwards' }),
+          );
+          fadeIn(el.querySelector('.nd-line'), 400, 120);
+        });
+      const line = (el: HTMLElement, t: number) =>
+        at(t, () => {
+          el.style.opacity = '';
+          anim(el.querySelector('.ln'), [{ transform: vertical ? 'scaleY(0)' : 'scaleX(0)' }, { transform: 'none' }], { duration: 420, easing: INOUT, fill: 'backwards' });
+          fadeIn(el.querySelector('.tag'), 260, 220);
+        });
+      node(n1, 0);
+      line(c1, 500);
+      node(n2, 900);
+      [1300, 1700, 2100].forEach((t, i) =>
+        at(t, () => {
+          dots[i].classList.add('on');
+          anim(dots[i], [{ transform: 'scale(.4)' }, { transform: 'none' }], { duration: 260, easing: EASE });
+        }),
+      );
+      at(2200, () => {
+        setup.textContent = setupText;
+        fadeIn(setup, 260);
+      });
+      line(c2, 2300);
+      node(n3, 2700);
+      at(2900, () => ping(q('[data-bp-live]')));
+      at(3200, () => {
+        leader.style.opacity = '';
+        anim(leader, [{ transform: 'scaleY(0)' }, { transform: 'none' }], { duration: 300, easing: INOUT, fill: 'backwards' });
+      });
+      at(3420, () => {
+        browser.style.opacity = '';
+        note.style.opacity = '';
+        anim(browser, [{ opacity: 0, transform: 'translateY(20px) scale(.985)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: EASE, fill: 'backwards' });
+        fadeIn(note, 400, 400);
+      });
+      // then the other apps, once each, and it stops on the last
+      apps.slice(1).forEach((_, k) => at(6500 + k * 3500, () => show(k + 1)));
+    };
+
+    q('.bp-pick').hidden = false;
+    buttons.forEach((b, i) =>
+      b.addEventListener('click', () => {
+        stop();
+        qa('.bp-part').forEach((p) => (p.style.opacity = ''));
+        root.classList.add('drawn');
+        dots.forEach((d) => d.classList.add('on'));
+        setup.textContent = setupText;
+        show(i);
+      }),
+    );
+
+    if (!reduce && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            io.disconnect();
+            // after the stage's own entrance (site.css) has mostly settled
+            setTimeout(() => {
+              if (!root.classList.contains('drawn')) draw();
+            }, 450);
+          }
+        },
+        { threshold: 0.35 },
+      );
+      io.observe(root);
+    } else {
+      root.classList.add('drawn');
+    }
+  }
+</script>
