@@ -1,0 +1,13 @@
+name: Trilium Notes
+description: "Trilium Notes is a self-hosted personal knowledge base: organise years of notes in a deep tree, search them in any browser and sync the desktop app."
+version: "0.107.0"
+tags: [personal knowledge base, note taking app, evernote alternative, obsidian alternative, self-hosted notes, trilium notes]
+links:
+  website: https://triliumnotes.org
+  docs: https://docs.triliumnotes.org
+  source: https://github.com/TriliumNext/Trilium
+cloudgate: 0.1.0
+compose: app
+size: small
+domains:
+  - { service: trilium, port: 8080 }

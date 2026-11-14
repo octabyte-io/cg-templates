@@ -1,0 +1,20 @@
+name: Wallos
+description: "Wallos is a self-hosted subscription tracker: list every recurring payment, see what's due and what you spend, and get renewal reminders, with no bank link."
+version: "5.11.1"
+tags: [subscription tracker, rocket money alternative, subscription manager, recurring payments, bill reminder, renewal reminders]
+links:
+  website: https://wallosapp.com
+  docs: https://github.com/ellite/Wallos#readme
+  source: https://github.com/ellite/Wallos
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  TZ:
+    ask:
+      label: Time zone
+      description: Used for due dates and reminders, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: wallos, port: 80 }

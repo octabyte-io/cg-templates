@@ -1,0 +1,28 @@
+name: NodeBB
+description: "NodeBB is self-hosted forum software for your community: categories, live replies, member chat, moderation and fediverse sharing, on your own domain."
+version: "4.16.8"
+tags: [circle alternative, discourse alternative, self-hosted forum software, open source forum software, community forum, facebook group alternative, activitypub forum]
+links:
+  website: https://nodebb.org
+  docs: https://docs.nodebb.org
+  source: https://github.com/NodeBB/NodeBB
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  NODEBB_URL: { value: "{{domains.nodebb.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-zA-Z][a-zA-Z0-9_-]{2,31}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of your admin account, used for password resets and forum notifications.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: nodebb, port: 4567 }

@@ -1,0 +1,67 @@
+services:
+  glpi:
+    # The official image (Apache + PHP on port 80, from glpi-project/docker-images), pinned to the
+    # latest stable release. With the five GLPI_DB_* variables set, it installs the database on the
+    # first start and runs the schema updates on later starts. A built-in worker runs GLPI's
+    # scheduled tasks (mail collection, notifications) every minute.
+    image: glpi/glpi:12.0.2
+    restart: unless-stopped
+    depends_on:
+      glpi-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      GLPI_DB_HOST: glpi-db
+      GLPI_DB_PORT: "3306"
+      GLPI_DB_NAME: glpi
+      GLPI_DB_USER: glpi
+      GLPI_DB_PASSWORD: ${DB_PASSWORD}
+      GLPI_URL: ${GLPI_URL}
+      GLPI_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # The image's entrypoint installs or updates GLPI, then runs this command. On every start it
+    # sets GLPI's own address (used in notification links). Once, after the first install, it
+    # replaces the default "glpi" super-admin password with the generated one and disables the
+    # other default accounts (tech, normal, post-only), whose passwords are public. Later starts
+    # leave accounts alone, so a password changed in GLPI stays changed.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        bin/console config:set url_base "$${GLPI_URL%/}" --no-interaction
+        marker=/var/glpi/config/.cloudgate-default-accounts-secured
+        if [ ! -f "$$marker" ]; then
+          bin/console user:reset_password glpi --password="$$GLPI_ADMIN_PASSWORD" --no-interaction
+          for user in tech normal post-only; do
+            bin/console user:disable "$$user" --no-interaction
+          done
+          touch "$$marker"
+        fi
+        exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+    volumes:
+      # GLPI's config (including its encryption key), uploaded documents, logs and marketplace plugins.
+      - glpi-data:/var/glpi
+
+  glpi-db:
+    # GLPI 12 needs MariaDB 10.11 or later (or MySQL 8.0 or later).
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: glpi
+      MARIADB_USER: glpi
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - glpi-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  glpi-data:
+  glpi-db-data:

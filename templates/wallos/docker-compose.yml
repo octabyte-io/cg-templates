@@ -1,0 +1,24 @@
+services:
+  wallos:
+    image: bellamy/wallos:5.11.1
+    restart: unless-stopped
+    # The first person to open the app creates the admin account on the
+    # registration page; after that, sign-ups stay closed unless the admin
+    # opens them. The SQLite database and uploaded logos live in the volumes
+    # below. The image's startup script switches nginx to IPv4 when the server
+    # has no IPv6.
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - wallos-db:/var/www/html/db
+      - wallos-logos:/var/www/html/images/uploads/logos
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1/health.php"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  wallos-db:
+  wallos-logos:

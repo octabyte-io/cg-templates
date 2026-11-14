@@ -1,0 +1,90 @@
+# From Sure's official compose.example.yml (v0.7.6-hotfix.1): web, Sidekiq worker,
+# Postgres and Redis. The optional backup sidecars are left out.
+x-sure-env: &sure_env
+  SELF_HOSTED: "true"
+  # Cloudgate terminates TLS in front of the app.
+  RAILS_FORCE_SSL: "false"
+  RAILS_ASSUME_SSL: "true"
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  APP_DOMAIN: ${APP_DOMAIN}
+  POSTGRES_USER: sure
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_DB: sure_production
+  DB_HOST: sure-db
+  DB_PORT: "5432"
+  REDIS_URL: redis://sure-redis:6379/1
+  EMAIL_SENDER: ${EMAIL_SENDER}
+  SMTP_ADDRESS: ${SMTP_ADDRESS}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USERNAME: ${SMTP_USERNAME}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_TLS_ENABLED: "true"
+
+services:
+  sure:
+    image: ghcr.io/we-promise/sure:0.7.6-hotfix.1
+    restart: unless-stopped
+    depends_on:
+      sure-db:
+        condition: service_healthy
+      sure-redis:
+        condition: service_healthy
+    # Sign-ups are "open" by default. DISABLE_SIGNUPS=true starts Sure with
+    # ONBOARDING_STATE=closed; the image's entrypoint still prepares the database.
+    entrypoint: ["bash", "-c", "if [ \"$$DISABLE_SIGNUPS\" = true ]; then export ONBOARDING_STATE=closed; fi; exec /rails/bin/docker-entrypoint ./bin/rails server"]
+    environment:
+      <<: *sure_env
+      DISABLE_SIGNUPS: ${DISABLE_SIGNUPS}
+    volumes:
+      - sure-storage:/rails/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000/up || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+
+  sure-worker:
+    image: ghcr.io/we-promise/sure:0.7.6-hotfix.1
+    restart: unless-stopped
+    depends_on:
+      sure:
+        condition: service_healthy
+      sure-redis:
+        condition: service_healthy
+    command: ["bundle", "exec", "sidekiq"]
+    environment:
+      <<: *sure_env
+    volumes:
+      - sure-storage:/rails/storage
+
+  sure-db:
+    image: postgres:16.15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sure
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: sure_production
+    volumes:
+      - sure-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sure -d sure_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  sure-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - sure-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sure-storage:
+  sure-db-data:
+  sure-redis-data:

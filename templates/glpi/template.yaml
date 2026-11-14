@@ -1,0 +1,18 @@
+name: GLPI
+description: "GLPI is a self-hosted IT service desk and asset inventory: handle IT tickets and track every computer, software licence and network device."
+version: "12.0.2"
+tags: [it service desk, it asset management, itsm, help desk ticketing, servicenow alternative, freshservice alternative, cmdb]
+links:
+  website: https://glpi-project.org
+  docs: https://glpi-project.org/documentation/
+  source: https://github.com/glpi-project/glpi
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  GLPI_URL: { value: "{{domains.glpi.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: glpi, port: 80 }
