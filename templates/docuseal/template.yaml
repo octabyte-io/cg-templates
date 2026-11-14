@@ -1,0 +1,18 @@
+name: DocuSeal
+description: "Self-hosted DocuSeal: an open-source DocuSign alternative. Send PDFs for e-signature, sign on any device, and keep a signed copy with an audit log."
+version: "3.3.6"
+tags: [e-signature, docusign alternative, electronic signature, document signing, open source e-signature, pdf forms, pandadoc alternative]
+links:
+  website: https://www.docuseal.com
+  docs: https://www.docuseal.com/docs
+  source: https://github.com/docusealco/docuseal
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.docuseal.url}}" }
+  APP_HOST: { value: "{{domains.docuseal.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: docuseal, port: 3000 }

@@ -7,9 +7,9 @@
 # One line under 70 characters, shown under the app's name.
 tagline: Say what the app does for you in one short line.
 
-# One id from site/src/categories.ts: websites, team-chat, automation,
-# analytics, docs-wikis, files-photos, passwords, customers-sales, monitoring,
-# developer-tools.
+# One id from site/src/categories.ts: websites, team-chat, ai, automation,
+# analytics, docs-wikis, documents, project-management, design, files-photos,
+# passwords, customers-sales, monitoring, developer-tools.
 category: automation
 
 # Optional. Paid products this app replaces, most important first, as ids from

@@ -1,0 +1,30 @@
+name: Paperless-ngx
+description: "Self-hosted Paperless-ngx turns scanned bills, receipts and contracts into a searchable archive that tags and files itself, in place of a filing cabinet."
+version: "3.4.2"
+tags: [document management, docuware alternative, evernote alternative for receipts, paperless office, ocr, digital filing cabinet]
+links:
+  website: https://docs.paperless-ngx.com
+  docs: https://docs.paperless-ngx.com
+  source: https://github.com/paperless-ngx/paperless-ngx
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  PAPERLESS_URL: { value: "{{domains.paperless.url}}" }
+  PAPERLESS_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  OCR_LANGUAGE:
+    ask:
+      label: Document language
+      description: The language most of your documents are written in, as a Tesseract code. eng, deu, fra, ita and spa are built in; join several with + (e.g. deu+eng).
+      default: eng
+      required: false
+      pattern: "[a-z_]{3,8}(\\+[a-z_]{3,8})*"
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for document dates and schedules, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: paperless, port: 8000 }
