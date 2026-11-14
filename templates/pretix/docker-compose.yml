@@ -1,0 +1,136 @@
+# Based on pretix's small-scale Docker guide (docs.pretix.eu, self-hosting >
+# Small-scale deployment with Docker): the pretix/standalone image runs nginx,
+# the web workers and the background task worker in one container, with
+# PostgreSQL and Redis next to it and a cron job for pretix's periodic tasks.
+# Settings come from PRETIX_<SECTION>_<OPTION> variables instead of pretix.cfg.
+x-pretix-env: &pretix-env
+  PRETIX_PRETIX_INSTANCE_NAME: pretix
+  PRETIX_PRETIX_URL: ${PRETIX_URL}
+  PRETIX_PRETIX_DATADIR: /data
+  # Cloudgate's proxy terminates HTTPS and sends X-Forwarded-For/-Proto.
+  PRETIX_PRETIX_TRUST_X_FORWARDED_FOR: "on"
+  PRETIX_PRETIX_TRUST_X_FORWARDED_PROTO: "on"
+  PRETIX_DJANGO_SECRET: ${SECRET_KEY}
+  PRETIX_DATABASE_BACKEND: postgresql
+  PRETIX_DATABASE_NAME: pretix
+  PRETIX_DATABASE_USER: pretix
+  PRETIX_DATABASE_PASSWORD: ${DB_PASSWORD}
+  PRETIX_DATABASE_HOST: pretix-db
+  PRETIX_DATABASE_PORT: "5432"
+  PRETIX_REDIS_LOCATION: redis://pretix-redis:6379/0
+  PRETIX_REDIS_SESSIONS: "true"
+  PRETIX_CELERY_BACKEND: redis://pretix-redis:6379/1
+  PRETIX_CELERY_BROKER: redis://pretix-redis:6379/2
+  # Email: optional at setup. Empty values are dropped at start (see below), so
+  # pretix uses its defaults until an email server is added.
+  PRETIX_MAIL_FROM: ${MAIL_FROM:-}
+  PRETIX_MAIL_HOST: ${MAIL_HOST:-}
+  PRETIX_MAIL_PORT: ${MAIL_PORT:-587}
+  PRETIX_MAIL_USER: ${MAIL_USERNAME:-}
+  PRETIX_MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+  # The image starts 2 web workers per CPU; 3 keeps memory in check on a small server.
+  NUM_WORKERS: "3"
+
+# Runs before the image's own "pretix" start script:
+#   - drops empty email settings, and turns on STARTTLS for port 587 or SSL for 465;
+#   - "cron": runs pretix's periodic tasks every 15 minutes (the guide's cron job);
+#   - otherwise: runs the database migrations, replaces the built-in
+#     admin@localhost / admin login with your email and a generated password
+#     (only while that default login is untouched), then starts pretix.
+x-pretix-start: &pretix-start
+  - bash
+  - -c
+  - |
+    for v in PRETIX_MAIL_FROM PRETIX_MAIL_HOST PRETIX_MAIL_PORT PRETIX_MAIL_USER PRETIX_MAIL_PASSWORD; do
+      [ -n "$${!v}" ] || unset "$$v"
+    done
+    case "$${PRETIX_MAIL_PORT:-}" in
+      465) export PRETIX_MAIL_SSL=on ;;
+      587) export PRETIX_MAIL_TLS=on ;;
+    esac
+    if [ "$$1" = cron ]; then
+      while true; do pretix cron; sleep 900; done
+    fi
+    pretix shell -c "$$CLOUDGATE_SET_ADMIN" || exit 1
+    AUTOMIGRATE=skip exec pretix all
+  - bash
+
+services:
+  pretix:
+    image: pretix/standalone:2026.9.1
+    restart: unless-stopped
+    entrypoint: *pretix-start
+    command: ["all"]
+    depends_on:
+      pretix-db:
+        condition: service_healthy
+      pretix-redis:
+        condition: service_healthy
+    environment:
+      <<: *pretix-env
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      CLOUDGATE_SET_ADMIN: |
+        import os
+        from pretix.base.models import User
+        u = User.objects.filter(email="admin@localhost").first()
+        if u is not None and u.check_password("admin"):
+            u.email = os.environ["ADMIN_EMAIL"].strip().lower()
+            u.set_password(os.environ["ADMIN_PASSWORD"])
+            u.save()
+            print("Replaced the default admin@localhost login with " + u.email)
+    volumes:
+      # Uploaded files, generated tickets and invoices, logs.
+      - pretix-data:/data
+      - ../files/nginx.conf:/etc/nginx/nginx.conf:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/healthcheck/"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
+  # pretix's periodic tasks (reminder emails, expiring unpaid orders, exports).
+  pretix-cron:
+    image: pretix/standalone:2026.9.1
+    restart: unless-stopped
+    entrypoint: *pretix-start
+    command: ["cron"]
+    depends_on:
+      pretix:
+        condition: service_healthy
+    environment:
+      <<: *pretix-env
+    volumes:
+      - pretix-data:/data
+
+  pretix-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pretix
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: pretix
+    volumes:
+      - pretix-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pretix -d pretix"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  pretix-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - pretix-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pretix-data:
+  pretix-db-data:
+  pretix-redis-data:

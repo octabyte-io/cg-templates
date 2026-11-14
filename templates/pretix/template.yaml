@@ -1,0 +1,52 @@
+name: pretix
+description: "Self-hosted pretix: sell tickets to conferences, concerts and courses from your own ticket shop, with invoices, vouchers and check-in at the door."
+version: "2026.9.1"
+tags: [eventbrite alternative, event ticketing software, ticket shop, sell tickets online, conference registration, event check-in app]
+links:
+  website: https://pretix.eu
+  docs: https://docs.pretix.eu
+  source: https://github.com/pretix/pretix
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  PRETIX_URL: { value: "{{domains.pretix.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to pretix with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  MAIL_FROM:
+    ask:
+      label: Send emails from (optional)
+      description: The address tickets and order confirmations come from. Leave the email questions empty to add them later on the app's variables page.
+      format: email
+      required: false
+  MAIL_HOST:
+    ask:
+      label: Email server (SMTP host, optional)
+      description: From your email sending service, for example smtp.postmarkapp.com. pretix needs it to send tickets, order confirmations and password resets.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      description: 587 (STARTTLS) works with most email services; 465 uses SSL.
+      default: "587"
+      format: number
+      required: false
+  MAIL_USERNAME:
+    ask:
+      label: Email server username (optional)
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password (optional)
+      secret: true
+      required: false
+domains:
+  - { service: pretix, port: 80 }
+files:
+  - { path: nginx.conf }

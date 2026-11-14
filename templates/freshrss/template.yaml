@@ -1,0 +1,22 @@
+name: FreshRSS
+description: "FreshRSS is a self-hosted RSS reader: follow news sites, blogs and YouTube channels in one fast feed, and read them on the web or in phone apps."
+version: "1.30.4"
+tags: [rss reader, self-hosted rss reader, feed reader, news aggregator, feedly alternative, inoreader alternative]
+links:
+  website: https://freshrss.org
+  docs: https://freshrss.github.io/FreshRSS/en/
+  source: https://github.com/FreshRSS/FreshRSS
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  BASE_URL: { value: "{{domains.freshrss.url}}" }
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for article dates and the refresh schedule, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: freshrss, port: 80 }

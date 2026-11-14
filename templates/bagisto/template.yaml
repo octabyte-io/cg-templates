@@ -1,0 +1,36 @@
+name: Bagisto
+description: "Self-hosted Bagisto is open-source Laravel e-commerce software for your own online shop, with products, orders, payments, bookings and returns."
+version: "2.5.1"
+tags: [shopify alternative, laravel ecommerce, open source ecommerce, ecommerce platform, self-hosted ecommerce, online shop, bigcommerce alternative]
+links:
+  website: https://bagisto.com
+  docs: https://devdocs.bagisto.com
+  source: https://github.com/bagisto/bagisto
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.bagisto.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to the shop's admin panel with this email.
+      format: email
+  CURRENCY:
+    ask:
+      label: Shop currency
+      description: The store's default currency, as a three-letter code such as USD, EUR or GBP. Set when the shop is installed.
+      default: USD
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The shop's time zone, as an IANA name such as Europe/Berlin. Scheduled tasks such as campaigns run at times in this zone.
+      default: UTC
+      required: false
+domains:
+  - { service: bagisto, port: 80 }

@@ -1,0 +1,29 @@
+name: Langflow
+description: "Self-hosted Langflow: build AI agents and document chatbots on a visual canvas with any AI model, then use them through an API or as MCP tools."
+version: "1.13.2"
+tags: [copilot studio alternative, ai agent builder, open source ai agent builder, rag chatbot builder, low-code ai, mcp server]
+links:
+  website: https://www.langflow.org
+  docs: https://docs.langflow.org
+  source: https://github.com/langflow-ai/langflow
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  LANGFLOW_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  LANGFLOW_SUPERUSER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  LANGFLOW_SUPERUSER_PASSWORD: { generate: password }
+  LANGFLOW_ENABLE_SIGNUP:
+    ask:
+      label: Allow new sign-ups
+      description: Type false once your team has its accounts, so nobody else can request one. New accounts stay inactive until the admin turns them on.
+      default: "true"
+      required: false
+domains:
+  - { service: langflow, port: 7860 }
