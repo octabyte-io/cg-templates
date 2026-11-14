@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted Penpot, open-source design and prototyping like Figma.
-category: developer-tools
+category: design
 alternativeTo: [figma, adobe-xd]
 ease: easy
 easeNote: Open your web address, create the first account and start a team; colleagues sign up the same way and you add them to it.

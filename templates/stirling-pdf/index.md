@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted PDF editor to merge, convert, sign and OCR your files.
-category: files-photos
+category: documents
 alternativeTo: [adobe-acrobat, smallpdf, ilovepdf]
 ease: easy
 easeNote: You sign in with the admin username you chose and the password Cloudgate shows you, then invite up to four colleagues.

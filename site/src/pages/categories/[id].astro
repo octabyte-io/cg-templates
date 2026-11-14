@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import Crumbs from '../../components/Crumbs.astro';
-import { getTemplates, lastUpdated, usedCategories } from '../../lib/catalogue';
+import { getTemplates, lastUpdated, licenceKind, usedCategories } from '../../lib/catalogue';
 import type { Category } from '../../categories';
 import { breadcrumbSchema, graph, itemListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
@@ -23,10 +23,18 @@ const trail = [
   { name: 'Home', path: '' },
   { name: category.name, path: `categories/${category.id}/` },
 ];
-const title = `Open-source ${category.name.toLowerCase()} apps to self-host`;
-const description = `${category.lede} ${apps.length} free ${apps.length === 1 ? 'app' : 'apps'}${
-  replaced.length ? `, replacing ${replaced.slice(0, 3).join(', ')}` : ''
-}.`.slice(0, 160);
+const allOpenSource = apps.every((app) => licenceKind(app.license).openSource);
+// Lowercase the name for the title, but keep acronyms such as AI and PDFs.
+const noun = category.name
+  .split(' ')
+  .map((word) => (/^[A-Z]{2,}s?$/.test(word) ? word : word.toLowerCase()))
+  .join(' ');
+const title = allOpenSource ? `Open-source ${noun} apps to self-host` : `Self-hosted ${noun} apps`;
+// Name as many replaced products as fit in 160 characters, never cutting a name in half.
+const describe = (names: string[]) =>
+  `${category.lede} ${apps.length} free ${apps.length === 1 ? 'app' : 'apps'}${names.length ? `, replacing ${names.join(', ')}` : ''}.`;
+const fitting = [3, 2, 1, 0].map((n) => describe(replaced.slice(0, n))).find((text) => text.length <= 160);
+const description = fitting ?? category.lede;
 ---
 
 <Base

@@ -1,6 +1,6 @@
 ---
 tagline: One AI chat for your whole team, on your own server.
-category: team-chat
+category: ai
 alternativeTo: [chatgpt, claude]
 ease: some-setup
 easeNote: Open WebUI comes with no AI model, so the admin connects a provider such as an OpenAI-compatible API key, Anthropic or their own model server in Admin Panel > Settings > Connections, and that provider bills the usage.

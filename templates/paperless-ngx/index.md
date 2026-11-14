@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted document filing that reads, tags and finds your papers.
-category: files-photos
+category: documents
 alternativeTo: [docuware, evernote]
 ease: easy
 easeNote: Open the web address, create the admin account, then drag in your first scanned PDFs.

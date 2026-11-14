@@ -1,6 +1,6 @@
 ---
 tagline: Send contracts and forms for e-signature from your own server.
-category: customers-sales
+category: documents
 alternativeTo: [docusign, pandadoc, dropbox-sign]
 ease: some-setup
 easeNote: Create the admin account on the setup page, then add your email server in Settings so DocuSeal can email signing requests; until then, copy each signing link and send it yourself.

@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted project tracking with sprints, boards and timelines.
-category: developer-tools
+category: project-management
 alternativeTo: [jira, linear, asana, monday]
 ease: easy
 easeNote: Right after setup, open your web address followed by /god-mode to create the admin account, then create a workspace for the team.
