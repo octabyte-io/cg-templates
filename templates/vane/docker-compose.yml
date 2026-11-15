@@ -1,0 +1,43 @@
+services:
+  # Vane has no accounts or sign-in: anyone with the address could search,
+  # change its settings and spend your AI credits. This proxy asks for the
+  # username "admin" and the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      vane:
+        condition: service_healthy
+
+  vane:
+    # The full image from the official instructions: Vane with its own
+    # SearXNG search engine and the headless browser it reads web pages with,
+    # all in one container. (The "slim" image has neither the search engine
+    # nor the browser.) Connect an AI provider in the setup screen.
+    image: itzcrazykns1337/vane:v1.12.2
+    restart: unless-stopped
+    environment:
+      # Next.js otherwise listens only on the container's own hostname.
+      HOSTNAME: 0.0.0.0
+    volumes:
+      # Settings (including API keys), search history, the database and
+      # uploaded files.
+      - vane-data:/home/vane/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail --output /dev/null http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  vane-data:

@@ -1,0 +1,14 @@
+services:
+  appsmith:
+    # All-in-one image: editor, API server, MongoDB, Redis and Postgres run
+    # inside this one container and keep their data under /appsmith-stacks.
+    image: appsmith/appsmith-ce:v2.7.0
+    restart: unless-stopped
+    environment:
+      APPSMITH_ENCRYPTION_PASSWORD: ${APPSMITH_ENCRYPTION_PASSWORD}
+      APPSMITH_ENCRYPTION_SALT: ${APPSMITH_ENCRYPTION_SALT}
+    volumes:
+      - appsmith-stacks:/appsmith-stacks
+
+volumes:
+  appsmith-stacks:
