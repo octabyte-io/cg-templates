@@ -1,0 +1,20 @@
+name: Node-RED
+description: "Self-hosted Node-RED: wire devices, web APIs and apps together in a browser flow editor to automate jobs, from webhooks to MQTT sensors."
+version: "5.0.9"
+tags: [node-red, workflow automation, zapier alternative, iot automation, mqtt, home automation, low-code]
+links:
+  website: https://nodered.org
+  docs: https://nodered.org/docs/
+  source: https://github.com/node-red/node-red
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password of the editor's "admin" user (files/settings.js.txt).
+  NODE_RED_ADMIN_PASSWORD: { generate: password }
+  # Encrypts the passwords and tokens saved in flows.
+  NODE_RED_CREDENTIAL_SECRET: { generate: hex }
+domains:
+  - { service: node-red, port: 1880 }
+files:
+  - { path: settings.js.txt }

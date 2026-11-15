@@ -12,27 +12,36 @@ apps:
   heimdall:
     fit: "The simplest way to a start page: one page of tiles linking to your apps and sites, set up entirely by clicking in the browser, with icons and colours filled in for hundreds of known apps, a search bar, tags and a separate page for each person. A few apps can show live numbers on their tile. It has no RSS, notes, calendar or weather widgets, no browser extension and no team pages, and it cannot import from start.me."
     import: no
+  homarr:
+    fit: "Gives a team one start page of app tiles, bookmarks and widgets, such as a calendar, weather, RSS feeds, notes and service status, with several boards that can be public or limited to chosen users and groups, and sign-in through LDAP or single sign-on. Everything is set up in the browser by drag and drop. Unlike start.me it has no browser extension, no ready-made page library and no import, and most of its live integrations are for self-hosted apps rather than office tools such as Microsoft 365."
+    import: no
 moving: |
   There is no import from start.me, so list the bookmarks you want to keep, section by section. In Dashy, sign in, turn on edit mode and add a section for each start.me page or widget group, then an item for each link; the icon is fetched for you. In Glance, add a bookmarks widget with your links, and an RSS widget for each feed you followed on start.me, in its glance.yml settings file. Set the new address as your browser's home page or new-tab page.
 
   For Homepage, add your links to its bookmarks and services settings files after you sign in, and for each self-hosted app you run, its address and, where its widget needs one, an API key, to show live numbers next to the link.
 
   With Heimdall, set a password for the admin user first, since it opens without one. Then add a tile for each link: type an app's name and Heimdall fills in its icon and colour. Group tiles with tags, set Heimdall as your browser's home page, and keep start.me until your links have moved.
+
+  Homarr cannot import start.me pages either, so rebuild them by hand. Open each start.me page and list the links your team uses most, then create a board in Homarr and add a tile for each app or a bookmarks widget for groups of links. Add users and groups, or connect your single sign-on, and decide which boards each group can see; anything placed on a public board can be read without signing in. Finally, set the Homarr address as the home page or new tab page in each browser.
 faq:
   - q: "Should I choose Dashy or Glance?"
     a: "Choose Dashy for a start page of work apps and links that you can edit in the browser, with status dots and search. Choose Glance if your start page is mostly news feeds, videos, weather and prices, and you don't mind editing a text file."
   - q: "Can each person have their own start page?"
-    a: "Not in the way start.me works. Dashy and Glance show pages set up on the server, and both can have several pages, but people do not each build their own in a few clicks."
+    a: "Not in the way start.me works. Dashy and Glance show pages set up on the server, and both can have several pages, but people do not each build their own in a few clicks. In Homarr each person can pick their own home board from the boards they can see."
   - q: "Is there a browser extension like start.me's?"
-    a: "No. Neither has a browser extension; you set the app's address as your browser's home page or new-tab page instead."
+    a: "No. None of these apps has a browser extension; you set the app's address as your browser's home page or new-tab page instead. Homarr also works in a phone's browser, with its own phone layout."
   - q: "Can I edit Homepage by dragging and clicking?"
     a: "No. Homepage is set up in a handful of settings files. Indentation matters in them, so change one section at a time and reload the page."
   - q: "Can each person in a team have their own Homepage?"
     a: "Not in one copy. Everyone who signs in sees the same page; run a second copy for a different set of links."
-  - q: "Should I choose Dashy, Homepage or Heimdall?"
-    a: "Choose Dashy for a start page of work apps and links that you edit in the browser, with status dots and search. Choose Homepage for live status and numbers from many self-hosted apps, if you don't mind editing settings files. Choose Heimdall for the simplest page of tiles, set up entirely by clicking in the browser, with a separate page for each person."
+  - q: "Should I choose Dashy, Homepage, Heimdall or Homarr?"
+    a: "Choose Dashy for a start page of work apps and links that you edit in the browser, with status dots and search. Choose Homepage for live status and numbers from many self-hosted apps, if you don't mind editing settings files. Choose Heimdall for the simplest page of tiles, set up entirely by clicking in the browser, with a separate page for each person. Choose Homarr for a team start page set up by drag and drop, with boards limited to chosen users and groups and sign-in through single sign-on."
+  - q: "Can I import my start.me pages into Homarr?"
+    a: "No. Homarr has no start.me importer and does not read browser bookmark files, so you add your links again as tiles or bookmark widgets."
+  - q: "Can different teams see different start pages?"
+    a: "Yes, in Homarr. It has several boards, and each can be public or limited to chosen users and groups. Each person can pick their own home board."
 ---
 
 start.me is a browser start page: you collect bookmarks, news feeds and widgets on pages that open whenever you start your browser, and teams can share pages with everyone.
 
-People look for an alternative because start.me's free plan shows ads and allows only a few pages, while unlimited pages and the extra widgets sit on paid plans. Some also want the list of tools their team uses kept off a third-party service. A self-hosted Dashy or Glance gives you an ad-free start page with no page limit, on your own server, and Homepage adds the live status and numbers of the apps you run yourself next to their links. Heimdall does the same job more simply, set up entirely by clicking in the browser.
+People look for an alternative because start.me's free plan shows ads and allows only a few pages, while unlimited pages and the extra widgets sit on paid plans. Some also want the list of tools their team uses kept off a third-party service. A self-hosted Dashy or Glance gives you an ad-free start page with no page limit, on your own server, and Homepage adds the live status and numbers of the apps you run yourself next to their links. Heimdall does the same job more simply, set up entirely by clicking in the browser. Homarr suits teams that want the shared page signed in with the same accounts as their other tools: it is set up by drag and drop, with boards for chosen users and groups.

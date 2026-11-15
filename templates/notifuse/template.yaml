@@ -1,0 +1,17 @@
+name: Notifuse
+description: "Self-hosted Notifuse sends newsletters, automated email sequences and your app's emails, with a drag-and-drop editor, lists and A/B tests."
+version: "43.0"
+tags: [email marketing, newsletter, email automation, transactional email, mailchimp alternative, klaviyo alternative]
+links:
+  website: https://www.notifuse.com
+  docs: https://docs.notifuse.com
+  source: https://github.com/Notifuse/notifuse
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  API_ENDPOINT: { value: "{{domains.notifuse.url}}" }
+  SECRET_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: notifuse, port: 8080 }

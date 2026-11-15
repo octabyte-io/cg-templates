@@ -12,6 +12,9 @@ apps:
   timetracker:
     fit: "Timer-first tracking like Toggl Track, with a timer that keeps running on the server across devices, idle detection, manual entries and a calendar view, plus invoices from tracked hours, expenses and budgets in the free app. It imports from Toggl Track directly with your API token. It has no app-store phone or desktop apps, fewer integrations, a busy menu, and donation prompts unless you buy an optional supporter key."
     import: yes
+  timetagger:
+    fit: "A private tracker for one person: press Record, tag the work with words such as #client and #task, and see your time on a timeline you zoom from a day to a year, with targets and PDF or CSV reports to send a client. It works offline as a web app on phones and computers. It has no team workspace, clients, rates or invoices, and no browser extension."
+    import: partly
 moving: |
   solidtime imports Toggl directly. Export your data from Toggl Track, then open solidtime's import page, choose the Toggl importer and upload the file: clients, projects and time entries come across. Invite your team after the import, and add your mail server's details on the app's variables page first if you want invitations by email. Before anyone can use the desktop app or browser extension with your own solidtime, the person who runs the server registers them once with a solidtime command.
 
@@ -20,6 +23,8 @@ moving: |
   Traggo cannot import Toggl data, so start fresh: decide on a few tags, such as project:name and client:name, and keep your Toggl export as a record of past hours.
 
   TimeTracker imports from Toggl Track directly: copy the API token from your Toggl profile, run TimeTracker's Toggl import, and check the projects and time entries before inviting your team. In the setup wizard, switch off the modules you won't use to keep the menu short.
+
+  TimeTagger imports by pasting a table: export your Toggl time entries as CSV, open the file in a spreadsheet, keep the start, stop and description columns, put your project names into a tag column, and paste the rows into TimeTagger's import dialog. Each person imports their own records, since TimeTagger has no team workspace.
 faq:
   - q: "Should I choose solidtime or Kimai?"
     a: "solidtime if you want the app that feels most like Toggl, with official desktop apps, browser extensions and a direct Toggl importer. Kimai if you bill clients from your tracker, since invoicing is free in its core and paid in solidtime, or if you want the older, more established project."
@@ -27,6 +32,8 @@ faq:
     a: "When you track time for yourself and only want a timer and charts. Traggo uses free-form tags instead of clients and projects, and you build your own dashboards, but it has no invoicing, import or phone apps."
   - q: "When is TimeTracker the better choice?"
     a: "When you want to invoice from your tracked hours and also track expenses and mileage, all free, with a direct Toggl import. It is a newer project with one main maintainer and a long feature list, though setup lets you switch off what you don't need."
+  - q: "Should a freelancer choose TimeTagger or Traggo?"
+    a: "TimeTagger if you want a timeline of your day and PDF reports to send clients, and to work offline from your phone. Traggo if you want to build your own dashboards of charts. Neither has invoices or rates."
   - q: "Can I import Toggl Track data into solidtime?"
     a: "Yes. solidtime has built-in Toggl importers that bring across clients, projects and time entries from Toggl's exports."
   - q: "Can I import Toggl Track data into Kimai?"

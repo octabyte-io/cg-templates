@@ -1,0 +1,33 @@
+name: LearnHouse
+description: "LearnHouse is a self-hosted, open-source LMS for online courses with graded assignments, certificates and communities, instead of Teachable or TalentLMS."
+version: "1.4.5"
+tags: [open source lms, online course platform, teachable alternative, thinkific alternative, learning management system, employee training software, course certificates]
+links:
+  website: https://www.learnhouse.app
+  docs: https://docs.learnhouse.app
+  source: https://github.com/learnhouse/learnhouse
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.learnhouse.url}}" }
+  APP_HOST: { value: "{{domains.learnhouse.host}}" }
+  NEXTAUTH_SECRET: { generate: base64 }
+  JWT_SECRET: { generate: base64 }
+  COLLAB_INTERNAL_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ORG_NAME:
+    ask:
+      label: Organization name
+      description: The name of your school or team, shown on the course site. You can change it later in the settings.
+      default: My Academy
+      pattern: "[^<>\"]{1,60}"
+      required: false
+domains:
+  - { service: learnhouse, port: 80 }

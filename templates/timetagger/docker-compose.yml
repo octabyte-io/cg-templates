@@ -1,0 +1,31 @@
+services:
+  timetagger:
+    # The official image, from the project's deploy/docker-compose.yml.
+    image: ghcr.io/almarklein/timetagger:v26.1.3
+    restart: unless-stopped
+    # TimeTagger reads its logins from TIMETAGGER_CREDENTIALS as
+    # "user:bcrypt-hash". At each start this hashes the generated password
+    # with the bcrypt module the image already ships, then starts the
+    # image's own command (python -m timetagger).
+    entrypoint:
+      - sh
+      - -c
+      - |-
+        TIMETAGGER_CREDENTIALS="$$(python -c 'import os, bcrypt; print(os.environ["ADMIN_USER"] + ":" + bcrypt.hashpw(os.environ["ADMIN_PASSWORD"].encode(), bcrypt.gensalt()).decode())')" || exit 1
+        export TIMETAGGER_CREDENTIALS
+        exec python -m timetagger
+    environment:
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TIMETAGGER_BIND: 0.0.0.0:80
+      TIMETAGGER_DATADIR: /root/_timetagger
+      TIMETAGGER_LOG_LEVEL: info
+      # Open the app itself at the root address instead of the project's
+      # promotional landing page.
+      TIMETAGGER_APP_REDIRECT: "true"
+    volumes:
+      # Each user's time records, one SQLite database per user.
+      - timetagger-data:/root/_timetagger
+
+volumes:
+  timetagger-data:

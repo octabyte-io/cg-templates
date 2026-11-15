@@ -9,13 +9,16 @@ apps:
   automatisch:
     fit: "Best for short, linear flows. It has far fewer ready-made connections than Make and no visual canvas, so it suits small teams with simple needs."
     import: no
+  node-red:
+    fit: "Also a visual canvas of wired blocks, but closer to programming than Make: each step passes a message you shape with JSON and often a little JavaScript. It shines with webhooks, web APIs, MQTT and devices, and has few business-app blocks with ready account sign-in, so it suits technical users more than Make's usual audience."
+    import: no
 moving: |
-  Make scenarios cannot be imported into any of these apps, so they are rebuilt by hand. n8n's canvas works the most like Make's, which makes it the easiest to rebuild in: routers become IF or Switch blocks, and iterators become loops. Rebuild the busiest scenarios first, test each one with real data, then turn the Make scenario off.
+  Make scenarios cannot be imported into any of these apps, so they are rebuilt by hand. n8n's canvas works the most like Make's, which makes it the easiest to rebuild in: routers become IF or Switch blocks, and iterators become loops. Rebuild the busiest scenarios first, test each one with real data, then turn the Make scenario off. Node-RED's canvas is similar too, but each module becomes a block or a short function you write, so allow more time per scenario.
 faq:
   - q: "Is n8n like Make?"
     a: "Yes. Both build automations on a visual canvas of connected blocks, with branches and loops. n8n can also run on your own server, where it has no limit on how often workflows run."
   - q: "Can I self-host Make?"
-    a: "No. Make is only available as a hosted service. n8n, Activepieces and Automatisch are the self-hosted options in this list."
+    a: "No. Make is only available as a hosted service. n8n, Activepieces, Automatisch and Node-RED are the self-hosted options in this list."
 ---
 
 Make, formerly Integromat, is a visual automation tool. You drag apps onto a canvas and join them into scenarios, with routers for branches and iterators for lists, which makes it more flexible than a simple trigger-and-action tool.

@@ -1,0 +1,17 @@
+name: Homarr
+description: "Homarr is a self-hosted dashboard and team start page: every web app on one board, with status checks, live widgets, user groups and single sign-on."
+version: "v2.13.1"
+tags: [self-hosted dashboard, start page, start.me alternative, homelab dashboard, app launcher, intranet start page]
+links:
+  website: https://homarr.dev
+  docs: https://homarr.dev/docs/getting-started
+  source: https://github.com/homarr-labs/homarr
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.homarr.url}}" }
+  SECRET_ENCRYPTION_KEY: { generate: hex }
+domains:
+  - { service: homarr, port: 7575 }
+files: []

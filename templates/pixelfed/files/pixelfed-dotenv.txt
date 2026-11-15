@@ -1,0 +1,3 @@
+# Pixelfed reads its settings from the environment (docker-compose.yml).
+# This file exists so that Pixelfed's web installer (/installer), which only
+# opens when there is no .env file, stays closed.

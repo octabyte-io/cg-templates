@@ -1,0 +1,24 @@
+services:
+  invio:
+    image: ghcr.io/kittendevv/invio:v2.4.1
+    restart: unless-stopped
+    environment:
+      # The admin account is created from these on the first start only;
+      # after that the password is changed inside Invio.
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASS: ${ADMIN_PASS}
+      JWT_SECRET: ${JWT_SECRET}
+      # The app's public address, used for SvelteKit's form (CSRF) check.
+      ORIGIN: ${ORIGIN}
+      DATABASE_PATH: /app/data/invio.db
+      # Cloudgate serves the app over HTTPS behind its reverse proxy.
+      RATE_LIMIT_TRUST_PROXY: "true"
+    volumes:
+      - invio-data:/app/data
+      # The image fetches the backend's Deno/npm packages on first start.
+      # Keeping Deno's cache means restarts don't download them again.
+      - invio-deno-cache:/root/.cache/deno
+
+volumes:
+  invio-data:
+  invio-deno-cache:

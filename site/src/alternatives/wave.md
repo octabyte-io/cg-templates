@@ -6,13 +6,16 @@ apps:
   invoiceplane:
     fit: "Does Wave's invoicing job: quotes that turn into invoices, recurring invoices, online payment through Stripe or PayPal, read-only client logins to see invoices and approve quotes, EU e-invoice XML and SEPA QR codes. It does no bookkeeping and has no expenses, bank feeds, automatic payment reminders or phone app."
     import: partly
+  invio:
+    fit: "A smaller invoicing tool than Wave: customers, products, invoices with taxes and discounts, PDF, a public link or email for each invoice, and paid and overdue status, plus European e-invoice files such as Factur-X and UBL. It has no accounting, online payments, recurring invoices, reminders or phone app."
+    import: no
 moving: |
-  SolidInvoice has no Wave importer, so you add your clients and the items you sell by hand. Create your company first, set up email sending so invoices and reminders reach clients, and connect Stripe or PayPal so clients can pay online. Then recreate any recurring invoices with the same schedule. Keep Wave, or another accounting app, for your books and past invoices, since SolidInvoice only handles invoicing. InvoicePlane imports clients, invoices and payments from CSV files in its own column layout, so rearrange Wave's exports to match; then set up email sending and Stripe or PayPal in the same way, and keep your books elsewhere too.
+  SolidInvoice has no Wave importer, so you add your clients and the items you sell by hand. Create your company first, set up email sending so invoices and reminders reach clients, and connect Stripe or PayPal so clients can pay online. Then recreate any recurring invoices with the same schedule. Keep Wave, or another accounting app, for your books and past invoices, since SolidInvoice only handles invoicing. InvoicePlane imports clients, invoices and payments from CSV files in its own column layout, so rearrange Wave's exports to match; then set up email sending and Stripe or PayPal in the same way, and keep your books elsewhere too. Invio has no importer either: set your company details, currency, tax rates and logo in its Settings, then add customers and products before your first invoice.
 faq:
   - q: "Does SolidInvoice do accounting like Wave?"
-    a: "No. SolidInvoice handles quotes, invoices and payments only. For double-entry accounting, keep a separate accounting app or your accountant’s software. InvoicePlane does no bookkeeping either."
-  - q: "Should I choose SolidInvoice or InvoicePlane?"
-    a: "SolidInvoice if you want automatic reminders for overdue invoices. InvoicePlane if you want projects and tasks to bill, client logins to approve quotes, or EU e-invoices and SEPA QR codes; it sends no automatic reminders."
+    a: "No. SolidInvoice handles quotes, invoices and payments only. For double-entry accounting, keep a separate accounting app or your accountant’s software. InvoicePlane and Invio do no bookkeeping either."
+  - q: "Should I choose SolidInvoice, InvoicePlane or Invio?"
+    a: "SolidInvoice if you want automatic reminders for overdue invoices. InvoicePlane if you want projects and tasks to bill, client logins to approve quotes, or EU e-invoices and SEPA QR codes; it sends no automatic reminders. Invio if you only need plain invoices, or e-invoice files such as Factur-X or UBL for European customers; it has no online payments, recurring invoices or reminders."
   - q: "Which payment services work with SolidInvoice?"
     a: "Stripe and PayPal, along with a few other gateways. Clients pay through a link in each invoice email."
 ---

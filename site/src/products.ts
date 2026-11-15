@@ -3064,6 +3064,36 @@ export const PRODUCTS: Product[] = [
     lede: 'Koha is a free, open-source Follett Destiny alternative: a full library system for the catalogue, loans, holds, borrowers and a public online catalogue where readers search, place holds and renew. Destiny is a vendor product sold with support included; Koha has no licence fee and takes your catalogue as MARC records, though it takes time to set up and you run it or hire support yourself.',
     pick: 'koha',
   },
+  {
+    id: 'instagram',
+    name: 'Instagram',
+    icon: 'instagram',
+    job: 'sharing photos with followers',
+    lede: 'Pixelfed is a free, open-source Instagram alternative: a photo-sharing network on your own server with a chronological feed, profiles, likes, comments, collections and direct messages, and no ads. Instagram ranks your feed and is paid for by advertising; Pixelfed shows posts in time order and can follow and be followed across Pixelfed and Mastodon servers, though its audience is far smaller and it has no Reels or shopping.',
+    pick: 'pixelfed',
+  },
+  {
+    id: 'kagi',
+    name: 'Kagi',
+    icon: 'kagi',
+    job: 'private, ad-free web search',
+    lede: 'SearXNG is a free, open-source Kagi alternative for private web search: it sends each search to many engines at once, merges the results, and keeps no account, profile or search history. Kagi is a paid subscription with its own ranking and AI tools; self-hosted SearXNG has no search limit and costs only your server, though its results are only as good as the engines it asks and it has no AI answers.',
+    pick: 'searxng',
+  },
+  {
+    id: 'attio',
+    name: 'Attio',
+    job: 'a modern, AI-ready CRM',
+    lede: 'Relaticle is a free, open-source Attio alternative: a CRM for companies, people, deals on a pipeline board, tasks and notes, with a built-in AI assistant whose changes you approve and an MCP server for Claude, ChatGPT and other AI tools. Attio is hosted only and priced per seat; self-hosted Relaticle has no seat limit, though it has no custom objects, data enrichment or app marketplace.',
+    pick: 'relaticle',
+  },
+  {
+    id: 'customer-io',
+    name: 'Customer.io',
+    job: 'automated email from your app’s events',
+    lede: 'Notifuse is a free-to-self-host Customer.io alternative for email: automated journeys triggered by what people do in your app, campaigns from a drag-and-drop editor, and an API for transactional email, on your own server. Customer.io prices by profile and adds SMS, push and in-app messages; Notifuse is email only, source-available rather than open source, with single sign-on and more than three workspaces behind a paid key.',
+    pick: 'notifuse',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));

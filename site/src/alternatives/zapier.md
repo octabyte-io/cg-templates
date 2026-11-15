@@ -15,11 +15,14 @@ apps:
   huginn:
     fit: "Better at watching than connecting: agents scrape web pages and read feeds, mailboxes and webhooks on a schedule, spot changes and unusual peaks, and send alerts, digests or webhooks, with its own RSS feeds as output. It has far fewer ready-made business-app connections than Zapier, and each agent is set up in a form with JSON settings rather than a visual step editor."
     import: no
+  node-red:
+    fit: "A more technical choice, for webhooks, web APIs, devices and smart homes rather than business apps. You wire blocks on a canvas and work with JSON, often with a little JavaScript, and its library of over 5,000 community blocks covers MQTT, databases, Home Assistant and Telegram. Few blocks offer the one-click account sign-in Zapier has, and there is no run history like n8n's."
+    import: no
 moving: |
-  None of these apps can import Zaps, so each one is rebuilt by hand. Start with the Zaps that run most often, since they cost the most on Zapier. A simple two- or three-step Zap usually takes a few minutes to rebuild, and n8n and Activepieces both have template libraries that cover common ones. If a Zap mostly hands work to an AI step, such as sorting emails or drafting replies, rebuild it in Sim as an agent with the apps it needs. Zaps that check a website or feed and send an alert or a daily summary fit Huginn, as a chain of agents. Connect each app's account once in the new tool, run the new flow alongside the Zap for a few days, then switch the Zap off.
+  None of these apps can import Zaps, so each one is rebuilt by hand. Start with the Zaps that run most often, since they cost the most on Zapier. A simple two- or three-step Zap usually takes a few minutes to rebuild, and n8n and Activepieces both have template libraries that cover common ones. If a Zap mostly hands work to an AI step, such as sorting emails or drafting replies, rebuild it in Sim as an agent with the apps it needs. Zaps that check a website or feed and send an alert or a daily summary fit Huginn, as a chain of agents. Zaps that start from a webhook or call a web API are often quickest to rebuild in Node-RED, which has blocks for both built in. Connect each app's account once in the new tool, run the new flow alongside the Zap for a few days, then switch the Zap off.
 faq:
   - q: "Is there a free version of Zapier I can host myself?"
-    a: "No. Zapier is only available as a hosted service. n8n, Activepieces, Automatisch, Sim and Huginn do the same job and can run on your own server, where they have no task limits."
+    a: "No. Zapier is only available as a hosted service. n8n, Activepieces, Automatisch, Sim, Huginn and Node-RED do the same job and can run on your own server, where they have no task limits."
   - q: "Which Zapier alternative is easiest to learn?"
     a: "Activepieces and Automatisch work most like Zapier, one step after another from menus. n8n has more options on its canvas, so it takes a little longer to learn but handles more complex work."
   - q: "Which Zapier alternative is best for AI agents?"
