@@ -1,0 +1,20 @@
+name: Photoview
+description: "Photoview is a self-hosted photo gallery that turns your folders into albums, shows RAW photos and videos, groups faces and shares albums by link."
+version: "2.4.0"
+tags: [self-hosted photo gallery, google photos alternative, smugmug alternative, raw photo viewer, share photo albums, photoview]
+links:
+  website: https://photoview.github.io
+  docs: https://photoview.github.io/docs/
+  source: https://github.com/photoview/photoview
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # photos and videos at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: photoview, port: 80 }
+  - { service: filebrowser, port: 80 }

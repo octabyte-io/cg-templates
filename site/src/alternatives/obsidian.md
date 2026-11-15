@@ -1,5 +1,8 @@
 ---
 apps:
+  silverbullet:
+    fit: "The closest to Obsidian here: notes stay plain Markdown files in a folder, with a live-preview editor, wiki links, linked mentions, a daily journal, tasks and queries over your notes. It runs on your server and opens in any browser, and installs as a web app that works offline and syncs when you reconnect. It has no app-store app and a smaller plugin library, and its queries need a little code."
+    import: partly
   trilium:
     fit: "Builds a large personal knowledge base in a tree of notes, with rich text, code notes, canvas drawings, mind maps, note maps, scripting, per-note encryption and version history, and imports Markdown. Unlike Obsidian, it keeps notes in a database rather than Markdown files, it is built for one person, and it has no official phone app, only a mobile web version and community apps."
     import: partly
@@ -13,20 +16,24 @@ apps:
     fit: "Keeps your notes as Markdown files in folders, much like a vault, in notebooks with notes nested inside notes, and can make any note public at a clean web address at no cost, which covers what many people use Obsidian Publish for. It has no backlinks, graph view, plugins or offline apps, search looks at titles only, and it cannot import a vault."
     import: no
 moving: |
-  Trilium imports Markdown, so bring your Obsidian vault across as files: zip the vault folder and import it into a note in Trilium, which keeps your folders as a tree. Check links between notes and embedded images afterwards, since Obsidian's wiki-style links and plugin features may not all carry over. Then install the Trilium desktop app on each computer and connect it to your server so your notes sync. SiYuan's server version can't import Markdown files, so with SiYuan you copy notes across by hand, starting with the ones you use most, and keep your vault as a read-only archive. LeafWiki imports a vault directly: zip the vault folder and import it as an editor or admin, and Obsidian-style links become links between pages; it works best with a tidy folder structure, and plugin content does not carry over. Note Mark has no import, so paste notes in one at a time, starting with the ones you want to share or publish.
+  An Obsidian vault is a folder of Markdown files, and SilverBullet reads it as it is: it finds wiki links by page name, so links between notes keep working without rewriting them. Its web app has no upload importer, so copy the vault's files into the space's folder on the server, or paste notes into new pages. Plugin features and Obsidian-only syntax may not carry over, so check your most-used notes first. Then install SilverBullet as a web app on each computer and phone from the browser.
+
+  Trilium imports Markdown, so you can zip the vault folder and import it into a note in Trilium, which keeps your folders as a tree. Check links between notes and embedded images afterwards, then install the Trilium desktop app on each computer and connect it to your server so your notes sync. SiYuan's server version can't import Markdown files, so with SiYuan you copy notes across by hand, starting with the ones you use most, and keep your vault as a read-only archive. LeafWiki imports a vault directly: zip the vault folder and import it as an editor or admin, and Obsidian-style links become links between pages; it works best with a tidy folder structure, and plugin content does not carry over. Note Mark has no import, so paste notes in one at a time, starting with the ones you want to share or publish.
 faq:
-  - q: "Does Trilium store notes as Markdown files?"
-    a: "No. Trilium keeps notes in a database on your server, and exports them as Markdown or HTML when you want files."
+  - q: "Which Obsidian alternative keeps notes as Markdown files?"
+    a: "SilverBullet, LeafWiki and Note Mark. Each keeps notes as plain Markdown files on your server, so you can read, back up or move them with any other tool; SilverBullet is the closest to a personal Obsidian vault. Trilium and SiYuan keep notes in their own storage and export Markdown when you ask."
+  - q: "Does SilverBullet work on my phone and offline?"
+    a: "Yes. SilverBullet installs from the browser as a web app on phones and computers, keeps a copy of your notes on the device, and syncs changes when you are back online. There is no app-store app."
   - q: "Can Trilium sync between computers like Obsidian Sync?"
     a: "Yes, at no cost. Trilium's desktop apps for Windows, macOS and Linux sync with your own Trilium server; keep the server and every app on the same version."
   - q: "Is there a Trilium phone app?"
     a: "Not an official one. Trilium's server has a mobile web version you can add to your home screen, and community apps exist for Android and iPhone."
-  - q: "Which of these keeps my notes as Markdown files?"
-    a: "LeafWiki and Note Mark. Both save every note as a plain Markdown file on your server, as Obsidian does on your device. Trilium keeps notes in a database, though it exports them as Markdown, and SiYuan uses its own format."
   - q: "Can I publish notes as web pages, like Obsidian Publish?"
     a: "Yes, with Note Mark or LeafWiki, at no cost. Note Mark makes any single note public at a clean web address; LeafWiki can open the whole wiki for anyone to read while only signed-in people edit."
+  - q: "Is SilverBullet's desktop app free?"
+    a: "The SilverBullet server Cloudgate installs is free and open source for any use. The separate SilverBullet Desktop app is proprietary: free for personal use, with a paid licence for work. You don't need it, since the server works in any browser."
 ---
 
 Obsidian is a note-taking app that keeps your notes as Markdown files on your own device, with links between notes, a graph view, a large collection of community plugins and official apps for computers and phones.
 
-People look for an alternative because Obsidian is proprietary and its sync is a paid add-on. When we checked its pricing page in November 2026, the app was free, Obsidian Sync cost $4 per user a month and Publish $8 per site a month, both billed yearly. Trilium Notes is open source and has sync and web access built in: its desktop apps sync with your own server, and you can open your notes in any browser. SiYuan, also open source, runs in the browser on your own server and adds databases and flashcards, though it keeps notes in its own format. LeafWiki and Note Mark, both open source, keep your notes as Markdown files on your server: LeafWiki as a shared wiki that imports your vault, Note Mark as a simple notebook that can publish notes as web pages.
+People look for an alternative because Obsidian is proprietary and its sync is a paid add-on. When we checked its pricing page in November 2026, the app was free, Obsidian Sync cost $4 per user a month and Publish $8 per site a month, both billed yearly. SilverBullet is open source and keeps the same plain Markdown files with wiki links, on your own server, so every device opens the same notes in a browser with no sync subscription. Trilium Notes, also open source, has desktop apps that sync with your server and a deeper note tree, though it keeps notes in a database. SiYuan runs in the browser on your own server and adds databases and flashcards, though it keeps notes in its own format. LeafWiki and Note Mark, both open source, also keep your notes as Markdown files on your server: LeafWiki as a shared wiki that imports your vault, Note Mark as a simple notebook that can publish notes as web pages.

@@ -1,0 +1,48 @@
+# From tududi's official docker-compose.yml (the app and PostgreSQL), with the
+# settings from its .env.example written out, uploads and backups kept in volumes,
+# and the optional nightly backup service left out.
+
+services:
+  tududi:
+    image: chrisvel/tududi:2.1.0
+    restart: unless-stopped
+    depends_on:
+      tududi-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://tududi:${DB_PASSWORD}@tududi-db:5432/tududi
+      # The first admin account, created on first start if it doesn't exist yet.
+      # Restarts leave an existing account (and a password changed later) as it is.
+      TUDUDI_USER_EMAIL: ${ADMIN_EMAIL}
+      TUDUDI_USER_PASSWORD: ${ADMIN_PASSWORD}
+      TUDUDI_SESSION_SECRET: ${SESSION_SECRET}
+      # The address people open, for CORS and for links in emails.
+      BASE_URL: ${APP_URL}
+      TUDUDI_ALLOWED_ORIGINS: ${APP_URL}
+      # Cloudgate serves the app through its proxy (HTTPS); with this the
+      # session cookie's secure flag follows X-Forwarded-Proto.
+      TUDUDI_TRUST_PROXY: "true"
+      TUDUDI_UPLOAD_PATH: /app/uploads
+    volumes:
+      - tududi-uploads:/app/uploads
+      - tududi-backups:/app/backups
+
+  tududi-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tududi
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: tududi
+    volumes:
+      - tududi-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tududi -d tududi"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tududi-uploads:
+  tududi-backups:
+  tududi-db-data:
