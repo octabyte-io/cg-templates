@@ -1,0 +1,27 @@
+name: Gatus
+description: "Self-hosted Gatus checks your websites, alerts you by email, Slack and about 40 other services, and shows a public status page. An UptimeRobot alternative."
+version: "5.38.0"
+tags: [uptime monitoring, status page, uptimerobot alternative, statuspage alternative, website monitoring, open source status page, ssl certificate monitoring]
+links:
+  website: https://gatus.io
+  docs: https://github.com/TwiN/gatus#readme
+  source: https://github.com/TwiN/gatus
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  SITE_URL:
+    ask:
+      label: Website to check
+      description: The first address Gatus checks, starting with https://, such as https://www.yourcompany.com. Add more websites later in Gatus's config.yaml file.
+      pattern: "^https://[^\\s\"'$\\\\]+$"
+  STATUS_PAGE_NAME:
+    ask:
+      label: Status page name
+      description: Shown at the top of your status page, such as your company's name.
+      default: Service status
+      pattern: "^[^\"$\\\\]{1,60}$"
+domains:
+  - { service: gatus, port: 8080 }
+files:
+  - { path: config.yaml }
