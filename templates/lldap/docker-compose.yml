@@ -1,0 +1,21 @@
+services:
+  lldap:
+    image: lldap/lldap:v0.6.3
+    restart: unless-stopped
+    environment:
+      # The address of the web interface, used in password reset links.
+      LLDAP_HTTP_URL: ${LLDAP_HTTP_URL}
+      LLDAP_JWT_SECRET: ${LLDAP_JWT_SECRET}
+      LLDAP_KEY_SEED: ${LLDAP_KEY_SEED}
+      LLDAP_LDAP_BASE_DN: ${LLDAP_LDAP_BASE_DN}
+      # The password of the built-in "admin" account, set on the first start.
+      # Later changes are made in the web interface.
+      LLDAP_LDAP_USER_PASS: ${LLDAP_LDAP_USER_PASS}
+    # The web interface listens on 17170. LDAP listens on 3890 inside the
+    # server's network, for other apps on the same server; it is not published.
+    # Users, groups and the SQLite database are kept in /data.
+    volumes:
+      - lldap-data:/data
+
+volumes:
+  lldap-data:

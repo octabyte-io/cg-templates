@@ -1,0 +1,19 @@
+name: ownCloud Server
+description: "ownCloud Server is the classic, self-hosted ownCloud: store, sync and share your team's files with links and versions, in place of Dropbox or Google Drive."
+version: "11.1.0"
+tags: [owncloud, owncloud classic, owncloud server, file sharing, file sync, dropbox alternative, google drive alternative]
+links:
+  website: https://owncloud.com
+  docs: https://doc.owncloud.com/server/11.1/
+  source: https://github.com/owncloud/core
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  OWNCLOUD_HOST: { value: "{{domains.owncloud.host}}" }
+  OWNCLOUD_URL: { value: "{{domains.owncloud.url}}" }
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: owncloud, port: 8080 }
