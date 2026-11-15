@@ -1,0 +1,15 @@
+# Mastodon's proxy, in place of the nginx in Mastodon's install guide
+# (dist/nginx.conf): the streaming API goes to the streaming server and
+# everything else to Puma, which also serves the static files.
+:80 {
+    reverse_proxy /api/v1/streaming* mastodon-streaming:4000 {
+        header_up X-Forwarded-Proto {header.X-Forwarded-Proto}
+        header_up X-Forwarded-For {header.X-Forwarded-For}
+    }
+
+    reverse_proxy * mastodon-web:3000 {
+        # Pass on the scheme and client address set by the proxy in front (Cloudgate's).
+        header_up X-Forwarded-Proto {header.X-Forwarded-Proto}
+        header_up X-Forwarded-For {header.X-Forwarded-For}
+    }
+}

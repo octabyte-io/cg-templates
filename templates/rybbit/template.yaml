@@ -1,0 +1,25 @@
+name: Rybbit
+description: "Self-hosted Rybbit: open-source, cookie-free web analytics with session replay, funnels and error tracking, a Google Analytics and Hotjar alternative."
+version: "2.9.2"
+tags: [web analytics, google analytics alternative, session replay, hotjar alternative, cookieless analytics, funnel analytics, privacy]
+links:
+  website: https://rybbit.com
+  docs: https://rybbit.com/docs
+  source: https://github.com/rybbit-io/rybbit
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.rybbit.url}}" }
+  BETTER_AUTH_SECRET: { generate: hex }
+  CLICKHOUSE_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: rybbit, port: 80 }
+files:
+  - { path: Caddyfile.conf }
+  - { path: clickhouse/network.xml }
+  - { path: clickhouse/logging_rules.xml }
+  - { path: clickhouse/resource_limits.xml }
+  - { path: clickhouse/user_settings.xml }

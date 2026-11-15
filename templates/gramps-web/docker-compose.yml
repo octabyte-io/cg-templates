@@ -1,0 +1,59 @@
+# From the official example: https://github.com/gramps-project/gramps-web-docs/blob/main/examples/docker-compose-base/docker-compose.yml
+services:
+  grampsweb:
+    image: ghcr.io/gramps-project/grampsweb:26.11.2
+    restart: unless-stopped
+    depends_on:
+      grampsweb-redis:
+        condition: service_healthy
+    environment: &grampsweb-env
+      GRAMPSWEB_TREE: "Gramps Web"  # created on first start if it does not exist
+      GRAMPSWEB_BASE_URL: ${BASE_URL}
+      GRAMPSWEB_SECRET_KEY: ${SECRET_KEY}
+      GRAMPSWEB_CELERY_CONFIG__broker_url: redis://grampsweb-redis:6379/0
+      GRAMPSWEB_CELERY_CONFIG__result_backend: redis://grampsweb-redis:6379/0
+      GRAMPSWEB_RATELIMIT_STORAGE_URI: redis://grampsweb-redis:6379/1
+      # The image starts 8 web workers by default; 2 keep memory within a medium server.
+      GUNICORN_NUM_WORKERS: "2"
+    volumes: &grampsweb-volumes
+      - grampsweb-users:/app/users
+      - grampsweb-index:/app/indexdir
+      - grampsweb-thumb-cache:/app/thumbnail_cache
+      - grampsweb-cache:/app/cache
+      - grampsweb-db:/root/.gramps/grampsdb
+      - grampsweb-media:/app/media
+      - grampsweb-tmp:/tmp
+
+  # Background jobs (imports, exports, reports, e-mail) share the web service's data.
+  grampsweb-celery:
+    image: ghcr.io/gramps-project/grampsweb:26.11.2
+    restart: unless-stopped
+    depends_on:
+      grampsweb:
+        condition: service_started
+      grampsweb-redis:
+        condition: service_healthy
+    environment: *grampsweb-env
+    volumes: *grampsweb-volumes
+    command: celery -A gramps_webapi.celery worker --loglevel=INFO --concurrency=2
+
+  grampsweb-redis:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    volumes:
+      - grampsweb-redis-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  grampsweb-users:
+  grampsweb-index:
+  grampsweb-thumb-cache:
+  grampsweb-cache:
+  grampsweb-db:
+  grampsweb-media:
+  grampsweb-tmp:
+  grampsweb-redis-data:

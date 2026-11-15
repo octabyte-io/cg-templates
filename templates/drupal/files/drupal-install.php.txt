@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Installs Drupal without the browser installer, on the container's first start.
+ *
+ * It does what Drupal core's own `install` command does (install_drupal() with
+ * interactive off), but against the PostgreSQL service instead of SQLite. Every
+ * value comes from the container's environment. start.sh runs it once.
+ */
+
+chdir('/opt/drupal/web');
+$class_loader = require '/opt/drupal/vendor/autoload.php';
+require_once 'core/includes/install.core.inc';
+
+$env = static function (string $name): string {
+  $value = getenv($name);
+  if ($value === FALSE || $value === '') {
+    fwrite(STDERR, "Missing environment variable $name\n");
+    exit(1);
+  }
+  return $value;
+};
+
+$driver = 'Drupal\\pgsql\\Driver\\Database\\pgsql';
+$admin_password = $env('DRUPAL_ADMIN_PASSWORD');
+
+if (!file_exists('sites/default/settings.php')) {
+  copy('sites/default/default.settings.php', 'sites/default/settings.php');
+}
+
+install_drupal($class_loader, [
+  'interactive' => FALSE,
+  'site_path' => 'sites/default',
+  'parameters' => [
+    'profile' => 'standard',
+    'langcode' => 'en',
+  ],
+  'forms' => [
+    'install_settings_form' => [
+      'driver' => $driver,
+      $driver => [
+        'database' => $env('DRUPAL_DB_NAME'),
+        'username' => $env('DRUPAL_DB_USER'),
+        'password' => $env('DRUPAL_DB_PASSWORD'),
+        'host' => $env('DRUPAL_DB_HOST'),
+        'port' => '5432',
+        'prefix' => '',
+      ],
+    ],
+    'install_configure_form' => [
+      'site_name' => $env('DRUPAL_SITE_NAME'),
+      'site_mail' => $env('DRUPAL_ADMIN_EMAIL'),
+      'account' => [
+        'name' => $env('DRUPAL_ADMIN_USERNAME'),
+        'mail' => $env('DRUPAL_ADMIN_EMAIL'),
+        'pass' => [
+          'pass1' => $admin_password,
+          'pass2' => $admin_password,
+        ],
+      ],
+      'enable_update_status_module' => TRUE,
+      // Programmatic form submissions need NULL, not FALSE, to leave a checkbox off.
+      'enable_update_status_emails' => NULL,
+    ],
+  ],
+]);
+
+echo "Drupal is installed.\n";

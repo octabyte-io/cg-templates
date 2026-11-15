@@ -1,0 +1,97 @@
+# From Xibo's official compose (github.com/xibosignage/xibo-docker, release 4.5.6): the CMS, MySQL,
+# the XMR message relay and memcached. QuickChart (only used to draw charts in emailed reports) is
+# left out.
+services:
+  xibo:
+    # The official CMS image (Apache + PHP on port 80). On the first start its entrypoint creates the
+    # database tables and the "xibo_admin" super-admin with the public default password "password";
+    # later starts run any database migrations. A built-in cron runs Xibo's scheduled tasks.
+    image: ghcr.io/xibosignage/xibo-cms:release-4.5.6
+    restart: unless-stopped
+    depends_on:
+      xibo-db:
+        condition: service_healthy
+        restart: true
+      xibo-xmr:
+        condition: service_started
+      xibo-memcached:
+        condition: service_started
+    environment:
+      MYSQL_HOST: xibo-db
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: cms
+      MYSQL_USER: cms
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      CMS_SERVER_NAME: ${SERVER_NAME}
+      XMR_HOST: xibo-xmr
+      CMS_USE_MEMCACHED: "true"
+      MEMCACHED_HOST: xibo-memcached
+      MEMCACHED_PORT: "11211"
+      # Cloudgate serves the CMS over HTTPS only.
+      CMS_PHP_COOKIE_SECURE: "On"
+      CMS_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Runs the image's own entrypoint. Once, after the first install, a background step replaces the
+    # public default password of "xibo_admin" with the generated one (Xibo accepts the same MD5 form
+    # its installer writes and re-hashes it on first sign-in). It waits until the web server answers,
+    # which the entrypoint starts only after its last database write, and changes the password only
+    # while it is still the default; later starts leave the account alone, so a password changed in
+    # Xibo stays changed.
+    command:
+      - bash
+      - -c
+      - |
+        marker=/var/www/cms/library/.cloudgate-admin-password-set
+        if [ ! -f "$$marker" ]; then
+          (
+            until curl -s -o /dev/null http://127.0.0.1/; do sleep 5; done
+            mysql -D "$$MYSQL_DATABASE" -e "UPDATE \`user\` SET UserPassword=MD5('$$CMS_ADMIN_PASSWORD'), CSPRNG=0 WHERE UserID=1 AND UserName='xibo_admin' AND UserPassword='5f4dcc3b5aa765d61d8327deb882cf99' LIMIT 1" \
+              && touch "$$marker" && echo "Cloudgate: replaced the default xibo_admin password"
+          ) &
+        fi
+        exec /entrypoint.sh
+    volumes:
+      # Uploaded media, generated keys and brand assets.
+      - xibo-library:/var/www/cms/library
+      # Custom modules and settings-custom.php.
+      - xibo-custom:/var/www/cms/custom
+      # Database backups the CMS takes before an upgrade and every 15 minutes.
+      - xibo-backup:/var/www/backup
+      - xibo-userscripts:/var/www/cms/web/userscripts
+      - xibo-ca-certs:/var/www/cms/ca-certs
+
+  xibo-db:
+    image: mysql:8.4.8
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: cms
+      MYSQL_USER: cms
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - xibo-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u cms -p\"$$MYSQL_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # XMR pushes instant messages (e.g. "collect now") to displays. The CMS reaches it on its private
+  # port 8081. Displays would subscribe on port 9505, which is not published here, so they fall back
+  # to checking in with the CMS on their collection interval.
+  xibo-xmr:
+    image: ghcr.io/xibosignage/xibo-xmr:1.5
+    restart: unless-stopped
+
+  xibo-memcached:
+    image: memcached:1.6.41-alpine
+    restart: unless-stopped
+    command: memcached -m 15
+
+volumes:
+  xibo-library:
+  xibo-custom:
+  xibo-backup:
+  xibo-userscripts:
+  xibo-ca-certs:
+  xibo-db-data:

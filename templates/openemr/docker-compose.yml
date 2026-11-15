@@ -1,0 +1,59 @@
+# From the official compose file in the image's README (openemr/openemr, docker/release on the
+# rel-850 branch) and the production appliance compose (openemr/openemr-devops,
+# packages/appliance). Left out: published ports and the hard-coded passwords. Cloudgate's
+# address points at Apache's plain HTTP port 80; the image's self-signed HTTPS port 443 is unused.
+
+services:
+  openemr:
+    image: openemr/openemr:8.5.0
+    restart: unless-stopped
+    depends_on:
+      openemr-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      # On the first start the image connects as the database root user, creates the "openemr"
+      # database and its user, installs OpenEMR and creates the admin account below. Later
+      # starts find the install in the sites volume and skip this.
+      MYSQL_HOST: openemr-db
+      MYSQL_ROOT_PASS: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: openemr
+      MYSQL_PASS: ${DB_PASSWORD}
+      # Sign in as "admin" with this password. OpenEMR only checks password strength when a
+      # password is changed, so the generated letters-and-digits password works for sign-in.
+      OE_USER: admin
+      OE_PASS: ${ADMIN_PASSWORD}
+    volumes:
+      # The site's configuration, uploaded documents, images and patient files. The image's
+      # automatic upgrade between releases needs this exact path as a volume.
+      - openemr-sites:/var/www/localhost/htdocs/openemr/sites
+      - openemr-logs:/var/log
+    healthcheck:
+      # As in the official appliance: the sign-in redirect answers 302 once OpenEMR is installed.
+      test: ["CMD-SHELL", "[ \"$$(curl -s -o /dev/null -w '%{http_code}' http://localhost/)\" -eq 302 ]"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 5m
+
+  openemr-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    command: ["mariadbd", "--character-set-server=utf8mb4"]
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - openemr-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  openemr-sites:
+  openemr-logs:
+  openemr-db-data:

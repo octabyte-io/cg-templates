@@ -1,0 +1,56 @@
+name: PeerTube
+description: "PeerTube is a self-hosted video platform: upload, share and embed videos in your own ad-free channels, instead of YouTube, Vimeo or Wistia."
+version: "8.3.2"
+tags: [self-hosted video platform, youtube alternative, vimeo alternative, wistia alternative, private video hosting, ad-free video hosting, peertube]
+links:
+  website: https://joinpeertube.org
+  docs: https://docs.joinpeertube.org
+  source: https://github.com/Chocobozzz/PeerTube
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  PEERTUBE_HOST: { value: "{{domains.peertube.host}}" }
+  PEERTUBE_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  ROOT_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the admin account (user name root). Cloudgate creates its password, shown afterwards on the app's variables page as ROOT_PASSWORD.
+      format: email
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional, but needed for sign-up confirmations, password resets and notifications. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_TLS:
+    ask:
+      label: Use SSL/TLS from the start
+      description: Type true only if your email server uses port 465. Leave false for port 587, which upgrades to a secure connection on its own.
+      default: "false"
+      pattern: "true|false"
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Send emails from
+      description: The address PeerTube's emails come from, such as videos@yourcompany.com. Needed if you fill in an email server above.
+      format: email
+      required: false
+domains:
+  - { service: peertube, port: 9000 }

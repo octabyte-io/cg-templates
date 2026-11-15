@@ -12,15 +12,18 @@ apps:
   swetrix:
     fit: "Cookieless visitor stats like Plausible's, plus custom events, funnels, user flows, page-speed monitoring and error tracking in one tool, and it can import GA4 history once you create your own Google sign-in app. It is open core: alerts, email reports, revenue analytics, experiments, Ask AI and organisations with roles are only in Swetrix Cloud, session replays need your own S3-compatible storage, and it needs a server with at least 2 GB of memory."
     import: yes
+  rybbit:
+    fit: "Cookie-free visitor stats on one dashboard, plus session replay, funnels, journeys, retention and error tracking in the free self-hosted edition. It has fewer marketing reports than Google Analytics and no Google Ads link, and it needs a bigger server, with 2 GB of memory, than Plausible or Umami."
+    import: no
 moving: |
-  Add the new tool's tracking line to your website and run it next to Google Analytics for a few weeks, so you can compare the numbers before you remove the Google tag. Plausible and Swetrix can import past Google Analytics 4 data, and Matomo's free Google Analytics Importer plugin copies Universal Analytics and GA4 history; all three need a Google Cloud connection set up first. Umami does not import history, so keep your old Google reports for comparison.
+  Add the new tool's tracking line to your website and run it next to Google Analytics for a few weeks, so you can compare the numbers before you remove the Google tag. Plausible and Swetrix can import past Google Analytics 4 data, and Matomo's free Google Analytics Importer plugin copies Universal Analytics and GA4 history; all three need a Google Cloud connection set up first. Umami and Rybbit do not import Google Analytics history, so keep your old Google reports for comparison.
 faq:
   - q: "Do I still need a cookie banner?"
-    a: "Plausible, Umami and Swetrix use no cookies, so most websites do not need a banner for them. Matomo can be set up to run without cookies too. Check the rules that apply to your site."
+    a: "Plausible, Umami, Swetrix and Rybbit use no cookies, so most websites do not need a banner for them; if you turn on Rybbit's session replay, mention it in your privacy notice. Matomo can be set up to run without cookies too. Check the rules that apply to your site."
   - q: "Why do the visitor numbers differ from Google Analytics?"
     a: "Each tool counts visits in its own way, and Google Analytics often misses visitors who decline cookies or block its script. Expect some difference, and compare trends rather than exact figures."
   - q: "Which Google Analytics alternative should I choose?"
-    a: "Plausible for a clear, simple dashboard; Umami if you want something similar under the MIT licence with more event reports; Matomo if you rely on detailed marketing and e-commerce reports; Swetrix if you also want page-speed and error tracking in the same dashboard."
+    a: "Plausible for a clear, simple dashboard; Umami if you want something similar under the MIT licence with more event reports; Matomo if you rely on detailed marketing and e-commerce reports; Swetrix if you also want page-speed and error tracking in the same dashboard; Rybbit if you also want to watch recorded visits and see where people drop off in funnels."
 ---
 
 Google Analytics is Google's free tool for measuring website visitors: how many people come, where from, what they read and whether they buy or sign up. Since 2023 the only version is Google Analytics 4 (GA4), which is built around events.

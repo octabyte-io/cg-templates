@@ -1,0 +1,56 @@
+services:
+  drupal:
+    image: drupal:11.4.12-php8.4-apache-trixie
+    restart: unless-stopped
+    depends_on:
+      drupal-db:
+        condition: service_healthy
+    # Installs the site on the first start (files/start.sh.txt), then runs Apache as the image does.
+    # Sign in at https://<domain>/user/login with the username "admin".
+    entrypoint: ["sh", "/cloudgate/start.sh"]
+    environment:
+      DRUPAL_DB_HOST: drupal-db
+      DRUPAL_DB_NAME: drupal
+      DRUPAL_DB_USER: drupal
+      DRUPAL_DB_PASSWORD: ${DB_PASSWORD}
+      DRUPAL_HOST: ${DRUPAL_HOST}
+      DRUPAL_SITE_NAME: ${SITE_NAME}
+      DRUPAL_ADMIN_USERNAME: admin
+      DRUPAL_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DRUPAL_ADMIN_EMAIL: ${ADMIN_EMAIL}
+    volumes:
+      # The volumes the image's documentation names: settings.php and uploaded files (sites),
+      # and added modules, themes and profiles. Drupal core itself comes from the image.
+      - drupal-sites:/opt/drupal/web/sites
+      - drupal-modules:/opt/drupal/web/modules
+      - drupal-themes:/opt/drupal/web/themes
+      - drupal-profiles:/opt/drupal/web/profiles
+      - ../files/start.sh.txt:/cloudgate/start.sh:ro
+      - ../files/drupal-install.php.txt:/cloudgate/drupal-install.php:ro
+      - ../files/settings-cloudgate.php.txt:/cloudgate/settings-cloudgate.php:ro
+      - ../files/php.ini:/usr/local/etc/php/conf.d/cloudgate.ini:ro
+      # Marks requests that reached Cloudgate's proxy over HTTPS as HTTPS.
+      - ../files/forwarded-https.conf:/etc/apache2/conf-enabled/forwarded-https.conf:ro
+
+  drupal-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: drupal
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: drupal
+    volumes:
+      - drupal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U drupal -d drupal"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  drupal-sites:
+  drupal-modules:
+  drupal-themes:
+  drupal-profiles:
+  drupal-db-data:

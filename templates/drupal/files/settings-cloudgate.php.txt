@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Cloudgate's settings, read on every request after settings.php.
+ *
+ * The database login and the site's address come from the container's
+ * environment, so changing them in Cloudgate needs no edit here.
+ */
+
+$databases['default']['default'] = [
+  'driver' => 'pgsql',
+  'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
+  'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
+  'database' => getenv('DRUPAL_DB_NAME'),
+  'username' => getenv('DRUPAL_DB_USER'),
+  'password' => getenv('DRUPAL_DB_PASSWORD'),
+  'host' => getenv('DRUPAL_DB_HOST'),
+  'port' => '5432',
+  'prefix' => '',
+];
+
+// Answer only on the site's own address (Drupal warns when this is not set).
+if ($drupal_host = getenv('DRUPAL_HOST')) {
+  $settings['trusted_host_patterns'] = ['^' . preg_quote($drupal_host) . '$'];
+}
