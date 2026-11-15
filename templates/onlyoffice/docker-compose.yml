@@ -1,0 +1,36 @@
+# From ONLYOFFICE's official Docker setup (github.com/ONLYOFFICE/Docker-DocumentServer),
+# without the published ports: Cloudgate routes the web address and terminates HTTPS.
+# The image is all-in-one: it runs its own PostgreSQL, RabbitMQ and Redis inside.
+services:
+  onlyoffice:
+    image: onlyoffice/documentserver:10.0.0
+    restart: unless-stopped
+    stop_grace_period: 60s
+    environment:
+      # File apps (Nextcloud, Seafile) sign every request with this shared secret.
+      JWT_ENABLED: "true"
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_HEADER: Authorization
+      JWT_IN_BODY: "true"
+      # Lets the editor fetch files from a file app on a private (LAN) address.
+      ALLOW_PRIVATE_IP_ADDRESS: ${ALLOW_PRIVATE_IP_ADDRESS:-false}
+    volumes:
+      - onlyoffice-data:/var/www/onlyoffice/Data
+      - onlyoffice-lib:/var/lib/onlyoffice
+      - onlyoffice-db:/var/lib/postgresql
+      - onlyoffice-rabbitmq:/var/lib/rabbitmq
+      - onlyoffice-redis:/var/lib/redis
+    # The image's own check: /healthcheck answers "true" once every part is up.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1/healthcheck | grep -qx true"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+volumes:
+  onlyoffice-data:
+  onlyoffice-lib:
+  onlyoffice-db:
+  onlyoffice-rabbitmq:
+  onlyoffice-redis:

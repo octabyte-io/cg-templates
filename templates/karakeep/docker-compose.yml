@@ -1,0 +1,62 @@
+# From karakeep-app/karakeep's docker/docker-compose.yml (v0.34.1), with the
+# .env file written out as settings and every image pinned to a version.
+services:
+  karakeep:
+    image: ghcr.io/karakeep-app/karakeep:0.34.1
+    restart: unless-stopped
+    depends_on:
+      karakeep-meilisearch:
+        condition: service_healthy
+      karakeep-chrome:
+        condition: service_started
+    environment:
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      MEILI_ADDR: http://karakeep-meilisearch:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      # Headless Chrome that fetches each saved page, its preview and screenshot.
+      BROWSER_WEB_URL: http://karakeep-chrome:9222
+      # The first account to sign up becomes the admin.
+      DISABLE_SIGNUPS: ${DISABLE_SIGNUPS:-false}
+      # AI tagging and summaries stay off until an OPENAI_API_KEY (or an
+      # Ollama address) is added.
+      DATA_DIR: /data
+    volumes:
+      - karakeep-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+  karakeep-chrome:
+    # Karakeep's own build of headless Chromium (the official compose file
+    # uses its :release tag, which is this version).
+    image: ghcr.io/karakeep-app/karakeep-chrome:157.0.8103.38-r1
+    restart: unless-stopped
+    init: true
+    command:
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --hide-scrollbars
+      - --disable-blink-features=AutomationControlled
+      - --window-size=1440,900
+
+  karakeep-meilisearch:
+    image: getmeili/meilisearch:v1.41.0
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - karakeep-meilisearch-data:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:7700/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  karakeep-data:
+  karakeep-meilisearch-data:

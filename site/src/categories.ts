@@ -23,6 +23,7 @@ export const CATEGORIES: Category[] = [
   { id: 'project-management', name: 'Project management', lede: 'Open-source project management with boards, sprints and timelines, so your team plans its work on your own server.' },
   { id: 'design', name: 'Design', lede: 'Open-source design, prototyping and diagramming tools, with your team’s design files and diagrams under your control.' },
   { id: 'media', name: 'Podcasts & media', lede: 'Self-hosted podcast hosting, so your shows, feeds and listener stats live on your own server with no fee per download.' },
+  { id: 'reading', name: 'Reading & bookmarks', lede: 'Self-hosted feed readers and read-it-later apps, so the articles, links and news you follow stay on your own server with no subscription.' },
   { id: 'files-photos', name: 'Files & photos', lede: 'Self-hosted cloud storage and photo backup that syncs files across your devices, on your own disk.' },
   { id: 'passwords', name: 'Passwords', lede: 'A self-hosted password manager to share your team’s logins safely, with no per-person subscription.' },
   { id: 'customers-sales', name: 'Customers & sales', lede: 'Open-source tools for your CRM, customer chat, bookings, newsletters, social posts and billable hours, with no fee per user.' },

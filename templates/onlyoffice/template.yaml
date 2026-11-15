@@ -1,0 +1,22 @@
+name: ONLYOFFICE Docs
+description: "Self-hosted ONLYOFFICE Docs: edit Word, Excel and PowerPoint files together in your browser, inside Nextcloud or Seafile, on your own server."
+version: "10.0.0"
+tags: [microsoft 365 alternative, google docs alternative, online office suite, nextcloud office, collaborative document editing, docx editor online]
+links:
+  website: https://www.onlyoffice.com/office-suite.aspx
+  docs: https://helpcenter.onlyoffice.com/docs/installation/docs-community-install-docker.aspx
+  source: https://github.com/ONLYOFFICE/DocumentServer
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  # The shared secret a file app (Nextcloud, Seafile) needs to open the editors.
+  JWT_SECRET: { generate: password }
+  ALLOW_PRIVATE_IP_ADDRESS:
+    ask:
+      label: Allow private addresses
+      description: Type true if your file app (Nextcloud, Seafile) is only reachable on a private network address, so the editor may fetch files from it.
+      default: "false"
+      required: false
+domains:
+  - { service: onlyoffice, port: 80 }

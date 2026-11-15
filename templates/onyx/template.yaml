@@ -1,0 +1,24 @@
+name: Onyx
+description: "Onyx is a self-hosted AI search and chat assistant that answers questions from your company's Slack, Drive, wiki and tickets, with sources."
+version: "5.1.2"
+tags: [glean alternative, ai enterprise search, self-hosted ai assistant, chat with company documents, open source enterprise search, danswer]
+links:
+  website: https://onyx.app
+  docs: https://docs.onyx.app
+  source: https://github.com/onyx-dot-app/onyx
+cloudgate: 0.1.0
+compose: app
+# Nine containers: OpenSearch (2 GB heap), two model servers, the API, the
+# background workers, the web app, Postgres, Redis and nginx. Onyx asks for
+# 4 CPU and 10 GB of memory at least, 16 GB recommended.
+size: 2xlarge
+inputs:
+  WEB_DOMAIN: { value: "{{domains.nginx.url}}" }
+  USER_AUTH_SECRET: { generate: hex }
+  ENCRYPTION_KEY_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  OPENSEARCH_PASSWORD: { generate: password }
+domains:
+  - { service: nginx, port: 80 }
+files:
+  - { path: nginx.conf }

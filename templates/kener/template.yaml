@@ -1,0 +1,28 @@
+name: Kener
+description: "Kener is a self-hosted status page: watch your websites and APIs, post incidents and maintenance, and keep customers informed by email."
+version: "4.2.1"
+tags: [statuspage alternative, self-hosted status page, status page, instatus alternative, incident communication, uptime monitoring]
+links:
+  website: https://kener.ing
+  docs: https://kener.ing/docs
+  source: https://github.com/rajnandan1/kener
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  KENER_SECRET_KEY: { generate: base64 }
+  ORIGIN: { value: "{{domains.kener.url}}" }
+  SMTP_HOST:
+    ask: { label: Email server (SMTP host), description: "Optional. Your email provider's SMTP server, used to email subscribers, invitations and password resets. Leave empty to skip email.", required: false }
+  SMTP_PORT:
+    ask: { label: SMTP port, description: "Usually 587, or 465 for SSL.", default: "587", required: false }
+  SMTP_USER:
+    ask: { label: SMTP username, required: false }
+  SMTP_PASS:
+    ask: { label: SMTP password, required: false, secret: true }
+  SMTP_FROM_EMAIL:
+    ask: { label: Send emails from, description: "The sender address, for example status@yourcompany.com.", required: false, format: email }
+  SMTP_SECURE:
+    ask: { label: Use SSL (port 465), description: "Type 1 if your SMTP port is 465; leave 0 for 587.", default: "0", required: false }
+domains:
+  - { service: kener, port: 3000 }

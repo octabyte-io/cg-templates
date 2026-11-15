@@ -6,15 +6,18 @@ apps:
   prestashop:
     fit: "A dedicated shop engine with a large product catalogue, combinations such as size and colour, order workflows with PDF invoices, several stores from one back office, and many languages and currencies. It has no platform fee or sales fee, but many modules and themes on its Addons marketplace are paid, and its app ecosystem is smaller than Shopify's."
     import: partly
+  bagisto:
+    fit: "An MIT-licensed shop built on Laravel, with variants, bundles, downloads and bookable products, orders with PDF invoices and refunds, returns, several currencies and languages, and Stripe and PayPal built in. It has a much smaller choice of themes and apps than Shopify, built-in shipping is flat rate or free only, and its multi-vendor marketplace, B2B selling and point of sale are paid extensions."
+    import: partly
 moving: |
-  Export your products from Shopify as a CSV file. WooCommerce's built-in product importer and PrestaShop's CSV import both bring products in, and PrestaShop's import also takes categories, customers and addresses. Customers, orders and pages from Shopify need a migration tool: for WooCommerce, the paid Shopify Data Migrator extension on the WooCommerce Marketplace. Set up payments, shipping and tax, connect an email sending service so order emails go out, then point your domain at the new shop and add redirects from your old product addresses.
+  Export your products from Shopify as a CSV file. WooCommerce's built-in product importer and PrestaShop's CSV import both bring products in, and PrestaShop's import also takes categories, customers and addresses. Bagisto imports products and customers from CSV or Excel files under Settings, Data Transfer, once you match Shopify's columns to its template. Customers, orders and pages from Shopify need a migration tool: for WooCommerce, the paid Shopify Data Migrator extension on the WooCommerce Marketplace. Set up payments, shipping and tax, connect an email sending service so order emails go out, then point your domain at the new shop and add redirects from your old product addresses.
 faq:
-  - q: "Does WooCommerce or PrestaShop take a cut of each sale?"
-    a: "No. Neither charges a platform fee or a fee per sale. Your payment provider, such as Stripe or PayPal, still charges its own card fees."
+  - q: "Do WooCommerce, PrestaShop or Bagisto take a cut of each sale?"
+    a: "No. None of them charges a platform fee or a fee per sale. Your payment provider, such as Stripe or PayPal, still charges its own card fees."
   - q: "Are there hidden costs compared with Shopify?"
-    a: "The apps are free, but some features are paid. WooCommerce sells extensions such as subscriptions, bookings and memberships, usually as yearly licences, and PrestaShop's marketplace sells many modules and themes. Premium themes cost extra for both."
-  - q: "Should I choose WooCommerce or PrestaShop?"
-    a: "Choose WooCommerce if you want your shop and your website or blog in one place on WordPress. Choose PrestaShop if you want a dedicated shop engine with several stores, languages and currencies managed from one back office."
+    a: "The apps are free, but some features are paid. WooCommerce sells extensions such as subscriptions, bookings and memberships, usually as yearly licences, PrestaShop's marketplace sells many modules and themes, and Bagisto's maker, Webkul, sells extensions such as a multi-vendor marketplace, B2B selling and point of sale. Premium themes cost extra too."
+  - q: "Should I choose WooCommerce, PrestaShop or Bagisto?"
+    a: "Choose WooCommerce if you want your shop and your website or blog in one place on WordPress. Choose PrestaShop if you want a dedicated shop engine with several stores, languages and currencies managed from one back office. Choose Bagisto if you want an MIT-licensed shop on Laravel with bookable products and returns built in, or if your developer works in Laravel."
   - q: "Is a self-hosted shop harder to run than Shopify?"
     a: "A little. Shopify handles updates, backups and security for you. With a self-hosted shop you keep the software and its plugins up to date and set up email sending; Cloudgate installs it and handles the server and secure web address."
 ---

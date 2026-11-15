@@ -1,0 +1,23 @@
+name: Karakeep
+description: "Karakeep is a self-hosted bookmark manager and read-it-later app: save links, notes, images and PDFs, archive whole pages and search everything you keep."
+version: "0.34.1"
+tags: [pocket alternative, self-hosted bookmark manager, read it later, bookmark manager, raindrop alternative, hoarder, web archive]
+links:
+  website: https://karakeep.com
+  docs: https://docs.karakeep.com
+  source: https://github.com/karakeep-app/karakeep
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  NEXTAUTH_URL: { value: "{{domains.karakeep.url}}" }
+  NEXTAUTH_SECRET: { generate: hex }
+  MEILI_MASTER_KEY: { generate: hex }
+  DISABLE_SIGNUPS:
+    ask:
+      label: Turn off new sign-ups
+      description: Type true once your own account exists, so nobody else can create an account.
+      default: "false"
+      required: false
+domains:
+  - { service: karakeep, port: 3000 }
