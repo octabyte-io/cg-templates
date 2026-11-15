@@ -20,6 +20,7 @@ apps:
     import: yes
   flatnotes:
     fit: "Stores notes the way Obsidian does: every note is a plain Markdown file, with [[wikilinks]], #tags and fast full-text search, served in a browser from your server so every device sees the same notes without a sync subscription. It has no plugins, graph view, folders or phone app, and it reads only notes at the top level of its folder, so a vault with subfolders needs flattening."
+    import: partly
   many-notes:
     fit: "Keeps vaults the way Obsidian does, as plain folders of Markdown files, with links, backlinks, tags and templates, opened in any browser on your own server, with several users and shared vaults. It has no graph view, canvas, plugins, offline mode or native apps, and its links are standard Markdown links, so Obsidian's wiki links don't connect after an import."
     import: partly
