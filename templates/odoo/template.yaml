@@ -1,0 +1,22 @@
+name: Odoo
+description: "Self-hosted Odoo Community: free, open-source CRM, sales, invoicing, inventory, purchasing and website apps in one system, replacing NetSuite or Zoho One."
+version: "20.0"
+tags: [netsuite alternative, open source erp, odoo community, free erp for small business, sap business one alternative, zoho one alternative, crm and invoicing]
+links:
+  website: https://www.odoo.com
+  docs: https://www.odoo.com/documentation/20.0/
+  source: https://github.com/odoo/odoo
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DB_PASSWORD: { generate: password }
+  ODOO_MASTER_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Odoo with this email address. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: odoo, port: 8069 }

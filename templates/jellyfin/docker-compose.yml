@@ -1,0 +1,45 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:12.4
+    restart: unless-stopped
+    environment:
+      # The address Jellyfin tells apps on the local network to use.
+      JELLYFIN_PublishedServerUrl: ${PUBLISHED_SERVER_URL}
+    volumes:
+      # The database, settings, users, metadata and logs.
+      - jellyfin-config:/config
+      # Transcodes and image cache; safe to lose.
+      - jellyfin-cache:/cache
+      # The media library, shared with FileBrowser Quantum below. In the setup
+      # wizard, add a library that points at /media (or a folder inside it).
+      - jellyfin-media:/media
+    # The image's own healthcheck calls http://localhost:8096/health with curl.
+
+  # FileBrowser Quantum: upload films, shows and music from the browser at its
+  # own address, into the same volume Jellyfin reads. Its default settings serve
+  # /srv with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets
+  # the password of the user "admin" (created on first start, and set back to
+  # this value on every start). Runs as root so it can write to the shared
+  # volume, which both images create owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - jellyfin-media:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  jellyfin-config:
+  jellyfin-cache:
+  jellyfin-media:
+  filebrowser-data:

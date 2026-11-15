@@ -1,0 +1,32 @@
+name: solidtime
+description: "solidtime is open-source, self-hosted time tracking: a timer, calendar and timesheets, billable rates by client and project, and exportable reports."
+version: "0.22.1"
+tags: [time tracking, toggl alternative, clockify alternative, harvest alternative, timesheet software, billable hours, open source time tracker]
+links:
+  website: https://www.solidtime.io
+  docs: https://docs.solidtime.io
+  source: https://github.com/solidtime-io/solidtime
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.solidtime.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to solidtime with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page. This account can also open the admin panel at /admin.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  REGISTRATION:
+    ask:
+      label: Sign-ups
+      description: Type off to add people only by invitation from solidtime, invite-only to let invited people register, or on to let anyone who can reach the app create an account.
+      default: "invite-only"
+      pattern: "on|off|invite-only"
+      required: false
+domains:
+  - { service: solidtime, port: 8000 }
+files:
+  - { path: solidtime-admin.php.txt }

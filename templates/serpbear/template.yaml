@@ -1,0 +1,24 @@
+name: SerpBear
+description: "SerpBear is a self-hosted keyword rank tracker that checks your Google positions daily, with history, email reports and Search Console data."
+version: "3.1.2"
+tags: [self-hosted rank tracker, keyword rank tracker, serp tracker, google rank checker, open source rank tracker, semrush alternative, accuranker alternative]
+links:
+  website: https://docs.serpbear.com
+  docs: https://docs.serpbear.com/getting-started
+  source: https://github.com/towfiqi/serpbear
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.serpbear.url}}" }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  SECRET: { generate: hex }
+  APIKEY: { generate: hex }
+domains:
+  - { service: serpbear, port: 3000 }

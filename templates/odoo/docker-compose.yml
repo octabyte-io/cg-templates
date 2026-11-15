@@ -1,0 +1,80 @@
+# From the official image's docs (hub.docker.com/_/odoo, github.com/odoo/docker 20.0):
+# Odoo plus PostgreSQL, with Odoo's files and add-ons folders on named volumes. Left out:
+# published ports. Settings are given as environment variables, which Odoo reads for
+# every config-file option (ODOO_<OPTION>, and PGHOST and friends for the database).
+# Odoo Community only (LGPL-3.0); Enterprise apps are not included.
+
+services:
+  odoo:
+    image: odoo:20.0-20261112
+    restart: unless-stopped
+    depends_on:
+      odoo-init:
+        condition: service_completed_successfully
+    environment: &odoo-env
+      PGHOST: odoo-db
+      PGPORT: "5432"
+      PGUSER: odoo
+      PGPASSWORD: ${DB_PASSWORD}
+      # One database, created on the first start by odoo-init below.
+      PGDATABASE: odoo
+      ODOO_DBFILTER: ^odoo$$
+      # Turns off the database manager page (create, copy, drop and restore databases).
+      ODOO_LIST_DB: "False"
+      # The master password, which guards those database tools if they are turned back on.
+      ODOO_ADMIN_PASSWD: ${ODOO_MASTER_PASSWORD}
+      # Cloudgate serves the app behind a reverse proxy with HTTPS.
+      ODOO_PROXY_MODE: "True"
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - odoo-addons:/mnt/extra-addons
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8069/web/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+  # Runs once at each start. On the first start it creates the "odoo" database and the
+  # admin account (sign in with ADMIN_EMAIL and ADMIN_PASSWORD), so nobody meets Odoo's
+  # database manager page. On later starts it finds the database and does nothing.
+  odoo-init:
+    image: odoo:20.0-20261112
+    restart: "no"
+    depends_on:
+      odoo-db:
+        condition: service_healthy
+    environment:
+      <<: *odoo-env
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - odoo-addons:/mnt/extra-addons
+    command:
+      - bash
+      - -c
+      - >-
+        ready=$$(psql -tAc "SELECT 1 FROM ir_module_module WHERE name = 'base' AND state = 'installed'" 2>/dev/null || true);
+        if [ "$$ready" = 1 ]; then echo "The odoo database is ready."; exit 0; fi;
+        exec odoo db init odoo --force --username "$$ADMIN_EMAIL" --password "$$ADMIN_PASSWORD"
+
+  odoo-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: postgres
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  odoo-data:
+  odoo-addons:
+  odoo-db-data:

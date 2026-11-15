@@ -1,0 +1,99 @@
+# From danny-avila/LibreChat's docker-compose.yml (v0.8.8): the LibreChat API
+# (which also serves the web app), MongoDB and Meilisearch, with the .env file
+# written out as settings and every image pinned to a version. Left out: the
+# optional RAG API and its pgvector database (file search, which needs an
+# embeddings API key), the separate admin panel, and the nginx proxy.
+services:
+  librechat:
+    image: librechat/librechat:v0.8.8
+    restart: unless-stopped
+    depends_on:
+      librechat-mongodb:
+        condition: service_healthy
+      librechat-meilisearch:
+        condition: service_healthy
+    # CREDS_IV must be 16 bytes (32 hex characters): keep the first 32 of the
+    # generated 64, then start the app the way the image does.
+    command:
+      - sh
+      - -c
+      - export CREDS_IV="$$(printf '%s' "$$CREDS_IV_SEED" | cut -c1-32)" && exec npm run backend
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3080"
+      NODE_ENV: production
+      DOMAIN_CLIENT: ${APP_URL}
+      DOMAIN_SERVER: ${APP_URL}
+      TRUST_PROXY: "1"
+      NO_INDEX: "true"
+      MONGO_URI: mongodb://librechat-mongodb:27017/LibreChat
+      SEARCH: "true"
+      MEILI_HOST: http://librechat-meilisearch:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: "true"
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      # Encrypts the AI provider keys people save in LibreChat.
+      CREDS_KEY: ${CREDS_KEY}
+      CREDS_IV_SEED: ${CREDS_IV_SEED}
+      # Email sign-in; the first account to sign up becomes the admin.
+      ALLOW_EMAIL_LOGIN: "true"
+      ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
+      ALLOW_UNVERIFIED_EMAIL_LOGIN: "true"
+      ALLOW_SOCIAL_LOGIN: "false"
+      ALLOW_SOCIAL_REGISTRATION: "false"
+      ALLOW_PASSWORD_RESET: "false"
+      # No AI key is set here: each person types their own key in the chat
+      # screen. To share one key, replace user_provided with it.
+      OPENAI_API_KEY: user_provided
+      ANTHROPIC_API_KEY: user_provided
+      GOOGLE_KEY: user_provided
+      LIBRECHAT_TEMP_CREDENTIALS_PATH: /app/data/.env.temp
+    volumes:
+      - librechat-images:/app/client/public/images
+      - librechat-uploads:/app/uploads
+      - librechat-logs:/app/logs
+      - librechat-skill:/app/skill
+      - librechat-data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+  librechat-mongodb:
+    image: mongo:8.0.20
+    restart: unless-stopped
+    command: mongod --noauth
+    volumes:
+      - librechat-mongodb-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 10s
+      start_period: 30s
+      retries: 10
+
+  librechat-meilisearch:
+    image: getmeili/meilisearch:v1.35.1
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - librechat-meilisearch-data:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:7700/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  librechat-images:
+  librechat-uploads:
+  librechat-logs:
+  librechat-skill:
+  librechat-data:
+  librechat-mongodb-data:
+  librechat-meilisearch-data:

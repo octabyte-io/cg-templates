@@ -1,0 +1,38 @@
+<?php
+// Creates solidtime's first account, with the email you entered and the password Cloudgate
+// generated, its email already marked as verified (no mail server is needed to sign in).
+// Runs at every start after the migrations, but creates the account only while solidtime has
+// no accounts at all, so later changes made in the app are never overwritten.
+// It does what solidtime's own "php artisan admin:user:create --verify-email" does, with a
+// password from the environment instead of a random one printed to the log.
+
+declare(strict_types=1);
+
+$email = trim((string) getenv('ADMIN_EMAIL'));
+$password = (string) getenv('ADMIN_PASSWORD');
+if ($email === '' || $password === '') {
+    fwrite(STDERR, "ADMIN_EMAIL or ADMIN_PASSWORD is empty\n");
+    exit(1);
+}
+
+require '/var/www/html/vendor/autoload.php';
+$app = require '/var/www/html/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+if (App\Models\User::query()->where('is_placeholder', '=', false)->exists()) {
+    echo "solidtime already has accounts; nothing to create.\n";
+    exit(0);
+}
+
+Illuminate\Support\Facades\DB::transaction(function () use ($email, $password): void {
+    app(App\Service\UserService::class)->createUser(
+        'Admin',
+        $email,
+        $password,
+        'UTC',
+        App\Enums\Weekday::Monday,
+        null,
+        verifyEmail: true
+    );
+});
+echo "Created the first account for {$email}.\n";

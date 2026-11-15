@@ -1,0 +1,94 @@
+# From upstream's docker/production/compose.yml (v2.22.0). Upstream mounts a signing
+# certificate you make by hand; here a one-shot service makes a self-signed one on first
+# start, with the commands from upstream's signing-certificate docs, and keeps it in a
+# volume. Documents are stored in the database (upstream's default upload transport).
+
+services:
+  documenso:
+    image: documenso/documenso:v2.22.0
+    restart: unless-stopped
+    depends_on:
+      documenso-db:
+        condition: service_healthy
+      documenso-cert:
+        condition: service_completed_successfully
+    environment:
+      PORT: "3000"
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXT_PRIVATE_ENCRYPTION_KEY: ${NEXT_PRIVATE_ENCRYPTION_KEY}
+      NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY: ${NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY}
+      NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
+      NEXT_PRIVATE_INTERNAL_WEBAPP_URL: http://localhost:3000
+      NEXT_PRIVATE_DATABASE_URL: postgresql://documenso:${DB_PASSWORD}@documenso-db:5432/documenso
+      NEXT_PRIVATE_DIRECT_DATABASE_URL: postgresql://documenso:${DB_PASSWORD}@documenso-db:5432/documenso
+      NEXT_PUBLIC_UPLOAD_TRANSPORT: database
+      NEXT_PRIVATE_SMTP_TRANSPORT: smtp-auth
+      NEXT_PRIVATE_SMTP_HOST: ${SMTP_HOST}
+      NEXT_PRIVATE_SMTP_PORT: ${SMTP_PORT}
+      NEXT_PRIVATE_SMTP_USERNAME: ${SMTP_USERNAME}
+      NEXT_PRIVATE_SMTP_PASSWORD: ${SMTP_PASSWORD}
+      NEXT_PRIVATE_SMTP_SECURE: ${SMTP_SECURE}
+      NEXT_PRIVATE_SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      NEXT_PRIVATE_SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+      NEXT_PRIVATE_SIGNING_TRANSPORT: local
+      NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH: /opt/documenso/cert.p12
+      NEXT_PRIVATE_SIGNING_PASSPHRASE: ${SIGNING_PASSPHRASE}
+    volumes:
+      - documenso-cert:/opt/documenso:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # Runs at each start and changes nothing once the certificate exists. Makes a
+  # self-signed signing certificate (valid 10 years) protected by the generated
+  # passphrase, readable by the app's user (uid 1001). To sign with a certificate from a
+  # certificate authority, replace cert.p12 in this volume with one using the same passphrase.
+  documenso-cert:
+    image: documenso/documenso:v2.22.0
+    restart: "no"
+    user: "0:0"
+    environment:
+      CERT_PASS: ${SIGNING_PASSPHRASE}
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -eu
+        cert=/opt/documenso/cert.p12
+        if [ -s "$$cert" ]; then echo "Signing certificate already there"; exit 0; fi
+        key=/tmp/documenso-signing.key
+        crt=/tmp/documenso-signing.crt
+        openssl req -x509 -newkey rsa:2048 -nodes -days 3650 \
+          -keyout "$$key" -out "$$crt" \
+          -subj "/CN=Documenso self-signed signing certificate"
+        openssl pkcs12 -export -out "$$cert.new" -inkey "$$key" -in "$$crt" \
+          -password env:CERT_PASS
+        rm -f "$$key" "$$crt"
+        chown 1001:1001 "$$cert.new"
+        chmod 400 "$$cert.new"
+        mv "$$cert.new" "$$cert"
+        echo "Made a self-signed signing certificate"
+    volumes:
+      - documenso-cert:/opt/documenso
+
+  documenso-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: documenso
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: documenso
+    volumes:
+      - documenso-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U documenso"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  documenso-cert:
+  documenso-db-data:

@@ -1,0 +1,19 @@
+name: MeshCentral
+description: "Self-hosted MeshCentral gives you remote desktop, terminal and file access to your team's Windows, macOS and Linux computers from a web browser."
+version: "1.3.1"
+tags: [remote desktop, remote support, teamviewer alternative, anydesk alternative, remote access software, it support]
+links:
+  website: https://meshcentral.com
+  docs: https://docs.meshcentral.com
+  source: https://github.com/Ylianst/MeshCentral
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  MESHCENTRAL_HOST: { value: "{{domains.meshcentral.host}}" }
+  MESHCENTRAL_URL: { value: "{{domains.meshcentral.url}}" }
+  SESSION_KEY: { generate: hex }
+# MeshCentral serves plain HTTP on 4430 behind Cloudgate's HTTPS proxy; the
+# browser and the agents both use the domain's port 443 (agents over wss).
+domains:
+  - { service: meshcentral, port: 4430 }

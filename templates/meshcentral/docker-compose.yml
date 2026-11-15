@@ -1,0 +1,59 @@
+services:
+  meshcentral:
+    image: ghcr.io/ylianst/meshcentral:1.3.1
+    restart: unless-stopped
+    environment:
+      MESHCENTRAL_HOST: ${MESHCENTRAL_HOST}
+      MESHCENTRAL_URL: ${MESHCENTRAL_URL}
+      SESSION_KEY: ${SESSION_KEY}
+      # The image's own environment-to-config step stays off; the entrypoint
+      # below writes the settings Cloudgate needs instead.
+      DYNAMIC_CONFIG: "false"
+    # Before the image's own entrypoint runs, set the settings that put
+    # MeshCentral behind Cloudgate's HTTPS proxy (as in MeshCentral's reverse
+    # proxy guide) in config.json, keeping anything else an admin has added:
+    #   tlsOffload: plain HTTP on port 4430, HTTPS done by the proxy;
+    #   aliasPort 443: links and agents use the domain's HTTPS port;
+    #   redirPort 0: no separate HTTP redirect port;
+    #   certUrl: read the certificate agents see from the domain itself, so
+    #     agents can check it (re-read when the certificate changes);
+    #   NewAccounts false: only the first visitor can create an account (the
+    #     admin); set it to true in config.json to open sign-ups.
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        CFG=/opt/meshcentral/meshcentral-data/config.json
+        mkdir -p /opt/meshcentral/meshcentral-data
+        [ -s "$$CFG" ] || echo '{"settings":{},"domains":{"":{}}}' > "$$CFG"
+        jq --arg host "$$MESHCENTRAL_HOST" --arg url "$$MESHCENTRAL_URL" --arg key "$$SESSION_KEY" '
+          .settings.cert = $$host
+          | .settings.port = 4430
+          | .settings.aliasPort = 443
+          | .settings.redirPort = 0
+          | .settings.exactPorts = true
+          | .settings.tlsOffload = true
+          | .settings.sessionKey = $$key
+          | .settings.selfUpdate = false
+          | .settings.agentPong = (.settings.agentPong // 300)
+          | .domains[""].certUrl = $$url
+          | .domains[""].NewAccounts = (.domains[""].NewAccounts // false)
+        ' "$$CFG" > /tmp/config.json
+        cat /tmp/config.json > "$$CFG"
+        exec /bin/bash /opt/meshcentral/entrypoint.sh
+    volumes:
+      - meshcentral-data:/opt/meshcentral/meshcentral-data
+      - meshcentral-files:/opt/meshcentral/meshcentral-files
+      - meshcentral-backups:/opt/meshcentral/meshcentral-backups
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:4430/health.ashx"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+volumes:
+  meshcentral-data:
+  meshcentral-files:
+  meshcentral-backups:

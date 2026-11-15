@@ -1,0 +1,19 @@
+name: Presenton
+description: "Presenton is a self-hosted AI presentation generator: turn a prompt or your documents into editable slides and export them as PowerPoint or PDF."
+version: "0.9.12-beta"
+tags: [gamma alternative, beautiful.ai alternative, ai presentation generator, ai powerpoint generator, open source presentation maker, ai slides]
+links:
+  website: https://presenton.ai
+  docs: https://docs.presenton.ai
+  source: https://github.com/presenton/presenton
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  # The address the app puts in download, edit and preview links.
+  PRESENTON_PUBLIC_URL: { value: "{{domains.presenton.url}}" }
+  # The admin account made on first start (username: admin). Presenton asks
+  # for at least 8 characters; letters and digits are accepted.
+  AUTH_PASSWORD: { generate: password }
+domains:
+  - { service: presenton, port: 80 }
