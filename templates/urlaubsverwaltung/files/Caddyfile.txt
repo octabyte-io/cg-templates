@@ -1,0 +1,29 @@
+# Cloudgate's web address for Urlaubsverwaltung points here; this passes every request on to the
+# app. One thing is added: signing out. Urlaubsverwaltung only ends its own session, so the next
+# visit would sign the person straight back in through Keycloak. After a sign-out this sends the
+# browser to Keycloak's sign-out page as well, which then returns to Urlaubsverwaltung.
+{
+	admin off
+	servers {
+		# Keep the https that Cloudgate's own proxy in front reports.
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	@signout {
+		method POST
+		path /logout
+	}
+	handle @signout {
+		reverse_proxy urlaubsverwaltung-app:8080 {
+			@done status 3xx
+			handle_response @done {
+				redir {$KEYCLOAK_URL}/realms/urlaubsverwaltung/protocol/openid-connect/logout?client_id=urlaubsverwaltung&post_logout_redirect_uri={$UV_URL}/ 302
+			}
+		}
+	}
+	handle {
+		reverse_proxy urlaubsverwaltung-app:8080
+	}
+}

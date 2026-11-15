@@ -1,0 +1,33 @@
+#!/bin/bash
+# From kobo-docker (scripts/wait_for_postgres.bash, AGPL-3.0), which kobo-install
+# mounts into the KoboToolbox containers: the image's start script runs it.
+# It also creates the two databases (forms and submissions) with PostGIS.
+set -e
+
+echo 'Waiting for container `postgres`.'
+wait-for-it -t 20 -h $POSTGRES_HOST -p $POSTGRES_PORT
+echo 'Container `postgres` up.'
+
+echo 'Waiting for Postgres service.'
+POSTGRES_USER="${POSTGRES_USER:-kobo}"
+export PGPASSWORD="${POSTGRES_PASSWORD:-kobo}"
+until pg_isready -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}"; do
+    sleep 1
+done
+
+source /etc/profile
+
+DATABASES_LIST="${KPI_POSTGRES_DB} ${KC_POSTGRES_DB}"
+
+for POSTGRES_DB in $DATABASES_LIST; do
+    echo "Postgres service running; ensuring ${POSTGRES_DB} database exists and has PostGIS extensions..."
+    psql -d postgres -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" <<EOSQL
+CREATE DATABASE "$POSTGRES_DB" OWNER "$POSTGRES_USER";
+\c "$POSTGRES_DB"
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS postgis_topology;
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
+CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder;
+EOSQL
+    echo "Postgres database ${POSTGRES_DB} ready for use!"
+done

@@ -1,0 +1,19 @@
+name: Tryton
+description: "Tryton is a self-hosted, open-source ERP for accounting, invoicing, sales, purchases and stock, built from modules you switch on as you need them."
+# The tryton/tryton image is tagged per series (8.2, 8.0, ...); the series tag gets each
+# bug-fix release (8.2.3 when this was written). There is no tag per bug-fix release.
+version: "8.2"
+tags: [open source erp, netsuite alternative, business central alternative, accounting software, inventory management, invoicing, tryton docker]
+links:
+  website: https://www.tryton.org
+  docs: https://docs.tryton.org/8.2/
+  source: https://github.com/tryton/tryton
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  # The password of Tryton's "admin" user, set when the database is created.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: tryton, port: 8000 }

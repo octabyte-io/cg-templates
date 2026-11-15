@@ -1,0 +1,211 @@
+# KoboToolbox as kobo-docker runs it (docker-compose.frontend.yml and
+# docker-compose.backend.yml at tag 2.026.37g), with the settings kobo-install
+# would write into its env files given here instead. Three addresses, as
+# upstream: the main one (form builder and data), the data-collection one
+# (KoboCollect and web-form submissions) and the web forms (Enketo).
+
+x-kpi: &kpi
+  image: kobotoolbox/kpi:2.026.37g
+  init: true
+  restart: unless-stopped
+  environment: &kpi-env
+    DJANGO_DEBUG: "False"
+    TEMPLATE_DEBUG: "False"
+    DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+    KPI_PREFIX: /
+    PUBLIC_REQUEST_SCHEME: https
+    SECURE_PROXY_SSL_HEADER: HTTP_X_FORWARDED_PROTO, https
+    # The three public addresses, and how the containers reach each other.
+    KOBOFORM_URL: ${KOBOFORM_URL}
+    KOBOCAT_URL: ${KOBOCAT_URL}
+    ENKETO_URL: ${ENKETO_URL}
+    KOBOFORM_INTERNAL_URL: http://kobotoolbox
+    KOBOCAT_INTERNAL_URL: http://kobotoolbox-collect
+    ENKETO_INTERNAL_URL: http://kobotoolbox-enketo:8005
+    # Web forms fetch forms and send submissions over the internal network.
+    CONSTANCE_ENKETO_USE_INTERNAL_OPENROSA_URL: "True"
+    ENKETO_API_KEY: ${ENKETO_API_KEY}
+    # The first administrator, created at the first start.
+    KOBO_SUPERUSER_USERNAME: ${KOBO_SUPERUSER_USERNAME}
+    KOBO_SUPERUSER_PASSWORD: ${KOBO_SUPERUSER_PASSWORD}
+    # PostgreSQL: one database for forms (kpi) and one for submissions (kobocat).
+    POSTGRES_HOST: kobotoolbox-db
+    POSTGRES_PORT: "5432"
+    POSTGRES_USER: kobo
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    KPI_POSTGRES_DB: koboform
+    KC_POSTGRES_DB: kobocat
+    KPI_DATABASE_URL: postgis://kobo:${POSTGRES_PASSWORD}@kobotoolbox-db:5432/koboform
+    KC_DATABASE_URL: postgis://kobo:${POSTGRES_PASSWORD}@kobotoolbox-db:5432/kobocat
+    DATABASE_URL: postgis://kobo:${POSTGRES_PASSWORD}@kobotoolbox-db:5432/koboform
+    # MongoDB holds a copy of every submission for the data tables.
+    KOBO_MONGO_HOST: kobotoolbox-mongo
+    KOBO_MONGO_PORT: "27017"
+    MONGO_DB_NAME: formhub
+    MONGO_DB_URL: mongodb://kobo:${MONGO_PASSWORD}@kobotoolbox-mongo:27017/formhub?authSource=admin
+    # One Redis, split by database number as kobo-install splits its two.
+    ENKETO_REDIS_MAIN_URL: redis://kobotoolbox-redis:6379/0
+    CELERY_BROKER_URL: redis://kobotoolbox-redis:6379/1
+    REDIS_SESSION_URL: redis://kobotoolbox-redis:6379/2
+    CACHE_URL: redis://kobotoolbox-redis:6379/5
+    CELERY_AUTOSCALE_MIN: "1"
+    CELERY_AUTOSCALE_MAX: "2"
+    UWSGI_MAX_REQUESTS: "512"
+    UWSGI_WORKERS_COUNT: "2"
+    UWSGI_CHEAPER_RSS_LIMIT_SOFT: "134217728"
+    UWSGI_CHEAPER_WORKERS_COUNT: "1"
+    UWSGI_HARAKIRI: "120"
+    UWSGI_WORKER_RELOAD_MERCY: "120"
+  volumes:
+    - kpi-static:/srv/static
+    - kpi-media:/srv/src/kpi/media
+    - kobocat-media:/srv/src/kobocat/media
+    - ../files/wait_for_mongo.bash.txt:/srv/init/wait_for_mongo.bash:ro
+    - ../files/wait_for_postgres.bash.txt:/srv/init/wait_for_postgres.bash:ro
+
+services:
+  # The app server (uWSGI). Its first start runs the database migrations,
+  # creates the administrator and copies the static files for nginx; that
+  # takes several minutes.
+  kobotoolbox-kpi:
+    <<: *kpi
+    # The image's start script re-syncs the Python packages from PyPI and
+    # GitHub unless it finds the list it installed, which the image's build
+    # leaves out. The packages are already in the image, so record the list
+    # first and start offline.
+    command:
+      - bash
+      - -c
+      - >-
+        cp dependencies/pip/requirements.txt "$${TMP_DIR}/pip_dependencies.txt" &&
+        exec bash docker/entrypoint.sh
+    depends_on:
+      kobotoolbox-db:
+        condition: service_healthy
+      kobotoolbox-mongo:
+        condition: service_healthy
+      kobotoolbox-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8000'"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15m
+
+  # Background jobs (exports, imports, form deployment) and the scheduler.
+  # Upstream runs four worker containers and a beat container from this image;
+  # here one worker takes every queue and runs the scheduler too.
+  kobotoolbox-worker:
+    <<: *kpi
+    depends_on:
+      kobotoolbox-kpi:
+        condition: service_healthy
+    command:
+      - bash
+      - -c
+      - >-
+        source /etc/profile && cd "$${KPI_SRC_DIR}" &&
+        exec celery -A kobo worker --beat --loglevel=info
+        --scheduler kobo.apps.beat.schedulers:ThrottledDatabaseScheduler
+        --hostname=kobo_worker@%h
+        --queues=kpi_queue,kpi_low_priority_queue,kpi_long_running_tasks_queue,kobocat_queue
+        --uid="$${UWSGI_USER}" --gid="$${UWSGI_GROUP}"
+        --autoscale "$${CELERY_AUTOSCALE_MAX},$${CELERY_AUTOSCALE_MIN}"
+
+  # The main address: the form builder, projects and data.
+  kobotoolbox:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      kobotoolbox-kpi:
+        condition: service_healthy
+    volumes:
+      - ../files/nginx-forms.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../files/nginx-uwsgi.conf:/etc/nginx/kobo-uwsgi.conf:ro
+      - kpi-static:/srv/www/kpi:ro
+      - kobocat-media:/media:ro
+      - kpi-media:/srv/kpi_media:ro
+
+  # The data-collection address, the server address KoboCollect asks for.
+  kobotoolbox-collect:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      kobotoolbox-kpi:
+        condition: service_healthy
+    volumes:
+      - ../files/nginx-collect.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../files/nginx-uwsgi.conf:/etc/nginx/kobo-uwsgi.conf:ro
+      - kpi-static:/srv/www/kpi:ro
+      - kobocat-media:/media:ro
+
+  # Enketo Express: the web forms, which also work offline in a browser.
+  kobotoolbox-enketo:
+    image: kobotoolbox/enketo-express-extra-widgets:7.6.3
+    init: true
+    restart: unless-stopped
+    depends_on:
+      kobotoolbox-redis:
+        condition: service_healthy
+    # The same keys as in files/enketo-config.json, under Enketo's own
+    # environment names.
+    environment:
+      ENKETO_LINKED_FORM_AND_DATA_SERVER_API_KEY: ${ENKETO_API_KEY}
+      ENKETO_ENCRYPTION_KEY: ${ENKETO_ENCRYPTION_KEY}
+      ENKETO_LESS_SECURE_ENCRYPTION_KEY: ${ENKETO_LESS_SECURE_ENCRYPTION_KEY}
+    volumes:
+      - ../files/enketo-config.json:/srv/src/enketo/packages/enketo-express/config/config.json:ro
+
+  kobotoolbox-db:
+    image: postgis/postgis:16-3.5-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kobo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: koboform
+    volumes:
+      - kobotoolbox-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kobo -d koboform"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    stop_grace_period: 1m
+
+  kobotoolbox-mongo:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: kobo
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: formhub
+    volumes:
+      - kobotoolbox-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    stop_grace_period: 1m
+
+  kobotoolbox-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1"]
+    volumes:
+      - kobotoolbox-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kpi-static:
+  kpi-media:
+  kobocat-media:
+  kobotoolbox-db-data:
+  kobotoolbox-mongo-data:
+  kobotoolbox-redis-data:

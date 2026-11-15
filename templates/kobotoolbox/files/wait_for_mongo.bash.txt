@@ -1,0 +1,8 @@
+#!/bin/bash
+# From kobo-docker (scripts/wait_for_mongo.bash, AGPL-3.0), which kobo-install
+# mounts into the KoboToolbox containers: the image's start script runs it.
+set -e
+
+echo 'Waiting for container `mongo`.'
+wait-for-it -t 40 -h $KOBO_MONGO_HOST -p $KOBO_MONGO_PORT
+echo 'Container `mongo` up.'

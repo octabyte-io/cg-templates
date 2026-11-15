@@ -1,0 +1,18 @@
+name: ClassicPress
+description: "Self-hosted ClassicPress: the WordPress fork with the classic editor and no blocks, for business websites and blogs on your own server."
+version: "2.7.4"
+tags: [classicpress, wordpress without gutenberg, classic editor, cms, website builder, blog, wix alternative]
+links:
+  website: https://www.classicpress.net
+  docs: https://docs.classicpress.net
+  source: https://github.com/ClassicPress/ClassicPress
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: classicpress, port: 80 }
+files:
+  - { path: uploads.ini }
