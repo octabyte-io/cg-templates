@@ -1,0 +1,21 @@
+services:
+  bentopdf:
+    # The official self-hosted build (github.com/alam00000/bentopdf), the one
+    # its docker-compose.yml uses: every PDF tool, without the marketing pages
+    # of the public bentopdf.com site. Unprivileged nginx serves the built web
+    # app on port 8080.
+    image: ghcr.io/alam00000/bentopdf-simple:v2.8.11
+    restart: unless-stopped
+    environment:
+      # Listen on IPv4 only, as the official compose suggests for IPv4-only
+      # hosts; Cloudgate reaches the container over its IPv4 network.
+      DISABLE_IPV6: "true"
+    # No sign-in and no volumes: BentoPDF is a static web app. Every tool runs
+    # in the visitor's browser, so PDFs are never uploaded to or kept on the
+    # server.
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --spider http://127.0.0.1:8080/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

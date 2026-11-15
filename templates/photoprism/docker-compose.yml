@@ -1,0 +1,70 @@
+services:
+  photoprism:
+    image: photoprism/photoprism:261029
+    restart: unless-stopped
+    stop_grace_period: 15s
+    depends_on:
+      photoprism-db:
+        condition: service_healthy
+    working_dir: /photoprism
+    environment:
+      # The admin account is created on the first start with this password;
+      # sign in as "admin". Change it afterwards in Settings > Account.
+      PHOTOPRISM_ADMIN_USER: admin
+      PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PHOTOPRISM_AUTH_MODE: password
+      PHOTOPRISM_SITE_URL: ${SITE_URL}
+      PHOTOPRISM_SITE_TITLE: PhotoPrism
+      PHOTOPRISM_SITE_CAPTION: AI-Powered Photos App
+      # Cloudgate serves the app over HTTPS, so PhotoPrism speaks plain HTTP
+      # on port 2342 and makes no certificate of its own.
+      PHOTOPRISM_DISABLE_TLS: "true"
+      PHOTOPRISM_DEFAULT_TLS: "false"
+      PHOTOPRISM_DEFAULT_LOCALE: en
+      PHOTOPRISM_PLACES_LOCALE: local
+      PHOTOPRISM_LOG_LEVEL: info
+      PHOTOPRISM_SIDECAR_YAML: "true"
+      PHOTOPRISM_BACKUP_ALBUMS: "true"
+      PHOTOPRISM_BACKUP_DATABASE: "true"
+      PHOTOPRISM_BACKUP_SCHEDULE: daily
+      PHOTOPRISM_AUTO_INDEX: 300
+      PHOTOPRISM_AUTO_IMPORT: -1
+      PHOTOPRISM_UPLOAD_LIMIT: 5000
+      PHOTOPRISM_ORIGINALS_LIMIT: 5000
+      PHOTOPRISM_HTTP_COMPRESSION: zstd,gzip
+      PHOTOPRISM_DATABASE_DRIVER: mysql
+      PHOTOPRISM_DATABASE_SERVER: photoprism-db:3306
+      PHOTOPRISM_DATABASE_NAME: photoprism
+      PHOTOPRISM_DATABASE_USER: photoprism
+      PHOTOPRISM_DATABASE_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # The original photos and videos.
+      - photoprism-originals:/photoprism/originals
+      # Thumbnails, sidecar files, the index cache and database backups.
+      - photoprism-storage:/photoprism/storage
+
+  photoprism-db:
+    image: mariadb:12.3.3
+    restart: unless-stopped
+    stop_grace_period: 15s
+    command: --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
+    environment:
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+      MARIADB_DATABASE: photoprism
+      MARIADB_USER: photoprism
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - photoprism-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  photoprism-originals:
+  photoprism-storage:
+  photoprism-db-data:

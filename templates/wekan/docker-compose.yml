@@ -1,0 +1,52 @@
+# Based on WeKan's default docker-compose.yml at tag v13.13: WeKan and FerretDB v1 (WeKan's own
+# fork) with its embedded SQLite backend, which speaks the MongoDB protocol. The official file
+# downloads the newest FerretDB binary into a Debian container at start; this uses the same
+# binary from the image WeKan publishes for it (named in that file), pinned to a version.
+
+services:
+  wekan:
+    image: wekanteam/wekan:v13.13
+    restart: unless-stopped
+    depends_on:
+      wekan-db:
+        condition: service_healthy
+    environment:
+      # FerretDB v1 has no change streams, so WeKan polls for updates.
+      DEFAULT_METEOR_REACTIVITY_ORDER: polling
+      METEOR_REACTIVITY_ORDER: polling
+      DDP_TRANSPORT: sockjs
+      WRITABLE_PATH: /data
+      # directConnection: FerretDB answers as a one-member replica set at 0.0.0.0.
+      MONGO_URL: mongodb://wekan-db:27017/wekan?directConnection=true
+      ROOT_URL: ${ROOT_URL}
+      WITH_API: "true"
+      CARDS_LOADING: auto
+      CARD_OPENED_WEBHOOK_ENABLED: "false"
+      BIGEVENTS_PATTERN: NONE
+      BROWSER_POLICY_ENABLED: "true"
+    volumes:
+      # Attachments and avatars.
+      - wekan-files:/data
+
+  wekan-db:
+    image: wekanteam/ferretdb-sqlite:v1.110.0
+    restart: unless-stopped
+    # --repl-set-name keeps the oplog that WeKan's Admin Panel backups stream from.
+    command: [--repl-set-name=rs0, --log-level=error]
+    environment:
+      FERRETDB_TELEMETRY: disable
+      DO_NOT_TRACK: "1"
+      # No MPTCP listener (as in WeKan's compose file).
+      GODEBUG: multipathtcp=0
+    volumes:
+      - wekan-db-data:/state
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/27017' 2>/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+      start_period: 20s
+
+volumes:
+  wekan-files:
+  wekan-db-data:

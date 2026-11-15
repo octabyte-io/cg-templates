@@ -1,0 +1,21 @@
+services:
+  psitransfer:
+    image: psitrax/psitransfer:v2.4.6
+    restart: unless-stopped
+    environment:
+      # Uploading needs this password; downloading a shared link does not.
+      PSITRANSFER_UPLOAD_PASS: ${PSITRANSFER_UPLOAD_PASS}
+      # Turns on the /admin page (it is off without a password).
+      PSITRANSFER_ADMIN_PASS: ${PSITRANSFER_ADMIN_PASS}
+      # Expiry choices offered to the uploader, longest 4 weeks; 1 week is preselected.
+      PSITRANSFER_RETENTIONS: '{"one-time":"one time download","3600":"1 Hour","86400":"1 Day","259200":"3 Days","604800":"1 Week","1209600":"2 Weeks","2419200":"4 Weeks"}'
+      PSITRANSFER_DEFAULT_RETENTION: "604800"
+      # Delete every file after 30 days at the latest (e.g. one-time files never downloaded).
+      PSITRANSFER_MAX_AGE: "2592000"
+      # Cloudgate's proxy sits in front: log the visitor's real address.
+      PSITRANSFER_TRUST_PROXY: "loopback, linklocal, uniquelocal"
+    volumes:
+      - psitransfer-data:/data
+
+volumes:
+  psitransfer-data:

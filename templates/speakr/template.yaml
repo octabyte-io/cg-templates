@@ -1,0 +1,27 @@
+name: Speakr
+description: "Self-hosted Speakr records or uploads meetings, transcribes them by speaker and writes AI summaries and action items, like Otter.ai."
+version: "0.10.22-alpha"
+tags: [otter alternative, fireflies alternative, ai meeting notes, meeting transcription, audio transcription, meeting summaries, self-hosted transcription]
+links:
+  website: https://murtaza-nasir.github.io/speakr/
+  docs: https://murtaza-nasir.github.io/speakr/getting-started/installation/
+  source: https://github.com/murtaza-nasir/speakr
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_BASE_URL: { value: "{{domains.speakr.url}}" }
+  SECRET_KEY: { generate: hex }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  OPENAI_API_KEY:
+    ask:
+      label: OpenAI API key
+      description: Speakr sends recordings to OpenAI to transcribe them and write summaries, and won't start without a key. Create one at platform.openai.com; usage is billed by OpenAI.
+      secret: true
+domains:
+  - { service: speakr, port: 8899 }

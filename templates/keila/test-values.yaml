@@ -1,0 +1,5 @@
+KEILA_USER: admin@example.com
+MAILER_SMTP_HOST: smtp.example.com
+MAILER_SMTP_USER: keila@example.com
+MAILER_SMTP_PASSWORD: example-smtp-password
+MAILER_SMTP_FROM_EMAIL: keila@example.com

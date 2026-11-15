@@ -1,0 +1,18 @@
+name: PsiTransfer
+description: "PsiTransfer is a self-hosted WeTransfer alternative: send large files by link, with an optional password and an expiry date, and no accounts needed."
+version: "2.4.6"
+tags: [wetransfer alternative, self-hosted file transfer, send large files, large file transfer, file sharing, smash alternative, dropbox transfer alternative]
+links:
+  website: https://github.com/psi-4ward/psitransfer
+  docs: https://github.com/psi-4ward/psitransfer/tree/master/docs
+  source: https://github.com/psi-4ward/psitransfer
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Only people who know this password can upload, so strangers can't fill the disk.
+  PSITRANSFER_UPLOAD_PASS: { generate: password }
+  # Opens the /admin page, which lists every upload.
+  PSITRANSFER_ADMIN_PASS: { generate: password }
+domains:
+  - { service: psitransfer, port: 3000 }

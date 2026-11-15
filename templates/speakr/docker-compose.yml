@@ -1,0 +1,47 @@
+services:
+  speakr:
+    # The official "lite" image: the same app without PyTorch (~0.7 GB
+    # instead of ~4.4 GB). Only Inquire Mode's semantic search falls back to
+    # text search, and Inquire Mode is off by default.
+    image: learnedmachine/speakr:0.10.22-alpha-lite
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: ERROR
+      # Signs sign-in cookies.
+      SECRET_KEY: ${SECRET_KEY}
+      # Cloudgate serves the app over HTTPS behind its proxy.
+      SESSION_COOKIE_SECURE: "true"
+      # Used for links in emails.
+      APP_BASE_URL: ${APP_BASE_URL}
+      # The entrypoint creates this admin on first start (signed in with the
+      # email). Sign-up is closed; the admin adds other users.
+      ADMIN_USERNAME: admin
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ALLOW_REGISTRATION: "false"
+      # Transcription with speaker labels, and summaries, titles and chat,
+      # both through OpenAI with one key, as in the project's recommended
+      # config/env.transcription.example. Any OpenAI-compatible service, or
+      # a self-hosted Whisper server (ASR_BASE_URL), can be set instead.
+      TRANSCRIPTION_BASE_URL: https://api.openai.com/v1
+      TRANSCRIPTION_API_KEY: ${OPENAI_API_KEY}
+      TRANSCRIPTION_MODEL: gpt-4o-transcribe-diarize
+      TEXT_MODEL_BASE_URL: https://api.openai.com/v1
+      TEXT_MODEL_API_KEY: ${OPENAI_API_KEY}
+      TEXT_MODEL_NAME: gpt-4o-mini
+      SQLALCHEMY_DATABASE_URI: sqlite:////data/instance/transcriptions.db
+      UPLOAD_FOLDER: /data/uploads
+    volumes:
+      - speakr-uploads:/data/uploads
+      - speakr-instance:/data/instance
+    healthcheck:
+      # The image has Python but neither curl nor wget.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8899/login', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+
+volumes:
+  speakr-uploads:
+  speakr-instance:

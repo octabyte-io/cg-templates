@@ -1,0 +1,15 @@
+name: WeKan
+description: "Self-hosted WeKan is an open-source kanban board for teams: Trello-style boards with swimlanes, calendar and Gantt views, and automation rules."
+version: "13.13"
+tags: [trello alternative, kanban board, open source kanban, self-hosted kanban, project management, task board]
+links:
+  website: https://wekan.fi
+  docs: https://github.com/wekan/wekan/tree/main/docs
+  source: https://github.com/wekan/wekan
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ROOT_URL: { value: "{{domains.wekan.url}}" }
+domains:
+  - { service: wekan, port: 8080 }

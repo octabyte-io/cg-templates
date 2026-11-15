@@ -1,0 +1,26 @@
+name: Sim
+description: "Sim is a self-hosted, open-source builder for AI agents and workflows that use your business apps, documents and the AI model you choose."
+version: "0.9.58"
+tags: [ai agent builder, relevance ai alternative, lindy alternative, zapier agents alternative, ai workflow automation, self-hosted ai agents]
+links:
+  website: https://www.sim.ai
+  docs: https://docs.sim.ai/platform/self-hosting
+  source: https://github.com/simstudioai/sim
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  APP_URL: { value: "{{domains.sim.url}}" }
+  # The realtime server (live editing and execution updates) has its own
+  # address, as Sim's docs describe for a proxy that cannot split paths.
+  SOCKET_URL: { value: "{{domains.sim-realtime.url}}" }
+  BETTER_AUTH_SECRET: { generate: hex }
+  # Encrypts stored credentials and API keys; it can't be changed later.
+  ENCRYPTION_KEY: { generate: hex }
+  API_ENCRYPTION_KEY: { generate: hex }
+  INTERNAL_API_SECRET: { generate: hex }
+  CRON_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: sim, port: 3000 }
+  - { service: sim-realtime, port: 3002 }

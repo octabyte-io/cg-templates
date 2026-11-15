@@ -1,0 +1,47 @@
+name: Keila
+description: "Self-hosted Keila, the open-source newsletter tool: write campaigns in a friendly editor, collect subscribers with sign-up forms, no fee per contact."
+version: "0.40.2"
+tags: [mailchimp alternative, newsletter, email marketing, brevo alternative, mailerlite alternative, sign-up forms, self-hosted newsletter]
+links:
+  website: https://www.keila.io
+  docs: https://www.keila.io/docs
+  source: https://github.com/pentacent/keila
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  URL_HOST: { value: "{{domains.keila.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  KEILA_USER:
+    ask:
+      label: Admin email
+      description: The email address you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  KEILA_PASSWORD: { generate: password }
+  MAILER_SMTP_HOST:
+    ask:
+      label: SMTP server
+      description: The mail server Keila uses for account emails such as password resets, e.g. smtp.postmarkapp.com. Newsletters are sent through the senders you add in Keila.
+  MAILER_SMTP_PORT:
+    ask:
+      label: SMTP port
+      description: 587 for STARTTLS (most providers) or 465 for TLS.
+      default: "587"
+      format: number
+  MAILER_SMTP_USER:
+    ask:
+      label: SMTP username
+      description: The username for your mail server.
+  MAILER_SMTP_PASSWORD:
+    ask:
+      label: SMTP password
+      description: The password or API token for your mail server.
+      secret: true
+  MAILER_SMTP_FROM_EMAIL:
+    ask:
+      label: Sender address
+      description: The From address of Keila's account emails, e.g. keila@yourcompany.com.
+      format: email
+domains:
+  - { service: keila, port: 4000 }

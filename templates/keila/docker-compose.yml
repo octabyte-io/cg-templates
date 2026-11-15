@@ -1,0 +1,56 @@
+services:
+  keila:
+    image: pentacent/keila:0.40.2
+    restart: unless-stopped
+    depends_on:
+      keila-db:
+        condition: service_healthy
+    environment:
+      # At each start Keila applies database migrations; on the first start it
+      # also creates the admin (root) user from KEILA_USER and KEILA_PASSWORD.
+      DB_URL: postgres://keila:${DB_PASSWORD}@keila-db:5432/keila
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      URL_HOST: ${URL_HOST}
+      URL_SCHEMA: https
+      URL_PORT: 443
+      PORT: 4000
+      KEILA_USER: ${KEILA_USER}
+      KEILA_PASSWORD: ${KEILA_PASSWORD}
+      # Anyone could otherwise create an account on the public sign-up page;
+      # the admin adds users under Admin > Users instead.
+      DISABLE_REGISTRATION: "true"
+      # The mail server for system emails (password resets, sender checks).
+      MAILER_TYPE: smtp
+      MAILER_SMTP_HOST: ${MAILER_SMTP_HOST}
+      MAILER_SMTP_PORT: ${MAILER_SMTP_PORT}
+      MAILER_SMTP_USER: ${MAILER_SMTP_USER}
+      MAILER_SMTP_PASSWORD: ${MAILER_SMTP_PASSWORD}
+      MAILER_SMTP_FROM_EMAIL: ${MAILER_SMTP_FROM_EMAIL}
+      USER_CONTENT_DIR: /opt/app/uploads
+    volumes:
+      - keila-uploads:/opt/app/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:4000/auth/login || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  keila-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: keila
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: keila
+    volumes:
+      - keila-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keila"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  keila-uploads:
+  keila-db-data:
