@@ -1,0 +1,30 @@
+# From OpenList's official docker-compose.yml, with the image pinned, the ports
+# left out (Cloudgate routes the web address) and the admin password set at the
+# first start.
+services:
+  openlist:
+    # The standard image: the full web interface, without the optional aria2
+    # and ffmpeg add-ons.
+    image: openlistteam/openlist:v4.2.9
+    restart: unless-stopped
+    # As in the official compose file: a new volume is owned by root, and the
+    # image's own user (1001) can't write to it.
+    user: "0:0"
+    environment:
+      UMASK: "022"
+      # Creates the user "admin" with this password on the first start only.
+      OPENLIST_ADMIN_PASSWORD: ${OPENLIST_ADMIN_PASSWORD}
+      # The public address, used in share links and file links.
+      SITE_URL: ${SITE_URL}
+    volumes:
+      # config.json, the SQLite database, and files kept on the "local" storage.
+      - openlist-data:/opt/openlist/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5244/ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  openlist-data:

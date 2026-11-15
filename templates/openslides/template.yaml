@@ -1,0 +1,27 @@
+name: OpenSlides
+description: "Self-hosted OpenSlides runs general meetings and AGMs: agenda, motions and amendments, lists of speakers, secret ballots and elections, and a big-screen view."
+version: "4.3.7"
+tags: [meeting software, agm voting software, electionbuddy alternative, motion management, online voting for associations, assembly management]
+links:
+  website: https://openslides.com
+  docs: https://github.com/OpenSlides/OpenSlides/blob/main/INSTALL.md
+  source: https://github.com/OpenSlides/OpenSlides
+cloudgate: 0.1.0
+compose: app
+# Fourteen containers (thirteen services plus PostgreSQL and Redis); measured
+# with `template try` (see build notes).
+size: medium
+inputs:
+  # The secrets the official setup tool (osmanage setup) writes into its
+  # secrets/ folder; the openslides-secrets service writes them as files the
+  # other services read from /run/secrets/.
+  AUTH_TOKEN_KEY: { generate: base64 }
+  AUTH_COOKIE_KEY: { generate: base64 }
+  INTERNAL_AUTH_PASSWORD: { generate: base64 }
+  POSTGRES_PASSWORD: { generate: password }
+  # The password of the first account, "superadmin", created on the first start.
+  # Read it on the service's variables page.
+  SUPERADMIN_PASSWORD: { generate: password }
+domains:
+  # The OpenSlides proxy, which serves the web app and routes to every service.
+  - { service: openslides, port: 8000 }

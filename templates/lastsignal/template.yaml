@@ -1,0 +1,46 @@
+name: LastSignal
+description: "LastSignal is a self-hosted dead man's switch that emails you check-ins and, if you stop answering, sends your encrypted messages to the people you chose."
+version: "1.1.1"
+tags: [dead mans switch, self-hosted dead mans switch, deadmansswitch.net alternative, messages after death, digital legacy, encrypted messages, email check-in]
+links:
+  website: https://lastsignal.app
+  docs: https://github.com/giovantenne/lastsignal/blob/master/docs/deploy-docker-compose.md
+  source: https://github.com/giovantenne/lastsignal
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_BASE_URL: { value: "{{domains.lastsignal.url}}" }
+  RAILS_MASTER_KEY: { generate: hex }
+  SECRET_KEY_BASE: { generate: hex }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: LastSignal signs you in, sends check-ins and delivers your messages only by email, so it needs an email sending service, for example smtp.resend.com. It must support STARTTLS (usually port 587).
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: Usually 587.
+      default: "587"
+  SMTP_USER:
+    ask:
+      label: Email server username
+  SMTP_PASS:
+    ask:
+      label: Email server password
+  SMTP_FROM_EMAIL:
+    ask:
+      label: Sender address
+      description: The address check-ins and messages come from, for example lastsignal@yourdomain.com. Use a domain your email service is set up to send for.
+      format: email
+  SMTP_DOMAIN:
+    ask:
+      label: Sender domain
+      description: The domain of the sender address, for example yourdomain.com.
+  ALLOWED_EMAILS:
+    ask:
+      label: Allowed sign-in emails
+      description: Optional, but recommended. The email addresses that may use this instance, separated by commas. Leave it empty to let anyone who finds the web address sign up.
+      required: false
+domains:
+  - { service: lastsignal, port: 80 }

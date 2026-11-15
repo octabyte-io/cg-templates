@@ -1,0 +1,59 @@
+name: ODK Central
+description: "Self-hosted ODK Central: build forms, collect survey data offline on Android phones or in web forms, and review every submission on your own server."
+version: "2026.3.1"
+tags: [surveycto alternative, odk cloud alternative, offline data collection, mobile data collection, kobotoolbox alternative, field survey app, xlsform server]
+links:
+  website: https://getodk.org
+  docs: https://docs.getodk.org/central-intro/
+  source: https://github.com/getodk/central
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DOMAIN: { value: "{{domains.odk-central.host}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page. ODK Central also lists it as the server's contact address.
+      format: email
+  EMAIL_FROM:
+    ask:
+      label: Send emails from
+      description: Optional. The address ODK Central's emails (invitations, password resets) come from. Leave empty for no-reply at the app's address.
+      format: email
+      required: false
+  EMAIL_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional. Leave empty to send through the built-in mail relay, which many servers and inboxes block; your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  EMAIL_PORT:
+    ask:
+      label: Email server port
+      description: Optional. Usually 587; leave empty with the built-in relay.
+      format: number
+      required: false
+  EMAIL_SECURE:
+    ask:
+      label: Email server uses TLS from the start
+      description: "true for port 465, false for port 587 (STARTTLS)."
+      default: "false"
+      pattern: "true|false"
+      required: false
+  EMAIL_USER:
+    ask:
+      label: Email server username
+      required: false
+  EMAIL_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: odk-central, port: 80 }
+files:
+  - { path: nginx-odk.conf.tmpl }
+  - { path: nginx-client-config.json.tmpl }
+  - { path: enketo-config.json.tmpl }

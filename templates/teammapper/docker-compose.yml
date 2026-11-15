@@ -1,0 +1,45 @@
+services:
+  teammapper:
+    image: ghcr.io/b310-digital/teammapper:v0.4.1-1
+    restart: unless-stopped
+    depends_on:
+      teammapper-db:
+        condition: service_healthy
+    environment:
+      MODE: PROD
+      BINDING: "0.0.0.0"
+      POSTGRES_DATABASE: teammapper
+      POSTGRES_HOST: teammapper-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: teammapper
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      # The database runs next to the app on the private network.
+      POSTGRES_SSL: "false"
+      POSTGRES_SSL_REJECT_UNAUTHORIZED: "false"
+      POSTGRES_QUERY_TIMEOUT: 100000
+      POSTGRES_STATEMENT_TIMEOUT: 100000
+      DELETE_AFTER_DAYS: ${DELETE_AFTER_DAYS:-30}
+      JWT_SECRET: ${JWT_SECRET}
+      # Cloudgate's proxy sits in front: read the visitor's address from it,
+      # so the per-address limits apply to visitors, not to the proxy.
+      WS_TRUST_PROXY: "1"
+      AI_ENABLED: "false"
+      LOG_LEVEL: warn
+
+  teammapper-db:
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: teammapper
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: teammapper
+    volumes:
+      - teammapper-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U teammapper -d teammapper"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  teammapper-db-data:
