@@ -1,0 +1,64 @@
+# Authelia's settings, based on the official "lite" example (examples/compose/lite
+# in the authelia repo, v4.39.28): users in a file, SQLite storage, Redis for
+# sessions. Every option is explained at https://www.authelia.com/configuration/
+#
+# The secrets (session, storage encryption key, password-reset JWT) are not in
+# this file: they come from the container's AUTHELIA_* environment variables.
+#
+# On the first start this file is copied to /config/configuration.yml (the
+# authelia-config volume) with @COOKIE_DOMAIN@ replaced by the app's host, and
+# Authelia reads that copy. To add OpenID Connect clients, access rules or an
+# email server, edit the copy and restart the app.
+---
+server:
+  address: 'tcp://:9091'
+
+log:
+  level: 'info'
+
+theme: 'auto'
+
+totp:
+  issuer: '@COOKIE_DOMAIN@'
+
+authentication_backend:
+  file:
+    # Written on the first start with one admin user; add users by editing it.
+    path: '/config/users_database.yml'
+    watch: true
+
+access_control:
+  # Anything behind a reverse proxy that asks Authelia, and has no rule of its
+  # own, needs a password and a second step.
+  default_policy: 'two_factor'
+
+session:
+  cookies:
+    - name: 'authelia_session'
+      # The app's own host, so it works on any domain. For single sign-on across
+      # several apps behind a proxy, set this to their shared parent domain
+      # (e.g. example.com).
+      domain: '@COOKIE_DOMAIN@'
+      authelia_url: 'https://@COOKIE_DOMAIN@'
+      expiration: '1 hour'
+      inactivity: '5 minutes'
+  redis:
+    host: 'authelia-redis'
+    port: 6379
+
+regulation:
+  max_retries: 3
+  find_time: '2 minutes'
+  ban_time: '5 minutes'
+
+storage:
+  local:
+    path: '/config/db.sqlite3'
+
+notifier:
+  # No email server is set up, so the messages Authelia would email (the code to
+  # register a second step, password resets) are written to this file instead.
+  # Replace it with an smtp: notifier to send real email.
+  filesystem:
+    filename: '/config/notification.txt'
+...

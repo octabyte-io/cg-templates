@@ -1,0 +1,4 @@
+# Placeholders so `template try` can start Kiosk without a real Immich server:
+# it still serves its pages (and /health) and logs that Immich is unreachable.
+KIOSK_IMMICH_URL: https://immich.example.com
+KIOSK_IMMICH_API_KEY: placeholder-immich-api-key

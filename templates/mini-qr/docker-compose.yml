@@ -1,0 +1,16 @@
+services:
+  mini-qr:
+    # The official image (ghcr.io/lyqht/mini-qr), built from each Mini QR
+    # release: the built web app served by `serve` on port 8080. The project's
+    # own compose file adds an nginx reverse proxy in front; Cloudgate routes
+    # the web address itself, so it is left out.
+    image: ghcr.io/lyqht/mini-qr:v0.32.0
+    restart: unless-stopped
+    # No sign-in, no database and no volumes: QR codes are made in the
+    # visitor's browser and settings are kept in that browser.
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --spider http://127.0.0.1:8080/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

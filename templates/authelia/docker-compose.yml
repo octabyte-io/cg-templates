@@ -1,0 +1,74 @@
+# Based on Authelia's official "lite" example (examples/compose/lite in the
+# authelia repo, v4.39.28): Authelia with users in a file, SQLite storage and
+# Redis for sessions. The example's Traefik proxy and demo apps are left out;
+# Cloudgate's own proxy gives Authelia its web address.
+services:
+  authelia:
+    image: authelia/authelia:4.39.28
+    restart: unless-stopped
+    depends_on:
+      authelia-redis:
+        condition: service_healthy
+    # On the first start: copies the settings from files/configuration.yml with
+    # the app's host as the session cookie domain, and writes a users file with
+    # one admin user, whose password Cloudgate made, stored as an argon2 hash.
+    # Then starts Authelia through the image's own entrypoint. Authelia needs a
+    # cookie domain with a dot in it: on a real install that is the app's host;
+    # a local test run whose host is plain "localhost" uses 127.0.0.1 instead.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        if [ ! -f /config/configuration.yml ]; then
+          case "$$APP_HOST" in
+            *.*) cookie_domain="$$APP_HOST" ;;
+            *) cookie_domain=127.0.0.1 ;;
+          esac
+          sed "/^[[:space:]]*#/!s/@COOKIE_DOMAIN@/$$cookie_domain/g" /etc/authelia/configuration.yml > /config/configuration.yml
+        fi
+        if [ ! -f /config/users_database.yml ]; then
+          digest="$$(authelia crypto hash generate argon2 --password "$$ADMIN_PASSWORD" | sed -n 's/^Digest: //p')"
+          [ -n "$$digest" ]
+          printf '%s\n' \
+            'users:' \
+            '  admin:' \
+            '    disabled: false' \
+            '    displayname: "Admin"' \
+            "    password: \"$$digest\"" \
+            "    email: \"$$ADMIN_EMAIL\"" \
+            '    groups:' \
+            '      - admins' > /config/users_database.yml
+          echo "Created the admin user 'admin'."
+        fi
+        unset APP_HOST ADMIN_EMAIL ADMIN_PASSWORD
+        exec /app/entrypoint.sh --config /config/configuration.yml
+    environment:
+      # Read only by the start command above. Their names don't start with
+      # AUTHELIA_, which Authelia would read as settings.
+      APP_HOST: ${APP_HOST}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      AUTHELIA_SESSION_SECRET: ${SESSION_SECRET}
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: ${STORAGE_ENCRYPTION_KEY}
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET: ${RESET_PASSWORD_JWT_SECRET}
+    volumes:
+      - ../files/configuration.yml:/etc/authelia/configuration.yml:ro
+      # Settings, users, the SQLite database and the notification file.
+      - authelia-config:/config
+    # The image's own healthcheck (/app/healthcheck.sh) checks /api/health.
+
+  authelia-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - authelia-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  authelia-config:
+  authelia-redis-data:

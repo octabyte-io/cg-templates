@@ -1,0 +1,86 @@
+# From LinguaCafe's docker-compose.yml at v0.14.1. The app finds its database, Redis
+# and Python service by host name; the names are set below instead of container_name.
+# Dropped from the official file: published ports (including 6001, see below),
+# host.docker.internal (for Anki on the same computer) and MySQL's general query log,
+# which records every query and grows without limit.
+services:
+  linguacafe:
+    image: ghcr.io/simjanos-dev/linguacafe-webserver:v0.14.1
+    restart: unless-stopped
+    depends_on:
+      linguacafe-db:
+        condition: service_healthy
+      linguacafe-redis:
+        condition: service_started
+    environment:
+      APP_URL: ${APP_URL}
+      # Real environment variables take precedence over the .env file in the image.
+      APP_KEY: base64:${APP_KEY}
+      DB_HOST: linguacafe-db
+      DB_PORT: 3306
+      DB_DATABASE: linguacafe
+      DB_USERNAME: linguacafe
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: linguacafe-redis
+      PYTHON_CONTAINER_NAME: linguacafe-python
+      BACKUP_INTERVAL: "59 23 * * *"
+      MAX_SAVED_BACKUPS: 14
+    volumes:
+      # Uploaded books and images, imported dictionary files, language models
+      # (shared with the Python service), logs and the nightly database backups.
+      - linguacafe-storage:/var/www/html/storage
+    # The image runs Apache (port 80), the queue worker (Horizon) and a websocket
+    # server on port 6001. The page connects to port 6001 for live progress bars
+    # (dictionary import, chapter processing); only port 80 gets the web address,
+    # so those bars don't move, but the work itself finishes.
+    healthcheck:
+      # Laravel's /up route. The first start runs the migrations and seeds first.
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+
+  # Splits imported text into words and finds dictionary forms (spaCy). Extra
+  # languages installed from Admin > Languages are saved in the shared storage volume.
+  linguacafe-python:
+    image: ghcr.io/simjanos-dev/linguacafe-python-service:v0.14.1
+    restart: unless-stopped
+    command: "python3 /app/tokenizer.py"
+    # Created after the web server, so the shared volume starts with the web image's
+    # storage folder (owned by its user) rather than an empty root-owned one.
+    depends_on:
+      linguacafe:
+        condition: service_started
+    environment:
+      PYTHONPATH: "/var/www/html/storage/app/model"
+    volumes:
+      - linguacafe-storage:/var/www/html/storage
+
+  linguacafe-db:
+    image: mysql:8.0.46
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: linguacafe
+      MYSQL_USER: linguacafe
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - linguacafe-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  linguacafe-redis:
+    image: redis:7.2.17-alpine
+    restart: unless-stopped
+    volumes:
+      - linguacafe-redis-data:/data
+
+volumes:
+  linguacafe-storage:
+  linguacafe-db-data:
+  linguacafe-redis-data:

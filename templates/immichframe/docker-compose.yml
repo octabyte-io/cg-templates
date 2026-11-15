@@ -1,0 +1,28 @@
+services:
+  immichframe:
+    image: ghcr.io/immichframe/immichframe:v1.0.39.0
+    restart: unless-stopped
+    environment:
+      TZ: ${TIMEZONE}
+      # Opens the admin page at /admin (always wins over a password saved there).
+      IMMICHFRAME_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      IMMICH_SERVER_URL: ${IMMICH_SERVER_URL}
+      IMMICH_API_KEY: ${IMMICH_API_KEY}
+      AUTHENTICATION_SECRET: ${AUTHENTICATION_SECRET}
+    # ImmichFrame no longer reads accounts from the environment: it imports a
+    # Settings.yml from its config folder once, on the first start, into its
+    # settings database. Write that file from the values above, then start the
+    # app as the image does. Later changes are made on the admin page.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ ! -f /app/Config/Settings.yml ]; then
+          printf 'General:\n  AuthenticationSecret: "%s"\nAccounts:\n  - ImmichServerUrl: "%s"\n    ApiKey: "%s"\n' \
+            "$$AUTHENTICATION_SECRET" "$$IMMICH_SERVER_URL" "$$IMMICH_API_KEY" > /app/Config/Settings.yml
+        fi
+        exec dotnet ImmichFrame.WebApi.dll
+    volumes:
+      - immichframe-config:/app/Config
+
+volumes:
+  immichframe-config:
