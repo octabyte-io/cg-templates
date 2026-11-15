@@ -1,0 +1,48 @@
+# From Halo's official "Halo + PostgreSQL" compose setup
+# (https://docs.halo.run/getting-started/install/docker-compose), using the
+# open-source community image (halohub/halo) rather than the paid halo-pro one.
+services:
+  halo:
+    image: halohub/halo:2.27.3
+    restart: unless-stopped
+    depends_on:
+      halo-db:
+        condition: service_healthy
+    environment:
+      # Halo's documented JVM heap; raise it on a larger server.
+      JVM_OPTS: -Xmx256m -Xms256m
+      # The image defaults to Asia/Shanghai.
+      TZ: Etc/UTC
+    command:
+      - --spring.r2dbc.url=r2dbc:pool:postgresql://halo-db:5432/halo
+      - --spring.r2dbc.username=halo
+      - --spring.r2dbc.password=${DB_PASSWORD}
+      - --spring.sql.init.platform=postgresql
+      - --halo.external-url=${HALO_URL}
+    volumes:
+      - halo-data:/root/.halo2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health/readiness"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  halo-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: halo
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: halo
+    volumes:
+      - halo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U halo -d halo"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  halo-data:
+  halo-db-data:

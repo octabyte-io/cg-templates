@@ -6,8 +6,11 @@ apps:
   wordpress:
     fit: "The most flexible choice. WordPress can be a simple blog or a whole website, with thousands of themes and plugins, but it has more settings to learn and no newsletter built in."
     import: partly
+  halo:
+    fit: "A blog on your own address with posts in a rich-text editor, categories and tags, built-in comments with moderation and several authors with roles, free under GPL-3.0. It has no newsletter or paid memberships built in, and most themes, plugins and docs are in Chinese."
+    import: no
 moving: |
-  Download your Medium archive from its settings; it contains every story as an HTML file. Ghost can import a Medium export directly. For WordPress, copy posts across, which is quick for a small blog, or use a community import tool. Add a link from your Medium profile to your new site so readers can follow you.
+  Download your Medium archive from its settings; it contains every story as an HTML file. Ghost can import a Medium export directly. For WordPress, copy posts across, which is quick for a small blog, or use a community import tool. Halo has no Medium import, so copy the stories you want to keep into its editor. Add a link from your Medium profile to your new site so readers can follow you.
 faq:
   - q: "Can I still earn money from my writing without Medium?"
     a: "Yes, and you set the price. Ghost has paid memberships built in, with payments going to your own Stripe account. On WordPress you add a membership plugin."
