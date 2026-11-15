@@ -1,0 +1,198 @@
+# Notesnook Sync Server, from the official docker-compose.yml at v1.0-beta.52
+# (github.com/streetwriters/notesnook-sync-server). Dropped from it: the "validate"
+# container (template.yaml makes every required value), autoheal (needs the Docker
+# socket) and the optional "extras" profile (themes server, CORS proxy, inbox API).
+
+# How the services find each other on the stack's network, and the public
+# addresses the servers put in links and tokens. Shared by every Notesnook service.
+x-notesnook-env: &notesnook-env
+  NOTESNOOK_SERVER_PORT: "5264"
+  NOTESNOOK_SERVER_HOST: notesnook-server
+  IDENTITY_SERVER_PORT: "8264"
+  IDENTITY_SERVER_HOST: identity-server
+  SSE_SERVER_PORT: "7264"
+  SSE_SERVER_HOST: sse-server
+  SELF_HOSTED: "1"
+  INSTANCE_NAME: ${INSTANCE_NAME}
+  NOTESNOOK_API_SECRET: ${NOTESNOOK_API_SECRET}
+  DISABLE_SIGNUPS: ${DISABLE_SIGNUPS}
+  IDENTITY_SERVER_URL: ${AUTH_SERVER_PUBLIC_URL}
+  AUTH_SERVER_PUBLIC_URL: ${AUTH_SERVER_PUBLIC_URL}
+  NOTESNOOK_APP_HOST: ${NOTESNOOK_APP_PUBLIC_URL}
+  NOTESNOOK_APP_PUBLIC_URL: ${NOTESNOOK_APP_PUBLIC_URL}
+  MONOGRAPH_PUBLIC_URL: ${MONOGRAPH_PUBLIC_URL}
+  ATTACHMENTS_SERVER_PUBLIC_URL: ${ATTACHMENTS_SERVER_PUBLIC_URL}
+  NOTESNOOK_API_PUBLIC_URL: ${NOTESNOOK_API_PUBLIC_URL}
+  # Optional: without them, email 2FA codes and password-reset emails are not sent.
+  SMTP_HOST: ${SMTP_HOST}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USERNAME: ${SMTP_USERNAME}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+
+services:
+  # MongoDB as a one-member replica set; the healthcheck starts the set on first run.
+  notesnook-db:
+    image: mongo:7.0.48
+    hostname: notesnook-db
+    restart: unless-stopped
+    command: --replSet rs0 --bind_ip_all
+    volumes:
+      - notesnook-db-data:/data/db
+    healthcheck:
+      test: echo 'try { rs.status() } catch (err) { rs.initiate() }; db.runCommand("ping").ok' | mongosh mongodb://localhost:27017 --quiet
+      interval: 15s
+      timeout: 30s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s
+
+  # Silo, the S3-compatible store (a MinIO fork) that holds attachments. The
+  # apps upload and download through signed links to its own web address.
+  notesnook-s3:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    restart: unless-stopped
+    command: server /data/s3 --console-address :9090
+    environment:
+      MINIO_ROOT_USER: ${S3_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${S3_ROOT_PASSWORD}
+      MINIO_BROWSER: "off"
+    volumes:
+      - notesnook-s3-data:/data/s3
+    healthcheck:
+      test: ["CMD", "silo", "healthcheck", "ready"]
+      interval: 15s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+      start_interval: 5s
+
+  # Makes the "attachments" bucket once, then exits.
+  setup-s3:
+    image: pgsty/mc:RELEASE.2026-09-13T00-00-00Z
+    restart: "no"
+    depends_on:
+      notesnook-s3:
+        condition: service_healthy
+    environment:
+      S3_ROOT_USER: ${S3_ROOT_USER}
+      S3_ROOT_PASSWORD: ${S3_ROOT_PASSWORD}
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        until mc alias set silo http://notesnook-s3:9000 "$$S3_ROOT_USER" "$$S3_ROOT_PASSWORD"; do
+          sleep 1;
+        done;
+        mc mb silo/attachments -p
+
+  # The auth server keeps its token signing keys in /app/keystore. This gives
+  # that volume to the image's user (uid 1000) so the keys outlive a restart
+  # and signed-in apps stay signed in.
+  identity-keystore:
+    image: streetwriters/identity:v1.0-beta.52
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["sh", "-c", "chown -R 1000:1000 /app/keystore"]
+    volumes:
+      - notesnook-identity-keys:/app/keystore
+
+  # Auth server: sign-up, sign-in and 2FA.
+  identity-server:
+    image: streetwriters/identity:v1.0-beta.52
+    restart: unless-stopped
+    depends_on:
+      notesnook-db:
+        condition: service_healthy
+      identity-keystore:
+        condition: service_completed_successfully
+    environment:
+      <<: *notesnook-env
+      MONGODB_CONNECTION_STRING: mongodb://notesnook-db:27017/identity?replSet=rs0
+      MONGODB_DATABASE_NAME: identity
+    volumes:
+      - notesnook-identity-keys:/app/keystore
+    healthcheck:
+      test: wget --tries=1 -nv -q http://localhost:8264/health -O- || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s
+
+  # Sync server: the API the apps sync encrypted notes with.
+  notesnook-server:
+    image: streetwriters/notesnook-sync:v1.0-beta.52
+    restart: unless-stopped
+    depends_on:
+      notesnook-db:
+        condition: service_healthy
+      setup-s3:
+        condition: service_completed_successfully
+      identity-server:
+        condition: service_started
+    environment:
+      <<: *notesnook-env
+      MONGODB_CONNECTION_STRING: mongodb://notesnook-db:27017/?replSet=rs0
+      MONGODB_DATABASE_NAME: notesnook
+      S3_INTERNAL_SERVICE_URL: http://notesnook-s3:9000
+      S3_INTERNAL_BUCKET_NAME: attachments
+      S3_ACCESS_KEY_ID: ${S3_ROOT_USER}
+      S3_ACCESS_KEY: ${S3_ROOT_PASSWORD}
+      S3_SERVICE_URL: ${ATTACHMENTS_SERVER_PUBLIC_URL}
+      S3_REGION: us-east-1
+      S3_BUCKET_NAME: attachments
+    healthcheck:
+      test: wget --tries=1 -nv -q http://localhost:5264/health -O- || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s
+
+  # Events server: pushes "something changed" notices to signed-in apps.
+  sse-server:
+    image: streetwriters/sse:v1.0-beta.52
+    restart: unless-stopped
+    depends_on:
+      identity-server:
+        condition: service_started
+      notesnook-server:
+        condition: service_started
+    environment:
+      <<: *notesnook-env
+    healthcheck:
+      test: wget --tries=1 -nv -q http://localhost:7264/health -O- || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s
+
+  # Monograph: serves notes people publish as public web pages.
+  monograph-server:
+    image: streetwriters/monograph:1.3.1
+    restart: unless-stopped
+    depends_on:
+      notesnook-server:
+        condition: service_started
+    environment:
+      <<: *notesnook-env
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      API_HOST: ${NOTESNOOK_API_PUBLIC_URL}
+      PUBLIC_URL: ${MONOGRAPH_PUBLIC_URL}
+    healthcheck:
+      test: >
+        bun -e "fetch('http://127.0.0.1:3000/api/health')
+        .then(r => { if (!r.ok) process.exit(1); })
+        .catch(() => process.exit(1))"
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s
+
+volumes:
+  notesnook-db-data:
+  notesnook-s3-data:
+  notesnook-identity-keys:

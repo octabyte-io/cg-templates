@@ -47,7 +47,7 @@ const freeLine =
     ? `${count === 1 ? 'It is' : count === 2 ? 'Both are' : `All ${count} are`} free and open source.`
     : `${count === 2 ? 'Both' : `All ${count}`} are free to self-host. ${listNames(openApps.map((a) => a.name)) || 'None'} ${openApps.length === 1 ? 'is' : 'are'} open source; ${listNames(
         apps.filter((a) => !kinds.get(a.id)!.openSource).map((a) => `${a.name} (${kinds.get(a.id)!.label.toLowerCase()})`),
-      )} ${count - openApps.length === 1 ? 'publishes its code' : 'publish their code'} under a licence that limits reselling it as a service.`;
+      )} ${count - openApps.length === 1 ? 'publishes its code' : 'publish their code'} under a licence with conditions an open-source licence does not have, such as limits on reselling it or keeping the maker's branding.`;
 
 // The first sentence answers "what is the open-source <Product> alternative?" on its own, so an
 // answer engine can quote it as it stands (see `Product.lede`).
@@ -80,7 +80,7 @@ const faq = [
   },
   {
     q: 'Do I need a developer?',
-    a: 'No. Cloudgate installs the app on your server and gives it a secure web address. You use it in your browser.',
+    a: copy?.developer ?? 'No. Cloudgate installs the app on your server and gives it a secure web address. You use it in your browser.',
   },
 ];
 

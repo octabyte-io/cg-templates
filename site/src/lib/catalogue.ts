@@ -355,6 +355,8 @@ export interface AlternativeCopy {
   faq: { q: string; a: string }[];
   /** Replaces the generated "Is it really free?" answer, for an app that is not free for every use. */
   cost?: string;
+  /** Replaces the generated "Do I need a developer?" answer, for an app that must be wired into the buyer's own product. */
+  developer?: string;
 }
 
 const alternativeRules = z.strictObject({
@@ -365,6 +367,7 @@ const alternativeRules = z.strictObject({
   moving: plain('how to move from the product, one paragraph'),
   faq: z.array(z.strictObject({ q: plain('the question'), a: plain('the answer') })).default([]),
   cost: plain('the answer to "Is it really free?", only when the app is not free for every use').optional(),
+  developer: plain('the answer to "Do I need a developer?", only when the app must be connected to your own product').optional(),
 });
 
 const alternativesDir = path.join(siteRoot, 'src', 'alternatives');
@@ -398,6 +401,7 @@ function readAlternativeCopy(product: Product, apps: Template[]): AlternativeCop
     movingHtml: html(parsed.data.moving),
     faq: parsed.data.faq,
     cost: parsed.data.cost?.trim(),
+    developer: parsed.data.developer?.trim(),
   };
 }
 
@@ -425,7 +429,7 @@ export function alternativesPages(): { product: Product; apps: Template[]; copy?
 
 /** How an app's code is shared: the words a visitor understands, from its SPDX licence id. */
 export function licenceKind(license: string): { label: string; openSource: boolean } {
-  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub)/i.test(license)) {
+  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub|NPL)/i.test(license)) {
     return { label: license.startsWith('SUL') ? 'Fair-code' : 'Source-available', openSource: false };
   }
   return { label: 'Open source', openSource: true };

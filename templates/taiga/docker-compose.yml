@@ -1,0 +1,184 @@
+# From Taiga's official Docker setup (github.com/taigaio/taiga-docker): the API
+# (taiga-back), its Celery worker for imports, exports and email (taiga-async), the
+# web app (taiga-front), live updates over WebSocket (taiga-events), signed links for
+# attachments (taiga-protected), PostgreSQL, the two RabbitMQ brokers upstream runs,
+# and its nginx gateway, which puts them all behind one address and so gets the domain.
+# Changes from upstream: pinned versions, no ports, healthchecks, the first
+# administrator created for you (files/taiga-admin.py.txt), optional SMTP
+# (files/taiga-email.sh.txt), and telemetry off.
+
+x-taiga-back-environment: &taiga-back-environment
+  POSTGRES_DB: taiga
+  POSTGRES_USER: taiga
+  POSTGRES_PASSWORD: ${DB_PASSWORD}
+  POSTGRES_HOST: taiga-db
+  TAIGA_SECRET_KEY: ${SECRET_KEY}
+  TAIGA_SITES_SCHEME: https
+  TAIGA_SITES_DOMAIN: ${TAIGA_HOST}
+  TAIGA_SUBPATH: ""
+  # files/taiga-email.sh.txt picks the SMTP or log ("console") backend.
+  DEFAULT_FROM_EMAIL: ${EMAIL_FROM:-}
+  EMAIL_HOST: ${SMTP_HOST:-}
+  EMAIL_PORT: ${SMTP_PORT:-587}
+  EMAIL_HOST_USER: ${SMTP_USER:-}
+  EMAIL_HOST_PASSWORD: ${SMTP_PASSWORD:-}
+  SMTP_IMPLICIT_TLS: ${SMTP_IMPLICIT_TLS:-false}
+  RABBITMQ_USER: taiga
+  RABBITMQ_PASS: ${RABBITMQ_PASSWORD}
+  ENABLE_TELEMETRY: "False"
+
+x-taiga-back-volumes: &taiga-back-volumes
+  - taiga-static-data:/taiga-back/static
+  - taiga-media-data:/taiga-back/media
+  - ../files/taiga-email.sh.txt:/taiga-email.sh:ro
+
+services:
+  taiga-gateway:
+    image: nginx:1.28.3-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - taiga-static-data:/taiga/static:ro
+      - taiga-media-data:/taiga/media:ro
+    depends_on:
+      taiga-back:
+        condition: service_healthy
+      taiga-front:
+        condition: service_started
+      taiga-events:
+        condition: service_started
+      taiga-protected:
+        condition: service_started
+
+  taiga-back:
+    image: taigaio/taiga-back:6.10.2
+    restart: unless-stopped
+    # Runs the database migrations, then files/taiga-admin.py.txt (creates the first
+    # administrator while there is none), then the image's own start script.
+    entrypoint:
+      - sh
+      - -c
+      - . /taiga-email.sh && python manage.py migrate --noinput && python manage.py shell < /taiga-admin.py; exec /taiga-back/docker/entrypoint.sh
+    environment:
+      <<: *taiga-back-environment
+      # Read only by files/taiga-admin.py.txt.
+      TAIGA_ADMIN_USERNAME: admin
+      TAIGA_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      TAIGA_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - taiga-static-data:/taiga-back/static
+      - taiga-media-data:/taiga-back/media
+      - ../files/taiga-email.sh.txt:/taiga-email.sh:ro
+      - ../files/taiga-admin.py.txt:/taiga-admin.py:ro
+    depends_on:
+      taiga-db:
+        condition: service_healthy
+      taiga-events-rabbitmq:
+        condition: service_healthy
+      taiga-async-rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      # The image has Python but neither curl nor wget.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/locales', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 180s
+
+  taiga-async:
+    image: taigaio/taiga-back:6.10.2
+    restart: unless-stopped
+    entrypoint:
+      - sh
+      - -c
+      - . /taiga-email.sh && exec /taiga-back/docker/async_entrypoint.sh
+    environment: *taiga-back-environment
+    volumes: *taiga-back-volumes
+    depends_on:
+      taiga-back:
+        condition: service_healthy
+      taiga-async-rabbitmq:
+        condition: service_healthy
+
+  taiga-async-rabbitmq:
+    image: rabbitmq:3.13.6-management-alpine
+    restart: unless-stopped
+    hostname: taiga-async-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: taiga
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: taiga
+    volumes:
+      - taiga-async-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 20s
+
+  taiga-front:
+    image: taigaio/taiga-front:6.10.3
+    restart: unless-stopped
+    environment:
+      TAIGA_URL: ${TAIGA_URL}
+      TAIGA_WEBSOCKETS_URL: wss://${TAIGA_HOST}
+      TAIGA_SUBPATH: ""
+
+  taiga-events:
+    image: taigaio/taiga-events:6.10.0
+    restart: unless-stopped
+    environment:
+      RABBITMQ_USER: taiga
+      RABBITMQ_PASS: ${RABBITMQ_PASSWORD}
+      TAIGA_SECRET_KEY: ${SECRET_KEY}
+    depends_on:
+      taiga-events-rabbitmq:
+        condition: service_healthy
+
+  taiga-events-rabbitmq:
+    image: rabbitmq:3.13.6-management-alpine
+    restart: unless-stopped
+    hostname: taiga-events-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: taiga
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: taiga
+    volumes:
+      - taiga-events-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 20s
+
+  taiga-protected:
+    image: taigaio/taiga-protected:6.10.1
+    restart: unless-stopped
+    environment:
+      # How long a link to an attachment works, in seconds (upstream's default).
+      MAX_AGE: "360"
+      SECRET_KEY: ${SECRET_KEY}
+
+  taiga-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: taiga
+      POSTGRES_USER: taiga
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - taiga-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taiga -d taiga"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  taiga-static-data:
+  taiga-media-data:
+  taiga-db-data:
+  taiga-async-rabbitmq-data:
+  taiga-events-rabbitmq-data:

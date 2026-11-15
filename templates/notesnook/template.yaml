@@ -1,0 +1,60 @@
+name: Notesnook Sync Server
+description: "Self-hosted Notesnook: sync the end-to-end encrypted Notesnook apps on your phone, computer and the web through your own server instead of Notesnook's."
+version: "v1.0-beta.52"
+tags: [self-hosted notesnook, notesnook sync server, evernote alternative, encrypted notes, google keep alternative, private note taking]
+links:
+  website: https://notesnook.com
+  docs: https://help.notesnook.com/self-hosting
+  source: https://github.com/streetwriters/notesnook-sync-server
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Shown on the apps' sign-in and sign-up pages, so people see which server they use.
+  INSTANCE_NAME: { value: "{{domains.notesnook-server.host}}" }
+  # Signs and checks the access tokens the auth server gives the apps.
+  NOTESNOOK_API_SECRET: { generate: hex }
+  # Sign-ups are open so you can create your account from a Notesnook app.
+  # Afterwards set this to true on the variables page to close them.
+  DISABLE_SIGNUPS: { value: "false" }
+  # The public addresses of the servers, used in tokens, email links and the
+  # signed links the apps upload and download attachments with.
+  NOTESNOOK_API_PUBLIC_URL: { value: "{{domains.notesnook-server.url}}" }
+  AUTH_SERVER_PUBLIC_URL: { value: "{{domains.identity-server.url}}" }
+  MONOGRAPH_PUBLIC_URL: { value: "{{domains.monograph-server.url}}" }
+  ATTACHMENTS_SERVER_PUBLIC_URL: { value: "{{domains.notesnook-s3.url}}" }
+  # Notesnook's own web app, which the links in emails open (the official setup's default).
+  NOTESNOOK_APP_PUBLIC_URL: { value: "https://app.notesnook.com" }
+  # The attachment store's root user and password, used only by the sync server.
+  S3_ROOT_USER: { generate: password }
+  S3_ROOT_PASSWORD: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional, but recommended. Notesnook emails sign-in codes (two-factor authentication) and password resets; without an email sending service, for example smtp.resend.com, switch your account's two-factor method to an authenticator app after you sign up. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 465 works with most email services.
+      default: "465"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      description: Often your email address. Emails are sent from this address.
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+# Five addresses: the four the Notesnook apps are pointed at (sync, auth,
+# events, monograph), and the attachment store the sync server's signed links use.
+domains:
+  - { service: notesnook-server, port: 5264 }
+  - { service: identity-server, port: 8264 }
+  - { service: sse-server, port: 7264 }
+  - { service: monograph-server, port: 3000 }
+  - { service: notesnook-s3, port: 9000 }

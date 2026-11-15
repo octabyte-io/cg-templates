@@ -1,0 +1,47 @@
+services:
+  zipline:
+    image: ghcr.io/diced/zipline:4.8.3
+    restart: unless-stopped
+    depends_on:
+      zipline-db:
+        condition: service_healthy
+    environment:
+      CORE_SECRET: ${CORE_SECRET}
+      CORE_PORT: "3000"
+      CORE_HOSTNAME: 0.0.0.0
+      # Cloudgate serves the app over HTTPS through its proxy, so links Zipline
+      # hands out (uploads, short links) should start with https.
+      CORE_TRUST_PROXY: "true"
+      CORE_RETURN_HTTPS_URLS: "true"
+      DATABASE_URL: postgres://zipline:${POSTGRES_PASSWORD}@zipline-db:5432/zipline
+    volumes:
+      - zipline-uploads:/zipline/uploads
+      - zipline-public:/zipline/public
+      - zipline-themes:/zipline/themes
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/api/healthcheck"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  zipline-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: zipline
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: zipline
+    volumes:
+      - zipline-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zipline"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  zipline-uploads:
+  zipline-public:
+  zipline-themes:
+  zipline-db-data:

@@ -1,0 +1,20 @@
+# Sourced by taiga-back and taiga-async before Taiga starts. Taiga sends email
+# (invitations, password resets, notifications) through an SMTP server when one was
+# entered at setup; without one it writes each email to its log instead, as
+# upstream's default "console" backend does.
+if [ -n "${EMAIL_HOST:-}" ]; then
+  export EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+  # Port 465 uses implicit TLS (SSL); 587 and 25 use STARTTLS. Taiga allows only one.
+  if [ "${SMTP_IMPLICIT_TLS:-false}" = "true" ]; then
+    export EMAIL_USE_SSL="True" EMAIL_USE_TLS="False"
+  else
+    export EMAIL_USE_SSL="False" EMAIL_USE_TLS="True"
+  fi
+else
+  export EMAIL_BACKEND="django.core.mail.backends.console.EmailBackend"
+  unset EMAIL_HOST
+fi
+# The sender address: the one entered at setup, or taiga@<the app's domain>.
+if [ -z "${DEFAULT_FROM_EMAIL:-}" ]; then
+  export DEFAULT_FROM_EMAIL="taiga@${TAIGA_SITES_DOMAIN}"
+fi

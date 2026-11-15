@@ -1,0 +1,22 @@
+name: nopCommerce
+description: "Self-hosted nopCommerce runs your own online store on .NET, with several stores, vendors and B2B pricing, in place of Shopify or BigCommerce."
+version: "5.00.1"
+tags: [shopify alternative, self-hosted ecommerce, bigcommerce alternative, multi-vendor marketplace, b2b ecommerce, asp.net ecommerce, online store]
+links:
+  website: https://www.nopcommerce.com
+  docs: https://docs.nopcommerce.com
+  source: https://github.com/nopSolutions/nopCommerce
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  STORE_URL: { value: "{{domains.nopcommerce.url}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to the store's admin area with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: nopcommerce, port: 80 }

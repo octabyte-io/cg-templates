@@ -1,0 +1,41 @@
+# From Remark42's docker-compose.yml (github.com/umputun/remark42, tag v1.18.0)
+# and its docs (remark42.com/docs). The image has its own healthcheck
+# (curl http://localhost:8080/ping). Comments, avatars, pictures and the
+# automatic daily backups are kept in BoltDB files under /srv/var.
+services:
+  remark42:
+    image: ghcr.io/umputun/remark42:v1.18.0
+    restart: unless-stopped
+    environment:
+      REMARK_URL: ${REMARK_URL}
+      SECRET: ${SECRET}
+      # The site_id the embed snippet on your website uses; several can be
+      # listed, separated by commas.
+      SITE: ${SITE}
+      # Remark42 runs on its own address, so this is the docs' "separate
+      # domain" setup: comments load only on your website (CSP
+      # frame-ancestors) and readers stay signed in when third-party cookies
+      # are blocked. remark42.com/docs/manuals/separate-domain/
+      ALLOWED_HOSTS: "'self',${WEBSITE_URL}"
+      AUTH_SEND_JWT_HEADER: "true"
+      # Sign-in: anonymous (a name only) and/or email (a code sent by email,
+      # needs the SMTP settings below).
+      AUTH_ANON: ${AUTH_ANON}
+      AUTH_EMAIL_ENABLE: ${AUTH_EMAIL_ENABLE}
+      AUTH_EMAIL_FROM: ${EMAIL_FROM}
+      NOTIFY_EMAIL_FROM: ${EMAIL_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_STARTTLS: ${SMTP_STARTTLS:-true}
+      SMTP_TLS: ${SMTP_TLS:-false}
+      # Moderators, by user ID: sign in on the widget, click your name to see
+      # your ID, then set it here (comma-separated for several).
+      ADMIN_SHARED_ID: ${ADMIN_SHARED_ID}
+      ADMIN_SHARED_EMAIL: ${ADMIN_SHARED_EMAIL}
+    volumes:
+      - remark42-data:/srv/var
+
+volumes:
+  remark42-data:

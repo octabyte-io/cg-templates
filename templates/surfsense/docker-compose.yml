@@ -1,0 +1,22 @@
+services:
+  surfsense:
+    # One image runs the whole app (API, workers, local model servers, and
+    # Caddy on port 80), as in the project's docker/surfsense/docker-compose.yml.
+    # It has its own healthcheck on /api/health.
+    image: ghcr.io/modsetter/surfsense:2.3.1
+    restart: unless-stopped
+    environment:
+      # The web address is public, so the sign-in password is set here before
+      # the first start (the project's advice for a server on the internet).
+      # Set this way, the app shows it locked; change it in this setting.
+      SURFSENSE_PASSWORD: ${SURFSENSE_PASSWORD}
+      # Encrypts the AI provider keys you add in the app. Changing it later
+      # makes stored keys unreadable.
+      SURFSENSE_LOCAL_SECRET: ${SURFSENSE_SECRET}
+    volumes:
+      - surfsense-data:/data
+    # The supervisor gives each of its processes 5 s after SIGTERM.
+    stop_grace_period: 30s
+
+volumes:
+  surfsense-data:

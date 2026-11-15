@@ -1,0 +1,16 @@
+name: SurfSense
+description: "Self-hosted SurfSense: a private NotebookLM alternative whose AI answers from your documents with citations and edits Word, Excel and PDF files."
+version: "2.3.1"
+tags: [notebooklm alternative, chat with your documents, ai research assistant, private ai, local ai models, ai document editing]
+links:
+  website: https://www.surfsense.com
+  docs: https://github.com/MODSetter/SurfSense/tree/main/docs
+  source: https://github.com/MODSetter/SurfSense
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  SURFSENSE_PASSWORD: { generate: password }
+  SURFSENSE_SECRET: { generate: hex }
+domains:
+  - { service: surfsense, port: 80 }
