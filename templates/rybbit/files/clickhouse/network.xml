@@ -1,0 +1,4 @@
+<!-- From Rybbit's official docker-compose.yml (v2.9.2), configs.clickhouse_network. -->
+<clickhouse>
+    <listen_host>0.0.0.0</listen_host>
+</clickhouse>

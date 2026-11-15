@@ -1,0 +1,17 @@
+name: Xibo
+description: "Xibo is self-hosted, open-source digital signage: design and schedule what plays on the screens in your shop, café or gym, in place of Yodeck or ScreenCloud."
+version: "4.5.6"
+tags: [digital signage, open source digital signage, yodeck alternative, screencloud alternative, optisigns alternative, digital menu board, signage scheduling]
+links:
+  website: https://xibosignage.com
+  docs: https://docs.xibosignage.com/
+  source: https://github.com/xibosignage/xibo-cms
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  SERVER_NAME: { value: "{{domains.xibo.host}}" }
+domains:
+  - { service: xibo, port: 80 }

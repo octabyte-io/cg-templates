@@ -1,0 +1,26 @@
+name: Lychee
+description: "Lychee is a self-hosted photo gallery to organise photos in albums and share them with clients, family or the public, in place of SmugMug or Pixieset."
+version: "7.13.0"
+tags: [self-hosted photo gallery, smugmug alternative, pixieset alternative, client photo gallery, flickr alternative, photo sharing, open source photo gallery]
+links:
+  website: https://lycheeorg.dev
+  docs: https://lycheeorg.dev/docs/
+  source: https://github.com/LycheeOrg/Lychee
+cloudgate: 0.1.0
+compose: app
+# Two PHP containers (web and queue worker) and MariaDB; resizing large photos needs headroom.
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.lychee.url}}" }
+  # Laravel's encryption key: Lychee's start script requires exactly 32 bytes once base64-decoded,
+  # so it is a base64 value (32 bytes) written as base64:<value> in the compose file.
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times shown in your galleries, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: lychee, port: 8000 }

@@ -1,0 +1,17 @@
+name: OpenEMR
+description: "Self-hosted OpenEMR: open-source EHR and practice management for clinics, with patient charts, scheduling, e-prescribing, billing and a patient portal."
+version: "8.5.0"
+tags: [open source ehr, emr software, practice management software, medical billing, patient portal, tebra alternative, drchrono alternative]
+links:
+  website: https://www.open-emr.org
+  docs: https://www.open-emr.org/wiki/index.php/OpenEMR_Wiki_Home_Page
+  source: https://github.com/openemr/openemr
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DB_ROOT_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: openemr, port: 80 }

@@ -1,0 +1,73 @@
+# Based on the official production compose file and .env (github.com/Chocobozzz/PeerTube,
+# support/docker/production, v8.3.2). Kept: PeerTube, PostgreSQL and Redis. Dropped: the
+# nginx webserver, certbot, the webserver reloader and the postfix relay (Cloudgate gives the
+# app its web address and HTTPS; email goes through the SMTP server set at setup, if any).
+# PeerTube serves its own web pages on port 9000.
+# Live streaming is switched off: it needs RTMP on port 1935, which Cloudgate does not route.
+services:
+  peertube:
+    image: chocobozzz/peertube:v8.3.2-trixie
+    restart: unless-stopped
+    depends_on:
+      peertube-db:
+        condition: service_healthy
+      peertube-redis:
+        condition: service_healthy
+    environment:
+      PEERTUBE_WEBSERVER_HOSTNAME: ${PEERTUBE_HOST}
+      PEERTUBE_WEBSERVER_PORT: "443"
+      PEERTUBE_WEBSERVER_HTTPS: "true"
+      PEERTUBE_SECRET: ${PEERTUBE_SECRET}
+      PEERTUBE_DB_HOSTNAME: peertube-db
+      PEERTUBE_DB_USERNAME: peertube
+      PEERTUBE_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      PEERTUBE_DB_NAME: peertube
+      PEERTUBE_DB_SSL: "false"
+      PEERTUBE_REDIS_HOSTNAME: peertube-redis
+      PEERTUBE_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      # Password of the "root" admin account, used on the first start only.
+      PT_INITIAL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      # Empty values are ignored, so without an SMTP host PeerTube starts with email off.
+      PEERTUBE_SMTP_HOSTNAME: ${SMTP_HOST}
+      PEERTUBE_SMTP_PORT: ${SMTP_PORT}
+      PEERTUBE_SMTP_USERNAME: ${SMTP_USERNAME}
+      PEERTUBE_SMTP_PASSWORD: ${SMTP_PASSWORD}
+      PEERTUBE_SMTP_TLS: ${SMTP_TLS}
+      PEERTUBE_SMTP_DISABLE_STARTTLS: "false"
+      PEERTUBE_SMTP_FROM: ${SMTP_FROM}
+      PEERTUBE_LIVE_ENABLED: "false"
+    volumes:
+      - peertube-data:/data
+      - peertube-config:/config
+
+  peertube-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: peertube
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: peertube
+    volumes:
+      - peertube-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d peertube -U peertube"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  peertube-redis:
+    image: redis:8.4.8-alpine
+    restart: unless-stopped
+    volumes:
+      - peertube-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  peertube-data:
+  peertube-config:
+  peertube-db-data:
+  peertube-redis-data:

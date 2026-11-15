@@ -1,0 +1,66 @@
+name: Mastodon
+description: "Self-hosted Mastodon gives your organisation or community its own social network on your own domain, connected to the fediverse, instead of renting space on X."
+version: "4.7.5"
+tags: [mastodon, self-hosted mastodon, x alternative, twitter alternative, fediverse, social network, masto.host alternative]
+links:
+  website: https://joinmastodon.org
+  docs: https://docs.joinmastodon.org/admin/install/
+  source: https://github.com/mastodon/mastodon
+cloudgate: 0.1.0
+compose: app
+# Web (Puma), Sidekiq, the streaming server, PostgreSQL and Redis together use
+# about 900 MB at rest (measured); 2 GB leaves room for a small community.
+size: medium
+inputs:
+  # The server's name in every username (@you@this-host). Mastodon says it
+  # cannot be changed safely once the server has accounts.
+  LOCAL_DOMAIN: { value: "{{domains.mastodon.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: { generate: hex }
+  ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: { generate: hex }
+  ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: { generate: hex }
+  DB_PASS: { generate: password }
+  # The owner account's password, made at setup; read it on the stack's
+  # variables page and change it after the first sign-in.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Owner username
+      description: The username of the server's owner account, such as admin. Letters, digits and underscores.
+      default: admin
+      pattern: "[A-Za-z0-9_]{1,30}"
+  ADMIN_EMAIL:
+    ask:
+      label: Owner email
+      description: You sign in to the owner account with this email address.
+      format: email
+  SMTP_SERVER:
+    ask:
+      label: Email server (SMTP) address
+      description: Mastodon emails new users a link to confirm their address, and sends password resets. Your email provider gives you this, such as smtp.mailgun.org.
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+  SMTP_LOGIN:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM_ADDRESS:
+    ask:
+      label: Send emails from
+      description: The address Mastodon's emails come from, such as notifications@yourdomain.com.
+      format: email
+# Mastodon's own proxy (Caddy, as nginx is in Mastodon's guide) sends
+# /api/v1/streaming to the streaming server and everything else to Puma, so the
+# web app and its live updates share one address.
+domains:
+  - { service: mastodon, port: 80 }
+files:
+  - { path: Caddyfile }

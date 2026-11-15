@@ -1,0 +1,24 @@
+#!/bin/sh
+# Starts Drupal. On the first start it installs the site with the "Standard" profile and
+# the administrator from Cloudgate's settings, so the browser installer never opens.
+set -eu
+cd /opt/drupal/web
+site=sites/default
+marker="$site/files/.cloudgate-installed"
+
+if [ ! -f "$marker" ]; then
+  echo "Installing Drupal (first start)..."
+  # A settings.php from an earlier, unfinished try would make the installer stop early.
+  chmod u+w "$site" 2>/dev/null || true
+  rm -f "$site/settings.php"
+  php -d memory_limit=512M /cloudgate/drupal-install.php
+  chmod u+w "$site" "$site/settings.php"
+  # Load Cloudgate's settings (database login and host from the environment) on every request.
+  printf "\n// Added by Cloudgate.\ninclude '/cloudgate/settings-cloudgate.php';\n" >>"$site/settings.php"
+  chmod 444 "$site/settings.php"
+  chmod 555 "$site"
+  touch "$marker"
+  chown -R www-data:www-data "$site/files"
+fi
+
+exec docker-php-entrypoint apache2-foreground

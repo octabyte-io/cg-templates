@@ -1,0 +1,33 @@
+name: Drupal
+description: "Self-hosted Drupal, the open-source CMS for large, structured and multilingual websites, on your own server instead of Acquia or Pantheon hosting."
+version: "11.4.12"
+tags: [drupal, self-hosted cms, acquia alternative, pantheon alternative, drupal hosting, multilingual website, open source cms]
+links:
+  website: https://www.drupal.org
+  docs: https://www.drupal.org/docs
+  source: https://git.drupalcode.org/project/drupal
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SITE_NAME:
+    ask:
+      label: Site name
+      description: The name of your website, shown in its title. You can change it later in Drupal.
+      default: My Drupal Site
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the Drupal administrator account and the site's sender address; password resets go here.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DRUPAL_HOST: { value: "{{domains.drupal.host}}" }
+domains:
+  - { service: drupal, port: 80 }
+files:
+  - { path: start.sh.txt }
+  - { path: drupal-install.php.txt }
+  - { path: settings-cloudgate.php.txt }
+  - { path: php.ini }
+  - { path: forwarded-https.conf }

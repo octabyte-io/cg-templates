@@ -1,0 +1,69 @@
+#!/bin/sh
+# Starts Synapse for Cloudgate. Runs as root in the matrixdotorg/synapse image.
+set -eu
+
+mkdir -p /data/media_store
+
+# Written at every start from the environment, so the file always matches the
+# template's settings. Secrets are letters and digits only.
+cat > /data/homeserver.yaml <<YAML
+server_name: "${SERVER_NAME}"
+public_baseurl: "${SYNAPSE_URL}/"
+pid_file: /data/homeserver.pid
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ["0.0.0.0"]
+    resources:
+      - names: [client, federation]
+        compress: false
+database:
+  name: psycopg2
+  args:
+    user: synapse
+    password: "${DB_PASSWORD}"
+    dbname: synapse
+    host: synapse-db
+    port: 5432
+    cp_min: 5
+    cp_max: 10
+media_store_path: /data/media_store
+max_upload_size: 50M
+signing_key_path: /data/signing.key
+trusted_key_servers:
+  - server_name: matrix.org
+suppress_key_server_warning: true
+report_stats: false
+# Federation over 443: other servers find this one through
+# https://<server name>/.well-known/matrix/server.
+serve_server_wellknown: true
+# Nobody can sign up; the administrator adds people in the admin panel.
+enable_registration: false
+registration_shared_secret: "${REGISTRATION_SHARED_SECRET}"
+macaroon_secret_key: "${MACAROON_SECRET_KEY}"
+form_secret: "${FORM_SECRET}"
+YAML
+
+chown -R 991:991 /data
+chmod 600 /data/homeserver.yaml
+
+# The server's signing key, made once.
+if [ ! -f /data/signing.key ]; then
+  gosu 991:991 python -m synapse.app.homeserver -c /data/homeserver.yaml --generate-keys
+fi
+
+# Create the administrator "admin" once Synapse answers. --exists-ok leaves an
+# existing account (and a password changed in Element) as it is.
+(
+  for _ in $(seq 1 120); do
+    if curl -fsS http://localhost:8008/health >/dev/null 2>&1; then
+      register_new_matrix_user -c /data/homeserver.yaml -u admin -p "${ADMIN_PASSWORD}" \
+        --admin --exists-ok http://localhost:8008 && exit 0
+    fi
+    sleep 5
+  done
+) &
+
+exec /start.py

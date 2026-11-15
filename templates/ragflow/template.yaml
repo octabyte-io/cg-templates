@@ -1,0 +1,29 @@
+name: RAGFlow
+description: "RAGFlow is a self-hosted AI assistant that reads complex documents, including scans and tables, and answers questions with cited sources."
+version: "1.0.0"
+tags: [chatbase alternative, customgpt alternative, self-hosted ai assistant, chat with documents, rag engine, open source rag, ai knowledge base]
+links:
+  website: https://ragflow.io
+  docs: https://ragflow.io/docs
+  source: https://github.com/infiniflow/ragflow
+cloudgate: 0.1.0
+compose: app
+# Six containers: RAGFlow (web app, API, document parsing with OCR and layout models on the
+# CPU), the Infinity search engine, MySQL, a MinIO-compatible file store, Kvrocks and NATS.
+# RAGFlow recommends 4 CPU cores, 16 GB of memory and 50 GB of disk.
+size: 2xlarge
+inputs:
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The admin account RAGFlow creates on first start. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  RAGFLOW_SECRET_KEY: { generate: hex }
+  MYSQL_PASSWORD: { generate: password }
+  MINIO_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: ragflow, port: 80 }
+files:
+  - { path: infinity_conf.toml }

@@ -1,0 +1,16 @@
+name: Gramps Web
+description: "Gramps Web is a self-hosted family tree app: build your genealogy with relatives, with photos, sources, charts and maps, on your own server."
+version: "26.11.2"
+tags: [family tree, genealogy software, ancestry alternative, myheritage alternative, gramps, family history, gedcom]
+links:
+  website: https://www.grampsweb.org
+  docs: https://www.grampsweb.org/install_setup/deployment/
+  source: https://github.com/gramps-project/gramps-web
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.grampsweb.url}}" }
+  SECRET_KEY: { generate: hex }
+domains:
+  - { service: grampsweb, port: 5000 }

@@ -1,0 +1,31 @@
+name: Element + Synapse (Matrix)
+description: "Run a self-hosted Matrix server with Synapse and the Element chat app: encrypted rooms and direct messages that can reach other Matrix servers."
+version: "1.165.0"
+tags: [self-hosted matrix server, synapse, element chat, slack alternative, encrypted team chat, whatsapp alternative, matrix homeserver]
+links:
+  website: https://element.io
+  docs: https://element-hq.github.io/synapse/latest/
+  source: https://github.com/element-hq/synapse
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The Matrix server name, the part after the colon in every user ID
+  # (@alice:<this host>). It is Synapse's own address and can't change later.
+  SERVER_NAME: { value: "{{domains.synapse.host}}" }
+  SYNAPSE_URL: { value: "{{domains.synapse.url}}" }
+  DB_PASSWORD: { generate: password }
+  REGISTRATION_SHARED_SECRET: { generate: hex }
+  MACAROON_SECRET_KEY: { generate: hex }
+  FORM_SECRET: { generate: hex }
+  # The password of the administrator "admin" (@admin:<server name>),
+  # created on first start.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: element, port: 80 }
+  - { service: synapse, port: 8008 }
+  # The admin panel (Ketesa), for adding people and managing rooms.
+  - { service: synapse-admin, port: 8080 }
+files:
+  - { path: synapse-start.sh.txt }
+  - { path: element-site.conf }
