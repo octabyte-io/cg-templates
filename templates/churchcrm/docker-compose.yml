@@ -55,7 +55,9 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - ../files/set-admin-password.php.txt:/cloudgate/set-admin-password.php:ro
-    entrypoint: ["php", "/cloudgate/set-admin-password.php"]
+    # Sets the admin password once, then stays idle so `docker compose up --wait`
+    # sees a running service rather than an exited one.
+    entrypoint: ["sh", "-c", "php /cloudgate/set-admin-password.php && exec sleep infinity"]
     healthcheck:
       disable: true
     cap_drop:
