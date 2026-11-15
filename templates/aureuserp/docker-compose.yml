@@ -1,0 +1,80 @@
+# From AureusERP's official production image (docker/production/README.md in the AureusERP
+# repo), in its "external MySQL" mode with a MySQL container next to it.
+services:
+  aureuserp:
+    # Official image: nginx + PHP-FPM, AureusERP's queue worker and its scheduler, run by
+    # Supervisor. Its bundled MySQL stays off because DB_HOST points at aureuserp-db.
+    image: webkul/aureuserp:1.8.0
+    restart: unless-stopped
+    # The image only installs AureusERP into its bundled database, at build time. With an
+    # external database the README says to run the installer once by hand; this does that on
+    # the first start (when the database has no "users" table yet), creating the admin with the
+    # email and password from Cloudgate. On later starts it runs the migrations a newer image
+    # brings. APP_ENV=local only for these commands, as the README does, so Laravel's
+    # production guard doesn't stop the installer's migrations. The image's entrypoint has
+    # already written the settings and waited for the database.
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        cd /var/www/aureuserp
+        if ! php -r 'exit((new PDO("mysql:host=aureuserp-db;dbname=aureus", "aureus", getenv("DB_PASSWORD")))->query("SHOW TABLES LIKE \"users\"")->fetch() ? 0 : 1);'; then
+          echo "* Installing AureusERP into the new database"
+          APP_ENV=local php artisan erp:install --force --no-interaction \
+            --admin-name=Administrator \
+            --admin-email="$$ADMIN_EMAIL" \
+            --admin-password="$$ADMIN_PASSWORD" \
+            --currency="$$APP_CURRENCY"
+          echo "* Admin is $$ADMIN_EMAIL"
+        else
+          APP_ENV=local php artisan migrate --force
+        fi
+        chown -R www-data:www-data storage bootstrap/cache
+        # nginx also listens on IPv6 ([::]:80) and fails to start on hosts without it.
+        if [ ! -e /proc/net/if_inet6 ]; then sed -i '/listen \[::\]/d' /etc/nginx/conf.d/aureus.conf; fi
+        exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+    depends_on:
+      aureuserp-db:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL}
+      # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+      APP_KEY: base64:${APP_KEY}
+      APP_CURRENCY: ${CURRENCY:-USD}
+      APP_TIMEZONE: ${TIMEZONE:-UTC}
+      DB_HOST: aureuserp-db
+      DB_PORT: 3306
+      DB_DATABASE: aureus
+      DB_USERNAME: aureus
+      DB_PASSWORD: ${DB_PASSWORD}
+      # The admin the first start creates; sign in at <address>/admin.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # Uploads, logs, sessions and app state.
+      - aureuserp-storage:/var/www/aureuserp/storage
+
+  aureuserp-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    environment:
+      MYSQL_DATABASE: aureus
+      MYSQL_USER: aureus
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - aureuserp-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -uroot -p$$MYSQL_ROOT_PASSWORD ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  aureuserp-storage:
+  aureuserp-db-data:

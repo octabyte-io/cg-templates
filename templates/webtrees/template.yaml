@@ -1,0 +1,23 @@
+name: webtrees
+description: "webtrees is a self-hosted family tree website: build your genealogy with relatives, with charts, PDF reports, photos and privacy you control."
+version: "2.2.6"
+tags: [family tree, genealogy software, ancestry alternative, myheritage alternative, family history website, gedcom]
+links:
+  website: https://webtrees.net
+  docs: https://webtrees.net/install/
+  source: https://github.com/fisharebest/webtrees
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.webtrees.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the first administrator. You sign in with the username admin and a strong password Cloudgate creates, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: webtrees, port: 80 }
