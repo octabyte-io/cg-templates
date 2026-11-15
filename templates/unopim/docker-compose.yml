@@ -1,0 +1,127 @@
+# From UnoPim's official quick-start compose file (compose.yaml in the UnoPim repo, tag v3.1.3):
+# the web app, its queue worker and scheduler, PostgreSQL (the default engine) and Redis.
+# Left out: Mailpit (a local mail catcher) and Elasticsearch, which UnoPim treats as optional
+# (ELASTICSEARCH_ENABLED); without it, product and category grids query the database.
+x-unopim-environment: &unopim-environment
+  APP_NAME: UnoPim
+  APP_ENV: production
+  APP_DEBUG: "false"
+  APP_URL: ${APP_URL}
+  APP_ADMIN_URL: admin
+  # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+  APP_KEY: base64:${APP_KEY}
+  APP_TIMEZONE: ${TIMEZONE:-UTC}
+  APP_LOCALE: en_US
+  APP_CURRENCY: ${CURRENCY:-USD}
+  APP_CHANNEL: default
+  # Cloudgate's proxy sits on the private network and sets X-Forwarded-Proto.
+  TRUSTED_PROXIES: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+  DB_CONNECTION: pgsql
+  DB_HOST: unopim-db
+  DB_PORT: "5432"
+  DB_PREFIX: ""
+  DB_DATABASE: unopim
+  DB_USERNAME: unopim
+  DB_PASSWORD: ${DB_PASSWORD}
+  CACHE_STORE: redis
+  QUEUE_CONNECTION: redis
+  REDIS_HOST: unopim-redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: "null"
+  # Must stay above the longest job timeout (exports scale theirs with the row count).
+  REDIS_QUEUE_RETRY_AFTER: "7200"
+  ELASTICSEARCH_ENABLED: "false"
+  # No mail server is set up: emails such as password resets go to the app's log.
+  MAIL_MAILER: log
+  # The first admin, created by UnoPim's seeder on the first start only.
+  INSTALLER_ADMIN_EMAIL: ${ADMIN_EMAIL}
+  INSTALLER_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+services:
+  unopim:
+    # Apache + PHP. On start it migrates the database, and on the first start seeds it and
+    # creates the admin. Sign in at <address>/admin.
+    image: webkul/unopim:3.1.3
+    restart: unless-stopped
+    environment:
+      <<: *unopim-environment
+    depends_on:
+      unopim-db:
+        condition: service_healthy
+      unopim-redis:
+        condition: service_healthy
+    volumes:
+      # Uploaded product images and assets, imports and exports, logs and API keys.
+      - unopim-storage:/var/www/html/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/up > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+  unopim-queue:
+    # Imports, exports, completeness and webhooks run here.
+    image: webkul/unopim-queue:3.1.3
+    restart: unless-stopped
+    environment:
+      <<: *unopim-environment
+      QUEUE_NAMES: webhooks,system,completeness,default,publication
+    depends_on:
+      unopim-db:
+        condition: service_healthy
+      unopim-redis:
+        condition: service_healthy
+      unopim:
+        condition: service_healthy
+    volumes:
+      - unopim-storage:/var/www/html/storage
+
+  unopim-scheduler:
+    image: webkul/unopim-queue:3.1.3
+    entrypoint: ["/var/www/html/dockerfiles/scheduler-entrypoint.sh"]
+    restart: unless-stopped
+    environment:
+      <<: *unopim-environment
+    depends_on:
+      unopim-db:
+        condition: service_healthy
+      unopim-redis:
+        condition: service_healthy
+      unopim:
+        condition: service_healthy
+    volumes:
+      - unopim-storage:/var/www/html/storage
+
+  unopim-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: unopim
+      POSTGRES_USER: unopim
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - unopim-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unopim -d unopim"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  unopim-redis:
+    image: redis:7.2.17-alpine
+    restart: unless-stopped
+    volumes:
+      - unopim-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  unopim-storage:
+  unopim-db-data:
+  unopim-redis-data:
