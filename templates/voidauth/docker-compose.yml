@@ -1,0 +1,41 @@
+services:
+  voidauth:
+    image: voidauth/voidauth:1.19.1
+    restart: unless-stopped
+    # The image has its own healthcheck (a request to /healthcheck).
+    depends_on:
+      voidauth-db:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL}
+      STORAGE_KEY: ${STORAGE_KEY}
+      DB_ADAPTER: postgres
+      DB_HOST: voidauth-db
+      DB_USER: voidauth
+      DB_NAME: voidauth
+      DB_PASSWORD: ${DB_PASSWORD}
+    # On the first start VoidAuth creates the admin user auth_admin and prints
+    # a password reset link for it (valid for 24 hours) in this service's logs.
+    volumes:
+      - voidauth-config:/app/config
+
+  voidauth-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: voidauth
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: voidauth
+    volumes:
+      # Postgres 18 keeps its data under /var/lib/postgresql/<major>.
+      - voidauth-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d voidauth -U voidauth"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  voidauth-config:
+  voidauth-db-data:

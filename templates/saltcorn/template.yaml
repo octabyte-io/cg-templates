@@ -1,0 +1,16 @@
+name: Saltcorn
+description: "Saltcorn is a self-hosted, open-source no-code builder for database apps: linked tables, forms, portals and workflows, replacing Microsoft Access."
+version: "1.6.4"
+tags: [no-code app builder, microsoft access alternative, no-code database, softr alternative, glide alternative, customer portal builder]
+links:
+  website: https://saltcorn.com
+  docs: https://wiki.saltcorn.com
+  source: https://github.com/saltcorn/saltcorn
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SALTCORN_SESSION_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: saltcorn, port: 3000 }

@@ -1,0 +1,24 @@
+name: ProjectSend
+description: "ProjectSend is a self-hosted client portal: share files privately with each client, let them upload back, and see who downloaded what."
+version: "2.9.0"
+tags: [client portal, sharefile alternative, client file sharing, secure file transfer, self-hosted file sharing, file sharing portal]
+links:
+  website: https://www.projectsend.org
+  docs: https://github.com/projectsend/projectsend/blob/v2.9.0/DOCKER.md
+  source: https://github.com/projectsend/projectsend
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.projectsend.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to ProjectSend with this email and the generated ADMIN_PASSWORD.
+      format: email
+domains:
+  - { service: projectsend, port: 80 }

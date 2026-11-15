@@ -1,0 +1,80 @@
+# From open-wanderer/wanderer's docker-compose.yml (v0.21.2), with the secrets
+# written out as settings, the public address as ORIGIN and every image pinned.
+services:
+  wanderer:
+    image: flomp/wanderer-web:v0.21.2
+    restart: unless-stopped
+    depends_on:
+      wanderer-search:
+        condition: service_healthy
+      wanderer-db:
+        condition: service_healthy
+    environment:
+      MEILI_URL: http://wanderer-search:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      # Must be the public address, or the browser gets CORS errors.
+      ORIGIN: ${ORIGIN}
+      BODY_SIZE_LIMIT: 2G
+      POCKETBASE_PROXY_SECRET: ${POCKETBASE_PROXY_SECRET}
+      PUBLIC_POCKETBASE_URL: http://wanderer-db:8090
+      # Anyone can sign up until this is true.
+      PUBLIC_DISABLE_SIGNUP: ${PUBLIC_DISABLE_SIGNUP:-false}
+      UPLOAD_FOLDER: /app/uploads
+      # Routing, place search and points of interest use the public
+      # OpenStreetMap services, as in the official file.
+      OVERPASS_API_URL: https://overpass-api.de
+      VALHALLA_URL: https://valhalla1.openstreetmap.de
+      NOMINATIM_URL: https://nominatim.openstreetmap.org
+      PUBLIC_MAP_MAX_POLYLINES: "100"
+    volumes:
+      - wanderer-uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 10
+
+  wanderer-db:
+    # wanderer's own PocketBase build: accounts, trails and files.
+    image: flomp/wanderer-db:v0.21.2
+    restart: unless-stopped
+    depends_on:
+      wanderer-search:
+        condition: service_healthy
+    environment:
+      MEILI_URL: http://wanderer-search:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      POCKETBASE_ENCRYPTION_KEY: ${POCKETBASE_ENCRYPTION_KEY}
+      POCKETBASE_PROXY_SECRET: ${POCKETBASE_PROXY_SECRET}
+      ORIGIN: ${ORIGIN}
+    volumes:
+      - wanderer-pb-data:/pb_data
+      - wanderer-plugins:/data/plugins
+    healthcheck:
+      test: ["CMD", "/curl", "--fail", "http://localhost:8090/health"]
+      interval: 15s
+      timeout: 10s
+      start_period: 20s
+      retries: 10
+
+  wanderer-search:
+    image: getmeili/meilisearch:v1.36.0
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - wanderer-meili-data:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:7700/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      start_period: 20s
+      retries: 10
+
+volumes:
+  wanderer-uploads:
+  wanderer-pb-data:
+  wanderer-plugins:
+  wanderer-meili-data:

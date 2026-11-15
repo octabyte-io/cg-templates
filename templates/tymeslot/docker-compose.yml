@@ -1,0 +1,30 @@
+# From Tymeslot's official docker-compose.yml (v1.44.0): one container with
+# PostgreSQL bundled inside it, as the project's Docker guide sets it up.
+services:
+  tymeslot:
+    image: luka1thb/tymeslot:1.44.0
+    restart: unless-stopped
+    environment:
+      DEPLOYMENT_TYPE: docker
+      # The default "::" fails with eafnosupport on Docker networks without IPv6.
+      LISTEN_IP: 0.0.0.0
+      PHX_HOST: ${PHX_HOST}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      # SMTP whenever an email server is filled in. If it is ever cleared, the
+      # empty value makes Tymeslot use its "test" adapter, which only logs mail.
+      EMAIL_ADAPTER: ${SMTP_HOST:+smtp}
+      EMAIL_FROM_NAME: Tymeslot
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+      - tymeslot-data:/app/data
+      - tymeslot-pg:/var/lib/postgresql/data
+
+volumes:
+  tymeslot-data:
+  tymeslot-pg:

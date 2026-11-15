@@ -1,0 +1,22 @@
+name: Pydio Cells
+description: "Pydio Cells is self-hosted file sharing for teams and clients, with workspaces, project spaces, secure links and file versions, like Box."
+version: "5.1.1"
+tags: [box alternative, dropbox alternative, self-hosted file sharing, secure file sharing, client file sharing, open source file sharing]
+links:
+  website: https://pydio.com
+  docs: https://docs.pydio.com/cells-v5/admin-guide/quick-start/cells-installation/docker/
+  source: https://github.com/pydio/cells
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.pydio-cells.url}}" }
+  # The password of the user "admin", used only by the first start's
+  # installation; change it later in the app.
+  CELLS_ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: pydio-cells, port: 8080 }
+files:
+  - { path: install.yml }

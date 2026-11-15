@@ -1,0 +1,24 @@
+name: WiseMapping
+description: "Self-hosted WiseMapping: create, share and embed mind maps in the browser, and import XMind and MindManager files."
+version: "6.0.11"
+tags: [mind map, mind mapping, mindmeister alternative, xmind alternative, brainstorming, self-hosted mind map, mindmanager alternative]
+links:
+  website: https://www.wisemapping.com
+  docs: https://github.com/wisemapping/wisemapping-open-source/tree/develop/distribution/app
+  source: https://github.com/wisemapping/wisemapping-open-source
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.wisemapping.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to WiseMapping with this email, written in lowercase. Cloudgate creates a strong password for it, shown afterwards on the app's variables page as ADMIN_PASSWORD.
+      pattern: "[a-z0-9._%+-]+@[a-z0-9-]+(\\.[a-z0-9-]+)+"
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  OAUTH_TOKEN_SECRET: { generate: hex }
+domains:
+  - { service: wisemapping, port: 80 }
