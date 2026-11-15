@@ -15,15 +15,18 @@ const trail = [
 const steps = [
   {
     name: 'Copy the starter folder',
-    text: 'On GitHub, copy each file in starter-template/ into templates/<your-app>/. The folder name is the app’s id and its web address, so pick it once: lowercase letters, digits and hyphens.',
+    text: 'In the cg-templates repository on GitHub, copy each file in starter-template/ into templates/<your-app>/. The folder name is the app’s id and its web address, so pick it once: lowercase letters, digits and hyphens.',
+    link: { href: `${GITHUB_REPO}/tree/main/starter-template`, label: 'Open the starter folder on GitHub' },
   },
   {
     name: 'Fill it in',
     text: 'template.yaml and cloudgate.yaml tell Cloudgate how to run the app. index.md is the page people read here: a tagline, what it replaces, what you can do with it, and a few questions.',
+    link: { href: `${GITHUB_REPO}/tree/main/templates`, label: 'See finished templates for examples' },
   },
   {
     name: 'Open a pull request',
-    text: 'Checks run on every pull request and say in plain English which file and field to change. A maintainer reviews it, and once merged the app appears here and in every Cloudgate install.',
+    text: 'Open a pull request to the cg-templates repository. Checks run on every pull request and say in plain English which file and field to change. A maintainer reviews it, and once merged the app appears here and in every Cloudgate install.',
+    link: { href: `${GITHUB_REPO}/compare`, label: 'Open a pull request on GitHub' },
   },
 ];
 
@@ -56,7 +59,7 @@ const faq = [
     {
       '@type': 'HowTo',
       name: 'How to add an app to Cloudgate Templates',
-      step: steps.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, name: step.name, text: step.text })),
+      step: steps.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, name: step.name, text: step.text, url: step.link.href })),
     },
     faqSchema(faq),
   )}
@@ -65,7 +68,7 @@ const faq = [
   <section class="apphead one pad">
     <div class="body">
       <h1 class="h1">Add an app</h1>
-      <p class="lede">Every app here is a folder of a few small files. You can add one from your browser, without installing anything.</p>
+      <p class="lede">Every app here is a folder of a few small files in the <a href={GITHUB_REPO}>cg-templates repository on GitHub</a>. You can add one from your browser, without installing anything.</p>
       <div class="acts">
         <a class="btn lg" href={`${GITHUB_REPO}/tree/main/starter-template`}>Open the starter folder</a>
         <a class="btn lg ghost" href={`${GITHUB_REPO}/issues/new`}>Request an app instead <Chev /></a>
@@ -82,6 +85,7 @@ const faq = [
               <span class="n">Step {index + 1}</span>
               <b>{step.name}</b>
               <p>{step.text}</p>
+              <a class="go" href={step.link.href}>{step.link.label} <Chev /></a>
             </li>
           ))
         }
