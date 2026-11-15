@@ -1,0 +1,25 @@
+#!/bin/sh
+# Starts Backdrop. On the first start it installs the site with the "Standard" profile and
+# the administrator from Cloudgate's settings, so the browser installer never opens.
+set -eu
+cd /var/www/html
+marker=/var/www/config/.cloudgate-installed
+
+mkdir -p /var/www/config/active /var/www/config/staging /var/www/config/backups
+
+if [ ! -f "$marker" ]; then
+  echo "Installing Backdrop (first start)..."
+  php -d memory_limit=512M core/scripts/install.sh standard \
+    --db-url "mysql://${BACKDROP_DB_USER}:${BACKDROP_DB_PASSWORD}@${BACKDROP_DB_HOST}:${BACKDROP_DB_PORT:-3306}/${BACKDROP_DB_NAME}" \
+    --site-name "${BACKDROP_SITE_NAME}" \
+    --site-mail "${BACKDROP_ADMIN_EMAIL}" \
+    --account-name admin \
+    --account-mail "${BACKDROP_ADMIN_EMAIL}" \
+    --account-pass "${BACKDROP_ADMIN_PASSWORD}"
+  touch "$marker"
+fi
+
+# Apache runs as www-data: let it write uploads, configuration and added modules, themes and layouts.
+chown -R www-data:www-data /var/www/config files modules themes layouts
+
+exec /entrypoint.sh apache2-foreground

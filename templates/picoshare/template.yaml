@@ -1,0 +1,15 @@
+name: PicoShare
+description: "PicoShare is a self-hosted app for sharing any file with a direct link that expires when you choose, and for collecting files from clients with guest links."
+version: "1.5.4"
+tags: [wetransfer alternative, dropbox transfer alternative, self-hosted file sharing, share files by link, send large files, file request link]
+links:
+  website: https://github.com/mtlynch/picoshare
+  docs: https://github.com/mtlynch/picoshare#readme
+  source: https://github.com/mtlynch/picoshare
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  PS_SHARED_SECRET: { generate: password }
+domains:
+  - { service: picoshare, port: 4001 }

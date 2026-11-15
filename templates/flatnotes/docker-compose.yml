@@ -1,0 +1,18 @@
+services:
+  flatnotes:
+    image: dullage/flatnotes:v5.5.5
+    restart: unless-stopped
+    environment:
+      PUID: 1000
+      PGID: 1000
+      # One account, signed in with a username and password.
+      FLATNOTES_AUTH_TYPE: password
+      FLATNOTES_USERNAME: ${FLATNOTES_USERNAME}
+      FLATNOTES_PASSWORD: ${FLATNOTES_PASSWORD}
+      FLATNOTES_SECRET_KEY: ${FLATNOTES_SECRET_KEY}
+    volumes:
+      # Notes are plain Markdown files, with attachments and the search index.
+      - flatnotes-data:/data
+
+volumes:
+  flatnotes-data:

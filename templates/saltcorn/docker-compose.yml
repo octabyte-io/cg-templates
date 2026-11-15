@@ -1,0 +1,39 @@
+services:
+  saltcorn:
+    image: saltcorn/saltcorn:1.6.4
+    restart: unless-stopped
+    # --addschema creates Saltcorn's tables on the first start (the official
+    # example loads an SQL dump into Postgres for this instead).
+    command: [serve, --addschema]
+    depends_on:
+      saltcorn-db:
+        condition: service_healthy
+    environment:
+      SALTCORN_SESSION_SECRET: ${SALTCORN_SESSION_SECRET}
+      PGHOST: saltcorn-db
+      PGPORT: 5432
+      PGUSER: saltcorn
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: saltcorn
+    volumes:
+      # Uploaded files and installed plugins.
+      - saltcorn-data:/root/.local/share
+
+  saltcorn-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: saltcorn
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: saltcorn
+    volumes:
+      - saltcorn-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saltcorn"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  saltcorn-data:
+  saltcorn-db-data:

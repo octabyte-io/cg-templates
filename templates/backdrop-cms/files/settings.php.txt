@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Backdrop's settings.php, written by Cloudgate.
+ *
+ * The database login, hash salt and site address come from the container's
+ * environment, so changing them in Cloudgate needs no edit here. The
+ * configuration lives outside the web root, in its own volume.
+ */
+
+$databases['default']['default'] = array(
+  'driver' => 'mysql',
+  'database' => getenv('BACKDROP_DB_NAME'),
+  'username' => getenv('BACKDROP_DB_USER'),
+  'password' => getenv('BACKDROP_DB_PASSWORD'),
+  'host' => getenv('BACKDROP_DB_HOST'),
+  'port' => getenv('BACKDROP_DB_PORT') ?: '3306',
+  'prefix' => '',
+  'charset' => 'utf8mb4',
+  'collation' => 'utf8mb4_general_ci',
+);
+
+$config_directories['active'] = '/var/www/config/active';
+$config_directories['staging'] = '/var/www/config/staging';
+
+$settings['hash_salt'] = getenv('BACKDROP_HASH_SALT');
+
+// Backups taken before updates; kept with the configuration, outside the web root.
+$settings['backup_directory'] = '/var/www/config/backups';
+
+$settings['update_free_access'] = FALSE;
+$settings['restore_free_access'] = FALSE;
+
+// Answer only on the site's own address.
+if ($backdrop_host = getenv('BACKDROP_HOST')) {
+  $settings['trusted_host_patterns'] = array('^' . preg_quote($backdrop_host) . '$');
+}
+
+ini_set('session.gc_probability', 1);
+ini_set('session.gc_divisor', 100);
+ini_set('session.gc_maxlifetime', 200000);
+ini_set('session.cookie_lifetime', 2000000);
