@@ -1,7 +1,7 @@
 ---
-tagline: Turn any screen into a photo frame for your Immich photos.
+tagline: A full-screen slideshow of your Immich photos in any web browser.
 category: files-photos
-alternativeTo: [nixplay, aura-frames]
+alternativeTo: [aura-frames, nixplay]
 ease: some-setup
 easeNote: During setup you enter your Immich address and an API key you create in Immich; then open Kiosk's web address on each screen.
 license: AGPL-3.0-only
@@ -49,28 +49,28 @@ screenshots:
     caption: "A full-screen slideshow with the clock and the photo's details. The weather needs an OpenWeatherMap key, which this template does not set up."
     credit:
       text: "Immich Kiosk · AGPL-3.0"
-      url: https://github.com/damongolding/immich-kiosk/blob/main/assets/preview.jpeg
+      url: https://github.com/damongolding/immich-kiosk/blob/v0.47.1/assets/preview.jpeg
   - src: screenshots/split-view.webp
     alt: "Immich Kiosk's split view with two portrait photos side by side, a smiling woman in a grey hoodie against a blue wall and a pile of orange and green pumpkins, each labelled with its album, date and place"
     caption: "Split view shows two portrait photos side by side on a wide screen."
     credit:
       text: "Immich Kiosk · AGPL-3.0"
-      url: https://github.com/damongolding/immich-kiosk/blob/main/assets/layout-splitview.jpg
+      url: https://github.com/damongolding/immich-kiosk/blob/v0.47.1/assets/layout-splitview.jpg
   - src: screenshots/portrait.webp
     alt: "A portrait photo centred on a landscape screen, with a blurred copy of the same photo filling the sides, plus the clock, the weather and the photo's details"
     caption: "Portrait photos fill a wide screen with a soft blurred background."
     credit:
       text: "Immich Kiosk · AGPL-3.0"
-      url: https://github.com/damongolding/immich-kiosk/blob/main/assets/portrait.jpeg
+      url: https://github.com/damongolding/immich-kiosk/blob/v0.47.1/assets/portrait.jpeg
   - src: screenshots/photo-details.webp
     alt: "Immich Kiosk's menu bar with previous, play, next, information, link and full-screen buttons over a dimmed photo, and a panel listing the date and place, the camera and exposure, the file name and size, a cat tag, a View in Immich button and a QR code"
     caption: "Tap the screen for controls and the full details of the current photo."
     credit:
       text: "Immich Kiosk · AGPL-3.0"
-      url: https://github.com/damongolding/immich-kiosk/blob/main/assets/more-info.jpeg
+      url: https://github.com/damongolding/immich-kiosk/blob/v0.47.1/assets/more-info.jpeg
 ---
 
-Immich Kiosk is a self-hosted slideshow for the photos in your Immich library: it turns a tablet, TV or spare monitor into a digital photo frame, in place of a Nixplay or Aura frame and its subscription. You open Kiosk's web address on the screen, and your photos and videos play full screen.
+Immich Kiosk is a self-hosted slideshow for the photos in your Immich library: it turns a tablet, TV or spare monitor into a digital photo frame, in place of an Aura or Nixplay frame and its subscription. You open Kiosk's web address on the screen, and your photos and videos play full screen.
 
 You decide what appears. Kiosk can show random photos from your whole library, or only chosen albums, people, memories from this day in past years, a range of dates, tags or star ratings. It can add the time and date, show two portrait photos side by side, and go dark at night. A café could put a screen by the counter that shows its "Specials" album during the day and goes dark after closing.
 

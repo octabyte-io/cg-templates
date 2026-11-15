@@ -1,5 +1,5 @@
 name: Immich Kiosk
-description: "Immich Kiosk is a self-hosted slideshow for your Immich photos: turn a tablet, TV or spare screen into a digital photo frame with a clock and date."
+description: "Immich Kiosk is a self-hosted Immich slideshow that runs in any web browser: each tablet, TV or screen can show its own albums, people and layout."
 version: "0.47.1"
 tags:
   - immich slideshow
