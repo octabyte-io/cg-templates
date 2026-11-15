@@ -22,7 +22,7 @@ services:
     volumes:
       - libredesk-uploads:/libredesk/uploads
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:9000/health"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:9000/health"]
       interval: 10s
       timeout: 5s
       retries: 12
