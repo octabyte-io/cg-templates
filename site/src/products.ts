@@ -3106,14 +3106,6 @@ export const PRODUCTS: Product[] = [
     pick: 'super-productivity',
   },
   {
-    id: 'ticktick',
-    name: 'TickTick',
-    icon: 'ticktick',
-    job: 'to-do lists with a focus timer',
-    lede: 'Super Productivity is a free, open-source TickTick alternative: a to-do list with projects, tags, a Pomodoro focus timer, an Eisenhower Matrix and time tracking per task, and it imports a TickTick backup. TickTick keeps calendar views, a timeline and higher list limits for Premium; Super Productivity has every feature free, though it is a personal tool with no shared lists.',
-    pick: 'super-productivity',
-  },
-  {
     id: 'wooclap',
     name: 'Wooclap',
     job: 'interactive questions in class',
