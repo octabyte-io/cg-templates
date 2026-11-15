@@ -3058,13 +3058,6 @@ export const PRODUCTS: Product[] = [
     pick: 'orthanc',
   },
   {
-    id: 'manus',
-    name: 'Manus',
-    job: 'running an AI agent that does tasks for you',
-    lede: 'OpenClaw is a free, open-source Manus alternative: a personal AI assistant that runs on your own server, which you message from WhatsApp, Telegram, Slack and other chat apps, using the AI model you choose. Manus is a hosted agent with paid plans; OpenClaw has no fee of its own and keeps its memory on your server, though you pay your AI provider or run a local model, and you handle setup and security yourself.',
-    pick: 'openclaw',
-  },
-  {
     id: 'follett-destiny',
     name: 'Follett Destiny',
     job: 'running a school library',
