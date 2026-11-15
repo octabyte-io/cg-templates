@@ -1,0 +1,90 @@
+# From Weblate's official compose file (github.com/WeblateOrg/docker-compose): the Weblate container
+# (web server plus the Celery background workers that update repositories, run checks and send
+# email), PostgreSQL and a Valkey cache that also carries the task queue.
+services:
+  weblate:
+    image: weblate/weblate:2026.11.2.0
+    restart: unless-stopped
+    depends_on:
+      weblate-db:
+        condition: service_healthy
+      weblate-cache:
+        condition: service_healthy
+    # The image has its own healthcheck (/app/bin/health_check), so none is added here.
+    environment:
+      WEBLATE_SITE_TITLE: Weblate
+      # The app's address without https:// (Weblate builds every link and email from it).
+      WEBLATE_SITE_DOMAIN: ${WEBLATE_SITE_DOMAIN}
+      WEBLATE_ALLOWED_HOSTS: ${WEBLATE_SITE_DOMAIN}
+      # Cloudgate's proxy serves the app over HTTPS and sends X-Forwarded-Proto and
+      # X-Forwarded-For, so Weblate builds https links, sets secure cookies and sees each
+      # visitor's IP address (used for its sign-in rate limits and audit log).
+      WEBLATE_ENABLE_HTTPS: "1"
+      WEBLATE_SECURE_PROXY_SSL_HEADER: HTTP_X_FORWARDED_PROTO,https
+      WEBLATE_IP_PROXY_HEADER: HTTP_X_FORWARDED_FOR
+      WEBLATE_TRUSTED_PROXY_ADDRESSES: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+      # The "admin" account. Weblate creates it on the first start and, while this password is
+      # set, resets its password, name and email to these values on every start.
+      WEBLATE_ADMIN_NAME: Weblate Admin
+      WEBLATE_ADMIN_EMAIL: ${WEBLATE_ADMIN_EMAIL}
+      WEBLATE_ADMIN_PASSWORD: ${WEBLATE_ADMIN_PASSWORD}
+      # 0: only the admin adds or invites people; 1: anyone can create an account.
+      WEBLATE_REGISTRATION_OPEN: ${WEBLATE_REGISTRATION_OPEN:-0}
+      WEBLATE_TIME_ZONE: ${WEBLATE_TIME_ZONE:-UTC}
+      # Outgoing email. TLS follows the port: 465 uses implicit TLS, 587 STARTTLS.
+      WEBLATE_EMAIL_HOST: ${WEBLATE_EMAIL_HOST}
+      WEBLATE_EMAIL_PORT: ${WEBLATE_EMAIL_PORT}
+      WEBLATE_EMAIL_HOST_USER: ${WEBLATE_EMAIL_HOST_USER}
+      WEBLATE_EMAIL_HOST_PASSWORD: ${WEBLATE_EMAIL_HOST_PASSWORD}
+      WEBLATE_DEFAULT_FROM_EMAIL: ${WEBLATE_DEFAULT_FROM_EMAIL}
+      WEBLATE_SERVER_EMAIL: ${WEBLATE_DEFAULT_FROM_EMAIL}
+      POSTGRES_HOST: weblate-db
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: weblate
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: weblate
+      REDIS_HOST: weblate-cache
+      REDIS_PORT: "6379"
+      CLIENT_MAX_BODY_SIZE: 1000M
+    volumes:
+      # Translations, the Git repositories Weblate works on, uploads and its generated secret key.
+      - weblate-data:/app/data
+      - weblate-cache:/app/cache
+    read_only: true
+    tmpfs:
+      - /run
+      - /tmp
+
+  weblate-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: weblate
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: weblate
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - weblate-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U weblate -d weblate"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  weblate-cache:
+    image: valkey/valkey:9.1.3-alpine
+    restart: unless-stopped
+    command: [valkey-server, --save, "60", "1", --loglevel, warning]
+    volumes:
+      - weblate-cache-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  weblate-data:
+  weblate-cache:
+  weblate-db-data:
+  weblate-cache-data:

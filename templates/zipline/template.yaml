@@ -1,0 +1,16 @@
+name: Zipline
+description: "Zipline is a self-hosted server for sharing files, screenshots and short links on your own domain, with ShareX uploads, in place of Zight or Droplr."
+version: "4.8.3"
+tags: [zight alternative, cloudapp alternative, droplr alternative, sharex server, screenshot sharing, file sharing, url shortener]
+links:
+  website: https://zipline.diced.sh
+  docs: https://zipline.diced.sh/docs/get-started/docker
+  source: https://github.com/diced/zipline
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  CORE_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: zipline, port: 3000 }

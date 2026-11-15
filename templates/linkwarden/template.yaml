@@ -1,0 +1,24 @@
+name: Linkwarden
+description: "Linkwarden is a self-hosted bookmark manager that keeps a copy of every page you save, with shared collections, full-text search and phone apps."
+version: "2.17.0"
+tags: [self-hosted bookmark manager, raindrop alternative, pocket alternative, web archive, collaborative bookmarks, read it later, linkwarden vs karakeep]
+links:
+  website: https://linkwarden.app
+  docs: https://docs.linkwarden.app
+  source: https://github.com/linkwarden/linkwarden
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  NEXTAUTH_URL: { value: "{{domains.linkwarden.url}}/api/v1/auth" }
+  NEXTAUTH_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  MEILI_MASTER_KEY: { generate: hex }
+  NEXT_PUBLIC_DISABLE_REGISTRATION:
+    ask:
+      label: Turn off new sign-ups
+      description: Type true once your own account exists, so nobody else can create an account.
+      default: "false"
+      required: false
+domains:
+  - { service: linkwarden, port: 3000 }

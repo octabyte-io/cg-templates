@@ -1,0 +1,57 @@
+name: Weblate
+description: "Self-hosted Weblate: open-source translation platform that syncs with Git. Translate apps, websites and docs as a team, with no Crowdin or Lokalise bill."
+version: "2026.11.2.0"
+tags: [translation management, crowdin alternative, lokalise alternative, localization platform, software localization, continuous localization, translation memory]
+links:
+  website: https://weblate.org
+  docs: https://docs.weblate.org/en/latest/admin/install/docker.html
+  source: https://github.com/WeblateOrg/weblate
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  WEBLATE_SITE_DOMAIN: { value: "{{domains.weblate.host}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  WEBLATE_ADMIN_PASSWORD: { generate: password }
+  WEBLATE_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the "admin" account Cloudgate creates for you. You sign in with the username admin and the password shown afterwards on the app's variables page.
+      format: email
+  WEBLATE_REGISTRATION_OPEN:
+    ask:
+      label: Let anyone sign up
+      description: "0 (the default): only you add or invite people. 1: anyone who opens the app's address can create an account, as open-source projects with volunteer translators do."
+      default: "0"
+      pattern: "0|1"
+      required: false
+  WEBLATE_DEFAULT_FROM_EMAIL:
+    ask:
+      label: Sender email
+      description: The address Weblate sends invitations, password resets and notifications from, for example weblate@yourdomain.com. Your email service must allow sending from it.
+      format: email
+  WEBLATE_EMAIL_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Weblate emails invitations, account confirmations and password resets, so it needs an email sending service, for example smtp.resend.com or email-smtp.eu-west-1.amazonaws.com.
+  WEBLATE_EMAIL_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services; use 465 if yours asks for SSL.
+      default: "587"
+      format: number
+  WEBLATE_EMAIL_HOST_USER:
+    ask:
+      label: Email server username
+  WEBLATE_EMAIL_HOST_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+  WEBLATE_TIME_ZONE:
+    ask:
+      label: Time zone
+      description: Used for dates in the app and in emails, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: weblate, port: 8080 }

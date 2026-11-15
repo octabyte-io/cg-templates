@@ -1,0 +1,121 @@
+# From nopCommerce's official image and its postgresql-docker-compose.yml (nopCommerce repo,
+# tag release-5.00.1), with PostgreSQL pinned and nopCommerce's install wizard run for you.
+services:
+  nopcommerce:
+    image: nopcommerceteam/nopcommerce:5.00.1
+    restart: unless-stopped
+    depends_on:
+      nopcommerce-install:
+        condition: service_completed_successfully
+    # nopCommerce keeps its settings (with the database connection) in App_Data/appsettings.json,
+    # the list of installed plugins in App_Data/plugins.json and its data-protection keys in
+    # App_Data/DataProtectionKeys. Only those live in the volume, so the rest of App_Data
+    # (language files, GeoIP data) comes from each new image.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        cd /app/App_Data
+        mkdir -p /data/DataProtectionKeys
+        touch /data/plugins.json
+        ln -sfn /data/appsettings.json appsettings.json
+        ln -sfn /data/plugins.json plugins.json
+        [ -L DataProtectionKeys ] || { rm -r DataProtectionKeys; ln -s /data/DataProtectionKeys DataProtectionKeys; }
+        cd /app
+        exec dotnet Nop.Web.dll
+    environment:
+      # Cloudgate's proxy terminates HTTPS; this makes nopCommerce trust its X-Forwarded headers.
+      HostingConfig__UseProxy: "true"
+      # ASP.NET logs every request at Information; keep the logs to warnings and errors.
+      Logging__LogLevel__Microsoft.AspNetCore: Warning
+    volumes:
+      - nopcommerce-data:/data
+      # Pictures and files, for when the shop is set to keep them on disk rather than in the database.
+      - nopcommerce-images:/app/wwwroot/images/uploaded
+      - nopcommerce-files:/app/wwwroot/files
+
+  # Runs once at each start. On the first start it does what nopCommerce's install wizard does:
+  # it starts nopCommerce inside this container, sends the wizard's form with the PostgreSQL
+  # server and the admin from Cloudgate (no sample data), and stops. Afterwards it sees the
+  # saved connection and exits straight away.
+  nopcommerce-install:
+    image: nopcommerceteam/nopcommerce:5.00.1
+    restart: "no"
+    depends_on:
+      nopcommerce-db:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        mkdir -p /data/DataProtectionKeys
+        [ -s /data/appsettings.json ] || echo '{}' > /data/appsettings.json
+        if grep -q '"ConnectionString": "[^"]' /data/appsettings.json; then
+          echo "* nopCommerce is already installed"; exit 0
+        fi
+        cd /app/App_Data
+        touch /data/plugins.json
+        ln -sfn /data/appsettings.json appsettings.json
+        ln -sfn /data/plugins.json plugins.json
+        [ -L DataProtectionKeys ] || { rm -r DataProtectionKeys; ln -s /data/DataProtectionKeys DataProtectionKeys; }
+        cd /app
+        dotnet Nop.Web.dll &
+        app=$$!
+        cd /tmp
+        i=0
+        until wget -q -S -O form.html http://127.0.0.1/install 2>headers.txt; do
+          i=$$((i + 1)); [ "$$i" -lt 90 ] || { echo "nopCommerce did not start"; exit 1; }
+          sleep 2
+        done
+        token=$$(grep -o 'name="__RequestVerificationToken" type="hidden" value="[^"]*"' form.html | head -1 | sed 's/.*value="//; s/"$$//')
+        cookie=$$(sed -n 's/^ *Set-Cookie: \([^;]*\).*/\1/p' headers.txt | paste -sd ';' -)
+        # The shop's own address, so the store is saved with it rather than with 127.0.0.1.
+        scheme=$${STORE_URL%%://*}
+        host=$${STORE_URL#*://}; host=$${host%%/*}
+        enc() { printf '%s' "$$1" | sed 's/%/%25/g; s/+/%2B/g; s/@/%40/g; s/&/%26/g; s/=/%3D/g'; }
+        echo "* Installing nopCommerce into the new database (a few minutes)"
+        wget -q -S -T 900 -O result.html \
+          --header "Host: $$host" --header "X-Forwarded-Proto: $$scheme" --header "Cookie: $$cookie" \
+          --post-data "AdminEmail=$$(enc "$$ADMIN_EMAIL")&AdminPassword=$$ADMIN_PASSWORD&ConfirmPassword=$$ADMIN_PASSWORD&DataProvider=PostgreSQL&ServerName=nopcommerce-db&DatabaseName=nopcommerce&Username=nopcommerce&Password=$$DB_PASSWORD&ConnectionStringRaw=false&IntegratedSecurity=false&CreateDatabaseIfNotExists=true&InstallSampleData=false&SubscribeNewsletters=false&UseCustomCollation=false&__RequestVerificationToken=$$token" \
+          http://127.0.0.1/install 2>post.txt || true
+        kill "$$app"; wait "$$app" || true
+        if ! grep -q '"ConnectionString": "[^"]' /data/appsettings.json; then
+          echo "nopCommerce's installer did not finish:"
+          cat post.txt
+          grep -o 'validation-summary-errors.*' result.html | sed 's/<[^>]*>/ /g' | head -5 || true
+          exit 1
+        fi
+        echo "* Installed; the admin is $$ADMIN_EMAIL"
+    environment:
+      HostingConfig__UseProxy: "true"
+      STORE_URL: ${STORE_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - nopcommerce-data:/data
+      - nopcommerce-images:/app/wwwroot/images/uploaded
+      - nopcommerce-files:/app/wwwroot/files
+
+  nopcommerce-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nopcommerce
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      # nopCommerce's installer creates its own "nopcommerce" database, with the citext and
+      # pgcrypto extensions it needs, so the container only makes the default one.
+      POSTGRES_DB: postgres
+    volumes:
+      - nopcommerce-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nopcommerce -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  nopcommerce-data:
+  nopcommerce-images:
+  nopcommerce-files:
+  nopcommerce-db-data:

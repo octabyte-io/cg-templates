@@ -1,0 +1,89 @@
+name: Remark42
+description: "Self-hosted Remark42 adds ad-free, private comments to your blog or website, with replies, voting and moderation, in place of Disqus."
+version: "1.18.0"
+tags: [disqus alternative, blog comments, comment system, self-hosted comments, privacy-friendly comments, website comments]
+links:
+  website: https://remark42.com
+  docs: https://remark42.com/docs/getting-started/installation/
+  source: https://github.com/umputun/remark42
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  REMARK_URL: { value: "{{domains.remark42.url}}" }
+  # Signs the sign-in tokens.
+  SECRET: { generate: hex }
+  SITE:
+    ask:
+      label: Site ID
+      description: A short name for your website. You use it as site_id in the snippet you paste into your pages.
+      default: remark
+      pattern: "[A-Za-z0-9_-]+"
+  WEBSITE_URL:
+    ask:
+      label: Your website's address
+      description: The website where the comments appear, for example https://blog.example.com. Comments load only there; add more sites later in the ALLOWED_HOSTS setting.
+      format: url
+  AUTH_ANON:
+    ask:
+      label: Allow anonymous comments
+      description: "true lets readers comment with just a name, no account or email needed."
+      default: "true"
+      pattern: "true|false"
+  AUTH_EMAIL_ENABLE:
+    ask:
+      label: Allow email sign-in
+      description: "true lets readers sign in with a code sent by email. Needs the email server settings below. Use it for your own admin account."
+      default: "false"
+      pattern: "true|false"
+  EMAIL_FROM:
+    ask:
+      label: Sender email
+      description: The address sign-in codes and notifications come from, for example comments@yourdomain.com. Your email service must allow sending from it.
+      format: email
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: For email sign-in, for example smtp.resend.com or smtp.eu.mailgun.org. Leave empty without email sign-in.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services; 465 needs "Use TLS" set to true.
+      default: "587"
+      format: number
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_STARTTLS:
+    ask:
+      label: Use STARTTLS
+      description: "true for port 587; false for port 465."
+      default: "true"
+      pattern: "true|false"
+  SMTP_TLS:
+    ask:
+      label: Use TLS
+      description: "true only for port 465; false for port 587."
+      default: "false"
+      pattern: "true|false"
+  ADMIN_SHARED_ID:
+    ask:
+      label: Admin user IDs
+      description: Leave empty at setup. Sign in on your website's comments, click your name to see your user ID, then put it here to get moderation tools.
+      required: false
+  ADMIN_SHARED_EMAIL:
+    ask:
+      label: Admin email
+      description: Where Remark42 sends admin notifications, if you turn them on later.
+      format: email
+      required: false
+domains:
+  - { service: remark42, port: 8080 }

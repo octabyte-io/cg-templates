@@ -1,0 +1,33 @@
+services:
+  grav:
+    # LinuxServer.io's image, version-pinned (Grav's own getgrav/grav image has only
+    # floating tags such as latest and php8.3). It ships Grav with the Admin2 panel.
+    image: lscr.io/linuxserver/grav:2.2.29-ls297
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 and refuses to start on a server without it.
+    # On such a server, drop the IPv6 listen lines before the image's own /init starts.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        if [ ! -e /proc/net/if_inet6 ]; then
+        sed -i '/listen \[::\]/d' /defaults/nginx/site-confs/default.conf.sample;
+        if [ -f /config/nginx/site-confs/default.conf ]; then
+        sed -i '/listen \[::\]/d' /config/nginx/site-confs/default.conf; fi; fi;
+        exec /init
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      # Grav is flat-file: pages, media, settings, accounts, plugins, themes, backups and logs.
+      - grav-config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  grav-config:

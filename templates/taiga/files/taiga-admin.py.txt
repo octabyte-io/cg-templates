@@ -1,0 +1,20 @@
+# Creates Taiga's first administrator, which upstream asks you to make by hand with
+# `manage.py createsuperuser`. taiga-back runs it with `manage.py shell` at each start,
+# after the database migrations. It acts only while Taiga has no administrator at all,
+# so it never changes an account that already exists (or a password you changed).
+import os
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+username = os.environ.get("TAIGA_ADMIN_USERNAME", "admin").strip()
+email = os.environ["TAIGA_ADMIN_EMAIL"].strip()
+password = os.environ["TAIGA_ADMIN_PASSWORD"]
+
+if User.objects.filter(is_superuser=True).exists():
+    print("Taiga admin: an administrator already exists; nothing to do.")
+elif User.objects.filter(username=username).exists() or User.objects.filter(email__iexact=email).exists():
+    print("Taiga admin: an account with that username or email already exists; not changing it.")
+else:
+    User.objects.create_superuser(username=username, email=email, password=password)
+    print(f"Taiga admin: created administrator '{username}' ({email}).")

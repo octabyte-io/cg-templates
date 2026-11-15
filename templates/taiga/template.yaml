@@ -1,0 +1,68 @@
+name: Taiga
+description: "Self-hosted Taiga is open-source agile project management: a user story backlog, Scrum sprints with burn-down charts, Kanban boards, epics and a bug tracker."
+version: "6.10.2"
+tags: [taiga, jira alternative, pivotal tracker alternative, scrum tool, kanban board, agile project management, self-hosted project management]
+links:
+  website: https://taiga.io
+  docs: https://docs.taiga.io/setup-production.html
+  source: https://github.com/taigaio/taiga-back
+cloudgate: 0.1.0
+compose: app
+# Nine containers: the API (three web workers), a Celery worker, the web app, live
+# updates, attachment links, PostgreSQL and two RabbitMQ brokers. 2 GB is the floor.
+size: medium
+inputs:
+  TAIGA_URL: { value: "{{domains.taiga-gateway.url}}" }
+  TAIGA_HOST: { value: "{{domains.taiga-gateway.host}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  RABBITMQ_PASSWORD: { generate: password }
+  # The first administrator's password (username admin), set on first start.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of Taiga's first administrator, who signs in as admin or with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Taiga works without email, but needs it to send project invitations, password resets and notifications. Add an email sending service, for example smtp.resend.com; you can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_IMPLICIT_TLS:
+    ask:
+      label: Use implicit TLS
+      description: "true only for port 465; false for port 587 or 25 (STARTTLS)."
+      default: "false"
+      pattern: "true|false"
+      required: false
+  EMAIL_FROM:
+    ask:
+      label: Send emails from
+      description: Optional. The address Taiga's emails come from, for example taiga@yourdomain.com. Your email service must allow sending from it.
+      format: email
+      required: false
+# Taiga's gateway sends / to the web app, /api and /admin to the API, /media to the
+# attachment service and /events to the WebSocket server, so it gets the address.
+domains:
+  - { service: taiga-gateway, port: 80 }
+files:
+  - { path: nginx.conf }
+  - { path: taiga-admin.py.txt }
+  - { path: taiga-email.sh.txt }

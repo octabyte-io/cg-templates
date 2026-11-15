@@ -1,0 +1,65 @@
+name: Lago
+description: "Lago is self-hosted, open-source usage-based billing: meter what customers use, price it, and send invoices, with payments through Stripe."
+version: "1.57.0"
+tags: [stripe billing alternative, chargebee alternative, usage based billing, open source billing, subscription billing, metering]
+links:
+  website: https://getlago.com
+  docs: https://getlago.com/docs
+  source: https://github.com/getlago/lago
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  LAGO_FRONT_URL: { value: "{{domains.lago-front.url}}" }
+  LAGO_API_URL: { value: "{{domains.lago-api.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  SECRET_KEY_BASE: { generate: hex }
+  LAGO_ENCRYPTION_PRIMARY_KEY: { generate: hex }
+  LAGO_ENCRYPTION_DETERMINISTIC_KEY: { generate: hex }
+  LAGO_ENCRYPTION_KEY_DERIVATION_SALT: { generate: hex }
+  LAGO_ORG_USER_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Lago with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  # Created once, at the first start. Public sign-up stays off; the admin invites the team.
+  LAGO_ORG_USER_PASSWORD: { generate: password }
+  LAGO_ORG_NAME:
+    ask:
+      label: Organization name
+      description: Your company's name, as it appears on invoices. You can change it later in Lago's settings.
+      default: My Company
+  LAGO_FROM_EMAIL:
+    ask:
+      label: Sender email address
+      description: Optional. The address invoices and invitations are sent from, such as billing@yourcompany.com.
+      format: email
+      required: false
+  LAGO_SMTP_ADDRESS:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed to email invoices and invite your team. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  LAGO_SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  LAGO_SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  LAGO_SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+# The first address is the Lago dashboard; the second is the API your product sends usage
+# events to (and the address webhooks, invoice PDFs and file links use).
+domains:
+  - { service: lago-front, port: 8080 }
+  - { service: lago-api, port: 3000 }
+# The front image's nginx site without its IPv6-only listener (see the file's first lines).
+files:
+  - { path: front-default.conf }
