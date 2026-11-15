@@ -1,0 +1,16 @@
+name: Halo
+description: "Self-hosted Halo: an open-source website and blog builder with themes, plugins, comments and one-click backups, on your own domain."
+version: "2.27.3"
+tags: [website builder, blog platform, cms, squarespace alternative, wix alternative, self-hosted blog]
+links:
+  website: https://www.halo.run
+  docs: https://docs.halo.run
+  source: https://github.com/halo-dev/halo
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  HALO_URL: { value: "{{domains.halo.url}}" }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: halo, port: 8090 }

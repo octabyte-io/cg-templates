@@ -1,0 +1,56 @@
+# Gatus configuration: what to check and how the status page looks.
+# Full reference: https://github.com/TwiN/gatus#configuration
+# After editing this file, redeploy the app for the changes to take effect.
+# ${SITE_URL} and ${STATUS_PAGE_NAME} are the values typed at setup; you can
+# replace them with plain text. A literal $ must be written as $$.
+
+# Keep the check history on disk so it survives restarts.
+storage:
+  type: sqlite
+  path: /data/data.db
+
+ui:
+  title: "${STATUS_PAGE_NAME}"
+  header: "${STATUS_PAGE_NAME}"
+  dashboard-heading: "${STATUS_PAGE_NAME}"
+  dashboard-subheading: "Live status of our websites and services"
+
+# Each entry below is one check. To check another website, copy the
+# "website" entry, give it its own name and url, and redeploy.
+endpoints:
+  - name: website
+    group: websites
+    url: "${SITE_URL}"
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"                    # the page answers normally
+      - "[RESPONSE_TIME] < 5000"             # within 5 seconds
+      - "[CERTIFICATE_EXPIRATION] > 240h"    # HTTPS certificate valid 10+ days
+    # Uncomment to get an email when this check fails (needs "alerting" below).
+    # alerts:
+    #   - type: email
+    #     send-on-resolved: true
+
+  # Another website (uncomment and change the url):
+  # - name: shop
+  #   group: websites
+  #   url: "https://shop.example.com"
+  #   interval: 5m
+  #   conditions:
+  #     - "[STATUS] == 200"
+  #     - "[CERTIFICATE_EXPIRATION] > 240h"
+  #     - "[DOMAIN_EXPIRATION] > 720h"       # domain name renewed 30+ days ahead
+
+# Alerts: uncomment one block and fill in your own details. Gatus also
+# sends to Slack, Microsoft Teams, Discord, Telegram, ntfy, PagerDuty and more:
+# https://github.com/TwiN/gatus#alerting
+# alerting:
+#   email:
+#     from: "status@example.com"
+#     username: "status@example.com"
+#     password: "your-smtp-password"
+#     host: "smtp.example.com"
+#     port: 587
+#     to: "you@example.com"
+#   slack:
+#     webhook-url: "https://hooks.slack.com/services/..."

@@ -1,0 +1,53 @@
+# From usekaneo/kaneo's compose.yml and its Docker Compose install guide
+# (v2.49.0): the bundled Kaneo image (web app and API on one port) and
+# PostgreSQL. Ports are removed (Cloudgate routes the web address); optional
+# extras (Redis for several API instances, S3 file storage, sign-in providers,
+# GitHub integration) are left out.
+services:
+  kaneo:
+    image: ghcr.io/usekaneo/kaneo:2.49.0
+    restart: unless-stopped
+    depends_on:
+      kaneo-db:
+        condition: service_healthy
+    environment:
+      # The API URL is derived from this (client URL + /api).
+      KANEO_CLIENT_URL: ${KANEO_CLIENT_URL}
+      POSTGRES_HOST: kaneo-db
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: kaneo
+      POSTGRES_USER: kaneo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      AUTH_SECRET: ${AUTH_SECRET}
+      NOTIFICATION_SECRET_ENCRYPTION_KEY: ${NOTIFICATION_SECRET_ENCRYPTION_KEY}
+      # Optional: email for invitations, sign-in codes and notifications.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_SECURE: ${SMTP_SECURE:-true}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    healthcheck:
+      test: ["CMD", "wget", "-Y", "off", "--quiet", "--spider", "http://127.0.0.1:5173/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+  kaneo-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kaneo
+      POSTGRES_USER: kaneo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - kaneo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kaneo -d kaneo"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kaneo-db-data:
