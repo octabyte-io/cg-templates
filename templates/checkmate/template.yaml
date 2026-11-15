@@ -1,0 +1,17 @@
+name: Checkmate
+description: "Checkmate is a self-hosted uptime monitor: alerts when a website or server goes down, incident history and branded status pages. No monitor limits."
+version: "3.13.1"
+tags: [uptime monitoring, status page, website monitoring, server monitoring, uptimerobot alternative, better stack alternative, self-hosted monitoring]
+links:
+  website: https://checkmate.so
+  docs: https://checkmate.so/docs
+  source: https://github.com/bluewave-labs/Checkmate
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  CLIENT_HOST: { value: "{{domains.checkmate.url}}" }
+  JWT_SECRET: { generate: hex }
+  ENCRYPTION_KEY: { generate: base64 }
+domains:
+  - { service: checkmate, port: 52345 }

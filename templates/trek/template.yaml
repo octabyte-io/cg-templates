@@ -1,0 +1,22 @@
+name: TREK
+description: "TREK is a self-hosted travel planner for groups: a shared itinerary on a map, bookings, cost splitting and packing lists, instead of Wanderlog or TripIt."
+version: "5.1.4"
+tags: [travel planner, trip planner, wanderlog alternative, tripit alternative, group trip planner, itinerary planner, split trip costs]
+links:
+  website: https://liketrek.com
+  docs: https://github.com/liketrek/TREK/wiki
+  source: https://github.com/liketrek/TREK
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.trek.url}}" }
+  ENCRYPTION_KEY: { generate: hex }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to TREK with this email. Cloudgate creates a first password for it, shown afterwards on the app's variables page; TREK asks you to choose a new one at the first sign-in.
+      format: email
+domains:
+  - { service: trek, port: 3000 }

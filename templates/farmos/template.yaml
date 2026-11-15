@@ -1,0 +1,31 @@
+name: farmOS
+description: "Self-hosted farmOS: open-source farm management to map your land and keep crop, livestock, harvest and task records on your own server."
+version: "4.0.9"
+tags: [farmbrite alternative, tend alternative, farm management software, farm record keeping, self-hosted farmos, livestock records, crop planning]
+links:
+  website: https://farmos.org
+  docs: https://farmos.org/guide/
+  source: https://github.com/farmOS/farmOS
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  FARM_NAME:
+    ask:
+      label: Farm name
+      description: The name of your farm, shown at the top of farmOS. You can change it later in farmOS.
+      default: My Farm
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the farmOS administrator account (username "admin"); password resets go here.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  FARMOS_HOST: { value: "{{domains.farmos.host}}" }
+domains:
+  - { service: farmos, port: 80 }
+files:
+  - { path: install.sh.txt }
+  - { path: settings-cloudgate.php.txt }
+  - { path: forwarded-https.conf }
