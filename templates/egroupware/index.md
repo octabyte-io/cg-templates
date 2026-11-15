@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted groupware for shared calendars, contacts and tasks.
-category: groupware
+category: email-calendars
 alternativeTo: [microsoft-exchange, microsoft-365, google-workspace, zoho-workplace]
 ease: some-setup
 easeNote: You sign in as sysop with the password Cloudgate creates, add your team, and connect your existing mail server if you want email inside EGroupware.

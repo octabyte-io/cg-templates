@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted shared email, calendars and contacts for your office.
-category: groupware
+category: email-calendars
 alternativeTo: [microsoft-exchange, microsoft-365, zoho-workplace, google-workspace]
 ease: some-setup
 easeNote: Sign in as admin with the password Cloudgate creates. Group-Office reads and sends mail through mailboxes you already have, so each person then adds their email account.
