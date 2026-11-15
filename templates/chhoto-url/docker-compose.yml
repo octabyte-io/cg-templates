@@ -1,0 +1,32 @@
+services:
+  chhoto-url:
+    # The alpine image, as in the official compose file: it has wget for the healthcheck.
+    image: sintan1729/chhoto-url:7.11.4-alpine
+    restart: unless-stopped
+    environment:
+      # Links and hit counts live in one SQLite file, in a volume; WAL mode as the docs recommend.
+      CHHOTO_DB_URL: /data/urls.sqlite
+      CHHOTO_SQLITE_USE_WAL_MODE: "True"
+      CHHOTO_SITE_URL: ${CHHOTO_SITE_URL}
+      # The one sign-in password; refuse to start without it.
+      CHHOTO_PASSWORD: ${CHHOTO_PASSWORD}
+      CHHOTO_EXIT_ON_NO_AUTH: "True"
+      # Both keys must decode as URL-safe base64 to at least 64 bytes, so each is two
+      # generated hex values joined (128 hex characters, 512 random bits).
+      CHHOTO_API_KEY: ${API_KEY_A}${API_KEY_B}
+      # Fixed so sign-ins survive a restart.
+      CHHOTO_SESSION_MASTER_KEY: ${SESSION_KEY_A}${SESSION_KEY_B}
+      CHHOTO_REDIRECT_METHOD: TEMPORARY
+      CHHOTO_SLUG_STYLE: Pair
+      CHHOTO_TRY_LONGER_SLUG: "True"
+    volumes:
+      - chhoto-url-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:1729/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  chhoto-url-data:

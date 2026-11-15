@@ -1,0 +1,60 @@
+# From Waline's self-hosting docs (waline.js.org/en/guide/deploy/vps.html) and
+# its database docs (waline.js.org/en/guide/database.html), with PostgreSQL in
+# place of the docs' SQLite example: the image has no way to create the SQLite
+# file, while PostgreSQL loads Waline's own schema (files/waline.sql, from
+# assets/waline.pgsql) by itself on the first start.
+# The first account registered at <address>/ui/register becomes the admin.
+services:
+  waline:
+    image: lizheming/waline:1.43.7
+    restart: unless-stopped
+    depends_on:
+      waline-db:
+        condition: service_healthy
+    environment:
+      TZ: ${TIMEZONE:-Etc/UTC}
+      PG_HOST: waline-db
+      PG_PORT: 5432
+      PG_DB: waline
+      PG_USER: waline
+      PG_PASSWORD: ${PG_PASSWORD}
+      # Signs the sign-in tokens.
+      JWT_TOKEN: ${JWT_TOKEN}
+      # Waline's own address, used in password-reset emails.
+      SERVER_URL: ${SERVER_URL}
+      # The website the comments appear on: its name and address go into
+      # notification emails.
+      SITE_NAME: ${SITE_NAME}
+      SITE_URL: ${SITE_URL}
+      # Only these hosts may use the comment API: your website and Waline's
+      # own address (its admin panel and demo page).
+      SECURE_DOMAINS: ${WEBSITE_DOMAINS},${WALINE_HOST}
+      # Email notifications (optional): new comments to AUTHOR_EMAIL, replies
+      # to the commenter. Leave SMTP_HOST empty to send none.
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SENDER_NAME: ${SITE_NAME}
+      SENDER_EMAIL: ${SENDER_EMAIL}
+      AUTHOR_EMAIL: ${AUTHOR_EMAIL}
+
+  waline-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: waline
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: waline
+    volumes:
+      - waline-db-data:/var/lib/postgresql/data
+      - ../files/waline.sql:/docker-entrypoint-initdb.d/waline.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U waline -d waline"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  waline-db-data:

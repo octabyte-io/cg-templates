@@ -1,0 +1,21 @@
+name: Grimoire
+description: "Grimoire is a self-hosted bookmark manager like Raindrop.io that keeps each page's text, so you can search inside your links, with optional AI tags."
+version: "1.3.1"
+tags: [bookmark manager, raindrop alternative, pinboard alternative, read later, full text search, ai bookmarks, self-hosted bookmarks]
+links:
+  website: https://goniszewski.com/grimoire/
+  docs: https://github.com/goniszewski/grimoire/tree/main/docs
+  source: https://github.com/goniszewski/grimoire
+cloudgate: 0.1.0
+compose: app
+# The official Docker guide asks for at least 2 GB of memory.
+size: medium
+inputs:
+  # The app's own address, the one browser origin Grimoire accepts changes from.
+  APP_URL: { value: "{{domains.proxy.url}}" }
+  # The password the sign-in prompt in front of Grimoire asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

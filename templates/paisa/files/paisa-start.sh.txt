@@ -1,0 +1,25 @@
+#!/bin/sh
+# Starts Paisa the way the image does ("paisa serve"), after writing a first
+# config on the first start only. Paisa's web pages have no login unless its
+# config lists user_accounts, so the first config adds one: the username and
+# generated password from the template's inputs. Paisa keeps the password as
+# sha256(sha256(password)), "sha256:" in front, as its docs say.
+set -e
+dir=/root/Documents/paisa
+config="$dir/paisa.yaml"
+mkdir -p "$dir"
+
+if [ ! -f "$config" ]; then
+  hash=$(printf '%s' "$PAISA_PASSWORD" | sha256sum | head -c 64 | sha256sum | head -c 64)
+  cat > "$config" <<YAML
+journal_path: main.ledger
+db_path: paisa.db
+user_accounts:
+  - username: "$PAISA_USERNAME"
+    password: "sha256:$hash"
+YAML
+  touch "$dir/main.ledger"
+  echo "Wrote $config with a login for $PAISA_USERNAME."
+fi
+
+exec paisa serve --port 7500

@@ -1,0 +1,20 @@
+name: Chhoto URL
+description: "Chhoto URL is a lightweight, self-hosted URL shortener: custom short links on your own domain, with link expiry, QR codes and private hit counts."
+version: "7.11.4"
+tags: [url shortener, self-hosted url shortener, bitly alternative, tinyurl alternative, qr code links, link expiry, custom short links]
+links:
+  website: https://chhoto.link
+  docs: https://github.com/SinTan1729/chhoto-url/blob/main/docs/INSTALLATION.md
+  source: https://github.com/SinTan1729/chhoto-url
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  CHHOTO_SITE_URL: { value: "{{domains.chhoto-url.url}}" }
+  CHHOTO_PASSWORD: { generate: password }
+  API_KEY_A: { generate: hex }
+  API_KEY_B: { generate: hex }
+  SESSION_KEY_A: { generate: hex }
+  SESSION_KEY_B: { generate: hex }
+domains:
+  - { service: chhoto-url, port: 4567 }

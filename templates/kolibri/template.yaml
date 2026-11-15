@@ -1,0 +1,16 @@
+name: Kolibri
+description: "Self-hosted Kolibri is a free, offline-first learning platform: a library of lessons, videos and exercises, with quizzes and progress tracking for teachers."
+version: "0.19.5"
+tags: [offline learning platform, google classroom alternative, offline khan academy, learning platform for schools, education software, classroom progress tracking]
+links:
+  website: https://learningequality.org/kolibri/
+  docs: https://kolibri.readthedocs.io/
+  source: https://github.com/learningequality/kolibri
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ZIP_CONTENT_ORIGIN: { value: "{{domains.kolibri-zipcontent.url}}" }
+domains:
+  - { service: kolibri, port: 8080 }
+  - { service: kolibri-zipcontent, port: 8081 }

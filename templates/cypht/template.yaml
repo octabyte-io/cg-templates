@@ -1,0 +1,23 @@
+name: Cypht
+description: "Cypht is self-hosted webmail that reads Gmail, Outlook, Exchange and any IMAP account in one combined inbox, with search across them all."
+version: "2.14.0"
+tags: [mailbird alternative, self-hosted webmail, unified inbox, multiple email accounts, gmailify alternative, imap webmail]
+links:
+  website: https://www.cypht.org
+  docs: https://www.cypht.org/documentation/
+  source: https://github.com/cypht-org/cypht
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in to Cypht with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_.-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: cypht, port: 80 }

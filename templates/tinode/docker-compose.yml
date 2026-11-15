@@ -1,0 +1,53 @@
+services:
+  tinode:
+    image: tinode/tinode-postgres:0.25.3
+    restart: unless-stopped
+    depends_on:
+      tinode-db:
+        condition: service_healthy
+    # Runs the image's own start script after two small steps: Tinode's user ID
+    # key must be exactly 16 bytes, so it is made from the first 16 characters
+    # of a generated value; and the server log goes to the container's output
+    # instead of a file inside the container.
+    entrypoint:
+      - /bin/bash
+      - -c
+      - >-
+        export UID_ENCRYPTION_KEY="$$(printf %s "$${UID_KEY_SEED:0:16}" | base64)" &&
+        ln -sf /dev/stderr /var/log/tinode.log &&
+        exec ./entrypoint.sh
+    environment:
+      POSTGRES_DSN: postgresql://postgres:${POSTGRES_PASSWORD}@tinode-db:5432/tinode?sslmode=disable&connect_timeout=10
+      WAIT_FOR: tinode-db:5432
+      # Creates the database on the first start and upgrades it after an image
+      # update. No sample users or chats are loaded.
+      UPGRADE_DB: "true"
+      SAMPLE_DATA: ""
+      AUTH_TOKEN_KEY: ${AUTH_TOKEN_KEY}
+      UID_KEY_SEED: ${UID_KEY_SEED}
+      # Links in verification emails point here, once email is set up.
+      SMTP_HOST_URL: ${APP_URL}
+    volumes:
+      - tinode-uploads:/opt/tinode/uploads
+
+  tinode-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      # Tinode creates its own "tinode" database on the first start, connecting
+      # first as "postgres" to the default database of the same name, as its
+      # Docker guide does.
+      POSTGRES_DB: postgres
+    volumes:
+      - tinode-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  tinode-uploads:
+  tinode-db-data:
