@@ -1,0 +1,34 @@
+name: OwnTracks Recorder
+description: "OwnTracks Recorder is a self-hosted server for the OwnTracks phone app that keeps your location history and shows where each phone is on a live map."
+version: "1.0.4"
+tags: [owntracks, owntracks recorder, location history, gps tracker, google maps timeline alternative, life360 alternative]
+links:
+  website: https://owntracks.org
+  docs: https://owntracks.org/booklet/clients/recorder/
+  source: https://github.com/owntracks/recorder
+cloudgate: 0.1.0
+compose: app
+# A small C program that keeps locations as plain files, behind a Caddy proxy.
+size: xsmall
+inputs:
+  # The sign-in in front of the Recorder, used in the browser and in the
+  # OwnTracks app (HTTP mode). The app also files locations under this name.
+  RECORDER_USERNAME:
+    ask:
+      label: Username
+      description: "The name you sign in with, in the browser and in the OwnTracks app. Letters, digits, dots, dashes and underscores."
+      default: owntracks
+      pattern: "[A-Za-z0-9._-]{1,32}"
+      required: false
+  # The password for that sign-in.
+  RECORDER_PASSWORD: { generate: password }
+  TIME_ZONE:
+    ask:
+      label: Time zone
+      description: The time zone the Recorder uses for dates and its log, as a tz database name such as Europe/Berlin or America/New_York.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

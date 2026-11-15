@@ -1,0 +1,28 @@
+name: Medplum
+description: "Self-hosted Medplum is an open-source FHIR server, sign-in and API for teams building their own healthcare apps, with an admin app for records."
+version: "5.2.17"
+tags: [healthie alternative, fhir server, headless ehr, healthcare api, open source fhir, aidbox alternative, electronic health records]
+links:
+  website: https://www.medplum.com
+  docs: https://www.medplum.com/docs/self-hosting/install-on-docker
+  source: https://github.com/medplum/medplum
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  MEDPLUM_APP_URL: { value: "{{domains.medplum-app.url}}/" }
+  MEDPLUM_SERVER_URL: { value: "{{domains.medplum-server.url}}/" }
+  DB_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  # Medplum makes this super admin account once, at the first start.
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Medplum with as the super admin. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+# The first address is the Medplum app (the web pages people sign in to); the second is the
+# FHIR API that the app, your own apps and integrations talk to.
+domains:
+  - { service: medplum-app, port: 3000 }
+  - { service: medplum-server, port: 8103 }

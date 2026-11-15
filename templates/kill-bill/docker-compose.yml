@@ -1,0 +1,86 @@
+# Based on Kill Bill's official Docker Compose setup (killbill.io/quick-start and
+# docker/compose/docker-compose.kb.yml in github.com/killbill/killbill-cloud): the Kill Bill
+# server, the Kaui admin UI and the killbill/mariadb database image, which comes with the
+# Kill Bill and Kaui tables already created. Images pinned, settings filled in.
+services:
+  # Kaui, the admin web UI. People sign in here with the Kill Bill admin account.
+  kaui:
+    image: killbill/kaui:4.0.31
+    restart: unless-stopped
+    depends_on:
+      killbill-db:
+        condition: service_healthy
+      killbill:
+        condition: service_healthy
+    environment:
+      KAUI_KILLBILL_URL: http://killbill:8080
+      KAUI_DB_URL: jdbc:mysql://killbill-db:3306/kaui?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      KAUI_DB_USERNAME: root
+      KAUI_DB_PASSWORD: ${DB_ROOT_PASSWORD}
+      # Signs Kaui's session cookies; without it the image makes a new one at each start,
+      # which signs everyone out.
+      KAUI_SECRET_KEY_BASE: ${KAUI_SECRET_KEY_BASE}
+      # Kill Bill's admin account (see the killbill service) has every right in Kaui.
+      KAUI_ROOT_USERNAME: admin
+      # The JVM's memory (the image defaults to a 2 GB heap for each of the two servers).
+      TOMCAT_JAVA_XMS: 256m
+      TOMCAT_JAVA_XMX: 768m
+      TOMCAT_DISABLE_GC_LOGGING: "true"
+
+  # The Kill Bill billing server and its REST API.
+  killbill:
+    image: killbill/killbill:0.24.22
+    restart: unless-stopped
+    depends_on:
+      killbill-db:
+        condition: service_healthy
+      killbill-init:
+        condition: service_completed_successfully
+    environment:
+      KILLBILL_DAO_URL: jdbc:mysql://killbill-db:3306/killbill
+      KILLBILL_DAO_USER: root
+      KILLBILL_DAO_PASSWORD: ${DB_ROOT_PASSWORD}
+      # The password of Kill Bill's "admin" account (the image writes it into shiro.ini at
+      # each start, in place of the default "password"). Kaui signs in with it.
+      KB_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TOMCAT_JAVA_XMS: 256m
+      TOMCAT_JAVA_XMX: 768m
+      TOMCAT_DISABLE_GC_LOGGING: "true"
+    volumes:
+      # Plugins installed from Kaui's plugin manager (payment gateways, analytics, ...).
+      - killbill-plugins:/var/lib/killbill/bundles/plugins
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/1.0/healthcheck >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 10s
+      start_period: 180s
+      retries: 30
+
+  # Gives the plugins volume to the server's "tomcat" user (a new volume belongs to root).
+  killbill-init:
+    image: killbill/killbill:0.24.22
+    restart: "no"
+    user: "0"
+    entrypoint: ["sh", "-c", "chown tomcat:tomcat /var/lib/killbill/bundles/plugins"]
+    volumes:
+      - killbill-plugins:/var/lib/killbill/bundles/plugins
+
+  killbill-db:
+    image: killbill/mariadb:0.24
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - killbill-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  killbill-plugins:
+  killbill-db-data:
