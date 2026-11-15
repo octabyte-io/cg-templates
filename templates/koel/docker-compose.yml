@@ -1,0 +1,81 @@
+services:
+  koel:
+    # The official image (github.com/koel/docker), Apache and PHP with Koel inside.
+    image: phanan/koel:9.15.0
+    restart: unless-stopped
+    depends_on:
+      koel-db:
+        condition: service_healthy
+    # The image's own entrypoint, plus two steps:
+    # - it only runs koel:init (database migrations, first admin) when a .env
+    #   file exists; every setting here comes from the environment, so an empty
+    #   one is enough;
+    # - koel:init creates the admin admin@koel.dev with the published password
+    #   KoelIsCool. While that account still has that password, give it the
+    #   email and password from the setup instead.
+    entrypoint:
+      - sh
+      - -c
+      - |
+        cd /var/www/html
+        if [ ! -f .env ]; then touch .env; chown www-data:www-data .env; fi
+        su -s /bin/sh -c /usr/local/bin/koel-init www-data
+        su -s /bin/sh -c 'XDG_CONFIG_HOME=/tmp php artisan tinker --execute="$$KOEL_SET_FIRST_ADMIN"' www-data
+        exec docker-php-entrypoint apache2-foreground
+    environment:
+      APP_URL: ${APP_URL}
+      # Laravel's application key: 32 random bytes, written as base64:<key>.
+      APP_KEY: base64:${APP_KEY}
+      # Cloudgate serves Koel over HTTPS through its proxy.
+      FORCE_HTTPS: "true"
+      DB_CONNECTION: mysql
+      DB_HOST: koel-db
+      DB_PORT: 3306
+      DB_DATABASE: koel
+      DB_USERNAME: koel
+      DB_PASSWORD: ${DB_PASSWORD}
+      KOEL_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      KOEL_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      KOEL_SET_FIRST_ADMIN: >-
+        App\Models\User::query()->where('email', 'admin@koel.dev')->get()
+        ->filter(fn ($$u) => Illuminate\Support\Facades\Hash::check('KoelIsCool', $$u->password))
+        ->each(fn ($$u) => $$u->forceFill(['email' => getenv('KOEL_ADMIN_EMAIL'), 'password' => getenv('KOEL_ADMIN_PASSWORD')])->save());
+    volumes:
+      # The music library: songs uploaded in Koel are stored here.
+      - koel-music:/music
+      # Album art, artist images and avatars.
+      - koel-images:/var/www/html/storage/app/public/images
+      - koel-search-index:/var/www/html/storage/search-indexes
+    # The image checks itself only every 5 minutes; check sooner after a start.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/sw.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  koel-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: koel
+      MARIADB_USER: koel
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - koel-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  koel-music:
+  koel-images:
+  koel-search-index:
+  koel-db-data:

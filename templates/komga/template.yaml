@@ -1,0 +1,24 @@
+name: Komga
+description: "Komga is a self-hosted comic and manga server: sort your DRM-free comics by series and read them in the browser or in apps, instead of ComiXology."
+version: "1.30.1"
+tags: ["self-hosted comic server", "self-hosted manga server", "comixology alternative", "comic book reader", "opds server", "kindle comics alternative", "komga"]
+links:
+  website: https://komga.org
+  docs: https://komga.org/docs/introduction/
+  source: https://github.com/gotson/komga
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # comics and books at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and scheduled library scans in Komga, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: komga, port: 25600 }
+  - { service: filebrowser, port: 80 }

@@ -1,0 +1,42 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:2.3.5
+    restart: unless-stopped
+    depends_on:
+      miniflux-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://miniflux:${POSTGRES_PASSWORD}@miniflux-db:5432/miniflux?sslmode=disable
+      BASE_URL: ${BASE_URL}
+      # Creates and upgrades the database tables at each start.
+      RUN_MIGRATIONS: "1"
+      # Creates the admin account on the first start; skipped once it exists,
+      # so changing ADMIN_PASSWORD later does not change the password.
+      CREATE_ADMIN: "1"
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    healthcheck:
+      test: ["CMD", "/usr/bin/miniflux", "-healthcheck", "auto"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+
+  miniflux-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: miniflux
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: miniflux
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - miniflux-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U miniflux -d miniflux"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  miniflux-db-data:

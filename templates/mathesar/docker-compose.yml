@@ -1,0 +1,52 @@
+# From Mathesar's official docker-compose.yml (release 0.12.0), without its
+# bundled Caddy reverse proxy: Cloudgate gives the app its web address, and
+# Mathesar serves its own static files.
+services:
+  mathesar:
+    image: mathesar/mathesar:0.12.0
+    restart: unless-stopped
+    depends_on:
+      mathesar-db:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      # Without Caddy in front, Mathesar itself must only answer its own address.
+      ALLOWED_HOSTS: ${APP_HOST}
+      # Also signs sessions and encrypts the PostgreSQL passwords Mathesar saves,
+      # so it must never change after setup.
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: "false"
+      WEB_CONCURRENCY: "3"
+      POSTGRES_DB: mathesar_django
+      POSTGRES_USER: mathesar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: mathesar-db
+      POSTGRES_PORT: "5432"
+    volumes:
+      - mathesar-media:/code/.media
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/healthz/ready/"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  # Holds Mathesar's own settings and is also a database you can add tables to.
+  mathesar-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mathesar_django
+      POSTGRES_USER: mathesar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - mathesar-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mathesar -d mathesar_django"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mathesar-media:
+  mathesar-db-data:
