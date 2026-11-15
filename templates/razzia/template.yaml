@@ -1,0 +1,16 @@
+name: Razzia
+description: "Razzia (formerly Rahoot) is a self-hosted live quiz game like Kahoot!: players join from their phones with a game PIN and race up the leaderboard."
+version: "4.1.0"
+tags: [kahoot alternative, quiz game, live quiz, classroom quiz, quiz night, rahoot, self-hosted quiz]
+links:
+  website: https://github.com/Ralex91/Razzia
+  docs: https://github.com/Ralex91/Razzia/tree/main/docs
+  source: https://github.com/Ralex91/Razzia
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  MANAGER_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+domains:
+  - { service: razzia, port: 3000 }

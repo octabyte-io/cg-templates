@@ -1,0 +1,74 @@
+# From the official docker-compose.yml (openclaw/openclaw v2026.11.3) and its
+# Docker setup script (scripts/docker/setup.sh). The optional openclaw-cli
+# helper service and the host ports are left out.
+services:
+  # One-shot step that does what the official setup script does before the
+  # first start: pins the Gateway to local mode, listening on the container
+  # network, and allows the dashboard's own web address as a browser origin.
+  # It also trusts the private-network address of Cloudgate's proxy, without
+  # which the Gateway answers every proxied request with 403
+  # "proxy_attribution_required". It runs again on every start, so a changed
+  # address is picked up.
+  openclaw-init:
+    image: ghcr.io/openclaw/openclaw:2026.11.3
+    restart: "no"
+    environment:
+      HOME: /home/node
+      OPENCLAW_HOME: /home/node
+      OPENCLAW_STATE_DIR: /home/node/.openclaw
+      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+      OPENCLAW_CONFIG_DIR: /home/node/.openclaw
+      OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+    command:
+      - node
+      - dist/index.js
+      - config
+      - set
+      - --batch-json
+      - '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.publicOrigin","value":"${OPENCLAW_PUBLIC_ORIGIN}"},{"path":"gateway.trustedProxies","value":["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"]}]'
+    volumes:
+      - openclaw-state:/home/node/.openclaw
+      - openclaw-workspace:/home/node/.openclaw/workspace
+      - openclaw-auth-secrets:/home/node/.config/openclaw
+
+  openclaw-gateway:
+    image: ghcr.io/openclaw/openclaw:2026.11.3
+    restart: unless-stopped
+    init: true
+    depends_on:
+      openclaw-init:
+        condition: service_completed_successfully
+    environment:
+      HOME: /home/node
+      OPENCLAW_HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_STATE_DIR: /home/node/.openclaw
+      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+      OPENCLAW_CONFIG_DIR: /home/node/.openclaw
+      OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+      OPENCLAW_GATEWAY_PORT: "18789"
+      # The shared secret for the dashboard and API; the Gateway refuses
+      # connections without it.
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
+      TZ: UTC
+    cap_drop:
+      - NET_RAW
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
+    volumes:
+      - openclaw-state:/home/node/.openclaw
+      - openclaw-workspace:/home/node/.openclaw/workspace
+      - openclaw-auth-secrets:/home/node/.config/openclaw
+    healthcheck:
+      test: ["CMD", "node", "dist/docker-healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  openclaw-state:
+  openclaw-workspace:
+  openclaw-auth-secrets:

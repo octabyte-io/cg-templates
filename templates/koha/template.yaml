@@ -1,0 +1,26 @@
+name: Koha
+description: "Koha is a self-hosted library system for your catalogue, loans, readers and public online catalogue, in place of Follett Destiny or Libib."
+version: "26.05.05"
+tags: [library management software, library system, integrated library system, library catalogue, school library software, follett destiny alternative, libib alternative]
+links:
+  website: https://koha-community.org
+  docs: https://koha-community.org/documentation/
+  source: https://github.com/Koha-Community/Koha
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  # The Koha database user's password. The web installer asks for it once, with
+  # the user name koha_library, before it creates the first staff account.
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The library's time zone for due dates and opening hours, as an IANA name such as Europe/London.
+      default: Etc/UTC
+domains:
+  # The public catalogue (OPAC) readers search and sign in to.
+  - { service: opac, port: 8080 }
+  # The staff interface: the web installer, cataloguing, circulation and settings.
+  - { service: staff, port: 8081 }

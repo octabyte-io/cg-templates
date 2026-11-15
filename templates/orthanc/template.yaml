@@ -1,0 +1,17 @@
+name: Orthanc
+description: "Orthanc is a free, self-hosted DICOM server (mini-PACS) to store, search and view X-ray, CT and MRI images in your browser, instead of a cloud PACS."
+version: "26.11.0"
+tags: [dicom server, pacs, postdicom alternative, medical imaging, dicom viewer, open source pacs, radiology]
+links:
+  website: https://www.orthanc-server.com
+  docs: https://orthanc.uclouvain.be/book/
+  source: https://github.com/jodogne/OrthancMirror
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Password of the "orthanc" user, the account you sign in with.
+  ORTHANC_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: orthanc, port: 8042 }

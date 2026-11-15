@@ -1,0 +1,100 @@
+# From codelitdev/courselit's deployment/docker/docker-compose.yml at tag v0.74.6: the CourseLit
+# app and MongoDB, plus the queue service and Redis that the file ships commented out. The queue
+# sends email in the background and runs drip content and email sequences, so it is kept.
+# Left out: the Caddy proxy (Cloudgate serves HTTPS) and the optional MediaLit file service, which
+# needs S3-compatible storage.
+services:
+  courselit:
+    image: codelit/courselit-app:v0.74.6
+    restart: unless-stopped
+    depends_on:
+      courselit-mongo:
+        condition: service_healthy
+      courselit-queue:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Secures sign-in sessions.
+      AUTH_SECRET: ${AUTH_SECRET}
+      DB_CONNECTION_STRING: mongodb://courselit:${MONGO_PASSWORD}@courselit-mongo:27017/courselit?authSource=admin
+      # A single MongoDB server, not a replica set, so no transactions (as in the official file).
+      DB_TRANSACTIONS: "false"
+      # Becomes the school's super admin the first time the app starts.
+      SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL}
+      # Sign-in is by a code sent by email, so email must work.
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+      EMAIL_FROM: ${EMAIL_FROM}
+      QUEUE_SERVER: http://courselit-queue
+      # Signs jobs the app sends to the queue; both services need the same value.
+      COURSELIT_JWT_SECRET: ${COURSELIT_JWT_SECRET}
+      # Signs the open and click tracking links in emails.
+      PIXEL_SIGNING_SECRET: ${PIXEL_SIGNING_SECRET}
+      CACHE_DIR: /cache
+    volumes:
+      - courselit-cache:/cache
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  courselit-queue:
+    image: codelit/courselit-queue:v0.74.6
+    restart: unless-stopped
+    depends_on:
+      courselit-mongo:
+        condition: service_healthy
+      courselit-redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "80"
+      DB_CONNECTION_STRING: mongodb://courselit:${MONGO_PASSWORD}@courselit-mongo:27017/courselit?authSource=admin
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+      EMAIL_FROM: ${EMAIL_FROM}
+      COURSELIT_JWT_SECRET: ${COURSELIT_JWT_SECRET}
+      PIXEL_SIGNING_SECRET: ${PIXEL_SIGNING_SECRET}
+      REDIS_HOST: courselit-redis
+      # The school's address, used for links in the emails the queue sends.
+      PROTOCOL: https
+      DOMAIN: ${APP_HOST}
+
+  courselit-mongo:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: courselit
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - courselit-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+  courselit-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - courselit-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  courselit-cache:
+  courselit-mongo-data:
+  courselit-redis-data:

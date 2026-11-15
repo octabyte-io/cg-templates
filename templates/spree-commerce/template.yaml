@@ -1,0 +1,59 @@
+name: Spree Commerce
+description: "Self-hosted Spree Commerce: run your online store, wholesale shop or marketplace with products, orders, payments and customers in one admin dashboard."
+version: "6.0.4.1"
+tags: [shopify alternative, online store, open source ecommerce, headless commerce, b2b ecommerce, multi vendor marketplace, bigcommerce alternative]
+links:
+  website: https://spreecommerce.org
+  docs: https://spreecommerce.org/docs
+  source: https://github.com/spree/spree
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SPREE_HOST: { value: "{{domains.spree.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: { generate: hex }
+  ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: { generate: hex }
+  ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  MISSION_CONTROL_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to the store's admin dashboard with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  STORE_COUNTRY:
+    ask:
+      label: Country you sell from
+      description: Two-letter country code, such as US, GB or DE. Spree sets up your store's currency, language and shipping zones from it.
+      default: "US"
+      pattern: "[A-Z]{2}"
+  SMTP_FROM_ADDRESS:
+    ask:
+      label: Send emails from
+      description: The address order and account emails come from, such as orders@yourshop.com. Needed if you fill in an email server below.
+      format: email
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed to send order confirmations and password resets. Your email provider gives you this, such as smtp.mailgun.org. Without it, emails are not sent.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: spree, port: 3000 }

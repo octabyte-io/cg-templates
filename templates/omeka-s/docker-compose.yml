@@ -1,0 +1,62 @@
+services:
+  omeka-s:
+    # Omeka publishes no official image. This is the maintained community image
+    # (github.com/giocomai/omeka-s-docker): PHP and Apache with Omeka S core.
+    image: giocomai/omeka-s-docker:v4.2.1
+    restart: unless-stopped
+    depends_on:
+      omeka-s-db:
+        condition: service_healthy
+    environment:
+      # Written to config/database.ini at each start.
+      MYSQL_HOST: omeka-s-db
+      MYSQL_DATABASE: omeka
+      MYSQL_USER: omeka
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      # With these four set, the image installs Omeka S on its first start (its
+      # install_cli.php) and creates this global administrator; later starts see
+      # the install and skip it.
+      OMEKA_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      OMEKA_ADMIN_NAME: Administrator
+      OMEKA_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      OMEKA_SITE_TITLE: ${SITE_TITLE:-Omeka S}
+      OMEKA_TIMEZONE: ${TIMEZONE:-UTC}
+      # The image ships no theme, and a public site needs one: this adds Omeka's
+      # own Default theme to the themes folder.
+      OMEKA_THEMES: https://github.com/omeka-s-themes/default/releases/download/v1.9.3/default-1.9.3.zip
+      PHP_MEMORY_LIMIT: 512M
+      PHP_UPLOAD_MAX_FILESIZE: 128M
+      PHP_POST_MAX_SIZE: 128M
+    volumes:
+      # config/, files/ (uploaded media and thumbnails), modules/, themes/ and logs/.
+      - omeka-s-data:/var/www/html/volume
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  omeka-s-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: omeka
+      MARIADB_USER: omeka
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - omeka-s-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  omeka-s-data:
+  omeka-s-db-data:

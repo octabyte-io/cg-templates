@@ -1,0 +1,186 @@
+# Koha, from the Koha community's official koha-docker stack
+# (https://gitlab.com/koha-community/docker/koha-docker, docker-compose.yml).
+#
+# One image, one process per container: KOHA_SERVICE picks the role. The one-shot
+# "init" service creates the instance and its database user; every other Koha
+# service waits for it. Search uses Zebra (upstream's "zebra" profile), which runs
+# from the same image, instead of a separate Elasticsearch server.
+#
+# Koha has two web interfaces on two ports of its Apache role: the public catalogue
+# (OPAC) on 8080 and the staff interface on 8081. Each gets its own web address, so
+# Apache runs twice: "opac" answers the catalogue address and "staff" the staff one.
+
+x-koha-env: &koha-env
+  KOHA_INSTANCE: library
+  KOHA_DOMAIN: .koha.internal
+  KOHA_OPAC_PORT: "8080"
+  KOHA_OPAC_PREFIX: ""
+  KOHA_OPAC_SUFFIX: ""
+  KOHA_INTRANET_PORT: "8081"
+  KOHA_INTRANET_PREFIX: ""
+  KOHA_INTRANET_SUFFIX: -intra
+  KOHA_MARC_FLAVOUR: marc21
+  KOHA_LANGS: ""
+  DB_SERVER: koha-db
+  DB_ROOT_USER: root
+  DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  DB_NAME: koha_library
+  DB_USER: koha_library
+  DB_PASSWORD: ${DB_PASSWORD}
+  MEMCACHED_SERVERS: koha-memcached:11211
+  SEARCH_ENGINE: Zebra
+  ZEBRA_MARC_FORMAT: marc21
+  ZEBRA_LANGUAGE: en
+  BIBLIOS_INDEXING_MODE: dom
+  AUTHORITIES_INDEXING_MODE: dom
+  TIMEZONE: ${TIMEZONE}
+  WORKER_MAX_PROCESSES: "1"
+
+x-koha-volumes: &koha-volumes
+  - koha-instance:/var/lib/koha
+  - koha-sites:/etc/koha/sites
+  # The Apache site is written once by koha-create in "init" and shared.
+  - koha-apache-sites-available:/etc/apache2/sites-available
+  - koha-apache-sites-enabled:/etc/apache2/sites-enabled
+  - koha-log:/var/log/koha
+  - koha-cache:/var/cache/koha
+
+x-koha: &koha
+  image: koha/koha:26.05.05-1
+  restart: unless-stopped
+  volumes: *koha-volumes
+  depends_on:
+    koha-init:
+      condition: service_completed_successfully
+
+services:
+  koha-db:
+    image: mariadb:11.4.13
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: koha_library
+      MARIADB_USER: koha_library
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - koha-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 1m
+
+  koha-memcached:
+    image: memcached:1.6.45
+    restart: unless-stopped
+    command: memcached -m 64m
+    healthcheck:
+      test: ["CMD-SHELL", "/bin/bash -c 'exec 3<>/dev/tcp/localhost/11211; printf \"stats\\nquit\\n\" >&3'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Runs once at each start: creates the instance, its database user and the
+  # Apache site, then exits.
+  koha-init:
+    image: koha/koha:26.05.05-1
+    restart: "no"
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: init
+    volumes: *koha-volumes
+    depends_on:
+      koha-db:
+        condition: service_healthy
+      koha-memcached:
+        condition: service_healthy
+
+  # The Plack application server behind both interfaces. Apache proxies to
+  # http://koha:5000, hence the alias.
+  koha-plack:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: plack
+    networks:
+      default:
+        aliases:
+          - koha
+    tmpfs:
+      - /tmp
+
+  # Apache for the public catalogue (OPAC), port 8080.
+  opac:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: apache
+    # Apache's mpm-itk serves each request as the Koha instance user, which needs
+    # these two capabilities on top of Docker's defaults (upstream adds ALL).
+    cap_add: [DAC_READ_SEARCH, SYS_NICE]
+    depends_on:
+      koha-init:
+        condition: service_completed_successfully
+      koha-plack:
+        condition: service_started
+
+  # Apache for the staff interface, port 8081. The web installer and every
+  # librarian task are here.
+  staff:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: apache
+    # Apache's mpm-itk serves each request as the Koha instance user, which needs
+    # these two capabilities on top of Docker's defaults (upstream adds ALL).
+    cap_add: [DAC_READ_SEARCH, SYS_NICE]
+    depends_on:
+      koha-init:
+        condition: service_completed_successfully
+      koha-plack:
+        condition: service_started
+
+  koha-cron:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: cron
+
+  # Background jobs, one worker per queue as upstream does. They wait until the
+  # web installer has created the database tables.
+  koha-worker-default:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: worker
+      WORKER_QUEUE: default
+
+  koha-worker-long-tasks:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: worker
+      WORKER_QUEUE: long_tasks
+
+  # Zebra search server and its indexer.
+  koha-zebra:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: zebra
+
+  koha-zebra-indexer:
+    <<: *koha
+    environment:
+      <<: *koha-env
+      KOHA_SERVICE: zebra-indexer
+
+volumes:
+  koha-db-data:
+  koha-instance:
+  koha-sites:
+  koha-apache-sites-available:
+  koha-apache-sites-enabled:
+  koha-log:
+  koha-cache:
