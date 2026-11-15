@@ -1,0 +1,68 @@
+# From WYGIWYH's docker-compose.prod.yml and .env.example (release 0.27.0). The image
+# runs the web app (gunicorn on port 8000) and its procrastinate task worker together
+# under supervisord, so one container is the whole app; it applies database
+# migrations and creates the admin from ADMIN_EMAIL/ADMIN_PASSWORD on every start
+# (skipped once that account exists).
+services:
+  wygiwyh:
+    image: eitchtee/wygiwyh:0.27.0
+    restart: unless-stopped
+    depends_on:
+      wygiwyh-db:
+        condition: service_healthy
+      wygiwyh-attachments-setup:
+        condition: service_completed_successfully
+    environment:
+      TZ: ${TIMEZONE:-Etc/UTC}
+      DEBUG: "false"
+      SECRET_KEY: ${SECRET_KEY}
+      # localhost stays allowed for requests from inside the container.
+      DJANGO_ALLOWED_HOSTS: ${ALLOWED_HOST} localhost 127.0.0.1
+      URL: ${APP_URL}
+      # Cloudgate's proxy serves the app over HTTPS: secure cookies, and trust
+      # the proxy's X-Forwarded-Proto header.
+      HTTPS_ENABLED: "true"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SQL_DATABASE: wygiwyh
+      SQL_USER: wygiwyh
+      SQL_PASSWORD: ${DB_PASSWORD}
+      SQL_HOST: wygiwyh-db
+      SQL_PORT: "5432"
+      # Gunicorn workers; the official example uses 4, 2 keeps it within 1 GB.
+      WEB_CONCURRENCY: "2"
+      TASK_WORKERS: "1"
+      ENABLE_SOFT_DELETE: "false"
+      KEEP_DELETED_TRANSACTIONS_FOR: "365"
+    volumes:
+      - wygiwyh-attachments:/usr/src/app/attachments
+
+  # The image has no attachments folder of its own, so a new volume would belong to
+  # root; this makes it writable by the app's user (app, uid 100). Runs once, then exits.
+  wygiwyh-attachments-setup:
+    image: eitchtee/wygiwyh:0.27.0
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["chown", "100:101", "/usr/src/app/attachments"]
+    volumes:
+      - wygiwyh-attachments:/usr/src/app/attachments
+
+  wygiwyh-db:
+    # The official file uses postgres:15; WYGIWYH supports PostgreSQL 15 or newer.
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wygiwyh
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: wygiwyh
+    volumes:
+      - wygiwyh-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d wygiwyh -U wygiwyh"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wygiwyh-attachments:
+  wygiwyh-db-data:

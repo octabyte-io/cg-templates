@@ -42,6 +42,7 @@ export const CATEGORIES: Category[] = [
   { id: 'health', name: 'Health & clinics', lede: 'Open-source clinic records, medical imaging and health tracking, run on a server you control so patient and health data stay with you.' },
   { id: 'research', name: 'Research & archives', lede: 'Open-source lab notebooks, library catalogues, journal publishing and data collection for labs, libraries, museums and field teams, on your own server.' },
   { id: 'operations', name: 'Operations', lede: 'Open-source software for maintenance, farms, workshops and production planning, so your work orders, stock and records stay on your own server with no fee per user.' },
+  { id: 'groupware', name: 'Groupware', lede: 'Self-hosted groupware for shared email, calendars, contacts, tasks and files, using the mailboxes your team already has, with no fee per user.' },
   { id: 'monitoring', name: 'Monitoring', lede: 'Self-hosted monitoring that alerts you when a website goes down or a web page, price or stock level changes.' },
   { id: 'developer-tools', name: 'Developer tools', lede: 'Self-hosted Git hosting and developer tools, so your code, reviews and builds stay on your server.' },
 ];

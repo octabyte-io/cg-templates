@@ -1,0 +1,27 @@
+name: DailyTxT
+description: "DailyTxT is a self-hosted, encrypted online diary: write one entry a day, add photos and files, tag and search your journal, and look back on past years."
+version: "2.6.4"
+tags: [day one alternative, encrypted diary, self-hosted journal, online diary, private journal app, daily journal]
+links:
+  website: https://github.com/PhiTux/DailyTxT
+  docs: https://github.com/PhiTux/DailyTxT#readme
+  source: https://github.com/PhiTux/DailyTxT
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Signs the sign-in tokens. Without it DailyTxT makes a new one at each start,
+  # which signs everyone out on every restart.
+  SECRET_TOKEN: { generate: base64 }
+  # Opens the admin panel (manage users, open sign-ups for 5 minutes). It is
+  # not a diary account and cannot read anyone's entries.
+  ADMIN_PASSWORD: { generate: password }
+  ALLOW_REGISTRATION:
+    ask:
+      label: Allow new sign-ups
+      description: Leave true so you can create your first account. Type false afterwards so nobody else can sign up; the admin panel can still open sign-ups for 5 minutes.
+      default: "true"
+      pattern: "^(true|false)$"
+      required: false
+domains:
+  - { service: dailytxt, port: 80 }

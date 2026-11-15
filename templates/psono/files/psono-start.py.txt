@@ -1,0 +1,102 @@
+# Starts Psono in place of the image's command (/root/configs/docker/cmd.sh), which it runs
+# at the end, after three steps of its own:
+#   1. writes /root/.psono_server/settings.yaml from files/settings.yaml plus the secrets,
+#      the database and the email server from the environment. The server's public key is
+#      worked out from its generated private key, and the email salt from a generated seed,
+#      so the same values come out at every start (as generateserverkeys would make once);
+#   2. prepares the database (Psono's presetup and migrate);
+#   3. on the first start only (no user yet), creates the first admin, "admin", with the
+#      generated password and the asked email, marks it to choose a new password at its
+#      first login and makes it a superuser for the admin portal at /portal. No email
+#      server is needed for that account.
+import base64
+import os
+import sys
+
+import nacl.encoding
+import nacl.public
+import yaml
+
+env = os.environ
+
+with open("/psono/settings.yaml") as f:
+    settings = yaml.safe_load(f)
+
+private_key = nacl.public.PrivateKey(env["CG_PRIVATE_KEY_HEX"], encoder=nacl.encoding.HexEncoder)
+
+# bcrypt's salt is 16 bytes in bcrypt's base64: standard base64 with another alphabet.
+std = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+bcr = "./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+seed = bytes.fromhex(env["CG_EMAIL_SALT_SEED"])[:16]
+salt = base64.b64encode(seed).decode().rstrip("=").translate(str.maketrans(std, bcr))
+
+settings.update(
+    {
+        "SECRET_KEY": env["CG_SECRET_KEY_VALUE"],
+        "ACTIVATION_LINK_SECRET": env["CG_ACTIVATION_LINK_SECRET_VALUE"],
+        "DB_SECRET": env["CG_DB_SECRET_VALUE"],
+        "EMAIL_SECRET_SALT": "$2b$12$" + salt,
+        "PRIVATE_KEY": private_key.encode(encoder=nacl.encoding.HexEncoder).decode(),
+        "PUBLIC_KEY": private_key.public_key.encode(encoder=nacl.encoding.HexEncoder).decode(),
+        "DATABASES": {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": "psono",
+                "USER": "psono",
+                "PASSWORD": env["CG_DB_PASSWORD"],
+                "HOST": "psono-db",
+                "PORT": "5432",
+            }
+        },
+    }
+)
+
+smtp_host = env.get("CG_SMTP_HOST", "").strip()
+if smtp_host:
+    ssl = env.get("CG_SMTP_SSL", "").strip().lower() == "true"
+    settings.update(
+        {
+            "EMAIL_FROM": env.get("CG_SMTP_FROM", ""),
+            "EMAIL_HOST": smtp_host,
+            "EMAIL_HOST_USER": env.get("CG_SMTP_USERNAME", ""),
+            "EMAIL_HOST_PASSWORD": env.get("CG_SMTP_PASSWORD", ""),
+            "EMAIL_PORT": int(env.get("CG_SMTP_PORT", "") or 587),
+            "EMAIL_USE_SSL": ssl,
+            "EMAIL_USE_TLS": not ssl,
+            "EMAIL_TIMEOUT": 10,
+        }
+    )
+
+os.makedirs("/root/.psono_server", exist_ok=True)
+path = "/root/.psono_server/settings.yaml"
+with open(path, "w") as f:
+    yaml.safe_dump(settings, f, default_flow_style=False)
+os.chmod(path, 0o600)
+
+admin_email = env.get("CG_ADMIN_EMAIL", "")
+admin_password = env.get("CG_ADMIN_PASSWORD", "")
+admin_host = env.get("CG_ADMIN_HOST", "")
+# The secrets now live in the settings file; keep them out of the server's environment.
+for name in [n for n in os.environ if n.startswith("CG_")]:
+    del os.environ[name]
+
+sys.path.insert(0, "/root/psono")
+os.chdir("/root/psono")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "psono.settings")
+import django  # noqa: E402
+
+django.setup()
+from django.core.management import call_command  # noqa: E402
+from restapi.models import User  # noqa: E402
+
+call_command("presetup")
+call_command("migrate", interactive=False)
+
+if not User.objects.exists() and admin_email and admin_password:
+    username = "admin@" + admin_host
+    call_command("createuser", username, admin_password, admin_email, require_password_change=True)
+    call_command("promoteuser", username, "superuser")
+    print("Created the first admin: sign in as admin with the generated admin password.", flush=True)
+
+os.environ["PSONO_SKIP_MIGRATIONS"] = "true"
+os.execv("/bin/sh", ["/bin/sh", "/root/configs/docker/cmd.sh"])

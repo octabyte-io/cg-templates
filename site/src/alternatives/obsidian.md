@@ -6,9 +6,14 @@ apps:
   siyuan:
     fit: "Has Obsidian's linked notes, backlinks and graph view, and adds block references, Notion-style databases, flashcards and PDF annotation, all in a browser on your own server. Notes are kept in SiYuan's own format rather than Markdown files, the SiYuan desktop and phone apps can't connect to the server, and the server version can't import Markdown files."
     import: no
+  many-notes:
+    fit: "The closest to Obsidian's way of storing notes: vaults that are plain folders of Markdown files, with links, backlinks, tags and templates, opened in any browser on your own server, with several users and shared vaults. It has no graph view, canvas, plugins, offline mode or native apps, and its links are standard Markdown links, so Obsidian's wiki links don't connect after an import."
+    import: partly
 moving: |
-  Trilium imports Markdown, so bring your Obsidian vault across as files: zip the vault folder and import it into a note in Trilium, which keeps your folders as a tree. Check links between notes and embedded images afterwards, since Obsidian's wiki-style links and plugin features may not all carry over. Then install the Trilium desktop app on each computer and connect it to your server so your notes sync. SiYuan's server version can't import Markdown files, so with SiYuan you copy notes across by hand, starting with the ones you use most, and keep your vault as a read-only archive.
+  Trilium imports Markdown, so bring your Obsidian vault across as files: zip the vault folder and import it into a note in Trilium, which keeps your folders as a tree. Check links between notes and embedded images afterwards, since Obsidian's wiki-style links and plugin features may not all carry over. Then install the Trilium desktop app on each computer and connect it to your server so your notes sync. SiYuan's server version can't import Markdown files, so with SiYuan you copy notes across by hand, starting with the ones you use most, and keep your vault as a read-only archive. Many Notes imports whole vaults as zip files: zip your Obsidian vault folder and import it, and your Markdown files and folders come across, though wiki links and plugin features do not work there.
 faq:
+  - q: "Which alternative keeps my notes as Markdown files like Obsidian?"
+    a: "Many Notes. Each vault is a folder of Markdown files on the server, and you can export it as a zip at any time. Trilium and SiYuan keep notes in their own storage and export Markdown on request."
   - q: "Does Trilium store notes as Markdown files?"
     a: "No. Trilium keeps notes in a database on your server, and exports them as Markdown or HTML when you want files."
   - q: "Can Trilium sync between computers like Obsidian Sync?"
@@ -19,4 +24,4 @@ faq:
 
 Obsidian is a note-taking app that keeps your notes as Markdown files on your own device, with links between notes, a graph view, a large collection of community plugins and official apps for computers and phones.
 
-People look for an alternative because Obsidian is proprietary and its sync is a paid add-on. When we checked its pricing page in November 2026, the app was free, Obsidian Sync cost $4 per user a month and Publish $8 per site a month, both billed yearly. Trilium Notes is open source and has sync and web access built in: its desktop apps sync with your own server, and you can open your notes in any browser. SiYuan, also open source, runs in the browser on your own server and adds databases and flashcards, though it keeps notes in its own format.
+People look for an alternative because Obsidian is proprietary and its sync is a paid add-on. When we checked its pricing page in November 2026, the app was free, Obsidian Sync cost $4 per user a month and Publish $8 per site a month, both billed yearly. Trilium Notes is open source and has sync and web access built in: its desktop apps sync with your own server, and you can open your notes in any browser. SiYuan, also open source, runs in the browser on your own server and adds databases and flashcards, though it keeps notes in its own format. Many Notes keeps a vault as a folder of Markdown files, like Obsidian, and lets several people share vaults in the browser, but it has no sync to desktop apps or offline mode.
