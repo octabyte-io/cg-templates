@@ -1,5 +1,5 @@
 # From EverShop's official docker-compose.yml (the app and PostgreSQL), with a
-# password on the database, uploaded media kept in a volume, and a one-off step
+# password on the database, uploaded media kept in a volume, and a first-start step
 # that creates the first admin account.
 
 x-evershop-db: &evershop-db
@@ -17,26 +17,6 @@ services:
     depends_on:
       evershop-db:
         condition: service_healthy
-    environment: *evershop-db
-    volumes:
-      # Product images and other uploads.
-      - evershop-media:/app/media
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 1m
-
-  # EverShop creates its tables when the app first starts. Once it is up, this
-  # creates the admin account (the official docs do it by hand with
-  # "npm run user:create"), only once, so a password changed later is kept.
-  evershop-admin:
-    image: evershop/evershop:2.4.0
-    restart: "no"
-    depends_on:
-      evershop:
-        condition: service_healthy
     environment:
       <<: *evershop-db
       ADMIN_EMAIL: ${ADMIN_EMAIL}
@@ -44,14 +24,32 @@ services:
       # user:create reports success at the info level, which the default (warn) hides.
       LOGGER_LEVEL: info
     volumes:
+      # Product images and other uploads.
+      - evershop-media:/app/media
       - evershop-setup:/setup
+    # EverShop creates its tables when the server first starts. Once it answers,
+    # this creates the admin account (the official docs do it by hand with
+    # "npm run user:create"), only once, so a password changed later is kept.
+    # It runs inside the app's container: a separate one-off step that exits
+    # after the app is up makes "docker compose up --wait" report a failure.
     command:
       - sh
       - -c
       - >-
-        if [ -f /setup/admin-created ]; then exit 0; fi;
-        npm run user:create -- --name Admin --email "$$ADMIN_EMAIL" --password "$$ADMIN_PASSWORD" 2>&1 | tee /tmp/out;
-        grep -q "created successfully" /tmp/out && touch /setup/admin-created
+        npm run start &
+        app=$$!;
+        if [ ! -f /setup/admin-created ]; then
+        until wget -q -O /dev/null http://127.0.0.1:3000/; do sleep 3; done;
+        npm run user:create -- --name Admin --email "$$ADMIN_EMAIL" --password "$$ADMIN_PASSWORD" >/tmp/admin.log 2>&1;
+        grep -q "created successfully" /tmp/admin.log && touch /setup/admin-created;
+        fi;
+        wait $$app
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 1m
 
   evershop-db:
     image: postgres:16.16-alpine
