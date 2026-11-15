@@ -1,0 +1,23 @@
+name: Keeper.sh
+description: "Keeper.sh is self-hosted calendar sync: copy busy times between Google, Outlook, iCloud and CalDAV calendars so you are never double-booked."
+version: "2.31.0"
+tags:
+  - calendar sync
+  - onecal alternative
+  - sync google and outlook calendar
+  - calendarbridge alternative
+  - busy time sync
+  - avoid double booking
+links:
+  website: https://www.keeper.sh
+  docs: https://github.com/ridafkih/keeper.sh#self-hosted
+  source: https://github.com/ridafkih/keeper.sh
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BETTER_AUTH_SECRET: { generate: base64 }
+  ENCRYPTION_KEY: { generate: base64 }
+  KEEPER_URL: { value: "{{domains.keeper.url}}" }
+domains:
+  - { service: keeper, port: 80 }

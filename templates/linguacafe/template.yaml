@@ -1,0 +1,25 @@
+name: LinguaCafe
+description: "LinguaCafe is a self-hosted app for learning a language by reading: import books and articles, look up words as you read, and review them later."
+version: "0.14.1"
+tags:
+  - lingq alternative
+  - language learning
+  - learn languages by reading
+  - readlang alternative
+  - vocabulary flashcards
+  - spaced repetition
+links:
+  website: https://github.com/simjanos-dev/LinguaCafe
+  docs: https://github.com/simjanos-dev/LinguaCafe/wiki
+  source: https://github.com/simjanos-dev/LinguaCafe
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.linguacafe.url}}" }
+  # Laravel's application key (the image ships a fixed one; this replaces it).
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: linguacafe, port: 80 }

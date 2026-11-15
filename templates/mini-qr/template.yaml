@@ -1,0 +1,21 @@
+name: Mini QR
+description: "Mini QR is a self-hosted QR code generator and scanner: add your logo, colours and a frame, then download PNG, JPG or SVG, one at a time or in bulk."
+version: "v0.32.0"
+tags:
+  - qr code generator
+  - qr code generator pro alternative
+  - qr code with logo
+  - bulk qr codes
+  - wifi qr code
+  - qr code scanner
+links:
+  website: https://mini-qr-code-generator.vercel.app
+  docs: https://github.com/lyqht/mini-qr/blob/main/SELF_HOSTING.md
+  source: https://github.com/lyqht/mini-qr
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs: {}
+domains:
+  - { service: mini-qr, port: 8080 }
+files: []

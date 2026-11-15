@@ -1,0 +1,40 @@
+name: Kyoo
+description: "Kyoo is a self-hosted media server that sorts your films, series and anime with no renaming and streams them to browsers, Android and Chromecast."
+version: "5.3.0"
+tags:
+  - media server
+  - plex alternative
+  - self-hosted netflix
+  - anime server
+  - video streaming
+  - jellyfin alternative
+links:
+  website: https://github.com/zoriya/Kyoo
+  docs: https://github.com/zoriya/Kyoo/blob/v5.3.0/INSTALLING.md
+  source: https://github.com/zoriya/Kyoo
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  PUBLIC_URL: { value: "{{domains.kyoo.url}}" }
+  DB_PASSWORD: { generate: password }
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # videos at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+  THEMOVIEDB_API_ACCESS_TOKEN:
+    ask:
+      label: TheMovieDB read access token
+      description: Optional. Leave empty to use Kyoo's built-in key. Your own comes from themoviedb.org under Settings > API (the read access token, not the API key).
+      secret: true
+      required: false
+  TVDB_APIKEY:
+    ask:
+      label: TheTVDB API key
+      description: Optional. Leave empty to use Kyoo's built-in key.
+      secret: true
+      required: false
+domains:
+  - { service: kyoo, port: 8901 }
+  - { service: filebrowser, port: 80 }
+files:
+  - { path: traefik-routes.yaml }
