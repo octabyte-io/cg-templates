@@ -1,0 +1,28 @@
+name: Sharry
+description: "Sharry is a self-hosted file sharing app: send files by expiring link, and give clients an upload page to send files back to you."
+version: "1.17.0"
+tags: [file sharing, wetransfer alternative, send large files, receive files, file request, upload page]
+links:
+  website: https://eikek.github.io/sharry/
+  docs: https://eikek.github.io/sharry/doc/
+  source: https://github.com/eikek/sharry
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.sharry.url}}" }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  # Needed (with an admin login) to create invitation keys for new accounts.
+  INVITE_PASSWORD: { generate: password }
+  SERVER_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: sharry, port: 9090 }
+files:
+  - { path: sharry.conf }

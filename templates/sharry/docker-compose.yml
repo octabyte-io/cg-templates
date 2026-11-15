@@ -1,0 +1,42 @@
+services:
+  sharry:
+    image: eikek0/sharry:v1.17.0
+    restart: unless-stopped
+    command: [/opt/sharry.conf]
+    depends_on:
+      sharry-db:
+        condition: service_healthy
+    environment:
+      SHARRY_BASE_URL: ${BASE_URL}
+      SHARRY_BACKEND_AUTH_SERVER_SECRET: hex:${SERVER_SECRET}
+      SHARRY_BACKEND_AUTH_FIXED_USER: ${ADMIN_USER}
+      SHARRY_BACKEND_AUTH_FIXED_PASSWORD: ${ADMIN_PASSWORD}
+      SHARRY_BACKEND_JDBC_PASSWORD: ${DB_PASSWORD}
+      SHARRY_BACKEND_SIGNUP_INVITE_PASSWORD: ${INVITE_PASSWORD}
+    volumes:
+      - ../files/sharry.conf:/opt/sharry.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9090/api/v2/open/info/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  sharry-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sharry
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: sharry
+    # Shares and their files are stored here.
+    volumes:
+      - sharry-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sharry"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sharry-db-data:
