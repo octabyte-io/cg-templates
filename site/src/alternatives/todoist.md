@@ -12,15 +12,18 @@ apps:
   super-productivity:
     fit: "A personal to-do list with projects, sub-tasks, tags, recurring tasks and Todoist-style quick add, plus a day planner, time tracking per task and focus timers. It imports your active Todoist projects and tasks. It is built for one person, with no shared projects or team accounts, and the web version keeps tasks in your browser until you turn on sync."
     import: yes
+  jotty:
+    fit: "Lighter than Todoist: checklists with categories and progress bars, and task boards in Kanban columns with subtasks and time tracking, next to notes, shared with other people on your server. It has no due-date reminders, recurring tasks or calendar view, and no phone app beyond a web app on your home screen, so it suits shared lists more than a daily task planner."
+    import: no
 moving: |
   Vikunja has a Todoist importer. It needs one-time setup by whoever runs the server: register an app in Todoist's developer console and add its keys to Vikunja, and the Vikunja address must be reachable from the internet. Then each person picks Todoist in Vikunja's import settings and signs in. Check your recurring tasks and reminders afterwards, and connect your calendar app over CalDAV if you want tasks there.
 
   Super Productivity imports from Todoist with a personal API token, which you copy from Todoist's settings. Active projects, tasks, sub-tasks, labels and due dates come across; completed tasks do not. Turn on sync with the password from Cloudgate in each browser or app, so the same list appears on your other devices.
 
-  tududi has no Todoist importer, but it imports spreadsheets: export a project from Todoist as a CSV file, import it in tududi, match the columns and review the tasks before saving; an import can be undone for 7 days. Check recurring tasks afterwards. Donetick has no importer, so add your household chores again by typing them in plain words, such as "take the bins out every Monday", and invite the household with the group's invite code.
+  tududi has no Todoist importer, but it imports spreadsheets: export a project from Todoist as a CSV file, import it in tududi, match the columns and review the tasks before saving; an import can be undone for 7 days. Check recurring tasks afterwards. Donetick has no importer, so add your household chores again by typing them in plain words, such as "take the bins out every Monday", and invite the household with the group's invite code. Jotty has no Todoist importer either, so recreate the lists you share as Jotty checklists or task boards by hand.
 faq:
-  - q: "Should I choose Vikunja, tududi, Donetick or Super Productivity?"
-    a: "Choose Vikunja to share projects with other people, with list, Kanban, Gantt and table views and a Todoist importer. Choose tududi for a personal or family to-do list with areas, habits and a daily plan. Choose Donetick to share and rotate household chores. Choose Super Productivity if the list is only yours and you also want to plan your day and track time per task."
+  - q: "Should I choose Vikunja, tududi, Donetick, Super Productivity or Jotty?"
+    a: "Choose Vikunja to share projects with other people, with list, Kanban, Gantt and table views and a Todoist importer. Choose tududi for a personal or family to-do list with areas, habits and a daily plan. Choose Donetick to share and rotate household chores. Choose Super Productivity if the list is only yours and you also want to plan your day and track time per task. Choose Jotty if you mostly keep shared checklists and simple task boards alongside notes, since it has no due-date reminders, recurring tasks or calendar view."
   - q: "Does Vikunja have recurring tasks and reminders?"
     a: "Yes. Tasks can repeat, for example every week or month, and have due dates and reminders, all in the free app."
   - q: "Is there a Vikunja phone app?"

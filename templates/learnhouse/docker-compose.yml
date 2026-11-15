@@ -1,0 +1,82 @@
+# From LearnHouse's official CLI setup (apps/cli/src/templates/docker-compose.ts and env.ts at 1.4.5),
+# without its nginx/Caddy front proxy: the app image already serves web, API and collab on port 80.
+services:
+  learnhouse:
+    image: ghcr.io/learnhouse/app:1.4.5
+    restart: unless-stopped
+    # The image's nginx also listens on [::]:80, which stops it from starting on a host
+    # without IPv6; drop that line only when the container has no IPv6.
+    command: ["sh", "-c", "[ -e /proc/net/if_inet6 ] || sed -i '/listen \\[::\\]:80;/d' /etc/nginx/http.d/default.conf; exec sh /app/start.sh"]
+    depends_on:
+      learnhouse-db:
+        condition: service_healthy
+      learnhouse-redis:
+        condition: service_healthy
+    environment:
+      HOSTNAME: 0.0.0.0
+      LEARNHOUSE_API_URL: http://localhost:9000
+      LEARNHOUSE_DOMAIN: ${APP_HOST}
+      NEXT_PUBLIC_LEARNHOUSE_API_URL: ${APP_URL}/api/v1/
+      NEXT_PUBLIC_LEARNHOUSE_BACKEND_URL: ${APP_URL}/
+      NEXT_PUBLIC_LEARNHOUSE_DOMAIN: ${APP_HOST}
+      NEXT_PUBLIC_LEARNHOUSE_TOP_DOMAIN: ${APP_HOST}
+      NEXT_PUBLIC_LEARNHOUSE_MULTI_ORG: "False"
+      NEXT_PUBLIC_LEARNHOUSE_DEFAULT_ORG: default
+      NEXT_PUBLIC_LEARNHOUSE_HTTPS: "true"
+      NEXT_PUBLIC_COLLAB_URL: wss://${APP_HOST}/collab
+      NEXTAUTH_URL: ${APP_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      LEARNHOUSE_SQL_CONNECTION_STRING: postgresql://learnhouse:${DB_PASSWORD}@learnhouse-db:5432/learnhouse
+      LEARNHOUSE_REDIS_CONNECTION_STRING: redis://learnhouse-redis:6379/learnhouse
+      LEARNHOUSE_REDIS_URL: redis://learnhouse-redis:6379
+      LEARNHOUSE_PORT: "9000"
+      LEARNHOUSE_AUTH_JWT_SECRET_KEY: ${JWT_SECRET}
+      LEARNHOUSE_INITIAL_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      LEARNHOUSE_INITIAL_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      LEARNHOUSE_INITIAL_ORG_NAME: ${ORG_NAME:-My Academy}
+      LEARNHOUSE_INITIAL_ORG_SLUG: default
+      COLLAB_INTERNAL_KEY: ${COLLAB_INTERNAL_KEY}
+      LEARNHOUSE_DEVELOPMENT_MODE: "False"
+      LEARNHOUSE_LOGFIRE_ENABLED: "False"
+      LEARNHOUSE_IS_AI_ENABLED: "False"
+      LEARNHOUSE_CONTENT_DELIVERY_TYPE: filesystem
+    volumes:
+      - learnhouse-content:/app/api/content
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  learnhouse-db:
+    image: pgvector/pgvector:0.8.7-pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: learnhouse
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: learnhouse
+    volumes:
+      - learnhouse-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U learnhouse"]
+      interval: 5s
+      timeout: 4s
+      retries: 10
+
+  learnhouse-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - learnhouse-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 4s
+      retries: 10
+
+volumes:
+  learnhouse-content:
+  learnhouse-db-data:
+  learnhouse-redis-data:

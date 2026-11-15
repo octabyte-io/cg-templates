@@ -1,0 +1,19 @@
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:v2.13.1
+    restart: unless-stopped
+    environment:
+      # Encrypts the app passwords and API keys Homarr stores for its
+      # integrations. 64 hex characters; keep it with your backups.
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY}
+      # The public address, used for origin checks and secure cookies.
+      BASE_URL: ${BASE_URL}
+      # Cloudgate gives the app no access to the server's Docker, so hide
+      # Homarr's Docker page (it needs the Docker socket mounted).
+      ENABLE_DOCKER: "false"
+    volumes:
+      # The SQLite database and settings.
+      - homarr-appdata:/appdata
+
+volumes:
+  homarr-appdata:
