@@ -6,8 +6,14 @@ apps:
   black-candy:
     fit: "Plays the music files you own in a clean web player and in its own free iPhone and Android apps, with playlists, favourites and an account for each person, and it can stream lossless files as smaller MP3s. Koel's web player does more, with podcasts, radio and uploads in the browser. It has no catalogue or recommendations, so music from Apple Music's catalogue can't be added."
     import: no
+  mstream:
+    fit: "Streams the music files you own to a web player and to mStream's own free iPhone and Android apps, which connect by scanning a QR code, with an Auto DJ, lyrics and playlists you can share by link. It has no catalogue or recommendations, and it is plainer to look at than Koel."
+    import: no
+  ampache:
+    fit: "Serves your own music, and video if you like, to a web player and to many apps at once, including DAAP apps that show it like a shared iTunes library, with smart playlists, podcasts and internet radio. It imports playlist files such as .m3u. It has no catalogue or recommendations, and its web page looks older than Koel's."
+    import: partly
 moving: |
-  Koel and Black Candy play music files, so start with the ones you have: ripped CDs, songs you bought as downloads, or a family collection. Songs bought from the iTunes Store without copy protection can be uploaded too; Apple Music streams and downloads can't. Open Koel's Upload screen and drag in your files or whole folders. Koel has no playlist import, so rebuild your favourite playlists by hand or let smart playlists fill by rules such as genre or year. For Black Candy, upload the same files at the File Browser address Cloudgate sets up, press Sync in Black Candy's Settings, then install the free Black Candy app on your iPhone and sign in with your server's address. With Koel, open it in your phone's browser, or sign in to a Subsonic-compatible app with your email and Koel's Subsonic key.
+  Koel, Black Candy, mStream and Ampache play music files, so start with the ones you have: ripped CDs, songs you bought as downloads, or a family collection. Songs bought from the iTunes Store without copy protection can be uploaded too; Apple Music streams and downloads can't. Open Koel's Upload screen and drag in your files or whole folders. Koel has no playlist import, so rebuild your favourite playlists by hand or let smart playlists fill by rules such as genre or year. For Black Candy, upload the same files at the File Browser address Cloudgate sets up, press Sync in Black Candy's Settings, then install the free Black Candy app on your iPhone and sign in with your server's address. With Koel, open it in your phone's browser, or sign in to a Subsonic-compatible app with your email and Koel's Subsonic key. In mStream, sign in as admin, upload files or whole folders in its File Explorer, and scan its Quick Connect QR code with the mStream app on each phone. In Ampache, add songs on its Upload page, and import playlist files such as .m3u from its Playlist menu once their songs are in the library.
 faq:
   - q: "Should I choose Koel or Black Candy?"
     a: "Choose Koel for the richer web player, with smart playlists, podcasts, internet radio and uploads in the browser. Choose Black Candy if you mostly listen on your phone and want a free official iPhone and Android app."
@@ -17,6 +23,10 @@ faq:
     a: "Yes, the official Koel Player app, but it is paid. For free, use Koel's web player in Safari or a Subsonic-compatible app such as Amperfy or substreamer."
   - q: "Can the whole family share Koel?"
     a: "Yes. Each person gets their own sign-in with private playlists, favourites and listening stats. In the free edition everyone shares one music library; separate libraries for each person come with the paid Koel Plus licence."
+  - q: "Which of these apps is free on iPhone?"
+    a: "mStream: its official iPhone and Android apps are free and open source. Koel's official app is paid, and Ampache works with Subsonic-compatible and other apps made by others."
+  - q: "Should I choose Koel, mStream or Ampache?"
+    a: "Koel for the most polished web player. mStream for a light server with free official phone apps. Ampache for the widest choice of apps and extras such as video, smart playlists built in the browser and playlist import."
 ---
 
 Apple Music is Apple's music streaming service: for a monthly fee you play songs from its catalogue on Apple devices, Android, the web and speakers, and it can also keep your own song files in the same library.

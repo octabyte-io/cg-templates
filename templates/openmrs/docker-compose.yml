@@ -1,0 +1,80 @@
+# From the official O3 docker-compose.yml (openmrs/openmrs-distro-referenceapplication, tag 3.8.0).
+# The gateway (nginx) routes /openmrs/spa to the frontend and /openmrs to the backend; it
+# reaches them by the names "frontend" and "backend", so keep those service names.
+services:
+  gateway:
+    image: openmrs/openmrs-reference-application-3-gateway:3.8.0
+    restart: unless-stopped
+    # The gateway's nginx config also listens on IPv6 ([::]:80), which stops nginx from
+    # starting on a server without IPv6. Drop that line there; otherwise run it unchanged.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        [ -e /proc/net/if_inet6 ] ||
+        sed -i '/listen \[::\]:80;/d' /etc/nginx/conf-templates/default.conf.template;
+        exec /usr/local/bin/docker-entrypoint.sh nginx -g 'daemon off;'
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    image: openmrs/openmrs-reference-application-3-frontend:3.8.0
+    restart: unless-stopped
+    environment:
+      SPA_PATH: /openmrs/spa
+      API_URL: /openmrs
+      SPA_CONFIG_URLS: /openmrs/spa/config-core_demo.json
+      SPA_DEFAULT_LOCALE: ""
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      timeout: 5s
+    depends_on:
+      - backend
+
+  # The "-no-demo" image starts with an empty database: no sample patients.
+  # The first start creates the tables and loads the concept dictionary, which can take
+  # 10 minutes or more.
+  backend:
+    image: openmrs/openmrs-reference-application-3-backend:3.8.0-no-demo
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      OMRS_CONFIG_MODULE_WEB_ADMIN: "true"
+      OMRS_CONFIG_AUTO_UPDATE_DATABASE: "true"
+      OMRS_CONFIG_CREATE_TABLES: "true"
+      OMRS_CONFIG_CONNECTION_SERVER: db
+      OMRS_CONFIG_CONNECTION_DATABASE: openmrs
+      OMRS_CONFIG_CONNECTION_USERNAME: openmrs
+      OMRS_CONFIG_CONNECTION_PASSWORD: ${DB_PASSWORD}
+      # Replaces the stock admin password (Admin123) when the database is first set up.
+      OMRS_CONFIG_ADMIN_USER_PASSWORD: ${ADMIN_PASSWORD}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
+      timeout: 5s
+      start_period: 30m
+    volumes:
+      - openmrs-data:/openmrs/data
+
+  db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci"
+    environment:
+      MYSQL_DATABASE: openmrs
+      MYSQL_USER: openmrs
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  openmrs-data:
+  db-data:

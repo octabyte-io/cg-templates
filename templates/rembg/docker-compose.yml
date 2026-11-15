@@ -1,0 +1,30 @@
+services:
+  rembg:
+    # The official image (hub.docker.com/r/danielgatis/rembg), built from each
+    # rembg release with CPU support. Its own build already downloads the
+    # default model (bria-rmbg, about 1 GB). The image is for amd64 only.
+    image: danielgatis/rembg:2.0.87
+    restart: unless-stopped
+    # "rembg s" is the HTTP server from the official docker-compose.yml: the
+    # web page (Gradio) at / and the API at /api/remove, with its docs at /api.
+    # Cloud models (withoutbg, atlascloud) stay off, as by default.
+    command: ["s", "--host", "0.0.0.0", "--port", "7000", "--log_level", "info", "--max-sessions", "2"]
+    # rembg has no sign-in: anyone with the address can use the page and the API.
+    # The default model (bria-rmbg) used more than 6 GB of memory while it
+    # worked on one image in testing, hence the xlarge size.
+    volumes:
+      # The models. Other models are downloaded on first use and kept here;
+      # at the first start the volume is filled with the model the image
+      # already has, so it is not downloaded again.
+      - rembg-models:/root/.rembg
+    healthcheck:
+      # The image has curl. /api is the API docs page and answers as soon as
+      # the server is up.
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:7000/api"]
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+
+volumes:
+  rembg-models:

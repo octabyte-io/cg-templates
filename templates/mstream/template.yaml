@@ -1,0 +1,17 @@
+name: mStream
+description: "mStream is a self-hosted music server that streams the music you own to any browser, with official Android and iPhone apps and an Auto DJ."
+version: "6.33.1"
+tags: [self-hosted music server, spotify alternative, music streaming server, personal music streaming, apple music alternative, mstream]
+links:
+  website: https://mstream.io
+  docs: https://github.com/IrosTheBeggar/mStream/tree/master/docs
+  source: https://github.com/IrosTheBeggar/mStream
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password of mStream's user "admin", created on the first start.
+  # Without a user mStream is open to anyone who has the address.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: mstream, port: 3000 }

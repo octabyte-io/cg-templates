@@ -6,15 +6,20 @@ apps:
   sim:
     fit: "Closer to how business teams work in Copilot Studio: agent, logic and app blocks on a canvas, over 270 app integrations, built-in tables and knowledge bases, and Chat, which builds a workflow from a description but needs a key from Sim's hosted service. Agents run as an API, a chat page, an MCP server or on a schedule, with any major AI provider or a local model. There is no Teams or Microsoft 365 publishing, it needs a large server, and single sign-on is paid."
     import: no
+  coze-studio:
+    fit: "The open-source edition of ByteDance's Coze: a no-code builder for agents with prompts, knowledge bases, plugins, memory and workflows drawn on a canvas, with the AI model you choose. It publishes through an API and a Chat SDK for your website, not to Teams or Microsoft 365, needs a large server, and much of its documentation and plugin store is written for users in China."
+    import: no
 moving: |
   Copilot Studio agents cannot be exported to Langflow, so rebuild them. Sign in to Langflow with the admin account Cloudgate created, add your AI provider's API key, and start from one of the starter projects closest to your agent, such as a simple agent or a chatbot over documents. Copy each agent's instructions into the prompt, add the tools and data it needs, and test it in the Playground until the answers match. Then call the flow from your website or app through its API, since Langflow has no Teams publishing.
 
   Sim cannot import Copilot Studio agents either. Add your AI provider's key, then build each agent as a workflow: a trigger, an Agent block with the same instructions, the app blocks for its actions and a knowledge base for its documents. Test it with Run, check each block's output in the log, and deploy it as a chat page for your colleagues or as an API.
+
+  Coze Studio cannot import Copilot Studio agents either. Register your account, add your email under Admin Emails in the admin area and turn off open registration, then add your AI provider's key and an embedding model. Create an agent with the same instructions, upload its documents into a knowledge base, rebuild its actions as workflows, and embed it in your website with the Chat SDK.
 faq:
-  - q: "Should I choose Langflow or Sim?"
-    a: "Choose Langflow if a developer is building agents and document chatbots to call from your own apps; it runs on a smaller server. Choose Sim if business teams want agents that act in apps such as Slack, HubSpot or Salesforce, with tables and knowledge bases built in, and you have a large server for it."
-  - q: "Do Langflow and Sim work with Microsoft Teams?"
-    a: "Not out of the box. Neither publishes to Teams or Microsoft 365. Both run agents through an API, so a developer can connect them to Teams or another chat tool."
+  - q: "Should I choose Langflow, Sim or Coze Studio?"
+    a: "Choose Langflow if a developer is building agents and document chatbots to call from your own apps; it runs on a smaller server. Choose Sim if business teams want agents that act in apps such as Slack, HubSpot or Salesforce, with tables and knowledge bases built in, and you have a large server for it. Choose Coze Studio if you want a no-code agent builder in the style of Coze, with agents you embed in your own website."
+  - q: "Do Langflow, Sim and Coze Studio work with Microsoft Teams?"
+    a: "Not out of the box. None of them publishes to Teams or Microsoft 365. All three run agents through an API, so a developer can connect them to Teams or another chat tool."
   - q: "Do I need to code to use Langflow?"
     a: "Not for most flows, which you build by connecting blocks on a canvas. Langflow is still made for technical users, and building your own components means writing Python."
   - q: "What does Langflow cost to run?"

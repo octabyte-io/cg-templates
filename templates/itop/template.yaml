@@ -1,0 +1,19 @@
+name: iTop
+description: "iTop is a self-hosted IT help desk and CMDB: requests, incidents, changes and SLAs, each linked to the servers and services it affects."
+version: "3.2.2"
+tags: [servicenow alternative, itsm, cmdb, it help desk, itil service desk, freshservice alternative, open source service desk]
+links:
+  website: https://www.combodo.com/itop
+  docs: https://www.itophub.io/wiki/page
+  source: https://github.com/Combodo/iTop
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ITOP_URL: { value: "{{domains.itop.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  CRON_PASSWORD: { generate: password }
+domains:
+  - { service: itop, port: 80 }

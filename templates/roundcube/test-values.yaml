@@ -1,0 +1,2 @@
+IMAP_HOST: ssl://mail.example.com
+SMTP_HOST: tls://mail.example.com

@@ -1,0 +1,44 @@
+services:
+  airtrail:
+    image: johly/airtrail:v3.14.0
+    restart: unless-stopped
+    depends_on:
+      airtrail-db:
+        condition: service_healthy
+    environment:
+      # The exact address people open AirTrail at; sign-in fails if it differs.
+      ORIGIN: ${ORIGIN}
+      DB_URL: postgres://airtrail:${DB_PASSWORD}@airtrail-db:5432/airtrail
+      UPLOAD_LOCATION: /app/uploads
+      BODY_SIZE_LIMIT: 20M
+      # AirTrail sits behind Cloudgate's reverse proxy; rate limits on sign-in
+      # use the client address from this header.
+      ADDRESS_HEADER: X-Forwarded-For
+    volumes:
+      - airtrail-uploads:/app/uploads
+    healthcheck:
+      # The image's own check (GET /api/ping), run more often than its 5-minute default.
+      test: ["CMD", "airtrail-healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  airtrail-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: airtrail
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: airtrail
+    volumes:
+      - airtrail-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airtrail -d airtrail"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  airtrail-uploads:
+  airtrail-db-data:

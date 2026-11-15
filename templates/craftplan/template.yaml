@@ -1,0 +1,26 @@
+name: Craftplan
+description: "Craftplan is a self-hosted planner for small makers: recipe costing, ingredient stock with lots, orders, production batches and purchasing in one app."
+version: "0.7.7"
+tags: [katana alternative, craftybase alternative, recipe costing, production planning, small batch manufacturing, lot traceability, inventory management]
+links:
+  website: https://puemos.github.io/craftplan/
+  docs: https://puemos.github.io/craftplan/docs/
+  source: https://github.com/puemos/craftplan
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  HOST: { value: "{{domains.craftplan.host}}" }
+  # Product photos are served from the bundled S3 storage at its own address;
+  # Craftplan signs each photo link for this address.
+  STORAGE_URL: { value: "{{domains.craftplan-storage.url}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  TOKEN_SIGNING_SECRET: { generate: hex }
+  # A 32-byte key, base64-encoded, that encrypts saved API and email keys.
+  CLOAK_KEY: { generate: base64 }
+  POSTGRES_PASSWORD: { generate: password }
+  STORAGE_ACCESS_KEY: { generate: password }
+  STORAGE_SECRET_KEY: { generate: password }
+domains:
+  - { service: craftplan, port: 4000 }
+  - { service: craftplan-storage, port: 9000 }

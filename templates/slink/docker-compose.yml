@@ -1,0 +1,28 @@
+services:
+  slink:
+    image: anirdev/slink:v1.14.6
+    restart: unless-stopped
+    # The image has its own healthcheck (wget on /api/health) and runs its web
+    # server, API, cache and real-time hub in this one container. It makes its
+    # signing keys and app secret on first start and keeps them in the data volume.
+    environment:
+      ORIGIN: ${ORIGIN}
+      TZ: ${TIMEZONE:-Etc/UTC}
+      # New sign-ups wait for the admin to approve them (the app's default).
+      USER_APPROVAL_REQUIRED: "true"
+      USER_PASSWORD_MIN_LENGTH: "8"
+      IMAGE_MAX_SIZE: 15M
+      STORAGE_PROVIDER: local
+      # The first start creates this admin account; it is skipped once it exists.
+      ADMIN_USERNAME: admin
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # The database, signing keys and settings.
+      - slink-data:/app/var/data
+      # The uploaded images.
+      - slink-images:/app/slink/images
+
+volumes:
+  slink-data:
+  slink-images:

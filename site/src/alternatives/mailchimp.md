@@ -15,15 +15,18 @@ apps:
   usesend:
     fit: "A fit if you want app emails and newsletters in one tool: campaigns to contact lists from a visual editor with personalisation, scheduling, double opt-in and one-click unsubscribe, next to an API for your app's emails. It sends only through your own Amazon SES account, is still labelled beta, and has lighter campaign features than listmonk or Mautic, with no automations."
     import: partly
+  phplist:
+    fit: "The longest-running of these apps, in development since 2000: any number of lists and subscribers, personalised campaigns, subscribe pages with double opt-in, scheduling, per-domain throttling and detailed open, click and bounce statistics. It has no automations, landing pages or drag-and-drop builder, and its interface looks dated next to listmonk or Keila."
+    import: partly
 moving: |
-  Export your audience from Mailchimp as a CSV file and import it into listmonk, keeping names, email addresses and any extra fields as attributes; Ghost, Mautic and Keila import contacts from a CSV in the same way, and Keila recognises Mailchimp's email address, first name and last name columns; in Mautic, rebuild your automations as campaigns; useSend takes contacts from a CSV or text file into a contact book. Only import people who are still subscribed. You will also need an email sending service such as Amazon SES, Postmark or Mailgun (useSend works only with Amazon SES), and you should set up its sender records on your domain before the first big send.
+  Export your audience from Mailchimp as a CSV file and import it into listmonk, keeping names, email addresses and any extra fields as attributes; Ghost, Mautic and Keila import contacts from a CSV in the same way, and Keila recognises Mailchimp's email address, first name and last name columns; in Mautic, rebuild your automations as campaigns; useSend takes contacts from a CSV or text file into a contact book. Only import people who are still subscribed. You will also need an email sending service such as Amazon SES, Postmark or Mailgun (useSend works only with Amazon SES), and you should set up its sender records on your domain before the first big send. phpList imports the same CSV, matching each column to a subscriber attribute; give it your sending service's SMTP details at install or later.
 faq:
   - q: "Can one app send both newsletters and my app's emails?"
     a: "Yes, useSend does both: campaigns to contact lists, and sign-up confirmations, receipts and other emails your app sends through its API. It runs on Amazon SES only and is still in beta."
   - q: "What does it cost to send email with listmonk?"
     a: "listmonk is free. You pay your email sending service, which usually charges a small amount per thousand emails, and your hosting."
   - q: "Do I need my own email server?"
-    a: "No. listmonk, Ghost, Mautic and Keila send through an email sending service you connect, and useSend through your own Amazon SES account; the service handles delivery to inboxes."
+    a: "No. listmonk, Ghost, Mautic and Keila send through an email sending service you connect, and useSend through your own Amazon SES account; phpList sends through any SMTP service, such as Amazon SES or Mailgun. The service handles delivery to inboxes."
   - q: "Should I choose listmonk, Keila or Mautic?"
     a: "Choose listmonk if you mainly send newsletters and campaigns to a list; it is simpler and lighter, even with very large lists. Choose Keila for a friendlier, Mailchimp-like editor and built-in sign-up forms. Choose Mautic if you rely on automated email journeys, lead scoring, forms or landing pages."
 ---

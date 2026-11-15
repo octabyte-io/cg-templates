@@ -1,0 +1,43 @@
+services:
+  # WBO has no accounts: anyone who can reach it can open any board by its
+  # name and draw on it. (Its optional JWT mode needs signed tokens made by
+  # another system.) This proxy asks for the username "admin" and the
+  # generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      wbo:
+        condition: service_healthy
+
+  wbo:
+    # The official image (hub.docker.com/r/lovasoa/wbo), built from each WBO
+    # release. It listens on port 80 and runs as user 1000.
+    image: lovasoa/wbo:v2.18.37
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      # Behind the proxy, take each visitor's address from X-Forwarded-For so
+      # WBO's per-person drawing limits apply to people, not to the proxy.
+      WBO_IP_SOURCE: X-Forwarded-For
+    volumes:
+      # The boards, saved as SVG files.
+      - wbo-boards:/opt/app/server-data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:80/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+
+volumes:
+  wbo-boards:
