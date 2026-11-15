@@ -1,0 +1,22 @@
+name: PiGallery2
+description: "PiGallery2 is a fast, self-hosted photo gallery that turns your photo folders into a private website to browse, search, map and share your pictures."
+version: "3.5.2"
+tags: [self-hosted photo gallery, smugmug alternative, flickr alternative, private photo sharing, photo gallery website, pigallery2]
+links:
+  website: https://bpatrik.github.io/pigallery2/
+  docs: https://bpatrik.github.io/pigallery2/setup/docker/
+  source: https://github.com/bpatrik/pigallery2
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  PUBLIC_URL: { value: "{{domains.pigallery2.url}}" }
+  # The password of PiGallery2's user "admin". It replaces the app's default
+  # admin/admin login.
+  ADMIN_PASSWORD: { generate: password }
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # photos at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: pigallery2, port: 80 }
+  - { service: filebrowser, port: 80 }

@@ -1,0 +1,32 @@
+# Misskey's configuration, from .config/docker_example.yml (misskey-dev/misskey,
+# tag 2026.11.0). The web address and the database login come from the
+# environment (MISSKEY_URL, DATABASE_USER, DATABASE_PASSWORD) set in
+# docker-compose.yml.
+
+# Asked for before the first visitor can create the admin account.
+setupPassword: "{{SETUP_PASSWORD}}"
+
+port: 3000
+
+db:
+  host: misskey-db
+  port: 5432
+  db: misskey
+
+dbReplications: false
+
+redis:
+  host: misskey-redis
+  port: 6379
+
+fulltextSearch:
+  provider: sqlLike
+
+id: 'aidx'
+
+proxyBypassHosts:
+  - api.deepl.com
+  - api-free.deepl.com
+  - www.recaptcha.net
+  - hcaptcha.com
+  - challenges.cloudflare.com

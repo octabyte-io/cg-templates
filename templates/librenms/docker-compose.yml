@@ -1,0 +1,165 @@
+# From the official example: https://github.com/librenms/docker/tree/master/examples/compose
+# Kept: the web app, the dispatcher (it runs polling, discovery and alerts), MariaDB and Redis.
+# Left out: the optional syslog-ng and snmptrapd sidecars (they need UDP ports 514 and 162
+# published) and msmtpd (outgoing mail can be set up in LibreNMS's own settings instead).
+# NET_ADMIN and NET_RAW are in the official file: fping and SNMP need them to reach devices.
+services:
+  librenms:
+    image: librenms/librenms:26.10.2
+    restart: unless-stopped
+    hostname: librenms
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      librenms-migrate:
+        condition: service_completed_successfully
+      librenms-redis:
+        condition: service_healthy
+    environment:
+      TZ: ${TIMEZONE:-UTC}
+      DB_HOST: librenms-db
+      DB_NAME: librenms
+      DB_USER: librenms
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_TIMEOUT: "60"
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      REDIS_HOST: librenms-redis
+      LIBRENMS_BASE_URL: ${APP_URL}
+      # nginx otherwise also listens on IPv6 and won't start where Docker has IPv6 off (the default).
+      LISTEN_IPV6: "false"
+      # Cloudgate's proxy is the only way in, so it may set the X-Forwarded-* headers.
+      APP_TRUSTED_PROXIES: "*"
+    volumes:
+      - librenms-data:/data
+    # The 26.10.2 image has no healthcheck of its own. The web server starts only after the
+    # database migrations, so an answer here means the app is ready.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8000/login"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 3m
+
+  # Polls and discovers devices and sends alerts. Without it nothing is monitored.
+  librenms-dispatcher:
+    image: librenms/librenms:26.10.2
+    restart: unless-stopped
+    hostname: librenms-dispatcher
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      librenms:
+        condition: service_healthy
+    environment:
+      TZ: ${TIMEZONE:-UTC}
+      DB_HOST: librenms-db
+      DB_NAME: librenms
+      DB_USER: librenms
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_TIMEOUT: "60"
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      REDIS_HOST: librenms-redis
+      DISPATCHER_NODE_ID: dispatcher1
+      SIDECAR_DISPATCHER: "1"
+    volumes:
+      - librenms-data:/data
+
+  # Runs once at each start, before the app: creates or updates the database tables.
+  # On an empty database the app would otherwise open its web sign-up wizard, where
+  # whoever visits first can make an admin account, until the next restart.
+  librenms-migrate:
+    image: librenms/librenms:26.10.2
+    restart: "no"
+    entrypoint: ["/bin/bash", "-c"]
+    depends_on:
+      librenms-db:
+        condition: service_healthy
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+    command:
+      - |
+        set -e
+        cd /opt/librenms
+        {
+          echo "DB_HOST=librenms-db"
+          echo "DB_DATABASE=librenms"
+          echo "DB_USERNAME=librenms"
+          echo "DB_PASSWORD=\"$$DB_PASSWORD\""
+        } > .env
+        lnms migrate --force --no-ansi --no-interaction
+
+  # Runs once at each start: creates the admin account with the generated password
+  # while the app has no users yet.
+  librenms-admin:
+    image: librenms/librenms:26.10.2
+    restart: "no"
+    entrypoint: ["/bin/bash", "-c"]
+    depends_on:
+      librenms:
+        condition: service_healthy
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - librenms-data:/data
+    command:
+      - |
+        set -e
+        cd /opt/librenms
+        {
+          echo "DB_HOST=librenms-db"
+          echo "DB_DATABASE=librenms"
+          echo "DB_USERNAME=librenms"
+          echo "DB_PASSWORD=\"$$DB_PASSWORD\""
+          cat /data/.env
+        } > .env
+        users=$$(mariadb -h librenms-db -u librenms -p"$$DB_PASSWORD" -N -e 'SELECT COUNT(*) FROM users' librenms)
+        if [ "$$users" = "0" ]; then
+          lnms user:add --no-interaction --role=admin --password="$$ADMIN_PASSWORD" "$$ADMIN_USER"
+        else
+          echo "LibreNMS already has users; leaving them as they are."
+        fi
+
+  librenms-db:
+    image: mariadb:12.3.3
+    restart: unless-stopped
+    command:
+      - mariadbd
+      - --innodb-file-per-table=1
+      - --lower-case-table-names=0
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      TZ: ${TIMEZONE:-UTC}
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+      MARIADB_DATABASE: librenms
+      MARIADB_USER: librenms
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - librenms-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  librenms-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - librenms-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  librenms-data:
+  librenms-db-data:
+  librenms-redis-data:

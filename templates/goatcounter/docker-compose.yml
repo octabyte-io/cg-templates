@@ -1,0 +1,35 @@
+services:
+  goatcounter:
+    image: arp242/goatcounter:2.7.0
+    restart: unless-stopped
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      APP_HOST: ${APP_HOST}
+    # GoatCounter keeps its SQLite database in the data volume below. On the
+    # first start, create the database and the site for this web address with
+    # its admin account (the image's documented "goatcounter db create site"),
+    # so the first-run sign-up form is never left open. Then start the server
+    # as the image does by default.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        # GoatCounter wants a domain with a dot; like its own sign-up form,
+        # turn a bare "localhost" into "goatcounter.localhost". With one site,
+        # GoatCounter serves it on any address anyway.
+        vhost="$$APP_HOST"
+        case "$$vhost" in *.*) ;; *) vhost="goatcounter.$$vhost" ;; esac
+        if [ ! -f goatcounter-data/.cloudgate-site-created ]; then
+          goatcounter db create site -createdb \
+            -vhost="$$vhost" \
+            -user.email="$$ADMIN_EMAIL" \
+            -user.password="$$ADMIN_PASSWORD"
+          touch goatcounter-data/.cloudgate-site-created
+        fi
+        exec goatcounter serve -automigrate
+    volumes:
+      - goatcounter-data:/home/goatcounter/goatcounter-data
+
+volumes:
+  goatcounter-data:

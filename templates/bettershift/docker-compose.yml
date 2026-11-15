@@ -1,0 +1,21 @@
+services:
+  bettershift:
+    image: ghcr.io/pantelx/bettershift:v3.3.0
+    restart: unless-stopped
+    # Next.js with a built-in SQLite database; the image has its own
+    # healthcheck on /api/health. There is no default login: the first person
+    # to sign up becomes the admin. Turn sign-ups off afterwards with
+    # ALLOW_USER_REGISTRATION=false.
+    environment:
+      AUTH_ENABLED: "true"
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      ALLOW_USER_REGISTRATION: ${ALLOW_USER_REGISTRATION:-true}
+      TZ: ${TZ}
+    volumes:
+      - bettershift-data:/app/data
+      - bettershift-uploads:/app/public/uploads
+
+volumes:
+  bettershift-data:
+  bettershift-uploads:
