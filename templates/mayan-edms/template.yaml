@@ -1,0 +1,18 @@
+name: Mayan EDMS
+description: "Mayan EDMS is self-hosted document management with OCR, version history, approval workflows and per-role permissions, in place of DocuWare or M-Files."
+version: "4.12.2"
+tags: [document management system, docuware alternative, m-files alternative, laserfiche alternative, open source edms, document approval workflow, ocr]
+links:
+  website: https://www.mayan-edms.com
+  docs: https://docs.mayan-edms.com
+  source: https://gitlab.com/mayan-edms/mayan-edms
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  MAYAN_URL: { value: "{{domains.mayan.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  RABBITMQ_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: hex }
+domains:
+  - { service: mayan, port: 8000 }

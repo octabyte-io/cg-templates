@@ -1,0 +1,18 @@
+name: Kavita
+description: "Kavita is a self-hosted reading server for e-books, comics and manga: read the files you own in any browser and share them with family or a club."
+version: "0.9.1"
+tags: [self-hosted reading server, manga server, comic book server, ebook server, kindle unlimited alternative, comixology alternative, opds server]
+links:
+  website: https://www.kavitareader.com
+  docs: https://wiki.kavitareader.com
+  source: https://github.com/Kareadita/Kavita
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # books at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: kavita, port: 5000 }
+  - { service: filebrowser, port: 80 }

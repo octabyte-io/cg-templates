@@ -1,0 +1,57 @@
+services:
+  usesend:
+    image: usesend/usesend:v1.10.3
+    restart: unless-stopped
+    depends_on:
+      usesend-db:
+        condition: service_healthy
+      usesend-redis:
+        condition: service_healthy
+    environment:
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+      DATABASE_URL: postgresql://usesend:${DB_PASSWORD}@usesend-db:5432/usesend
+      REDIS_URL: redis://usesend-redis:6379
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      GITHUB_ID: ${GITHUB_ID}
+      GITHUB_SECRET: ${GITHUB_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      NEXT_PUBLIC_IS_CLOUD: "false"
+      API_RATE_LIMIT: "1"
+
+  usesend-db:
+    image: postgres:16.15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: usesend
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: usesend
+    volumes:
+      - usesend-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usesend"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  usesend-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - usesend-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  usesend-db-data:
+  usesend-redis-data:

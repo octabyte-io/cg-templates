@@ -1,0 +1,38 @@
+# From wger's official PowerSync config (wger-project/docker, services/config-powersync/powersync.yaml,
+# tag 2.7.0). PowerSync keeps the wger mobile app's offline copy in sync. The values come from the
+# PS_* environment variables set in docker-compose.yml.
+telemetry:
+  disable_telemetry_sharing: true
+  prometheus_port: 9090
+
+# Replicate from the wger database (logical replication).
+replication:
+  connections:
+    - type: postgresql
+      uri: !env PS_DATABASE_URI
+      # The database is on the stack's private network.
+      sslmode: disable
+
+# Sync state lives in its own schema of the wger database, owned by the
+# powersync_storage user that the web container creates on start.
+storage:
+  type: postgresql
+  uri: !env PS_STORAGE_PG_URI
+  sslmode: disable
+
+port: !env PS_PORT
+
+# Workaround for PSYNC_S2305 (see powersync-service issue 682 and wger flutter issue 1237).
+api:
+  parameters:
+    max_parameter_query_results: 10000
+
+sync_rules:
+  path: sync_rules.yaml
+
+# The app's users sign in with tokens signed by the wger server; PowerSync checks them with
+# the server's public keys.
+client_auth:
+  allow_local_jwks: true
+  jwks_uri: !env PS_JWKS_URL
+  audience: ["powersync"]

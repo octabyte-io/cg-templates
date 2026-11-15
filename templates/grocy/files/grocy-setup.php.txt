@@ -1,0 +1,48 @@
+<?php
+// Runs once at each start, after Grocy answers (see docker-compose.yml).
+// Grocy creates its database on the first visit to "/" and adds the account
+// "admin" with the password "admin". This replaces that password with the
+// generated ADMIN_PASSWORD. If the password is no longer "admin" (already
+// replaced, or changed by someone), it changes nothing.
+
+$db = '/config/data/grocy.db';
+$password = getenv('ADMIN_PASSWORD');
+if ($password === false || $password === '') {
+    fwrite(STDERR, "ADMIN_PASSWORD is not set\n");
+    exit(1);
+}
+
+// Visit "/" so Grocy creates or updates its database, then wait for the users table.
+$ready = false;
+for ($i = 0; $i < 60 && !$ready; $i++) {
+    @file_get_contents('http://grocy/', false, stream_context_create(['http' => ['timeout' => 10, 'ignore_errors' => true, 'follow_location' => 0]]));
+    if (file_exists($db)) {
+        try {
+            $pdo = new PDO('sqlite:' . $db, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+            $pdo->exec('PRAGMA busy_timeout = 10000');
+            $ready = (bool) $pdo->query("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'users'")->fetchColumn();
+        } catch (Exception $e) {
+            $ready = false;
+        }
+    }
+    if (!$ready) {
+        sleep(2);
+    }
+}
+if (!$ready) {
+    fwrite(STDERR, "Grocy's database was not created in time\n");
+    exit(1);
+}
+
+$hash = $pdo->query("SELECT password FROM users WHERE username = 'admin'")->fetchColumn();
+if ($hash === false) {
+    echo "No account named admin; nothing to change\n";
+    exit(0);
+}
+if (!password_verify('admin', $hash)) {
+    echo "The admin password is no longer the default; nothing to change\n";
+    exit(0);
+}
+$update = $pdo->prepare("UPDATE users SET password = ? WHERE username = 'admin'");
+$update->execute([password_hash($password, PASSWORD_ARGON2ID)]);
+echo "Replaced the default admin password\n";

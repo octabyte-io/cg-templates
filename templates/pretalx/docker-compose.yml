@@ -1,0 +1,162 @@
+# Based on pretalx's Docker setup (github.com/pretalx/pretalx-docker at v2026.2.1):
+# the pretalx/standalone image runs the web workers (gunicorn) and the background
+# task worker (celery) in one container, with PostgreSQL and Redis next to it and
+# a periodic-tasks job. Its README asks for a web server in front that serves
+# /media/ (pretalx serves uploads itself only in debug mode); that is the nginx
+# service below. Settings come from PRETALX_* variables instead of pretalx.cfg.
+x-pretalx-env: &pretalx-env
+  PRETALX_SITE_URL: ${PRETALX_URL}
+  PRETALX_DB_TYPE: postgresql
+  PRETALX_DB_NAME: pretalx
+  PRETALX_DB_USER: pretalx
+  PRETALX_DB_PASS: ${DB_PASSWORD}
+  PRETALX_DB_HOST: pretalx-db
+  PRETALX_DB_PORT: "5432"
+  PRETALX_REDIS: redis://pretalx-redis:6379/0
+  PRETALX_REDIS_SESSIONS: "true"
+  PRETALX_CELERY_BACKEND: redis://pretalx-redis:6379/1
+  PRETALX_CELERY_BROKER: redis://pretalx-redis:6379/2
+  # Requests pass Cloudgate's proxy, then nginx: the visitor's address is the
+  # second entry from the right of X-Forwarded-For (used for login rate limits).
+  PRETALX_TRUSTED_PROXY_COUNT: "2"
+  # gunicorn takes X-Forwarded-Proto only from trusted addresses; only nginx
+  # on this app's own network can reach it.
+  GUNICORN_FORWARDED_ALLOW_IPS: "*"
+  # The image starts 2 web workers per CPU; 3 keeps memory in check on a small server.
+  GUNICORN_WORKERS: "3"
+  # Email: optional at setup. Empty values are dropped at start (see below), so
+  # pretalx uses its defaults until an email server is added.
+  PRETALX_MAIL_FROM: ${MAIL_FROM:-}
+  PRETALX_MAIL_HOST: ${MAIL_HOST:-}
+  PRETALX_MAIL_PORT: ${MAIL_PORT:-587}
+  PRETALX_MAIL_USER: ${MAIL_USERNAME:-}
+  PRETALX_MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+
+# Runs before the image's own "pretalx" start script:
+#   - drops empty email settings, and turns on STARTTLS for port 587 or SSL for 465;
+#   - "cron": runs pretalx's periodic tasks every 30 minutes (the README's cron job);
+#   - otherwise: runs the database migrations, then, while no administrator
+#     exists yet, pretalx's own "init" with your email, a generated password
+#     and a first organiser; then starts pretalx.
+x-pretalx-start: &pretalx-start
+  - bash
+  - -c
+  - |
+    for v in PRETALX_MAIL_FROM PRETALX_MAIL_HOST PRETALX_MAIL_PORT PRETALX_MAIL_USER PRETALX_MAIL_PASSWORD; do
+      [ -n "$${!v}" ] || unset "$$v"
+    done
+    case "$${PRETALX_MAIL_PORT:-}" in
+      465) export PRETALX_MAIL_SSL=True ;;
+      587) export PRETALX_MAIL_TLS=True ;;
+    esac
+    export AUTOMIGRATE=skip
+    if [ "$$1" = cron ]; then
+      while true; do pretalx runperiodic; sleep 1800; done
+    fi
+    pretalx migrate --noinput || exit 1
+    # The image's "pretalx shell" drops its arguments, so call Django's shell directly.
+    (cd /pretalx/src && PRETALX_DATA_DIR=/data python3 -m pretalx shell --unsafe-disable-scopes -c "$$CLOUDGATE_NO_ADMIN")
+    no_admin=$$?
+    [ "$$no_admin" -le 1 ] || exit 1
+    if [ "$$no_admin" = 0 ]; then
+      DJANGO_SUPERUSER_EMAIL="$$(echo "$$ADMIN_EMAIL" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')" \
+      DJANGO_SUPERUSER_PASSWORD="$$ADMIN_PASSWORD" \
+      PRETALX_INIT_ORGANISER_NAME=Organiser PRETALX_INIT_ORGANISER_SLUG=organiser \
+        pretalx init --noinput || exit 1
+    fi
+    exec pretalx all
+  - bash
+
+services:
+  # nginx in front: serves uploaded files (speaker photos, slides) from the
+  # data volume and passes everything else to pretalx.
+  pretalx:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      pretalx-app:
+        condition: service_healthy
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - pretalx-data:/data:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthcheck/"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  pretalx-app:
+    image: pretalx/standalone:v2026.2.1
+    restart: unless-stopped
+    entrypoint: *pretalx-start
+    command: ["all"]
+    depends_on:
+      pretalx-db:
+        condition: service_healthy
+      pretalx-redis:
+        condition: service_healthy
+    environment:
+      <<: *pretalx-env
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Exits 0 (so init runs) only while there is no administrator yet, 1 once
+      # there is; anything else is an error and stops the start.
+      CLOUDGATE_NO_ADMIN: |
+        import sys
+        from pretalx.person.models import User
+        sys.exit(1 if User.objects.filter(is_administrator=True).exists() else 0)
+    volumes:
+      # Uploaded files, logs and the instance's secret key (/data/.secret).
+      - pretalx-data:/data
+    healthcheck:
+      # The image has neither curl nor wget.
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost/healthcheck/', timeout=8)"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
+  # pretalx's periodic tasks (scheduled emails, clean-up).
+  pretalx-cron:
+    image: pretalx/standalone:v2026.2.1
+    restart: unless-stopped
+    entrypoint: *pretalx-start
+    command: ["cron"]
+    depends_on:
+      pretalx-app:
+        condition: service_healthy
+    environment:
+      <<: *pretalx-env
+    volumes:
+      - pretalx-data:/data
+
+  pretalx-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pretalx
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: pretalx
+    volumes:
+      - pretalx-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pretalx -d pretalx"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  pretalx-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - pretalx-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pretalx-data:
+  pretalx-db-data:
+  pretalx-redis-data:

@@ -1,0 +1,48 @@
+services:
+  kavita:
+    image: jvmilazz0/kavita:0.9.1
+    restart: unless-stopped
+    environment:
+      TZ: Etc/UTC
+    volumes:
+      # Kavita's settings (appsettings.json), SQLite database, covers and logs.
+      - kavita-config:/kavita/config
+      # The book library, shared with FileBrowser Quantum below. Add a library
+      # in Kavita pointing at /books. Kavita scans libraries on a schedule
+      # (daily by default); "Scan Library" picks up new files at once.
+      - kavita-books:/books
+    healthcheck:
+      # The same check the image's own HEALTHCHECK runs.
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:5000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 30s
+
+  # FileBrowser Quantum: upload books from the browser at its own address,
+  # into the same volume Kavita reads from. Its default settings serve /srv
+  # with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets the
+  # password of the user "admin" (created on first start, and set back to this
+  # value on every start). Runs as root so it can write to the shared volume,
+  # which both images create owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - kavita-books:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  kavita-config:
+  kavita-books:
+  filebrowser-data:

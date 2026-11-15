@@ -1,0 +1,30 @@
+name: Grocy
+description: "Grocy is a self-hosted household app that tracks the food you have at home, warns before it expires, fills your shopping list and shares chores."
+version: "4.7.1"
+tags: [ourgroceries alternative, grocery list, pantry inventory, household management, meal planner, chore tracker, barcode scanner]
+links:
+  website: https://grocy.info
+  docs: https://github.com/grocy/grocy#readme
+  source: https://github.com/grocy/grocy
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Replaces the default password (admin) of the account "admin" on the first start.
+  ADMIN_PASSWORD: { generate: password }
+  CURRENCY:
+    ask:
+      label: Currency
+      description: The currency for prices in Grocy, as a three-letter ISO 4217 code such as EUR.
+      default: USD
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in Grocy, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: grocy, port: 80 }
+files:
+  - { path: grocy-setup.php.txt }

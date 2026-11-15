@@ -1,0 +1,52 @@
+services:
+  grocy:
+    # LinuxServer.io's image, the one Grocy's README points to for Docker.
+    # Grocy keeps everything (settings, SQLite database, pictures) under /config.
+    image: lscr.io/linuxserver/grocy:v4.7.1-ls349
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 and refuses to start on a server without it.
+    # On such a server, drop the IPv6 listen lines before the image's own /init starts.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        if [ ! -e /proc/net/if_inet6 ]; then
+        sed -i '/listen \[::\]/d' /defaults/nginx/site-confs/default.conf.sample;
+        if [ -f /config/nginx/site-confs/default.conf ]; then
+        sed -i '/listen \[::\]/d' /config/nginx/site-confs/default.conf; fi; fi;
+        exec /init
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      # Grocy reads any setting from config.php as GROCY_<NAME>.
+      GROCY_CURRENCY: ${CURRENCY:-USD}
+    volumes:
+      - grocy-config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # Runs once at each start, after Grocy answers (files/grocy-setup.php.txt).
+  # On the first start it has Grocy create its database and replaces the default
+  # password "admin" of the account "admin" with the generated one. Later starts
+  # find the password changed and change nothing.
+  grocy-setup:
+    image: lscr.io/linuxserver/grocy:v4.7.1-ls349
+    restart: "no"
+    user: "1000:1000"
+    entrypoint: ["php", "/grocy-setup.php"]
+    depends_on:
+      grocy:
+        condition: service_healthy
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - grocy-config:/config
+      - ../files/grocy-setup.php.txt:/grocy-setup.php:ro
+
+volumes:
+  grocy-config:

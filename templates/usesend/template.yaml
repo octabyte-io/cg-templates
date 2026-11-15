@@ -1,0 +1,56 @@
+name: useSend
+description: "useSend is a self-hosted, open-source email platform on Amazon SES: send app emails and marketing campaigns, and track every delivery, open and bounce."
+version: "1.10.3"
+tags: [resend alternative, sendgrid alternative, postmark alternative, transactional email, email api, amazon ses, email marketing]
+links:
+  website: https://usesend.com
+  docs: https://docs.usesend.com/self-hosting/overview
+  source: https://github.com/usesend/useSend
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  NEXTAUTH_URL: { value: "{{domains.usesend.url}}" }
+  NEXTAUTH_SECRET: { generate: base64 }
+  GITHUB_ID:
+    ask:
+      label: GitHub app client ID
+      description: "useSend signs people in with GitHub. Create a GitHub app (or OAuth app) with the callback URL <your useSend address>/api/auth/callback/github and Email addresses read access, then paste its client ID."
+  GITHUB_SECRET:
+    ask:
+      label: GitHub app client secret
+      description: The client secret of the same GitHub app.
+      secret: true
+  GOOGLE_CLIENT_ID:
+    ask:
+      label: Google client ID (optional)
+      description: "Also allow Google sign-in: a Google OAuth client with the redirect URI <your useSend address>/api/auth/callback/google. Leave both Google fields empty to use GitHub only."
+      required: false
+  GOOGLE_CLIENT_SECRET:
+    ask:
+      label: Google client secret (optional)
+      secret: true
+      required: false
+  AWS_ACCESS_KEY_ID:
+    ask:
+      label: AWS access key ID
+      description: useSend sends through Amazon SES. Create an AWS user with the AmazonSESFullAccess and AmazonSNSFullAccess policies and paste its access key ID.
+  AWS_SECRET_ACCESS_KEY:
+    ask:
+      label: AWS secret access key
+      description: The secret access key of the same AWS user.
+      secret: true
+  AWS_DEFAULT_REGION:
+    ask:
+      label: AWS region
+      description: The Amazon SES region to send from, for example us-east-1 or eu-west-1.
+      default: us-east-1
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email (optional)
+      description: The account that may open the Admin page. Leave empty to make the first person who signs in the admin.
+      format: email
+      required: false
+domains:
+  - { service: usesend, port: 3000 }

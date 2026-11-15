@@ -1,0 +1,124 @@
+# Based on the official docker/docker-compose.yml (GitLab, mayan-edms/mayan-edms) with its
+# default profiles: all_in_one (web UI, workers and scheduler in one container), postgresql,
+# rabbitmq and redis. Elasticsearch, backups, Traefik and the FUSE mirrors are optional extras.
+x-mayan-environment: &mayan-environment
+  MAYAN_CELERY_BROKER_URL: amqp://mayan:${RABBITMQ_PASSWORD}@mayan-rabbitmq:5672/mayan
+  MAYAN_CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD}@mayan-redis:6379/1
+  MAYAN_DATABASES: "{'default':{'ENGINE':'django.db.backends.postgresql','NAME':'mayan','PASSWORD':'${POSTGRES_PASSWORD}','USER':'mayan','HOST':'mayan-db','PORT':5432,'CONN_MAX_AGE':0}}"
+  MAYAN_LOCK_MANAGER_BACKEND: mayan.apps.lock_manager.backends.redis_lock.RedisLock
+  MAYAN_LOCK_MANAGER_BACKEND_ARGUMENTS: "{'redis_url':'redis://:${REDIS_PASSWORD}@mayan-redis:6379/2'}"
+  MAYAN_SERVER_SIDE_EVENTS_BACKEND: mayan.apps.server_side_events.sse_backends.redis.RedisServerEventStreamBackend
+  MAYAN_SERVER_SIDE_EVENTS_BACKEND_ARGUMENTS: "{'url':'redis://:${REDIS_PASSWORD}@mayan-redis:6379/3'}"
+  MAYAN_DOCKER_WAIT: "mayan-db:5432 mayan-rabbitmq:5672 mayan-redis:6379"
+  # Cloudgate serves the app over HTTPS through its proxy; Django's CSRF check needs the
+  # public address to accept form posts such as the sign-in.
+  MAYAN_CSRF_TRUSTED_ORIGINS: "['${MAYAN_URL}']"
+
+services:
+  mayan:
+    image: mayanedms/mayanedms:v4.12.2
+    restart: unless-stopped
+    depends_on:
+      mayan-db:
+        condition: service_healthy
+      mayan-rabbitmq:
+        condition: service_healthy
+      mayan-redis:
+        condition: service_healthy
+    environment:
+      <<: *mayan-environment
+    volumes:
+      - mayan-data:/var/lib/mayan
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mayan-edms/bin/python -c \"import sys,urllib.request; r=urllib.request.urlopen('http://127.0.0.1:8000/', timeout=5); sys.exit(0 if r.status<400 else 1)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+
+  mayan-db:
+    image: postgres:15.17-alpine
+    restart: unless-stopped
+    command:
+      - postgres
+      - -c
+      - default_statistics_target=200
+      - -c
+      - maintenance_work_mem=128MB
+      - -c
+      - max_connections=150
+      - -c
+      - shared_buffers=512MB
+      - -c
+      - work_mem=32MB
+    shm_size: 128m
+    environment:
+      POSTGRES_DB: mayan
+      POSTGRES_USER: mayan
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - mayan-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "--dbname", "mayan", "--username", "mayan"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  mayan-rabbitmq:
+    image: rabbitmq:4.1.8-alpine
+    restart: unless-stopped
+    hostname: mayan-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: mayan
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: mayan
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: -rabbit consumer_timeout 1800000
+    volumes:
+      - mayan-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+  # Holds locks, task results and the live event stream. Not a cache: keys must not be
+  # evicted, so it uses noeviction like the official file.
+  mayan-redis:
+    image: redis:7.4.8-alpine
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly
+      - "no"
+      - --databases
+      - "4"
+      - --maxmemory
+      - "100mb"
+      - --maxclients
+      - "500"
+      - --maxmemory-policy
+      - noeviction
+      - --save
+      - ""
+      - --tcp-backlog
+      - "256"
+      - --requirepass
+      - ${REDIS_PASSWORD}
+    volumes:
+      - mayan-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+volumes:
+  mayan-data:
+  mayan-db-data:
+  mayan-rabbitmq-data:
+  mayan-redis-data:
