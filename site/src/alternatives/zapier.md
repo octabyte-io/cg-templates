@@ -1,7 +1,7 @@
 ---
 apps:
   n8n:
-    fit: "The most capable of the three. Workflows can branch, loop, wait and run code, and AI steps are built in, so it handles jobs that need several Zaps or paid features in Zapier. The editor takes an hour or two to learn."
+    fit: "The most capable general automation tool here. Workflows can branch, loop, wait and run code, and AI steps are built in, so it handles jobs that need several Zaps or paid features in Zapier. The editor takes an hour or two to learn."
     import: no
   activepieces:
     fit: "The closest to how Zapier feels. You build a flow one step at a time from menus, with a trigger at the top, and the list of ready-made app connections grows every month."
@@ -9,13 +9,18 @@ apps:
   automatisch:
     fit: "The simplest choice, for short flows such as a new form entry going to a spreadsheet and a chat message. It connects to far fewer apps than Zapier, so check that yours are on its list."
     import: no
+  sim:
+    fit: "Built for AI agents rather than general automation: agent, logic and app blocks on a canvas, with knowledge bases of your documents, built-in tables and the AI model you choose, and workflows that run on schedules, webhooks and app events. It connects to over 270 apps, fewer than Zapier, and needs a large server and your own AI provider keys."
+    import: no
 moving: |
-  None of these apps can import Zaps, so each one is rebuilt by hand. Start with the Zaps that run most often, since they cost the most on Zapier. A simple two- or three-step Zap usually takes a few minutes to rebuild, and n8n and Activepieces both have template libraries that cover common ones. Connect each app's account once in the new tool, run the new flow alongside the Zap for a few days, then switch the Zap off.
+  None of these apps can import Zaps, so each one is rebuilt by hand. Start with the Zaps that run most often, since they cost the most on Zapier. A simple two- or three-step Zap usually takes a few minutes to rebuild, and n8n and Activepieces both have template libraries that cover common ones. If a Zap mostly hands work to an AI step, such as sorting emails or drafting replies, rebuild it in Sim as an agent with the apps it needs. Connect each app's account once in the new tool, run the new flow alongside the Zap for a few days, then switch the Zap off.
 faq:
   - q: "Is there a free version of Zapier I can host myself?"
-    a: "No. Zapier is only available as a hosted service. n8n, Activepieces and Automatisch do the same job and can run on your own server, where they have no task limits."
+    a: "No. Zapier is only available as a hosted service. n8n, Activepieces, Automatisch and Sim do the same job and can run on your own server, where they have no task limits."
   - q: "Which Zapier alternative is easiest to learn?"
     a: "Activepieces and Automatisch work most like Zapier, one step after another from menus. n8n has more options on its canvas, so it takes a little longer to learn but handles more complex work."
+  - q: "Which Zapier alternative is best for AI agents?"
+    a: "Sim is built around AI agents, with knowledge bases and tables, and works with any major AI provider or a local model. n8n also has AI steps built in and connects to more kinds of apps, so it suits work that mixes AI with ordinary automation."
 ---
 
 Zapier connects the apps a business already uses, so that something happening in one, such as a new form entry or a paid invoice, sets off actions in others. Each automation is called a Zap: a trigger followed by one or more steps.

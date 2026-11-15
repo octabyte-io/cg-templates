@@ -1,0 +1,36 @@
+name: LobeHub
+description: "Self-hosted LobeHub, formerly LobeChat: a ChatGPT-style AI app where you chat with many models, build agents and ask about your files."
+version: "2.3.3"
+tags: [lobechat, chatgpt alternative, self-hosted ai chat, ai agents, chatgpt plus alternative, multi-model ai chat]
+links:
+  website: https://lobehub.com
+  docs: https://lobehub.com/docs/self-hosting/platform/docker-compose
+  source: https://github.com/lobehub/lobehub
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.lobehub.url}}" }
+  S3_ENDPOINT: { value: "{{domains.lobehub-rustfs.url}}" }
+  AGENT_GATEWAY_URL: { value: "{{domains.lobehub-gateway.url}}" }
+  # Encrypts the AI provider keys people save in the app; never change it.
+  KEY_VAULTS_SECRET: { generate: base64 }
+  AUTH_SECRET: { generate: base64 }
+  GATEWAY_SERVICE_TOKEN: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  RUSTFS_ACCESS_KEY: { generate: password }
+  RUSTFS_SECRET_KEY: { generate: password }
+  SEARXNG_SECRET: { generate: hex }
+  AUTH_ALLOWED_EMAILS:
+    ask:
+      label: Who can sign up (optional)
+      description: Email addresses or domains allowed to create an account, separated by commas, for example you@example.com,example.com. Leave it empty to let anyone who opens the app's address sign up.
+      required: false
+domains:
+  - { service: lobehub, port: 3210 }
+  - { service: lobehub-rustfs, port: 9000 }
+  - { service: lobehub-gateway, port: 8787 }
+files:
+  - { path: jwks/generate.js }
+  - { path: rustfs/bucket.config.json }
+  - { path: searxng/settings.yml }

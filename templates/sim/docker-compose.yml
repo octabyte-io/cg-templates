@@ -1,0 +1,145 @@
+# From Sim's docker-compose.prod.yml (v0.9.58). The app, realtime and migrations
+# images share one database schema, so they always use the same version.
+# AI provider keys are not needed to start: people add them in the app.
+services:
+  sim:
+    image: ghcr.io/simstudioai/simstudio:v0.9.58
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    depends_on:
+      sim-db:
+        condition: service_healthy
+      sim-redis:
+        condition: service_healthy
+      sim-migrations:
+        condition: service_completed_successfully
+      sim-realtime:
+        condition: service_healthy
+      sim-uploads-setup:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@sim-db:5432/simstudio
+      NEXT_PUBLIC_APP_URL: ${APP_URL}
+      BETTER_AUTH_URL: ${APP_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      API_ENCRYPTION_KEY: ${API_ENCRYPTION_KEY}
+      INTERNAL_API_SECRET: ${INTERNAL_API_SECRET}
+      CRON_SECRET: ${CRON_SECRET}
+      REDIS_URL: redis://sim-redis:6379
+      # The app talks to realtime inside the stack; the browser uses its own address.
+      SOCKET_SERVER_URL: http://sim-realtime:3002
+      NEXT_PUBLIC_SOCKET_URL: ${SOCKET_URL}
+      # Uploaded files are kept on the volume below (Sim's local disk storage).
+      STORAGE_PROVIDER: local
+    volumes:
+      - sim-uploads:/app/apps/sim/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # Makes the uploads volume writable by the app's user (nextjs, uid 1001),
+  # since the image has no uploads folder of its own. Runs once, then exits.
+  sim-uploads-setup:
+    image: ghcr.io/simstudioai/simstudio:v0.9.58
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["sh", "-c", "chown -R 1001:1001 /app/apps/sim/uploads"]
+    volumes:
+      - sim-uploads:/app/apps/sim/uploads
+
+  # Socket.IO server for live collaborative editing and execution updates.
+  sim-realtime:
+    image: ghcr.io/simstudioai/realtime:v0.9.58
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    depends_on:
+      sim-db:
+        condition: service_healthy
+      sim-redis:
+        condition: service_healthy
+      # Realtime refuses to start until the database tables exist.
+      sim-migrations:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@sim-db:5432/simstudio
+      NEXT_PUBLIC_APP_URL: ${APP_URL}
+      BETTER_AUTH_URL: ${APP_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      INTERNAL_API_SECRET: ${INTERNAL_API_SECRET}
+      REDIS_URL: redis://sim-redis:6379
+      # Socket connections are accepted only from the app's own address.
+      ALLOWED_ORIGINS: ${APP_URL}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:3002/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Creates and upgrades the database tables, then exits.
+  sim-migrations:
+    image: ghcr.io/simstudioai/migrations:v0.9.58
+    restart: "no"
+    working_dir: /app/packages/db
+    command: ["bun", "run", "db:migrate"]
+    depends_on:
+      sim-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@sim-db:5432/simstudio
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+
+  # Runs scheduled workflows, polling triggers and other background jobs.
+  sim-cron:
+    image: ghcr.io/simstudioai/cron:v0.9.58
+    restart: on-failure
+    depends_on:
+      sim:
+        condition: service_healthy
+    environment:
+      SIM_URL: http://sim:3000
+      CRON_SECRET: ${CRON_SECRET}
+      TZ: UTC
+
+  sim-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - sim-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  sim-db:
+    image: pgvector/pgvector:0.8.7-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: simstudio
+    volumes:
+      - sim-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d simstudio"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sim-uploads:
+  sim-db-data:
+  sim-redis-data:

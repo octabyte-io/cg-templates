@@ -6,15 +6,18 @@ apps:
   omni-tools:
     fit: "A lighter choice for the basic jobs: merge, split, rotate, compress, password-protect and turn PDFs into images, with files processed in your own browser and never uploaded. It has no Word or Excel conversion, no OCR and no e-signatures, but it adds image, video, text and data tools and runs on the smallest server."
     import: yes
+  bentopdf:
+    fit: "Works like iLovePDF, pick a tool and drop in a file, with dozens of tools for merging, splitting, compressing, converting Office files, OCR, editing text, signing and forms, all run in your own browser so files are never uploaded. It has no accounts, no API and no phone apps, and large files or OCR are only as fast as the device you use."
+    import: yes
 moving: |
-  There is nothing to import: iLovePDF works on files you upload and download, and Stirling PDF opens the same PDFs. Download anything you kept in iLovePDF's cloud storage first. Give your team Stirling PDF's web address, and if you often chain tools in iLovePDF, such as convert then merge then compress, save that chain as an automation in Stirling PDF and run it on a whole batch of files at once. If your team only merges, splits and compresses PDFs, OmniTools is enough: share its web address and the same jobs run in each person's browser.
+  There is nothing to import: iLovePDF works on files you upload and download, and Stirling PDF opens the same PDFs. Download anything you kept in iLovePDF's cloud storage first. Give your team Stirling PDF's web address, and if you often chain tools in iLovePDF, such as convert then merge then compress, save that chain as an automation in Stirling PDF and run it on a whole batch of files at once. If your team only merges, splits and compresses PDFs, OmniTools is enough: share its web address and the same jobs run in each person's browser. BentoPDF also runs in the browser but covers far more tools, including Office conversion and OCR, and its Workflow Builder chains steps the way you would in iLovePDF.
 faq:
   - q: "Does Stirling PDF limit file sizes like iLovePDF's free plan?"
     a: "No. Stirling PDF has no plan limit on file size and accepts uploads of up to 2,000 MB by default; in practice your server's memory is the limit. Very large files and OCR take longer on a small server."
   - q: "Can Stirling PDF convert Word and Excel files to PDF?"
     a: "Yes. It converts Word, Excel and PowerPoint files, images, web pages and ebooks to PDF, and PDFs back into other formats."
-  - q: "Should I choose Stirling PDF or OmniTools?"
-    a: "Choose Stirling PDF if PDFs are a regular part of your work: it converts Office files, reads scanned pages with OCR and has user accounts, but needs a fairly large server. Choose OmniTools for occasional merging, splitting and compressing on the smallest server, with no accounts to manage."
+  - q: "Should I choose Stirling PDF, BentoPDF or OmniTools?"
+    a: "Choose Stirling PDF if PDFs are a regular part of your work and you want user accounts, an API and the work done on the server, which needs a fairly large one. Choose BentoPDF for a similar range of tools with files kept in each person's browser, on a tiny server with no accounts. Choose OmniTools for occasional merging, splitting and compressing, alongside image and text tools."
 ---
 
 iLovePDF is a popular online PDF toolbox. On its website you can merge, split, compress, convert, rotate, watermark, unlock and sign PDFs, one tool per task, and it also has desktop and phone apps and a paid plan.

@@ -6,11 +6,16 @@ apps:
   omni-tools:
     fit: "Covers Smallpdf's everyday tools, merge, split, rotate, compress, protect and PDF to images, with no task limit, and files never leave your own browser. It has no conversion to Word or Excel, no OCR and no e-signatures, so it suits occasional PDF jobs best."
     import: yes
+  bentopdf:
+    fit: "The same pick-a-tool way of working, with dozens of tools including Office conversion, OCR, editing text, signing and fillable forms, and no task limit. The work happens in your own browser, so files never leave your computer, and the server only serves the app. It has no accounts, storage or phone apps, and slow devices are slow on big files."
+    import: yes
 moving: |
-  Smallpdf keeps no data you need to bring over: you upload a PDF, run a tool and download the result, and Stirling PDF does the same with your files. If you stored documents in Smallpdf's cloud, download them first. Bookmark Stirling PDF's web address for everyone who used Smallpdf, and show them the search bar at the top, which finds a tool by name. There is no phone app, but a phone can scan a QR code and send photos of pages to Stirling PDF, which turns them into a PDF. OmniTools needs even less: open its web address in any browser, phone included, and pick a tool from its search box.
+  Smallpdf keeps no data you need to bring over: you upload a PDF, run a tool and download the result, and Stirling PDF does the same with your files. If you stored documents in Smallpdf's cloud, download them first. Bookmark Stirling PDF's web address for everyone who used Smallpdf, and show them the search bar at the top, which finds a tool by name. There is no phone app, but a phone can scan a QR code and send photos of pages to Stirling PDF, which turns them into a PDF. OmniTools and BentoPDF need even less: open the web address in any browser and pick a tool, with nothing to sign in to.
 faq:
   - q: "Does Stirling PDF have a daily task limit like Smallpdf's free plan?"
     a: "No. Tools you use by hand have no limit. Only automated work, such as API calls with a key and saved pipelines, counts towards a monthly allowance on the free plan."
+  - q: "Which Smallpdf alternative keeps files off the server?"
+    a: "BentoPDF and OmniTools. Both process files in your own browser, so documents are not uploaded anywhere; BentoPDF has the wider range of tools, including Office conversion and OCR."
   - q: "Can I use Stirling PDF on my phone?"
     a: "In the phone's browser, yes, but there is no phone app. Its mobile scanner lets you photograph pages with your phone and send them to Stirling PDF as a PDF."
 ---

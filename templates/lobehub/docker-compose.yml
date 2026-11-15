@@ -1,0 +1,172 @@
+# From LobeHub's docker-compose/deploy/docker-compose.yml at v2.3.3 (the
+# server-database deployment its docs describe), without published ports, the
+# RustFS admin console and the optional Elasticsearch services. Cloudgate gives
+# three web addresses: the app, the file storage (browsers upload and open
+# files there) and the agent gateway (browsers stream agent runs from it).
+services:
+  lobehub:
+    image: lobehub/lobehub:2.3.3
+    restart: unless-stopped
+    depends_on:
+      lobehub-db:
+        condition: service_healthy
+      lobehub-redis:
+        condition: service_healthy
+      lobehub-rustfs:
+        condition: service_healthy
+      lobehub-rustfs-init:
+        condition: service_completed_successfully
+      lobehub-jwks:
+        condition: service_completed_successfully
+    # JWKS_KEY is an RSA key set, made once by lobehub-jwks; it is read from
+    # its volume at each start and handed to LobeHub's own start command.
+    entrypoint: ["/bin/sh", "-c"]
+    command: ['export JWKS_KEY="$$(cat /jwks/private.json)" && exec /bin/node /app/startServer.js']
+    environment:
+      APP_URL: ${APP_URL}
+      INTERNAL_APP_URL: http://localhost:3210
+      KEY_VAULTS_SECRET: ${KEY_VAULTS_SECRET}
+      AUTH_SECRET: ${AUTH_SECRET}
+      AUTH_ALLOWED_EMAILS: ${AUTH_ALLOWED_EMAILS}
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@lobehub-db:5432/lobechat
+      # S3_ENDPOINT is opened by browsers; the server reaches RustFS directly.
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_INTERNAL_ENDPOINT: http://lobehub-rustfs:9000
+      S3_BUCKET: lobe
+      S3_ENABLE_PATH_STYLE: "1"
+      S3_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
+      S3_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY}
+      S3_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY}
+      S3_SET_ACL: "0"
+      LLM_VISION_IMAGE_USE_BASE64: "1"
+      SEARXNG_URL: http://lobehub-searxng:8080
+      REDIS_URL: redis://lobehub-redis:6379
+      REDIS_PREFIX: lobechat
+      REDIS_TLS: "0"
+      # Gateway Mode: agent runs execute on the server and stream to the
+      # browser through lobehub-gateway.
+      ENABLE_AGENT_GATEWAY: "1"
+      AGENT_GATEWAY_URL: ${AGENT_GATEWAY_URL}
+      AGENT_GATEWAY_INTERNAL_URL: http://lobehub-gateway:8787
+      AGENT_GATEWAY_SERVICE_TOKEN: ${GATEWAY_SERVICE_TOKEN}
+      DEVICE_GATEWAY_URL: http://lobehub-gateway:8788
+      DEVICE_GATEWAY_SERVICE_TOKEN: ${GATEWAY_SERVICE_TOKEN}
+    volumes:
+      - lobehub-jwks:/jwks:ro
+
+  # Runs once at each start: makes the RS256 key set on the first start and
+  # leaves it alone afterwards (files/jwks/generate.js).
+  lobehub-jwks:
+    image: lobehub/lobehub:2.3.3
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["/bin/node", "/generate.js"]
+    command: []
+    volumes:
+      - ../files/jwks/generate.js:/generate.js:ro
+      - lobehub-jwks:/jwks
+
+  # LobeHub's gateway (agent gateway on 8787, device gateway on 8788 for
+  # `lh connect`). It keeps its state in memory.
+  lobehub-gateway:
+    image: ghcr.io/lobehub/lobehub-gateway:0.5.0
+    restart: unless-stopped
+    depends_on:
+      lobehub-jwks:
+        condition: service_completed_successfully
+    entrypoint: ["/bin/sh", "-c"]
+    command: ['export JWKS_PUBLIC_KEY="$$(cat /jwks/public.json)" && exec gateway']
+    environment:
+      SERVICE_TOKEN: ${GATEWAY_SERVICE_TOKEN}
+      LOBE_API_BASE_URL: http://lobehub:3210
+    volumes:
+      - lobehub-jwks:/jwks:ro
+
+  lobehub-db:
+    # PostgreSQL 17 with pgvector and pg_search, as LobeHub's compose file uses.
+    image: paradedb/paradedb:0.26.6-pg17
+    restart: unless-stopped
+    # Keep the image's preload list: its first-start bootstrap creates pg_cron.
+    command: ["postgres", "-c", "shared_preload_libraries=pg_search,pg_cron,pg_stat_statements"]
+    environment:
+      POSTGRES_DB: lobechat
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - lobehub-db-data:/var/lib/postgresql/data
+    healthcheck:
+      # Over TCP: during first-time setup the image runs a socket-only server.
+      test: ["CMD-SHELL", "pg_isready -U postgres -h 127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  lobehub-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1000", "--appendonly", "yes"]
+    volumes:
+      - lobehub-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # S3-compatible storage for uploaded files and images.
+  lobehub-rustfs:
+    image: rustfs/rustfs:1.0.5
+    restart: unless-stopped
+    command: ["--access-key", "${RUSTFS_ACCESS_KEY}", "--secret-key", "${RUSTFS_SECRET_KEY}", "/data"]
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY}
+      RUSTFS_CONSOLE_ENABLE: "false"
+    volumes:
+      - lobehub-rustfs-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9000/health >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  # Runs once at each start: creates the "lobe" bucket, lets anyone read its
+  # files (files/rustfs/bucket.config.json) and allows browser uploads (CORS).
+  lobehub-rustfs-init:
+    image: rustfs/rc:v0.1.37
+    restart: "no"
+    depends_on:
+      lobehub-rustfs:
+        condition: service_healthy
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY}
+    volumes:
+      - ../files/rustfs/bucket.config.json:/bucket.config.json:ro
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - >-
+        set -eu;
+        rc alias set rustfs http://lobehub-rustfs:9000 "$$RUSTFS_ACCESS_KEY" "$$RUSTFS_SECRET_KEY";
+        rc mb rustfs/lobe --ignore-existing;
+        rc anonymous set-json /bucket.config.json rustfs/lobe;
+        printf "%s" "<CORSConfiguration><CORSRule><AllowedOrigin>*</AllowedOrigin><AllowedMethod>GET</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedHeader>*</AllowedHeader><ExposeHeader>ETag</ExposeHeader><MaxAgeSeconds>3600</MaxAgeSeconds></CORSRule></CORSConfiguration>"
+        | rc bucket cors set rustfs/lobe -
+
+  # Web search for LobeHub's assistants.
+  lobehub-searxng:
+    image: searxng/searxng:2026.11.14-a7128d5d1
+    restart: unless-stopped
+    environment:
+      SEARXNG_SETTINGS_FILE: /etc/searxng/settings.yml
+      SEARXNG_SECRET: ${SEARXNG_SECRET}
+      GRANIAN_HOST: 0.0.0.0
+    volumes:
+      - ../files/searxng/settings.yml:/etc/searxng/settings.yml:ro
+
+volumes:
+  lobehub-jwks:
+  lobehub-db-data:
+  lobehub-redis-data:
+  lobehub-rustfs-data:

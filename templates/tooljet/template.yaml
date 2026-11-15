@@ -1,0 +1,19 @@
+name: ToolJet
+description: "Self-hosted ToolJet Community Edition: build internal tools, admin panels and dashboards on your own databases or its built-in one, with no per-user limit."
+version: "3.21.96-lts"
+tags: [retool alternative, internal tools, admin panel builder, low-code, glide alternative, softr alternative, app builder]
+links:
+  website: https://www.tooljet.com
+  docs: https://docs.tooljet.com
+  source: https://github.com/ToolJet/ToolJet
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  TOOLJET_HOST: { value: "{{domains.tooljet.url}}" }
+  LOCKBOX_MASTER_KEY: { generate: hex }
+  SECRET_KEY_BASE: { generate: hex }
+  PGRST_JWT_SECRET: { generate: hex }
+  PG_PASS: { generate: password }
+domains:
+  - { service: tooljet, port: 80 }
