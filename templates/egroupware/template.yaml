@@ -1,0 +1,20 @@
+name: EGroupware
+description: "EGroupware is open-source groupware you host yourself: a shared calendar, address book, tasks, projects, time sheets and files for your team in one web app."
+version: "26.11.20261112"
+tags: [groupware, microsoft exchange alternative, shared calendar, caldav carddav server, google workspace alternative, open source groupware, egroupware]
+links:
+  website: https://www.egroupware.org
+  docs: https://help.egroupware.org
+  source: https://github.com/EGroupware/egroupware
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  SETUP_PASSWORD: { generate: password }
+domains:
+  - { service: egroupware-nginx, port: 80 }
+files:
+  - { path: nginx.conf }

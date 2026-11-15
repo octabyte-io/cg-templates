@@ -1,0 +1,27 @@
+services:
+  dailytxt:
+    image: phitux/dailytxt:2.6.4
+    restart: unless-stopped
+    environment:
+      # Signs the sign-in tokens, so people stay signed in across restarts.
+      SECRET_TOKEN: ${SECRET_TOKEN}
+      # Password for the admin panel (Settings > Admin). It manages accounts but
+      # cannot decrypt anyone's diary.
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Anyone who can reach the address may sign up while this is true. There
+      # is no first-user exception, so keep it true until your account exists.
+      ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
+      # Days until a sign-in expires.
+      LOGOUT_AFTER_DAYS: "40"
+    volumes:
+      # Every account's encrypted entries and uploaded files, as JSON files.
+      - dailytxt-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  dailytxt-data:

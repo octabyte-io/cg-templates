@@ -1,0 +1,52 @@
+# Runs with "bin/instance run" before SENAITE starts (see docker-compose.yml).
+# Python 2.7, inside the official senaite/senaite image; "app" is the Zope root.
+#
+# 1. Replaces the image's default Zope admin password (admin:admin) with the
+#    generated ADMIN_PASSWORD. Only while it is still "admin": a password you
+#    change later is never overwritten.
+# 2. Creates the SENAITE site at /senaite on the first start, as the
+#    "Create SENAITE Site" button in the Zope root would. Later starts find it
+#    and change nothing.
+import os
+
+import transaction
+from AccessControl.SecurityManagement import newSecurityManager
+from Testing.makerequest import makerequest
+from zope.globalrequest import setRequest
+
+SITE_ID = "senaite"
+ADMIN = "admin"
+
+app = makerequest(app)  # noqa: F821 (provided by bin/instance run)
+app.REQUEST["PARENTS"] = [app]
+setRequest(app.REQUEST)
+
+acl_users = app.acl_users
+user = acl_users.getUserById(ADMIN)
+password = os.environ["ADMIN_PASSWORD"]
+if user is None:
+    acl_users._doAddUser(ADMIN, password, ["Manager"], [])
+    print("senaite-setup: created the Zope admin user")
+elif acl_users.authenticate(ADMIN, "admin", app.REQUEST) is not None:
+    acl_users._doChangeUser(ADMIN, password, user.getRoles(), user.getDomains())
+    print("senaite-setup: replaced the default admin password")
+transaction.commit()
+
+if SITE_ID not in app.objectIds():
+    from Products.CMFPlone.factory import addPloneSite
+
+    newSecurityManager(None, acl_users.getUserById(ADMIN).__of__(acl_users))
+    addPloneSite(
+        app,
+        SITE_ID,
+        title="SENAITE LIMS",
+        profile_id="Products.CMFPlone:plone",
+        extension_ids=("senaite.lims:default",),
+        setup_content=False,
+        default_language="en",
+        portal_timezone=os.environ.get("TIMEZONE") or "UTC",
+    )
+    transaction.commit()
+    print("senaite-setup: created the SENAITE site /%s" % SITE_ID)
+else:
+    print("senaite-setup: the SENAITE site /%s exists" % SITE_ID)

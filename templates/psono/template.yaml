@@ -1,0 +1,69 @@
+name: Psono
+description: "Psono is a self-hosted, open-source team password manager in place of 1Password or LastPass: share logins by folder, with apps and browser autofill."
+version: "7.5.10"
+tags: [team password manager, self-hosted password manager, 1password alternative, lastpass alternative, keeper alternative, password sharing, open source password manager]
+links:
+  website: https://psono.com
+  docs: https://doc.psono.com/admin/installation/install-psono-ce.html
+  source: https://gitlab.com/esaqa/psono/psono-server
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PSONO_HOST: { value: "{{domains.psono.host}}" }
+  DB_PASSWORD: { generate: password }
+  # The server's own secrets, made once (Psono's generateserverkeys makes the same kinds).
+  # Changing any of them later breaks logins, activation links and stored email addresses.
+  SECRET_KEY: { generate: password }
+  ACTIVATION_LINK_SECRET: { generate: password }
+  DB_SECRET: { generate: password }
+  # The server's NaCl private key (32 bytes); its public key is worked out from it at start.
+  PRIVATE_KEY: { generate: hex }
+  # 16 of its bytes become the bcrypt salt Psono hashes email addresses with.
+  EMAIL_SALT_SEED: { generate: hex }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the first admin account. You sign in as "admin" with the generated admin password, then choose your own password.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  EMAIL_FROM:
+    ask:
+      label: Sender email
+      description: Optional. The address Psono sends account activations and password resets from, such as psono@yourcompany.com. Needed if you fill in an email server below.
+      format: email
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but people who sign up themselves need it to activate their account. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_SSL:
+    ask:
+      label: Email server uses TLS from the start
+      description: "true for port 465, false for port 587 (STARTTLS)."
+      default: "false"
+      pattern: "true|false"
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: psono, port: 80 }
+files:
+  - { path: settings.yaml }
+  - { path: config.json }
+  - { path: psono-start.py.txt }

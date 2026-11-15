@@ -1,0 +1,25 @@
+name: SENAITE LIMS
+description: "SENAITE is a self-hosted, open-source LIMS for testing labs: track samples, worksheets, instrument results, verification and PDF reports."
+version: "2.6.0"
+tags: [open source lims, laboratory information management system, qbench alternative, labware lims alternative, sample tracking, lab results reports]
+links:
+  website: https://www.senaite.com
+  docs: https://www.senaite.com/docs/installation
+  source: https://github.com/senaite/senaite.core
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # Replaces the image's default Zope admin password (admin) on the first start.
+  # Sign in as "admin" with this password.
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The lab's time zone for dates and times in SENAITE, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: senaite, port: 8080 }
+files:
+  - { path: senaite-setup.py.txt }

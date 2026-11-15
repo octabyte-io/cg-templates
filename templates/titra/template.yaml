@@ -1,0 +1,15 @@
+name: titra
+description: "titra is simple, self-hosted time tracking for freelancers and small teams: book hours to projects, see turnover at your rates and export to CSV or Excel."
+version: "1.2.0"
+tags: [time tracking, toggl alternative, clockify alternative, harvest alternative, timesheet software, time tracker for freelancers, open source time tracker]
+links:
+  website: https://titra.io
+  docs: https://wiki.titra.io
+  source: https://github.com/titraio/titra
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ROOT_URL: { value: "{{domains.titra.url}}" }
+domains:
+  - { service: titra, port: 3000 }

@@ -1,0 +1,45 @@
+services:
+  senaite:
+    # The official SENAITE image (github.com/senaite/senaite.docker): SENAITE
+    # 2.6.0 on Plone 5.2 / Zope, a standalone instance with its ZODB database
+    # in the data volume. "-docker2" is the maintainers' rebuild of 2.6.0.
+    image: senaite/senaite:v2.6.0-docker2
+    restart: unless-stopped
+    # The image's entrypoint fixes the data volume's permissions, then runs
+    # this command (as it does for any custom command). It:
+    #   1. lets Zope's web server trust the X-Forwarded-* headers of the
+    #      Cloudgate proxy in front of it, so links use https and the domain;
+    #   2. runs files/senaite-setup.py.txt: on the first start it replaces the
+    #      default admin password and creates the SENAITE site at /senaite;
+    #   3. starts SENAITE in the foreground, as the image's own "start" does.
+    # The image's SITE and PASSWORD variables would do 2. by re-running
+    # buildout, which downloads from dist.plone.org at every start; this
+    # does it offline.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        ini=/home/senaite/senaitelims/parts/instance/etc/wsgi.ini
+        if ! grep -q '^trusted_proxy' "$$ini"; then
+          sed -i 's/^\[server:main\]$$/[server:main]\ntrusted_proxy = *\ntrusted_proxy_count = 1\ntrusted_proxy_headers = x-forwarded-for x-forwarded-host x-forwarded-proto x-forwarded-port/' "$$ini"
+        fi
+        gosu senaite bin/instance run /senaite-setup.py
+        exec gosu senaite bin/instance console
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TIMEZONE: ${TIMEZONE:-UTC}
+    volumes:
+      # Data.fs (the ZODB database), blobs (attachments, reports) and logs.
+      - senaite-data:/data
+      - ../files/senaite-setup.py.txt:/senaite-setup.py:ro
+    healthcheck:
+      # The image has neither curl nor wget; it has Python 2.
+      test: ["CMD", "python", "-c", "import urllib2; urllib2.urlopen('http://localhost:8080/senaite/login', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 300s
+
+volumes:
+  senaite-data:

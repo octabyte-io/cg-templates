@@ -1,0 +1,47 @@
+name: Foodsoft
+description: "Self-hosted Foodsoft runs a food co-op or buying group's shared orders, supplier price lists, stock, member accounts and volunteer tasks in one web app."
+version: "4.9.2"
+tags: [food co-op software, food coop, buying group, buying club software, food cooperative, group ordering, member accounts]
+links:
+  website: https://foodcoops.net
+  docs: https://github.com/foodcoops/foodsoft/wiki
+  source: https://github.com/foodcoops/foodsoft
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  FOODSOFT_HOST: { value: "{{domains.foodsoft.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Foodsoft with this address and the generated admin password. Foodsoft's emails are sent from it too.
+      format: email
+  SMTP_ADDRESS:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed for invitations, password resets and order emails. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER_NAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: foodsoft, port: 3000 }
+files:
+  - { path: app_config.yml }
+  - { path: foodsoft-start.sh.txt }

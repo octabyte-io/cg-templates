@@ -1,0 +1,31 @@
+#!/bin/sh
+# Starts Foodsoft's web process. On the first start it loads the database schema and
+# Foodsoft's minimal seed (the "Administrators" group and the "admin" user), then gives
+# that admin the email and the generated password from Cloudgate's settings, so the
+# well-known default login (admin / secret) never works. Later starts run migrations.
+set -eu
+cd /usr/src/app
+
+state="$(bundle exec rails runner 'puts(ActiveRecord::Base.connection.table_exists?(:users) ? "STATE=ready" : "STATE=empty")' | sed -n 's/^STATE=//p' | tail -n 1)"
+
+case "$state" in
+  empty)
+    echo "Setting up the Foodsoft database (first start)..."
+    bundle exec rake db:schema:load db:seed
+    bundle exec rails runner '
+      admin = User.find_by!(nick: "admin")
+      admin.update!(email: ENV.fetch("FOODSOFT_ADMIN_EMAIL"), password: ENV.fetch("FOODSOFT_ADMIN_PASSWORD"))
+      puts "Admin account ready: log in as #{admin.email} (or admin) with the generated password."
+    '
+    ;;
+  ready)
+    bundle exec rake db:migrate
+    ;;
+  *)
+    # Could not tell whether the database is set up: never load the schema over real data.
+    echo "Could not read the database; retrying on the next start." >&2
+    exit 1
+    ;;
+esac
+
+exec ./proc-start web

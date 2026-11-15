@@ -1,0 +1,92 @@
+# From EGroupware's doc/docker/docker-compose.yml and nginx.conf (release 26.11.20261112).
+# Kept: the egroupware (PHP-FPM) container, nginx in front of it, MariaDB and the push server
+# (live updates in the browser). Left out: Collabora Online, Rocket.Chat and its MongoDB,
+# watchtower, published ports and the host bind mounts (named volumes instead).
+#
+# On its first start the egroupware image installs EGroupware into the database
+# (doc/rpm-build/post_install.php) and creates the admin user. post_install.php reads EGW_*
+# environment variables, but the image's entrypoint calls it through sudo, which drops them;
+# the entrypoint override below only tells sudo to keep EGW_* variables, then runs the
+# image's own entrypoint and command unchanged.
+
+services:
+  egroupware:
+    image: egroupware/egroupware:26.11.20261112
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - echo 'Defaults env_keep += "EGW_*"' > /etc/sudoers.d/cloudgate-egw-env && chmod 440 /etc/sudoers.d/cloudgate-egw-env && exec /entrypoint.sh php-fpm --nodaemonize
+    depends_on:
+      egroupware-db:
+        condition: service_healthy
+    environment:
+      EGW_DB_HOST: egroupware-db
+      # the database user egroupware is created by the installer, from any container address
+      EGW_DB_GRANT_HOST: "%"
+      EGW_DB_ROOT: root
+      EGW_DB_ROOT_PW: ${DB_ROOT_PASSWORD}
+      EGW_DB_NAME: egroupware
+      EGW_DB_USER: egroupware
+      EGW_DB_PASS: ${DB_PASSWORD}
+      # Created on the first install only: sign in as "sysop" with ADMIN_PASSWORD.
+      EGW_ADMIN_USER: sysop
+      EGW_ADMIN_PASSWD: ${ADMIN_PASSWORD}
+      # Setup / database manager (/egroupware/setup/): user "admin" with SETUP_PASSWORD.
+      EGW_CONFIG_USER: admin
+      EGW_CONFIG_PASSWD: ${SETUP_PASSWORD}
+    volumes:
+      - egroupware-sources:/usr/share/egroupware
+      - egroupware-data:/var/lib/egroupware
+      - egroupware-sessions:/var/lib/php/sessions
+      - egroupware-push-config:/var/lib/egroupware-push
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/lib/egroupware/header.inc.php && nc -z 127.0.0.1 9000"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 600s
+
+  egroupware-nginx:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      egroupware:
+        condition: service_healthy
+    volumes:
+      - egroupware-sources:/usr/share/egroupware:ro
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  # push server (phpswoole), running the push code that ships with EGroupware
+  egroupware-push:
+    image: phpswoole/swoole:6.2.5-php8.4-alpine
+    restart: unless-stopped
+    command: ["php", "/usr/share/egroupware/swoolepush/server.php"]
+    depends_on:
+      egroupware:
+        condition: service_healthy
+    volumes:
+      - egroupware-sources:/usr/share/egroupware:ro
+      - egroupware-sessions:/var/lib/php/sessions
+      - egroupware-push-config:/var/lib/egroupware-push
+
+  egroupware-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - egroupware-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  egroupware-sources:
+  egroupware-data:
+  egroupware-sessions:
+  egroupware-push-config:
+  egroupware-db-data:
