@@ -1,0 +1,18 @@
+name: Dashy
+description: "Dashy is a self-hosted start page that puts your team's apps and links on one page, with live up or down status dots, search and widgets."
+version: "4.9.18"
+tags: [start.me alternative, self-hosted start page, app dashboard, homepage dashboard, browser start page, app launcher]
+links:
+  website: https://dashy.to
+  docs: https://dashy.to/docs
+  source: https://github.com/Lissy93/dashy
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Dashy's own login is checked only in the browser, so the server itself asks
+  # for this password (username: admin) before it hands out the dashboard's
+  # config or runs any status check or widget request.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: dashy, port: 8080 }
