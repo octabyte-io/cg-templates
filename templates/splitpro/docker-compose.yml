@@ -27,10 +27,11 @@ services:
       - splitpro-uploads:/app/uploads
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/healthz"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 60s
+      # Database migrations run on first start, so allow a slow first boot.
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 180s
 
   splitpro-db:
     image: ossapps/postgres:17.7-trixie
