@@ -1,0 +1,130 @@
+# Based on Helfertool's installation guide (docs.helfertool.org > Administration >
+# Installation) and helfertoolctl, which runs the helfertool/helfertool image with
+# PostgreSQL and RabbitMQ next to it. The image runs nginx, the web workers (uWSGI)
+# and the Celery worker and scheduler in one container, as user 10001, and reads
+# its settings from /config/helfertool.yaml (files/helfertool.yaml here).
+#
+# The project publishes one Docker tag per release series (4.1.x), rebuilt with
+# security updates; it has no tag per patch release.
+
+services:
+  helfertool:
+    image: helfertool/helfertool:4.1.x
+    restart: unless-stopped
+    depends_on:
+      helfertool-setup:
+        condition: service_completed_successfully
+      helfertool-db:
+        condition: service_healthy
+      helfertool-rabbitmq:
+        condition: service_healthy
+    # Before the image's own start ("helfertool run": migrations, then all
+    # services), on the first start only: enables PostgreSQL's pg_trgm for the
+    # similarity search, loads the default texts ("helfertoolctl init") and creates
+    # the "admin" account with your email and a generated password (the docs'
+    # "helfertoolctl createadmin"). Later starts find all of that done.
+    entrypoint:
+      - bash
+      - -c
+      - |
+        set -e
+        mkdir -p /helfertool/run/tmp /data/media /data/tmp
+        cd /helfertool/src
+        /helfertool/venv/bin/python manage.py migrate --noinput
+        /helfertool/venv/bin/python manage.py shell -v 0 -c "$$CLOUDGATE_SETUP"
+        exec /usr/local/bin/helfertool run
+    environment:
+      # 3 web workers and 1 task worker instead of the image's 2 and 0.5 per CPU,
+      # which keeps memory near 450 MB on a small server.
+      HELFERTOOL_WORKERS: "3"
+      HELFERTOOL_TASK_WORKERS: "1"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Helfertool reads these from files/helfertool.yaml, where Cloudgate writes
+      # them at setup; they are listed here so the template declares every value.
+      HELFERTOOL_SECRET_KEY: ${SECRET_KEY}
+      HELFERTOOL_TIMEZONE: ${TIMEZONE}
+      HELFERTOOL_MAIL_FROM: ${MAIL_FROM:-}
+      HELFERTOOL_MAIL_HOST: ${MAIL_HOST:-}
+      HELFERTOOL_MAIL_PORT: ${MAIL_PORT:-587}
+      HELFERTOOL_MAIL_USERNAME: ${MAIL_USERNAME:-}
+      HELFERTOOL_MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      CLOUDGATE_SETUP: |
+        import os
+        from django.core.management import call_command
+        from django.db import connection
+        from django.contrib.auth.models import User
+        from toolsettings.models import HTMLSetting
+        with connection.cursor() as c:
+            c.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+        if not HTMLSetting.objects.exists():
+            call_command("loaddata", "toolsettings")
+        if not User.objects.filter(is_superuser=True).exists():
+            User.objects.create_superuser("admin", os.environ["ADMIN_EMAIL"].strip(), os.environ["ADMIN_PASSWORD"])
+            print("Created the admin account")
+    volumes:
+      # Uploaded files (event logos, badge photos) and the scheduler's state.
+      - helfertool-data:/data
+      - helfertool-log:/log
+      - ../files/helfertool.yaml:/config/helfertool.yaml:ro
+      - ../files/nginx.conf:/helfertool/etc/nginx.conf:ro
+    # Sockets, pid files and temporary files, as helfertoolctl mounts it.
+    tmpfs:
+      - /helfertool/run
+    # The image's own healthcheck (web answers, every service running), with
+    # time for the first start's migrations.
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 180s
+
+  # The image runs as user 10001 and its /data and /log folders belong to root,
+  # so a new volume isn't writable. This gives them to that user, then exits.
+  helfertool-setup:
+    image: helfertool/helfertool:4.1.x
+    restart: "no"
+    user: root
+    entrypoint: ["chown", "10001:10001", "/data", "/log"]
+    volumes:
+      - helfertool-data:/data
+      - helfertool-log:/log
+
+  helfertool-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: helfertool
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: helfertool
+    volumes:
+      - helfertool-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U helfertool -d helfertool"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # The message queue between the web workers and the Celery task worker.
+  helfertool-rabbitmq:
+    image: rabbitmq:4.1.8-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: helfertool
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: helfertool
+    volumes:
+      - helfertool-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  helfertool-data:
+  helfertool-log:
+  helfertool-db-data:
+  helfertool-rabbitmq-data:

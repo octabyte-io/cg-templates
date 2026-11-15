@@ -1,0 +1,22 @@
+name: Paheko
+description: "Self-hosted Paheko: member register, fees, email reminders and simple double-entry accounting for associations, in French. Formerly Garradin."
+version: "1.3.24"
+tags:
+  - assoconnect alternative
+  - association management software
+  - logiciel gestion association
+  - nonprofit accounting
+  - membership management
+  - garradin
+links:
+  website: https://paheko.cloud
+  docs: https://paheko.cloud/aide
+  source: https://fossil.kd2.org/paheko
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  WWW_URL: { value: "{{domains.paheko.url}}/" }
+  SECRET_KEY: { generate: hex }
+domains:
+  - { service: paheko, port: 80 }
