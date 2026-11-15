@@ -1,0 +1,48 @@
+name: Healthchecks
+description: "Healthchecks is a self-hosted cron job monitor that alerts you when a backup or scheduled task stops running, in place of Cronitor or Dead Man's Snitch."
+version: "5.0.3"
+tags: ["cron job monitoring", "cronitor alternative", "dead mans snitch alternative", "heartbeat monitoring", "backup monitoring", "scheduled task alerts"]
+links:
+  website: https://healthchecks.io
+  docs: https://healthchecks.io/docs/self_hosted/
+  source: https://github.com/healthchecks/healthchecks
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SITE_ROOT: { value: "{{domains.healthchecks.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email address. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  EMAIL_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Healthchecks sends alerts, sign-in links and team invitations by email, so add an email sending service, for example smtp.resend.com, to use them. You can add it later on the app's variables page.
+      required: false
+  EMAIL_PORT:
+    ask:
+      label: Email server port
+      description: Usually 587.
+      default: "587"
+      required: false
+  EMAIL_HOST_USER:
+    ask:
+      label: Email server username
+      required: false
+  EMAIL_HOST_PASSWORD:
+    ask:
+      label: Email server password
+      required: false
+  DEFAULT_FROM_EMAIL:
+    ask:
+      label: Sender address
+      description: The address alert emails come from, for example alerts@yourcompany.com.
+      format: email
+      required: false
+domains:
+  - { service: healthchecks, port: 8000 }

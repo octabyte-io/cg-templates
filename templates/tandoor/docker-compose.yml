@@ -1,0 +1,58 @@
+# From Tandoor's official "plain" compose file (docs/install/docker/plain), with
+# the settings of its .env.template written out. The image runs nginx on port 80
+# in front of the app and serves the static files itself.
+#
+# No admin is created here: on the first visit Tandoor opens its setup page,
+# where the first person creates the administrator account and its password.
+services:
+  tandoor:
+    image: vabene1111/recipes:2.7.2
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 ([::]:80) and won't start on a
+    # server without it, so that line is dropped there. Then the image's own
+    # start script runs as usual.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        if [ ! -e /proc/net/if_inet6 ]; then sed -i '/listen \[::\]/d' /opt/recipes/http.d/Recipes.conf.template; fi;
+        exec /sbin/tini -- /opt/recipes/boot.sh
+    depends_on:
+      tandoor-db:
+        condition: service_healthy
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      TZ: ${TIMEZONE:-Etc/UTC}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${APP_URL}
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: tandoor-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: tandoor
+      POSTGRES_USER: tandoor
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # Collected again at every start.
+      - tandoor-static:/opt/recipes/staticfiles
+      # Recipe images and uploaded files.
+      - tandoor-media:/opt/recipes/mediafiles
+
+  tandoor-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tandoor
+      POSTGRES_USER: tandoor
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - tandoor-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tandoor -d tandoor"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tandoor-static:
+  tandoor-media:
+  tandoor-db-data:

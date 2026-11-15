@@ -292,6 +292,20 @@ export const PRODUCTS: Product[] = [
     pick: 'uptime-kuma',
   },
   {
+    id: 'cronitor',
+    name: 'Cronitor',
+    job: 'cron job monitoring',
+    lede: 'Healthchecks is a free, open-source Cronitor alternative that alerts you when a cron job, backup or other scheduled task does not run on time. Cronitor charges per monitor and per user beyond its free plan; self-hosted Healthchecks has no limit on checks or users, though it does not check websites or host status pages.',
+    pick: 'healthchecks',
+  },
+  {
+    id: 'dead-mans-snitch',
+    name: 'Dead Man’s Snitch',
+    job: 'cron job and heartbeat monitoring',
+    lede: 'Healthchecks is a free, open-source Dead Man’s Snitch alternative: each scheduled job pings its own link, and you get an alert when a ping does not arrive on time. Dead Man’s Snitch prices by the number of snitches and keeps integrations for its paid plans; self-hosted Healthchecks has no check limit and sends alerts to more than 25 services.',
+    pick: 'healthchecks',
+  },
+  {
     id: 'github',
     name: 'GitHub',
     icon: 'github',
@@ -1207,6 +1221,14 @@ export const PRODUCTS: Product[] = [
     pick: 'navidrome',
   },
   {
+    id: 'apple-music',
+    name: 'Apple Music',
+    icon: 'applemusic',
+    job: 'listening to your music library',
+    lede: 'Koel is a free, open-source Apple Music alternative for the music you already own: it plays your own song files in a polished web player, with playlists, podcasts and internet radio. Apple Music rents you its catalogue for a monthly fee; self-hosted Koel has no subscription, but it has no catalogue, so you bring the music.',
+    pick: 'koel',
+  },
+  {
     id: 'audible',
     name: 'Audible',
     icon: 'audible',
@@ -1945,6 +1967,13 @@ export const PRODUCTS: Product[] = [
     job: 'business dashboards and reports',
     lede: 'Apache Superset is a free, open-source Power BI alternative for sharing interactive dashboards built on your own databases (PostgreSQL as installed; others once their driver is added), with over 40 chart types and a SQL editor. Power BI Desktop is free, but sharing reports needs a paid licence for each person; self-hosted Superset shares dashboards with any number of people at no licence cost, though it has no Excel-style data modelling and suits teams with someone who knows SQL.',
     pick: 'superset',
+  },
+  {
+    id: 'deskbird',
+    name: 'deskbird',
+    job: 'desk booking for hybrid offices',
+    lede: 'Seatsurfing is a free, open-source deskbird alternative for booking desks, rooms and parking spots on your own floor plan, with no limit on users. deskbird charges per user each month and has polished phone apps; self-hosted Seatsurfing has no per-user fee and works on phones as a web app you add to the home screen.',
+    pick: 'seatsurfing',
   },
 ];
 

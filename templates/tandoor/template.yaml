@@ -1,0 +1,26 @@
+name: Tandoor Recipes
+description: "Tandoor Recipes is a self-hosted recipe manager for big collections: detailed recipes, nutrition, meal plans and shopping lists your household shares."
+version: "2.7.2"
+tags: ["self-hosted recipe manager", "recipe manager", "meal planner", "paprika alternative", "plan to eat alternative", "shared shopping list", "cookbook"]
+links:
+  website: https://tandoor.dev
+  docs: https://docs.tandoor.dev
+  source: https://github.com/TandoorRecipes/recipes
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Django only answers requests for these host names and accepts form posts
+  # from these origins, so both are set to the app's own address.
+  ALLOWED_HOSTS: { value: "{{domains.tandoor.host}}" }
+  APP_URL: { value: "{{domains.tandoor.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for meal plan dates, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: tandoor, port: 80 }

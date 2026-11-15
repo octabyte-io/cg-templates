@@ -1,0 +1,52 @@
+# From Seatsurfing's docker-compose.yml (seatsurfing.io/docs/self-hosted/docker),
+# without "ports:" and with HTTPS settings: Cloudgate serves the web address over HTTPS.
+services:
+  seatsurfing:
+    image: ghcr.io/seatsurfing/backend:1.141.0
+    restart: unless-stopped
+    depends_on:
+      seatsurfing-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_URL: postgres://seatsurfing:${DB_PASSWORD}@seatsurfing-db/seatsurfing?sslmode=disable
+      CRYPT_KEY: ${CRYPT_KEY}
+      PUBLIC_SCHEME: https
+      PUBLIC_PORT: "443"
+      # First organization and its admin, created only when the database is empty.
+      INIT_ORG_NAME: ${INIT_ORG_NAME}
+      INIT_ORG_DOMAIN: ${INIT_ORG_DOMAIN}
+      INIT_ORG_USER: admin
+      INIT_ORG_PASS: ${INIT_ORG_PASS}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_START_TLS: "1"
+      SMTP_AUTH: "1"
+      SMTP_AUTH_USER: ${SMTP_USER:-}
+      SMTP_AUTH_PASS: ${SMTP_PASSWORD:-}
+      MAIL_SENDER_ADDRESS: ${MAIL_SENDER_ADDRESS:-}
+    # The image is distroless; it ships its own /app/healthcheck (GET /healthcheck).
+    healthcheck:
+      test: ["CMD", "/app/healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  seatsurfing-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: seatsurfing
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: seatsurfing
+    volumes:
+      # Postgres 18 keeps its data under /var/lib/postgresql.
+      - seatsurfing-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U seatsurfing"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  seatsurfing-db-data:

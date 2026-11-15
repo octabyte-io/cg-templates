@@ -1,0 +1,36 @@
+# From GoToSocial's official example/docker-compose/docker-compose.yaml (v0.22.3),
+# without ports, the fixed network and Let's Encrypt: Cloudgate routes the web
+# address and handles HTTPS. The start script creates the admin account once,
+# since GoToSocial has no sign-up page for the first admin.
+services:
+  gotosocial:
+    image: docker.io/superseriousbusiness/gotosocial:0.22.3
+    user: 1000:1000
+    restart: unless-stopped
+    entrypoint: ["sh", "/cloudgate/gotosocial-start.sh"]
+    environment:
+      # The web address's host. GoToSocial can't change it after the first start.
+      GTS_HOST: ${GTS_HOST}
+      GTS_PROTOCOL: https
+      GTS_DB_TYPE: sqlite
+      GTS_DB_ADDRESS: /gotosocial/storage/sqlite.db
+      GTS_LETSENCRYPT_ENABLED: "false"
+      GTS_WAZERO_COMPILATION_CACHE: /gotosocial/.cache
+      GTS_TRUSTED_PROXIES: 127.0.0.1/32,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - gotosocial-data:/gotosocial/storage
+      - gotosocial-cache:/gotosocial/.cache
+      - ../files/gotosocial-start.sh.txt:/cloudgate/gotosocial-start.sh:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/readyz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 300s
+
+volumes:
+  gotosocial-data:
+  gotosocial-cache:

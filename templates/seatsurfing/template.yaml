@@ -1,0 +1,53 @@
+name: Seatsurfing
+description: "Seatsurfing is self-hosted desk booking: staff reserve desks, meeting rooms and parking on your floor plan, with unlimited users and no per-user fee."
+version: "1.141.0"
+tags: ["desk booking software", "hot desking", "room booking", "robin alternative", "deskbird alternative", "hybrid office", "parking space booking"]
+links:
+  website: https://seatsurfing.io
+  docs: https://seatsurfing.io/docs/
+  source: https://github.com/seatsurfing/seatsurfing
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Seatsurfing requires exactly 32 characters; a generated password is 32.
+  CRYPT_KEY: { generate: password }
+  DB_PASSWORD: { generate: password }
+  # The first organization is created on first start. Its domain is the app's
+  # own address, so the admin signs in as admin@<that address>.
+  INIT_ORG_DOMAIN: { value: "{{domains.seatsurfing.host}}" }
+  INIT_ORG_PASS: { generate: password }
+  INIT_ORG_NAME:
+    ask:
+      label: Organization name
+      description: Your company's name, shown in Seatsurfing. You can change it later in the admin area.
+      default: My Company
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Used for password resets, invitations and booking emails, for example smtp.resend.com. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  MAIL_SENDER_ADDRESS:
+    ask:
+      label: Sender email
+      description: The address Seatsurfing's emails are sent from.
+      format: email
+      required: false
+domains:
+  - { service: seatsurfing, port: 8080 }

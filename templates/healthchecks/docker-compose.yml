@@ -1,0 +1,73 @@
+# Based on the official docker/docker-compose.yml and docker/.env.example in
+# github.com/healthchecks/healthchecks, using the pre-built image.
+x-healthchecks-env: &healthchecks-env
+  DB: postgres
+  DB_HOST: healthchecks-db
+  DB_PORT: "5432"
+  DB_NAME: hc
+  DB_USER: hc
+  DB_PASSWORD: ${DB_PASSWORD}
+  DEBUG: "False"
+  SECRET_KEY: ${SECRET_KEY}
+  # ALLOWED_HOSTS is taken from SITE_ROOT's domain when it is not set.
+  SITE_ROOT: ${SITE_ROOT}
+  SITE_NAME: Healthchecks
+  # The admin account is created below; nobody else can sign themselves up.
+  REGISTRATION_OPEN: "False"
+  DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-healthchecks@example.org}
+  EMAIL_HOST: ${EMAIL_HOST:-}
+  EMAIL_PORT: ${EMAIL_PORT:-587}
+  EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+  EMAIL_USE_TLS: "True"
+  GUNICORN_WORKERS: "2"
+
+services:
+  healthchecks:
+    image: healthchecks/healthchecks:v5.0.3
+    restart: unless-stopped
+    depends_on:
+      healthchecks-init:
+        condition: service_completed_successfully
+    environment: *healthchecks-env
+
+  # Runs once at each start: applies database migrations, and on the first
+  # start creates the admin account (ADMIN_EMAIL / ADMIN_PASSWORD) with the
+  # app's own createsuperuser command. It leaves an existing account alone.
+  healthchecks-init:
+    image: healthchecks/healthchecks:v5.0.3
+    restart: "no"
+    depends_on:
+      healthchecks-db:
+        condition: service_healthy
+    environment:
+      <<: *healthchecks-env
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    command:
+      - bash
+      - -c
+      - >-
+        ./manage.py migrate --no-input &&
+        if ./manage.py shell -c "import os, sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(email__iexact=os.environ['ADMIN_EMAIL']).exists() else 3)";
+        then echo "Admin account already exists";
+        else ./manage.py createsuperuser --email "$$ADMIN_EMAIL" --password "$$ADMIN_PASSWORD";
+        fi
+
+  healthchecks-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hc
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: hc
+    volumes:
+      - healthchecks-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hc -d hc"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  healthchecks-db-data:

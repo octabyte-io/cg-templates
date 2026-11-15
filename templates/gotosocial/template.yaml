@@ -1,0 +1,29 @@
+name: GoToSocial
+description: "GoToSocial is a light, self-hosted fediverse server: run your own social account on your own address that follows and talks to Mastodon users."
+version: "0.22.3"
+tags: ["fediverse server", "mastodon alternative", "self-hosted social network", "activitypub server", "single-user mastodon instance", "twitter alternative"]
+links:
+  website: https://gotosocial.org
+  docs: https://docs.gotosocial.org
+  source: https://codeberg.org/superseriousbusiness/gotosocial
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  GTS_HOST: { value: "{{domains.gotosocial.host}}" }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: Your admin account's name, shown in your fediverse handle as @name@your-address. Lowercase letters, digits and underscores. It can't be changed later.
+      default: admin
+      pattern: "[a-z0-9_]{1,64}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: gotosocial, port: 8080 }
+files:
+  - { path: gotosocial-start.sh.txt }

@@ -1,0 +1,33 @@
+# Starts GoToSocial. On the very first start it creates the admin account
+# from ADMIN_USERNAME, ADMIN_EMAIL and ADMIN_PASSWORD, the way the GoToSocial
+# docs describe: run the server once, stop it, then `admin account create`
+# and `admin account promote`. A marker file on the data volume makes this
+# happen only once, so a restart or a later change of the values does nothing.
+set -eu
+
+gts=/gotosocial/gotosocial
+marker=/gotosocial/storage/.cloudgate-admin-created
+
+if [ ! -f "$marker" ]; then
+  echo "cloudgate: first start, preparing the database"
+  "$gts" server start &
+  pid=$!
+  ready=0
+  for _ in $(seq 1 180); do
+    if wget -q -O /dev/null http://127.0.0.1:8080/readyz 2>/dev/null; then ready=1; break; fi
+    if ! kill -0 "$pid" 2>/dev/null; then break; fi
+    sleep 2
+  done
+  kill "$pid" 2>/dev/null || true
+  wait "$pid" || true
+  if [ "$ready" != 1 ]; then echo "cloudgate: GoToSocial did not become ready" >&2; exit 1; fi
+
+  echo "cloudgate: creating admin account $ADMIN_USERNAME"
+  # If the account already exists (an earlier attempt stopped halfway), carry on.
+  "$gts" admin account create --username "$ADMIN_USERNAME" --email "$ADMIN_EMAIL" --password "$ADMIN_PASSWORD" \
+    || echo "cloudgate: account not created (it may exist already)"
+  "$gts" admin account promote --username "$ADMIN_USERNAME"
+  touch "$marker"
+fi
+
+exec "$gts" server start

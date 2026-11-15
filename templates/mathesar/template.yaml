@@ -1,0 +1,17 @@
+name: Mathesar
+description: "Self-hosted Mathesar gives your PostgreSQL data a spreadsheet-like screen, so your team can view, edit, link and report on records without SQL."
+version: "0.12.0"
+tags: ["airtable alternative", "postgresql gui", "spreadsheet for postgresql", "no-code database", "open source database ui", "data entry forms"]
+links:
+  website: https://mathesar.org
+  docs: https://docs.mathesar.org/latest/
+  source: https://github.com/mathesar-foundation/mathesar
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_HOST: { value: "{{domains.mathesar.host}}" }
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: mathesar, port: 8000 }

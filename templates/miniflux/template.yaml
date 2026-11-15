@@ -1,0 +1,23 @@
+name: Miniflux
+description: "Miniflux is a minimalist, self-hosted RSS reader: one fast, quiet list for the news sites, blogs and podcasts you follow, with no plugins or clutter."
+version: "2.3.5"
+tags: ["minimalist rss reader", "self-hosted rss reader", "rss reader", "feed reader", "miniflux vs freshrss", "feedly alternative", "inoreader alternative"]
+links:
+  website: https://miniflux.app
+  docs: https://miniflux.app/docs/
+  source: https://github.com/miniflux/v2
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  BASE_URL: { value: "{{domains.miniflux.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: miniflux, port: 8080 }

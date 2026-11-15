@@ -1,0 +1,26 @@
+name: Koel
+description: "Koel is a self-hosted music server: upload the songs you own and play them in a polished web player, with playlists, podcasts and radio."
+version: "9.15.0"
+tags: ["self-hosted music server", "music streaming server", "spotify alternative", "apple music alternative", "personal music streaming", "koel"]
+links:
+  website: https://koel.dev
+  docs: https://docs.koel.dev
+  source: https://github.com/koel/koel
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.koel.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  # Koel's first start creates an admin with a published default login.
+  # The compose file replaces it with this email and password.
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Koel with as its first admin.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: koel, port: 80 }

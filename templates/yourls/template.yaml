@@ -1,0 +1,25 @@
+name: YOURLS
+description: "YOURLS is a self-hosted URL shortener for branded short links on your own domain, with detailed click stats, bookmarklets, an API and plugins."
+version: "1.10.6"
+tags: ["url shortener", "self-hosted url shortener", "bitly alternative", "rebrandly alternative", "branded short links", "link click tracking"]
+links:
+  website: https://yourls.org
+  docs: https://yourls.org/docs
+  source: https://github.com/YOURLS/YOURLS
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  YOURLS_SITE: { value: "{{domains.yourls.url}}" }
+  YOURLS_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  YOURLS_PASS: { generate: password }
+  YOURLS_COOKIEKEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: yourls, port: 8080 }
