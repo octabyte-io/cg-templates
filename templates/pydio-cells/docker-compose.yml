@@ -1,0 +1,57 @@
+# From Pydio Cells' Docker docs (v5 Admin Guide > Docker, "Run with Docker
+# Compose"), with the database and admin set up from files/install.yml instead
+# of the browser installer, and plain HTTP behind Cloudgate's proxy.
+services:
+  pydio-cells:
+    image: pydio/cells:5.1.1
+    restart: unless-stopped
+    # The image's own entrypoint runs "cells configure" on the first start and
+    # exits when it is done; this runs the install once, then starts Cells in
+    # the same container.
+    entrypoint:
+      - /sbin/tini
+      - --
+      - sh
+      - -c
+      - >-
+        if ! cells admin config check >/dev/null 2>&1; then
+        cells configure || exit 1; fi;
+        exec cells start
+    depends_on:
+      pydio-cells-db:
+        condition: service_healthy
+    environment:
+      CELLS_INSTALL_YAML: /cloudgate/install.yml
+      CELLS_SITE_BIND: 0.0.0.0:8080
+      CELLS_SITE_EXTERNAL: ${APP_URL}
+      CELLS_SITE_NO_TLS: "1"
+      CELLS_ADMIN_PASSWORD: ${CELLS_ADMIN_PASSWORD}
+      CELLS_DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # Configuration (pydio.json), keys, search indexes and every uploaded file.
+      - pydio-cells-data:/var/cells
+      - ../files/install.yml:/cloudgate/install.yml:ro
+
+  pydio-cells-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    command: [--character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --max-connections=500]
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: cells
+      MARIADB_USER: pydio
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - pydio-cells-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  pydio-cells-data:
+  pydio-cells-db-data:

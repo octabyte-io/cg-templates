@@ -12,19 +12,24 @@ apps:
   shiori:
     fit: "A light bookmark list with tags, like Pinboard, that also keeps a readable copy and an optional offline archive of each page on your own server and searches their text, which on Pinboard needs the higher-priced archival account. It has no official phone app, its browser extension is in beta, and it imports your Pinboard export with a one-time command on the server."
     import: partly
+  linkace:
+    fit: "Keeps Pinboard's tagged, private-or-public list of links and adds lists, notes, several user accounts and a check every two hours that flags links that have broken or moved. It imports Pinboard's HTML export with your tags. Copies of pages go to the Wayback Machine rather than your server, it does not search inside saved pages, and it has no official phone app or browser extension, only a bookmarklet and community tools."
+    import: partly
 moving: |
   In Pinboard's settings, export your bookmarks in HTML format. Sign in to linkding as admin, open its settings page and import that file: your links come across with their titles, descriptions and tags. Install the linkding extension for Firefox or Chrome, or the bookmarklet in other browsers, so new links go to linkding, and add the other people who need an account from linkding's admin panel. Grimoire imports the same HTML file from its Import button, then fetches and saves the text of each page, so give a large collection time; save new links with its bookmarklet. Keep your Pinboard export as a backup, especially if you paid for Pinboard's page archive, since those archived copies do not move across.
 
   With Shaarli, open Tools, then Import links, and upload the same HTML file: tags come across, and links you kept private in Pinboard stay private. Drag Shaarli's bookmarklet to your browser's toolbar to save new links.
 
   Shiori imports the same HTML file with a one-time command on the server, `shiori import` followed by the file, and keeps the tags.
+
+  LinkAce takes the same file through its bookmarks import, with your tags. After that, save new links with its bookmarklet, invite colleagues once you have added a mail server, and use the Broken Links filter now and then to fix what has gone stale.
 faq:
   - q: "Can I import my Pinboard bookmarks into linkding?"
     a: "Yes. Export your bookmarks from Pinboard as an HTML file and import it on linkding's settings page; links, descriptions and tags come across. Pinboard's archived page copies do not."
+  - q: "Should I choose linkding, Grimoire, Shaarli, Shiori or LinkAce?"
+    a: "Choose linkding for the closest match to Pinboard: a plain, fast list with a read-later flag, official browser extensions and an account for each person in a family or team. Choose Grimoire if you save alone and want to search inside the text of the pages you saved, which linkding cannot do. Choose Shaarli for one person who wants the lightest possible bookmark list, or a public link blog with RSS feeds; it stores everything in files, with no database. Choose Shiori if you want an offline copy of each page you save, searchable by its text. Choose LinkAce if several people keep one collection and you want to know when links break."
   - q: "Does linkding have full-text search like Pinboard's archival account?"
     a: "No. linkding searches the title, description, notes, tags and address of each bookmark, not the text of the saved page. It can ask the Internet Archive to keep a copy of each page instead."
-  - q: "Should I choose linkding, Grimoire, Shaarli or Shiori?"
-    a: "Choose linkding for Pinboard's plain, fast way of working, with accounts for each person in a family or team and official browser extensions. Choose Grimoire if you save alone and want to search inside the text of the pages you saved, which linkding cannot do. Choose Shaarli for one person who wants the lightest possible bookmark list, or a public link blog with RSS feeds; it stores everything in files, with no database. Choose Shiori if you want an offline copy of each page you save, searchable by its text."
   - q: "Which Pinboard alternative keeps an offline copy of each page?"
     a: "Shiori. It keeps a readable copy of each page you save, and optionally a full offline archive, on your own server, and its search covers the saved text as well as titles. Grimoire saves the readable text of each page but not a full copy."
   - q: "Is there a linkding app for my phone?"
@@ -33,4 +38,4 @@ faq:
 
 Pinboard is a paid bookmarking service for people who want a fast, private place to save links. You tag what you save, mark it read or unread, and search your collection later; a higher-priced account adds an archived copy of each page and search inside those pages. Its code is not public.
 
-People look for an alternative when they would rather not pay a yearly fee for a list of links, or would rather keep their bookmarks on a server they control. Others want an account for each person in a family or team. A self-hosted linkding keeps the same plain, tag-based way of working, with notes and a read-later flag, adds user accounts and shared bookmarks, and keeps everything on your own server. Grimoire suits one person who wants Pinboard's archive-style search: it saves the text of each page and searches inside it. Shaarli is the lighter choice for one person, and can also publish your public links as a link blog with RSS feeds. Shiori keeps an offline copy of each page and searches its text.
+People look for an alternative when they would rather not pay a yearly fee for a list of links, or would rather keep their bookmarks on a server they control. Others want an account for each person in a family or team, or to know when a saved link stops working. A self-hosted linkding keeps the same plain, tag-based way of working, with notes and a read-later flag, adds user accounts and shared bookmarks, and keeps everything on your own server. Grimoire suits one person who wants Pinboard's archive-style search: it saves the text of each page and searches inside it. Shaarli is the lighter choice for one person, and can also publish your public links as a link blog with RSS feeds. Shiori keeps an offline copy of each page and searches its text. LinkAce adds lists and regular checks for broken links.

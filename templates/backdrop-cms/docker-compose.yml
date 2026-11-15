@@ -1,0 +1,60 @@
+services:
+  backdrop:
+    image: backdrop:1.34.2-apache
+    restart: unless-stopped
+    depends_on:
+      backdrop-db:
+        condition: service_healthy
+    # Installs the site on the first start (files/start.sh.txt), then runs Apache as the image does.
+    # Sign in at https://<domain>/user/login with the username "admin".
+    entrypoint: ["sh", "/cloudgate/start.sh"]
+    environment:
+      BACKDROP_DB_HOST: backdrop-db
+      BACKDROP_DB_PORT: 3306
+      BACKDROP_DB_NAME: backdrop
+      BACKDROP_DB_USER: backdrop
+      BACKDROP_DB_PASSWORD: ${DB_PASSWORD}
+      BACKDROP_HASH_SALT: ${HASH_SALT}
+      BACKDROP_HOST: ${BACKDROP_HOST}
+      BACKDROP_SITE_NAME: ${SITE_NAME}
+      BACKDROP_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      BACKDROP_ADMIN_EMAIL: ${ADMIN_EMAIL}
+    volumes:
+      # Uploaded files, and added modules, themes and layouts. Backdrop itself comes from the image.
+      - backdrop-files:/var/www/html/files
+      - backdrop-modules:/var/www/html/modules
+      - backdrop-themes:/var/www/html/themes
+      - backdrop-layouts:/var/www/html/layouts
+      # The site's configuration and update backups, outside the web root.
+      - backdrop-config:/var/www/config
+      - ../files/start.sh.txt:/cloudgate/start.sh:ro
+      - ../files/settings.php.txt:/var/www/html/settings.php:ro
+      - ../files/php.ini:/usr/local/etc/php/conf.d/cloudgate.ini:ro
+      # Marks requests that reached Cloudgate's proxy over HTTPS as HTTPS.
+      - ../files/forwarded-https.conf:/etc/apache2/conf-enabled/forwarded-https.conf:ro
+
+  backdrop-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: backdrop
+      MARIADB_USER: backdrop
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - backdrop-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  backdrop-files:
+  backdrop-modules:
+  backdrop-themes:
+  backdrop-layouts:
+  backdrop-config:
+  backdrop-db-data:

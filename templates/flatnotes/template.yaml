@@ -1,0 +1,25 @@
+name: flatnotes
+description: "flatnotes is a self-hosted Markdown notes app to use in place of Simplenote: every note is a plain file, found by search, #tags and links between notes."
+version: "5.5.5"
+tags: [simplenote alternative, apple notes alternative, markdown notes, self-hosted notes, note taking app, obsidian alternative]
+links:
+  website: https://flatnotes.io
+  docs: https://github.com/dullage/flatnotes/wiki
+  source: https://github.com/dullage/flatnotes
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # flatnotes has one account, read from these settings on every start, so
+  # changing them later changes the sign-in.
+  FLATNOTES_USERNAME:
+    ask:
+      label: Username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  FLATNOTES_PASSWORD: { generate: password }
+  # Signs the sign-in tokens.
+  FLATNOTES_SECRET_KEY: { generate: hex }
+domains:
+  - { service: flatnotes, port: 8080 }

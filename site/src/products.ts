@@ -3479,6 +3479,51 @@ export const PRODUCTS: Product[] = [
     lede: 'TYPO3 is a free, open-source Adobe Experience Manager alternative for large, multilingual websites: many editors with detailed permissions, several sites in one installation, and changes that go through review and approval before they are published. Adobe Experience Manager is an enterprise licence sold alongside Adobe’s marketing tools; TYPO3 has no licence fee, but it has no built-in personalisation and usually needs a developer or agency to set up.',
     pick: 'typo3',
   },
+  {
+    id: 'simplenote',
+    name: 'Simplenote',
+    icon: 'simplenote',
+    job: 'simple, searchable notes',
+    lede: 'flatnotes is a free, open-source Simplenote alternative: a minimal notes app where you find notes by search and tags, with every note kept as a plain Markdown file on your own server. Simplenote is free but keeps your notes in its own cloud; flatnotes keeps them on your server, though it runs only in a browser, with no phone or desktop app and no shared notes.',
+    pick: 'flatnotes',
+  },
+  {
+    id: 'apple-notes',
+    name: 'Apple Notes',
+    job: 'everyday notes',
+    lede: 'flatnotes is a free, open-source Apple Notes alternative that works in any browser, on Windows, Android and Linux as well as Apple devices, with every note kept as a plain Markdown file on your own server. Apple Notes is free but tied to Apple devices and iCloud; flatnotes is not, though it has no folders, no shared notes and no phone app that works offline.',
+    pick: 'flatnotes',
+  },
+  {
+    id: 'alltrails',
+    name: 'AllTrails',
+    icon: 'alltrails',
+    job: 'finding, planning and sharing trails',
+    lede: 'wanderer is a free, open-source AllTrails alternative: a trail library on your own server where you upload GPS tracks, plan routes, add photos and notes, and share hikes with friends or a club. AllTrails keeps features such as offline maps for its paid AllTrails+ plan and holds your tracks in its own cloud; wanderer has no paid tier, though it has no catalogue of other people’s trails, so you bring your own.',
+    pick: 'wanderer',
+  },
+  {
+    id: 'komoot',
+    name: 'komoot',
+    icon: 'komoot',
+    job: 'planning hiking and cycling routes',
+    lede: 'wanderer is a free, open-source komoot alternative for planning routes and keeping a library of your hikes and rides, with photos, notes, statistics and sharing, on your own server. komoot sells map regions and a Premium subscription for worldwide maps; wanderer has no paid features, though its web app has no turn-by-turn navigation or offline maps.',
+    pick: 'wanderer',
+  },
+  {
+    id: 'whimsical',
+    name: 'Whimsical',
+    job: 'flowcharts and mind maps',
+    lede: 'Drawnix is a free, open-source Whimsical alternative for drawing flowcharts and mind maps on one board in your browser, and it builds them from Markdown or Mermaid text. Whimsical limits its free plan and charges per editor; Drawnix has no fee, though it is made for one person at a time, with no live collaboration, comments, wireframes or docs.',
+    pick: 'drawnix',
+  },
+  {
+    id: 'microsoft-access',
+    name: 'Microsoft Access',
+    job: 'building small business databases',
+    lede: 'Saltcorn is a free, open-source Microsoft Access alternative: you build linked tables, forms, lists and reports without code, and the result is a web app many people use at once in their browsers. Access is a Windows desktop database that comes with some Microsoft 365 plans, and a database file is awkward to share across a team; Saltcorn runs on your own server with no limit on users, though it cannot import Access files, so your tables come across as CSV.',
+    pick: 'saltcorn',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));
