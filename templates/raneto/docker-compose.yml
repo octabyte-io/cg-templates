@@ -1,0 +1,44 @@
+services:
+  raneto:
+    # The LinuxServer.io image of Raneto (the project ships no image of its own).
+    # 0.18.1 is the Raneto release, ls216 the image build.
+    image: lscr.io/linuxserver/raneto:0.18.1-ls216
+    restart: unless-stopped
+    # The image's default config.js signs in "admin" and "admin2" with the password
+    # "password" and uses a fixed session secret. Before the image's own /init
+    # copies it into the volume, replace those with one "admin" account whose
+    # password and session secret come from the generated settings below.
+    # Only a config that still has the defaults is changed.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        node -e '
+        const fs = require("fs");
+        for (const f of ["/defaults/config.js", "/config/config/config.js"]) {
+          if (!fs.existsSync(f)) continue;
+          let s = fs.readFileSync(f, "utf8");
+          if (!s.includes("someCoolSecretRightHere")) continue;
+          s = s.replace(/credentials: \[[\s\S]*?\n  \],/, "credentials: [{ username: \"admin\", password: process.env.RANETO_ADMIN_PASSWORD }],");
+          s = s.replace(/secret: \x27someCoolSecretRightHere\x27/, "secret: process.env.RANETO_SECRET");
+          fs.writeFileSync(f, s);
+        }' && exec /init
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      RANETO_ADMIN_PASSWORD: ${RANETO_ADMIN_PASSWORD}
+      RANETO_SECRET: ${RANETO_SECRET}
+    volumes:
+      # Everything Raneto keeps: config/config.js, the Markdown pages in
+      # content/ and images. No database.
+      - raneto-config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  raneto-config:

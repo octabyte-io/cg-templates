@@ -1799,8 +1799,8 @@ export const PRODUCTS: Product[] = [
     name: 'Auth0',
     icon: 'auth0',
     job: 'sign-in for your own apps',
-    lede: 'authentik is a free, open-source Auth0 alternative for adding sign-in to your own apps: customer sign-up, social logins, two-step verification and standard OpenID Connect and SAML, on your own server. Auth0 is a hosted service with SDKs for developers; self-hosted authentik keeps your users’ accounts on your server, and you look after it yourself.',
-    pick: 'authentik',
+    lede: 'Logto is a free, open-source Auth0 alternative for adding customer sign-in to your own website or app: ready-made sign-in pages, social logins, two-step verification, organisations and roles, with SDKs for more than 30 frameworks, on your own server. Auth0 is a hosted service that keeps your users’ accounts; self-hosted Logto and authentik keep them on your server, and you look after it yourself.',
+    pick: 'logto',
   },
   {
     id: 'zight',
@@ -2267,6 +2267,20 @@ export const PRODUCTS: Product[] = [
     job: 'fetching web pages through an API',
     lede: 'Crawl4AI is a free, open-source ScrapingBee alternative that loads web pages in a real browser on your own server and returns them as clean Markdown, JSON, screenshots or PDFs. ScrapingBee sells monthly credit plans and cannot be self-hosted; Crawl4AI has no per-request fee, though it has no rotating proxies, so sites with strong bot protection may block it.',
     pick: 'crawl4ai',
+  },
+  {
+    id: 'mambu',
+    name: 'Mambu',
+    job: 'running loans, savings and the books',
+    lede: 'Mifos X is a free, open-source Mambu alternative for microfinance institutions, credit unions and savings groups: client records, loans, savings and real-time accounting on your own server. Mambu is a cloud banking platform sold by quote; Mifos X has no licence fee, though you run and support it yourself or pay a Mifos partner for help.',
+    pick: 'mifos',
+  },
+  {
+    id: 'helpjuice',
+    name: 'Helpjuice',
+    job: 'help centres and knowledge bases',
+    lede: 'Raneto is a free, open-source Helpjuice alternative for a simple help centre, FAQ or staff handbook: Markdown pages in categories, full-text search and a browser editor, on your own server. Helpjuice is a hosted knowledge base paid by subscription, with analytics and editing workflows; Raneto has none of those, but it costs nothing, needs no database and keeps every article as a plain file.',
+    pick: 'raneto',
   },
 ];
 

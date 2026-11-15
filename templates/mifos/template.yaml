@@ -1,0 +1,26 @@
+name: Mifos X
+description: "Self-hosted Mifos X on Apache Fineract runs clients, loans, savings and accounting for microfinance institutions and credit unions."
+version: "1.12.1"
+tags: ["microfinance software", "core banking", "loan management software", "mambu alternative", "savings and credit", "apache fineract"]
+links:
+  website: https://mifos.org
+  docs: https://fineract.apache.org/docs/current/
+  source: https://github.com/apache/fineract
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.mifos.url}}" }
+  DB_PASSWORD: { generate: password }
+  MASTER_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The time zone your organisation's business days follow, as an IANA name such as Africa/Nairobi. Set it before the first start; it is saved with your data.
+      default: UTC
+      required: false
+domains:
+  - { service: mifos, port: 80 }
+files:
+  - { path: nginx.conf }
+  - { path: postgres-init.sql }

@@ -9,18 +9,23 @@ apps:
   khoj:
     fit: "Answers questions from your own PDFs, Word files, notes and code with the references it used, and adds web search, a deeper research mode, custom agents and scheduled questions, with any AI model you connect, including local ones. Files can stay synced from Obsidian, Emacs or its desktop app. It has no audio overviews or podcasts and no notebooks: each user has one knowledge base, which you filter per chat."
     import: no
+  privategpt:
+    fit: "Answers questions about the documents you upload, with citations, using AI models that run on your own server, so your files and chats never go to an AI company. Its web page is a basic workbench that its makers label a demo rather than the main product, with no notebooks, podcasts or user accounts, and chats are kept in each browser. The small model it starts with gives far weaker answers than Google's; it suits developers and privacy-minded teams more than everyday note-taking."
+    import: no
 moving: |
   There is no import from NotebookLM, so you add your sources again: upload the same files, paste the web addresses and YouTube links, and Open Notebook processes them into a new notebook. Before that, add an AI provider key under Manage > Models and choose a language model and an embedding model; podcasts also need a text-to-speech model. Copy any notes you want to keep from NotebookLM into notes in Open Notebook. SurfSense has no NotebookLM import either: create a workspace, upload your files or whole folders, and choose a model when it asks, either a local model that runs inside the app, an API key, or a ChatGPT or Claude plan sign-in. Web pages and YouTube links need its paid web plugins.
 
   Khoj has no NotebookLM import either. Sign in to its admin page, add an AI provider key and a chat model, then upload the same files in the web app, or keep a folder synced from the desktop app or Obsidian.
+
+  PrivateGPT has no NotebookLM import either. Wait for its AI models to download after the first start, enter the username and password Cloudgate created in the Workbench's connection settings, then upload your documents and ask questions with the Documents tool switched on.
 faq:
   - q: "Is NotebookLM now called Gemini Notebook?"
     a: "Yes. Google renamed NotebookLM to Gemini Notebook on 16 July 2026. Open Notebook is an alternative to both names, since they are the same product."
-  - q: "Should I choose Open Notebook, SurfSense or Khoj?"
-    a: "Choose Open Notebook if your sources include web pages and YouTube videos, which it adds for free. Choose SurfSense if you work mostly from files and want it to write or edit Word, Excel, PowerPoint and PDF documents, or to run a local model with no extra setup. Choose Khoj for one assistant over all your documents that also searches the web, runs scheduled questions and syncs with Obsidian or Emacs."
+  - q: "Should I choose Open Notebook, SurfSense, Khoj or PrivateGPT?"
+    a: "Choose Open Notebook if your sources include web pages and YouTube videos, which it adds for free. Choose SurfSense if you work mostly from files and want it to write or edit Word, Excel, PowerPoint and PDF documents, or to run a local model with no extra setup. Choose Khoj for one assistant over all your documents that also searches the web, runs scheduled questions and syncs with Obsidian or Emacs. Choose PrivateGPT if you are a developer who wants private document answers through an API, with its web page as a simple workbench."
   - q: "Can these apps run without sending my sources to an AI company?"
-    a: "Yes, with a local model. Open Notebook and Khoj use one through Ollama or another server you run, and SurfSense can run one inside the app. With a cloud provider, the parts of your sources they work on are sent to that provider."
-cost: "All three apps are free and open source. SurfSense sells a licence for its own web plugins, such as web search, web crawling and YouTube; everything else in it is free. You pay your AI provider for what you use, or nothing if you run local models. To run the apps you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
+    a: "Yes, with a local model. PrivateGPT uses one by default. Open Notebook and Khoj use one through Ollama or another server you run, and SurfSense can run one inside the app. With a cloud provider, the parts of your sources they work on are sent to that provider."
+cost: "All four apps are free and open source. SurfSense sells a licence for its own web plugins, such as web search, web crawling and YouTube; everything else in it is free. You pay your AI provider for what you use, or nothing if you run local models. To run the apps you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 ---
 
 NotebookLM is Google's AI research notebook: you add sources, then ask questions, get summaries and listen to audio overviews that draw only on what you added. Google renamed it Gemini Notebook in July 2026; many people still search for it as NotebookLM.

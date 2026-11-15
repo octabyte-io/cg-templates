@@ -1,0 +1,53 @@
+# PrivateGPT 1.x connects to any OpenAI-compatible AI server; its docs start with Ollama.
+# Here Ollama runs next to it on the server's CPU (no GPU, no paid API key) with two small
+# models it downloads on the first start: one to answer, one to index documents.
+services:
+  privategpt:
+    image: zylonai/private-gpt:1.0.1
+    restart: unless-stopped
+    depends_on:
+      ollama:
+        condition: service_healthy
+    entrypoint: ["sh", "/privategpt-start.sh"]
+    environment:
+      PORT: "8080"
+      # Ollama's OpenAI-compatible API; PrivateGPT discovers its models at start.
+      OPENAI_API_BASE: http://ollama:11434/v1
+      OLLAMA_URL: http://ollama:11434
+      # The chat model and the embedding model (1024 dimensions, PrivateGPT's default).
+      # Bigger models from ollama.com/library answer better but need more memory.
+      PGPT_PULL_MODELS: "qwen2.5:1.5b mxbai-embed-large"
+      # Serve the web app at the root of the address instead of /ui.
+      PGPT_UI_PATH: /
+      PGPT_PROFILES: cloudgate
+      PGPT_ADMIN_USER: admin
+      PGPT_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - privategpt-data:/home/worker/app/local_data
+      - ../files/settings-cloudgate.yaml:/home/worker/app/settings-cloudgate.yaml:ro
+      - ../files/privategpt-start.sh.txt:/privategpt-start.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 900s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:0.40.16
+    restart: unless-stopped
+    environment:
+      # Keep the models loaded for a while after a question, so the next answer is quicker.
+      OLLAMA_KEEP_ALIVE: 30m
+    volumes:
+      - ollama-models:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 10
+
+volumes:
+  privategpt-data:
+  ollama-models:
