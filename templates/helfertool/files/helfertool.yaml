@@ -1,0 +1,108 @@
+# Helfertool's configuration file, based on the default helfertool.yaml from
+# helfertoolctl (github.com/helfertool/helfertoolctl, src/helfertoolctl/config).
+# Cloudgate fills in the {{...}} values at setup. Every option is explained at
+# https://docs.helfertool.org/admin/configuration.html. After changing this file,
+# restart the app.
+
+# Language settings. Helfertool follows the visitor's browser language (English
+# or German) and uses the default when the browser names neither.
+language:
+    default: "en"
+    singlelanguage: false
+    badges: "en"
+    timezone: "{{TIMEZONE}}"
+
+database:
+    backend: "postgresql"
+    name: "helfertool"
+    user: "helfertool"
+    password: "{{DB_PASSWORD}}"
+    host: "helfertool-db"
+    port: 5432
+
+rabbitmq:
+    vhost: "helfertool"
+    user: "helfertool"
+    password: "{{RABBITMQ_PASSWORD}}"
+    host: "helfertool-rabbitmq"
+    port: 5672
+
+mail:
+    send:
+        host: '{{MAIL_HOST}}'
+        port: {{MAIL_PORT}}
+        user: '{{MAIL_USERNAME}}'
+        password: '{{MAIL_PASSWORD}}'
+        tls: false
+        starttls: true
+
+    # Receiving replies from helpers over IMAP is optional; see the docs.
+    #receive:
+    #    host: "localhost"
+    #    port: 993
+    #    user: "helfertool"
+    #    password: "<PASSWORD>"
+    #    tls: true
+    #    starttls: false
+    #    folder: "INBOX"
+    #    interval: 300
+
+    sender_address: '{{MAIL_FROM}}'
+    sender_name: "Helfertool"
+
+    batch_size: 200
+    batch_gap: 5
+
+authentication:
+    local_user_char: null
+
+logging:
+    # Error reports go here.
+    mails:
+        - "{{ADMIN_EMAIL}}"
+
+security:
+    debug: false
+    secret: "{{SECRET_KEY}}"
+    allowed_hosts:
+        - "{{domains.helfertool.host}}"
+    lockout:
+        limit: 5
+        time: 10
+    password_length: 12
+    captchas:
+        newsletter: true
+        password_reset: true
+        registration: false
+
+features:
+    newsletter: true
+    badges: true
+    gifts: true
+    prerequisites: true
+    inventory: true
+
+customization:
+    title: "Helfertool"
+    display:
+        events_last_years: 2
+    search:
+        similarity: 0.3
+        disable_similarity: false
+    # Links in the page footer. Point imprint and privacy at your own pages.
+    urls:
+        imprint: "https://app.helfertool.org/impressum/"
+        privacy: "https://app.helfertool.org/datenschutz/"
+        docs: "https://docs.helfertool.org"
+    contact_address: "{{ADMIN_EMAIL}}"
+
+badges:
+    template: "src/badges/latextemplate/badge.tex"
+    photo_max_size: 1000
+    special_badges_max: 50
+    build_timeout: 5
+    pdf_timeout: 30
+    rm_delay: 2
+
+newsletter:
+    subscribe_deadline: 3

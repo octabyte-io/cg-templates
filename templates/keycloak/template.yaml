@@ -1,0 +1,32 @@
+name: Keycloak
+description: "Self-hosted Keycloak gives your team one login, with two-step sign-in and passkeys, for every app, replacing Okta, Auth0 or Entra ID."
+version: "26.8.2"
+tags:
+  - okta alternative
+  - single sign-on
+  - sso
+  - identity provider
+  - auth0 alternative
+  - self-hosted sso
+  - identity and access management
+links:
+  website: https://www.keycloak.org
+  docs: https://www.keycloak.org/documentation
+  source: https://github.com/keycloak/keycloak
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  KC_HOSTNAME: { value: "{{domains.keycloak.url}}" }
+  KC_DB_PASSWORD: { generate: password }
+  # The temporary admin account Keycloak creates on its first start, in the
+  # master realm. The password is shown afterwards on the app's variables page.
+  KC_BOOTSTRAP_ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name of the first admin account. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  KC_BOOTSTRAP_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: keycloak, port: 8080 }
