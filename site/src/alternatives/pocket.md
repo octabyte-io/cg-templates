@@ -3,8 +3,11 @@ apps:
   karakeep:
     fit: "Saves articles and links from browser extensions and phone apps, shows them in a reader view, and keeps highlights, lists and full-text search. It can keep a full copy of each page so an article stays readable after the site removes it, and it imports a Pocket export file. AI tags and summaries need your own OpenAI key or a local Ollama model."
     import: yes
+  linkding:
+    fit: "A bookmark manager with a read-later flag rather than a reading app: save links from Firefox, Chrome or a bookmarklet, tag them, add notes and mark them unread until you get to them. It has no reader view, highlights or official phone apps, and page copies go to the Internet Archive. A community tool, not linkding itself, imports a Pocket export."
+    import: partly
 moving: |
-  If you downloaded your Pocket export before Mozilla deleted the data in October 2025, keep that file: Karakeep has a Pocket importer that brings in your saved links. In Karakeep's settings, choose the Pocket importer and upload the file. Install the Karakeep extension in your browser and the app on your phone so you can save new articles. If you missed the export window, Pocket's data is gone, so start fresh and import your browser's bookmarks file instead.
+  If you downloaded your Pocket export before Mozilla deleted the data in October 2025, keep that file: Karakeep has a Pocket importer that brings in your saved links. In Karakeep's settings, choose the Pocket importer and upload the file. Install the Karakeep extension in your browser and the app on your phone so you can save new articles. If you missed the export window, Pocket's data is gone, so start fresh and import your browser's bookmarks file instead. linkding has no Pocket importer of its own; the community tool Pocket2Linkding, listed on linkding's website, brings in links with their dates and tags.
 faq:
   - q: "Is Pocket still available?"
     a: "No. Mozilla shut Pocket down on 8 July 2025 and deleted saved data after 8 October 2025, the end of the export window."

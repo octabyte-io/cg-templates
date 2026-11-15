@@ -1,0 +1,64 @@
+name: I Hate Money
+description: "I Hate Money is a self-hosted app for splitting costs on trips, in shared flats and clubs: log bills, check each balance and settle up in a few payments."
+version: "7.2.1"
+tags: [splitwise alternative, tricount alternative, shared expenses, expense splitting, bill splitting, group expenses]
+links:
+  website: https://ihatemoney.org
+  docs: https://ihatemoney.readthedocs.io/en/latest/
+  source: https://github.com/spiral-project/ihatemoney
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ALLOW_PUBLIC_PROJECT_CREATION:
+    ask:
+      label: Anyone can create projects
+      description: "True lets anyone who opens the web address create a project. False (the default) asks for the admin password, shown afterwards on the app's variables page."
+      default: "False"
+      pattern: "True|False"
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates shown in the app, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+  MAIL_SERVER:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Used to send project invitations and password reminders, for example smtp.resend.com. Leave empty to send no email.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  MAIL_USE_TLS:
+    ask:
+      label: Use STARTTLS
+      description: "True for port 587 (most services), False otherwise."
+      default: "True"
+      pattern: "True|False"
+      required: false
+  MAIL_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  MAIL_SENDER:
+    ask:
+      label: Sender email
+      description: The address emails come from, for example noreply@yourdomain.com.
+      format: email
+      required: false
+domains:
+  - { service: ihatemoney, port: 8000 }

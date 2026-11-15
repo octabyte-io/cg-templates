@@ -1,0 +1,18 @@
+services:
+  linkding:
+    # The image has its own healthcheck (curl on /health).
+    image: sissbruecker/linkding:1.47.0
+    restart: unless-stopped
+    environment:
+      # Listen on IPv4 only. The default ([::], dual stack) fails to start on
+      # hosts where Docker has IPv6 turned off.
+      LD_SERVER_HOST: "0.0.0.0"
+      LD_SUPERUSER_NAME: ${LD_SUPERUSER_NAME}
+      LD_SUPERUSER_PASSWORD: ${LD_SUPERUSER_PASSWORD}
+      LD_CSRF_TRUSTED_ORIGINS: ${LD_CSRF_TRUSTED_ORIGINS}
+    volumes:
+      # The SQLite database, favicons, previews and uploaded files.
+      - linkding-data:/etc/linkding/data
+
+volumes:
+  linkding-data:

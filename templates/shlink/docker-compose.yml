@@ -1,0 +1,63 @@
+# Shlink's official Docker image (shlink.io/documentation/install-docker-image) with
+# PostgreSQL, which its docs recommend over the built-in SQLite for real use, and the
+# official shlink-web-client, the web app for managing short links.
+services:
+  shlink:
+    image: shlinkio/shlink:5.1.8
+    restart: unless-stopped
+    depends_on:
+      shlink-db:
+        condition: service_healthy
+    environment:
+      DEFAULT_DOMAIN: ${DEFAULT_DOMAIN}
+      # Cloudgate serves every Domain over HTTPS.
+      IS_HTTPS_ENABLED: "true"
+      INITIAL_API_KEY: ${INITIAL_API_KEY}
+      GEOLITE_LICENSE_KEY: ${GEOLITE_LICENSE_KEY}
+      # Cloudgate's proxy is the one hop in front of Shlink, so visitor IPs come from it.
+      TRUSTED_PROXIES: "1"
+      DB_DRIVER: postgres
+      DB_HOST: shlink-db
+      DB_NAME: shlink
+      DB_USER: shlink
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # Cache, locks and the GeoLite2 database; links and visits live in PostgreSQL.
+      - shlink-data:/etc/shlink/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/rest/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # The web app runs in the visitor's browser and talks to Shlink's API directly.
+  # No server is pre-configured on purpose: that would publish the API key to anyone
+  # who opens this address (see "Pre-configuring servers" in Shlink's docs).
+  shlink-web-client:
+    image: shlinkio/shlink-web-client:4.9.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  shlink-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: shlink
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: shlink
+    volumes:
+      - shlink-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shlink -d shlink"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  shlink-data:
+  shlink-db-data:
