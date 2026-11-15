@@ -6,11 +6,18 @@ apps:
   lychee:
     fit: "A photo site under your own name with albums, tags, star ratings, camera details and a map of geotagged photos, with no storage plan. It has no community, followers, discovery or visitor comments, and no phone app yet."
     import: no
+  chevereto:
+    fit: "An upload-and-share site rather than a gallery: upload photos and short videos, organise them in albums with optional passwords, categories and tags, and share each one by link or embed code, with accounts for other people if you allow them and an Explore page to browse. The free edition has no followers or likes, and spam controls are in its paid editions."
+    import: no
 moving: |
   Piwigo has no Flickr importer in its core, so request your Flickr data download from your account settings, then upload the photos to Piwigo, either in the web uploader or from your phone with the Piwigo app. Recreate your albums, and use the Batch Manager to add tags, titles and dates to many photos at once. Set each album to public or private and give groups of users access to the private ones. Lychee has no Flickr importer either: upload the photos from your data download in the browser, sort them into albums, and tag many at once. Then add a link to your new gallery on your Flickr profile so followers can find it.
+
+  Chevereto has no Flickr importer either: upload the photos from your data download into albums, or have an admin add whole folders with its bulk importer.
 faq:
-  - q: "Can people follow my photos on Piwigo or Lychee like on Flickr?"
-    a: "No. Neither has a social feed or followers. Visitors browse your gallery, its recent photos and tags, and you share links to albums or single photos wherever your audience already is."
+  - q: "Should I choose Piwigo, Lychee or Chevereto?"
+    a: "Choose Piwigo for a full photo website with public and private albums, comments and fine control over who sees what. Choose Lychee for a clean portfolio with ratings and a map of where photos were taken. Choose Chevereto if you mostly upload pictures to share by link or embed in forums and websites; its followers and likes are paid."
+  - q: "Can people follow my photos like on Flickr?"
+    a: "No. Piwigo and Lychee have no social feed or followers, and Chevereto keeps followers and likes for its paid editions. Visitors browse your gallery, its recent photos and tags, and you share links to albums or single photos wherever your audience already is."
   - q: "Can I keep my photos' camera details and tags?"
     a: "Yes. Piwigo reads the EXIF and IPTC details stored in each photo file, such as the camera, date and keywords, when you upload it. Lychee shows each photo's camera, lens and exposure details and puts geotagged photos on a map."
 ---

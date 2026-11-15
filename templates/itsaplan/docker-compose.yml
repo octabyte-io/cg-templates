@@ -1,0 +1,157 @@
+# Based on the official docker-compose.yml in croffasia/itsaplan at tag v1.11.0.
+x-database-url: &database-url postgres://itsaplan:${POSTGRES_PASSWORD}@itsaplan-db:5432/itsaplan
+
+x-s3-env: &s3-env
+  S3_ENDPOINT: http://itsaplan-files:9000
+  S3_BUCKET: planner-attachments
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+  S3_REGION: us-east-1
+
+services:
+  # The web app (Next.js). The api origin is read at startup and handed to the browser.
+  itsaplan:
+    image: ghcr.io/croffasia/itsaplan-web:1.11.0
+    restart: unless-stopped
+    depends_on:
+      itsaplan-api:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      HOSTNAME: 0.0.0.0
+      API_URL: ${API_URL}
+      # Where web itself reaches the api, to stream avatars and attachments.
+      SERVICE_URL_API: http://itsaplan-api:3000
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3001/login"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  itsaplan-api:
+    image: ghcr.io/croffasia/itsaplan-api:1.11.0
+    restart: unless-stopped
+    # The image's own CMD migrates first; here itsaplan-migrate has done that.
+    command: ["bun", "run", "apps/api/src/index.ts"]
+    depends_on:
+      itsaplan-db:
+        condition: service_healthy
+      itsaplan-migrate:
+        condition: service_completed_successfully
+      itsaplan-files-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *s3-env
+      NODE_ENV: production
+      API_PORT: 3000
+      DATABASE_URL: *database-url
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY}
+      API_URL: ${API_URL}
+      APP_URL: ${APP_URL}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Webhook and notification delivery, imports and agent schedules.
+  itsaplan-worker:
+    image: ghcr.io/croffasia/itsaplan-worker:1.11.0
+    restart: unless-stopped
+    depends_on:
+      itsaplan-db:
+        condition: service_healthy
+      itsaplan-migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *s3-env
+      NODE_ENV: production
+      DATABASE_URL: *database-url
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY}
+
+  # Telegram bot for notification links; idle until a bot token is set in god mode.
+  # Must stay at one replica.
+  itsaplan-bot:
+    image: ghcr.io/croffasia/itsaplan-bot:1.11.0
+    restart: unless-stopped
+    depends_on:
+      itsaplan-db:
+        condition: service_healthy
+      itsaplan-migrate:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: *database-url
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY}
+
+  # Runs at each start: dumps the database (kept 30 days) and applies migrations.
+  itsaplan-migrate:
+    image: ghcr.io/croffasia/itsaplan-api:1.11.0
+    restart: "no"
+    command: ["bun", "run", "packages/db/src/migrate.ts"]
+    depends_on:
+      itsaplan-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: *database-url
+    volumes:
+      - itsaplan-db-backups:/backups
+
+  itsaplan-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: itsaplan
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: itsaplan
+    volumes:
+      - itsaplan-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U itsaplan -d itsaplan"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # S3-compatible store for attachments (RustFS); stays inside the compose network.
+  itsaplan-files:
+    image: rustfs/rustfs:1.0.0
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY_ID}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_ACCESS_KEY}
+    volumes:
+      - itsaplan-files-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:9000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Runs at each start: creates the attachments bucket (a PUT on an existing bucket succeeds).
+  itsaplan-files-init:
+    image: rustfs/rustfs:1.0.0
+    restart: "no"
+    depends_on:
+      itsaplan-files:
+        condition: service_healthy
+    environment:
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        curl -fsS -X PUT --aws-sigv4 aws:amz:us-east-1:s3
+        --user "$$S3_ACCESS_KEY_ID:$$S3_SECRET_ACCESS_KEY"
+        http://itsaplan-files:9000/planner-attachments && echo bucket ready
+
+volumes:
+  itsaplan-db-data:
+  itsaplan-db-backups:
+  itsaplan-files-data:

@@ -1,0 +1,22 @@
+name: Heimdall
+description: "Heimdall is a self-hosted start page that puts all your team's web apps and links on one tidy dashboard, in place of start.me or messy bookmarks."
+version: "2.8.4"
+tags: [start.me alternative, self-hosted start page, application dashboard, homepage dashboard, browser start page, bookmark dashboard]
+links:
+  website: https://heimdall.site
+  docs: https://github.com/linuxserver/Heimdall#readme
+  source: https://github.com/linuxserver/Heimdall
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Heimdall builds its links from this address, so they stay on https behind Cloudgate's proxy.
+  APP_URL: { value: "{{domains.heimdall.url}}" }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in Heimdall, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: heimdall, port: 80 }

@@ -1,0 +1,108 @@
+# Based on Redash's official setup (getredash/setup, data/compose.yaml): the web
+# server, the RQ scheduler, the scheduled, ad-hoc and default workers, PostgreSQL
+# and Redis. The nginx container is dropped (Cloudgate routes the web address),
+# and the setup script's one-time `create_db` step becomes the redash-init
+# service, which also applies database migrations after an upgrade.
+x-redash: &redash
+  image: redash/redash:26.9.0
+  restart: unless-stopped
+  environment: &redash-env
+    PYTHONUNBUFFERED: "0"
+    REDASH_LOG_LEVEL: INFO
+    REDASH_HOST: ${REDASH_HOST}
+    REDASH_REDIS_URL: redis://redash-redis:6379/0
+    REDASH_DATABASE_URL: postgresql://redash:${DB_PASSWORD}@redash-db/redash
+    REDASH_COOKIE_SECRET: ${REDASH_COOKIE_SECRET}
+    REDASH_SECRET_KEY: ${REDASH_SECRET_KEY}
+    REDASH_ENFORCE_CSRF: "true"
+    REDASH_GUNICORN_TIMEOUT: "60"
+  depends_on:
+    redash-init:
+      condition: service_completed_successfully
+
+services:
+  redash:
+    <<: *redash
+    command: server
+    environment:
+      <<: *redash-env
+      REDASH_WEB_WORKERS: "4"
+      # The image binds [::]:5000 by default, which fails on hosts without IPv6.
+      REDASH_GUNICORN_BIND: 0.0.0.0:5000
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:5000/ping || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 1m
+
+  redash-scheduler:
+    <<: *redash
+    command: scheduler
+
+  redash-scheduled-worker:
+    <<: *redash
+    command: worker
+    environment:
+      <<: *redash-env
+      QUEUES: "scheduled_queries,schemas"
+      WORKERS_COUNT: "1"
+
+  redash-adhoc-worker:
+    <<: *redash
+    command: worker
+    environment:
+      <<: *redash-env
+      QUEUES: "queries"
+      WORKERS_COUNT: "2"
+
+  redash-worker:
+    <<: *redash
+    command: worker
+    environment:
+      <<: *redash-env
+      QUEUES: "periodic,emails,default"
+      WORKERS_COUNT: "1"
+
+  # Runs at every start, then exits: creates the tables on an empty database
+  # (Redash's `create_db`; it does nothing once they exist), then applies any
+  # migrations a newer Redash version brings.
+  redash-init:
+    <<: *redash
+    restart: "no"
+    command: ["bash", "-ec", "/app/manage.py database create_tables && /app/manage.py db upgrade"]
+    depends_on:
+      redash-db:
+        condition: service_healthy
+      redash-redis:
+        condition: service_healthy
+
+  redash-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: redash
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: redash
+    volumes:
+      - redash-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U redash"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redash-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - redash-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  redash-db-data:
+  redash-redis-data:

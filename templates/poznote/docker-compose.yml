@@ -1,0 +1,21 @@
+# From Poznote's official docker-compose.yml (release 6.148.1). The optional
+# MCP server for AI assistants (poznote-mcp, published on 127.0.0.1 only) is
+# left out; Poznote itself is the single webserver container.
+services:
+  webserver:
+    image: ghcr.io/timothepoznanski/poznote:6.148.1
+    restart: unless-stopped
+    environment:
+      SQLITE_DATABASE: /var/www/html/data/database/poznote.db
+    volumes:
+      # SQLite databases, notes, attachments and backups.
+      - poznote-data:/var/www/html/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --timeout=5 -O /dev/null http://127.0.0.1:80/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  poznote-data:

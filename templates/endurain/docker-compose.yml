@@ -1,0 +1,52 @@
+services:
+  endurain:
+    image: ghcr.io/endurain-project/endurain:v0.20.2
+    restart: unless-stopped
+    depends_on:
+      endurain-db:
+        condition: service_healthy
+    environment:
+      ENDURAIN_HOST: ${ENDURAIN_HOST}
+      TZ: ${TZ}
+      SECRET_KEY: ${SECRET_KEY}
+      FERNET_KEY: ${FERNET_KEY}
+      DB_HOST: endurain-db
+      DB_PORT: "5432"
+      DB_USER: endurain
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: endurain
+      # Cloudgate's proxy reaches the app over a private Docker network.
+      BEHIND_PROXY: "true"
+      TRUSTED_PROXIES: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    volumes:
+      # Activity files, user and server images; the image creates these folders
+      # owned by its non-root user, so named volumes need no chown.
+      - endurain-data:/app/backend/data
+      - endurain-logs:/app/backend/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/api/v1/about || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
+  endurain-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: endurain
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: endurain
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - endurain-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U endurain -d endurain"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  endurain-data:
+  endurain-logs:
+  endurain-db-data:
