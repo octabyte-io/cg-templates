@@ -1,0 +1,14 @@
+name: Drawnix
+description: "Self-hosted Drawnix: a free, open-source whiteboard for mind maps, flowcharts and sketches, built from Markdown or Mermaid and saved in your browser."
+version: "0.4.1"
+tags: [xmind alternative, whimsical alternative, mind map maker, flowchart maker, markdown to mind map, mermaid to flowchart, open source whiteboard]
+links:
+  website: https://drawnix.com
+  docs: https://github.com/plait-board/drawnix#readme
+  source: https://github.com/plait-board/drawnix
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs: {}
+domains:
+  - { service: drawnix, port: 80 }

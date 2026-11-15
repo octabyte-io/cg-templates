@@ -1,0 +1,22 @@
+name: LinkAce
+description: "LinkAce is a self-hosted bookmark archive: save links with tags, lists and notes, share them with your team, and get told when a link moves or breaks."
+version: "2.6.3"
+tags: [self-hosted bookmark manager, raindrop alternative, pinboard alternative, broken link checker, bookmark archive, link collection]
+links:
+  website: https://www.linkace.org
+  docs: https://www.linkace.org/docs/v2/
+  source: https://github.com/Kovah/LinkAce
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Used for generated links, emails and LinkAce's trusted host check.
+  APP_URL: { value: "{{domains.linkace.url}}" }
+  # Laravel's APP_KEY (32 random bytes, base64); the compose file adds the "base64:" prefix.
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  MEILISEARCH_KEY: { generate: hex }
+domains:
+  - { service: linkace, port: 80 }

@@ -1,0 +1,11 @@
+services:
+  drawnix:
+    # The official image (hub.docker.com/r/pubuzhixing/drawnix), built from
+    # each Drawnix release by the project's Dockerfile: busybox httpd serving
+    # the built web app on port 80.
+    image: pubuzhixing/drawnix:v0.4.1
+    restart: unless-stopped
+    # No sign-in, no volumes and no healthcheck: Drawnix is a static web app
+    # that saves boards in the visitor's browser storage, never on the server,
+    # and the image (built FROM scratch) has no shell, wget or curl to run a
+    # check with.
