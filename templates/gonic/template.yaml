@@ -1,0 +1,21 @@
+name: gonic
+description: "gonic is a lightweight, self-hosted music server that streams the music files you own to Subsonic apps on your phone and computer."
+version: "v0.23.0"
+tags: [self-hosted music server, subsonic server, spotify alternative, lightweight music server, music streaming server, gonic vs navidrome]
+links:
+  website: https://github.com/sentriz/gonic
+  docs: https://github.com/sentriz/gonic/wiki
+  source: https://github.com/sentriz/gonic
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Replaces gonic's default password (admin) of the account "admin" on the
+  # first start.
+  ADMIN_PASSWORD: { generate: password }
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # music at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: gonic, port: 80 }
+  - { service: filebrowser, port: 80 }

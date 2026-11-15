@@ -1,0 +1,49 @@
+name: Habitica
+description: "Self-hosted Habitica: a habit tracker and to-do list that plays like a role-playing game, with parties, quests and shared chore boards for families."
+version: "5.51.0"
+tags: [habit tracker, self-hosted habitica, gamified to-do list, chore chart for families, habit tracker game, habitica alternative]
+links:
+  website: https://habitica.com
+  docs: https://github.com/awinterstein/habitica-self-host#readme
+  source: https://github.com/HabitRPG/habitica
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The app's own address, used in links in emails and for sign-in redirects.
+  BASE_URL: { value: "{{domains.habitica.url}}" }
+  # Signs the sign-in cookies.
+  SESSION_SECRET: { generate: hex }
+  # Encrypts the unsubscribe links in emails (AES-256, 64 hex characters).
+  SESSION_SECRET_KEY: { generate: hex }
+  # Sign-ups are open so you can create your account; the first account becomes the admin.
+  # Afterwards set this to true on the variables page so only invited people can join.
+  INVITE_ONLY: { value: "false" }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed for password resets and invitations by email. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: Habitica connects with STARTTLS, usually on port 587.
+      default: "587"
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Sender email address
+      description: The address Habitica's emails come from.
+      format: email
+      required: false
+domains:
+  - { service: habitica, port: 3000 }
