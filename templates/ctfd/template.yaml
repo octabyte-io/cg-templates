@@ -1,0 +1,17 @@
+name: CTFd
+description: "Self-hosted CTFd runs capture-the-flag competitions for security classes, clubs and company events, with challenges, teams, hints and a live scoreboard."
+version: "3.8.9"
+tags: [ctf platform, capture the flag, self-hosted ctfd, ctfd hosting alternative, hack the box ctf alternative, cybersecurity training, security education]
+links:
+  website: https://ctfd.io
+  docs: https://docs.ctfd.io
+  source: https://github.com/CTFd/CTFd
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: ctfd, port: 8000 }

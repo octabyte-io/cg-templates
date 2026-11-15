@@ -1,0 +1,23 @@
+name: LibrePhotos
+description: "LibrePhotos is a self-hosted photo library that sorts your photos by face, place and day, and finds them by plain-word search, like Google Photos."
+version: "1.6.0"
+tags: [photo library, face recognition, photo search, google photos alternative, self-hosted photos, photo management]
+links:
+  website: https://docs.librephotos.com
+  docs: https://docs.librephotos.com/docs/intro
+  source: https://github.com/LibrePhotos/librephotos
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.proxy.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the first LibrePhotos account, the admin. Its username is admin.
+      format: email
+domains:
+  - { service: proxy, port: 80 }

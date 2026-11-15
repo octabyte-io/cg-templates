@@ -1,0 +1,57 @@
+# Based on Squidex's official Docker Compose setup (github.com/Squidex/squidex-hosting,
+# docker-compose/docker-compose.yml, linked from docs.squidex.io "Install on Docker"): the app and
+# MongoDB. The Caddy proxy is left out (Cloudgate routes the web address and adds HTTPS). MongoDB
+# gets a password, and is pinned to 7.0, which Squidex 7 supports (the official file uses mongo:6).
+
+services:
+  squidex:
+    image: squidex/squidex:7.24.0
+    restart: unless-stopped
+    depends_on:
+      squidex-mongo:
+        condition: service_healthy
+    environment:
+      URLS__BASEURL: ${BASE_URL}
+      ASPNETCORE_URLS: http://+:5000
+      EVENTSTORE__TYPE: MongoDB
+      EVENTSTORE__MONGODB__CONFIGURATION: mongodb://squidex:${MONGO_PASSWORD}@squidex-mongo:27017/?authSource=admin
+      STORE__MONGODB__CONFIGURATION: mongodb://squidex:${MONGO_PASSWORD}@squidex-mongo:27017/?authSource=admin
+      ASSETSTORE__TYPE: Folder
+      ASSETSTORE__FOLDER__PATH: /app/Assets
+      # The image ships sign-in keys for Squidex's own Google, GitHub and Microsoft apps, which only
+      # work on squidex.io. Empty values turn those buttons off; people sign in with email and password.
+      IDENTITY__GOOGLECLIENT: ""
+      IDENTITY__GOOGLESECRET: ""
+      IDENTITY__GITHUBCLIENT: ""
+      IDENTITY__GITHUBSECRET: ""
+      IDENTITY__MICROSOFTCLIENT: ""
+      IDENTITY__MICROSOFTSECRET: ""
+      # The first account to sign up becomes the admin; later sign-ups wait for the admin to unlock them.
+      IDENTITY__LOCKAUTOMATICALLY: ${LOCK_NEW_USERS:-true}
+    volumes:
+      - squidex-assets:/app/Assets
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:5000/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  squidex-mongo:
+    image: mongo:7.0.48
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: squidex
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - squidex-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  squidex-assets:
+  squidex-mongo-data:
