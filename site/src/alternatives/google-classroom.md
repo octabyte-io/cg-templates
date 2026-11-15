@@ -1,13 +1,13 @@
 ---
 apps:
   kolibri:
-    fit: "Covers the assign-and-follow part of Google Classroom: coaches build lessons from a library of ready-made videos, exercises, simulations and books, assign them to a class or group, build quizzes and follow each learner's progress and scores. It works offline on the local network and in the Kolibri Android app. It is not a full replacement: learners cannot hand in files, essays cannot be graded, and it has no Google Docs or Drive link and no video calls."
+    fit: "Covers the assign-and-follow part of Google Classroom: coaches build lessons from a library of ready-made videos, exercises, simulations and books, assign them to a class or group, build quizzes and follow each learner's progress and scores. Learners can keep working offline in the Kolibri Android app, and a Kolibri computer at a school can copy channels from your server and sync progress back. It is not a full replacement: learners cannot hand in files, essays cannot be graded, and it has no Google Docs or Drive link and no video calls."
     import: no
 moving: |
   Nothing imports from Google Classroom, so set up your classes in Kolibri. Open the new web address and go through the setup wizard, choosing group learning, then create the super admin account and keep its password safe, because it cannot be recovered. Import the content channels you need, such as Khan Academy, CK-12, PhET or TED-Ed, over the internet or from a USB drive; videos take a lot of disk space, so import only the topics you teach. Then create your classes, add coaches and learners, by hand or from a CSV file, and build your first lessons and quizzes from the library.
 faq:
   - q: "Does Kolibri work without internet?"
-    a: "Yes. Once Kolibri and its content are on your server, learners use it over the local network with no internet connection. Learners with the Kolibri Android app can keep working offline and sync their progress later."
+    a: "Kolibri itself can run on a local network with no internet at all. When Cloudgate runs it on an online server, learners reach it over the internet, and the Kolibri Android app or a Kolibri computer at a school can copy channels from it, work offline and sync progress back later."
   - q: "Can learners hand in assignments in Kolibri?"
     a: "No. Kolibri tracks progress on lessons, exercises and quizzes from its library, but learners cannot upload files and essays cannot be graded. Keep another tool for written work."
   - q: "Can I use my own teaching materials?"

@@ -1,0 +1,31 @@
+name: FitTrackee
+description: "Self-hosted FitTrackee logs runs, rides and hikes from GPX or FIT files, with route maps, statistics and records, in place of Strava."
+version: "v1.3.8"
+tags: [workout tracker, strava alternative, gpx tracker, activity tracker, garmin connect alternative, running log, cycling tracker]
+links:
+  website: https://docs.fittrackee.org/en/
+  docs: https://docs.fittrackee.org/en/installation/index.html
+  source: https://codeberg.org/FitTrackee/FitTrackee
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  UI_URL: { value: "{{domains.fittrackee.url}}" }
+  APP_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Owner username
+      description: The name of the owner account, shown to other people on this FitTrackee. Letters, digits and underscores, 3 to 30 characters.
+      default: admin
+      pattern: "[A-Za-z0-9_]{3,30}"
+  ADMIN_EMAIL:
+    ask:
+      label: Owner email
+      description: You sign in to FitTrackee with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  # The owner account's first password, read afterwards on the app's variables
+  # page. Changing it here later does nothing: change it in FitTrackee instead.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: fittrackee, port: 5000 }

@@ -1,0 +1,27 @@
+name: ArchivesSpace
+description: "ArchivesSpace is self-hosted archives management: record accessions, describe collections and publish finding aids to a public catalogue."
+version: "4.2.1"
+tags: [archives management software, archivera alternative, finding aid software, archival collection management, open source archives software, axiell collections alternative, archivesspace hosting]
+links:
+  website: https://archivesspace.org
+  docs: https://docs.archivesspace.org
+  source: https://github.com/archivesspace/archivesspace
+cloudgate: 0.1.0
+compose: app
+# The app (1.5 GB Java heap), Solr (768 MB heap) and MySQL; upstream asks for at
+# least 2 GB for the app alone.
+size: large
+inputs:
+  STAFF_URL: { value: "{{domains.archivesspace.url}}" }
+  PUBLIC_URL: { value: "{{domains.archivesspace-public.url}}" }
+  # The password of the "admin" account in the staff interface, set on first start.
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  # The staff interface, where archivists work and the admin signs in.
+  - { service: archivesspace, port: 8080 }
+  # The public interface, where researchers search published collections.
+  - { service: archivesspace-public, port: 8081 }
+files:
+  - { path: public-proxy.conf }

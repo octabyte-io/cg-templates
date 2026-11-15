@@ -1,0 +1,31 @@
+services:
+  lowcoder:
+    # Official all-in-one image (deploy/docker/docker-compose.yaml): the web
+    # frontend, API service, Node service, MongoDB and Redis run inside this one
+    # container and keep their data under /lowcoder-stacks.
+    image: lowcoderorg/lowcoder-ce:3.0.0
+    restart: unless-stopped
+    environment:
+      LOWCODER_PUBLIC_URL: ${LOWCODER_PUBLIC_URL}
+      # Encrypts data source credentials stored in MongoDB.
+      LOWCODER_DB_ENCRYPTION_PASSWORD: ${LOWCODER_DB_ENCRYPTION_PASSWORD}
+      LOWCODER_DB_ENCRYPTION_SALT: ${LOWCODER_DB_ENCRYPTION_SALT}
+      LOWCODER_API_KEY_SECRET: ${LOWCODER_API_KEY_SECRET}
+      LOWCODER_NODE_SERVICE_SECRET: ${LOWCODER_NODE_SERVICE_SECRET}
+      LOWCODER_NODE_SERVICE_SECRET_SALT: ${LOWCODER_NODE_SERVICE_SECRET_SALT}
+      # Super-admin account (admin@localhost). Without a password set here the
+      # image makes a new random one on every start and only prints it to a log.
+      LOWCODER_SUPERUSER_PASSWORD: ${LOWCODER_SUPERUSER_PASSWORD}
+    volumes:
+      - lowcoder-stacks:/lowcoder-stacks
+      - lowcoder-assets:/lowcoder/assets
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000/api/status/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+volumes:
+  lowcoder-stacks:
+  lowcoder-assets:
