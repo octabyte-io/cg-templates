@@ -1,0 +1,15 @@
+name: LubeLogger
+description: "LubeLogger is a self-hosted vehicle maintenance tracker: log services, repairs and fuel for every car, see running costs, and get reminders when work is due."
+version: "v1.7.4"
+tags: ["vehicle maintenance tracker", "car maintenance log", "fuel mileage tracker", "fuelly alternative", "drivvo alternative", "fleet maintenance software"]
+links:
+  website: https://lubelogger.com
+  docs: https://docs.lubelogger.com
+  source: https://github.com/hargata/lubelog
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  LUBELOGGER_DOMAIN: { value: "{{domains.lubelogger.url}}" }
+domains:
+  - { service: lubelogger, port: 8080 }

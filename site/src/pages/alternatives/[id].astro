@@ -32,7 +32,8 @@ interface Props {
 
 const { product, apps, copy } = Astro.props;
 const pick = apps[0];
-const simplest = apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
+// Only suggest a simpler app when the pick itself isn't the easy one.
+const simplest = pick.ease === 'easy' ? undefined : apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
 const count = apps.length;
 const plural = count === 1 ? 'alternative' : 'alternatives';
 const names = listNames(apps.map((app) => app.name));

@@ -1,0 +1,75 @@
+# From BookOrbit's official docker-compose.yml (v3.8.0). The opt-in "tts" and
+# "read-aloud" profile services are left out.
+services:
+  bookorbit:
+    image: ghcr.io/bookorbit/bookorbit:3.8.0
+    restart: unless-stopped
+    init: true
+    depends_on:
+      bookorbit-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      POSTGRES_HOST: bookorbit-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: bookorbit
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: bookorbit
+      JWT_SECRET: ${JWT_SECRET}
+      # One-time token the first-run setup page asks for before it creates the admin account.
+      SETUP_BOOTSTRAP_TOKEN: ${SETUP_BOOTSTRAP_TOKEN}
+      # 32-byte keys written as 64 hex characters; any other value leaves those secrets unencrypted.
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY}
+      MIGRATION_ENCRYPTION_KEY: ${MIGRATION_ENCRYPTION_KEY}
+      APP_URL: ${APP_URL}
+      CLIENT_URL: ${APP_URL}
+      TZ: ${TIMEZONE:-Etc/UTC}
+      PUID: 1000
+      PGID: 1000
+      NODE_MAX_OLD_SPACE_SIZE: auto
+      # Start the library folder picker at the books folder.
+      LIBRARY_BROWSE_ROOT: /books
+    volumes:
+      # The book library.
+      - bookorbit-books:/books
+      # Covers, uploads, the Book Dock folder and app data.
+      - bookorbit-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+    # The image's own HEALTHCHECK (wget on /api/v1/health) is used.
+
+  bookorbit-db:
+    # BookOrbit needs the vector (pgvector), uuid-ossp and pg_trgm extensions.
+    image: pgvector/pgvector:0.8.7-pg18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bookorbit
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: bookorbit
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - bookorbit-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bookorbit -d bookorbit"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  bookorbit-books:
+  bookorbit-data:
+  bookorbit-db-data:

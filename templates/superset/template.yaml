@@ -1,0 +1,22 @@
+name: Apache Superset
+description: "Self-hosted Apache Superset: build charts, dashboards and SQL queries on your own databases, with no per-viewer licence like Tableau or Power BI."
+version: "6.1.0"
+tags: ["business intelligence", "dashboards", "sql editor", "data visualization", "tableau alternative", "power bi alternative", "open source bi"]
+links:
+  website: https://superset.apache.org
+  docs: https://superset.apache.org/docs/intro/
+  source: https://github.com/apache/superset
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SUPERSET_SECRET_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of Superset's admin account (you sign in with the username admin).
+      format: email
+domains:
+  - { service: superset, port: 8088 }

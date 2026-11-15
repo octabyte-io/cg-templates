@@ -3,11 +3,16 @@ apps:
   vane:
     fit: "Searches the web through its built-in SearXNG engine and writes an answer with numbered citations, in speed, balanced or quality modes, and can answer questions about files you upload. Its answers depend on the AI model you connect, it has no phone apps, and it has no user accounts: the template adds one shared sign-in."
     import: no
+  khoj:
+    fit: "Searches the web through its bundled SearXNG and answers with sources, with a research mode that digs deeper, and can draw on your own documents in the same answer. It is a broader personal assistant than a search engine, with agents and scheduled questions; answers depend on the AI model you connect, and it has no phone app, though it installs as a web app."
+    import: no
 moving: |
-  There is nothing to import: Vane starts with an empty library. Sign in, connect an AI provider such as OpenAI, Anthropic or Google with an API key, or a local model through Ollama or LM Studio, and choose your default model. To search from your browser's address bar, add Vane as a search engine with your Vane address followed by /?q=%s. Keep any Perplexity threads you need in Perplexity, or copy out the answers you want to keep.
+  There is nothing to import: Vane starts with an empty library. Sign in, connect an AI provider such as OpenAI, Anthropic or Google with an API key, or a local model through Ollama or LM Studio, and choose your default model. To search from your browser's address bar, add Vane as a search engine with your Vane address followed by /?q=%s. Keep any Perplexity threads you need in Perplexity, or copy out the answers you want to keep. Khoj starts empty too: sign in to its admin page, add an AI provider key and a chat model, and web search works through its bundled SearXNG with no extra key.
 faq:
   - q: "Does Vane need a paid AI subscription?"
     a: "No, but it needs an AI model. Use an API key from a provider such as OpenAI, Anthropic, Google or Groq, which charge for what you use, or run a local model with Ollama or LM Studio on your own hardware."
+  - q: "Should I choose Vane or Khoj?"
+    a: "Choose Vane for a dedicated answer engine that searches the web. Choose Khoj if you also want answers from your own documents and notes, with user accounts, agents and scheduled questions."
   - q: "Is Vane the same as Perplexica?"
     a: "Yes. Perplexica was renamed Vane in March 2026; it is the same project by the same developer."
   - q: "Can several people use Vane?"

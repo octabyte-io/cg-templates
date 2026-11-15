@@ -6,8 +6,11 @@ apps:
   mayan-edms:
     fit: "The closer match for DocuWare's business features: document types with your own index fields, OCR, version history, check-out and check-in, multi-step approval workflows with escalation, a permission for every action and a full audit log, capturing from scanners, email and watched folders. It needs a bigger server and more setup than Paperless-ngx, has no e-signing service, and support is community-based unless you buy professional services."
     import: partly
+  papra:
+    fit: "Covers the archive and search side for a household or small office: upload files or forward emails, it reads them with OCR, tags them by rules and makes them searchable, with shared organisations, roles and optional encryption of stored files. It has no approval workflows, e-signatures, retention rules or vendor support, and it is newer and simpler than Paperless-ngx."
+    import: no
 moving: |
-  There is no DocuWare importer. Export your documents from DocuWare as files, then drop them into Paperless-ngx by uploading them in the browser, or in batches through its consume folder; it reads and indexes each one. Index fields from DocuWare do not come across, so recreate the important ones first as tags, correspondents, document types and custom fields, and add workflows that set them on new documents. Start with this year's documents, check that search and tagging work the way you want, then bring in the archive. For new paper, point your scanner at the consume folder or forward email to a mailbox Paperless-ngx watches. Moving to Mayan EDMS works the same way: recreate your DocuWare index fields as metadata on document types, rebuild approvals as workflows, then load the exported files by bulk upload or a watched folder.
+  There is no DocuWare importer. Export your documents from DocuWare as files, then drop them into Paperless-ngx by uploading them in the browser, or in batches through its consume folder; it reads and indexes each one. Index fields from DocuWare do not come across, so recreate the important ones first as tags, correspondents, document types and custom fields, and add workflows that set them on new documents. Start with this year's documents, check that search and tagging work the way you want, then bring in the archive. For new paper, point your scanner at the consume folder or forward email to a mailbox Paperless-ngx watches. Moving to Mayan EDMS works the same way: recreate your DocuWare index fields as metadata on document types, rebuild approvals as workflows, then load the exported files by bulk upload or a watched folder. Papra takes the same exported files through its browser upload, a watched folder or its command-line tool; recreate your index fields as tags and custom properties first, and add tagging rules for new documents.
 faq:
   - q: "Should I choose Paperless-ngx or Mayan EDMS?"
     a: "Paperless-ngx for a small office or household that wants paperwork scanned, tagged and searchable with little setup. Mayan EDMS for a business that needs DocuWare-style approvals, versions, detailed permissions and an audit log, and can give it a bigger server and setup time."
@@ -15,6 +18,8 @@ faq:
     a: "Yes, simpler ones. Workflows run when a document is added, changed or on a schedule, and can assign tags, fields and permissions, send an email or call a webhook. There are no multi-step approval workflows with sign-off; Mayan EDMS has them."
   - q: "Can Paperless-ngx scan documents?"
     a: "No. A scanner or phone app does the scanning; Paperless-ngx takes the files from a watched folder, an email inbox, the web upload or its API."
+  - q: "Should I choose Paperless-ngx or Papra?"
+    a: "Choose Paperless-ngx for the more complete document system, with workflows, mail rules and a tagging model that learns. Choose Papra for a simpler archive that runs in one small container, with shared organisations for a family or team."
   - q: "Are documents encrypted in Paperless-ngx?"
     a: "No, files are stored unencrypted on the server, and the project advises running it only on a server you trust, with backups."
 ---
