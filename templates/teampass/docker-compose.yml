@@ -1,0 +1,104 @@
+# From TeamPass's official Docker Compose setup (docker/docker-compose/docker-compose.yml at
+# the 3.2.4.3 tag), with the images pinned, no published ports, the MariaDB settings of its
+# custom.cnf passed as flags, and a one-shot service that completes the web installer.
+services:
+  teampass:
+    # Official image: nginx + PHP-FPM on port 80, with TeamPass's scheduler run by cron
+    # inside the container. On each start it applies pending database upgrades itself.
+    image: teampass/teampass:3.2.4.3
+    restart: unless-stopped
+    # The image's nginx also listens on [::]:80 and refuses to start on a server whose
+    # containers have no IPv6. Cloudgate reaches the app over IPv4, so that one line is
+    # dropped before the image's own entrypoint and command run unchanged.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - sed -i '/listen \[::\]:80/d' /etc/nginx/http.d/default.conf && exec /docker-entrypoint.sh "$$@"
+      - --
+    command: ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+    depends_on:
+      teampass-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: teampass-db
+      DB_PORT: 3306
+      DB_NAME: teampass
+      DB_USER: teampass
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PREFIX: teampass_
+      TEAMPASS_URL: ${TEAMPASS_URL}
+      PHP_MEMORY_LIMIT: 512M
+      PHP_UPLOAD_MAX_FILESIZE: 100M
+      PHP_POST_MAX_SIZE: 100M
+      PHP_MAX_EXECUTION_TIME: 120
+    volumes:
+      # The five paths the image declares, each on a named volume as the official file does:
+      # the master encryption key (secrets) and settings.php (storage/config) must survive
+      # a container being recreated, or the data can't be decrypted.
+      - teampass-sk:/var/www/html/storage/sk
+      - teampass-files:/var/www/html/storage/files
+      - teampass-upload:/var/www/html/storage/upload
+      - teampass-config:/var/www/html/storage/config
+      - teampass-secrets:/var/www/html/secrets
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # TeamPass 3.2 installs only through its web wizard (the command-line installer was removed),
+  # and the wizard would be open to whoever reached the address first. This runs once after
+  # the app is up and completes it with this setup's database and admin account
+  # (files/teampass-install.sh.txt); later starts see TeamPass is installed and exit.
+  teampass-install:
+    image: teampass/teampass:3.2.4.3
+    restart: "no"
+    depends_on:
+      teampass:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "/teampass-install.sh"]
+    environment:
+      TEAMPASS_URL: ${TEAMPASS_URL}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ../files/teampass-install.sh.txt:/teampass-install.sh:ro
+    healthcheck:
+      disable: true
+
+  teampass-db:
+    # The official file uses mariadb:11.2, which is past its end of life; 11.8 is the current
+    # LTS series.
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: teampass
+      MARIADB_USER: teampass
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+      MARIADB_AUTO_UPGRADE: "1"
+      MARIADB_INITDB_SKIP_TZINFO: "1"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_allowed_packet=64M
+      - --innodb_buffer_pool_size=256M
+      - --sql-mode=NO_ENGINE_SUBSTITUTION
+    volumes:
+      - teampass-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  teampass-sk:
+  teampass-files:
+  teampass-upload:
+  teampass-config:
+  teampass-secrets:
+  teampass-db-data:

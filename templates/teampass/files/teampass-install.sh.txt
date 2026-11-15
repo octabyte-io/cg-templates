@@ -1,0 +1,96 @@
+#!/bin/sh
+# Completes TeamPass's own web installer once, on the first start, so the installer is never
+# left open for whoever reaches the address first. It makes the same requests the installer's
+# pages make (install/install.php, then install-steps/run.step1, 3, 4, 5 and 6), in the same
+# order, with the database details of this setup and the admin account from ADMIN_EMAIL and
+# the generated ADMIN_PASSWORD. The list of tables (step 5) and final tasks (step 6) is read
+# from the installer's own install.js, so it always matches the image.
+# On later starts install.php answers "already installed" (or 404 once the app container has
+# removed the install folder) and this exits straight away.
+set -eu
+
+BASE=http://teampass
+APP_URL="${TEAMPASS_URL%/}/"
+JS=/var/www/html/public/install/install-steps/install.js
+JAR=/tmp/teampass-install.cookies
+rm -f "$JAR"
+
+page=""
+i=0
+while [ $i -lt 60 ]; do
+  code=$(curl -sS -o /tmp/install.html -w '%{http_code}' -c "$JAR" -b "$JAR" "$BASE/install/install.php" || echo 000)
+  page=$(cat /tmp/install.html 2>/dev/null || true)
+  if [ "$code" = "404" ] || echo "$page" | grep -q 'already installed'; then
+    echo "TeamPass is already installed; nothing to do."
+    exit 0
+  fi
+  if [ "$code" = "200" ] && echo "$page" | grep -q 'name="csrf-token" content="[0-9a-f]'; then
+    break
+  fi
+  i=$((i + 1))
+  sleep 5
+done
+
+TOKEN=$(echo "$page" | sed -n 's/.*name="csrf-token" content="\([0-9a-f]*\)".*/\1/p' | head -n1)
+[ -n "$TOKEN" ] || { echo "Could not open the TeamPass installer (last HTTP status $code)."; exit 1; }
+
+DB="--data-urlencode dbHost=teampass-db --data-urlencode dbName=teampass --data-urlencode dbLogin=teampass --data-urlencode dbPw=${DB_PASSWORD} --data-urlencode dbPort=3306 --data-urlencode tablePrefix=teampass_"
+
+# post <step> <label> [optional] -- curl data arguments...
+post() {
+  step=$1; label=$2; optional=$3; shift 3
+  out=$(curl -sS -b "$JAR" -c "$JAR" -H "X-CSRF-Token: $TOKEN" -X POST "$BASE/install/install-steps/run.$step.php" "$@" || true)
+  if echo "$out" | grep -q '"success":true'; then
+    return 0
+  fi
+  if [ "$optional" = "optional" ]; then
+    echo "  (optional) $label skipped: $out"
+    return 0
+  fi
+  echo "TeamPass installer failed at $step ($label): $out"
+  exit 1
+}
+
+# The administrator's email may not appear in the password (the installer refuses the
+# password then). In that rare case install with a stand-in address and set the real one after.
+EMAIL_LOCAL=$(echo "${ADMIN_EMAIL%@*}" | tr 'A-Z' 'a-z')
+EMAIL_ORG=$(echo "${ADMIN_EMAIL#*@}" | cut -d. -f1 | tr 'A-Z' 'a-z')
+PW_LOWER=$(echo "$ADMIN_PASSWORD" | tr 'A-Z' 'a-z')
+INSTALL_EMAIL="$ADMIN_EMAIL"
+case "$PW_LOWER" in
+  *"$EMAIL_LOCAL"*|*"$EMAIL_ORG"*) INSTALL_EMAIL="admin@localhost" ;;
+esac
+
+echo "Installing TeamPass for $APP_URL ..."
+post step1 paths required --data-urlencode absolutePath=/var/www/html/public --data-urlencode "urlPath=$APP_URL"
+# shellcheck disable=SC2086
+post step3 database required $DB --data-urlencode teampassAbsolutePath=/var/www/html/public/ --data-urlencode "teampassUrl=$APP_URL"
+# shellcheck disable=SC2086
+post step4 admin required $DB --data-urlencode "adminPassword=$ADMIN_PASSWORD" --data-urlencode "adminEmail=$INSTALL_EMAIL" --data-urlencode adminName=Admin --data-urlencode adminLastname=TeamPass
+
+for action in $(sed -n '/^function performStep5/,/^function performStep4/p' "$JS" | grep -o "action: '[A-Za-z0-9_]*'" | cut -d"'" -f2); do
+  # shellcheck disable=SC2086
+  post step5 "$action" required $DB --data-urlencode "action=$action"
+done
+echo "Database tables created."
+
+for action in $(sed -n '/^function performStep6/,/^function performStep5/p' "$JS" | grep -o "action: '[A-Za-z0-9_]*'" | cut -d"'" -f2); do
+  opt=required
+  # The app container runs TeamPass's scheduler itself, so the crontab entry is optional.
+  [ "$action" = "cronJob" ] && opt=optional
+  # shellcheck disable=SC2086
+  post step6 "$action" "$opt" $DB --data-urlencode "action=$action"
+done
+
+if [ "$INSTALL_EMAIL" != "$ADMIN_EMAIL" ]; then
+  php -r '
+    $db = new mysqli("teampass-db", "teampass", getenv("DB_PASSWORD"), "teampass", 3306);
+    $email = getenv("ADMIN_EMAIL");
+    $stmt = $db->prepare("UPDATE teampass_users SET email = ? WHERE login = \"admin\"");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+  '
+fi
+
+rm -f "$JAR" /tmp/install.html
+echo "TeamPass is installed. Sign in as \"admin\" with the generated ADMIN_PASSWORD."

@@ -6,11 +6,14 @@ apps:
   miniflux:
     fit: "A fast, minimalist reader with no feed limit: categories, starred articles, full-text search, full-article fetching, and regex filters and rewrite rules for each feed. It strips trackers and syncs with phone apps through the Google Reader and Fever APIs. It has fewer automation rules than Inoreader, no AI, no newsletter-to-feed address, no plugins and no official app."
     import: yes
+  commafeed:
+    fit: "A light, Google Reader-style reader: categories with unread counts, four layouts, starred articles, search, rules that mark articles as read, push notifications for new articles, and sync with phone apps through the Fever and Google Reader APIs. It has fewer rules and filters than Inoreader, no AI, no newsletter feeds and no official phone app."
+    import: yes
 moving: |
-  In Inoreader, export your subscriptions as an OPML file from its import and export settings. In FreshRSS, open Subscription management, then Import / export, and import the file; in Miniflux, use Import under Feeds. Your feeds arrive with their folders as categories. Saved articles, rules and newsletter feeds do not come across, so rebuild the rules you rely on, as FreshRSS mark-as-read rules and saved searches or as Miniflux's keep and block filters. Then turn on the Google Reader or Fever API and connect your phone reader app.
+  In Inoreader, export your subscriptions as an OPML file from its import and export settings. In FreshRSS, open Subscription management, then Import / export, and import the file; in Miniflux, use Import under Feeds; in CommaFeed, use the OPML tab on the Subscribe screen. Your feeds arrive with their folders as categories. Saved articles, rules and newsletter feeds do not come across, so rebuild the rules you rely on, as FreshRSS mark-as-read rules and saved searches as Miniflux's keep and block filters, or as CommaFeed's mark-as-read rules. Then turn on the Google Reader or Fever API and connect your phone reader app.
 faq:
-  - q: "Should I choose FreshRSS or Miniflux?"
-    a: "Choose FreshRSS if you want extensions, more views and feeds made from web pages. Choose Miniflux if you want the simplest, fastest reader, with privacy filtering built in. Both are free and sync with phone reader apps."
+  - q: "Should I choose FreshRSS, Miniflux or CommaFeed?"
+    a: "Choose FreshRSS if you want extensions, more views and feeds made from web pages. Choose Miniflux if you want the simplest, fastest reader, with privacy filtering built in. Choose CommaFeed if you want a Google Reader-style tree of categories with push notifications. All three are free and sync with phone reader apps."
   - q: "How many feeds can I follow in FreshRSS or Miniflux?"
     a: "As many as you like. Neither has a feed limit; the only limit is your server. When we checked in November 2026, Inoreader's free plan stopped at 150 feeds."
   - q: "Can I read FreshRSS on my phone like Inoreader's app?"

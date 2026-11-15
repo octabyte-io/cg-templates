@@ -3258,6 +3258,22 @@ export const PRODUCTS: Product[] = [
     lede: 'Claper is a free, open-source Wooclap alternative for teachers and trainers: polls, scored quizzes, word clouds and questions on your own slides, with students joining from their phones and quiz scores sent to Moodle. Wooclap’s free plan allows only a few questions a month and paid plans are billed per presenter each year; self-hosted Claper has no such limits, though its Moodle link is still in beta.',
     pick: 'claper',
   },
+  {
+    id: 'sitecore',
+    name: 'Sitecore',
+    icon: 'sitecore',
+    job: 'running large websites with many editors',
+    lede: 'TYPO3 is a free, open-source Sitecore alternative for large websites with many editors: several sites and languages in one installation, detailed permissions, and draft workspaces where changes are reviewed before they go live. Sitecore is sold with licence fees and a marketing suite; TYPO3 has no licence fee, but it has no built-in personalisation, and building its site templates usually takes a developer or agency.',
+    pick: 'typo3',
+  },
+  {
+    id: 'adobe-experience-manager',
+    name: 'Adobe Experience Manager',
+    icon: 'adobe',
+    job: 'running large websites with many editors',
+    lede: 'TYPO3 is a free, open-source Adobe Experience Manager alternative for large, multilingual websites: many editors with detailed permissions, several sites in one installation, and changes that go through review and approval before they are published. Adobe Experience Manager is an enterprise licence sold alongside Adobe’s marketing tools; TYPO3 has no licence fee, but it has no built-in personalisation and usually needs a developer or agency to set up.',
+    pick: 'typo3',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));
