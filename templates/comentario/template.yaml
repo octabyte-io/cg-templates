@@ -1,0 +1,44 @@
+name: Comentario
+description: "Comentario is a self-hosted comment system with a moderation dashboard, spam rules and statistics, and no ads. Import your Disqus or Commento comments."
+version: "3.19.0"
+tags: [comment system, disqus alternative, commento alternative, self-hosted comments, blog comments, comment moderation]
+links:
+  website: https://comentario.app
+  docs: https://docs.comentario.app
+  source: https://gitlab.com/comentario/comentario
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.comentario.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  SERVER_SIGNING_KEY: { generate: hex }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed to send reply notifications, sign-up confirmations and password resets. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_EMAIL_FROM:
+    ask:
+      label: Sender address
+      description: The address emails come from, such as comments@example.com. If empty, the username is used.
+      format: email
+      required: false
+domains:
+  - { service: comentario, port: 80 }

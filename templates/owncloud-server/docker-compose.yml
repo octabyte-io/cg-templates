@@ -1,0 +1,67 @@
+services:
+  owncloud:
+    image: owncloud/server:11.1.0
+    restart: unless-stopped
+    depends_on:
+      owncloud-db:
+        condition: service_healthy
+      owncloud-redis:
+        condition: service_healthy
+    environment:
+      OWNCLOUD_DOMAIN: ${OWNCLOUD_HOST}
+      OWNCLOUD_TRUSTED_DOMAINS: ${OWNCLOUD_HOST}
+      OWNCLOUD_OVERWRITE_CLI_URL: ${OWNCLOUD_URL}
+      OWNCLOUD_OVERWRITE_PROTOCOL: https
+      OWNCLOUD_DB_TYPE: mysql
+      OWNCLOUD_DB_NAME: owncloud
+      OWNCLOUD_DB_USERNAME: owncloud
+      OWNCLOUD_DB_PASSWORD: ${DB_PASSWORD}
+      OWNCLOUD_DB_HOST: owncloud-db
+      OWNCLOUD_ADMIN_USERNAME: admin
+      OWNCLOUD_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      OWNCLOUD_MYSQL_UTF8MB4: "true"
+      OWNCLOUD_REDIS_ENABLED: "true"
+      OWNCLOUD_REDIS_HOST: owncloud-redis
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    volumes:
+      - owncloud-files:/mnt/data
+
+  owncloud-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_USER: owncloud
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: owncloud
+      MARIADB_AUTO_UPGRADE: "1"
+    command: ["--max-allowed-packet=128M", "--innodb-log-file-size=64M"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - owncloud-db-data:/var/lib/mysql
+
+  owncloud-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--databases", "1"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - owncloud-redis-data:/data
+
+volumes:
+  owncloud-files:
+  owncloud-db-data:
+  owncloud-redis-data:

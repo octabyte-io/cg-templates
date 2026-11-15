@@ -1,0 +1,23 @@
+name: Send
+description: "Send is a self-hosted Firefox Send: share files through an end-to-end encrypted link that expires after a set time or number of downloads."
+version: "3.5.1"
+tags: [firefox send alternative, wetransfer alternative, encrypted file sharing, self-hosted firefox send, expiring file links, send files with password]
+links:
+  website: https://send.vis.ee
+  docs: https://github.com/timvisee/send/blob/master/docs/docker.md
+  source: https://github.com/timvisee/send
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Send writes this address into every share link it makes.
+  BASE_URL: { value: "{{domains.send.url}}" }
+  REDIS_PASSWORD: { generate: password }
+  SEND_FOOTER_DMCA_URL:
+    ask:
+      label: Abuse report page (optional)
+      description: Anyone who can open Send can upload files. A page where people can report illegal files, shown as a link in Send's footer.
+      format: url
+      required: false
+domains:
+  - { service: send, port: 1443 }

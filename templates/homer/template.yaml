@@ -1,0 +1,13 @@
+name: Homer
+description: "Homer is a self-hosted start page that puts links to all your team's web apps on one fast, searchable page, set up from one simple settings file."
+version: "v26.11.3"
+tags: [start.me alternative, self-hosted start page, homepage dashboard, service dashboard, bookmarks page, new tab page]
+links:
+  website: https://homer-demo.netlify.app
+  docs: https://github.com/homer-dashboard/homer/blob/main/docs/configuration.md
+  source: https://github.com/homer-dashboard/homer
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: homer, port: 8080 }

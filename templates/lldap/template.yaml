@@ -1,0 +1,24 @@
+name: LLDAP
+description: "LLDAP is a light, self-hosted LDAP server: one list of users and groups, managed on a web page, that your other apps use for logins."
+version: "0.6.3"
+tags: [ldap server, self-hosted ldap, user directory, jumpcloud alternative, openldap alternative, ldap web ui]
+links:
+  website: https://github.com/lldap/lldap
+  docs: https://github.com/lldap/lldap/tree/main/docs
+  source: https://github.com/lldap/lldap
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  LLDAP_HTTP_URL: { value: "{{domains.lldap.url}}" }
+  LLDAP_JWT_SECRET: { generate: hex }
+  LLDAP_KEY_SEED: { generate: hex }
+  LLDAP_LDAP_USER_PASS: { generate: password }
+  LLDAP_LDAP_BASE_DN:
+    ask:
+      label: LDAP base DN
+      description: The root of your directory, usually your domain written as dc parts, such as dc=example,dc=com. Apps that sign people in through LDAP use it in their settings.
+      default: dc=example,dc=com
+      pattern: "dc=[a-z0-9-]+(,dc=[a-z0-9-]+)*"
+domains:
+  - { service: lldap, port: 17170 }

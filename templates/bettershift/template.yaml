@@ -1,0 +1,28 @@
+name: BetterShift
+description: "BetterShift is a self-hosted shift planner: plan shifts in one click, share the schedule with your team and sync it to their calendar apps."
+version: "3.3.0"
+tags: [shift planner, shift calendar, employee scheduling, rota planner, when i work alternative, deputy alternative]
+links:
+  website: https://github.com/panteLx/BetterShift
+  docs: https://github.com/panteLx/BetterShift/tree/main/docs
+  source: https://github.com/panteLx/BetterShift
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BETTER_AUTH_URL: { value: "{{domains.bettershift.url}}" }
+  BETTER_AUTH_SECRET: { generate: base64 }
+  TZ:
+    ask:
+      label: Time zone
+      description: Used for shift times, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+  ALLOW_USER_REGISTRATION:
+    ask:
+      label: Allow new sign-ups
+      description: "Leave true until your own account exists (the first person to sign up becomes the admin), then set it to false on the app's variables page."
+      default: "true"
+      pattern: "true|false"
+      required: false
+domains:
+  - { service: bettershift, port: 3000 }
