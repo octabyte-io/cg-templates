@@ -1,0 +1,17 @@
+name: Wishlist
+description: "Wishlist is a self-hosted gift list app: family and friends share wish lists and claim gifts, so no one buys the same present twice."
+version: "v0.69.0"
+tags: [self-hosted wishlist, family wish list, shared gift list, gift registry, giftster alternative, elfster alternative, amazon wish list alternative]
+links:
+  website: https://github.com/cmintey/wishlist
+  docs: https://github.com/cmintey/wishlist#getting-started
+  source: https://github.com/cmintey/wishlist
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ORIGIN: { value: "{{domains.wishlist.url}}" }
+  DEFAULT_CURRENCY:
+    ask: { label: Default currency, description: "The three-letter currency code shown on prices, such as USD, EUR or GBP. Each item can still use its own currency.", default: "USD", required: false }
+domains:
+  - { service: wishlist, port: 3280 }

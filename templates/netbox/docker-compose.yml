@@ -1,0 +1,150 @@
+# Based on netbox-community/netbox-docker 5.1.2 (docker-compose.yml and env/*.env).
+# The image ships its configuration in /etc/netbox/config and reads it from the
+# environment, so no config files are mounted. Housekeeping runs as a NetBox
+# system job in the worker, so there is no separate housekeeping service.
+x-netbox-env: &netbox-env
+  DB_HOST: netbox-db
+  DB_NAME: netbox
+  DB_USER: netbox
+  DB_PASSWORD: ${DB_PASSWORD}
+  REDIS_HOST: netbox-redis
+  REDIS_DATABASE: "0"
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  REDIS_SSL: "false"
+  REDIS_CACHE_HOST: netbox-redis-cache
+  REDIS_CACHE_DATABASE: "1"
+  REDIS_CACHE_PASSWORD: ${REDIS_CACHE_PASSWORD}
+  REDIS_CACHE_SSL: "false"
+  SECRET_KEY: ${SECRET_KEY}
+  API_TOKEN_PEPPER_1: ${API_TOKEN_PEPPER}
+  CORS_ORIGIN_ALLOW_ALL: "True"
+  GRAPHQL_ENABLED: "true"
+  WEBHOOKS_ENABLED: "true"
+  METRICS_ENABLED: "false"
+  MEDIA_ROOT: /opt/netbox/netbox/media
+  RELEASE_CHECK_URL: https://api.github.com/repos/netbox-community/netbox/releases
+
+services:
+  netbox:
+    image: netboxcommunity/netbox:v4.7.5-5.1.2
+    restart: unless-stopped
+    user: "netbox:root"
+    depends_on:
+      netbox-db:
+        condition: service_healthy
+      netbox-redis:
+        condition: service_healthy
+      netbox-redis-cache:
+        condition: service_healthy
+    environment:
+      <<: *netbox-env
+      # The first start runs every database migration, which takes several
+      # minutes on a small server; the admin account is created right after.
+      SKIP_SUPERUSER: "false"
+      SUPERUSER_NAME: ${SUPERUSER_NAME:-admin}
+      SUPERUSER_EMAIL: ${SUPERUSER_EMAIL}
+      SUPERUSER_PASSWORD: ${SUPERUSER_PASSWORD}
+    # The image's launch script binds the web server to "::", which fails on
+    # Docker hosts without IPv6; Cloudgate reaches the app over IPv4. This runs
+    # the same entrypoint and launch script, bound to 0.0.0.0 instead.
+    command:
+      - /opt/netbox/docker-entrypoint.sh
+      - bash
+      - -c
+      - 'sed ''s/--host "::"/--host "0.0.0.0"/'' /opt/netbox/launch-netbox.sh > /tmp/launch-netbox.sh && exec bash /tmp/launch-netbox.sh'
+    healthcheck:
+      # health.sh ships in the image (curl on port 8080).
+      test: /opt/netbox/health.sh
+      start_period: 1200s
+      timeout: 5s
+      interval: 15s
+      retries: 5
+    volumes:
+      - netbox-media:/opt/netbox/netbox/media
+      - netbox-reports:/opt/netbox/netbox/reports
+      - netbox-scripts:/opt/netbox/netbox/scripts
+
+  netbox-worker:
+    image: netboxcommunity/netbox:v4.7.5-5.1.2
+    restart: unless-stopped
+    user: "netbox:root"
+    depends_on:
+      netbox:
+        condition: service_healthy
+    environment:
+      <<: *netbox-env
+      SKIP_SUPERUSER: "true"
+    command:
+      - /opt/netbox/venv/bin/python
+      - /opt/netbox/netbox/manage.py
+      - rqworker
+    healthcheck:
+      test: ps -aux | grep -v grep | grep -q rqworker || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+    volumes:
+      - netbox-media:/opt/netbox/netbox/media
+      - netbox-reports:/opt/netbox/netbox/reports
+      - netbox-scripts:/opt/netbox/netbox/scripts
+
+  netbox-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: netbox
+      POSTGRES_USER: netbox
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - netbox-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -t 2 -d netbox -U netbox"]
+      start_period: 20s
+      interval: 10s
+      timeout: 30s
+      retries: 10
+
+  netbox-redis:
+    image: valkey/valkey:9.1.3-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command:
+      - sh
+      - -c
+      - valkey-server --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    volumes:
+      - netbox-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "[ \"$$(valkey-cli --no-auth-warning -a \"$$REDIS_PASSWORD\" ping)\" = PONG ]"]
+      start_period: 5s
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  netbox-redis-cache:
+    image: valkey/valkey:9.1.3-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_CACHE_PASSWORD}
+    command:
+      - sh
+      - -c
+      - valkey-server --requirepass "$$REDIS_PASSWORD"
+    volumes:
+      - netbox-redis-cache-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "[ \"$$(valkey-cli --no-auth-warning -a \"$$REDIS_PASSWORD\" ping)\" = PONG ]"]
+      start_period: 5s
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  netbox-media:
+  netbox-reports:
+  netbox-scripts:
+  netbox-db-data:
+  netbox-redis-data:
+  netbox-redis-cache-data:

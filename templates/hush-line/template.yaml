@@ -1,0 +1,21 @@
+name: Hush Line
+description: "Hush Line is a self-hosted anonymous tip line: whistleblowers send you encrypted messages without an account, and you read and answer them in one inbox."
+version: "0.7.36"
+tags: [anonymous tip line, whistleblower software, whistleblowing platform, encrypted tip line, navex ethicspoint alternative, whispli alternative, securedrop alternative]
+links:
+  website: https://hushline.app
+  docs: https://hushline.app/library/docs/getting-started/start-here
+  source: https://github.com/scidsg/hushline
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.hush-line.url}}" }
+  APP_HOST: { value: "{{domains.hush-line.host}}" }
+  SECRET_KEY: { generate: hex }
+  # Fernet keys (32 random bytes, base64) for the encrypted database fields and the session.
+  ENCRYPTION_KEY: { generate: base64 }
+  SESSION_FERNET_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: hush-line, port: 8080 }

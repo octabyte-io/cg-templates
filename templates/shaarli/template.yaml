@@ -1,0 +1,13 @@
+name: Shaarli
+description: "Shaarli is a self-hosted bookmark manager for one person: save, tag and search links, keep them private or share them as a link blog with RSS."
+version: "0.16.10"
+tags: [bookmark manager, self-hosted bookmarks, pinboard alternative, raindrop alternative, link blog, read later]
+links:
+  website: https://shaarli.readthedocs.io
+  docs: https://shaarli.readthedocs.io/en/master/
+  source: https://github.com/shaarli/Shaarli
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: shaarli, port: 80 }

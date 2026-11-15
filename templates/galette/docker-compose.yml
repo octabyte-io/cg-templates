@@ -1,0 +1,56 @@
+# From the image's README and its galette-and-mariadb compose example
+# (github.com/galette/docker). Left out: published ports, container names and the
+# hard-coded passwords. The config and data folders are named volumes instead of
+# host folders, so they belong to www-data from the start. files/galette-start.sh.txt
+# installs Galette on the first start with its command line installer, so you sign
+# in as "admin" with ADMIN_PASSWORD; the web installer stays closed.
+
+services:
+  galette:
+    image: galette/galette:1.3.3
+    restart: unless-stopped
+    depends_on:
+      galette-db:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "/galette-start.sh"]
+    environment:
+      GALETTE_URL: ${GALETTE_URL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD}
+      # Keep the install folder: upgrades run from it, and since Galette 1.3.0 the
+      # web installer only opens while data/ENABLE_INSTALL exists.
+      RM_INSTALL_FOLDER: "0"
+    volumes:
+      - ../files/galette-start.sh.txt:/galette-start.sh:ro
+      # config.inc.php (database settings) and optional behavior.inc.php.
+      - galette-config:/var/www/galette/config
+      # Photos, documents, attachments, exports, imports, logs and caches.
+      - galette-data:/var/www/galette/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+  galette-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: galette
+      MARIADB_USER: galette
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - galette-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  galette-config:
+  galette-data:
+  galette-db-data:

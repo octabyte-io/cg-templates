@@ -1,0 +1,13 @@
+name: Gancio
+description: "Gancio is a self-hosted community event calendar that anyone can add local events to and follow."
+version: "1.28.2"
+tags: [community calendar, facebook events alternative, meetup alternative, shared event agenda, local events calendar, fediverse events, embed events calendar]
+links:
+  website: https://gancio.org
+  docs: https://gancio.org/install/docker
+  source: https://framagit.org/les/gancio
+cloudgate: 0.1.0
+compose: app
+size: small
+domains:
+  - { service: gancio, port: 13120 }
