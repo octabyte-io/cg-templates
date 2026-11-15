@@ -2268,6 +2268,48 @@ export const PRODUCTS: Product[] = [
     lede: 'Crawl4AI is a free, open-source ScrapingBee alternative that loads web pages in a real browser on your own server and returns them as clean Markdown, JSON, screenshots or PDFs. ScrapingBee sells monthly credit plans and cannot be self-hosted; Crawl4AI has no per-request fee, though it has no rotating proxies, so sites with strong bot protection may block it.',
     pick: 'crawl4ai',
   },
+  {
+    id: 'privnote',
+    name: 'Privnote',
+    job: 'sending notes that destroy themselves after reading',
+    lede: 'Enclosed is a free, open-source Privnote alternative: write a note, attach files if you need to, and send a link that stops working once it has been read, with the note encrypted in your browser before it leaves. Privnote is a website run by someone else; a self-hosted Enclosed or Onetime Secret keeps every note on your own server until it is read or expires.',
+    pick: 'enclosed',
+  },
+  {
+    id: 'uptimerobot',
+    name: 'UptimeRobot',
+    job: 'uptime monitoring',
+    lede: 'Tianji is a free, open-source UptimeRobot alternative that checks your websites, ports, DNS and scheduled jobs and alerts you when one stops answering, with website visitor stats and server health in the same dashboard. UptimeRobot ties the number of monitors and how often they are checked to your plan; self-hosted Tianji has no monitor limit, though it checks from your one server rather than from many locations.',
+    pick: 'tianji',
+  },
+  {
+    id: 'flighty',
+    name: 'Flighty',
+    job: 'keeping a log of your flights',
+    lede: 'AirTrail is a free, open-source Flighty alternative for the logbook side: every flight you have taken on a world map, with a searchable history and statistics, and it imports Flighty’s CSV export. Flighty’s unlimited Passport history and extra statistics are part of its paid Pro plan; self-hosted AirTrail keeps every flight and all its statistics at no cost, though it has no live flight status, delay alerts or phone app.',
+    pick: 'airtrail',
+  },
+  {
+    id: 'app-in-the-air',
+    name: 'App in the Air',
+    job: 'keeping a log of your flights',
+    lede: 'AirTrail is a free, open-source App in the Air alternative: it keeps your flight history on a world map with statistics, and it imports the .txt export App in the Air sent before it closed. App in the Air shut down in September 2024; a self-hosted AirTrail keeps your flight log on your own server, so it cannot disappear with someone else’s app.',
+    pick: 'airtrail',
+  },
+  {
+    id: 'habitify',
+    name: 'Habitify',
+    job: 'tracking daily habits',
+    lede: 'Beaver Habit Tracker is a free, open-source Habitify alternative: a grid of your habits where you tick each day you did them, with streaks, heatmaps and notes, in any browser. Habitify is a freemium app with goals, reminders and timers; self-hosted Beaver has no habit limit and keeps your history on your server, but it has no reminders or goals by design.',
+    pick: 'beaver-habit-tracker',
+  },
+  {
+    id: 'streaks',
+    name: 'Streaks',
+    job: 'tracking daily habits',
+    lede: 'Beaver Habit Tracker is a free, open-source Streaks alternative: tick off your habits on a daily grid and see streaks, heatmaps and notes, in any browser on any phone or computer. Streaks is a paid app for Apple devices only; self-hosted Beaver works on Android, Windows and Linux too, though it has no reminders and no Apple Health or Watch link.',
+    pick: 'beaver-habit-tracker',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));

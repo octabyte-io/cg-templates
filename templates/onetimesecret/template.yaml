@@ -1,0 +1,17 @@
+name: Onetime Secret
+description: "Self-hosted Onetime Secret: share passwords and private notes as links that open once, then self-destruct, so secrets stay out of chat and email."
+version: "0.26.19"
+tags: [one-time secret, share passwords securely, self-destructing messages, burn after reading, self-hosted password sharing, privnote alternative, onetimesecret.com alternative]
+links:
+  website: https://onetimesecret.com
+  docs: https://docs.onetimesecret.com/en/self-hosting/
+  source: https://github.com/onetimesecret/onetimesecret
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  HOST: { value: "{{domains.onetimesecret.host}}" }
+  SECRET: { generate: hex }
+  VALKEY_PASSWORD: { generate: password }
+domains:
+  - { service: onetimesecret, port: 3000 }

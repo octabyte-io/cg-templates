@@ -1,0 +1,79 @@
+services:
+  tianji:
+    image: moonrailgun/tianji:1.34.3
+    restart: unless-stopped
+    depends_on:
+      tianji-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://tianji:${DB_PASSWORD}@tianji-db:5432/tianji
+      JWT_SECRET: ${JWT_SECRET}
+      PUBLIC_URL: ${PUBLIC_URL}
+      ALLOW_REGISTER: "false"
+      ALLOW_OPENAPI: "true"
+
+  # One-shot: Tianji's first database migration creates the account admin / admin.
+  # This waits for that account and, only while it still has the default password,
+  # sets it to the generated ADMIN_PASSWORD. A password changed later is left alone.
+  tianji-admin-password:
+    image: postgres:15.20-alpine
+    restart: "no"
+    depends_on:
+      tianji-db:
+        condition: service_healthy
+    environment:
+      PGHOST: tianji-db
+      PGUSER: tianji
+      PGDATABASE: tianji
+      PGPASSWORD: ${DB_PASSWORD}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -eu
+        admin_count() {
+          psql -tA 2>/dev/null <<'SQL' || echo 0
+        SELECT count(*) FROM "User" WHERE username = 'admin';
+        SQL
+        }
+        table_exists() {
+          psql -tA 2>/dev/null <<'SQL' || echo f
+        SELECT to_regclass('public."User"') IS NOT NULL;
+        SQL
+        }
+        waited=0
+        after_table=0
+        until [ "$$(admin_count)" = "1" ]; do
+          if [ "$$(table_exists)" = "t" ]; then after_table=$$((after_table + 2)); fi
+          if [ "$$after_table" -ge 60 ] || [ "$$waited" -ge 900 ]; then
+            echo "No admin account found; nothing to change"
+            exit 0
+          fi
+          sleep 2
+          waited=$$((waited + 2))
+        done
+        psql -v ON_ERROR_STOP=1 -v pw="$$ADMIN_PASSWORD" <<'SQL'
+        CREATE EXTENSION IF NOT EXISTS pgcrypto;
+        UPDATE "User" SET password = crypt(:'pw', gen_salt('bf', 10)), "updatedAt" = now()
+          WHERE username = 'admin' AND password = crypt('admin', password);
+        SQL
+        echo "Admin password checked"
+
+  tianji-db:
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tianji
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: tianji
+    volumes:
+      - tianji-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tianji -d tianji"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tianji-db-data:

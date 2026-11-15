@@ -1,0 +1,21 @@
+name: GoatCounter
+description: "GoatCounter is self-hosted, cookie-free web analytics: see your visitors, pages, referrers and campaigns on one plain page, with no personal data stored."
+version: "2.7.0"
+tags: [web analytics, cookieless analytics, privacy-friendly analytics, google analytics alternative, fathom alternative, lightweight website stats]
+links:
+  website: https://www.goatcounter.com
+  docs: https://github.com/arp242/goatcounter#self-hosting-goatcounter
+  source: https://github.com/arp242/goatcounter
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to GoatCounter with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  APP_HOST: { value: "{{domains.goatcounter.host}}" }
+domains:
+  - { service: goatcounter, port: 8080 }
