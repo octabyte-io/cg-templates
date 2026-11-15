@@ -1,0 +1,93 @@
+# Based on ckan/ckan-docker (the official compose setup), without its nginx
+# proxy, DataPusher and development parts.
+services:
+  ckan:
+    image: ckan/ckan-base:2.12.1
+    restart: unless-stopped
+    depends_on:
+      ckan-db:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      CKAN_SITE_URL: ${CKAN_SITE_URL}
+      CKAN_SITE_ID: default
+      CKAN_SQLALCHEMY_URL: postgresql://ckan:${CKAN_DB_PASSWORD}@ckan-db/ckan
+      CKAN_DATASTORE_WRITE_URL: postgresql://ckan:${CKAN_DB_PASSWORD}@ckan-db/datastore
+      CKAN_DATASTORE_READ_URL: postgresql://datastore_ro:${DATASTORE_RO_PASSWORD}@ckan-db/datastore
+      CKAN_SOLR_URL: http://solr:8983/solr/ckan
+      CKAN_REDIS_URL: redis://redis:6379/1
+      CKAN_STORAGE_PATH: /var/lib/ckan
+      CKAN_MAX_UPLOAD_SIZE_MB: "100"
+      CKAN__PLUGINS: image_view text_view datatables_view datastore envvars
+      # Fixed secrets, so sign-ins and API tokens survive a container restart
+      # (the image would otherwise make new ones in ckan.ini on each start).
+      CKAN___SECRET_KEY: ${SECRET_KEY}
+      CKAN___WTF_CSRF_SECRET_KEY: ${CSRF_SECRET_KEY}
+      CKAN___API_TOKEN__JWT__ENCODE__SECRET: string:${JWT_SECRET}
+      CKAN___API_TOKEN__JWT__DECODE__SECRET: string:${JWT_SECRET}
+      # The image's start script creates this sysadmin on the first start.
+      CKAN_SYSADMIN_NAME: ${ADMIN_USER}
+      CKAN_SYSADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      CKAN_SYSADMIN_EMAIL: ${ADMIN_EMAIL}
+      TZ: UTC
+      # The image's default uWSGI options, but listening on IPv4: the default
+      # "[::]:5000" fails to start on hosts without IPv6.
+      UWSGI_OPTS: >-
+        --socket /tmp/uwsgi.sock --wsgi-file /srv/app/wsgi.py --module wsgi:application
+        --http 0.0.0.0:5000 --master --enable-threads --lazy-apps
+        -p 2 -L -b 32768 --vacuum --harakiri 50
+    volumes:
+      - ckan-storage:/var/lib/ckan
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:5000/api/action/status_show"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  ckan-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+      CKAN_DB_PASSWORD: ${CKAN_DB_PASSWORD}
+      DATASTORE_RO_PASSWORD: ${DATASTORE_RO_PASSWORD}
+    volumes:
+      - ckan-db-data:/var/lib/postgresql/data
+      - ../files/ckan-db-init.sh.txt:/docker-entrypoint-initdb.d/10-ckan.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d ckan"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Search index for datasets, with CKAN's Solr schema built in.
+  solr:
+    image: ckan/ckan-solr:2.12-solr9.9
+    restart: unless-stopped
+    volumes:
+      - solr-data:/var/solr
+    healthcheck:
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8983/solr/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  ckan-storage:
+  ckan-db-data:
+  solr-data:

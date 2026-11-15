@@ -1,0 +1,48 @@
+# Chibisafe's official Caddyfile (v6.7.0) with the service names of this
+# template. Requests to /api and /docs keep the visitor's Host header (the
+# official file swaps it for the server's), so the links Chibisafe hands out
+# use the app's own address instead of an internal one.
+{
+	servers {
+		trusted_proxies static private_ranges
+		client_ip_headers X-Forwarded-For X-Real-IP
+	}
+}
+
+{$BASE_URL} {
+	route {
+		# Uploaded documents must not execute scripts or share the application's origin.
+		@uploadedFile file {
+			root /app/uploads
+			try_files {path} {path}/index.html {path}/index.txt
+		}
+		handle @uploadedFile {
+			header {
+				Content-Security-Policy "sandbox; script-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+				X-Content-Type-Options nosniff
+				# Native media viewers fetch from the sandbox's opaque origin.
+				Access-Control-Allow-Origin *
+			}
+
+			file_server {
+				root /app/uploads
+				pass_thru
+			}
+		}
+
+		@api path /api/*
+		reverse_proxy @api http://chibisafe-server:8000 {
+			header_up X-Real-IP {http.request.header.X-Real-IP}
+		}
+
+		@docs path /docs*
+		reverse_proxy @docs http://chibisafe-server:8000 {
+			header_up X-Real-IP {http.request.header.X-Real-IP}
+		}
+
+		reverse_proxy http://chibisafe:8001 {
+			header_up Host {http.reverse_proxy.upstream.hostport}
+			header_up X-Real-IP {http.request.header.X-Real-IP}
+		}
+	}
+}

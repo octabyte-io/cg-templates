@@ -1,0 +1,167 @@
+# Based on Decidim's official production setup (github.com/decidim/docker, install/docker-compose.yml):
+# the pre-built Decidim app image for the web server and a Sidekiq worker, PostgreSQL and Redis.
+# Traefik and its certificates are left out (Cloudgate's web proxy does HTTPS), and a one-off
+# init service does what the official install script asks you to do by hand.
+
+x-decidim-env: &decidim-env
+  RAILS_ENV: production
+  RAILS_LOG_TO_STDOUT: "true"
+  RAILS_SERVE_STATIC_FILES: "true"
+  DATABASE_URL: postgres://decidim:${DB_PASSWORD}@decidim-db:5432/decidim
+  REDIS_URL: redis://decidim-redis:6379/0
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  QUEUE_ADAPTER: sidekiq
+  WEB_CONCURRENCY: "2"
+  # Email: Decidim emails new participants a link to confirm their address, plus notifications.
+  DECIDIM_MAILER_SENDER: ${MAILER_SENDER}
+  SMTP_ADDRESS: ${SMTP_ADDRESS}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USERNAME: ${SMTP_USERNAME}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_DOMAIN: ${DECIDIM_HOST}
+
+services:
+  # Runs at each start, before the web server and the worker: migrates the database, and on the
+  # first start makes the system admin (for /system), the organization for this web address and
+  # its first admin, all with the email and generated password from setup.
+  decidim-init:
+    image: ghcr.io/decidim/decidim:0.31.6
+    restart: on-failure
+    environment:
+      <<: *decidim-env
+      DECIDIM_HOST: ${DECIDIM_HOST}
+      ORGANIZATION_NAME: ${ORGANIZATION_NAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        bin/rails db:migrate
+        bin/rails runner '
+          email = ENV.fetch("ADMIN_EMAIL")
+          password = ENV.fetch("ADMIN_PASSWORD")
+          unless Decidim::System::Admin.exists?
+            Decidim::System::Admin.create!(email: email, password: password, password_confirmation: password)
+            puts "Made the system admin #{email}."
+          end
+          unless Decidim::Organization.exists?
+            name = ENV.fetch("ORGANIZATION_NAME").strip
+            organization = Decidim::Organization.create!(
+              name: { "en" => name },
+              short_name: { "en" => name[0, 12] },
+              host: ENV.fetch("DECIDIM_HOST"),
+              reference_prefix: "DEC",
+              available_locales: Decidim.available_locales.map(&:to_s),
+              default_locale: "en",
+              available_authorizations: [],
+              external_domain_allowlist: ["decidim.org", "github.com"],
+              users_registration_mode: :enabled,
+              tos_version: Time.current,
+              badges_enabled: true,
+              send_welcome_notification: true,
+              file_upload_settings: Decidim::OrganizationSettings.default(:upload),
+              colors: { primary: "#53bf40", secondary: "#4053bf", tertiary: "#bf4053" }
+            )
+            Decidim::System::CreateDefaultPages.call(organization)
+            Decidim::System::CreateDefaultHelpPages.call(organization)
+            Decidim::System::CreateDefaultContentBlocks.call(organization)
+            Decidim::User.create!(
+              organization: organization, email: email, name: "Admin", nickname: "admin",
+              password: password, password_updated_at: Time.current,
+              admin: true, admin_terms_accepted_at: Time.current,
+              confirmed_at: Time.current, locale: "en",
+              tos_agreement: true, accepted_tos_version: organization.tos_version
+            )
+            puts "Made the organization #{name} at #{organization.host} and its admin #{email}."
+          end
+        '
+    depends_on:
+      decidim-db:
+        condition: service_healthy
+      decidim-redis:
+        condition: service_healthy
+
+  decidim:
+    image: ghcr.io/decidim/decidim:0.31.6
+    restart: unless-stopped
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    environment: *decidim-env
+    volumes:
+      # Uploaded files (Active Storage).
+      - decidim-storage:/code/storage
+    healthcheck:
+      # Rails forces HTTPS, so the check says it came through the HTTPS proxy.
+      test: ["CMD-SHELL", "curl -fsS -H 'X-Forwarded-Proto: https' http://localhost:3000/up >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 2m
+    depends_on:
+      decidim-init:
+        condition: service_completed_successfully
+
+  # Background jobs (emails, notifications, exports), plus Decidim's scheduled tasks, which the
+  # official setup runs with sidekiq-cron: here a small loop runs the same rake tasks at the same
+  # times (hourly process steps; daily digests, reminders, open data and clean-ups; weekly ones).
+  decidim-worker:
+    image: ghcr.io/decidim/decidim:0.31.6
+    restart: unless-stopped
+    environment: *decidim-env
+    command:
+      - sh
+      - -c
+      - |
+        (
+          while true; do
+            sleep $$((3600 - $$(date +%s) % 3600))
+            tasks="decidim_participatory_processes:change_active_step"
+            case "$$(date -u +%H)" in
+              01) tasks="$$tasks decidim:participants:delete_inactive_participants" ;;
+              03) tasks="$$tasks decidim:open_data:export decidim:delete_download_your_data_files"
+                  [ "$$(date -u +%w)" = 0 ] && tasks="$$tasks decidim_meetings:clean_registration_forms" ;;
+              11) tasks="$$tasks decidim:reminders:all" ;;
+              18) tasks="$$tasks decidim:mailers:notifications_digest_daily"
+                  [ "$$(date -u +%w)" = 0 ] && tasks="$$tasks decidim:mailers:notifications_digest_weekly" ;;
+            esac
+            bin/rails $$tasks || echo "A scheduled task failed: $$tasks"
+          done
+        ) &
+        exec bundle exec sidekiq -C config/sidekiq.yml
+    volumes:
+      - decidim-storage:/code/storage
+    depends_on:
+      decidim-init:
+        condition: service_completed_successfully
+
+  decidim-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: decidim
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: decidim
+    volumes:
+      - decidim-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U decidim -d decidim"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  decidim-redis:
+    image: redis:8.6.8-alpine
+    restart: unless-stopped
+    volumes:
+      - decidim-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  decidim-storage:
+  decidim-db-data:
+  decidim-redis-data:

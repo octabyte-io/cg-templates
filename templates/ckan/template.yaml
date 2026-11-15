@@ -1,0 +1,35 @@
+name: CKAN
+description: "CKAN is self-hosted, open-source data portal software: publish your organisation's datasets with search, previews and a data API."
+version: "2.12.1"
+tags: ["open data portal", "opendatasoft alternative", "socrata alternative", "data catalog", "dataset publishing", "open data"]
+links:
+  website: https://ckan.org
+  docs: https://docs.ckan.org/en/2.12/
+  source: https://github.com/ckan/ckan
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  CKAN_SITE_URL: { value: "{{domains.ckan.url}}" }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The sysadmin account you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z0-9_-]{2,100}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The sysadmin's email address, used for password resets.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  CKAN_DB_PASSWORD: { generate: password }
+  DATASTORE_RO_PASSWORD: { generate: password }
+  SECRET_KEY: { generate: hex }
+  CSRF_SECRET_KEY: { generate: hex }
+  JWT_SECRET: { generate: hex }
+domains:
+  - { service: ckan, port: 5000 }
+files:
+  - { path: ckan-db-init.sh.txt }

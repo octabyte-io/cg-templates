@@ -1,0 +1,16 @@
+name: Checkmk
+description: "Checkmk Community is free, self-hosted IT monitoring that checks your servers, network devices and services and alerts you when something fails."
+version: "2.5.0p19"
+tags: ["prtg alternative", "solarwinds alternative", "server monitoring", "network monitoring", "checkmk raw", "infrastructure monitoring"]
+links:
+  website: https://checkmk.com
+  docs: https://docs.checkmk.com/latest/en/introduction_docker.html
+  source: https://github.com/Checkmk/checkmk
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # Password of the cmkadmin user, set when the site is first created.
+  CMK_PASSWORD: { generate: password }
+domains:
+  - { service: checkmk, port: 5000 }

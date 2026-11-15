@@ -1,0 +1,30 @@
+services:
+  fireshare:
+    # The "-lite" image is the one the project's README uses: it runs without
+    # the NVIDIA libraries, which Cloudgate servers have no GPU for.
+    image: shaneisrael/fireshare:1.9.0-lite
+    restart: unless-stopped
+    environment:
+      # The admin account; the password is made at setup.
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Signs login and remember-me cookies.
+      SECRET_KEY: ${SECRET_KEY}
+      # The app's address without https://, used for link previews of shared videos.
+      DOMAIN: ${DOMAIN}
+      MINUTES_BETWEEN_VIDEO_SCANS: "5"
+      THUMBNAIL_VIDEO_LOCATION: "0"
+      ENABLE_TRANSCODING: "false"
+      PUID: "1000"
+      PGID: "1000"
+    volumes:
+      - fireshare-data:/data
+      - fireshare-processed:/processed
+      - fireshare-videos:/videos
+      - fireshare-images:/images
+
+volumes:
+  fireshare-data:
+  fireshare-processed:
+  fireshare-videos:
+  fireshare-images:

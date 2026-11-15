@@ -1,0 +1,57 @@
+name: Decidim
+description: "Decidim is a self-hosted participatory democracy platform for consultations, proposals, participatory budgets and meetings."
+version: "0.31.6"
+tags: ["go vocal alternative", "citizenlab alternative", "participatory budgeting software", "citizen participation platform", "public consultation", "engagementhq alternative"]
+links:
+  website: https://decidim.org
+  docs: https://docs.decidim.org
+  source: https://github.com/decidim/decidim
+cloudgate: 0.1.0
+compose: app
+# Three Rails processes (two web workers and Sidekiq) plus the hourly scheduled tasks, next to
+# PostgreSQL and Redis.
+size: large
+inputs:
+  DECIDIM_HOST: { value: "{{domains.decidim.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  # The password of both accounts made at setup: the platform's admin and the system admin
+  # (/system). Read it on the stack's variables page.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in as the platform's admin, and to its /system panel, with this email address.
+      format: email
+  ORGANIZATION_NAME:
+    ask:
+      label: Organization name
+      description: The name shown at the top of your participation platform, such as your town or association. You can change it later in the admin panel.
+      default: Our participation platform
+      pattern: "[^<>'\"]{3,80}"
+  MAILER_SENDER:
+    ask:
+      label: Sender email address
+      description: The address Decidim's emails come from, such as participate@your-domain.org.
+      format: email
+  SMTP_ADDRESS:
+    ask:
+      label: Email server (SMTP) address
+      description: Decidim emails new participants a link to confirm their address. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: decidim, port: 3000 }
