@@ -6,8 +6,11 @@ apps:
   solidtime:
     fit: "Covers Clockify's core with a modern, Toggl-like look: timer, calendar and weekly timesheet, clients, projects, tasks and tags, billable rates and reports, plus free desktop apps and browser extensions, and it imports your Clockify projects and time entries directly. When self-hosted, invoicing needs its paid Business licence, and it has no expenses, scheduling or phone app."
     import: yes
+  traggo:
+    fit: "A simple, tag-based tracker for individuals and small teams: timers and time spans labelled with tags you define, a list and calendar view, and dashboards of charts you build yourself. It has no clients, rates, invoicing, expenses or team timesheets, no Clockify import, and no phone, desktop or browser apps."
+    import: no
 moving: |
-  Export your detailed time report from Clockify as CSV, then install Kimai's free Importer plugin, which documents Clockify's columns. Create your team's user accounts first, so each entry finds its owner, and import a short period to check the result before the rest. Then set your hourly rates and an invoice template, and give phone users one of the third-party Kimai apps. In solidtime, use the built-in Clockify importer on its import page to bring across projects and time entries from Clockify's exports, then set billable rates and invite your team.
+  Export your detailed time report from Clockify as CSV, then install Kimai's free Importer plugin, which documents Clockify's columns. Create your team's user accounts first, so each entry finds its owner, and import a short period to check the result before the rest. Then set your hourly rates and an invoice template, and give phone users one of the third-party Kimai apps. In solidtime, use the built-in Clockify importer on its import page to bring across projects and time entries from Clockify's exports, then set billable rates and invite your team. Traggo has no Clockify importer, so start it fresh with a few tags such as project:name, and keep your Clockify export as a record.
 faq:
   - q: "Can I import Clockify data into Kimai?"
     a: "Yes, as a CSV file through Kimai's free Importer plugin, which documents Clockify's export columns. Create the users in Kimai before you import."

@@ -1,0 +1,17 @@
+services:
+  traggo:
+    image: traggo/server:0.8.3
+    restart: unless-stopped
+    environment:
+      # The admin account Traggo creates on first start, when it has no users yet.
+      TRAGGO_DEFAULT_USER_NAME: ${TRAGGO_DEFAULT_USER_NAME}
+      TRAGGO_DEFAULT_USER_PASS: ${TRAGGO_DEFAULT_USER_PASS}
+      TRAGGO_LOG_LEVEL: info
+      # The built-in SQLite database, kept in the data volume below.
+      TRAGGO_DATABASE_DIALECT: sqlite3
+      TRAGGO_DATABASE_CONNECTION: data/traggo.db
+    volumes:
+      - traggo-data:/opt/traggo/data
+
+volumes:
+  traggo-data:

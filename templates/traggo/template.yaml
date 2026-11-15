@@ -1,0 +1,21 @@
+name: Traggo
+description: "Traggo is a self-hosted time tracker: tag your time, such as by client or project, and see where the hours went in dashboards you build."
+version: "0.8.3"
+tags: [time tracking, self-hosted time tracker, tag based time tracking, timesheet, toggl alternative, clockify alternative]
+links:
+  website: https://traggo.net
+  docs: https://traggo.net/install/
+  source: https://github.com/traggo/server
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  TRAGGO_DEFAULT_USER_NAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  TRAGGO_DEFAULT_USER_PASS: { generate: password }
+domains:
+  - { service: traggo, port: 3030 }

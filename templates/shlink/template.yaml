@@ -1,0 +1,30 @@
+name: Shlink
+description: "Shlink is a self-hosted URL shortener: short links on your own domain, with detailed visit stats, smart redirects and a web app to manage them."
+version: "5.1.8"
+tags: [url shortener, self-hosted url shortener, bitly alternative, rebrandly alternative, branded short links, link click stats]
+links:
+  website: https://shlink.io
+  docs: https://shlink.io/documentation/
+  source: https://github.com/shlinkio/shlink
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Shlink builds every short link as https://<DEFAULT_DOMAIN>/<code>, so it
+  # wants the bare host, not a URL.
+  DEFAULT_DOMAIN: { value: "{{domains.shlink.host}}" }
+  # The admin API key, created once at the first start. The web app at the
+  # second address asks for it, together with the first address as the server URL.
+  INITIAL_API_KEY: { generate: uuid }
+  DB_PASSWORD: { generate: password }
+  GEOLITE_LICENSE_KEY:
+    ask:
+      label: MaxMind GeoLite2 licence key (optional)
+      description: >-
+        A free key from maxmind.com that lets Shlink show which country and city each visit
+        came from. Leave it empty to skip visit locations; you can add it later.
+      default: ""
+      required: false
+domains:
+  - { service: shlink, port: 8080 }
+  - { service: shlink-web-client, port: 8080 }

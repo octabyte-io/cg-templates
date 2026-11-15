@@ -1,0 +1,61 @@
+services:
+  ihatemoney:
+    image: ihatemoney/ihatemoney:7.2.1
+    restart: unless-stopped
+    depends_on:
+      ihatemoney-db:
+        condition: service_healthy
+    # The image's own entrypoint writes the settings file from the environment.
+    # I Hate Money stores the admin password as a hash, so this hashes the
+    # generated password first and hands it on as ADMIN_PASSWORD.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        set -e;
+        hash="$$(python -c 'import os; from werkzeug.security import generate_password_hash; print(generate_password_hash(os.environ["ADMIN_PASSWORD_PLAIN"], method="pbkdf2:sha256"))')";
+        export ADMIN_PASSWORD="$$hash";
+        unset ADMIN_PASSWORD_PLAIN;
+        exec /src/conf/entrypoint.sh
+    environment:
+      PORT: "8000"
+      SECRET_KEY: ${SECRET_KEY}
+      ADMIN_PASSWORD_PLAIN: ${ADMIN_PASSWORD}
+      ACTIVATE_ADMIN_DASHBOARD: "True"
+      ACTIVATE_DEMO_PROJECT: "False"
+      ALLOW_PUBLIC_PROJECT_CREATION: ${ALLOW_PUBLIC_PROJECT_CREATION:-False}
+      BABEL_DEFAULT_TIMEZONE: ${TIMEZONE:-UTC}
+      SQLALCHEMY_DATABASE_URI: postgresql://ihatemoney:${POSTGRES_PASSWORD}@ihatemoney-db:5432/ihatemoney
+      SESSION_COOKIE_SECURE: "True"
+      SHOW_ADMIN_EMAIL: "False"
+      MAIL_SERVER: ${MAIL_SERVER:-localhost}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USE_TLS: ${MAIL_USE_TLS:-True}
+      MAIL_USE_SSL: "False"
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_DEFAULT_SENDER: "I Hate Money <${MAIL_SENDER:-noreply@example.com}>"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8000/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  ihatemoney-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ihatemoney
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ihatemoney
+    volumes:
+      - ihatemoney-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ihatemoney"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ihatemoney-db-data:

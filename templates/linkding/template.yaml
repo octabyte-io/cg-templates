@@ -1,0 +1,20 @@
+name: linkding
+description: "linkding is a self-hosted bookmark manager: save links with tags and notes, search them fast and keep a read-later list, instead of Pinboard or Raindrop.io."
+version: "1.47.0"
+tags: [self-hosted bookmark manager, pinboard alternative, raindrop alternative, open source bookmark manager, read it later, pocket alternative]
+links:
+  website: https://linkding.link
+  docs: https://linkding.link/installation/
+  source: https://github.com/sissbruecker/linkding
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The administrator account, created on first start. Nothing happens if it
+  # already exists, so changing these later does not reset the account.
+  LD_SUPERUSER_NAME: { value: "admin" }
+  LD_SUPERUSER_PASSWORD: { generate: password }
+  # Lets the login form and bookmark saves work behind Cloudgate's HTTPS proxy.
+  LD_CSRF_TRUSTED_ORIGINS: { value: "{{domains.linkding.url}}" }
+domains:
+  - { service: linkding, port: 9090 }

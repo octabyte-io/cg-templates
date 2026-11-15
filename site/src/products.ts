@@ -77,6 +77,14 @@ export const PRODUCTS: Product[] = [
     swap: { to: 'plausible', why: 'Simple visitor stats with no cookie banner needed.' },
   },
   {
+    id: 'mixpanel',
+    name: 'Mixpanel',
+    icon: 'mixpanel',
+    job: 'product analytics',
+    lede: 'Swetrix is a free, open-source Mixpanel alternative for lighter product analytics: custom events with properties, funnels, sessions and user flows, with no cookies. Mixpanel prices its paid plans by the number of events you track; self-hosted Swetrix Community Edition is not priced by events and keeps the data on your server, though it has far fewer analysis tools than Mixpanel.',
+    pick: 'swetrix',
+  },
+  {
     id: 'slack',
     name: 'Slack',
     icon: 'slack',
@@ -942,6 +950,14 @@ export const PRODUCTS: Product[] = [
     job: 'saving and organising bookmarks',
     lede: 'Karakeep is a free, open-source Raindrop.io alternative for saving links, notes, images and PDFs, with full-text search and a full copy of each page. Raindrop.io keeps full-text search and its permanent web archive for its paid Pro plan; self-hosted Karakeep includes both at no cost.',
     pick: 'karakeep',
+  },
+  {
+    id: 'pinboard',
+    name: 'Pinboard',
+    icon: 'pinboard',
+    job: 'bookmarking with tags',
+    lede: 'linkding is the free, open-source Pinboard alternative we recommend: a fast, private list of bookmarks with tags, notes and a read-later flag, and it imports your Pinboard export. Pinboard is a paid, closed-source service; self-hosted linkding has no fee of its own and keeps your bookmarks on your server, though it does not search inside saved pages.',
+    pick: 'linkding',
   },
   {
     id: 'instatus',

@@ -1,0 +1,11 @@
+<!-- ClickHouse 26.8 has async_insert on by default. Swetrix sets
+     wait_for_async_insert=0 and reads a new account back right after writing it, so
+     with the new default its first sign-up fails. Swetrix asks for async inserts
+     explicitly where it wants them (events), so the old default is restored here. -->
+<clickhouse>
+  <profiles>
+    <default>
+      <async_insert>0</async_insert>
+    </default>
+  </profiles>
+</clickhouse>
