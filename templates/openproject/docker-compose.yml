@@ -1,0 +1,119 @@
+# Based on OpenProject's official compose file
+# (opf/openproject-docker-compose, branch stable/17), without the autoheal
+# container and with the proxy built from the stock Caddy image.
+
+# Settings shared by web, worker, cron and seeder.
+x-op-app: &app
+  image: openproject/openproject:17.9.7-slim
+  restart: unless-stopped
+  environment:
+    OPENPROJECT_HTTPS: "true"
+    OPENPROJECT_HOST__NAME: ${OPENPROJECT_HOST__NAME}
+    # Lets hocuspocus call the web container by its service name.
+    OPENPROJECT_ADDITIONAL__HOST__NAMES: web
+    OPENPROJECT_HSTS: "true"
+    OPENPROJECT_RAILS__CACHE__STORE: memcache
+    OPENPROJECT_CACHE__MEMCACHE__SERVER: openproject-cache:11211
+    OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL: wss://${OPENPROJECT_HOST__NAME}/hocuspocus
+    OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET: ${COLLABORATIVE_SERVER_SECRET}
+    DATABASE_URL: postgres://openproject:${POSTGRES_PASSWORD}@openproject-db:5432/openproject?pool=20&encoding=unicode&reconnect=true
+    RAILS_MIN_THREADS: "4"
+    RAILS_MAX_THREADS: "16"
+    IMAP_ENABLED: "false"
+    SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  volumes:
+    - openproject-assets:/var/openproject/assets
+
+services:
+  # OpenProject's own proxy: /hocuspocus goes to the collaboration server,
+  # everything else to the web container, so it gets the web address.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - web
+      - hocuspocus
+
+  web:
+    <<: *app
+    command: ./docker/prod/web
+    depends_on:
+      openproject-db:
+        condition: service_healthy
+      openproject-cache:
+        condition: service_started
+      seeder:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health_checks/default"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+      start_period: 2m
+
+  worker:
+    <<: *app
+    command: ./docker/prod/worker
+    depends_on:
+      openproject-db:
+        condition: service_healthy
+      openproject-cache:
+        condition: service_started
+      seeder:
+        condition: service_completed_successfully
+
+  cron:
+    <<: *app
+    command: ./docker/prod/cron
+    depends_on:
+      openproject-db:
+        condition: service_healthy
+      openproject-cache:
+        condition: service_started
+      seeder:
+        condition: service_completed_successfully
+
+  # Runs once at each start: creates and seeds the database on the first start
+  # (including the admin account) and applies migrations after an update.
+  seeder:
+    <<: *app
+    command: ./docker/prod/seeder
+    restart: on-failure
+    depends_on:
+      openproject-db:
+        condition: service_healthy
+
+  # Collaboration server for real-time editing of documents.
+  hocuspocus:
+    image: openproject/hocuspocus:17.9.7
+    restart: unless-stopped
+    environment:
+      SECRET: ${COLLABORATIVE_SERVER_SECRET}
+      OPENPROJECT_URL: http://web:8080
+      OPENPROJECT_HTTPS: "true"
+
+  openproject-cache:
+    image: memcached:1.6.45-alpine
+    restart: unless-stopped
+
+  openproject-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    stop_grace_period: 3s
+    environment:
+      POSTGRES_USER: openproject
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: openproject
+    volumes:
+      - openproject-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openproject -d openproject"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  openproject-assets:
+  openproject-db-data:

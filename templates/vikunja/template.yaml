@@ -1,0 +1,29 @@
+name: Vikunja
+description: "Vikunja is a self-hosted to-do list and task manager: plan tasks in lists, Kanban boards, Gantt charts and tables, alone or with your team."
+version: "2.8.0"
+tags: [self-hosted to-do list, task manager, kanban board, gantt chart, todoist alternative, trello alternative, open source task manager]
+links:
+  website: https://vikunja.io
+  docs: https://vikunja.io/docs/
+  source: https://github.com/go-vikunja/vikunja
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  VIKUNJA_SERVICE_PUBLICURL: { value: "{{domains.vikunja.url}}" }
+  VIKUNJA_SERVICE_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for due dates and reminders, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+  ENABLE_REGISTRATION:
+    ask:
+      label: Allow new sign-ups
+      description: Type false to stop new people creating accounts once your team has signed up.
+      default: "true"
+      required: false
+domains:
+  - { service: vikunja, port: 3456 }

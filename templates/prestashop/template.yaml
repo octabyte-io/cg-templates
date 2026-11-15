@@ -1,0 +1,24 @@
+name: PrestaShop
+description: "Self-hosted PrestaShop is open-source e-commerce software for your own online shop, with products, orders, payments, shipping and taxes in one back office."
+version: "9.2.1"
+tags: [shopify alternative, ecommerce platform, online shop, open source ecommerce, self-hosted ecommerce, shopping cart, bigcommerce alternative]
+links:
+  website: https://www.prestashop-project.org
+  docs: https://docs.prestashop-project.org
+  source: https://github.com/PrestaShop/PrestaShop
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  PS_DOMAIN: { value: "{{domains.prestashop.host}}" }
+  ADMIN_FOLDER: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to the shop's back office with this email.
+      format: email
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: prestashop, port: 80 }

@@ -1,0 +1,50 @@
+services:
+  vikunja:
+    image: vikunja/vikunja:2.8.0
+    restart: unless-stopped
+    depends_on:
+      vikunja-db:
+        condition: service_healthy
+      vikunja-files-owner:
+        condition: service_completed_successfully
+    environment:
+      VIKUNJA_SERVICE_PUBLICURL: ${VIKUNJA_SERVICE_PUBLICURL}
+      VIKUNJA_SERVICE_SECRET: ${VIKUNJA_SERVICE_SECRET}
+      VIKUNJA_SERVICE_TIMEZONE: ${TIMEZONE:-Etc/UTC}
+      VIKUNJA_SERVICE_ENABLEREGISTRATION: ${ENABLE_REGISTRATION:-true}
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_HOST: vikunja-db
+      VIKUNJA_DATABASE_USER: vikunja
+      VIKUNJA_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      VIKUNJA_DATABASE_DATABASE: vikunja
+    volumes:
+      - vikunja-files:/app/vikunja/files
+
+  # Vikunja runs as user 1000 and its image has no files folder, so a new
+  # volume would belong to root and uploads would fail. This gives the volume
+  # to user 1000 once at each start, as the official docs ask (chown 1000).
+  vikunja-files-owner:
+    image: busybox:1.37.0
+    restart: "no"
+    command: [chown, "1000:1000", /files]
+    volumes:
+      - vikunja-files:/files
+
+  vikunja-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vikunja
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: vikunja
+    volumes:
+      - vikunja-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vikunja"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  vikunja-files:
+  vikunja-db-data:

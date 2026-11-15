@@ -1,0 +1,24 @@
+name: Leantime
+description: "Self-hosted Leantime: open-source project management for small teams, with to-do boards, milestone timelines, goals and time tracking on your own server."
+version: "3.14.0"
+tags: [project management, self-hosted project management, kanban board, gantt chart, time tracking, asana alternative, clickup alternative]
+links:
+  website: https://leantime.io
+  docs: https://docs.leantime.io
+  source: https://github.com/Leantime/leantime
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  LEAN_APP_URL: { value: "{{domains.leantime.url}}" }
+  LEAN_SESSION_PASSWORD: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The default time zone for new users and dates, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: leantime, port: 8080 }
