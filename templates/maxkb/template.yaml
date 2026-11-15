@@ -1,0 +1,22 @@
+name: MaxKB
+description: "MaxKB is a self-hosted, open-source AI chatbot builder that answers from your documents on your website or for staff, with a visual workflow editor."
+version: "2.10.8"
+tags: [chatbase alternative, botpress alternative, ai chatbot for website, knowledge base chatbot, chat with your documents, ai agent builder]
+links:
+  website: https://maxkb.pro
+  docs: https://docs.maxkb.pro
+  source: https://github.com/1Panel-dev/MaxKB
+cloudgate: 0.1.0
+compose: app
+# One container: the MaxKB web app and workers, with its own PostgreSQL (pgvector), Redis and a
+# local embedding model inside. MaxKB recommends 4 CPU cores and 8 GB of memory.
+size: large
+inputs:
+  # The built-in admin account is "admin"; its first password is this one, shown afterwards on
+  # the app's variables page. MaxKB asks for a new password at the first sign-in.
+  ADMIN_PASSWORD: { generate: password }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: maxkb, port: 8080 }

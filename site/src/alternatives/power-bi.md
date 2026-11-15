@@ -3,9 +3,16 @@ apps:
   superset:
     fit: "Builds interactive dashboards with over 40 chart types, filters and drill-downs on your own SQL databases, with a SQL editor, row-level security and no price per viewer. It reads data from databases, not Excel files, has no Excel-style modelling like Power Query and DAX and no desktop app, and anything beyond simple charts needs someone who knows SQL."
     import: no
+  redash:
+    fit: "Shares dashboards built from SQL queries on your databases, with scheduled refreshes, alerts to email, Slack or Microsoft Teams, and public links for dashboards, at no licence cost. Unlike Superset it can query Google Sheets, Excel and CSV files as data sources. It has no Power Query or DAX modelling and no desktop app, and every chart starts from a query someone writes."
+    import: no
 moving: |
   Power BI reports cannot be imported, so plan to rebuild the ones people use most. First put the data your reports use into a SQL database Superset can read, such as PostgreSQL, which Cloudgate's setup reads as installed (other databases and warehouses need their driver added first), and move the transformations you did in Power Query into database views or Superset datasets. Then add the datasets, define shared metrics, rebuild the key charts and arrange them into dashboards with filters. Set up roles, and row-level security where people should see only their own figures, before sharing.
+
+  With Redash, connect your database, or a Google Sheet as a data source, write the queries behind your key reports, and build dashboards from their charts. Use groups so each team can query only the data sources it should, and set alerts on the numbers people check every day.
 faq:
+  - q: "Should I choose Apache Superset or Redash?"
+    a: "Choose Superset for more chart types, cross-filters and row-level security. Choose Redash for quick SQL-to-dashboard work with alerts, or if some of your data sits in Google Sheets, Excel or CSV files, which Redash can query directly."
   - q: "Can Apache Superset open Power BI files?"
     a: "No. Superset cannot import .pbix files. You rebuild the dashboards on data in a SQL database."
   - q: "Can Superset read Excel files?"

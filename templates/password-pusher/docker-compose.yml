@@ -1,0 +1,50 @@
+x-pwpush-env: &pwpush-env
+  # Built-in SQLite database, kept in the storage volume with uploaded files.
+  DATABASE_URL: sqlite3:storage/db/production.sqlite3
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  # Encrypts every push in the database. Never change it once pushes exist:
+  # older pushes would become unreadable.
+  PWPUSH_MASTER_KEY: ${PWPUSH_MASTER_KEY}
+  # Secret links are built from the app's web address.
+  PWP__OVERRIDE_BASE_URL: ${APP_URL}
+  PWP__FILES__STORAGE: local
+
+services:
+  password-pusher:
+    # Password Pusher's official image, as in the project's docker-compose.yml.
+    image: pglombardo/pwpush:2.17.2
+    restart: unless-stopped
+    depends_on:
+      password-pusher-setup:
+        condition: service_completed_successfully
+    environment:
+      <<: *pwpush-env
+    volumes:
+      # SQLite database and uploaded files. Never mount over
+      # /opt/PasswordPusher/db: it holds the migrations.
+      - pwpush-storage:/opt/PasswordPusher/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5100/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Runs once at each start, before the web server: applies the database
+  # migrations, then files/pwpush-setup.rb.txt creates the administrator
+  # account while the instance has none. It changes nothing afterwards.
+  password-pusher-setup:
+    image: pglombardo/pwpush:2.17.2
+    restart: "no"
+    command: [sh, -c, "bundle exec rake db:migrate && bundle exec rails runner /pwpush-setup.rb"]
+    environment:
+      <<: *pwpush-env
+      RAILS_ENV: production
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - pwpush-storage:/opt/PasswordPusher/storage
+      - ../files/pwpush-setup.rb.txt:/pwpush-setup.rb:ro
+
+volumes:
+  pwpush-storage:

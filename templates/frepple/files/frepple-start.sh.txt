@@ -1,0 +1,31 @@
+#!/bin/bash
+# Runs before the image's own /entrypoint.sh. That entrypoint creates the
+# databases, runs the migrations (which add the user "admin" with password
+# "admin"), then runs every script in /etc/frepple/entrypoint.d before it
+# starts the web server. This puts one script there: it sets the admin's
+# password to FREPPLE_ADMIN_PASSWORD in the main database and in each scenario,
+# and only while it is still "admin", so a password someone changed later is
+# left alone.
+set -e
+mkdir -p /etc/frepple/entrypoint.d
+cat > /etc/frepple/entrypoint.d/50-cloudgate-admin-password <<'SCRIPT'
+#!/bin/bash
+[ -n "$FREPPLE_ADMIN_PASSWORD" ] || exit 0
+frepplectl shell -c "
+import os
+from django.conf import settings
+from django.contrib.auth.hashers import make_password
+from freppledb.common.models import User
+password = make_password(os.environ['FREPPLE_ADMIN_PASSWORD'])
+for db in settings.DATABASES:
+    try:
+        u = User.objects.using(db).filter(username='admin').first()
+        if u is not None and u.check_password('admin'):
+            User.objects.using(db).filter(pk=u.pk).update(password=password)
+            print('Cloudgate: set the admin password in', db)
+    except Exception:
+        pass  # a scenario database that is not in use yet
+"
+SCRIPT
+chmod 755 /etc/frepple/entrypoint.d/50-cloudgate-admin-password
+exec /entrypoint.sh "$@"

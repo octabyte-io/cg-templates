@@ -1,0 +1,67 @@
+services:
+  blackcandy:
+    # The official image (ghcr.io/blackcandy-org/blackcandy): Rails behind Thruster
+    # on port 80, with SQLite databases in /rails/storage.
+    image: ghcr.io/blackcandy-org/blackcandy:3.2.1
+    restart: unless-stopped
+    # The image's own entrypoint, run in three steps:
+    # - prepare the databases (the first run creates them and the admin
+    #   admin@admin.com with the published password foobar);
+    # - while that account still has that password, give it the email and
+    #   password from the setup instead;
+    # - start the server, as the image's default command does.
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        ./bin/docker-entrypoint ./bin/rails db:prepare
+        ./bin/docker-entrypoint ./bin/rails runner "$$BC_SET_FIRST_ADMIN"
+        exec ./bin/docker-entrypoint ./bin/thrust ./bin/rails server
+    environment:
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      # The music library, shared with FileBrowser Quantum below.
+      MEDIA_PATH: /media
+      BC_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      BC_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      BC_SET_FIRST_ADMIN: >-
+        u = User.find_by(email: "admin@admin.com");
+        u.update!(email: ENV.fetch("BC_ADMIN_EMAIL"), password: ENV.fetch("BC_ADMIN_PASSWORD")) if u && u.authenticate("foobar")
+    volumes:
+      # The SQLite databases, cache and artwork.
+      - blackcandy-storage:/rails/storage
+      - blackcandy-media:/media
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # FileBrowser Quantum: upload music from the browser at its own address,
+  # into the same volume Black Candy plays from. Its default settings serve /srv
+  # with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets the
+  # password of the user "admin" (created on first start, and set back to this
+  # value on every start). Runs as root so it can write to the shared volume,
+  # which both images create owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - blackcandy-media:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  blackcandy-storage:
+  blackcandy-media:
+  filebrowser-data:

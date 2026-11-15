@@ -1,0 +1,18 @@
+name: Donetick
+description: "Donetick is a self-hosted chore app for families and house-shares: share recurring chores, rotate who does them, earn points and tick them off on a wall tablet."
+version: "v0.1.86"
+tags: [chore app, family chore tracker, household chores, recurring tasks, tody alternative, sweepy alternative, ourhome alternative]
+links:
+  website: https://donetick.com
+  docs: https://docs.donetick.com
+  source: https://github.com/donetick/donetick
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Signs every sign-in; changing it signs everyone out. Donetick needs at
+  # least 32 characters (hex gives 64).
+  JWT_SECRET: { generate: hex }
+  PUBLIC_URL: { value: "{{domains.donetick.url}}" }
+domains:
+  - { service: donetick, port: 2021 }

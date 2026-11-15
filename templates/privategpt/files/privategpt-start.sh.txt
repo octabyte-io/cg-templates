@@ -1,0 +1,25 @@
+#!/bin/sh
+# Starts PrivateGPT for Cloudgate.
+#
+# PrivateGPT finds its AI models only once, when it starts, by asking Ollama which models
+# it has. So first ask Ollama to download the models named in PGPT_PULL_MODELS (the first
+# start downloads about 1.7 GB; later starts only check they are up to date), then start
+# PrivateGPT. If a download fails (no internet), PrivateGPT starts anyway with the models
+# Ollama already has, and the reason is in this container's log.
+set -u
+
+for model in ${PGPT_PULL_MODELS:-}; do
+  echo "Downloading the model $model into Ollama (this can take several minutes)..."
+  if curl -sS --fail-with-body "$OLLAMA_URL/api/pull" -d "{\"model\": \"$model\", \"stream\": false}"; then
+    echo
+  else
+    echo
+    echo "Could not download $model; starting with the models Ollama already has."
+  fi
+done
+
+# PrivateGPT compares the request's Authorization header with this exact value.
+PGPT_AUTH_SECRET="Basic $(printf '%s:%s' "$PGPT_ADMIN_USER" "$PGPT_ADMIN_PASSWORD" | base64 -w0)"
+export PGPT_AUTH_SECRET
+
+exec private-gpt serve

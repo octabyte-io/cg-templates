@@ -1,0 +1,18 @@
+name: TimeTracker
+description: "TimeTracker is self-hosted time tracking with timers, projects, timesheets, expenses and PDF invoices, replacing Harvest and Toggl Track."
+version: "5.20.0"
+tags: [time tracking, harvest alternative, toggl alternative, timesheets, invoicing, billable hours, expense tracking]
+links:
+  website: https://timetracker.drytrix.com
+  docs: https://github.com/DRYTRIX/TimeTracker/tree/main/docs
+  source: https://github.com/DRYTRIX/TimeTracker
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.timetracker.url}}" }
+  SECRET_KEY: { generate: hex }
+  SETTINGS_ENCRYPTION_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: timetracker, port: 8080 }

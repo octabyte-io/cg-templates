@@ -1,0 +1,46 @@
+# Based on Nightscout's docker-compose.yml at tag 15.0.9 (github.com/nightscout/cgm-remote-monitor):
+# the app and MongoDB 5.0, as the project ships it. Its Traefik service is left out because
+# Cloudgate serves the web address over HTTPS. MongoDB gets a password here; the official file
+# runs it without one on the private network. The official file also raises MongoDB's open-file
+# limit to 64000; that is left out because a container can't start at all on a host whose own
+# limit is lower, and a one-person Nightscout database stays far below Docker's default.
+
+services:
+  nightscout:
+    image: nightscout/cgm-remote-monitor:15.0.9
+    restart: unless-stopped
+    depends_on:
+      nightscout-mongo:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      TZ: Etc/UTC
+      # Cloudgate's proxy terminates HTTPS, so the app itself speaks plain HTTP.
+      INSECURE_USE_HTTP: "true"
+      NIGHTSCOUT_HOSTNAME: 0.0.0.0
+      MONGO_CONNECTION: mongodb://nightscout:${MONGO_PASSWORD}@nightscout-mongo:27017/nightscout?authSource=admin
+      API_SECRET: ${API_SECRET}
+      BASE_URL: ${BASE_URL}
+      DISPLAY_UNITS: ${DISPLAY_UNITS:-mg/dl}
+      ENABLE: careportal rawbg iob
+      # Glucose data is private: nobody sees anything until they sign in with the API secret
+      # or an access token (as in the official compose file).
+      AUTH_DEFAULT_ROLES: denied
+
+  nightscout-mongo:
+    image: mongo:5.0.32
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nightscout
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - nightscout-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  nightscout-mongo-data:

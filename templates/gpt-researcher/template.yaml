@@ -1,0 +1,36 @@
+name: GPT Researcher
+description: "GPT Researcher is a self-hosted AI research agent: ask a question and it searches the web and writes a detailed report that cites its sources."
+version: "3.8.0"
+tags: [chatgpt deep research alternative, ai research agent, deep research, perplexity alternative, ai report writer, research with citations, open source deep research]
+links:
+  website: https://gptr.dev
+  docs: https://docs.gptr.dev
+  source: https://github.com/assafelovic/gpt-researcher
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The password the sign-in prompt in front of GPT Researcher asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+  OPENAI_API_KEY:
+    ask:
+      label: OpenAI API key
+      description: Optional now, needed to run research. GPT Researcher writes its reports with OpenAI models by default. You can add or change it later in the app's variables.
+      secret: true
+      required: false
+  TAVILY_API_KEY:
+    ask:
+      label: Tavily API key
+      description: Optional. The web search GPT Researcher uses by default; Tavily has a free plan at tavily.com. Without a key, set the search engine below to duckduckgo.
+      secret: true
+      required: false
+  RETRIEVER:
+    ask:
+      label: Search engine
+      description: "tavily (needs the key above) or duckduckgo (no key needed)."
+      default: tavily
+      pattern: "tavily|duckduckgo"
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

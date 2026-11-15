@@ -1,0 +1,20 @@
+name: Kept
+description: "Kept is a self-hosted inventory app for homes and small teams: where things are, QR labels, low stock, lending and offline phone use."
+version: "1.14.7"
+tags: [home inventory, sortly alternative, inventory app, qr code labels, stock tracking, homebox alternative]
+links:
+  website: https://keptinventory.info
+  docs: https://keptinventory.info/install/compose/
+  source: https://github.com/keptinventory/kept
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  KEPT_PUBLIC_URL: { value: "{{domains.kept.url}}" }
+  KEPT_DB_SUPERUSER_PASSWORD: { generate: hex }
+  KEPT_DB_OWNER_PASSWORD: { generate: hex }
+  KEPT_DB_APP_PASSWORD: { generate: hex }
+  KEPT_DB_AUTH_PASSWORD: { generate: hex }
+  KEPT_DB_SYSTEM_PASSWORD: { generate: hex }
+domains:
+  - { service: kept, port: 8080 }

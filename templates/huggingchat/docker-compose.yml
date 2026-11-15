@@ -1,0 +1,49 @@
+# From huggingface/chat-ui's Docker instructions (docs/source/installation/docker.md):
+# the chat-ui-db image, which the docs recommend for a quick setup, runs the web
+# app and its own MongoDB in one container and keeps the database in /data.
+services:
+  # Without OpenID Connect, Chat UI has no accounts: anyone with the address
+  # could chat on your API key. This proxy asks for the username "admin" and
+  # the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      huggingchat:
+        condition: service_healthy
+
+  huggingchat:
+    image: ghcr.io/huggingface/chat-ui-db:0.20.0
+    restart: unless-stopped
+    environment:
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN}
+      # Any OpenAI-compatible API (Hugging Face router, OpenAI, OpenRouter,
+      # Ollama, llama.cpp...). Chat UI reads the model list from
+      # ${OPENAI_BASE_URL}/models when it starts, so the address must answer;
+      # the Hugging Face router lists its models without a key.
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL}
+      # Leave empty to start without a key; add it later to chat.
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # After the sign-in prompt, open <address>/?token=<ADMIN_TOKEN> to
+      # become Chat UI's admin.
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+    volumes:
+      - huggingchat-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:3000/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  huggingchat-data:

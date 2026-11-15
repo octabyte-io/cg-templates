@@ -1,0 +1,46 @@
+#!/bin/sh
+# Runs once at each start, before farmOS answers. On the first start it installs farmOS
+# with the administrator from Cloudgate's settings, so the browser installer never opens
+# (the same `drush site:install farm` the farmOS docs use). On later starts it applies the
+# database updates a newer farmOS image needs (farmos.org/hosting/update).
+set -eu
+cd /opt/drupal
+
+# The keys folder holds the API's OAuth2 keys (farmos.org/hosting/install, "OAuth2 keys").
+# A new volume belongs to root; farmOS writes it as www-data.
+chown www-data:www-data keys
+
+run() { setpriv --reuid=www-data --regid=www-data --init-groups "$@"; }
+
+site=web/sites/default
+marker="$site/files/.cloudgate-installed"
+
+if [ ! -f "$marker" ]; then
+  echo "Installing farmOS (first start)..."
+  # A settings.php from an earlier, unfinished try would make the installer stop early.
+  chmod u+w "$site" 2>/dev/null || true
+  rm -f "$site/settings.php"
+  run mkdir -p "$site/files" "$site/private/files"
+  chmod 770 "$site/private"
+  # farmOS must know the private files folder while it installs its modules.
+  run cp "$site/default.settings.php" "$site/settings.php"
+  printf "\n\$settings['file_private_path'] = '/opt/drupal/web/sites/default/private/files';\n" >>"$site/settings.php"
+  run drush site:install farm --yes \
+    --db-url="pgsql://${FARMOS_DB_USER}:${FARMOS_DB_PASSWORD}@${FARMOS_DB_HOST}:5432/${FARMOS_DB_NAME}" \
+    --site-name="${FARMOS_FARM_NAME}" \
+    --site-mail="${FARMOS_ADMIN_EMAIL}" \
+    --account-name=admin \
+    --account-mail="${FARMOS_ADMIN_EMAIL}" \
+    --account-pass="${FARMOS_ADMIN_PASSWORD}"
+  chmod u+w "$site" "$site/settings.php"
+  # Load Cloudgate's settings (database login, host, private files) on every request.
+  printf "\n// Added by Cloudgate.\ninclude '/cloudgate/settings-cloudgate.php';\n" >>"$site/settings.php"
+  chown www-data:www-data "$site/settings.php"
+  chmod 444 "$site/settings.php"
+  chmod 555 "$site"
+  run drush cache:rebuild
+  run touch "$marker"
+  echo "farmOS is installed."
+else
+  run drush updatedb --yes
+fi

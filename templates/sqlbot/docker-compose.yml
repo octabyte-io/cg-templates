@@ -1,0 +1,46 @@
+# From SQLBot's official docker-compose.yaml (v1.10.3). The image runs its own
+# PostgreSQL inside the container, as the official setup does. The official
+# file also sets privileged: true; nothing in the image needs it, so it is left
+# out. The MCP server on port 8001 is not given a web address.
+services:
+  sqlbot:
+    image: dataease/sqlbot:v1.10.3
+    restart: unless-stopped
+    environment:
+      # The built-in PostgreSQL. Its password is set when the database is
+      # first created.
+      POSTGRES_SERVER: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: sqlbot
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PROJECT_NAME: "SQLBot"
+      # The password new users get when the admin adds them or resets theirs.
+      # (The admin account itself starts with SQLBot's documented password.)
+      DEFAULT_PWD: ${DEFAULT_PWD}
+      # Signs sign-in tokens.
+      SECRET_KEY: ${SECRET_KEY}
+      BACKEND_CORS_ORIGINS: ${APP_URL}
+      LOG_LEVEL: "INFO"
+      SQL_DEBUG: "False"
+    volumes:
+      - sqlbot-excel:/opt/sqlbot/data/excel
+      - sqlbot-files:/opt/sqlbot/data/file
+      - sqlbot-images:/opt/sqlbot/images
+      - sqlbot-logs:/opt/sqlbot/app/logs
+      - sqlbot-db:/var/lib/postgresql/data
+    # The image's own health check, with more time for the first start (the
+    # database is created and the embedding model loaded).
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 180s
+      retries: 5
+
+volumes:
+  sqlbot-excel:
+  sqlbot-files:
+  sqlbot-images:
+  sqlbot-logs:
+  sqlbot-db:

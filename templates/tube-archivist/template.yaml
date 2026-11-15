@@ -1,0 +1,30 @@
+name: Tube Archivist
+description: "Tube Archivist is a self-hosted YouTube archive: keep your own videos, or ones you may download, and search and watch them in your browser."
+version: "v0.6.0"
+tags: [self-hosted youtube archive, youtube archiver, youtube channel backup, video archive, youtube media server, tube archivist jellyfin]
+links:
+  website: https://www.tubearchivist.com
+  docs: https://docs.tubearchivist.com
+  source: https://github.com/tubearchivist/tubearchivist
+cloudgate: 0.1.0
+compose: app
+# Elasticsearch takes a 1 GB heap on top of the app and its download workers.
+size: large
+inputs:
+  TA_HOST: { value: "{{domains.tubearchivist.url}}" }
+  TA_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-zA-Z][a-zA-Z0-9_.-]{2,31}"
+  TA_PASSWORD: { generate: password }
+  ELASTIC_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for scheduled channel scans and downloads, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: tubearchivist, port: 8000 }

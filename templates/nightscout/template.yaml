@@ -1,0 +1,25 @@
+name: Nightscout
+description: "Self-hosted Nightscout puts a CGM's glucose readings on your own private website, so family and carers can follow them live, with alarms and reports."
+version: "15.0.9"
+tags: [nightscout, self-hosted nightscout, cgm remote monitoring, share glucose readings with family, type 1 diabetes, t1pal alternative, cgm reports]
+links:
+  website: https://nightscout.github.io
+  docs: https://nightscout.github.io/nightscout/new_user/
+  source: https://github.com/nightscout/cgm-remote-monitor
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.nightscout.url}}" }
+  # The passphrase uploaders (xDrip+, Loop, AndroidAPS) and the site's own sign-in use.
+  # Generated: 32 letters and digits, readable on the Service's variables page.
+  API_SECRET: { generate: password }
+  MONGO_PASSWORD: { generate: password }
+  DISPLAY_UNITS:
+    ask:
+      label: Glucose units
+      description: "mg/dl (used in the US and some other countries) or mmol (mmol/L, used in the UK, Canada, Australia and most of Europe)."
+      default: "mg/dl"
+      pattern: "mg/dl|mmol"
+domains:
+  - { service: nightscout, port: 1337 }

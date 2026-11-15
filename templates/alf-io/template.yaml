@@ -1,0 +1,19 @@
+name: alf.io
+description: "alf.io is self-hosted, open-source event ticketing: sell tickets, register attendees, send invoices and check people in, with no fee per ticket."
+version: "2.0-M5-2609"
+tags: [event ticketing, event registration software, conference registration, eventbrite alternative, tito alternative, event check-in app]
+links:
+  website: https://alf.io
+  docs: https://alf.io/docs/
+  source: https://github.com/alfio-event/alf.io
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.alf-io-proxy.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: alf-io-proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

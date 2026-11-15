@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Cloudgate's settings, read on every request after settings.php.
+ *
+ * The database login and the site's address come from the container's
+ * environment, so changing them in Cloudgate needs no edit here.
+ */
+
+$databases['default']['default'] = [
+  'driver' => 'pgsql',
+  'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
+  'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
+  'database' => getenv('FARMOS_DB_NAME'),
+  'username' => getenv('FARMOS_DB_USER'),
+  'password' => getenv('FARMOS_DB_PASSWORD'),
+  'host' => getenv('FARMOS_DB_HOST'),
+  'port' => '5432',
+  'prefix' => '',
+];
+
+// Uploaded photos and files, kept out of the public web folder as the farmOS
+// install guide asks (farmos.org/hosting/install, "File uploads").
+$settings['file_private_path'] = '/opt/drupal/web/sites/default/private/files';
+
+// Answer only on the farm's own address (Drupal warns when this is not set).
+if ($farmos_host = getenv('FARMOS_HOST')) {
+  $settings['trusted_host_patterns'] = ['^' . preg_quote($farmos_host) . '$'];
+}

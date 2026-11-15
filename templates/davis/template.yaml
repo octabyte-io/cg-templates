@@ -1,0 +1,56 @@
+name: Davis
+description: "Davis is a self-hosted CalDAV and CardDAV server that syncs your team's calendars and contacts to every phone and computer, managed from a simple dashboard."
+version: "5.6.3"
+tags: [caldav server, carddav server, self-hosted calendar, contacts sync, google calendar alternative, icloud calendar alternative, baikal alternative]
+links:
+  website: https://github.com/tchapi/davis
+  docs: https://github.com/tchapi/davis#readme
+  source: https://github.com/tchapi/davis
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_LOGIN:
+    ask:
+      label: Admin username
+      description: The name you sign in to the dashboard with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-zA-Z][a-zA-Z0-9_.-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  APP_TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for calendar events and reminders, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+  INVITE_FROM_ADDRESS:
+    ask:
+      label: Send invitations from
+      description: The address that event invitations come from, such as calendar@yourcompany.com. Needed only if you fill in an email server below.
+      format: email
+      required: false
+  MAIL_HOST:
+    ask:
+      label: Email server (SMTP host, optional)
+      description: Lets Davis email event invitations. Your email provider gives you this, such as smtp.mailgun.org. Leave empty to send no email.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      required: false
+  MAIL_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: davis, port: 9000 }

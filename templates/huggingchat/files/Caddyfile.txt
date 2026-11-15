@@ -1,0 +1,19 @@
+# Chat UI has no sign-in of its own unless OpenID Connect is set up, so this
+# small proxy asks for a username and password before anyone reaches it (and
+# chats on your API key). Cloudgate's own proxy in front handles the domain and
+# TLS. BASIC_AUTH_HASH is the bcrypt hash of ADMIN_PASSWORD, made when the
+# container starts (see docker-compose.yml).
+{
+	admin off
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	# Replies stream in token by token: pass them on at once.
+	reverse_proxy huggingchat:3000 {
+		flush_interval -1
+	}
+}

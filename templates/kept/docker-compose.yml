@@ -1,0 +1,100 @@
+# From Kept's own compose.yaml (v1.14.7), with these changes for Cloudgate:
+# - the database passwords come from template.yaml (generated once at setup) instead of files
+#   that the bootstrap writes, so the bootstrap reaches the database over the network with the
+#   superuser's password instead of sharing the database container's network;
+# - no ports, no fixed subnet, no init service (Cloudgate sets the address);
+# - Cloudgate's proxy is trusted for X-Forwarded-For, so sign-in limits apply per visitor.
+# Kept generates its own keys into the kept-config volume on the first start.
+x-kept-image: &kept-image
+  image: ghcr.io/keptinventory/kept:1.14.7
+  read_only: true
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+
+services:
+  kept:
+    <<: *kept-image
+    restart: unless-stopped
+    environment:
+      KEPT_PUBLIC_URL: ${KEPT_PUBLIC_URL}
+      KEPT_DATABASE_URL: postgres://kept_app:${KEPT_DB_APP_PASSWORD}@kept-db:5432/kept
+      KEPT_AUTH_DATABASE_URL: postgres://kept_auth:${KEPT_DB_AUTH_PASSWORD}@kept-db:5432/kept
+      KEPT_SYSTEM_DATABASE_URL: postgres://kept_system:${KEPT_DB_SYSTEM_PASSWORD}@kept-db:5432/kept
+      KEPT_TRUSTED_PROXIES: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      KEPT_STORAGE: local
+      KEPT_LOG_LEVEL: info
+      KEPT_LOG_FORMAT: json
+    volumes:
+      - kept-data:/data
+      - kept-config:/config
+    depends_on:
+      kept-db:
+        condition: service_healthy
+      kept-migrate:
+        condition: service_completed_successfully
+
+  # Runs once at each start: creates Kept's four database logins (or resets their passwords to
+  # the ones above) and the extensions it needs.
+  kept-bootstrap:
+    <<: *kept-image
+    entrypoint: ["kept"]
+    command: ["bootstrap"]
+    restart: "no"
+    environment:
+      PGHOST: kept-db
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: ${KEPT_DB_SUPERUSER_PASSWORD}
+      PGDATABASE: kept
+      KEPT_DB_OWNER_PASSWORD: ${KEPT_DB_OWNER_PASSWORD}
+      KEPT_DB_APP_PASSWORD: ${KEPT_DB_APP_PASSWORD}
+      KEPT_DB_AUTH_PASSWORD: ${KEPT_DB_AUTH_PASSWORD}
+      KEPT_DB_SYSTEM_PASSWORD: ${KEPT_DB_SYSTEM_PASSWORD}
+    healthcheck:
+      disable: true
+    depends_on:
+      kept-db:
+        condition: service_healthy
+
+  # Runs once at each start, after the bootstrap: applies Kept's database migrations.
+  kept-migrate:
+    <<: *kept-image
+    entrypoint: ["kept"]
+    command: ["migrate"]
+    restart: "no"
+    environment:
+      KEPT_OWNER_DATABASE_URL: postgres://kept_owner:${KEPT_DB_OWNER_PASSWORD}@kept-db:5432/kept
+      KEPT_PUBLIC_URL: ${KEPT_PUBLIC_URL}
+    volumes:
+      - kept-data:/data
+      - kept-config:/config:ro
+    healthcheck:
+      disable: true
+    depends_on:
+      kept-db:
+        condition: service_healthy
+      kept-bootstrap:
+        condition: service_completed_successfully
+
+  kept-db:
+    # Postgres 18 with pgvector, the image and digest Kept's compose.yaml pins.
+    image: pgvector/pgvector:0.8.6-pg18-bookworm@sha256:2ba9ca5f2e7daa0f0e7723cba1ee9167bab54efd3640516a44ac1a928dd67e7a
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${KEPT_DB_SUPERUSER_PASSWORD}
+      POSTGRES_DB: kept
+      TZ: UTC
+    volumes:
+      - kept-db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d kept"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  kept-data:
+  kept-config:
+  kept-db:

@@ -1,0 +1,61 @@
+services:
+  # Logto's official image, started as its docker-compose.yml does: the first start
+  # creates the database tables (and skips that when they exist), then starts Logto.
+  # It serves sign-in on port 3001 and the admin console on port 3002.
+  logto:
+    image: svhd/logto:1.46.0
+    restart: unless-stopped
+    depends_on:
+      logto-db:
+        condition: service_healthy
+    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    environment:
+      # Logto sits behind Cloudgate's proxy, which sets the X-Forwarded headers.
+      TRUST_PROXY_HEADER: "1"
+      DB_URL: postgres://logto:${DB_PASSWORD}@logto-db:5432/logto
+      ENDPOINT: ${LOGTO_ENDPOINT}
+      ADMIN_ENDPOINT: ${LOGTO_ADMIN_ENDPOINT}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3001/api/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 2m
+
+  # The admin console's address. Logto serves it on port 3002 of the same container;
+  # this forwards that port unchanged so the second address has a service of its own.
+  logto-admin:
+    image: svhd/logto:1.46.0
+    restart: unless-stopped
+    depends_on:
+      logto:
+        condition: service_started
+    entrypoint:
+      - node
+      - -e
+      - >-
+        const net = require('net');
+        net.createServer((client) => {
+          const app = net.connect(3002, 'logto');
+          client.pipe(app); app.pipe(client);
+          client.on('error', () => app.destroy());
+          app.on('error', () => client.destroy());
+        }).listen(3002, '0.0.0.0');
+
+  logto-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: logto
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: logto
+    volumes:
+      - logto-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U logto -d logto"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  logto-db-data:

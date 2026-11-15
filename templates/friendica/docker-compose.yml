@@ -1,0 +1,73 @@
+# From Friendica's official Docker image and its compose examples (github.com/friendica/docker):
+# the apache image serves the site, a second container from the same image runs the background
+# worker daemon (cron.sh) that sends and fetches posts, next to MariaDB.
+x-friendica-env: &friendica-env
+  MYSQL_HOST: friendica-db
+  MYSQL_PORT: "3306"
+  MYSQL_DATABASE: friendica
+  MYSQL_USER: friendica
+  MYSQL_PASSWORD: ${DB_PASSWORD}
+
+services:
+  friendica:
+    image: friendica:2026.05-apache
+    restart: unless-stopped
+    depends_on:
+      friendica-db:
+        condition: service_healthy
+    environment:
+      <<: *friendica-env
+      # With these set, the image's entrypoint runs Friendica's console installer on the first
+      # start instead of the web wizard. The account later registered with the admin email
+      # becomes the node's admin.
+      FRIENDICA_URL: ${FRIENDICA_URL}
+      FRIENDICA_ADMIN_MAIL: ${ADMIN_EMAIL}
+    volumes:
+      - friendica-html:/var/www/html
+      - friendica-data:/var/www/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/friendica/json"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # Friendica's worker daemon: delivers and fetches posts, runs maintenance.
+  friendica-cron:
+    image: friendica:2026.05-apache
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    depends_on:
+      friendica:
+        condition: service_healthy
+    environment:
+      <<: *friendica-env
+    volumes:
+      - friendica-html:/var/www/html
+      - friendica-data:/var/www/data
+
+  friendica-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_general_ci
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: friendica
+      MARIADB_USER: friendica
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - friendica-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  friendica-html:
+  friendica-data:
+  friendica-db-data:

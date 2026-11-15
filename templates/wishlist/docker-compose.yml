@@ -1,0 +1,20 @@
+services:
+  wishlist:
+    image: ghcr.io/cmintey/wishlist:v0.69.0
+    restart: unless-stopped
+    environment:
+      # The address people use to open Wishlist; it must match exactly or
+      # sign-in and forms fail.
+      ORIGIN: ${ORIGIN}
+      # Hours that sign-up invites and password reset links stay valid.
+      TOKEN_TIME: 72
+      DEFAULT_CURRENCY: ${DEFAULT_CURRENCY:-USD}
+    volumes:
+      # Pictures people upload for their wishes.
+      - wishlist-uploads:/usr/src/app/uploads
+      # The built-in SQLite database.
+      - wishlist-data:/usr/src/app/data
+
+volumes:
+  wishlist-uploads:
+  wishlist-data:

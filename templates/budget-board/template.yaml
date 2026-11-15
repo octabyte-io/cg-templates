@@ -1,0 +1,28 @@
+name: Budget Board
+description: "Budget Board is a self-hosted Mint alternative: track accounts, spending, monthly budgets, goals and net worth, with your money data on your own server."
+version: "3.9.1"
+tags: [mint alternative, monarch money alternative, budget app, personal finance, expense tracker, net worth tracker]
+links:
+  website: https://budgetboard.net
+  docs: https://budgetboard.net
+  source: https://github.com/teelur/budget-board
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.budget-board-client.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  DISABLE_NEW_USERS:
+    ask:
+      label: Turn off new sign-ups
+      description: Leave this "false" until you have created your own account on the sign-up page, then change it to "true" in this app's variables and redeploy, so nobody else who finds the address can sign up.
+      default: "false"
+      pattern: "true|false"
+  TZ:
+    ask:
+      label: Time zone
+      description: Used for dates and the scheduled bank sync, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: budget-board-client, port: 6253 }

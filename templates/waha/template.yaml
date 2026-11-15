@@ -1,0 +1,29 @@
+name: WAHA
+description: "Self-hosted WAHA: an unofficial WhatsApp HTTP API to send and receive messages from your apps, webhooks and n8n. WhatsApp can ban numbers."
+version: "2026.10.1"
+tags:
+  - whatsapp business api alternative
+  - whatsapp api
+  - whatsapp http api
+  - twilio whatsapp alternative
+  - whatsapp automation
+  - whatsapp webhook
+links:
+  website: https://waha.devlike.pro
+  docs: https://waha.devlike.pro/docs/overview/introduction/
+  source: https://github.com/devlikeapro/waha
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  WAHA_URL: { value: "{{domains.waha.url}}" }
+  WAHA_API_KEY: { generate: hex }
+  DASHBOARD_USERNAME:
+    ask:
+      label: Dashboard username
+      description: The name you sign in to the WAHA dashboard and API docs with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  DASHBOARD_PASSWORD: { generate: password }
+domains:
+  - { service: waha, port: 3000 }

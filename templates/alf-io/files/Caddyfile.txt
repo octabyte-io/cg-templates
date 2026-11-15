@@ -1,0 +1,7 @@
+# Cloudgate always serves the app over https. alf.io redirects every request it
+# believes is plain http to https, so tell it the visitor's request was https.
+:80 {
+	reverse_proxy alf-io:8080 {
+		header_up X-Forwarded-Proto https
+	}
+}

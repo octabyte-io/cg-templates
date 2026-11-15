@@ -1,0 +1,25 @@
+#!/bin/sh
+# Starts Galette in place of the image's entrypoint. On the first start (no
+# config/config.inc.php yet) it installs Galette with the image's own command
+# line installer, the documented alternative to the web installer, so the web
+# installer never has to be opened. It then sets the instance address, which the
+# reminder and mailing jobs need, and runs the image's entrypoint (Apache and the
+# scheduled jobs).
+set -e
+
+if [ ! -f /var/www/galette/config/config.inc.php ]; then
+  echo "* Installing Galette ..."
+  php /var/www/bin/console galette:install --no-interaction --write-config \
+    --dbtype=mysql --dbhost=galette-db --dbport=3306 --dbname=galette \
+    --dbprefix=galette_ --dbuser=galette --dbpass="$DB_PASSWORD" \
+    --admin=admin --password="$ADMIN_PASSWORD"
+
+  # Same as Configuration > Preferences > "Galette URL"; editable there later.
+  php -r '
+    $db = new PDO("mysql:host=galette-db;port=3306;dbname=galette", "galette", getenv("DB_PASSWORD"));
+    $db->prepare("UPDATE galette_preferences SET val_pref = ? WHERE nom_pref = ?")
+       ->execute([rtrim(getenv("GALETTE_URL"), "/"), "pref_galette_url"]);
+  '
+fi
+
+exec /bin/sh /entrypoint.sh

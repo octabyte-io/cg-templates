@@ -1,0 +1,13 @@
+name: Seerr
+description: "Self-hosted Seerr lets your household request films and series for Jellyfin, Plex or Emby, and lets you approve them in one list."
+version: "3.5.2"
+tags: [media requests, jellyseerr alternative, overseerr alternative, jellyfin requests, plex requests, emby requests]
+links:
+  website: https://seerr.dev
+  docs: https://docs.seerr.dev
+  source: https://github.com/seerr-team/seerr
+cloudgate: 0.1.0
+compose: app
+size: small
+domains:
+  - { service: seerr, port: 5055 }

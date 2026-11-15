@@ -1,0 +1,35 @@
+services:
+  glances:
+    image: nicolargo/glances:4.5.9-full
+    restart: unless-stopped
+    # Glances in web server mode, protected by a password. Glances reads the
+    # password from a hashed file (salt$pbkdf2, the format `glances --password`
+    # saves); it is written here from GLANCES_PASSWORD before Glances starts,
+    # so nobody has to type it into the container. Sign in as "glances".
+    # Without the host access the official file uses (pid: host, host network,
+    # the Docker socket), Glances sees the server's CPU, memory, load, disks
+    # and disk space, but only its own processes and network interface.
+    command:
+      - /bin/sh
+      - -c
+      - |
+        /venv/bin/python3 - <<'PY'
+        import hashlib, os, uuid
+        def h(p, s=''):
+            return hashlib.pbkdf2_hmac('sha256', p.encode(), s.encode(), 100000, dklen=128).hex()
+        d = os.path.expanduser('~/.config/glances')
+        os.makedirs(d, exist_ok=True)
+        salt = uuid.uuid4().hex
+        with open(os.path.join(d, 'glances.pwd'), 'w') as f:
+            f.write(salt + '$$' + h(h(os.environ['GLANCES_PASSWORD']), salt))
+        PY
+        exec /venv/bin/python3 -m glances -w --password
+    environment:
+      GLANCES_PASSWORD: ${GLANCES_PASSWORD}
+      TZ: UTC
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -u \"glances:$$GLANCES_PASSWORD\" http://localhost:61208/api/4/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

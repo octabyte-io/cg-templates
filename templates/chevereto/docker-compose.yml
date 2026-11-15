@@ -1,0 +1,89 @@
+# From Chevereto's official compose file (github.com/chevereto/docker, default.yml on the 4.5
+# branch): the free edition's image, MySQL and Redis, pinned to one release. Left out: its
+# nginx-proxy and Let's Encrypt wiring (Cloudgate routes the address and serves HTTPS) and the
+# paid edition's license key. The official setup runs Chevereto's cron from the host every
+# minute (`app/bin/cli -C cron`); here a second container of the same image does that.
+x-chevereto-env: &chevereto-env
+  CHEVERETO_DB_HOST: chevereto-db
+  CHEVERETO_DB_USER: chevereto
+  CHEVERETO_DB_PASS: ${DB_PASSWORD}
+  CHEVERETO_DB_PORT: 3306
+  CHEVERETO_DB_NAME: chevereto
+  # Cloudgate's proxy sets X-Real-IP to the visitor's address.
+  CHEVERETO_HEADER_CLIENT_IP: X-Real-IP
+  CHEVERETO_HOSTNAME: ${HOSTNAME}
+  CHEVERETO_HOSTNAME_PATH: /
+  CHEVERETO_HTTPS: 1
+  CHEVERETO_ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+  CHEVERETO_MAX_POST_SIZE: 2G
+  CHEVERETO_MAX_UPLOAD_SIZE: 2G
+  CHEVERETO_SESSION_SAVE_HANDLER: redis
+  CHEVERETO_SESSION_SAVE_PATH: "tcp://chevereto-redis:6379?auth[]=${REDIS_PASSWORD}&prefix=chv:SESSION:"
+  CHEVERETO_CACHE_DRIVER: redis
+  CHEVERETO_CACHE_HOST: chevereto-redis
+  CHEVERETO_CACHE_PORT: 6379
+  CHEVERETO_CACHE_USER: ""
+  CHEVERETO_CACHE_PASSWORD: ${REDIS_PASSWORD}
+
+services:
+  chevereto:
+    image: chevereto/chevereto:4.5.9
+    restart: unless-stopped
+    depends_on:
+      chevereto-db:
+        condition: service_healthy
+      chevereto-redis:
+        condition: service_healthy
+    environment: *chevereto-env
+    volumes:
+      # Uploaded images and videos.
+      - chevereto-images:/var/www/html/images
+
+  chevereto-cron:
+    image: chevereto/chevereto:4.5.9
+    restart: unless-stopped
+    depends_on:
+      chevereto-db:
+        condition: service_healthy
+      chevereto-redis:
+        condition: service_healthy
+    environment: *chevereto-env
+    entrypoint: ["sh", "-c", "while true; do app/bin/cli -C cron; sleep 60; done"]
+    volumes:
+      - chevereto-images:/var/www/html/images
+
+  chevereto-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: chevereto
+      MYSQL_USER: chevereto
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - chevereto-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  chevereto-redis:
+    image: redis:8.10.3-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - chevereto-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+volumes:
+  chevereto-images:
+  chevereto-db-data:
+  chevereto-redis-data:

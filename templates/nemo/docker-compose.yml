@@ -1,0 +1,95 @@
+# NEMO as its Docker Compose guide runs it (the NEMO image behind nginx, with a
+# SQLite database in the data folder), plus LLDAP: NEMO keeps no passwords and
+# signs people in against an LDAP directory, so LLDAP provides one with a web
+# page for adding people and setting their passwords.
+x-nemo-env: &nemo-env
+  DJANGO_SETTINGS_MODULE: settings
+  PYTHONPATH: /etc/nemo:/nemo
+  NEMO_URL: ${NEMO_URL}
+  SECRET_KEY: ${SECRET_KEY}
+  ADMIN_EMAIL: ${ADMIN_EMAIL}
+  TIME_ZONE: ${TIME_ZONE:-Etc/UTC}
+  LDAP_BASE_DN: dc=nemo,dc=local
+  EMAIL_HOST: ${EMAIL_HOST:-}
+  EMAIL_PORT: ${EMAIL_PORT:-587}
+  EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+  DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-}
+
+services:
+  # nginx in front of NEMO: serves the static files and passes the rest on.
+  nemo:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      nemo-app:
+        condition: service_healthy
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/nginx.conf:ro
+      - nemo-data:/nemo:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/health/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # NEMO itself. The image's start script collects the static files, runs the
+  # database migrations and starts Gunicorn on port 8000.
+  nemo-app:
+    image: nanofab/nemo:8.2.1
+    restart: unless-stopped
+    depends_on:
+      nemo-setup:
+        condition: service_completed_successfully
+      nemo-ldap:
+        condition: service_healthy
+    environment:
+      <<: *nemo-env
+      # Two Gunicorn workers (8 threads each) instead of one per CPU, to keep memory use small.
+      GUNICORN_WORKER_COUNT: "2"
+    volumes:
+      - ../files/nemo-settings.py.txt:/etc/nemo/settings.py:ro
+      - nemo-data:/nemo
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8000/health/"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 1m
+
+  # Runs once at each start (files/nemo-setup.py.txt): database migrations, and
+  # on the first start the administrator "admin".
+  nemo-setup:
+    image: nanofab/nemo:8.2.1
+    restart: "no"
+    command: ["python3", "/etc/nemo/nemo-setup.py"]
+    environment: *nemo-env
+    volumes:
+      - ../files/nemo-settings.py.txt:/etc/nemo/settings.py:ro
+      - ../files/nemo-setup.py.txt:/etc/nemo/nemo-setup.py:ro
+      - nemo-data:/nemo
+
+  # LLDAP: the directory NEMO checks passwords against, with its own web page
+  # (the second address) for adding people and setting passwords. Its account
+  # "admin" has ADMIN_PASSWORD, which is also how NEMO's admin signs in.
+  nemo-ldap:
+    image: lldap/lldap:v0.6.3-alpine
+    restart: unless-stopped
+    environment:
+      UID: "1000"
+      GID: "1000"
+      TZ: ${TIME_ZONE:-Etc/UTC}
+      LLDAP_JWT_SECRET: ${LLDAP_JWT_SECRET}
+      LLDAP_KEY_SEED: ${LLDAP_KEY_SEED}
+      LLDAP_LDAP_BASE_DN: dc=nemo,dc=local
+      LLDAP_LDAP_USER_DN: admin
+      LLDAP_LDAP_USER_EMAIL: ${ADMIN_EMAIL}
+      LLDAP_LDAP_USER_PASS: ${ADMIN_PASSWORD}
+      LLDAP_HTTP_URL: ${LLDAP_URL}
+    volumes:
+      - nemo-ldap-data:/data
+
+volumes:
+  nemo-data:
+  nemo-ldap-data:

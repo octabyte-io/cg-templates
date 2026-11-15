@@ -1,0 +1,47 @@
+# Based on Casdoor's official docker-compose.yml (v4.29.0), using PostgreSQL
+# instead of MySQL. Casdoor reads every app.conf setting from an environment
+# variable of the same name.
+services:
+  casdoor:
+    image: casbin/casdoor:4.29.0
+    restart: unless-stopped
+    # Creates the database and its tables on the first start.
+    entrypoint: ["/server", "--createDatabase=true"]
+    depends_on:
+      casdoor-db:
+        condition: service_healthy
+    environment:
+      RUNNING_IN_DOCKER: "true"
+      driverName: postgres
+      dataSourceName: "user=casdoor password=${DB_PASSWORD} host=casdoor-db port=5432 sslmode=disable dbname=casdoor"
+      dbName: casdoor
+      # The app's public address, used in OIDC discovery and redirect links.
+      origin: ${ORIGIN}
+      # Password of built-in/admin when Casdoor creates the database. Without
+      # it, the first visitor sets the admin password on a welcome page.
+      initAdminPassword: ${ADMIN_PASSWORD}
+    # The image's own check, with more time for the first start.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/api/health > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 120s
+
+  casdoor-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: casdoor
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: casdoor
+    volumes:
+      - casdoor-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d casdoor -U casdoor"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  casdoor-db-data:

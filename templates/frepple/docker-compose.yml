@@ -1,0 +1,52 @@
+services:
+  frepple:
+    image: ghcr.io/frepple/frepple-community:9.19.0
+    restart: unless-stopped
+    depends_on:
+      frepple-db:
+        condition: service_healthy
+    # files/frepple-start.sh.txt adds one step to the image's own entrypoint:
+    # it replaces the built-in admin/admin password with ADMIN_PASSWORD.
+    entrypoint: ["/bin/bash", "/frepple-start.sh"]
+    environment:
+      POSTGRES_HOST: frepple-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: frepple
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FREPPLE_TIME_ZONE: UTC
+      # Behind Cloudgate's HTTPS proxy: trust the app's own address for forms.
+      FREPPLE_CSRF_TRUSTED_ORIGINS: ${APP_URL}
+      FREPPLE_SECURE_PROXY_SSL_HEADER: HTTP_X_FORWARDED_PROTO https
+      FREPPLE_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ../files/frepple-start.sh.txt:/frepple-start.sh:ro
+      # Settings (djangosettings.py), kept across image updates.
+      - frepple-config:/etc/frepple
+      # Logs, plus the folders frePPLe imports data files from and exports to.
+      - frepple-logs:/var/log/frepple
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://localhost/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 300s
+
+  frepple-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: frepple
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: frepple
+    volumes:
+      - frepple-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U frepple"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  frepple-config:
+  frepple-logs:
+  frepple-db-data:

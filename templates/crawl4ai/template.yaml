@@ -1,0 +1,29 @@
+name: Crawl4AI
+description: "Self-hosted Crawl4AI turns web pages into clean Markdown and structured JSON for AI apps, through an API and a browser playground on your own server."
+version: "0.9.5"
+tags: [firecrawl alternative, web scraper for llm, website to markdown, self-hosted web scraping, web crawler api, scrapingbee alternative]
+links:
+  website: https://crawl4ai.com
+  docs: https://docs.crawl4ai.com/core/self-hosting/
+  source: https://github.com/unclecode/crawl4ai
+cloudgate: 0.1.0
+compose: app
+# The makers ask for at least 4 GB of memory: every crawl runs in a real
+# Chromium browser.
+size: large
+inputs:
+  API_TOKEN: { generate: hex }
+  LLM_PROVIDER:
+    ask:
+      label: AI provider and model
+      description: Optional. Used only for AI extraction, as provider/model (for example openai/gpt-4o-mini or anthropic/claude-3-5-haiku-latest). Plain crawling needs no AI.
+      default: "openai/gpt-4o-mini"
+      required: false
+  LLM_API_KEY:
+    ask:
+      label: AI provider API key
+      description: Optional. The key for the provider above. Leave it empty to crawl without AI extraction.
+      required: false
+      secret: true
+domains:
+  - { service: crawl4ai, port: 11235 }
