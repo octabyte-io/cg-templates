@@ -1,0 +1,18 @@
+services:
+  homer:
+    # The official image (README "Using docker"). A static page served by lighttpd;
+    # everything you change lives in /www/assets: config.yml, icons, logos.
+    image: b4bz/homer:v26.11.3
+    restart: unless-stopped
+    environment:
+      # On first start, put the example config.yml and default icons into the
+      # empty assets volume. Later starts find config.yml and leave it alone.
+      INIT_ASSETS: "1"
+      # lighttpd also listens on IPv6 by default and won't start on a server
+      # without it; the web address reaches Homer over IPv4.
+      IPV6_DISABLE: "1"
+    volumes:
+      - homer-assets:/www/assets
+
+volumes:
+  homer-assets:

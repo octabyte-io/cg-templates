@@ -1,0 +1,32 @@
+services:
+  radicale:
+    # The official image (Kozea/Radicale's Dockerfile, published on GHCR).
+    image: ghcr.io/kozea/radicale:3.9.1
+    restart: unless-stopped
+    # Before Radicale starts, set the password of the user from template.yaml
+    # in the htpasswd file (bcrypt), creating the file on the first start.
+    # Other users added to the file are kept. There is no anonymous access.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        set -e;
+        f=/var/lib/radicale/users;
+        [ -f "$$f" ] || touch "$$f";
+        htpasswd -B -b "$$f" "$$RADICALE_USER" "$$RADICALE_PASSWORD";
+        exec /app/bin/python /app/bin/radicale --config /etc/radicale/config
+    environment:
+      RADICALE_USER: ${RADICALE_USER}
+      RADICALE_PASSWORD: ${RADICALE_PASSWORD}
+    volumes:
+      - radicale-data:/var/lib/radicale
+      - ../files/radicale.conf:/etc/radicale/config:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:5232/.web/"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+volumes:
+  radicale-data:

@@ -1,0 +1,98 @@
+services:
+  phpipam:
+    # The official web image (Apache + PHP on port 80, built by phpipam-docker), pinned to the
+    # latest stable release. Its settings come from the IPAM_* variables below.
+    image: phpipam/phpipam-www:v1.9.0
+    restart: unless-stopped
+    depends_on:
+      phpipam-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      IPAM_DATABASE_HOST: phpipam-db
+      IPAM_DATABASE_NAME: phpipam
+      IPAM_DATABASE_USER: phpipam
+      IPAM_DATABASE_PASS: ${DB_PASSWORD}
+      # The database is installed below, so the web install wizard stays switched off; whoever
+      # reached the address first could otherwise run it.
+      IPAM_DISABLE_INSTALLER: "true"
+      # Cloudgate's proxy serves the app over HTTPS and sets the X-Forwarded-* headers.
+      IPAM_TRUST_X_FORWARDED: "true"
+      APP_URL: ${APP_URL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # On the first start this does what phpIPAM's install wizard does: it loads the database schema
+    # shipped in the image, replaces the default "Admin" password ("ipamadmin", which is public)
+    # with the generated one, and sets the site's address. Later starts find the schema and leave
+    # everything alone; after an image update phpIPAM asks the Admin to run its own schema upgrade.
+    # Then it starts Apache as the image does.
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        export MYSQL_PWD="$$IPAM_DATABASE_PASS"
+        db="mariadb --skip-ssl -h $$IPAM_DATABASE_HOST -u $$IPAM_DATABASE_USER $$IPAM_DATABASE_NAME"
+        until $$db -e "SELECT 1" >/dev/null 2>&1; do echo "waiting for the database"; sleep 2; done
+        if [ -z "$$($$db -N -e "SHOW TABLES LIKE 'settings'")" ]; then
+          echo "installing the phpIPAM database"
+          $$db < /phpipam/db/SCHEMA.sql
+          hash=$$(php -r 'echo crypt(getenv("ADMIN_PASSWORD"), "\$$6\$$rounds=5000\$$".bin2hex(random_bytes(8)));')
+          url=$$(php -r 'echo addslashes(rtrim(getenv("APP_URL"), "/")."/");')
+          $$db -e "UPDATE users SET password='$$hash', passChange='No' WHERE username='Admin'; UPDATE settings SET siteURL='$$url', dbverified=0 WHERE id=1;"
+        fi
+        exec /start_apache2
+    cap_add:
+      # From the official compose file: lets phpIPAM ping hosts and scan subnets.
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      # A custom logo uploaded under Administration > Settings.
+      - phpipam-logo:/phpipam/public/css/images/logo
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  phpipam-cron:
+    # The official cron image: every hour it pings the addresses in subnets marked for checking,
+    # discovers new hosts and resolves host names. Only one copy may run.
+    image: phpipam/phpipam-cron:v1.9.0
+    restart: unless-stopped
+    depends_on:
+      phpipam:
+        condition: service_healthy
+    environment:
+      IPAM_DATABASE_HOST: phpipam-db
+      IPAM_DATABASE_NAME: phpipam
+      IPAM_DATABASE_USER: phpipam
+      IPAM_DATABASE_PASS: ${DB_PASSWORD}
+      SCAN_INTERVAL: 1h
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  phpipam-db:
+    # phpIPAM 1.9 runs on MariaDB 10.x and 11.x (or MySQL 8).
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: phpipam
+      MARIADB_USER: phpipam
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - phpipam-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  phpipam-logo:
+  phpipam-db-data:

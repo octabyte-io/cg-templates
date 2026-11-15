@@ -1,0 +1,18 @@
+name: WBO
+description: "WBO is a self-hosted whiteboard where your team draws together live on shared boards that save themselves, a simple alternative to Miro."
+version: "2.18.37"
+tags: [self-hosted whiteboard, collaborative whiteboard, miro alternative, microsoft whiteboard alternative, online whiteboard for teachers, open source whiteboard]
+links:
+  website: https://wbo.ophir.dev
+  docs: https://github.com/lovasoa/whitebophir#readme
+  source: https://github.com/lovasoa/whitebophir
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of WBO asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

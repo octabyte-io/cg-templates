@@ -1,0 +1,57 @@
+services:
+  mstream:
+    # The LinuxServer.io image the mStream project points to for Docker.
+    image: lscr.io/linuxserver/mstream:6.33.1
+    restart: unless-stopped
+    # The image's own entrypoint (/init), plus one step on the first start:
+    # mStream has no users at first and is then open to anyone with the address.
+    # Write its config file with the image's defaults plus the user "admin"
+    # (password ADMIN_PASSWORD, hashed the way mStream hashes it), which mStream
+    # moves into its database on that first start. Uploads from the browser
+    # are turned on, new files in the library are picked up straight away, and
+    # it listens on IPv4 (its default, "::", fails where Docker has no IPv6).
+    # On every start, the library folder is given to the app's user (PUID) so
+    # uploads can be written there; the image leaves it owned by root.
+    entrypoint:
+      - sh
+      - -c
+      - |
+        if [ ! -f /config/config.json ]; then
+          mkdir -p /config
+          node -e "$$MSTREAM_FIRST_CONFIG" > /config/config.json.new
+          mv /config/config.json.new /config/config.json
+        fi
+        mkdir -p /music
+        chown 1000:1000 /music
+        exec /init
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      MSTREAM_FIRST_CONFIG: >-
+        const crypto = require('crypto');
+        const c = JSON.parse(require('fs').readFileSync('/defaults/config.json', 'utf8'));
+        const salt = crypto.randomBytes(16).toString('base64');
+        const hash = crypto.pbkdf2Sync(process.env.ADMIN_PASSWORD, salt, 15000, 32, 'sha512').toString('base64');
+        c.address = '0.0.0.0';
+        c.noUpload = false;
+        c.trustProxy = true;
+        c.scanOptions.watcherEnabled = true;
+        c.users = { admin: { password: hash, salt: salt, admin: true, vpaths: ['library'] } };
+        console.log(JSON.stringify(c, null, 2));
+    volumes:
+      # Settings, the database, album art and logs.
+      - mstream-config:/config
+      # The music library: songs uploaded in mStream are stored here.
+      - mstream-music:/music
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mstream-config:
+  mstream-music:

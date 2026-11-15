@@ -1,0 +1,26 @@
+name: Ampache
+description: "Ampache is a self-hosted music server: upload the music you own and stream it in your browser or phone apps, with smart playlists and podcasts."
+version: "8.4.0"
+tags: [self-hosted music server, spotify alternative, music streaming server, subsonic server, personal music streaming, ampache]
+links:
+  website: https://ampache.org
+  docs: https://ampache.org/docs/
+  source: https://github.com/ampache/ampache
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # MariaDB's root password. Ampache's installer uses it once, on the first
+  # start, to create its database and its own database user.
+  DB_ROOT_PASSWORD: { generate: password }
+  # The password of the database user "ampache" that Ampache runs with.
+  DB_PASSWORD: { generate: password }
+  # The first admin, created on the first start. Sign in as "admin".
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of Ampache's first admin. You sign in with the username admin.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: ampache, port: 80 }

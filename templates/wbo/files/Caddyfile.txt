@@ -1,0 +1,22 @@
+# WBO has no sign-in of its own, so this small proxy asks for a username and
+# password before anyone reaches a board. Cloudgate's own proxy in front
+# handles the domain and TLS. BASIC_AUTH_HASH is the bcrypt hash of
+# ADMIN_PASSWORD, made when the container starts (see docker-compose.yml).
+{
+	admin off
+	servers {
+		# Pass on the visitor's address from Cloudgate's proxy.
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	# Drawing is synced live over a WebSocket, which Caddy passes on.
+	reverse_proxy wbo:80 {
+		flush_interval -1
+	}
+}

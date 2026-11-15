@@ -1,0 +1,19 @@
+# MeTube has no sign-in of its own, so this small proxy asks for a username
+# and password before anyone reaches it, the downloaded files included.
+# Cloudgate's own proxy in front handles the domain and TLS. BASIC_AUTH_HASH
+# is the bcrypt hash of ADMIN_PASSWORD, made when the container starts (see
+# docker-compose.yml).
+{
+	admin off
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	# Download progress is pushed live over a WebSocket, which Caddy passes on.
+	reverse_proxy metube:8081 {
+		flush_interval -1
+	}
+}

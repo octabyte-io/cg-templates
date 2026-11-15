@@ -1,0 +1,48 @@
+services:
+  comentario:
+    image: registry.gitlab.com/comentario/comentario:v3.19.0
+    restart: unless-stopped
+    depends_on:
+      comentario-db:
+        condition: service_healthy
+    environment:
+      BASE_URL: ${BASE_URL}
+      # The settings below are "secrets" in Comentario's docs; it reads each
+      # one from its COMENTARIO_* environment variable instead of a secrets.yaml.
+      COMENTARIO_POSTGRES_HOST: comentario-db
+      COMENTARIO_POSTGRES_PORT: 5432
+      COMENTARIO_POSTGRES_DATABASE: comentario
+      COMENTARIO_POSTGRES_USERNAME: comentario
+      COMENTARIO_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      COMENTARIO_SERVER_SIGNING_KEY: ${SERVER_SIGNING_KEY}
+      # Email is optional: with no SMTP host, Comentario sends no email.
+      COMENTARIO_SMTP_HOST: ${SMTP_HOST:-}
+      COMENTARIO_SMTP_PORT: ${SMTP_PORT:-587}
+      COMENTARIO_SMTP_USERNAME: ${SMTP_USERNAME:-}
+      COMENTARIO_SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      COMENTARIO_SMTP_EMAIL_FROM: ${SMTP_EMAIL_FROM:-}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/api/user"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  comentario-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: comentario
+      POSTGRES_USER: comentario
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - comentario-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U comentario -d comentario"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  comentario-db-data:

@@ -1,0 +1,29 @@
+name: LibreNMS
+description: "LibreNMS is self-hosted network monitoring and a PRTG alternative: it finds your switches, routers and servers, graphs their traffic and alerts you."
+version: "26.10.2"
+tags: [network monitoring, prtg alternative, auvik alternative, snmp monitoring, self-hosted network monitoring, observium alternative]
+links:
+  website: https://www.librenms.org
+  docs: https://docs.librenms.org
+  source: https://github.com/librenms/librenms
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.librenms.url}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for graphs, alerts and schedules, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: librenms, port: 8000 }

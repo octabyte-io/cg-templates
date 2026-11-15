@@ -1,0 +1,41 @@
+name: Roundcube
+description: "Roundcube is self-hosted webmail: read, write and file email from the mailbox you already have, in a modern browser inbox. It is not a mail server."
+version: "1.7.6"
+tags: [webmail, gmail alternative, outlook web alternative, imap webmail, email client, open source webmail]
+links:
+  website: https://roundcube.net
+  docs: https://github.com/roundcube/roundcubemail/wiki
+  source: https://github.com/roundcube/roundcubemail
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  IMAP_HOST:
+    ask:
+      label: Incoming mail server (IMAP)
+      description: Your mailbox's IMAP server, starting with ssl:// for port 993 (most providers) or tls:// for port 143, e.g. ssl://mail.yourdomain.com. Your mail host or control panel lists it. Roundcube reads your mail there; it is not a mail server itself.
+      pattern: "(ssl|tls)://[A-Za-z0-9.-]+"
+  IMAP_PORT:
+    ask:
+      label: IMAP port
+      description: 993 with ssl://, 143 with tls://.
+      default: "993"
+      format: number
+  SMTP_HOST:
+    ask:
+      label: Outgoing mail server (SMTP)
+      description: The SMTP server that sends your mail, starting with tls:// for port 587 (most providers) or ssl:// for port 465, e.g. tls://mail.yourdomain.com. People sign in to it with their own mailbox login.
+      pattern: "(ssl|tls)://[A-Za-z0-9.-]+"
+  SMTP_PORT:
+    ask:
+      label: SMTP port
+      description: 587 with tls://, 465 with ssl://.
+      default: "587"
+      format: number
+  DES_KEY: { generate: password }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: roundcube, port: 80 }
+files:
+  - { path: cloudgate.inc.php.txt }
+  - { path: forwarded-https.conf }

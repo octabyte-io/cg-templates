@@ -1,0 +1,18 @@
+name: MeTube
+description: "MeTube is a self-hosted video downloader: paste a link to save your own or permitted videos, playlists or audio to your server from any browser."
+version: "2026.11.14"
+tags: [self-hosted video downloader, 4k video downloader alternative, yt-dlp web ui, video downloader, audio downloader, playlist downloader]
+links:
+  website: https://github.com/alexta69/metube
+  docs: https://github.com/alexta69/metube/wiki
+  source: https://github.com/alexta69/metube
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of MeTube asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }
