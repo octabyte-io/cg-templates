@@ -1,0 +1,20 @@
+services:
+  enclosed:
+    image: corentinth/enclosed:1.16.1
+    restart: unless-stopped
+    environment:
+      # Signs the login tokens used when optional authentication is turned on
+      # (PUBLIC_IS_AUTHENTICATION_REQUIRED + AUTHENTICATION_USERS).
+      AUTHENTICATION_JWT_SECRET: ${AUTHENTICATION_JWT_SECRET}
+    volumes:
+      # Encrypted notes and files are stored here.
+      - enclosed-data:/app/.data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8787/api/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  enclosed-data:

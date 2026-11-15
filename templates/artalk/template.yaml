@@ -1,0 +1,42 @@
+name: Artalk
+description: "Artalk is a self-hosted comment system for blogs and websites: threaded replies, spam checks and a moderation dashboard, with no ads."
+version: "2.10.1"
+tags: [disqus alternative, self-hosted comments, blog comment system, comment system, website comments, comment moderation]
+links:
+  website: https://artalk.js.org
+  docs: https://artalk.js.org/guide/deploy.html
+  source: https://github.com/ArtalkJS/Artalk
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Signs sign-in tokens.
+  APP_KEY: { generate: hex }
+  SITE_NAME:
+    ask:
+      label: Site name
+      description: Your website's name. You use it as the site value in the snippet you paste into your pages.
+      default: My Blog
+  WEBSITE_URL:
+    ask:
+      label: Your website's address
+      description: The website where the comments appear, for example https://blog.example.com. Add more sites later in Artalk's dashboard.
+      format: url
+  ADMIN_NAME:
+    ask:
+      label: Admin name
+      description: The name you sign in to the dashboard with.
+      default: admin
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: Your sign-in email, also where Artalk sends new-comment alerts once email is set up.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  TZ:
+    ask:
+      label: Time zone
+      description: For dates in emails and the dashboard, for example Europe/Berlin.
+      default: Etc/UTC
+domains:
+  - { service: artalk, port: 23366 }
