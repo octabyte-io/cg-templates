@@ -35,6 +35,13 @@ export const CATEGORIES: Category[] = [
   { id: 'events', name: 'Events & tickets', lede: 'Self-hosted event pages and ticket sales, so you keep the booking fees an event platform would take.' },
   { id: 'point-of-sale', name: 'Point of sale', lede: 'Open-source point of sale software for shops and counters, so your sales, stock and receipts stay on your own server with no monthly fee per register.' },
   { id: 'inventory-assets', name: 'Inventory & assets', lede: 'Self-hosted asset tracking and inventory software, so you know who has each laptop, licence and item, with no fee per asset.' },
+  { id: 'education', name: 'Learning & courses', lede: 'Self-hosted course platforms, quizzes and live polls for teachers, trainers and schools, with your learners’ data on your own server and no fee per student.' },
+  { id: 'nonprofits', name: 'Clubs & nonprofits', lede: 'Open-source membership, church and volunteer software for clubs, charities and associations, with your members’ details on your own server and no fee per member.' },
+  { id: 'social', name: 'Social networks', lede: 'Self-hosted social networks for photos, posts and groups, so your community has its own space with no ads and no algorithm deciding what people see.' },
+  { id: 'security', name: 'Security & sign-in', lede: 'Self-hosted single sign-on, secure password sharing and whistleblowing tools, so your logins and sensitive reports stay on your own server.' },
+  { id: 'health', name: 'Health & clinics', lede: 'Open-source clinic records, medical imaging and health tracking, run on a server you control so patient and health data stay with you.' },
+  { id: 'research', name: 'Research & archives', lede: 'Open-source lab notebooks, library catalogues, journal publishing and data collection for labs, libraries, museums and field teams, on your own server.' },
+  { id: 'operations', name: 'Operations', lede: 'Open-source software for maintenance, farms, workshops and production planning, so your work orders, stock and records stay on your own server with no fee per user.' },
   { id: 'monitoring', name: 'Monitoring', lede: 'Self-hosted monitoring that alerts you when a website goes down or a web page, price or stock level changes.' },
   { id: 'developer-tools', name: 'Developer tools', lede: 'Self-hosted Git hosting and developer tools, so your code, reviews and builds stay on your server.' },
 ];
