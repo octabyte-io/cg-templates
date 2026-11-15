@@ -60,6 +60,14 @@ services:
       # Replaces the image's nginx site: the same site, but /config.json is
       # written from the settings above, so Element signs in to this Synapse.
       - ../files/element-site.conf:/etc/nginx/templates/default.conf.template:ro
+    healthcheck:
+      # The image's own check calls localhost, which can resolve to IPv6 (::1)
+      # while the site above listens on IPv4 only, so check 127.0.0.1 instead.
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/config.json"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   synapse-admin:
     # Ketesa (formerly Synapse Admin), the maintained admin web panel for
