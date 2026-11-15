@@ -10,7 +10,7 @@ cloudgate: 0.1.0
 compose: app
 size: medium
 inputs:
-  OCIS_URL: { value: "{{domains.ocis.url}}" }
+  OCIS_HOST: { value: "{{domains.ocis.host}}" }
   ADMIN_PASSWORD: { generate: password }
 domains:
   - { service: ocis, port: 9200 }
