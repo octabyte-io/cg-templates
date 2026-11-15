@@ -6,11 +6,14 @@ apps:
   wordpress:
     fit: "The most flexible choice. WordPress can be a simple blog or a whole website, with thousands of themes and plugins, but it has more settings to learn and no newsletter built in."
     import: partly
+  typecho:
+    fit: "The lightest choice: a small, fast blog where you write in Markdown, sort posts into categories and tags, add pages and moderate comments, with themes and plugins. It has no newsletter or paid memberships, fewer themes than WordPress, and its admin starts in Chinese until you switch the language to English."
+    import: no
 moving: |
-  Download your Medium archive from its settings; it contains every story as an HTML file. Ghost can import a Medium export directly. For WordPress, copy posts across, which is quick for a small blog, or use a community import tool. Add a link from your Medium profile to your new site so readers can follow you.
+  Download your Medium archive from its settings; it contains every story as an HTML file. Ghost can import a Medium export directly. For WordPress, copy posts across, which is quick for a small blog, or use a community import tool. Typecho has no importer, so paste each story into its Markdown editor and upload the images again. Add a link from your Medium profile to your new site so readers can follow you.
 faq:
   - q: "Can I still earn money from my writing without Medium?"
-    a: "Yes, and you set the price. Ghost has paid memberships built in, with payments going to your own Stripe account. On WordPress you add a membership plugin."
+    a: "Yes, and you set the price. Ghost has paid memberships built in, with payments going to your own Stripe account. On WordPress you add a membership plugin. Typecho has no paid memberships."
   - q: "Will my posts still get read without Medium's audience?"
     a: "Medium's recommendations bring some readers, and you lose those. Your own site is found through search, your newsletter and social media, and every reader you gain is yours to keep."
 ---

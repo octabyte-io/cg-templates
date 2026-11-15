@@ -1,0 +1,8 @@
+# Cloudgate profile for PrivateGPT (loaded with PGPT_PROFILES=cloudgate, on top of the
+# image's own settings.yaml). It turns on the API's Basic Auth, so only people with the
+# admin user name and password can chat with the AI or read the uploaded documents.
+# PGPT_AUTH_SECRET is built from those two values by files/privategpt-start.sh.txt.
+server:
+  auth:
+    enabled: true
+    secret: ${PGPT_AUTH_SECRET}

@@ -1,0 +1,24 @@
+# From Collabora's CODE Docker image instructions (sdk.collaboraonline.com, "CODE Docker image"),
+# without the published port: Cloudgate routes the web address and terminates HTTPS, so the
+# server runs plain HTTP behind it (ssl.enable=false, ssl.termination=true).
+# It holds no data of its own: documents stay in the file app that opens them.
+services:
+  collabora:
+    image: collabora/code:26.04.6.1.1
+    restart: unless-stopped
+    environment:
+      # Only this file app (WOPI host) may open documents here.
+      aliasgroup1: ${FILE_APP_URL}
+      # Admin console sign-in.
+      username: admin
+      password: ${ADMIN_PASSWORD}
+      # Plain HTTP behind Cloudgate's HTTPS, and IPv4 only: the server exits at start when
+      # the Docker network has no IPv6, which is Docker's default.
+      extra_params: --o:ssl.enable=false --o:ssl.termination=true --o:net.proto=IPv4
+    # The image's own check (it has no shell, curl or wget).
+    healthcheck:
+      test: ["CMD", "/usr/bin/coolwsd", "--probe", "--use-env-vars"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s

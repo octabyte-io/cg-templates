@@ -1,0 +1,166 @@
+# Atlas CMMS, from the project's docker-compose.yml and nginx.conf at v1.9.0
+# (https://github.com/Grashjs/cmms): a Spring Boot API, a React web app,
+# PostgreSQL, S3-compatible file storage and nginx, which serves all of them
+# on the app's one web address (/, /api/ and /storage/).
+services:
+  # The app's web address: upstream's nginx, routing to the parts below.
+  atlas-cmms:
+    image: nginx:1.30.2-alpine
+    restart: unless-stopped
+    depends_on:
+      atlas-cmms-frontend:
+        condition: service_started
+      atlas-cmms-api:
+        condition: service_started
+      atlas-cmms-minio:
+        condition: service_started
+      atlas-cmms-lock-superadmin:
+        condition: service_completed_successfully
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  atlas-cmms-api:
+    image: intelloop/atlas-cmms-backend:v1.9.0
+    restart: unless-stopped
+    depends_on:
+      atlas-cmms-db:
+        condition: service_healthy
+      atlas-cmms-minio:
+        condition: service_started
+    # Upstream's start command. Email turns on only when an email server was
+    # given; an empty SMTP_HOST is dropped so Spring keeps its own default.
+    command:
+      - sh
+      - -c
+      - >-
+        if [ -n "$$SMTP_HOST" ]; then export ENABLE_EMAIL_NOTIFICATIONS=true;
+        else unset SMTP_HOST SMTP_PORT SMTP_USER SMTP_PWD SMTP_FROM; fi;
+        exec java --add-opens=java.base/java.lang=ALL-UNNAMED $$JAVA_OPTS -jar /app/my-spring-boot-app.jar
+    environment:
+      DB_URL: atlas-cmms-db/atlas
+      DB_USER: atlas
+      DB_PWD: ${POSTGRES_PASSWORD}
+      PUBLIC_API_URL: ${APP_URL}/api
+      PUBLIC_FRONT_URL: ${APP_URL}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      SPRING_PROFILES_ACTIVE: ""
+      STORAGE_TYPE: minio
+      MINIO_ENDPOINT: http://atlas-cmms-minio:9000
+      MINIO_BUCKET: atlas-bucket
+      MINIO_ACCESS_KEY: atlas
+      MINIO_SECRET_KEY: ${MINIO_PASSWORD}
+      PUBLIC_MINIO_ENDPOINT: ${APP_URL}/storage
+      # Only this email may create the organization; everyone else joins by invitation.
+      ALLOWED_ORGANIZATION_ADMINS: ${ADMIN_EMAIL}
+      INVITATION_VIA_EMAIL: "false"
+      ENABLE_EMAIL_NOTIFICATIONS: "false"
+      ENABLE_MAIL_HEALTH_CHECK: "false"
+      MAIL_TYPE: smtp
+      MAIL_RECIPIENTS: ""
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PWD: ${SMTP_PASSWORD}
+      SMTP_FROM: ${SMTP_FROM}
+      ENABLE_SSO: "false"
+      LDAP_ENABLED: "false"
+      ENABLE_CORS: "false"
+      SINGLE_INGRESS: "true"
+      LICENSE_KEY: ""
+      LICENSE_FINGERPRINT_REQUIRED: "false"
+      PADDLE_ENVIRONMENT: sandbox
+      JAVA_OPTS: -XX:MaxRAMPercentage=50
+
+  atlas-cmms-frontend:
+    image: intelloop/atlas-cmms-frontend:v1.9.0
+    restart: unless-stopped
+    depends_on:
+      atlas-cmms-api:
+        condition: service_started
+    # Upstream's values; the blanks are a single space, as upstream sets them,
+    # so the image's runtime-env-cra finds every variable it expects.
+    environment:
+      API_URL: /api
+      NODE_ENV: production
+      GOOGLE_KEY: " "
+      GOOGLE_TRACKING_ID: " "
+      INVITATION_VIA_EMAIL: "false"
+      CLOUD_VERSION: "false"
+      ENABLE_SSO: "false"
+      OAUTH2_PROVIDER: " "
+      LOGO_PATHS: " "
+      CUSTOM_COLORS: " "
+      BRAND_CONFIG: " "
+      DEMO_LINK: " "
+      HOME_URL: https://atlas-cmms.com
+      PADDLE_SECRET_TOKEN: " "
+      PADDLE_ENVIRONMENT: sandbox
+      RECAPTCHA_SITE_KEY: " "
+      LDAP_ENABLED: "false"
+      SENTRY_DSN: " "
+      SENTRY_ENVIRONMENT: " "
+      SENTRY_RELEASE: " "
+      CLARITY_ID: " "
+
+  # The API seeds a platform super admin with a published password
+  # (superadmin@test.com / pls_change_me, ApplicationInitializer.java). This runs
+  # at each start, waits for the API to create that account, then disables it
+  # and replaces its password with one no one knows. The web address waits for
+  # it, so the account is never reachable with the published password.
+  atlas-cmms-lock-superadmin:
+    image: postgres:16.16-alpine
+    restart: "no"
+    depends_on:
+      atlas-cmms-db:
+        condition: service_healthy
+      atlas-cmms-api:
+        condition: service_started
+    environment:
+      PGHOST: atlas-cmms-db
+      PGUSER: atlas
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: atlas
+    command:
+      - sh
+      - -c
+      - >-
+        q="SELECT count(*) FROM own_user WHERE lower(email) = 'superadmin@test.com'";
+        n=0; i=0;
+        while [ "$$n" != 1 ] && [ $$i -lt 120 ]; do
+        n=$$(psql -tAc "$$q" 2>/dev/null); i=$$((i + 1)); [ "$$n" = 1 ] || sleep 5; done;
+        [ "$$n" = 1 ] || { echo "super admin account not found"; exit 1; };
+        psql -v ON_ERROR_STOP=1 -c "UPDATE own_user SET enabled = false,
+        password = '!locked-' || md5(random()::text || clock_timestamp()::text),
+        session_invalidated_at = now()
+        WHERE lower(email) = 'superadmin@test.com' AND password NOT LIKE '!locked-%'"
+
+  # File storage (upstream's MinIO build); the API creates its bucket on start.
+  atlas-cmms-minio:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    restart: unless-stopped
+    user: "0:0"
+    command: server --address ":9000" --console-address ":9001" /data
+    environment:
+      MINIO_ROOT_USER: atlas
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    volumes:
+      - atlas-cmms-files:/data
+
+  atlas-cmms-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: atlas
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: atlas
+    volumes:
+      - atlas-cmms-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atlas -d atlas"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  atlas-cmms-files:
+  atlas-cmms-db-data:

@@ -1,0 +1,43 @@
+# Based on Ackee's docker-compose.yml and docs/Get started.md ("With Docker Compose") at tag
+# v3.7.1: the Ackee server and MongoDB (Ackee needs MongoDB 7 or newer).
+
+services:
+  ackee:
+    image: electerious/ackee:3.7.1
+    restart: unless-stopped
+    depends_on:
+      ackee-mongo:
+        condition: service_healthy
+    environment:
+      ACKEE_MONGODB: mongodb://ackee:${MONGO_PASSWORD}@ackee-mongo:27017/ackee?authSource=admin
+      # The login for the dashboard; Ackee has a single user.
+      ACKEE_USERNAME: ${ACKEE_USERNAME}
+      ACKEE_PASSWORD: ${ACKEE_PASSWORD}
+      # Sends CORS headers for every domain added in Ackee whose title is its full domain name
+      # (e.g. example.com), so the tracking script works on those sites.
+      ACKEE_AUTO_ORIGIN: "true"
+    healthcheck:
+      # The image's own check (MongoDB, web server and API), run more often than its default.
+      test: ["CMD", "npm", "run", "healthcheck"]
+      interval: 20s
+      timeout: 30s
+      retries: 10
+      start_period: 60s
+
+  ackee-mongo:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ackee
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - ackee-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  ackee-mongo-data:

@@ -1,0 +1,22 @@
+name: Admidio
+description: "Self-hosted Admidio is free membership management for clubs and associations: a member database, roles, events with sign-up and email to members."
+version: "v5.0.18"
+tags: [membership management, club management software, wild apricot alternative, clubexpress alternative, association management, member database]
+links:
+  website: https://www.admidio.org
+  docs: https://www.admidio.org/dokuwiki/doku.php?id=en:2.0:index
+  source: https://github.com/Admidio/admidio
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ADMIDIO_ROOT_PATH: { value: "{{domains.admidio.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TZ:
+    ask:
+      label: Time zone
+      description: Your organisation's time zone for events and dates, such as Europe/Berlin, America/New_York or UTC. Pick the same zone in the setup wizard.
+      default: UTC
+domains:
+  - { service: admidio, port: 8080 }
