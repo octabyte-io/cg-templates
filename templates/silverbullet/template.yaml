@@ -1,0 +1,13 @@
+name: SilverBullet
+description: "SilverBullet is a self-hosted Markdown notes app with linked pages, a daily journal, tasks and live tables, kept as plain files on your own server."
+version: "2.12.1"
+tags: [obsidian alternative, markdown notes, personal knowledge base, self-hosted wiki, daily journal, notion alternative]
+links:
+  website: https://silverbullet.md
+  docs: https://docs.silverbullet.md
+  source: https://github.com/silverbulletmd/silverbullet
+cloudgate: 0.1.0
+compose: app
+size: small
+domains:
+  - { service: silverbullet, port: 3000 }

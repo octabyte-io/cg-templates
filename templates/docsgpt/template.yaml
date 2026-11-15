@@ -1,0 +1,31 @@
+name: DocsGPT
+description: "DocsGPT is a self-hosted AI chatbot that answers from your own documents and web pages, with sources, and puts a Chatbase-style chat on your website."
+version: "1.1.0"
+tags: [chatbase alternative, ai chatbot for website, chat with your documents, self-hosted ai chatbot, customgpt alternative, ai support chatbot, docs assistant]
+links:
+  website: https://www.docsgpt.cloud
+  docs: https://docs.docsgpt.cloud
+  source: https://github.com/arc53/DocsGPT
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  API_URL: { value: "{{domains.docsgpt.url}}" }
+  INTERNAL_KEY: { generate: hex }
+  JWT_SECRET_KEY: { generate: hex }
+  ENCRYPTION_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  LLM_PROVIDER:
+    ask:
+      label: AI provider
+      description: Which AI service writes the answers. "docsgpt" is the free public model run by the DocsGPT team and needs no key; the others (openai, anthropic, google, groq, openrouter, novita) need your API key below.
+      default: docsgpt
+      pattern: "docsgpt|openai|anthropic|google|groq|openrouter|novita"
+  API_KEY:
+    ask:
+      label: AI provider API key
+      description: Your API key for the provider above. Leave it empty for "docsgpt".
+      secret: true
+      required: false
+domains:
+  - { service: docsgpt, port: 7091 }

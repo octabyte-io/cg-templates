@@ -1,0 +1,87 @@
+services:
+  # Gokapi with its built-in SQLite database. Uploaded files and the database
+  # are kept in gokapi-data, the server settings (config.json) in gokapi-config.
+  gokapi:
+    image: f0rc3/gokapi:v2.2.4
+    restart: unless-stopped
+    depends_on:
+      gokapi-init:
+        condition: service_completed_successfully
+    environment:
+      TZ: UTC
+    volumes:
+      - gokapi-data:/app/data
+      - gokapi-config:/app/config
+    # The same check as the official image's HEALTHCHECK (the image has curl).
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:53842/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # Runs once at each start. On the very first start it replaces Gokapi's
+  # browser setup wizard, which whoever opens the address first could
+  # otherwise complete: it writes config.json as the wizard would (SQLite,
+  # username and password sign-in, no encryption, the app's own URL) and
+  # creates the admin user "admin" with GOKAPI_ADMIN_PASSWORD through Gokapi's
+  # own --deployment-password option (docs: "Automatic Deployment"). Later
+  # starts find config.json and change nothing. Both salts are left empty on
+  # purpose: Gokapi makes random ones on its first start (and logs that it did).
+  gokapi-init:
+    image: f0rc3/gokapi:v2.2.4
+    restart: "no"
+    environment:
+      GOKAPI_URL: ${GOKAPI_URL}
+      GOKAPI_ADMIN_PASSWORD: ${GOKAPI_ADMIN_PASSWORD}
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        if [ -f /app/config/config.json ]; then
+          echo "Gokapi is already set up."
+          exit 0
+        fi
+        url="$${GOKAPI_URL%/}/"
+        printf '%s\n' \
+          '{' \
+          '  "Authentication": {' \
+          '    "Method": 0,' \
+          '    "SaltAdmin": "",' \
+          '    "SaltFiles": "",' \
+          '    "Username": "admin",' \
+          '    "HeaderKey": "",' \
+          '    "OauthProvider": "",' \
+          '    "OAuthClientId": "",' \
+          '    "OAuthClientSecret": "",' \
+          '    "OauthGroupScope": "",' \
+          '    "OAuthRecheckInterval": 12,' \
+          '    "OAuthGroups": [],' \
+          '    "OnlyRegisteredUsers": false' \
+          '  },' \
+          '  "Port": ":53842",' \
+          "  \"ServerUrl\": \"$${url}\"," \
+          "  \"RedirectUrl\": \"$${url}admin\"," \
+          '  "PublicName": "Gokapi",' \
+          '  "DataDir": "data",' \
+          '  "DatabaseUrl": "sqlite:///app/data/gokapi.sqlite",' \
+          '  "ConfigVersion": 22,' \
+          '  "MaxFileSizeMB": 102400,' \
+          '  "MaxMemory": 50,' \
+          '  "ChunkSize": 45,' \
+          '  "MaxParallelUploads": 3,' \
+          '  "Encryption": {"Level": 0, "Cipher": null, "Salt": "", "Checksum": "", "ChecksumSalt": ""},' \
+          '  "UseSsl": false,' \
+          '  "PicturesAlwaysLocal": false,' \
+          '  "SaveIp": false,' \
+          '  "IncludeFilename": false' \
+          '}' > /app/config/config.json.new
+        mv /app/config/config.json.new /app/config/config.json
+        /app/gokapi --deployment-password "$${GOKAPI_ADMIN_PASSWORD}"
+    volumes:
+      - gokapi-data:/app/data
+      - gokapi-config:/app/config
+
+volumes:
+  gokapi-data:
+  gokapi-config:

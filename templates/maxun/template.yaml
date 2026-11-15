@@ -1,0 +1,27 @@
+name: Maxun
+description: "Self-hosted Maxun is a no-code web scraper: train a robot by clicking on a website, then collect its data on a schedule, as CSV or through an API."
+version: "0.1.0"
+tags: [no code web scraper, browse ai alternative, octoparse alternative, apify alternative, web scraping, website to api]
+links:
+  website: https://www.maxun.dev
+  docs: https://docs.maxun.dev
+  source: https://github.com/getmaxun/maxun
+cloudgate: 0.1.0
+compose: app
+# Idle, the six containers use about 850 MB; each robot that runs or records adds a
+# Chromium page. Upstream allows the backend up to 6 GB, so busy setups want large.
+size: medium
+inputs:
+  PUBLIC_URL: { value: "{{domains.maxun.url}}" }
+  DB_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  SESSION_SECRET: { generate: hex }
+  # Encrypts saved site passwords and proxy settings; Maxun needs 64 hex characters.
+  ENCRYPTION_KEY: { generate: hex }
+  MINIO_SECRET_KEY: { generate: password }
+# One address: a small nginx sends the API, websocket and stored screenshots to their
+# containers and everything else to the web app, as Maxun's own nginx example does.
+domains:
+  - { service: maxun, port: 80 }
+files:
+  - { path: nginx.conf }
