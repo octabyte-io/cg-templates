@@ -1,0 +1,39 @@
+name: Ryot
+description: "Self-hosted Ryot tracks the movies, shows, books, games and podcasts you enjoy, plus your workouts, in one private app."
+version: "10.5.8"
+tags: [media tracker, trakt alternative, goodreads alternative, watchlist, reading tracker, workout tracker]
+links:
+  website: https://ryot.io
+  docs: https://docs.ryot.io
+  source: https://github.com/IgnisDa/ryot
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  FRONTEND_URL: { value: "{{domains.ryot.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  SERVER_ADMIN_ACCESS_TOKEN: { generate: hex }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for scheduled jobs such as release notifications, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+  TMDB_ACCESS_TOKEN:
+    ask:
+      label: TMDB read access token (optional)
+      description: Needed to search movies and TV shows. Get a free "API Read Access Token" from your themoviedb.org account settings.
+      secret: true
+      required: false
+  TWITCH_CLIENT_ID:
+    ask:
+      label: Twitch client ID (optional)
+      description: Needed, with the secret below, to search video games (IGDB). Create a free app at dev.twitch.tv.
+      required: false
+  TWITCH_CLIENT_SECRET:
+    ask:
+      label: Twitch client secret (optional)
+      secret: true
+      required: false
+domains:
+  - { service: ryot, port: 8000 }

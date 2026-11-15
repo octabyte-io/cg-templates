@@ -1,0 +1,23 @@
+name: TaxHacker
+description: "TaxHacker is self-hosted AI bookkeeping: upload receipts and invoices, and it reads the amounts, dates, VAT and vendors into a searchable ledger."
+version: "0.8.5"
+tags: [ai accounting, receipt scanner, invoice data extraction, expense tracking, dext alternative, expensify alternative]
+links:
+  website: https://taxhacker.app
+  docs: https://github.com/vas3k/TaxHacker#readme
+  source: https://github.com/vas3k/TaxHacker
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of TaxHacker asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  # Encrypts the mailbox passwords TaxHacker keeps for its email import.
+  BETTER_AUTH_SECRET: { generate: hex }
+  BASE_URL: { value: "{{domains.proxy.url}}" }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }
+  - { path: crontab.txt }
