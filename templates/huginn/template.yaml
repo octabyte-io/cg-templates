@@ -1,0 +1,37 @@
+name: Huginn
+description: "Self-hosted Huginn runs agents that watch websites, feeds and inboxes and send you alerts or daily digests, much like IFTTT or Zapier."
+version: "2026.11.09"
+tags: [ifttt alternative, self-hosted ifttt, zapier alternative, website change alerts, web scraping, email digest, rss automation]
+links:
+  website: https://github.com/huginn/huginn
+  docs: https://github.com/huginn/huginn/wiki
+  source: https://github.com/huginn/huginn
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  HUGINN_DOMAIN: { value: "{{domains.huginn.host}}" }
+  APP_SECRET_TOKEN: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  INVITATION_CODE: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-zA-Z0-9_-]{3,32}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the first admin account.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for scheduling agents, as a Rails time zone name such as UTC, London or Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: huginn, port: 3000 }

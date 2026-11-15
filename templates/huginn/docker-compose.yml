@@ -1,0 +1,63 @@
+# From the official docker/single-process/docker-compose.yml (MySQL 8.4; the
+# image ships only the MySQL driver, so PostgreSQL would download a gem at
+# every start): one web container (it migrates the database and creates the
+# first admin) and one worker that runs the agents on their schedules.
+x-huginn-env: &huginn-env
+  DATABASE_ADAPTER: mysql2
+  DATABASE_HOST: huginn-db
+  DATABASE_PORT: "3306"
+  DATABASE_NAME: huginn
+  DATABASE_USERNAME: huginn
+  DATABASE_PASSWORD: ${DB_PASSWORD}
+  DO_NOT_CREATE_DATABASE: "true"
+  APP_SECRET_TOKEN: ${APP_SECRET_TOKEN}
+  DOMAIN: ${HUGINN_DOMAIN}
+  # New sign-ups need this code; the image's default (try-huginn) is public.
+  INVITATION_CODE: ${INVITATION_CODE}
+  TIMEZONE: ${TIMEZONE:-UTC}
+
+services:
+  huginn:
+    image: huginn/huginn-single-process:v2026.11.09
+    restart: unless-stopped
+    depends_on:
+      huginn-db:
+        condition: service_healthy
+    environment:
+      <<: *huginn-env
+      # The first admin, created on the first start only (db:seed skips a
+      # database that already has a user).
+      SEED_USERNAME: ${ADMIN_USERNAME}
+      SEED_EMAIL: ${ADMIN_EMAIL}
+      SEED_PASSWORD: ${ADMIN_PASSWORD}
+
+  huginn-worker:
+    image: huginn/huginn-single-process:v2026.11.09
+    restart: unless-stopped
+    command: [/scripts/init, bin/threaded.rb]
+    depends_on:
+      huginn-db:
+        condition: service_healthy
+      huginn:
+        condition: service_started
+    environment:
+      <<: *huginn-env
+
+  huginn-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: huginn
+      MYSQL_USER: huginn
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - huginn-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -uroot -p$$MYSQL_ROOT_PASSWORD ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  huginn-db-data:
