@@ -1,0 +1,17 @@
+name: PDFMathTranslate
+description: "Self-hosted PDFMathTranslate (pdf2zh): translate scientific PDFs and keep formulas, charts and layout, with a side-by-side bilingual copy."
+version: "1.9.11"
+tags: ["pdf translator", "translate scientific papers", "bilingual pdf", "deepl alternative", "pdf2zh", "document translation"]
+links:
+  website: https://github.com/PDFMathTranslate/PDFMathTranslate
+  docs: https://github.com/PDFMathTranslate/PDFMathTranslate/blob/main/docs/ADVANCED.md
+  source: https://github.com/PDFMathTranslate/PDFMathTranslate
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The password of the account "admin" on the web page's sign-in screen.
+  # Without it, anyone who finds the address could use the translator.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: pdfmathtranslate, port: 7860 }

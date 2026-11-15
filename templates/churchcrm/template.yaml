@@ -1,0 +1,22 @@
+name: ChurchCRM
+description: "ChurchCRM is self-hosted church management software for members, families, Sunday school, check-in, volunteers and giving statements."
+version: "7.8.4"
+tags: [church management software, planning center alternative, breeze chms alternative, church member database, church check-in, church giving statements, sunday school attendance]
+links:
+  website: https://churchcrm.io
+  docs: https://docs.churchcrm.io
+  source: https://github.com/ChurchCRM/CRM
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  CHURCHCRM_URL: { value: "{{domains.churchcrm.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: churchcrm, port: 8080 }
+files:
+  - { path: Config.php.txt }
+  - { path: set-admin-password.php.txt }
+  - { path: forwarded-https.conf }

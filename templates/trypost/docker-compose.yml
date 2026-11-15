@@ -1,0 +1,162 @@
+# From TryPost's official compose.prod.yaml (github.com/trypostit/trypost, tag v2.0.1).
+# Kept: the app (nginx, PHP, the Horizon queue workers, the scheduler and the
+# Reverb WebSocket server all run inside it), Postgres and Redis. Dropped as
+# optional: the Caddy reverse proxy.
+#
+# Each social network needs its own developer app keys (redirect URI:
+# <your address>/accounts/<network>/callback). They are optional: add them later
+# as variables of this stack (e.g. LINKEDIN_CLIENT_ID) and redeploy.
+services:
+  trypost:
+    image: ghcr.io/trypostit/trypost:2.0.1
+    restart: unless-stopped
+    depends_on:
+      trypost-db:
+        condition: service_healthy
+      trypost-redis:
+        condition: service_healthy
+    # The image refuses to start in production without Passport (API and MCP
+    # token) keys in its environment. This makes a key pair once, keeps it in
+    # the trypost-keys volume, creates the first admin account, then hands
+    # over to the official entrypoint (migrations, caches, then nginx, PHP,
+    # Horizon, Reverb and the scheduler).
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -eu
+        # The image's nginx also listens on [::]:80, which fails where the
+        # container has no IPv6; keep only the IPv4 listener there.
+        if [ ! -e /proc/net/if_inet6 ]; then
+          sed -i '/listen \[::\]:80;/d' /etc/nginx/http.d/default.conf
+        fi
+        keys=/var/www/html/storage/passport
+        if [ ! -s "$$keys/oauth-private.key" ]; then
+          echo "[cloudgate] generating Passport keys"
+          openssl genrsa -out "$$keys/oauth-private.key.new" 4096
+          openssl rsa -in "$$keys/oauth-private.key.new" -pubout -out "$$keys/oauth-public.key"
+          mv "$$keys/oauth-private.key.new" "$$keys/oauth-private.key"
+        fi
+        PASSPORT_PRIVATE_KEY="$$(cat "$$keys/oauth-private.key")"
+        PASSPORT_PUBLIC_KEY="$$(cat "$$keys/oauth-public.key")"
+        export PASSPORT_PRIVATE_KEY PASSPORT_PUBLIC_KEY
+        # Self-hosted TryPost has no public sign-up: make the first admin.
+        cd /var/www/html
+        php artisan config:clear >/dev/null
+        php artisan migrate --force
+        # Its own UserSeeder uses a fixed password, so this makes the admin from
+        # ADMIN_EMAIL and ADMIN_PASSWORD, only while there is no account yet.
+        php -r '
+          require "vendor/autoload.php";
+          (require "bootstrap/app.php")->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+          if (App\Models\User::query()->exists()) { exit(0); }
+          App\Actions\User\CreateUser::execute(["name" => "Admin", "email" => getenv("ADMIN_EMAIL"), "password" => getenv("ADMIN_PASSWORD"), "email_verified_at" => now()]);
+          echo "[cloudgate] admin account created for ", getenv("ADMIN_EMAIL"), PHP_EOL;
+        '
+        exec /usr/local/bin/entrypoint.sh
+    environment:
+      APP_NAME: TryPost
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: base64:${APP_KEY}
+      APP_URL: ${TRYPOST_URL}
+      SELF_HOSTED: "true"
+      TRYPOST_TARGET: production
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Cloudgate's proxy sits in front; trust its X-Forwarded-* headers.
+      TRUSTED_PROXIES: "*"
+      DB_CONNECTION: pgsql
+      DB_HOST: trypost-db
+      DB_PORT: "5432"
+      DB_DATABASE: trypost
+      DB_USERNAME: trypost
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: trypost-redis
+      REDIS_PORT: "6379"
+      QUEUE_CONNECTION: redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: database
+      BROADCAST_CONNECTION: reverb
+      # The app key must match the one built into the published image.
+      REVERB_APP_ID: "1001"
+      REVERB_APP_KEY: trypost-reverb-key
+      REVERB_APP_SECRET: ${REVERB_APP_SECRET}
+      REVERB_HOST: localhost
+      REVERB_PORT: "8080"
+      REVERB_SCHEME: http
+      FILESYSTEM_DISK: public
+      # Emails go to the container log until SMTP is set (MAIL_MAILER: smtp,
+      # MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD).
+      MAIL_MAILER: ${MAIL_MAILER:-log}
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
+      MAIL_FROM_NAME: TryPost
+      # Social networks (optional; each needs its own developer app).
+      LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID:-}
+      LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET:-}
+      X_CLIENT_ID: ${X_CLIENT_ID:-}
+      X_CLIENT_SECRET: ${X_CLIENT_SECRET:-}
+      FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID:-}
+      FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET:-}
+      INSTAGRAM_CLIENT_ID: ${INSTAGRAM_CLIENT_ID:-}
+      INSTAGRAM_CLIENT_SECRET: ${INSTAGRAM_CLIENT_SECRET:-}
+      THREADS_CLIENT_ID: ${THREADS_CLIENT_ID:-}
+      THREADS_CLIENT_SECRET: ${THREADS_CLIENT_SECRET:-}
+      TIKTOK_CLIENT_ID: ${TIKTOK_CLIENT_ID:-}
+      TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET:-}
+      PINTEREST_CLIENT_ID: ${PINTEREST_CLIENT_ID:-}
+      PINTEREST_CLIENT_SECRET: ${PINTEREST_CLIENT_SECRET:-}
+      # YouTube (and Google sign-in).
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      # Optional AI writing help.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    volumes:
+      - trypost-storage:/var/www/html/storage/app
+      - trypost-keys:/var/www/html/storage/passport
+    # The image's own healthcheck.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1/up || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+
+  trypost-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: trypost
+      POSTGRES_USER: trypost
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - trypost-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trypost -d trypost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  trypost-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - trypost-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  trypost-storage:
+  trypost-keys:
+  trypost-db-data:
+  trypost-redis-data:

@@ -1,0 +1,6 @@
+SMTP_HOST: smtp.example.com
+SMTP_PORT: "587"
+SMTP_USER: lastsignal@example.com
+SMTP_PASS: test-smtp-password
+SMTP_FROM_EMAIL: lastsignal@example.com
+SMTP_DOMAIN: example.com

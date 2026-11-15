@@ -1,0 +1,383 @@
+# From Docs' documentation/examples/compose/compose.yaml at v6.1.0 (with its
+# env.d/production.dist files), plus the Keycloak and MinIO examples beside it,
+# because Docs signs people in only through an OpenID Connect provider and
+# keeps files in S3 storage. Changes from the examples:
+#   - images pinned; no published ports; named volumes;
+#   - the S3 storage is RustFS (the MinIO image the example used is no longer
+#     published) and is reached only inside the stack, as Docs allows;
+#   - the backend reaches Keycloak's token, user and key endpoints inside the
+#     stack; browsers go to Keycloak's own web address to sign in;
+#   - one-off containers do the manual steps of the install guide: make the
+#     signing keys, create the collaboration server's schema, run the
+#     migrations, create the bucket, and import a Keycloak realm with the
+#     Docs client and the first user;
+#   - the Celery worker that Docs' Helm chart runs (mention emails, access
+#     changes), which the compose example leaves out.
+# Cloudgate gives two web addresses: Docs itself (docs) and the sign-in
+# server (docs-keycloak).
+
+x-docs-backend: &docs-backend
+  image: lasuite/impress-backend:v6.1.0
+  user: "1000"
+  restart: unless-stopped
+  environment: &docs-backend-env
+    DJANGO_CONFIGURATION: Production
+    DJANGO_SETTINGS_MODULE: impress.settings
+    DJANGO_ALLOWED_HOSTS: ${DOCS_HOST}
+    DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+    PYTHONPATH: /app
+    WEB_CONCURRENCY: "2"
+    LOGGING_LEVEL_HANDLERS_CONSOLE: ERROR
+    LOGGING_LEVEL_LOGGERS_ROOT: INFO
+    LOGGING_LEVEL_LOGGERS_APP: INFO
+    # Database and caches
+    DB_HOST: docs-db
+    DB_NAME: docs
+    DB_USER: docs
+    DB_PASSWORD: ${DB_PASSWORD}
+    DB_PORT: "5432"
+    REDIS_URL: redis://docs-redis:6379/0
+    DJANGO_CELERY_BROKER_URL: redis://docs-redis:6379/0
+    # Signs the calls made to the collaboration and conversion servers
+    JWT_PRIVATE_KEY_FILE: /keys/private.pem
+    YHUB_API_BASE_URL: http://docs-yhub:3002
+    Y_PROVIDER_API_BASE_URL: http://docs-y-provider:4444/api/
+    Y_PROVIDER_API_KEY: ${Y_PROVIDER_API_KEY}
+    COLLABORATION_SERVER_ORIGIN: ${DOCS_URL}
+    # Email (invitations, mentions). Without a host the backend logs emails
+    # instead of sending them; see the start command.
+    DJANGO_EMAIL_HOST: ${SMTP_HOST:-}
+    DJANGO_EMAIL_PORT: ${SMTP_PORT:-587}
+    DJANGO_EMAIL_HOST_USER: ${SMTP_USER:-}
+    DJANGO_EMAIL_HOST_PASSWORD: ${SMTP_PASSWORD:-}
+    DJANGO_EMAIL_FROM: ${SMTP_FROM:-}
+    DJANGO_EMAIL_USE_TLS: "true"
+    DJANGO_EMAIL_BRAND_NAME: Docs
+    DJANGO_EMAIL_LOGO_IMG: ${DOCS_URL}/assets/logo-suite-numerique.png
+    DJANGO_EMAIL_URL_APP: ${DOCS_URL}
+    # Files, in the stack's own S3 storage
+    AWS_S3_ENDPOINT_URL: http://docs-s3:9000
+    AWS_S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
+    AWS_S3_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
+    AWS_STORAGE_BUCKET_NAME: docs-media-storage
+    MEDIA_BASE_URL: ${DOCS_URL}
+    # Sign-in through the bundled Keycloak: the browser goes to its web
+    # address, the backend talks to it inside the stack.
+    OIDC_OP_AUTHORIZATION_ENDPOINT: ${KEYCLOAK_URL}/realms/docs/protocol/openid-connect/auth
+    OIDC_OP_LOGOUT_ENDPOINT: ${KEYCLOAK_URL}/realms/docs/protocol/openid-connect/logout
+    OIDC_OP_TOKEN_ENDPOINT: http://docs-keycloak:8080/realms/docs/protocol/openid-connect/token
+    OIDC_OP_USER_ENDPOINT: http://docs-keycloak:8080/realms/docs/protocol/openid-connect/userinfo
+    OIDC_OP_JWKS_ENDPOINT: http://docs-keycloak:8080/realms/docs/protocol/openid-connect/certs
+    OIDC_RP_CLIENT_ID: docs
+    OIDC_RP_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+    OIDC_RP_SIGN_ALGO: RS256
+    OIDC_RP_SCOPES: openid email profile
+    OIDC_USERINFO_FULLNAME_FIELDS: given_name,family_name
+    OIDC_USERINFO_SHORTNAME_FIELD: given_name
+    OIDC_REDIRECT_ALLOWED_HOSTS: ${DOCS_HOST}
+    LOGIN_REDIRECT_URL: ${DOCS_URL}
+    LOGIN_REDIRECT_URL_FAILURE: ${DOCS_URL}
+    LOGOUT_REDIRECT_URL: ${DOCS_URL}
+  volumes:
+    - docs-backend-key:/keys:ro
+
+services:
+  # The web address. Docs' frontend image is nginx: it serves the editor and
+  # routes /api, /admin, /media and the collaboration websocket
+  # (files/nginx/docs.conf).
+  docs:
+    image: lasuite/impress-frontend:v6.1.0
+    user: "101"
+    restart: unless-stopped
+    volumes:
+      - ../files/nginx/docs.conf:/etc/nginx/conf.d/docs.conf:ro
+    depends_on:
+      docs-backend:
+        condition: service_healthy
+      docs-yhub:
+        condition: service_healthy
+      docs-s3:
+        condition: service_healthy
+
+  docs-backend:
+    <<: *docs-backend
+    # Docs' own start command, after choosing the email backend: with no SMTP
+    # host, emails are written to the log instead of failing the request.
+    command:
+      - /bin/sh
+      - -c
+      - >-
+        if [ -z "$$DJANGO_EMAIL_HOST" ]; then export DJANGO_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend; fi;
+        exec uvicorn --app-dir=/app --host=0.0.0.0 --timeout-graceful-shutdown=300 --limit-max-requests=20000 --lifespan=off impress.asgi:application
+    healthcheck:
+      test: ["CMD", "python", "manage.py", "check"]
+      interval: 15s
+      timeout: 30s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      docs-migrate:
+        condition: service_completed_successfully
+      docs-redis:
+        condition: service_healthy
+      docs-s3-init:
+        condition: service_completed_successfully
+
+  # Sends emails and applies access changes in the background (the Helm
+  # chart's celery-worker).
+  docs-celery:
+    <<: *docs-backend
+    command:
+      - /bin/sh
+      - -c
+      - >-
+        if [ -z "$$DJANGO_EMAIL_HOST" ]; then export DJANGO_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend; fi;
+        exec celery -A impress.celery_app worker -l INFO --concurrency=2 -n impress@%h
+    depends_on:
+      docs-migrate:
+        condition: service_completed_successfully
+      docs-redis:
+        condition: service_healthy
+
+  # Runs at each start: the database migrations (the install guide's manual
+  # step), then makes the first admin on the first start (MAKE_ADMIN).
+  docs-migrate:
+    <<: *docs-backend
+    restart: "no"
+    environment:
+      <<: *docs-backend-env
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Makes the person who set the app up a Docs superuser, once. They sign
+      # in to Docs through Keycloak with the same email (the backend links the
+      # two by email); /admin takes the email and ADMIN_PASSWORD. Later starts
+      # change nothing, so a changed password is kept.
+      MAKE_ADMIN: |
+        import os
+        from core.models import User
+        email = os.environ["ADMIN_EMAIL"].strip()
+        if User.objects.filter(admin_email__iexact=email).exists() or User.objects.filter(email__iexact=email).exists():
+            print("admin user already exists")
+        else:
+            user = User(admin_email=email, email=email, is_staff=True, is_superuser=True)
+            user.set_password(os.environ["ADMIN_PASSWORD"])
+            user.save()
+            print("admin user created")
+    command:
+      - /bin/sh
+      - -c
+      - python manage.py migrate --noinput && python manage.py shell -c "$$MAKE_ADMIN"
+    volumes:
+      - docs-backend-key:/keys:ro
+    depends_on:
+      docs-db:
+        condition: service_healthy
+      docs-keys:
+        condition: service_completed_successfully
+
+  # Runs at each start: makes the two RS256 signing keys on the first start
+  # (/keys/backend/private.pem for the backend, /keys/yhub/yhub-private.pem
+  # for the collaboration server; the install guide makes them with openssl)
+  # and leaves them alone afterwards.
+  docs-keys:
+    image: lasuite/impress-backend:v6.1.0
+    user: "0:0"
+    restart: "no"
+    entrypoint: ["python", "-c"]
+    command:
+      - |
+        import os
+        from cryptography.hazmat.primitives import serialization
+        from cryptography.hazmat.primitives.asymmetric import rsa
+        for path in ("/keys/backend/private.pem", "/keys/yhub/yhub-private.pem"):
+            if not os.path.exists(path):
+                key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+                with open(path, "wb") as f:
+                    f.write(key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()))
+                print("made", path)
+            os.chown(path, 1000, 1000)
+            os.chmod(path, 0o600)
+    volumes:
+      - docs-backend-key:/keys/backend
+      - docs-yhub-key:/keys/yhub
+
+  # The collaboration server: syncs the editors and holds the content of the
+  # documents in its own database (yhub) on docs-db.
+  docs-yhub:
+    image: lasuite/impress-yhub:v6.1.0
+    user: "1000:1000"
+    restart: unless-stopped
+    environment: &yhub-env
+      PORT: "3002"
+      REDIS: redis://docs-yhub-valkey:6379
+      REDIS_PREFIX: yhub
+      POSTGRES: postgres://docs:${DB_PASSWORD}@docs-db:5432/yhub
+      # The backend's API, through the stack-only server in files/nginx/docs.conf
+      COLLABORATION_BACKEND_BASE_URL: http://docs:8084
+      COLLABORATION_SERVER_ORIGIN: ${DOCS_URL}
+      Y_PROVIDER_API_KEY: ${Y_PROVIDER_API_KEY}
+      YHUB_JWT_PRIVATE_KEY_FILE: /keys/yhub-private.pem
+    volumes:
+      - docs-yhub-key:/keys:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3002/collaboration/ready/v1').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      docs-yhub-init:
+        condition: service_completed_successfully
+      docs-yhub-valkey:
+        condition: service_healthy
+
+  # Runs at each start: creates or updates the collaboration server's database
+  # schema (the install guide's `node dist/init-db.js` step; safe to repeat).
+  docs-yhub-init:
+    image: lasuite/impress-yhub:v6.1.0
+    user: "1000:1000"
+    restart: "no"
+    environment: *yhub-env
+    command: ["node", "dist/init-db.js"]
+    volumes:
+      - docs-yhub-key:/keys:ro
+    depends_on:
+      docs-db:
+        condition: service_healthy
+      docs-keys:
+        condition: service_completed_successfully
+
+  # Converts documents to and from Markdown, HTML, PDF and Word.
+  docs-y-provider:
+    image: lasuite/impress-y-provider:v6.1.0
+    user: "1000"
+    restart: unless-stopped
+    environment:
+      Y_PROVIDER_API_KEY: ${Y_PROVIDER_API_KEY}
+      COLLABORATION_SERVER_ORIGIN: ${DOCS_URL}
+      COLLABORATION_BACKEND_BASE_URL: http://docs:8084
+      COLLABORATION_LOGGING: "true"
+
+  docs-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: docs
+      POSTGRES_USER: docs
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - docs-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d docs -U docs"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  docs-redis:
+    image: redis:8.6.8-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # The collaboration server's own store: it holds edits not yet written to
+  # the database, so it keeps an append-only file and never evicts them.
+  docs-yhub-valkey:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    command: ["valkey-server", "--maxmemory-policy", "volatile-lru", "--appendonly", "yes", "--appendfsync", "everysec"]
+    volumes:
+      - docs-yhub-valkey-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # S3-compatible storage for images and files in documents, and versions.
+  docs-s3:
+    image: rustfs/rustfs:1.0.5
+    restart: unless-stopped
+    command: ["--access-key", "${S3_ACCESS_KEY}", "--secret-key", "${S3_SECRET_KEY}", "/data"]
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_KEY}
+      RUSTFS_CONSOLE_ENABLE: "false"
+    volumes:
+      - docs-s3-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9000/health >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  # Runs at each start: creates the docs-media-storage bucket with versioning,
+  # as Docs' MinIO example does.
+  docs-s3-init:
+    image: rustfs/rc:v0.1.37
+    restart: "no"
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_KEY}
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - >-
+        set -eu;
+        rc alias set docs http://docs-s3:9000 "$$RUSTFS_ACCESS_KEY" "$$RUSTFS_SECRET_KEY";
+        rc bucket create docs/docs-media-storage --ignore-existing --with-versioning;
+        rc bucket version enable docs/docs-media-storage
+    depends_on:
+      docs-s3:
+        condition: service_healthy
+
+  # Sign-in server (OpenID Connect), as in Docs' Keycloak example. On the
+  # first start it imports the "docs" realm (files/keycloak/docs-realm.json):
+  # the Docs client and the first user, who can add more users at
+  # <this address>/admin/docs/console/.
+  docs-keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    restart: unless-stopped
+    command: ["start", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: docs-keycloak-db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_HOSTNAME: ${KEYCLOAK_URL}
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      JAVA_OPTS_KC_HEAP: -Xms128m -Xmx512m
+    volumes:
+      - ../files/keycloak/docs-realm.json:/opt/keycloak/data/import/docs-realm.json:ro
+    depends_on:
+      docs-keycloak-db:
+        condition: service_healthy
+
+  docs-keycloak-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - docs-keycloak-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d keycloak -U keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  docs-backend-key:
+  docs-yhub-key:
+  docs-db-data:
+  docs-yhub-valkey-data:
+  docs-s3-data:
+  docs-keycloak-db-data:

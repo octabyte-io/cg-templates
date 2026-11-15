@@ -1,0 +1,83 @@
+# From the project's docker/docker-compose.yml and docker-compose-base.yml
+# (github.com/openboxes/openboxes, tag v0.9.9): the app, MariaDB 10 and nginx.
+services:
+  # The address points here. Redirects / to /openboxes/ and forwards the rest
+  # to the app. It starts once the admin password has been set, so the app
+  # never answers with its default admin/password login.
+  openboxes:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      openboxes-app:
+        condition: service_healthy
+      openboxes-admin:
+        condition: service_completed_successfully
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  # The Grails app with its embedded Tomcat on port 8080, under /openboxes.
+  # The first start runs the database migrations and takes several minutes.
+  openboxes-app:
+    image: ghcr.io/openboxes/openboxes:v0.9.9
+    restart: unless-stopped
+    depends_on:
+      openboxes-db:
+        condition: service_healthy
+    environment:
+      DATASOURCE_USERNAME: openboxes
+      DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      DATASOURCE_URL: jdbc:mysql://openboxes-db/openboxes?serverTimezone=UTC&useSSL=false
+      GRAILS_SERVER_URL: ${SERVER_URL}
+      # Trust the proxy's X-Forwarded-* headers, so redirects keep https.
+      SERVER_USE_FORWARD_HEADERS: "true"
+      JAVA_TOOL_OPTIONS: -Xms1024m -Xmx2048m -XX:+UseParallelGC -Djava.awt.headless=true
+    volumes:
+      - openboxes-uploads:/app/uploads
+    healthcheck:
+      # The official check; curl is in the image.
+      test: ["CMD-SHELL", "curl --fail --silent localhost:8080/openboxes/health | grep UP || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15m
+
+  # OpenBoxes creates the admin account as admin / password on its first start.
+  # Once the app is up, this replaces that password with the one Cloudgate
+  # generated (OpenBoxes stores base64(SHA-1(password))). It only touches the
+  # account while it still has the default password, so later runs change nothing.
+  openboxes-admin:
+    image: mariadb:10.11.19
+    restart: "no"
+    depends_on:
+      openboxes-app:
+        condition: service_healthy
+    environment:
+      MYSQL_PWD: ${DB_PASSWORD}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        mariadb -h openboxes-db -u openboxes openboxes -e
+        "UPDATE \`user\` SET password = TO_BASE64(UNHEX(SHA1('$$ADMIN_PASSWORD')))
+        WHERE username = 'admin' AND password IN ('password', 'W6ph5Mm5Pz8GgiULbPgzG37mj9g=');"
+
+  openboxes-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: openboxes
+      MARIADB_USER: openboxes
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - openboxes-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  openboxes-uploads:
+  openboxes-db-data:

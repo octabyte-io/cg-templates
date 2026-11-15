@@ -1,0 +1,23 @@
+name: TeamMapper
+description: "Self-hosted TeamMapper: an open-source MindMeister alternative for mind maps your team edits together live, shared by link with no accounts."
+version: "0.4.1-1"
+tags: [mind map, collaborative mind map, mindmeister alternative, coggle alternative, brainstorming, mind mapping tool]
+links:
+  website: https://teammapper.org
+  docs: https://github.com/b310-digital/teammapper#readme
+  source: https://github.com/b310-digital/teammapper
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  POSTGRES_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  DELETE_AFTER_DAYS:
+    ask:
+      label: Delete unused maps after (days)
+      description: A map nobody has opened or changed for this many days is deleted in a nightly clean-up.
+      default: "30"
+      pattern: "[1-9][0-9]{0,4}"
+      required: false
+domains:
+  - { service: teammapper, port: 3000 }

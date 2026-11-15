@@ -1,0 +1,27 @@
+services:
+  seerr:
+    image: ghcr.io/seerr-team/seerr:v3.5.2
+    restart: unless-stopped
+    init: true
+    environment:
+      LOG_LEVEL: info
+      TZ: ${TIMEZONE:-Etc/UTC}
+      PORT: 5055
+    volumes:
+      # Settings (settings.json), the SQLite database and logs. The setup
+      # wizard (sign in with Jellyfin, Plex or Emby) runs on first visit.
+      - seerr-config:/app/config
+    # From the official compose file; the image is Alpine, so it has wget.
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1"]
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+
+volumes:
+  seerr-config:

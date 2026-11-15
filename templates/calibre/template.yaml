@@ -1,0 +1,25 @@
+name: calibre
+description: "Self-hosted calibre puts the full e-book manager in your browser: organise your library, fix book details and covers, convert and edit e-books."
+version: "9.18.0"
+tags: ["ebook manager", "calibre in browser", "ebook converter", "kindle alternative", "epub editor", "ebook library"]
+links:
+  website: https://calibre-ebook.com
+  docs: https://manual.calibre-ebook.com
+  source: https://github.com/kovidgoyal/calibre
+cloudgate: 0.1.0
+compose: app
+# The full Calibre desktop is streamed to the browser; LinuxServer.io suggests
+# about 2 GB of memory for its desktop images.
+size: medium
+inputs:
+  # The browser asks for this user name and password before it shows the desktop.
+  CALIBRE_USER: { value: "calibre" }
+  CALIBRE_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in Calibre, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: calibre, port: 8080 }

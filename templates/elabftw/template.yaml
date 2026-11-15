@@ -1,0 +1,25 @@
+name: eLabFTW
+description: "eLabFTW is a free, self-hosted electronic lab notebook for research teams: experiments, lab inventory, equipment booking and trusted timestamps."
+version: "6.0.9"
+tags: [electronic lab notebook, eln, labarchives alternative, benchling alternative, lab inventory, research data management, open source lab notebook]
+links:
+  website: https://www.elabftw.net
+  docs: https://doc.elabftw.net
+  source: https://github.com/elabftw/elabftw
+cloudgate: 0.1.0
+compose: app
+# MySQL plus PHP, which eLabFTW allows up to 2 GB for big PDF exports and images.
+size: medium
+inputs:
+  SITE_URL: { value: "{{domains.elabftw.url}}" }
+  SECRET_KEY_SEED: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The lab's time zone, as an IANA name such as Europe/Berlin. Dates and timestamps on entries use it.
+      default: UTC
+      required: false
+domains:
+  - { service: elabftw, port: 8080 }

@@ -1,0 +1,39 @@
+name: Calnode
+description: "Calnode is a light, self-hosted scheduling app: share a booking link so clients pick a free time on your calendar, like Calendly."
+version: "0.14.0"
+tags: [calendly alternative, booking page, scheduling links, appointment scheduling, meeting scheduler, open source scheduling]
+links:
+  website: https://calnode.com
+  docs: https://github.com/Calnode/calnode/blob/v0.14.0/DEPLOY.md
+  source: https://github.com/Calnode/calnode
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  BASE_URL: { value: "{{domains.calnode.url}}" }
+  CALNODE_ENCRYPTION_KEY: { generate: hex }
+  CALNODE_RECOVERY_SECRET: { generate: hex }
+  GOOGLE_CLIENT_ID:
+    ask:
+      label: Google OAuth client ID
+      description: Optional. Lets people sign in with Google and connect Google Calendar. Create an OAuth client in Google Cloud Console; you can also add it later in Calnode's Settings, Google OAuth.
+      required: false
+  GOOGLE_CLIENT_SECRET:
+    ask:
+      label: Google OAuth client secret
+      description: Optional. The secret of the Google OAuth client above.
+      secret: true
+      required: false
+  MICROSOFT_CLIENT_ID:
+    ask:
+      label: Microsoft OAuth client ID
+      description: Optional. Lets people sign in with Microsoft and connect Outlook or Microsoft 365 calendars. Create an app registration in the Microsoft Entra admin center. Calnode has no settings page for this, so set it here or on the app's variables page.
+      required: false
+  MICROSOFT_CLIENT_SECRET:
+    ask:
+      label: Microsoft OAuth client secret
+      description: Optional. The secret of the Microsoft app registration above.
+      secret: true
+      required: false
+domains:
+  - { service: calnode, port: 3000 }

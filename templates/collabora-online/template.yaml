@@ -1,0 +1,22 @@
+name: Collabora Online
+description: "Collabora Online is a self-hosted office suite built on LibreOffice: edit Word, Excel, PowerPoint and OpenDocument files together in Nextcloud or Seafile."
+version: "26.04.6.1.1"
+tags: [microsoft 365 alternative, google docs alternative, online office suite, nextcloud office, collaborative document editing, libreoffice online, collabora code]
+links:
+  website: https://www.collaboraonline.com/code/
+  docs: https://sdk.collaboraonline.com/docs/installation/CODE_Docker_image.html
+  source: https://github.com/CollaboraOnline/online
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The file app allowed to open documents here (Collabora's WOPI host allow-list).
+  FILE_APP_URL:
+    ask:
+      label: File app address
+      description: The web address of the Nextcloud or Seafile that will open documents here, for example https://cloud.yourcompany.com. Only that app may use this editor.
+      format: url
+  # Sign-in for Collabora's admin console at /browser/dist/admin/admin.html.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: collabora, port: 9980 }
