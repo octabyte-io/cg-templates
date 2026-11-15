@@ -1,0 +1,56 @@
+# Based on the official PostgreSQL sample (orthanc-server/orthanc-setup-samples,
+# docker/postgresql): Orthanc keeps its index in PostgreSQL and the DICOM files
+# in a volume. Only the web interface and REST API (port 8042) get the web
+# address; the DICOM port 4242 is not published.
+services:
+  orthanc:
+    image: orthancteam/orthanc:26.11.0
+    restart: unless-stopped
+    depends_on:
+      orthanc-db:
+        condition: service_healthy
+    environment:
+      # Creates the user "orthanc" with this password; every page and API call
+      # needs it.
+      ORTHANC_PASSWORD: ${ORTHANC_PASSWORD}
+      ORTHANC__NAME: Orthanc
+      ORTHANC__POSTGRESQL: |
+        {
+          "Host": "orthanc-db",
+          "Port": 5432,
+          "Database": "orthanc",
+          "Username": "orthanc",
+          "Password": "${POSTGRES_PASSWORD}"
+        }
+      # Viewers and the DICOMweb API (the OHIF viewer needs DICOMweb).
+      DICOM_WEB_PLUGIN_ENABLED: "true"
+      STONE_WEB_VIEWER_PLUGIN_ENABLED: "true"
+      OHIF_PLUGIN_ENABLED: "true"
+    volumes:
+      - orthanc-storage:/var/lib/orthanc/db
+    healthcheck:
+      # Ships in the image: calls /changes with the configured user.
+      test: ["CMD", "/probes/test-aliveness.py"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  orthanc-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: orthanc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: orthanc
+    volumes:
+      - orthanc-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orthanc -d orthanc"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  orthanc-storage:
+  orthanc-db-data:

@@ -1,0 +1,5 @@
+SUPER_ADMIN_EMAIL: admin@example.com
+EMAIL_FROM: school@example.com
+EMAIL_HOST: smtp.example.com
+EMAIL_USER: courselit
+EMAIL_PASS: example-password

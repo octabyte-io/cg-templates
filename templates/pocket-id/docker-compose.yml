@@ -1,0 +1,26 @@
+services:
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:v2.19.2
+    restart: unless-stopped
+    environment:
+      APP_URL: ${APP_URL}
+      # Encrypts the signing keys kept in the data volume. Never change it
+      # after setup, or Pocket ID can no longer read them.
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      # Cloudgate puts a reverse proxy in front of the app; trust its
+      # forwarded headers so sign-in logs show the visitor's real address.
+      TRUST_PROXY: "true"
+      PUID: "1000"
+      PGID: "1000"
+    volumes:
+      # The SQLite database, signing keys and uploaded logos.
+      - pocket-id-data:/app/data
+    healthcheck:
+      test: ["CMD", "/app/pocket-id", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  pocket-id-data:
