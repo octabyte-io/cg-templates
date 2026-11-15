@@ -1,0 +1,24 @@
+name: Libredesk
+description: "Libredesk is a self-hosted help desk: answer customer email, website live chat and WhatsApp together from one shared team inbox, with no fee per agent."
+version: "2.9.2"
+tags: [help desk, shared inbox, customer support, live chat, help scout alternative, front alternative, zendesk alternative]
+links:
+  website: https://libredesk.io
+  docs: https://docs.libredesk.io
+  source: https://github.com/abhinavxd/libredesk
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ROOT_URL: { value: "{{domains.libredesk.url}}" }
+  # Must be exactly 32 characters; a generated password is 32 letters and digits.
+  ENCRYPTION_KEY: { generate: password }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD:
+    ask:
+      label: Admin password
+      description: The password of Libredesk's admin account, which signs in with the name "System". 10 to 72 characters, with an upper-case letter, a lower-case letter, a digit and a symbol, as Libredesk requires.
+      secret: true
+      pattern: "(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{10,72}"
+domains:
+  - { service: libredesk, port: 9000 }

@@ -1,0 +1,13 @@
+name: Readeck
+description: "Readeck is a self-hosted read-it-later app: save articles, highlight and add notes, export to e-books, and import your Pocket or Instapaper list."
+version: "0.23.5"
+tags: [pocket alternative, read it later, instapaper alternative, self-hosted read later app, article highlights, save articles for later, epub export]
+links:
+  website: https://readeck.org
+  docs: https://readeck.org/en/docs/
+  source: https://codeberg.org/readeck/readeck
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: readeck, port: 8000 }

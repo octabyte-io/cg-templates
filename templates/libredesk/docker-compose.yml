@@ -1,0 +1,97 @@
+# From Libredesk's official docker-compose.yml: the app, PostgreSQL and Redis. Settings come
+# from LIBREDESK_* environment variables (a__b is the config key a.b) instead of config.toml.
+x-libredesk-env: &libredesk-env
+  LIBREDESK_APP__ENV: prod
+  LIBREDESK_APP__LOG_LEVEL: info
+  LIBREDESK_APP__ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+  LIBREDESK_DB__HOST: libredesk-db
+  LIBREDESK_DB__USER: libredesk
+  LIBREDESK_DB__PASSWORD: ${DB_PASSWORD}
+  LIBREDESK_DB__DATABASE: libredesk
+  LIBREDESK_REDIS__ADDRESS: libredesk-redis:6379
+
+services:
+  libredesk:
+    image: libredesk/libredesk:v2.9.2
+    restart: unless-stopped
+    depends_on:
+      libredesk-set-url:
+        condition: service_completed_successfully
+    environment:
+      <<: *libredesk-env
+    volumes:
+      - libredesk-uploads:/libredesk/uploads
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  # Runs at each start, before the app: creates the database schema and the admin account
+  # "System" on the first start (with ADMIN_PASSWORD), then applies any upgrade migrations.
+  libredesk-install:
+    image: libredesk/libredesk:v2.9.2
+    restart: "no"
+    depends_on:
+      libredesk-db:
+        condition: service_healthy
+      libredesk-redis:
+        condition: service_healthy
+    environment:
+      <<: *libredesk-env
+      LIBREDESK_SYSTEM_USER_PASSWORD: ${ADMIN_PASSWORD}
+    command: [sh, -c, "./libredesk --install --idempotent-install --yes && ./libredesk --upgrade --yes"]
+
+  # Points Libredesk's "Root URL" setting at the app's web address, but only while it still
+  # has the installer's default (http://localhost:9000); a URL changed in Settings is kept.
+  libredesk-set-url:
+    image: postgres:17.11-alpine
+    restart: "no"
+    depends_on:
+      libredesk-install:
+        condition: service_completed_successfully
+    environment:
+      PGHOST: libredesk-db
+      PGUSER: libredesk
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: libredesk
+      ROOT_URL: ${ROOT_URL}
+    command:
+      - sh
+      - -c
+      - >-
+        psql -v ON_ERROR_STOP=1
+        -c "UPDATE settings SET value = to_jsonb('$$ROOT_URL'::text) WHERE key = 'app.root_url' AND value = '\"http://localhost:9000\"'::jsonb"
+        -c "UPDATE settings SET value = to_jsonb('$$ROOT_URL/favicon.ico'::text) WHERE key = 'app.favicon_url' AND value = '\"http://localhost:9000/favicon.ico\"'::jsonb"
+
+  libredesk-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: libredesk
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: libredesk
+    volumes:
+      - libredesk-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U libredesk -d libredesk"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  libredesk-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - libredesk-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  libredesk-uploads:
+  libredesk-db-data:
+  libredesk-redis-data:

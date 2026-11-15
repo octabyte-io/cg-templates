@@ -1,0 +1,28 @@
+name: Dawarich
+description: "Dawarich is self-hosted location history: your routes, visits and trips on a private map and timeline, replacing Google Maps Timeline."
+version: "1.22.0"
+tags: [google timeline alternative, location history, location tracker, gps tracking, google takeout import, family location sharing]
+links:
+  website: https://dawarich.app
+  docs: https://dawarich.app/docs/intro
+  source: https://github.com/Freika/dawarich
+cloudgate: 0.1.0
+compose: app
+# Rails app with embedded Sidekiq, PostGIS and Redis; imports of large location
+# histories are memory-hungry.
+size: medium
+inputs:
+  APPLICATION_HOSTS: { value: "{{domains.dawarich.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  OTP_ENCRYPTION_PRIMARY_KEY: { generate: hex }
+  OTP_ENCRYPTION_DETERMINISTIC_KEY: { generate: hex }
+  OTP_ENCRYPTION_KEY_DERIVATION_SALT: { generate: hex }
+  TIME_ZONE:
+    ask:
+      label: Time zone
+      description: The time zone your trips and stats are shown in, as a tz database name such as Europe/Berlin or America/New_York.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: dawarich, port: 3000 }

@@ -1,0 +1,16 @@
+name: ownCloud Infinite Scale
+description: "ownCloud Infinite Scale is self-hosted file sync and sharing with team Spaces, share links and desktop and phone apps, replacing Dropbox or Box."
+version: "8.2.3"
+tags: [dropbox alternative, box alternative, self-hosted file sharing, owncloud, ocis, file sync, nextcloud alternative]
+links:
+  website: https://owncloud.com/infinite-scale/
+  docs: https://doc.owncloud.com/ocis/next/
+  source: https://github.com/owncloud/ocis
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  OCIS_URL: { value: "{{domains.ocis.url}}" }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: ocis, port: 9200 }

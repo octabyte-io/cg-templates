@@ -1,0 +1,31 @@
+services:
+  ocis:
+    image: owncloud/ocis:8.2.3
+    restart: unless-stopped
+    # From ownCloud's official ocis_full example: "ocis init" writes a config file
+    # with random secrets on the first start and fails on later ones (the file
+    # already exists), so its error is ignored before the server starts.
+    entrypoint: ["/bin/sh"]
+    command: ["-c", "ocis init || true; exec ocis server"]
+    environment:
+      # The address people open; oCIS's built-in sign-in service issues tokens for it.
+      OCIS_URL: ${OCIS_URL}
+      # TLS ends at Cloudgate's proxy, so oCIS itself serves plain HTTP on 9200.
+      PROXY_TLS: "false"
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+      # oCIS checks its own sign-in tokens through OCIS_URL; skip certificate
+      # verification on those internal calls so a certificate that is still
+      # being issued, or a self-signed one, does not block sign-in.
+      OCIS_INSECURE: "true"
+      # Password of the "admin" account, also used by "ocis init" on first start.
+      IDM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      IDM_CREATE_DEMO_USERS: "false"
+      PROXY_ENABLE_BASIC_AUTH: "false"
+      OCIS_LOG_LEVEL: info
+    volumes:
+      - ocis-config:/etc/ocis
+      - ocis-data:/var/lib/ocis
+
+volumes:
+  ocis-config:
+  ocis-data:

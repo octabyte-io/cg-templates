@@ -1,0 +1,25 @@
+name: Horilla
+description: "Horilla is self-hosted HR software with recruitment, onboarding, attendance, leave, payroll and performance in one, replacing BambooHR or Zoho People."
+version: "2.4.0"
+tags: [bamboohr alternative, open source hrms, hr software with payroll, zoho people alternative, leave management, attendance tracking, payroll software]
+links:
+  website: https://www.horilla.com
+  docs: https://docs.horilla.com
+  source: https://github.com/horilla/horilla-hr
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.horilla.url}}" }
+  APP_HOST: { value: "{{domains.horilla.host}}" }
+  SECRET_KEY: { generate: hex }
+  DB_INIT_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  TIME_ZONE:
+    ask:
+      label: Time zone
+      description: The time zone Horilla uses for attendance, leave and payroll dates, as a tz database name such as Europe/London or America/New_York.
+      default: UTC
+domains:
+  - { service: horilla, port: 8000 }
