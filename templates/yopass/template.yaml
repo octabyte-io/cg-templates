@@ -1,0 +1,13 @@
+name: Yopass
+description: "Self-hosted Yopass sends passwords, keys and small files as encrypted links that open once and expire, so logins stay out of email and chat."
+version: "16.1.0"
+tags: [onetimesecret alternative, one-time secret, share passwords securely, self-destructing messages, encrypted links, secret sharing]
+links:
+  website: https://yopass.se
+  docs: https://yopass.se/docs/quickstart
+  source: https://github.com/jhaals/yopass
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: yopass, port: 1337 }

@@ -1,0 +1,16 @@
+name: Baïkal
+description: "Baïkal is a self-hosted calendar and contacts server that syncs your team's calendars, to-do lists and address books to phones and computers."
+version: "0.13.0"
+tags: [google calendar alternative, icloud calendar alternative, caldav server, carddav server, calendar sync, contacts sync, self-hosted calendar]
+links:
+  website: https://sabre.io/baikal/
+  docs: https://sabre.io/baikal/install/
+  source: https://github.com/sabre-io/Baikal
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  BAIKAL_ADMIN_PASSWORD: { generate: password }
+  BAIKAL_ENCRYPTION_KEY: { generate: hex }
+domains:
+  - { service: baikal, port: 80 }

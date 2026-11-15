@@ -1,0 +1,22 @@
+name: Super Productivity
+description: "Self-hosted Super Productivity is a free to-do list, time tracker and day planner with focus timers, replacing Todoist and Sunsama."
+version: "20.0.0"
+tags: [todoist alternative, sunsama alternative, to-do list with time tracking, daily planner, time tracking, pomodoro timer, task manager]
+links:
+  website: https://super-productivity.com
+  docs: https://github.com/super-productivity/super-productivity/wiki
+  source: https://github.com/super-productivity/super-productivity
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The app's own WebDAV sync address, filled in as the default in
+  # Settings > Sync. The /webdav/ path is proxied by the app container
+  # to the webdav service.
+  WEBDAV_BASE_URL: { value: "{{domains.super-productivity.url}}/webdav/" }
+  # The sync password; you type it once in Settings > Sync on each device.
+  WEBDAV_PASSWORD: { generate: password }
+domains:
+  - { service: super-productivity, port: 80 }
+files:
+  - { path: webdav.yaml }

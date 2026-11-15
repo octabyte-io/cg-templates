@@ -12,13 +12,16 @@ apps:
   owncloud-infinite-scale:
     fit: "Files only, like Dropbox: desktop sync apps for Windows, macOS and Linux, Android and iOS apps, share links with passwords, file versions and a trash bin, plus Spaces, shared team drives whose files stay put when people leave. It runs as one program with no database to look after. It has no calendars or office suite, and editing documents in the browser needs a separate Collabora or ONLYOFFICE server."
     import: no
+  copyparty:
+    fit: "A lighter choice for sharing rather than syncing: upload files of any size in the browser, send share links with a password and expiry time, collect files through upload-only folders, and open your files as a network drive over WebDAV. It has no two-way sync, no desktop sync app, no file version history and no trash bin, and users are added in a settings file."
+    import: no
 moving: |
-  Download your Dropbox files, or let the Dropbox desktop app finish syncing, then move them into the Nextcloud desktop app's folder so they upload to your server. Shared folders and links do not carry over, so share them again in Nextcloud. With Seafile, sync a library with its desktop app and move your files into that folder in the same way. OpenCloud works the same way: install its desktop app, sync your personal space or a team Space, and move the files in. With ownCloud Infinite Scale, create a Space for each shared Dropbox folder, sync it with the ownCloud desktop app and move the files in. Uninstall the Dropbox app once everything has synced.
+  Download your Dropbox files, or let the Dropbox desktop app finish syncing, then move them into the Nextcloud desktop app's folder so they upload to your server. Shared folders and links do not carry over, so share them again in Nextcloud. With Seafile, sync a library with its desktop app and move your files into that folder in the same way. OpenCloud works the same way: install its desktop app, sync your personal space or a team Space, and move the files in. With ownCloud Infinite Scale, create a Space for each shared Dropbox folder, sync it with the ownCloud desktop app and move the files in. Uninstall the Dropbox app once everything has synced. copyparty has no sync app, so upload your downloaded Dropbox folders in the browser, where a dropped upload resumes, or copy them over WebDAV.
 faq:
   - q: "Does Nextcloud sync like Dropbox?"
     a: "Yes. Its desktop apps for Windows, macOS and Linux keep a folder in sync, and its phone apps can upload photos automatically."
-  - q: "Should I choose Nextcloud, Seafile, OpenCloud or ownCloud Infinite Scale?"
-    a: "Choose Nextcloud if you also want calendars, contacts, office editing and other apps. Choose Seafile if you only need fast, dependable file sync and sharing. Choose OpenCloud or ownCloud Infinite Scale for files only, organised into shared team drives called Spaces, with no database to look after; OpenCloud runs on a small server, and editing documents in the browser with ownCloud Infinite Scale needs a separate Collabora or ONLYOFFICE server."
+  - q: "Which Dropbox alternative should I choose?"
+    a: "Choose Nextcloud if you also want calendars, contacts, office editing and other apps. Choose Seafile if you only need fast, dependable file sync and sharing. Choose OpenCloud or ownCloud Infinite Scale for files only, organised into shared team drives called Spaces, with no database to look after; OpenCloud runs on a small server, and editing documents in the browser with ownCloud Infinite Scale needs a separate Collabora or ONLYOFFICE server. Choose copyparty if you mainly send and collect files by link and don't need folders synced to every device."
   - q: "Can I share files with people outside my company?"
     a: "Yes. Share a link, optionally with a password, an expiry date or upload-only access."
 ---

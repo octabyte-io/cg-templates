@@ -1,0 +1,72 @@
+# Based on the Overleaf Toolkit (github.com/overleaf/toolkit, lib/docker-compose.*.yml and
+# lib/config-seed at version 6.3.3), the setup Overleaf's docs call the way to run Community
+# Edition: the sharelatex image, MongoDB as a one-member replica set, and Redis with
+# append-only persistence. The toolkit's bin/up starts the replica set once; here Mongo's
+# healthcheck does the same. Sandboxed compiles (Server Pro only) stay off.
+# The first admin is created at <address>/launchpad, Overleaf's own first-run page.
+
+services:
+  overleaf:
+    image: sharelatex/sharelatex:6.3.3
+    restart: unless-stopped
+    stop_grace_period: 60s
+    depends_on:
+      overleaf-mongo:
+        condition: service_healthy
+      overleaf-redis:
+        condition: service_healthy
+    environment:
+      OVERLEAF_APP_NAME: Overleaf Community Edition
+      OVERLEAF_SITE_URL: ${OVERLEAF_SITE_URL}
+      OVERLEAF_MONGO_URL: mongodb://overleaf-mongo:27017/sharelatex?replicaSet=overleaf
+      # Same setting, read under two names by different Overleaf services.
+      OVERLEAF_REDIS_HOST: overleaf-redis
+      REDIS_HOST: overleaf-redis
+      REDIS_PORT: "6379"
+      V1_HISTORY_URL: http://localhost:3100/api
+      GIT_BRIDGE_ENABLED: "false"
+      # Needed to create project invite links.
+      OVERLEAF_INVITE_TOKEN_SECRET: ${OVERLEAF_INVITE_TOKEN_SECRET}
+      ENABLED_LINKED_FILE_TYPES: project_file,project_output_file
+      ENABLE_CONVERSIONS: "true"
+      EMAIL_CONFIRMATION_DISABLED: "true"
+      # Cloudgate serves the app over HTTPS through its proxy.
+      OVERLEAF_BEHIND_PROXY: "true"
+      OVERLEAF_SECURE_COOKIE: "true"
+    volumes:
+      # Projects, uploaded files, history and compile output.
+      - overleaf-data:/var/lib/overleaf
+
+  overleaf-mongo:
+    image: mongo:8.0.38
+    hostname: overleaf-mongo
+    restart: unless-stopped
+    command: --replSet overleaf --bind_ip_all
+    volumes:
+      - overleaf-mongo-data:/data/db
+    healthcheck:
+      # Starts the replica set on the first run (as the toolkit's bin/up does), then reports
+      # healthy once this member is the primary.
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'if (!db.isMaster().primary) { try { rs.initiate({ _id: \"overleaf\", members: [{ _id: 0, host: \"overleaf-mongo:27017\" }] }) } catch (e) {} }; quit(db.isMaster().ismaster ? 0 : 1)'"]
+      interval: 10s
+      timeout: 30s
+      retries: 20
+      start_period: 30s
+      start_interval: 5s
+
+  overleaf-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - overleaf-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  overleaf-data:
+  overleaf-mongo-data:
+  overleaf-redis-data:

@@ -1,0 +1,90 @@
+# From ClaperCo/Claper's docker-compose.yml and .env.sample (v3.3.0): the app
+# and PostgreSQL. Ports and the custom network are removed (Cloudgate routes
+# the web address); optional S3 storage and OIDC are left out, so slides are
+# kept in the claper-uploads volume.
+services:
+  claper:
+    image: ghcr.io/claperco/claper:3.3.0
+    restart: unless-stopped
+    depends_on:
+      claper-db:
+        condition: service_healthy
+    environment:
+      BASE_URL: ${BASE_URL}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      DATABASE_URL: postgres://claper:${POSTGRES_PASSWORD}@claper-db:5432/claper
+      PRESENTATION_STORAGE: local
+      PRESENTATION_STORAGE_DIR: /app/uploads
+      ENABLE_ACCOUNT_CREATION: ${ENABLE_ACCOUNT_CREATION:-false}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Optional email. Without SMTP_RELAY Claper keeps its "local" mail
+      # adapter (nothing is sent) and people sign in with their password.
+      SMTP_RELAY: ${SMTP_RELAY}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_FROM_NAME: Claper
+    # The image's own start command (migrate, seed, start), plus two steps:
+    # - email settings are switched on only when an SMTP host is given, with
+    #   implicit TLS on port 465 and STARTTLS on any other port;
+    # - Claper's seed creates the admin admin@claper.co with the password
+    #   "claper". While that account still has that password, it is changed to
+    #   ADMIN_EMAIL and ADMIN_PASSWORD, so no instance starts with a known login.
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        if [ -n "$$SMTP_RELAY" ]; then
+          export MAIL_TRANSPORT=smtp
+          if [ "$$SMTP_PORT" = "465" ]; then export SMTP_SSL=true SMTP_TLS=never; else export SMTP_SSL=false SMTP_TLS=always; fi
+        else
+          export MAIL_TRANSPORT=local
+          unset SMTP_RELAY SMTP_USERNAME SMTP_PASSWORD
+        fi
+        [ -n "$$MAIL_FROM" ] || unset MAIL_FROM
+        /app/bin/claper eval 'Claper.Release.migrate(); Claper.Release.seeds()'
+        /app/bin/claper eval '
+          Application.load(:claper)
+          {:ok, _, _} = Ecto.Migrator.with_repo(Claper.Repo, fn repo ->
+            user = Claper.Accounts.get_user_by_email("admin@claper.co")
+            if user && Claper.Accounts.User.valid_password?(user, "claper") do
+              user
+              |> Ecto.Changeset.change(
+                email: System.fetch_env!("ADMIN_EMAIL"),
+                hashed_password: Bcrypt.hash_pwd_salt(System.fetch_env!("ADMIN_PASSWORD"))
+              )
+              |> repo.update!()
+              IO.puts("Default admin moved to ADMIN_EMAIL with ADMIN_PASSWORD")
+            end
+          end)'
+        exec /app/bin/claper start
+    volumes:
+      - claper-uploads:/app/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1:4000 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  claper-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: claper
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: claper
+    volumes:
+      - claper-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U claper -d claper"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  claper-uploads:
+  claper-db-data:

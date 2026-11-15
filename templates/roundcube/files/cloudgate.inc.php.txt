@@ -1,0 +1,6 @@
+<?php
+// Read by Roundcube after its own Docker config (every *.php in /var/roundcube/config).
+// The key that encrypts each signed-in person's mail password in their session comes
+// from DES_KEY (32 random characters), which fits AES-256-CBC, the cipher Roundcube's
+// own defaults call the better choice over the legacy DES-EDE3-CBC.
+$config['cipher_method'] = 'AES-256-CBC';
