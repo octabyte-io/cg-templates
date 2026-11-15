@@ -1,0 +1,27 @@
+# Damselfly's server does not check who is asking, so this small proxy asks
+# for a username and password before anyone reaches it. Cloudgate's own proxy
+# in front handles the domain and TLS. BASIC_AUTH_HASH is the bcrypt hash of
+# ADMIN_PASSWORD, made when the container starts (see docker-compose.yml).
+#
+# Once Damselfly's own log-in is used, its pages send their own Authorization
+# header instead of the browser's saved password. So a browser that passed the
+# prompt gets a cookie holding SESSION_TOKEN, and requests carrying that
+# cookie are let through without the prompt.
+{
+	admin off
+}
+
+:80 {
+	@session header_regexp Cookie (^|;\s*)cg_session={$SESSION_TOKEN}(;|$)
+
+	route {
+		reverse_proxy @session damselfly:6363
+
+		basic_auth {
+			admin {$BASIC_AUTH_HASH}
+		}
+
+		header Set-Cookie "cg_session={$SESSION_TOKEN}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000"
+		reverse_proxy damselfly:6363
+	}
+}

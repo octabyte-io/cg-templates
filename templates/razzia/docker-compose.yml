@@ -1,0 +1,18 @@
+services:
+  # The official release workflow publishes this same image to Docker Hub
+  # (ralex91/razzia) and GHCR; GHCR has no anonymous pull rate limit.
+  razzia:
+    image: ghcr.io/ralex91/razzia:4.1.0
+    restart: unless-stopped
+    environment:
+      # The password that opens the manager screen (/manager), where quizzes
+      # are created and games are started. Players need no password.
+      MANAGER_PASSWORD: ${MANAGER_PASSWORD}
+      # Keeps manager and player sessions valid across restarts (32+ characters).
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      # Quizzes, saved results, uploaded media and branding.
+      - razzia-config:/app/config
+
+volumes:
+  razzia-config:

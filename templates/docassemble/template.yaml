@@ -1,0 +1,21 @@
+name: docassemble
+description: "Self-hosted docassemble runs guided online interviews that ask plain questions and fill in your Word and PDF templates, like Gavel or HotDocs."
+version: "1.10.15"
+tags: [document automation, document assembly, legal document automation, guided interviews, hotdocs alternative, gavel alternative, client intake]
+links:
+  website: https://docassemble.org
+  docs: https://docassemble.org/docs.html
+  source: https://github.com/jhpyle/docassemble
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to docassemble with as its administrator.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DA_HOST: { value: "{{domains.docassemble.host}}" }
+domains:
+  - { service: docassemble, port: 80 }

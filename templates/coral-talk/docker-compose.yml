@@ -1,0 +1,60 @@
+# Coral by Vox Media: the comments platform. Based on the image's own Dockerfile
+# (it listens on port 5000) and the services in the repo's docker-compose.yml
+# (MongoDB and Redis), at release v9.11.9.
+services:
+  coral:
+    image: coralproject/talk:9.11.9
+    restart: unless-stopped
+    depends_on:
+      coral-mongo:
+        condition: service_healthy
+      coral-redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "5000"
+      TRUST_PROXY: "true"
+      MONGODB_URI: mongodb://coral:${MONGO_PASSWORD}@coral-mongo:27017/coral?authSource=admin
+      MONGODB_ARCHIVE_URI: mongodb://coral:${MONGO_PASSWORD}@coral-mongo:27017/coral?authSource=admin
+      REDIS_URI: redis://:${REDIS_PASSWORD}@coral-redis:6379
+      # Signs sign-in tokens. Changing it signs everyone out.
+      SIGNING_SECRET: ${SIGNING_SECRET}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5000/api/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  coral-mongo:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: coral
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - coral-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  coral-redis:
+    image: redis:7.2.17-alpine
+    restart: unless-stopped
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - coral-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASSWORD\" redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  coral-mongo-data:
+  coral-redis-data:

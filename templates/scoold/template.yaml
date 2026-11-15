@@ -1,0 +1,22 @@
+name: Scoold
+description: "Scoold is a self-hosted Q&A site for teams and communities, like a private Stack Overflow, with votes, accepted answers, tags, reputation and search."
+version: "1.70.3"
+tags: ["self-hosted q&a", "stack overflow for teams alternative", "stack overflow clone", "knowledge sharing", "q&a platform", "internal knowledge base"]
+links:
+  website: https://scoold.com
+  docs: https://scoold.com/documentation/
+  source: https://github.com/Erudika/scoold
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.scoold.url}}" }
+  PARA_ROOT_SECRET: { generate: hex }
+  SCOOLD_APP_SECRET: { generate: hex }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: Sign up in Scoold with this email address and that account becomes the admin.
+      format: email
+domains:
+  - { service: scoold, port: 8000 }

@@ -1,0 +1,71 @@
+services:
+  babybuddy:
+    # LinuxServer.io's image, the one Baby Buddy's deployment docs point to for Docker.
+    # nginx on port 8000 in front of gunicorn. Everything (settings, SQLite database,
+    # uploaded pictures) is kept under /config.
+    image: lscr.io/linuxserver/babybuddy:v2.11.0-ls258
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 and refuses to start on a server without it.
+    # On such a server, drop the IPv6 listen lines before the image's own /init starts.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        if [ ! -e /proc/net/if_inet6 ]; then
+        sed -i '/listen \[::\]/d' /defaults/nginx/site-confs/default.conf.sample;
+        if [ -f /config/nginx/site-confs/default.conf ]; then
+        sed -i '/listen \[::\]/d' /config/nginx/site-confs/default.conf; fi; fi;
+        exec /init
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      SECRET_KEY: ${SECRET_KEY}
+      # Sign-in and every form are posted from the app's https address.
+      CSRF_TRUSTED_ORIGINS: ${APP_URL}
+    volumes:
+      - babybuddy-config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8000/login/"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 60s
+
+  # Runs once at each start, after Baby Buddy answers (its database is migrated by then).
+  # Baby Buddy creates the account "admin" with the password "admin"; on the first start
+  # this replaces that password with the generated one. Later starts find it changed
+  # and change nothing.
+  babybuddy-setup:
+    image: lscr.io/linuxserver/babybuddy:v2.11.0-ls258
+    restart: "no"
+    user: "1000:1000"
+    working_dir: /app/www/public
+    entrypoint:
+      - /lsiopy/bin/python3
+      - manage.py
+      - shell
+      - -c
+      - |
+        import os
+        from django.contrib.auth import get_user_model
+        user = get_user_model().objects.filter(username="admin").first()
+        if user is not None and user.check_password("admin"):
+            user.set_password(os.environ["ADMIN_PASSWORD"])
+            user.save()
+            print("Replaced the default admin password.")
+        else:
+            print("Admin password already changed; nothing to do.")
+    depends_on:
+      babybuddy:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: babybuddy.settings.base
+      SECRET_KEY: ${SECRET_KEY}
+      DB_NAME: /config/data/db.sqlite3
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - babybuddy-config:/config
+
+volumes:
+  babybuddy-config:

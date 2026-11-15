@@ -1,0 +1,22 @@
+services:
+  # The official all-in-one image: the web app, PostgreSQL, Redis, RabbitMQ and
+  # the background workers all run inside this one container.
+  docassemble:
+    image: jhpyle/docassemble:1.10.15
+    restart: unless-stopped
+    # docassemble backs up its database and files on shutdown; give it time.
+    stop_grace_period: 10m
+    environment:
+      DAHOSTNAME: ${DA_HOST}
+      # Cloudgate serves the app over HTTPS and forwards plain HTTP to it.
+      BEHINDHTTPSLOADBALANCER: "true"
+      # The first administrator, created only when the database is empty.
+      DA_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      DA_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # Database, uploaded files, configuration and logs are kept here and
+      # restored when the container starts.
+      - docassemble-backup:/usr/share/docassemble/backup
+
+volumes:
+  docassemble-backup:

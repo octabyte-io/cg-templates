@@ -1,0 +1,48 @@
+name: Loomio
+description: "Self-hosted Loomio is open-source group decision-making: discuss proposals, vote with reasons and record the outcome, for boards, co-ops and nonprofits."
+version: "3.16.0"
+tags: [group decision making, board voting software, online voting, consensus decision making, board meeting software, cooperative governance, polls]
+links:
+  website: https://www.loomio.com
+  docs: https://github.com/loomio/loomio/blob/master/deploy/README.md
+  source: https://github.com/loomio/loomio
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  PUBLIC_APP_URL: { value: "{{domains.loomio.url}}" }
+  CANONICAL_HOST: { value: "{{domains.loomio.host}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  SECRET_COOKIE_TOKEN: { generate: hex }
+  SERVER_API_KEY: { generate: hex }
+  RAILS_INBOUND_EMAIL_PASSWORD: { generate: hex }
+  SUPPORT_EMAIL:
+    ask:
+      label: Support email
+      description: Where people can contact the person running this Loomio, shown in the app and used as the sender of its emails.
+      format: email
+  SMTP_SERVER:
+    ask:
+      label: Email server (SMTP) address
+      description: Loomio emails a sign-in link or code to everyone, including you, so it needs an email server. Your email provider gives you this, such as smtp.mailgun.org.
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "465"
+      format: number
+  SMTP_USE_SSL:
+    ask:
+      label: Connect with SSL
+      description: Keep 1 for port 465. Clear it for port 587, which upgrades the connection with STARTTLS.
+      default: "1"
+      pattern: "1?"
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+domains:
+  - { service: loomio, port: 80 }

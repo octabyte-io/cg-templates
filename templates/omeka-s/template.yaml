@@ -1,0 +1,35 @@
+name: Omeka S
+description: "Omeka S is a free, self-hosted platform for museums, archives and libraries to catalogue their collections and publish them as public websites."
+version: "4.2.1"
+tags: [digital collections, contentdm alternative, pastperfect alternative, online museum collection, digital archive, digital exhibits, linked open data]
+links:
+  website: https://omeka.org/s/
+  docs: https://omeka.org/s/docs/user-manual/
+  source: https://github.com/omeka/omeka-s
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  # The password of the first global administrator, created on first start.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Omeka S with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  SITE_TITLE:
+    ask:
+      label: Installation title
+      description: The name shown at the top of the admin pages, such as your organisation's name. You can change it later in Settings.
+      default: Omeka S
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: omeka-s, port: 80 }

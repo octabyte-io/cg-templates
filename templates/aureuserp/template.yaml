@@ -1,0 +1,36 @@
+name: AureusERP
+description: "Self-hosted AureusERP: a free, open-source ERP for sales, CRM, stock, purchasing, manufacturing, point of sale, accounting and HR in one system."
+version: "1.8.0"
+tags: [netsuite alternative, odoo alternative, open source erp, erp for small business, inventory management, accounting software, laravel erp]
+links:
+  website: https://aureuserp.com
+  docs: https://devdocs.aureuserp.com
+  source: https://github.com/aureuserp/aureuserp
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.aureuserp.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to AureusERP with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  CURRENCY:
+    ask:
+      label: Base currency
+      description: Your company's main currency, as a three-letter code such as USD, EUR or GBP. Set when AureusERP is installed.
+      default: USD
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The company's time zone, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: aureuserp, port: 80 }
