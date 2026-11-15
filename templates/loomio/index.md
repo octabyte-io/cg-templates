@@ -37,8 +37,8 @@ switching:
 faq:
   - q: Is Loomio free?
     a: "Yes, self-hosted Loomio is free and open-source software under the AGPL-3.0 licence, with every feature included. You pay only for your server and an email sending service; the paid plans on loomio.com are for hosting, not for extra features."
-  - q: Is Loomio a good alternative to Diligent Boards?
-    a: "Yes, for the discussion and decision side of a board's work. Loomio handles proposals, votes with reasons, quorum, outcomes and minutes between meetings. It does not assemble board books, let directors annotate papers or collect e-signatures, as a board portal does."
+  - q: Should I use Loomio or Rallly to find a meeting time?
+    a: "Rallly, if finding a time is all you need. Loomio has a time poll, but as one part of a tool for group decisions, next to discussions, proposals and votes. It suits a group that already decides things in Loomio and wants its time polls in the same place."
   - q: Can Loomio run anonymous votes and elections?
     a: "Yes. Any poll can be anonymous, with results hidden until voting closes, and Loomio has ranked choice and STV elections, quorum, approval thresholds and weighted votes. It does not send text-message or paper ballots, so formal elections that need those still need an election service."
   - q: How do I sign in to Loomio the first time?
@@ -76,7 +76,7 @@ screenshots:
       url: https://github.com/loomio/loomio/blob/v3.16.0/docs/help/en/user_manual/polls/allocate/results.png
 ---
 
-Self-hosted Loomio is open-source group decision-making software: a place where a board, co-op or community group discusses a question, votes with reasons and records what it decided, instead of relying on a board portal, an election service or long email chains. Every discussion keeps its background, comments, votes and outcome together, so the reasons behind a decision are easy to find later.
+Self-hosted Loomio is open-source group decision-making software: a place where a board, co-op or community group discusses a question, votes with reasons and records what it decided, instead of losing decisions in long email chains and chat threads. Every discussion keeps its background, comments, votes and outcome together, so the reasons behind a decision are easy to find later.
 
 Members take part when it suits them, between meetings rather than only at them. A food co-op, for example, could share next year's budget with its members, run a consent proposal for a week, and close it with a written outcome that anyone can look up when the next budget comes round.
 

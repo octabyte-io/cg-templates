@@ -1,7 +1,7 @@
 name: InvoicePlane
 description: "Self-hosted InvoicePlane: free, open-source quotes and invoices for freelancers, with online payment by Stripe or PayPal and recurring billing."
 version: "1.7.2.6"
-tags: [freshbooks alternative, zoho invoice alternative, open source invoicing software, quotes and invoices, invoicing for freelancers, recurring invoices, e-invoicing]
+tags: [freshbooks alternative, wave alternative, open source invoicing software, quotes and invoices, invoicing for freelancers, recurring invoices, e-invoicing]
 links:
   website: https://invoiceplane.com
   docs: https://wiki.invoiceplane.com

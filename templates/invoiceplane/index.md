@@ -64,7 +64,7 @@ screenshots:
     caption: "Clients open their invoice from a link and can download the PDF."
 ---
 
-InvoicePlane is free, open-source, self-hosted invoicing software for sending quotes and invoices and tracking the payments against them, as an alternative to FreshBooks, Zoho Invoice or Wave. It suits freelancers, tradespeople and small agencies who want their billing on their own server with no monthly fee.
+InvoicePlane is free, open-source, self-hosted invoicing software for sending quotes and invoices and tracking the payments against them, as an alternative to FreshBooks or Wave. It suits freelancers, tradespeople and small agencies who want their billing on their own server with no monthly fee.
 
 A joinery business, for example, could quote a bakery for a new shop counter, turn the accepted quote into an invoice, and email it. The bakery opens the invoice from a link and pays the first half by card, and the dashboard shows the rest as still owed until it is paid. Regular maintenance work can go out as a recurring invoice.
 

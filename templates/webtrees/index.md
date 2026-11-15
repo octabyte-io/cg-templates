@@ -46,7 +46,7 @@ faq:
   - q: How is webtrees different from Gramps Web?
     a: webtrees is a family history website that you can open to the public or keep private, with detailed privacy settings, many chart types and PDF reports. Gramps Web is a private workspace for signed-in relatives that works with Gramps Desktop and keeps DNA match data.
   - q: How do I sign in to webtrees the first time?
-    a: Sign in with the username admin and the password Cloudgate generated for you, shown on the template's variables page. Then create a family tree or import a GEDCOM file, and review the privacy settings before inviting relatives.
+    a: Sign in with the username admin and the password Cloudgate generated for you, shown on the app's variables page in Cloudgate. Then create a family tree or import a GEDCOM file, and review the privacy settings before inviting relatives.
   - q: Is there a webtrees phone app?
     a: No, there is no official phone app, but webtrees works in the web browser on phones, tablets and computers.
 screenshots:

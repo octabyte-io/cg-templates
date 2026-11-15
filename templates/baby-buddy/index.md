@@ -57,7 +57,7 @@ screenshots:
     credit: { text: "Baby Buddy · BSD-2-Clause", url: "https://github.com/babybuddy/babybuddy/blob/v2.11.0/docs/assets/images/timeline.png" }
 ---
 
-Baby Buddy is a free, open-source, self-hosted baby tracker, a shared alternative to subscription apps like Huckleberry and Glow Baby. Parents and caregivers log feedings, sleep, diaper changes, tummy time, pumping, medication and growth, and Baby Buddy turns the entries into a dashboard, a daily timeline and charts, so you can see patterns instead of guessing.
+Baby Buddy is a free, open-source, self-hosted baby tracker, a shared alternative to subscription apps like Huckleberry. Parents and caregivers log feedings, sleep, diaper changes, tummy time, pumping, medication and growth, and Baby Buddy turns the entries into a dashboard, a daily timeline and charts, so you can see patterns instead of guessing.
 
 Everyone who helps gets their own sign-in and adds to the same log. Two parents taking turns at night, for example, can check which breast the last feed started on and how long ago it was, and a grandmother looking after the baby on Tuesdays can log naps and diapers from her phone with a caregiver account. Twins or siblings each get their own dashboard.
 

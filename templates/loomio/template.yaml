@@ -1,7 +1,7 @@
 name: Loomio
 description: "Self-hosted Loomio is open-source group decision-making: discuss proposals, vote with reasons and record the outcome, for boards, co-ops and nonprofits."
 version: "3.16.0"
-tags: [group decision making, diligent boards alternative, online voting, consensus decision making, board meeting software, cooperative governance, polls]
+tags: [group decision making, board voting software, online voting, consensus decision making, board meeting software, cooperative governance, polls]
 links:
   website: https://www.loomio.com
   docs: https://github.com/loomio/loomio/blob/master/deploy/README.md

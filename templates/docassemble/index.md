@@ -64,7 +64,7 @@ screenshots:
     credit: { text: "docassemble docs · CC BY 3.0", url: "https://docassemble.org/docs/playground.html" }
 ---
 
-docassemble is a free, open-source, self-hosted platform for guided interviews and document assembly, used in place of Gavel, HotDocs and Clio Draft. It asks people questions one screen at a time, chooses the next question from their earlier answers, and fills in your Word or PDF templates to produce a finished letter, form or court document.
+docassemble is a free, open-source, self-hosted platform for guided interviews and document assembly, and an alternative to Gavel and HotDocs. It asks people questions one screen at a time, chooses the next question from their earlier answers, and fills in your Word or PDF templates to produce a finished letter, form or court document.
 
 A legal aid office, for example, could build an interview that helps tenants ask a landlord for repairs. Each tenant answers questions about their home on their phone, signs on the screen and downloads a ready-to-send letter, while staff can join by live chat to help anyone who gets stuck.
 

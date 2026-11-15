@@ -1,7 +1,7 @@
 name: docassemble
 description: "Self-hosted docassemble runs guided online interviews that ask plain questions and fill in your Word and PDF templates, like Gavel or HotDocs."
 version: "1.10.15"
-tags: [document automation, document assembly, legal document automation, guided interviews, hotdocs alternative, gavel alternative, clio draft alternative]
+tags: [document automation, document assembly, legal document automation, guided interviews, hotdocs alternative, gavel alternative, client intake]
 links:
   website: https://docassemble.org
   docs: https://docassemble.org/docs.html

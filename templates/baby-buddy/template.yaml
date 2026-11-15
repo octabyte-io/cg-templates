@@ -1,7 +1,7 @@
 name: Baby Buddy
 description: "Baby Buddy is a self-hosted baby tracker: parents and caregivers share one log of feedings, sleep, diapers and growth, with charts and timers."
 version: "2.11.0"
-tags: [baby tracker, huckleberry alternative, self-hosted baby tracker, feeding tracker, baby sleep tracker, diaper log, glow baby alternative]
+tags: [baby tracker, huckleberry alternative, self-hosted baby tracker, feeding tracker, baby sleep tracker, diaper log, baby log app]
 links:
   website: https://github.com/babybuddy/babybuddy
   docs: https://docs.baby-buddy.net

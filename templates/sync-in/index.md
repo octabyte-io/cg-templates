@@ -41,7 +41,7 @@ faq:
     a: Yes, for shared folders, desktop sync and share links. Sync-in adds team spaces, links with a password, expiry date and access limit, and search inside documents on your own server, but it has no version history and no phone app of its own yet.
   - q: Should I choose Sync-in or Nextcloud?
     a: Choose Sync-in if you mainly want a file-focused shared drive with careful control over who sees what. Choose Nextcloud if you also want calendars, contacts, chat and an app store in the same place, or need file version history and phone apps today.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to Sync-in the first time?
     a: Sign in with the admin username you chose during setup and the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. Then set your own email address in your profile and add your colleagues.
   - q: Is there a Sync-in phone app?
     a: No. Sync-in has no phone app of its own yet; you can open the web app in your phone's browser, or use a WebDAV app such as Documents by Readdle on iPhone or FolderSync on Android to reach your files.
