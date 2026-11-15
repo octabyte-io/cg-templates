@@ -41,7 +41,8 @@ services:
       - teampass-config:/var/www/html/storage/config
       - teampass-secrets:/var/www/html/secrets
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      # 127.0.0.1, not localhost: nginx no longer listens on IPv6, and localhost can resolve to ::1.
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1/health"]
       interval: 30s
       timeout: 10s
       retries: 3
