@@ -1,0 +1,56 @@
+# Runs once at each start, before Calibre-Web Automated, in the same image.
+# Every step only acts when it is still needed, so a later start changes nothing:
+#   1. no settings yet: creates app.db the way the image's own first start does
+#      (a dry run of cps.py; the image's bundled app.db if that fails);
+#   2. the "admin" account still has the default password admin123: replaces
+#      it with ADMIN_PASSWORD, so the well-known login never works.
+# The image's own start then finds app.db, creates the empty Calibre library in
+# /calibre-library and points the settings at it, as it always does.
+import os
+import shutil
+import sqlite3
+import subprocess
+import sys
+
+from werkzeug.security import check_password_hash, generate_password_hash
+
+APP = "/app/calibre-web-automated"
+APP_DB = "/config/app.db"
+UID = int(os.environ.get("PUID", "1000"))
+GID = int(os.environ.get("PGID", "1000"))
+
+
+def create_settings():
+    if os.path.exists(APP_DB):
+        print("Calibre-Web Automated settings found.")
+        return
+    print("Creating the Calibre-Web Automated settings...")
+    env = dict(os.environ, CALIBRE_DBPATH="/config")
+    subprocess.run([sys.executable, "cps.py", "-d"], cwd=APP, env=env,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+    if not os.path.exists(APP_DB):
+        shutil.copy(os.path.join(APP, "empty_library", "app.db"), APP_DB)
+
+
+def replace_default_password():
+    password = os.environ.get("ADMIN_PASSWORD", "")
+    if not password:
+        sys.exit("ADMIN_PASSWORD is not set.")
+    conn = sqlite3.connect(APP_DB)
+    row = conn.execute("SELECT id, password FROM user WHERE lower(name) = 'admin'").fetchone()
+    if row and row[1] and check_password_hash(row[1], "admin123"):
+        # Written directly, as cps.py's own "-s" option would, but without its
+        # password rules: the generated password is letters and digits.
+        conn.execute("UPDATE user SET password = ? WHERE id = ?",
+                     (generate_password_hash(password), row[0]))
+        conn.commit()
+        print("Replaced the default admin password with ADMIN_PASSWORD.")
+    else:
+        print("The admin password is not the default; left as it is.")
+    conn.close()
+
+
+create_settings()
+replace_default_password()
+for name in os.listdir("/config"):
+    os.chown(os.path.join("/config", name), UID, GID)

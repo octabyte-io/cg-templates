@@ -1,0 +1,59 @@
+services:
+  pigallery2:
+    image: bpatrik/pigallery2:3.5.2
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      # The address people open, used in sharing links.
+      Server-publicUrl: ${PUBLIC_URL}
+      # Creates the user "admin" with this password on first start, so the
+      # app never makes its default admin/admin user. Changing it later does not
+      # change an existing user's password; do that in the app's settings.
+      Users-enforcedUsers: '[{"name":"admin","password":"${ADMIN_PASSWORD}","role":4}]'
+    volumes:
+      # Settings (config.json) and extensions.
+      - pigallery2-config:/app/data/config
+      # The SQLite database: the photo index, users and shares.
+      - pigallery2-db:/app/data/db
+      # The photo folders, shared with FileBrowser Quantum below. PiGallery2
+      # only reads them; it indexes a folder when someone opens it.
+      - pigallery2-images:/app/data/images:ro
+      # Thumbnails and converted videos.
+      - pigallery2-tmp:/app/data/tmp
+    healthcheck:
+      # The same check the image's own HEALTHCHECK runs.
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/heartbeat"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 30s
+
+  # FileBrowser Quantum: upload photos from the browser at its own address,
+  # into the same volume PiGallery2 shows. Its default settings serve /srv
+  # with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets the
+  # password of the user "admin" (created on first start, and set back to this
+  # value on every start). Runs as root so it can write to the shared volume,
+  # which both images create owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - pigallery2-images:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  pigallery2-config:
+  pigallery2-db:
+  pigallery2-images:
+  pigallery2-tmp:
+  filebrowser-data:

@@ -1,0 +1,27 @@
+name: OneUptime
+description: "Self-hosted OneUptime checks your websites, pages whoever is on call and runs your status page, replacing PagerDuty, Opsgenie and Statuspage in one app."
+version: "14.1.0"
+tags: [pagerduty alternative, opsgenie alternative, statuspage alternative, on-call scheduling, incident management, uptime monitoring, status page]
+links:
+  website: https://oneuptime.com
+  docs: https://oneuptime.com/docs
+  source: https://github.com/OneUptime/oneuptime
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  HOST: { value: "{{domains.oneuptime-ingress.host}}" }
+  ONEUPTIME_SECRET: { generate: hex }
+  ENCRYPTION_SECRET: { generate: hex }
+  REGISTER_PROBE_KEY: { generate: hex }
+  PROBE_KEY: { generate: hex }
+  DATABASE_PASSWORD: { generate: password }
+  CLICKHOUSE_PASSWORD: { generate: password }
+  VALKEY_PASSWORD: { generate: password }
+domains:
+  - { service: oneuptime-ingress, port: 7849 }
+files:
+  - { path: clickhouse-cluster.xml }
+  - { path: clickhouse-system-log-ttl.xml }
+  - { path: clickhouse-logger.xml }
+  - { path: clickhouse-distributed-insert-tuning.xml }

@@ -1,0 +1,78 @@
+# From the project's docker-compose.yml at v0.7.7: Craftplan, PostgreSQL and
+# the project's SeaweedFS storage image for product photos. Email is set up in
+# the app (Settings > Email), so it needs no settings here.
+services:
+  craftplan:
+    image: ghcr.io/puemos/craftplan:0.7.7
+    restart: unless-stopped
+    # Listen on IPv4. The image's runtime config binds the web server to "::"
+    # with no setting to change it, and that fails where Docker has no IPv6
+    # (":eafnosupport"); this edits that one line, then starts as the image does.
+    command:
+      - sh
+      - -c
+      - >-
+        sed -i 's/ip: {0, 0, 0, 0, 0, 0, 0, 0}/ip: {0, 0, 0, 0}/' releases/*/runtime.exs
+        && exec bin/server
+    depends_on:
+      craftplan-db:
+        condition: service_healthy
+      craftplan-storage:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ecto://craftplan:${POSTGRES_PASSWORD}@craftplan-db/craftplan
+      # The default pool of 50 connections is more than one small server needs.
+      POOL_SIZE: "10"
+      HOST: ${HOST}
+      PORT: "4000"
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      TOKEN_SIGNING_SECRET: ${TOKEN_SIGNING_SECRET}
+      CLOAK_KEY: ${CLOAK_KEY}
+      AWS_S3_SCHEME: http://
+      AWS_S3_HOST: craftplan-storage
+      AWS_S3_PORT: "9000"
+      AWS_S3_PUBLIC_URL: ${STORAGE_URL}
+      AWS_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${STORAGE_SECRET_KEY}
+      AWS_S3_BUCKET: craftplan
+      AWS_REGION: us-east-1
+
+  craftplan-db:
+    image: postgres:16.15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: craftplan
+      POSTGRES_USER: craftplan
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - craftplan-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U craftplan -d craftplan"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # SeaweedFS (S3-compatible), built by the project; it creates the bucket.
+  craftplan-storage:
+    image: ghcr.io/puemos/craftplan-storage:0.7.7
+    restart: unless-stopped
+    environment:
+      AWS_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${STORAGE_SECRET_KEY}
+      S3_BUCKET: craftplan
+    volumes:
+      - craftplan-storage-data:/data
+      # The start script looks here for data from the project's older MinIO
+      # storage; a new install leaves it empty.
+      - craftplan-storage-legacy:/legacy:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:9000/readyz"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+volumes:
+  craftplan-db-data:
+  craftplan-storage-data:
+  craftplan-storage-legacy:

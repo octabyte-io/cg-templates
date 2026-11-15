@@ -18,15 +18,18 @@ apps:
   filebrowser-quantum:
     fit: "A simple web file manager for the folders on your server: browse, preview, search and share files from any browser, with share links that can expire, need a password or only accept uploads. It has no sync app, no phone app and no document co-editing, so it suits reaching and sharing files rather than replacing Drive on every device."
     import: no
+  copyparty:
+    fit: "A fast web file server for uploading, sharing and collecting files: uploads of any size that resume, share links with a password and expiry, upload-only folders, photo and video previews, a media player and WebDAV access. It has no sync app, no document editing and no version history, and users and folders are set up in a settings file rather than an admin screen."
+    import: no
 moving: |
-  Download your files with Google Takeout, which turns Google Docs, Sheets and Slides into Word, Excel and PowerPoint files. Put them in the Nextcloud desktop app's folder and it uploads them. Export your Google calendars and contacts as files and import them into Nextcloud's Calendar and Contacts apps. With Seafile, move the downloaded files into a library synced by its desktop app. With OpenCloud, create a Space for each shared drive and move the files into it through the desktop app or the web upload; with ownCloud Infinite Scale, move them into a Space synced by the ownCloud desktop app. Cloudreve and FileBrowser Quantum have no sync app, so upload the files in the browser or copy them over WebDAV. Shared links and sharing settings do not carry over, so share again from the new app.
+  Download your files with Google Takeout, which turns Google Docs, Sheets and Slides into Word, Excel and PowerPoint files. Put them in the Nextcloud desktop app's folder and it uploads them. Export your Google calendars and contacts as files and import them into Nextcloud's Calendar and Contacts apps. With Seafile, move the downloaded files into a library synced by its desktop app. With OpenCloud, create a Space for each shared drive and move the files into it through the desktop app or the web upload; with ownCloud Infinite Scale, move them into a Space synced by the ownCloud desktop app. Cloudreve, FileBrowser Quantum and copyparty have no sync app, so upload the files in the browser or copy them over WebDAV. Shared links and sharing settings do not carry over, so share again from the new app.
 faq:
   - q: "Can I edit documents in the browser like Google Docs?"
     a: "Yes, once you add an office app. Nextcloud works with Nextcloud Office or OnlyOffice; Seafile, ownCloud Infinite Scale and Cloudreve can connect to a separate OnlyOffice or Collabora server; and FileBrowser Quantum to a separate OnlyOffice server. Several people can then edit the same document at once."
   - q: "How much storage do I get?"
     a: "As much as your server's disk holds. You can start small and add storage later, with no plan to upgrade."
   - q: "Which Google Drive alternative should I choose?"
-    a: "Choose Nextcloud for files synced to every device plus calendars and contacts, Seafile for fast file sync only, and OpenCloud or ownCloud Infinite Scale for shared team Spaces with roles. Choose Cloudreve for a light web drive with share links and storage quotas, or FileBrowser Quantum to reach and share the folders already on your server from a browser."
+    a: "Choose Nextcloud for files synced to every device plus calendars and contacts, Seafile for fast file sync only, and OpenCloud or ownCloud Infinite Scale for shared team Spaces with roles. Choose Cloudreve for a light web drive with share links and storage quotas, or FileBrowser Quantum to reach and share the folders already on your server from a browser. Choose copyparty to send and collect large files by link, with no size limit."
 ---
 
 Google Drive is Google's cloud storage, with Docs, Sheets and Slides for editing in the browser. Every Google account gets 15 GB free, shared between Drive, Gmail and Google Photos; more space comes with a Google One or Workspace plan.

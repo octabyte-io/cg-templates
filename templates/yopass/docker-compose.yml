@@ -1,0 +1,22 @@
+services:
+  yopass:
+    image: jhaals/yopass:16.1.0
+    restart: unless-stopped
+    depends_on:
+      - yopass-memcached
+    environment:
+      # Secrets are kept only in memory in Memcached and expire on their own.
+      DATABASE: memcached
+      MEMCACHED: yopass-memcached:11211
+      PORT: "1337"
+    healthcheck:
+      # The image is distroless; the server binary has its own health check.
+      test: ["CMD", "/yopass-server", "--health-check"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  yopass-memcached:
+    image: memcached:1.6.45-alpine
+    restart: unless-stopped
