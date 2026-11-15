@@ -1,0 +1,17 @@
+services:
+  wizarr:
+    image: ghcr.io/wizarrrr/wizarr:v2026.10.1
+    restart: unless-stopped
+    environment:
+      # Run as the image's default user; the entrypoint fixes ownership of the
+      # data volume. Leave Wizarr's own sign-in on (true only behind an SSO proxy).
+      PUID: "1000"
+      PGID: "1000"
+      DISABLE_BUILTIN_AUTH: "false"
+      TZ: Etc/UTC
+    volumes:
+      # SQLite database, sessions and the generated secret key live here.
+      - wizarr-data:/data
+
+volumes:
+  wizarr-data:

@@ -1,0 +1,23 @@
+name: Feishin
+description: "Feishin is a self-hosted music player for Navidrome and Jellyfin: a Spotify-style web player for your own music, with playlists and lyrics."
+version: "1.17.0"
+tags:
+  - spotify alternative
+  - navidrome client
+  - jellyfin music player
+  - subsonic web player
+  - self-hosted music player
+  - music streaming
+links:
+  website: https://github.com/jeffvli/feishin
+  docs: https://github.com/jeffvli/feishin#readme
+  source: https://github.com/jeffvli/feishin
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: feishin, port: 9180 }
+# Feishin's own nginx config, without its IPv6 listen line, which stops nginx
+# from starting on servers where containers have no IPv6.
+files:
+  - { path: nginx.conf }

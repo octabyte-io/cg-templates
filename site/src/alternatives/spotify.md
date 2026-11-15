@@ -21,12 +21,17 @@ apps:
   gonic:
     fit: "The lightest server here: it streams the music files you own to Subsonic-compatible apps on phones, desktops and the web, with folder browsing for libraries organised in folders, podcasts, internet radio and an account for each person. It has no player of its own, only an admin page, so everyone listens through a Subsonic app, and like the others it has no catalogue or recommendations."
     import: no
+  feishin:
+    fit: "A Spotify-style player for the music server you run: it connects to Navidrome, Jellyfin or another Subsonic-compatible server and gives you home, album and artist pages, a queue, synced lyrics, smart playlists with Navidrome, ratings and scrobbling, in the browser and as a desktop app. It stores no music, so you install it alongside a server, and it has no phone app or catalogue."
+    import: no
 moving: |
   Navidrome, Koel, Black Candy, mStream and Ampache play music files, so start with the ones you have: ripped CDs, downloads you bought, or a family collection. For Navidrome, upload them through the File Browser address Cloudgate sets up, in folders such as Artist/Album, and Navidrome adds them by itself; in Koel, drag files or whole folders onto its Upload screen. Spotify playlists can't be exported as files, so rebuild your favourites by hand; Navidrome can also import .m3u playlists exported from iTunes or Apple Music. For Black Candy, upload the files at the File Browser address Cloudgate sets up, then press Sync in Black Candy's Settings so it adds them. Then install a Subsonic-compatible app on each phone and sign in with your Navidrome username and password, or with your email and Koel's Subsonic key; for Black Candy, install its free app for iPhone or Android and sign in with your server's address. In mStream, sign in as admin, upload files or whole folders in its File Explorer, and scan its Quick Connect QR code with the mStream app on each phone. In Ampache, add songs on its Upload page, and import playlist files such as .m3u from its Playlist menu once their songs are in the library.
 
   For Swing Music, upload your files at the File Browser address Cloudgate sets up, then run a scan from Swing Music's settings so it adds them. On Android, install its app and pair it by scanning the QR code in Swing Music's settings; on an iPhone, use the web player in the browser.
 
   For gonic, upload your music at its second, File Browser address, keeping one album per folder such as Artist/Album, and gonic adds new files by itself. Rebuild your playlists in your Subsonic app, then sign in from each phone or computer with gonic's address, your username and password.
+
+  Feishin is a player rather than a server: set up Navidrome or Jellyfin with your music first, then open Feishin, add that server's address and sign in with your account there.
 faq:
   - q: "Which self-hosted music server should I choose?"
     a: "Choose Navidrome for a light server that is free in every feature and works with many Subsonic-compatible apps. Choose Koel if you want a richer web player with podcasts, radio and uploads in the browser; its official phone app and extras such as separate libraries for each person are paid. Choose Black Candy for a simple server with its own free iPhone and Android apps, if you don't need Subsonic apps or scrobbling. Choose Swing Music for a modern web player with folder view, collections and listening stats, and a free Android app; it has no Subsonic support or iPhone app, and its mixes and recommendations are paid. Choose mStream for a light server with its own free iPhone and Android apps that connect by QR code. Choose Ampache if many kinds of apps need to connect at once, or you want podcasts, internet radio and video too. Choose gonic if you only listen through Subsonic apps and want the lightest server, with folder browsing and podcasts but no player of its own."
@@ -38,6 +43,8 @@ faq:
     a: "mStream: its official iPhone and Android apps are free and open source, and connect by scanning a QR code. Navidrome and Ampache rely on Subsonic-compatible apps made by others, and Koel's official app is paid."
   - q: "When is Ampache a better choice than Navidrome?"
     a: "When you want more than music streaming: podcasts, internet radio, smart playlists built in the web page, uploads, votes on what plays next, or connecting iTunes-style DAAP apps. Navidrome is lighter and simpler for music alone."
+  - q: "Where does Feishin fit?"
+    a: "Feishin is a player for a music server you already run, such as Navidrome or Jellyfin, with a look closer to Spotify's: home and artist pages, synced lyrics and a full-screen player. Use it in the browser or as a desktop app, with Navidrome as the server behind it."
 ---
 
 Spotify is a music streaming service: for a monthly fee you can play almost any song from its catalogue on your phone, computer, speakers or car, with playlists and recommendations made for you.

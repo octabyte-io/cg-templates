@@ -1,0 +1,54 @@
+# From Grimmory's official deploy/compose/docker-compose.yml (v3.5.0). The
+# database uses the official MariaDB image (11.4 LTS, the same series as the
+# official file's linuxserver/mariadb:11.4.8) instead of the linuxserver one.
+services:
+  grimmory:
+    image: ghcr.io/grimmory-tools/grimmory:v3.5.0
+    restart: unless-stopped
+    depends_on:
+      grimmory-db:
+        condition: service_healthy
+    environment:
+      USER_ID: 1000
+      GROUP_ID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      DATABASE_URL: jdbc:mariadb://grimmory-db:3306/grimmory
+      DATABASE_USERNAME: grimmory
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      API_DOCS_ENABLED: "false"
+      DISK_TYPE: LOCAL
+      FORCE_DISABLE_OIDC: "false"
+    volumes:
+      # Covers, thumbnails and app data.
+      - grimmory-data:/app/data
+      # The book library: create libraries in folders under /books.
+      - grimmory-books:/books
+      # BookDrop: files dropped here are picked up and queued for review.
+      - grimmory-bookdrop:/bookdrop
+    # The image's own HEALTHCHECK (wget on /api/v1/healthcheck) is used.
+
+  grimmory-db:
+    image: mariadb:11.4.10
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: grimmory
+      MARIADB_USER: grimmory
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      - grimmory-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  grimmory-data:
+  grimmory-books:
+  grimmory-bookdrop:
+  grimmory-db-data:

@@ -18,8 +18,13 @@ apps:
   request-tracker:
     fit: "An email-first ticket system, developed since 1996: email to a queue's address becomes a ticket, with owners, your own statuses and fields, SLAs with business hours, automation rules, a knowledge base of articles, dashboards and a self-service portal, all free with no fee per agent. It has no chat, social or phone channels, no AI features and no phone apps, its interface is dense rather than modern, and it takes real setup, including a mail server for email."
     import: partly
+  erxes:
+    fit: "Turns customer requests into tickets and gathers messages from Facebook, Instagram, Telegram and other connected channels in one team inbox, inside a CRM with contacts and a sales pipeline. It suits teams that want support and sales in one app; it is not a dedicated help desk like Zendesk, this template has no website chat widget, and its licence makes it source-available rather than open source."
+    import: no
 moving: |
   With Zammad, the built-in migration wizard copies groups, organisations, users and tickets from Zendesk. It needs a Zendesk plan with API access, does not bring passwords and runs once rather than syncing, so pick a cut-over day and connect your support address once it finishes. With Chatwoot, export your customer contacts from Zendesk and import them into Chatwoot from a CSV file. Past tickets cannot be imported, so keep Zendesk available read-only. Forward your support email address to Chatwoot, add its chat widget to your website, and recreate macros as canned replies and automation rules. With FreeScout, connect your support address as a mailbox and new emails arrive as conversations. Moving past tickets needs a paid third-party migration service and FreeScout's paid API module; most teams start fresh and keep Zendesk read-only for a while. With Frappe Helpdesk, connect your support mailbox so new emails become tickets, set up your SLAs, teams and assignment rules, and bring contacts and customers in from a spreadsheet with its Data Import tool; there is no importer for past tickets, so most teams start fresh. With Libredesk, connect your support mailbox, add its chat widget to your website and recreate macros and SLAs; past tickets stay in Zendesk. With Request Tracker, create a queue for each support address and connect a mail server so emails become tickets and replies go out. Past tickets can be loaded from Zendesk CSV exports with Best Practical's free CSV import extension, which is not installed on this template; otherwise start fresh and keep Zendesk read-only.
+
+  With erxes, connect your channels to its shared inbox and bring customers in from a CSV file exported from Zendesk; past tickets stay in Zendesk.
 faq:
   - q: "Can I import my Zendesk tickets?"
     a: "Yes, into Zammad. Its migration wizard copies groups, organisations, users and tickets from Zendesk, though not passwords. Chatwoot, FreeScout, Frappe Helpdesk and Libredesk cannot import past tickets for free; Request Tracker can load CSV exports through a free extension that is not installed on this template."
@@ -31,6 +36,8 @@ faq:
     a: "Yes. You can publish help articles in a public help centre on your own address."
   - q: "Is Request Tracker a good Zendesk alternative?"
     a: "Yes, for teams that support people by email and want queues, rights and automation shaped exactly to their process. It has no chat, social or phone channels, and someone has to set it up, including its email."
+  - q: "Where does erxes fit?"
+    a: "It suits a team that wants its help desk and its CRM in one app: tickets and a shared inbox next to contacts and a sales pipeline. For support alone, Zammad is the more complete ticket system."
 ---
 
 Zendesk is a customer service platform built around tickets: emails, chats and calls become tickets that agents assign, answer and track, with a help centre and many integrations.

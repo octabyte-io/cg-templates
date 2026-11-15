@@ -18,15 +18,20 @@ apps:
   poznote:
     fit: "The closest to Obsidian's way of working: notes kept as plain Markdown and HTML files, links between notes with backlinks and a graph view, and it imports a zipped Obsidian vault, all in a browser on your own server with accounts for other people. Aliases, heading links, embeds, Dataview and canvases don't carry over, there is no plugin ecosystem, and there is no official desktop or phone app, though it installs from the browser and keeps recent notes offline."
     import: yes
+  notediscovery:
+    fit: "Close to Obsidian's way of working: notes stay plain Markdown files in folders, with [[double bracket]] links, backlinks, a graph view, tags and templates, edited in any browser on your own server. It has far fewer plugins than Obsidian, no phone or desktop apps, and one shared password rather than user accounts."
+    import: partly
 moving: |
   An Obsidian vault is a folder of Markdown files, and SilverBullet reads it as it is: it finds wiki links by page name, so links between notes keep working without rewriting them. Its web app has no upload importer, so copy the vault's files into the space's folder on the server, or paste notes into new pages. Plugin features and Obsidian-only syntax may not carry over, so check your most-used notes first. Then install SilverBullet as a web app on each computer and phone from the browser.
 
   Trilium imports Markdown, so bring your Obsidian vault across as files: zip the vault folder and import it into a note in Trilium, which keeps your folders as a tree. Check links between notes and embedded images afterwards, since Obsidian's wiki-style links and plugin features may not all carry over. Then install the Trilium desktop app on each computer and connect it to your server so your notes sync. SiYuan's server version can't import Markdown files, so with SiYuan you copy notes across by hand, starting with the ones you use most, and keep your vault as a read-only archive. LeafWiki imports a vault directly: zip the vault folder and import it as an editor or admin, and Obsidian-style links become links between pages; it works best with a tidy folder structure, and plugin content does not carry over. Note Mark has no import, so paste notes in one at a time, starting with the ones you want to share or publish.
 
   Poznote imports an Obsidian vault directly: zip the vault folder and import it, and your notes, folders, front-matter tags, [[links]], images and PDFs come across. Aliases, links to headings, embeds, Dataview queries and canvases do not, so check the notes that rely on them.
+
+  NoteDiscovery keeps notes as Markdown files in folders, so you can copy your vault's notes and folders into its notes folder; check links and embedded images afterwards, since plugin features don't carry over.
 faq:
   - q: "Which Obsidian alternative keeps notes as Markdown files?"
-    a: "SilverBullet, LeafWiki, Note Mark and Poznote. Each keeps notes as plain Markdown or HTML files on your server, so you can read, back up or move them with any other tool; SilverBullet is the closest to a personal Obsidian vault. Trilium and SiYuan keep notes in their own storage and export Markdown when you ask."
+    a: "SilverBullet, LeafWiki, Note Mark, NoteDiscovery and Poznote. Each keeps notes as plain Markdown or HTML files on your server, so you can read, back up or move them with any other tool; SilverBullet is the closest to a personal Obsidian vault. Trilium and SiYuan keep notes in their own storage and export Markdown when you ask."
   - q: "Does SilverBullet work on my phone and offline?"
     a: "Yes. SilverBullet installs from the browser as a web app on phones and computers, keeps a copy of your notes on the device, and syncs changes when you are back online. There is no app-store app."
   - q: "Should I choose SilverBullet, Trilium, SiYuan or Poznote?"

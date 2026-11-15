@@ -12,10 +12,15 @@ apps:
   writebook:
     fit: "A simple option for docs shaped like a book, such as manuals and handbooks: one small app where you write in Markdown with section and picture pages, publish with one switch or keep it private for invited readers, and each page is also available as plain Markdown. It has no Git sync, API, importer or PDF export, and books are linear pages rather than nested spaces."
     import: no
+  pandawiki:
+    fit: "Publishes your documents as a public docs website with a table of contents and search, and adds AI answers: visitors ask a question and get a reply written from your pages, with links to its sources, also as a chat widget or a chat bot. The free edition allows one site, 300 documents and one admin, has no Git sync, private wikis or version history, and its screens are in Chinese only."
+    import: partly
 moving: |
   Neither Wiki.js nor BookStack has a GitBook importer, so start by syncing your GitBook space to a GitHub or GitLab repository as Markdown files. With Wiki.js, connect its Git storage to a copy of that repository so the Markdown pages sync in, then check each page, because GitBook's own blocks, such as hints and tabs, are not standard Markdown, and images may need uploading again. With BookStack, copy each page into its Markdown editor, one book per GitBook space and one chapter per group of pages, and upload images again. If your docs are public, give guests read access in Wiki.js or turn on public viewing in BookStack, then point your docs address at the new site.
 
   Raneto and Writebook have no GitBook importer either. In Raneto, sign in as admin, create a category for each group of pages, and paste each page's Markdown into its editor, rewriting GitBook's own blocks as plain Markdown and uploading images again. In Writebook, create one book per GitBook space, paste each page's Markdown into a new page, upload images again, and switch the book to public when it is ready.
+
+  PandaWiki has no GitBook importer either, but it can bring pages in from a web address or a sitemap, so point it at your published GitBook site, check the imported documents, then connect your AI models and publish the knowledge base at its wiki address.
 faq:
   - q: "Can Wiki.js sync with Git like GitBook?"
     a: "Yes. Wiki.js keeps pages in two-way sync with a Git repository as plain Markdown files, so people can edit in the wiki or change the files in the repository. BookStack has no Git sync."
@@ -27,6 +32,8 @@ faq:
     a: "When your docs read best as a book, such as a manual or handbook, and you want the simplest setup: write in Markdown, publish with one switch and invite co-authors with a link. Choose Wiki.js if you need Git sync."
   - q: "Can I write in Markdown in BookStack?"
     a: "Yes. BookStack has a visual editor and an optional Markdown editor with a live preview, and pages, chapters and books can be exported as Markdown, PDF or HTML."
+  - q: "Which GitBook alternative answers readers' questions with AI?"
+    a: "PandaWiki. Visitors can ask a question in plain words and get an answer written from your documents, with links to the pages it used. It needs AI models you connect, and its free edition is limited to one site, 300 documents and one admin."
 ---
 
 GitBook is a hosted platform for publishing documentation, often public product and developer docs, with an editor for your team and two-way sync with a Git repository.

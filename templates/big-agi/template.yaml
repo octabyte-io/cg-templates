@@ -1,0 +1,24 @@
+name: big-AGI
+description: "big-AGI is a self-hosted AI chat app that uses your own API keys to talk to OpenAI, Anthropic, Google and other models in one place, instead of ChatGPT Plus."
+version: "2.1.3"
+tags:
+  - chatgpt plus alternative
+  - typingmind alternative
+  - ai chat
+  - multi-model ai chat
+  - bring your own api key
+  - llm chat interface
+links:
+  website: https://big-agi.com
+  docs: https://github.com/enricoros/big-AGI/tree/main/docs
+  source: https://github.com/enricoros/big-AGI
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of big-AGI asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

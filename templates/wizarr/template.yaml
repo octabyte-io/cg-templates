@@ -1,0 +1,19 @@
+name: Wizarr
+description: "Wizarr is a self-hosted invite tool for Plex, Jellyfin and Emby: send one link and friends get an account and a guide to start watching."
+version: "v2026.10.1"
+tags:
+  - plex invite
+  - jellyfin invite
+  - emby invite
+  - media server users
+  - user onboarding
+  - plex sharing
+links:
+  website: https://docs.wizarr.dev
+  docs: https://docs.wizarr.dev/getting-started/installation
+  source: https://github.com/wizarrrr/wizarr
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: wizarr, port: 5690 }

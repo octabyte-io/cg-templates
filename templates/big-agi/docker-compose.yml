@@ -1,0 +1,34 @@
+services:
+  # big-AGI has no accounts or sign-in: anyone with the address could use it
+  # and spend the AI credits of any keys set on the server. Its own HTTP basic
+  # auth only works in a custom build (docs/deploy-authentication.md), so this
+  # proxy asks for the username "admin" and the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      big-agi:
+        condition: service_healthy
+
+  big-agi:
+    # The official image (docs/deploy-docker.md). Chats, settings and API keys
+    # typed in the app live in each visitor's browser, so there is no data
+    # volume. AI service keys can also be preset on the server with the
+    # variables in docs/environment-variables.md (e.g. OPENAI_API_KEY).
+    image: ghcr.io/enricoros/big-agi:v2.1.3
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 5

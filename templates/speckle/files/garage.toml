@@ -1,0 +1,16 @@
+# Garage (S3-compatible object storage) for Speckle, from the config in Speckle's
+# Docker Compose quickstart. The RPC secret comes from GARAGE_RPC_SECRET in the
+# compose file instead of being written here. It binds to IPv4 (the quickstart uses [::]),
+# so it also starts on hosts where Docker has IPv6 turned off.
+metadata_dir = "/data/meta"
+data_dir = "/data/blocks"
+db_engine = "sqlite"
+replication_factor = 1
+
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "127.0.0.1:3901"
+
+[s3_api]
+s3_region = "us-east-1"
+api_bind_addr = "0.0.0.0:9000"
+root_domain = ".s3.garage.localhost"

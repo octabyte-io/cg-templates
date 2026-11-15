@@ -1,0 +1,250 @@
+# From PandaWiki's official installer compose (https://release.baizhi.cloud/panda-wiki/docker-compose.yml,
+# fetched by the installer that manager.sh downloads) at v3.87.5, with every service and image kept.
+# Changes, all because Cloudgate routes the addresses:
+# - No published ports and no container names. The names the app dials (panda-wiki-api,
+#   panda-wiki-postgres, ...) are DNS aliases on the panda-wiki network instead.
+# - The panda-wiki network keeps upstream's fixed subnet and addresses: the API tells Caddy to
+#   proxy to 169.254.15.2 (API), .112 (wiki app) and .12 (file store), and it accepts imported
+#   documents only from the crawler at .17. So one PandaWiki per server, as with upstream.
+# - Caddy (the public wiki sites) runs on that network instead of host networking, without
+#   NET_ADMIN, and starts from files/Caddyfile, a one-line page shown until the first knowledge
+#   base exists; --resume keeps PandaWiki's last pushed config across restarts.
+# - The admin console's nginx serves plain HTTP (files/admin-server.conf), not self-signed HTTPS.
+# - The API's /run/pandawiki host mount is left out (nothing in the open-source API reads it), and
+#   the API and consumer don't send errors to the vendor's Sentry.
+x-pandawiki-env: &pandawiki-env
+  NATS_PASSWORD: ${NATS_PASSWORD}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  S3_SECRET_KEY: ${S3_SECRET_KEY}
+  JWT_SECRET: ${JWT_SECRET}
+  SUBNET_PREFIX: "169.254.15"
+  SENTRY_ENABLED: "false"
+
+services:
+  # The public wiki: Caddy routes each knowledge base's address and port to the wiki app.
+  wiki:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-caddy:2.10-alpine
+    restart: unless-stopped
+    command: ["caddy", "run", "--resume", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+    environment:
+      CADDY_ADMIN: unix//var/run/caddy/caddy-admin.sock
+    volumes:
+      - caddy-config:/config
+      - caddy-data:/data
+      - caddy-run:/var/run/caddy
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.20
+
+  # The admin console (upstream's "nginx"): the admin web app, and /api proxied to the API.
+  admin:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-nginx:v3.87.5
+    restart: unless-stopped
+    depends_on:
+      - api
+    volumes:
+      - nginx-ssl:/etc/nginx/ssl
+      - ../files/admin-server.conf:/etc/nginx/conf.d/server.conf:ro
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.111
+
+  app:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-app:v3.87.5
+    restart: unless-stopped
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.112
+        aliases: [panda-wiki-app]
+
+  api:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-api:v3.87.5
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      wiki:
+        condition: service_started
+      raglite:
+        condition: service_started
+    environment:
+      <<: *pandawiki-env
+      # The admin console's sign-in: user "admin" with this password.
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - caddy-run:/app/run
+      - nginx-ssl:/app/etc/nginx/ssl
+      - api-data:/data
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.2
+        aliases: [panda-wiki-api]
+
+  consumer:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-consumer:v3.87.5
+    restart: unless-stopped
+    depends_on:
+      - nats
+      - api
+      - raglite
+    environment:
+      <<: *pandawiki-env
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.3
+        aliases: [panda-wiki-consumer]
+
+  # PostgreSQL 17 with the zhparser extension for Chinese full-text search.
+  postgres:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/postgres-zhparser:17.6-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: panda-wiki
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: panda-wiki
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "panda-wiki", "-d", "panda-wiki"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.10
+        aliases: [panda-wiki-postgres]
+
+  redis:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-redis:7.4.2-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "appendonly.aof", "--save", "900 1", "--save", "300 10", "--save", "60 10000"]
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.11
+        aliases: [panda-wiki-redis]
+
+  minio:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-minio:RELEASE.2025-04-22T22-12-26Z-cpuv1
+    restart: unless-stopped
+    command: ["minio", "server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ACCESS_KEY: s3panda-wiki
+      MINIO_SECRET_KEY: ${S3_SECRET_KEY}
+    volumes:
+      - minio-data:/data
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.12
+        aliases: [panda-wiki-minio]
+
+  nats:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-nats:2.11.3-alpine
+    restart: unless-stopped
+    command: ["nats-server", "-c", "/etc/nats/nats.conf", "--user", "panda-wiki", "--pass", "${NATS_PASSWORD}"]
+    volumes:
+      - nats-data:/data
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.13
+        aliases: [panda-wiki-nats]
+
+  # The vector store behind the AI search and Q&A.
+  qdrant:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-qdrant:v1.14.1
+    restart: unless-stopped
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY}
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.14
+        aliases: [panda-wiki-qdrant]
+
+  # Imports documents from web pages, files, Notion, Feishu and other sources.
+  crawler:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/anydoc:v0.10.2
+    restart: unless-stopped
+    init: true
+    environment:
+      GLOG_GLOBAL_LEVEL: info
+      NAMESPACE: anydoc
+      MQ_NATS_URL: nats://panda-wiki-nats:4222
+      MQ_NATS_USER: panda-wiki
+      MQ_NATS_PASSWORD: ${NATS_PASSWORD}
+      OSS_MINIO_ACCESS_KEY: s3panda-wiki
+      OSS_MINIO_SECRET_KEY: ${S3_SECRET_KEY}
+      OSS_MINIO_ENDPOINT: panda-wiki-minio:9000
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.17
+        aliases: [panda-wiki-crawler]
+
+  # Splits documents, calls the embedding model you set up, and answers retrieval queries.
+  raglite:
+    image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/raglite:v2.17.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      qdrant:
+        condition: service_started
+    environment:
+      GIN_MODE: release
+      DATABASE_POSTGRESQL_HOST: panda-wiki-postgres
+      DATABASE_POSTGRESQL_USER: panda-wiki
+      DATABASE_POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_QDRANT_HOST: panda-wiki-qdrant
+      DATABASE_QDRANT_API_KEY: ${QDRANT_API_KEY}
+      STORAGE_MINIO_ENDPOINT: panda-wiki-minio:9000
+      STORAGE_MINIO_ACCESS_KEY_ID: s3panda-wiki
+      STORAGE_MINIO_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
+      NATS_URL: nats://panda-wiki-nats:4222
+      NATS_USER: panda-wiki
+      NATS_PASSWORD: ${NATS_PASSWORD}
+      EMBEDDER_RPM: "800"
+      LLM_RPM: "50"
+    volumes:
+      - raglite-data:/data
+    networks:
+      panda-wiki:
+        ipv4_address: 169.254.15.18
+        aliases: [panda-wiki-raglite]
+
+networks:
+  panda-wiki:
+    ipam:
+      driver: default
+      config:
+        - subnet: 169.254.15.0/24
+
+volumes:
+  caddy-config:
+  caddy-data:
+  caddy-run:
+  nginx-ssl:
+  api-data:
+  postgres-data:
+  redis-data:
+  minio-data:
+  nats-data:
+  qdrant-data:
+  raglite-data:
