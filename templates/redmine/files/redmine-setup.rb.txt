@@ -1,0 +1,45 @@
+# Runs once at each start, with `rails runner`, after Redmine's own database
+# migrations and before the web server starts.
+#
+# 1. On an empty database, loads Redmine's default configuration in English
+#    (trackers, issue statuses, roles, priorities, workflows): the same data the
+#    "Load the default configuration" button in Administration loads.
+# 2. Redmine creates its first administrator as admin / admin. While that
+#    account still has the password "admin", this gives it the generated
+#    ADMIN_PASSWORD and the email you entered, so the well-known default never
+#    works on your server. Redmine marks that account "must change password";
+#    this clears the mark, so the generated password shown in Cloudgate keeps
+#    working until you change it. Once the password is anything else, it
+#    changes nothing.
+# 3. While Redmine's host name and protocol are still the defaults
+#    (localhost:3000, http), sets them from the app's web address, so links in
+#    notification emails point to your server.
+
+if Redmine::DefaultData::Loader.no_data?
+  Redmine::DefaultData::Loader.load("en")
+  puts "redmine-setup: loaded the default configuration"
+end
+
+admin = User.find_by(login: "admin")
+if admin && admin.check_password?("admin")
+  admin.password = ENV.fetch("ADMIN_PASSWORD")
+  admin.password_confirmation = ENV.fetch("ADMIN_PASSWORD")
+  email = ENV["ADMIN_EMAIL"].to_s.strip
+  admin.mail = email unless email.empty?
+  admin.must_change_passwd = false
+  admin.save!
+  puts "redmine-setup: replaced the default admin password"
+end
+
+url = ENV["APP_URL"].to_s.strip
+unless url.empty?
+  uri = URI.parse(url)
+  host = uri.host.to_s
+  host += ":#{uri.port}" if uri.port && uri.port != uri.default_port
+  if Setting.host_name == "localhost:3000" && !host.empty?
+    Setting.host_name = host
+  end
+  if Setting.protocol == "http" && uri.scheme == "https"
+    Setting.protocol = "https"
+  end
+end

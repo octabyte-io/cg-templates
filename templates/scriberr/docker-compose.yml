@@ -1,0 +1,29 @@
+services:
+  scriberr:
+    # CPU image (amd64 and arm64). NVIDIA GPU servers can use
+    # ghcr.io/rishikanthc/scriberr-cuda with the NVIDIA Container Toolkit.
+    image: ghcr.io/rishikanthc/scriberr:v1.2.0
+    restart: unless-stopped
+    environment:
+      # The project says not to change this; it also keeps secure cookies on,
+      # which is right behind Cloudgate's HTTPS address.
+      APP_ENV: production
+      ALLOWED_ORIGINS: ${APP_URL}
+      PUID: "1000"
+      PGID: "1000"
+    volumes:
+      # Database, uploads, transcripts and the generated JWT secret.
+      - scriberr-data:/app/data
+      # Python environments and models, downloaded on first start.
+      - scriberr-env:/app/whisperx-env
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      # First start builds Python environments and downloads models.
+      start_period: 30m
+
+volumes:
+  scriberr-data:
+  scriberr-env:

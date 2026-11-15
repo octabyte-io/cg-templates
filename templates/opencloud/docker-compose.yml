@@ -1,0 +1,36 @@
+# From OpenCloud's official compose project (opencloud-eu/opencloud-compose, docker-compose.yml),
+# on the Production image instead of Rolling, without Traefik, Collabora, Tika or the extra
+# config files: Cloudgate routes the web address and terminates HTTPS.
+services:
+  opencloud:
+    image: opencloudeu/opencloud:7.2.5
+    restart: unless-stopped
+    user: "1000:1000"
+    entrypoint:
+      - /bin/sh
+    # "opencloud init" writes a config with random secrets on the first start and fails on
+    # later starts because the config already exists, so its error is ignored.
+    # OpenCloud's built-in sign-in service refuses an address that is not https://. Cloudgate
+    # always gives the app an https:// address; only a local "template try" gives
+    # http://localhost, which this turns into https:// so the server still starts there.
+    command:
+      - -c
+      - 'case "$$OC_URL" in http://*) export OC_URL="https://$${OC_URL#http://}";; esac; opencloud init || true; opencloud server'
+    environment:
+      OC_URL: ${OC_URL}
+      # Cloudgate's proxy speaks plain HTTP to the container.
+      PROXY_TLS: "false"
+      # The public address has a real certificate, so certificate checks stay on.
+      OC_INSECURE: "false"
+      # The admin user is "admin"; this password is only read on the first start.
+      IDM_ADMIN_PASSWORD: ${IDM_ADMIN_PASSWORD}
+      IDM_CREATE_DEMO_USERS: "false"
+      OC_LOG_LEVEL: info
+      FRONTEND_ARCHIVER_MAX_SIZE: "10000000000"
+    volumes:
+      - opencloud-config:/etc/opencloud
+      - opencloud-data:/var/lib/opencloud
+
+volumes:
+  opencloud-config:
+  opencloud-data:

@@ -1,0 +1,15 @@
+name: Scriberr
+description: "Scriberr is a self-hosted transcription app that turns audio and video recordings into text on your own server, with speaker labels and AI summaries."
+version: "v1.2.0"
+tags: [audio transcription, speech to text, otter alternative, whisper transcription, speaker diarization, interview transcription, rev alternative]
+links:
+  website: https://scriberr.app
+  docs: https://github.com/rishikanthc/Scriberr#readme
+  source: https://github.com/rishikanthc/Scriberr
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.scriberr.url}}" }
+domains:
+  - { service: scriberr, port: 8080 }

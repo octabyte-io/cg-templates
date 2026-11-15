@@ -1,0 +1,64 @@
+services:
+  redmine:
+    # Redmine's official Docker image, as on Docker Hub (library/redmine).
+    image: redmine:7.0.3
+    restart: unless-stopped
+    depends_on:
+      redmine-setup:
+        condition: service_completed_successfully
+    environment: &redmine-env
+      REDMINE_DB_POSTGRES: redmine-db
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_PASSWORD: ${DB_PASSWORD}
+      REDMINE_DB_DATABASE: redmine
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+    volumes:
+      # Uploaded files and attachments.
+      - redmine-files:/usr/src/redmine/files
+    healthcheck:
+      # The image has neither curl nor wget, so Ruby asks for the sign-in page.
+      test: ["CMD", "ruby", "-rnet/http", "-e", "exit Net::HTTP.get_response(URI('http://127.0.0.1:3000/login')).is_a?(Net::HTTPSuccess) ? 0 : 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # Runs once at each start, before Redmine's web server: the image's start
+  # script applies the database migrations, then files/redmine-setup.rb.txt
+  # loads the default configuration on a new database, replaces the default
+  # admin / admin password with the generated one, and sets Redmine's host
+  # name from the app's web address. It changes nothing once those are set.
+  redmine-setup:
+    image: redmine:7.0.3
+    restart: "no"
+    command: [rails, runner, /redmine-setup.rb]
+    depends_on:
+      redmine-db:
+        condition: service_healthy
+    environment:
+      <<: *redmine-env
+      APP_URL: ${APP_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - redmine-files:/usr/src/redmine/files
+      - ../files/redmine-setup.rb.txt:/redmine-setup.rb:ro
+
+  redmine-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: redmine
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: redmine
+    volumes:
+      - redmine-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U redmine -d redmine"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  redmine-files:
+  redmine-db-data:

@@ -1,0 +1,97 @@
+services:
+  # CryptPad's official image, set up as its docker-compose.yml does: a read-only
+  # filesystem, running as user 4001, with every writable folder a volume.
+  cryptpad:
+    image: cryptpad/cryptpad:version-2026.10.1
+    restart: unless-stopped
+    hostname: cryptpad
+    read_only: true
+    depends_on:
+      cryptpad-volumes:
+        condition: service_completed_successfully
+    # files/cryptpad-start.sh.txt does what the image's entrypoint does, and adds
+    # the generated install token for the first admin account.
+    entrypoint: ["/bin/bash", "/cryptpad-start.sh"]
+    environment:
+      # The address people open, and the second address CryptPad loads its
+      # editors from, so a document's code runs apart from the account's keys.
+      CPAD_MAIN_DOMAIN: ${CPAD_MAIN_DOMAIN}
+      CPAD_SANDBOX_DOMAIN: ${CPAD_SANDBOX_DOMAIN}
+      # The image's example settings; the admin panel changes most of them.
+      CRYPTPAD_CONFIG: /cryptpad/config.local/config.example.js
+      CRYPTPAD_CONFIG_INFRA: /cryptpad/config.local/infra.example.js
+      # "yes" downloads the Euro-Office editors (AGPL-3.0, based on ONLYOFFICE)
+      # for the Document, Spreadsheet and Presentation apps, accepting their
+      # licence: https://github.com/Euro-Office/web-apps/raw/refs/heads/main/LICENSE.txt
+      CPAD_INSTALL_OFFICE: ${CPAD_INSTALL_OFFICE}
+      CPAD_INSTALL_TOKEN: ${CPAD_INSTALL_TOKEN}
+      CPAD_ADMIN_SETUP_URL: ${CPAD_ADMIN_SETUP_URL}
+    volumes:
+      - ../files/cryptpad-start.sh.txt:/cryptpad-start.sh:ro
+      # Encrypted documents, files and accounts.
+      - cryptpad-blob:/cryptpad/blob
+      - cryptpad-block:/cryptpad/block
+      - cryptpad-data:/cryptpad/data
+      - cryptpad-datastore:/cryptpad/datastore
+      # The built pages, and the instance's own look if the admin adds one.
+      - cryptpad-customize:/cryptpad/customize
+      # The office editors, when CPAD_INSTALL_OFFICE is "yes".
+      - cryptpad-office:/cryptpad/www/common/onlyoffice/dist
+      - cryptpad-office-conf:/cryptpad/onlyoffice-conf
+    tmpfs:
+      - /tmp
+    # No ulimits: upstream raises the open-file limit to 1000000, which some
+    # hosts refuse; Docker's default is enough for a team.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 5m
+
+  # The sandbox address. CryptPad serves it on port 3001 of the same server; this
+  # forwards that port unchanged so the second address has a service of its own.
+  cryptpad-sandbox:
+    image: cryptpad/cryptpad:version-2026.10.1
+    restart: unless-stopped
+    read_only: true
+    depends_on:
+      cryptpad:
+        condition: service_started
+    entrypoint:
+      - node
+      - -e
+      - >-
+        const net = require('net');
+        net.createServer((client) => {
+          const app = net.connect(3001, 'cryptpad');
+          client.pipe(app); app.pipe(client);
+          client.on('error', () => app.destroy());
+          app.on('error', () => client.destroy());
+        }).listen(3001, '0.0.0.0');
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:3001/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 5m
+
+  # Runs once at each start: gives the CryptPad user (4001) the office volumes,
+  # which Docker creates owned by root because the image has no such folders.
+  cryptpad-volumes:
+    image: cryptpad/cryptpad:version-2026.10.1
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["chown", "4001:4001", "/cryptpad/www/common/onlyoffice/dist", "/cryptpad/onlyoffice-conf"]
+    volumes:
+      - cryptpad-office:/cryptpad/www/common/onlyoffice/dist
+      - cryptpad-office-conf:/cryptpad/onlyoffice-conf
+
+volumes:
+  cryptpad-blob:
+  cryptpad-block:
+  cryptpad-data:
+  cryptpad-datastore:
+  cryptpad-customize:
+  cryptpad-office:
+  cryptpad-office-conf:

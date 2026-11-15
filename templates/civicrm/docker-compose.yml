@@ -1,0 +1,118 @@
+# From the official image's example compose file (github.com/civicrm/civicrm-docker,
+# example/civicrm/compose.yaml). Left out: published ports and the optional Redis
+# container (the example starts it, but nothing in it points CiviCRM at it).
+# The image does not install CiviCRM by itself, so civicrm-install below runs the
+# installer once, and civicrm-cron runs the scheduled jobs the image leaves to you.
+
+x-civicrm-env: &civicrm-env
+  CIVICRM_DB_HOST: civicrm-db
+  CIVICRM_DB_PORT: "3306"
+  CIVICRM_DB_NAME: civicrm
+  CIVICRM_DB_USER: civicrm
+  CIVICRM_DB_PASSWORD: ${DB_PASSWORD}
+  CIVICRM_UF_BASEURL: ${CIVICRM_UF_BASEURL}
+  # Each Apache worker holds its own PHP (256 MB limit), so 8 workers fit a 2 GB server.
+  APACHE_MAX_REQUEST_WORKERS: "8"
+
+x-civicrm-volumes: &civicrm-volumes
+  - civicrm-private:/var/www/html/private
+  - civicrm-public:/var/www/html/public
+  - civicrm-ext:/var/www/html/ext
+
+services:
+  civicrm:
+    image: civicrm/civicrm:6.20.0
+    restart: unless-stopped
+    depends_on:
+      civicrm-install:
+        condition: service_completed_successfully
+    environment: *civicrm-env
+    volumes: *civicrm-volumes
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/civicrm/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Runs once at each start. On the first start it installs CiviCRM Standalone with
+  # the admin account below (the same `cv core:install` call as the image's
+  # civicrm-docker-install script, plus the admin's email). Later it applies any
+  # database upgrade a newer image needs.
+  civicrm-install:
+    image: civicrm/civicrm:6.20.0
+    restart: "no"
+    user: www-data
+    depends_on:
+      civicrm-db:
+        condition: service_healthy
+    environment:
+      <<: *civicrm-env
+      CIVICRM_ADMIN_USER: ${ADMIN_USER}
+      CIVICRM_ADMIN_PASS: ${ADMIN_PASSWORD}
+      CIVICRM_ADMIN_EMAIL: ${ADMIN_EMAIL}
+    volumes: *civicrm-volumes
+    working_dir: /var/www/html
+    entrypoint: ["sh", "-c"]
+    command:
+      - >-
+        set -e;
+        if [ -f private/civicrm.settings.php ]; then
+        cv upgrade:db --no-interaction;
+        else
+        cv core:install
+        --db="mysql://$${CIVICRM_DB_USER}:$${CIVICRM_DB_PASSWORD}@$${CIVICRM_DB_HOST}:$${CIVICRM_DB_PORT}/$${CIVICRM_DB_NAME}"
+        --url="$${CIVICRM_UF_BASEURL}"
+        -m extras.adminUser="$${CIVICRM_ADMIN_USER}"
+        -m extras.adminPass="$${CIVICRM_ADMIN_PASS}"
+        -m extras.adminEmail="$${CIVICRM_ADMIN_EMAIL}";
+        fi
+    healthcheck:
+      disable: true
+
+  # CiviCRM's scheduled jobs (sending CiviMail, reminders, membership renewals,
+  # bounce processing), every 15 minutes as the admin account.
+  civicrm-cron:
+    image: civicrm/civicrm:6.20.0
+    restart: unless-stopped
+    user: www-data
+    depends_on:
+      civicrm:
+        condition: service_healthy
+    environment:
+      <<: *civicrm-env
+      CIVICRM_ADMIN_USER: ${ADMIN_USER}
+    volumes: *civicrm-volumes
+    working_dir: /var/www/html
+    entrypoint: ["sh", "-c"]
+    command:
+      - >-
+        while true; do
+        cv core:cron --user="$${CIVICRM_ADMIN_USER}" || echo "cron run failed";
+        sleep 900;
+        done
+    healthcheck:
+      disable: true
+
+  civicrm-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: civicrm
+      MARIADB_USER: civicrm
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - civicrm-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  civicrm-private:
+  civicrm-public:
+  civicrm-ext:
+  civicrm-db-data:
