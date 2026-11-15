@@ -1,0 +1,24 @@
+services:
+  otterwiki:
+    image: redimp/otterwiki:2.27.0
+    restart: unless-stopped
+    environment:
+      # Out of the box anyone may edit pages and upload files. On a public web
+      # address start with edits and uploads for signed-in users only; the
+      # admin can change both under Settings > Permissions and Registration.
+      WRITE_ACCESS: REGISTERED
+      ATTACHMENT_ACCESS: REGISTERED
+    volumes:
+      # Everything the wiki keeps: the git repository with every page, its
+      # history and attachments, the SQLite database of users and settings,
+      # and settings.cfg with the secret key made on first start.
+      - otterwiki-data:/app-data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/-/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  otterwiki-data:

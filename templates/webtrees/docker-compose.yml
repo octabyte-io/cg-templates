@@ -1,0 +1,61 @@
+services:
+  webtrees:
+    # webtrees publishes no official image; this is the widely used community image
+    # (github.com/NathanVaughn/webtrees-docker), built from each upstream release.
+    # It serves plain HTTP on port 80 and has its own healthcheck (curl on 127.0.0.1:80).
+    image: nathanvaughn/webtrees:2.2.6
+    restart: unless-stopped
+    depends_on:
+      webtrees-db:
+        condition: service_healthy
+    environment:
+      PRETTY_URLS: "1"
+      # Cloudgate's proxy terminates HTTPS in front of the container.
+      HTTPS: "0"
+      HTTPS_REDIRECT: "0"
+      LANG: en-US
+      BASE_URL: ${BASE_URL}
+      DB_TYPE: mysql
+      DB_HOST: webtrees-db
+      DB_PORT: "3306"
+      DB_USER: webtrees
+      DB_PASS: ${DB_PASSWORD}
+      DB_NAME: webtrees
+      DB_PREFIX: wt_
+      # The first administrator, created on the first start only (the image runs
+      # webtrees' setup wizard for you); later starts leave it alone.
+      WT_USER: admin
+      WT_NAME: Administrator
+      WT_PASS: ${ADMIN_PASSWORD}
+      WT_EMAIL: ${ADMIN_EMAIL}
+    volumes:
+      # config.ini.php, uploaded media (data/media) and GEDCOM files.
+      - webtrees-data:/var/www/webtrees/data
+      # Add-on themes and modules.
+      - webtrees-modules:/var/www/webtrees/modules_v4
+
+  webtrees-db:
+    # The image's own compose file uses mariadb:12; this is that release line, pinned.
+    image: mariadb:12.3.3
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: webtrees
+      MARIADB_USER: webtrees
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - webtrees-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  webtrees-data:
+  webtrees-modules:
+  webtrees-db-data:

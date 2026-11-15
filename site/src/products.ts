@@ -1666,14 +1666,14 @@ export const PRODUCTS: Product[] = [
     id: 'ancestry',
     name: 'Ancestry',
     job: 'family trees and genealogy',
-    lede: 'Gramps Web is a free, open-source Ancestry alternative for keeping your family tree, photos, sources and DNA match data on your own server and building it together with relatives. Ancestry is a subscription service whose main draw is its historical record collections and record hints; Gramps Web has no subscription and imports your Ancestry tree as a GEDCOM file, but has no record collections or DNA tests.',
+    lede: 'Gramps Web is a free, open-source Ancestry alternative for keeping your family tree, photos, sources and DNA match data on your own server and building it together with relatives. Ancestry is a subscription service whose main draw is its historical record collections and record hints; Gramps Web and webtrees have no subscription and import your Ancestry tree as a GEDCOM file, but have no record collections or DNA tests.',
     pick: 'gramps-web',
   },
   {
     id: 'myheritage',
     name: 'MyHeritage',
     job: 'family trees and genealogy',
-    lede: 'Gramps Web is a free, open-source MyHeritage alternative for a private family tree that relatives view and edit together, with charts, maps, photos and DNA match data, on your own server. MyHeritage is a subscription service built around record search, Smart Matches and DNA tests; Gramps Web has no subscription and imports your MyHeritage tree as a GEDCOM file, but has none of those record features.',
+    lede: 'Gramps Web is a free, open-source MyHeritage alternative for a private family tree that relatives view and edit together, with charts, maps, photos and DNA match data, on your own server. MyHeritage is a subscription service built around record search, Smart Matches and DNA tests; Gramps Web and webtrees have no subscription and import your MyHeritage tree as a GEDCOM file, but have none of those record features.',
     pick: 'gramps-web',
   },
   {
@@ -2196,6 +2196,34 @@ export const PRODUCTS: Product[] = [
     job: 'syncing busy times between calendars',
     lede: 'Keeper.sh is a free, open-source CalendarBridge alternative for syncing busy times between Google, Outlook, iCloud, Fastmail and CalDAV calendars, with privacy controls and event filters. CalendarBridge is a paid service that also offers booking pages; self-hosted Keeper.sh only syncs, but it does so for free with no account limits.',
     pick: 'keeper-sh',
+  },
+  {
+    id: 'huckleberry',
+    name: 'Huckleberry',
+    job: 'tracking a baby’s sleep, feeds and diapers',
+    lede: 'Baby Buddy is a free, open-source Huckleberry alternative for logging a baby’s sleep, feeds, diaper changes and growth, shared by every parent and carer on your own server. Huckleberry keeps syncing between caregivers’ devices and its SweetSpot nap predictions for paid plans; Baby Buddy shares the log at no cost, though it has no nap predictions, sleep plans or expert advice.',
+    pick: 'baby-buddy',
+  },
+  {
+    id: 'partsbox',
+    name: 'PartsBox',
+    job: 'electronic parts inventory',
+    lede: 'Part-DB is a free, open-source PartsBox alternative for keeping track of electronic components: where each part is stored, how many you have, what it cost and its datasheets, with bills of materials and KiCad integration. PartsBox’s paid plans are priced by the month and the number of users; self-hosted Part-DB has no user limit and keeps your inventory on your own server, though it is less polished and lacks the ordering and manufacturing workflows of PartsBox’s higher plans.',
+    pick: 'part-db',
+  },
+  {
+    id: 'gavel',
+    name: 'Gavel',
+    job: 'document automation and client intake',
+    lede: 'docassemble is a free, open-source Gavel alternative for guided interviews that ask clients questions one at a time and assemble finished Word or PDF documents from their answers. Gavel is priced by the month, and its entry plan limits builders, workflows and sessions; docassemble has no such limits on your own server, but someone has to write its interviews as text files instead of using a no-code builder.',
+    pick: 'docassemble',
+  },
+  {
+    id: 'hotdocs',
+    name: 'HotDocs',
+    job: 'document assembly',
+    lede: 'docassemble is a free, open-source HotDocs alternative for document assembly: it asks people questions one screen at a time and fills Word or PDF templates from their answers. HotDocs is commercial software sold by quote; docassemble has no licence fee and runs on your own server, though its interviews are written as text files with simple logic rather than built in a commercial tool with vendor support.',
+    pick: 'docassemble',
   },
 ];
 

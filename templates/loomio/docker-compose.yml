@@ -1,0 +1,106 @@
+# Based on Loomio's official deploy/docker-compose.yml (loomio/loomio, v3.16.0).
+# The web address goes to port 80, where the image's Thruster proxy fronts Puma (port 3000).
+# Left out: the nginx-proxy and acme-companion services (Cloudgate routes the domain and
+# handles TLS) and the optional Haraka service for reply-by-email (it needs port 25 and an MX record).
+x-loomio-env: &loomio-env
+  RAILS_ENV: production
+  SITE_NAME: Loomio
+  CANONICAL_HOST: ${CANONICAL_HOST}
+  PUBLIC_APP_URL: ${PUBLIC_APP_URL}
+  PRIVATE_APP_URL: http://loomio:3000
+  SUPPORT_EMAIL: ${SUPPORT_EMAIL}
+  REPLY_HOSTNAME: ${CANONICAL_HOST}
+  RAILS_INBOUND_EMAIL_URL: http://loomio:3000/rails/action_mailbox/relay/inbound_emails
+  RAILS_INBOUND_EMAIL_PASSWORD: ${RAILS_INBOUND_EMAIL_PASSWORD}
+  SMTP_AUTH: plain
+  SMTP_DOMAIN: ${CANONICAL_HOST}
+  SMTP_SERVER: ${SMTP_SERVER}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USERNAME: ${SMTP_USERNAME}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_USE_SSL: ${SMTP_USE_SSL}
+  WEB_CONCURRENCY: "0"
+  MIN_THREADS: "3"
+  MAX_THREADS: "3"
+  # Cloudgate terminates HTTPS in front of the app and forwards plain HTTP.
+  FORCE_SSL: "1"
+  ASSUME_SSL: "1"
+  USE_RACK_ATTACK: "1"
+  RACK_ATTACK_RATE_MULTPLIER: "1"
+  RACK_ATTACK_TIME_MULTPLIER: "1"
+  DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@loomio-db/loomio_production
+  REDIS_CACHE_URL: redis://loomio-redis:6379/0
+  ACTIVE_STORAGE_SERVICE: local
+  LOOMIO_SYSTEM_RELOAD: "1"
+  SERVER_API_KEY: ${SERVER_API_KEY}
+  SECRET_COOKIE_TOKEN: ${SECRET_COOKIE_TOKEN}
+
+services:
+  loomio:
+    image: loomio/loomio:3.16.0
+    restart: unless-stopped
+    depends_on:
+      loomio-db:
+        condition: service_healthy
+      loomio-redis:
+        condition: service_healthy
+    environment:
+      <<: *loomio-env
+    volumes:
+      - loomio-uploads:/loomio/public/system
+      - loomio-storage:/loomio/storage
+      - loomio-files:/loomio/public/files
+      - loomio-client:/loomio/public/client3
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent --output /dev/null http://localhost:3000/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 180s
+
+  loomio-worker:
+    image: loomio/loomio:3.16.0
+    restart: unless-stopped
+    depends_on:
+      loomio:
+        condition: service_healthy
+    environment:
+      <<: *loomio-env
+      TASK: worker
+    volumes:
+      - loomio-uploads:/loomio/public/system
+      - loomio-storage:/loomio/storage
+      - loomio-files:/loomio/public/files
+      - loomio-client:/loomio/public/client3
+
+  loomio-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: loomio_production
+    volumes:
+      - loomio-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d loomio_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  loomio-redis:
+    image: redis:8.4.8-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  loomio-uploads:
+  loomio-storage:
+  loomio-files:
+  loomio-client:
+  loomio-db-data:

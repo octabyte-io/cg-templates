@@ -1,0 +1,24 @@
+name: Baby Buddy
+description: "Baby Buddy is a self-hosted baby tracker: parents and caregivers share one log of feedings, sleep, diapers and growth, with charts and timers."
+version: "2.11.0"
+tags: [baby tracker, huckleberry alternative, self-hosted baby tracker, feeding tracker, baby sleep tracker, diaper log, glow baby alternative]
+links:
+  website: https://github.com/babybuddy/babybuddy
+  docs: https://docs.baby-buddy.net
+  source: https://github.com/babybuddy/babybuddy
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.babybuddy.url}}" }
+  SECRET_KEY: { generate: hex }
+  # Replaces the default password (admin) of the account "admin" on the first start.
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in Baby Buddy, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: babybuddy, port: 8000 }

@@ -1,0 +1,17 @@
+name: InvoicePlane
+description: "Self-hosted InvoicePlane: free, open-source quotes and invoices for freelancers, with online payment by Stripe or PayPal and recurring billing."
+version: "1.7.2.6"
+tags: [freshbooks alternative, zoho invoice alternative, open source invoicing software, quotes and invoices, invoicing for freelancers, recurring invoices, e-invoicing]
+links:
+  website: https://invoiceplane.com
+  docs: https://wiki.invoiceplane.com
+  source: https://github.com/InvoicePlane/InvoicePlane
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  IP_URL: { value: "{{domains.invoiceplane.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: invoiceplane, port: 80 }

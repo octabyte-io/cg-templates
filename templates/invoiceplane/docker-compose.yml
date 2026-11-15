@@ -1,0 +1,82 @@
+# InvoicePlane publishes no container image of its own (its repo's GHCR workflow has never
+# published one). This uses the maintained community image mhzawadi/invoiceplane
+# (github.com/mhzawadi/invoiceplane), which follows each release, set up as its
+# docker-compose.yml does, without the Traefik proxy.
+services:
+  invoiceplane:
+    # nginx + PHP-FPM on Alpine, serving InvoicePlane v1.7.2 on port 80; ".6" is the
+    # image's own build number.
+    image: mhzawadi/invoiceplane:1.7.2.6
+    restart: unless-stopped
+    depends_on:
+      invoiceplane-db:
+        condition: service_healthy
+    environment:
+      IP_URL: ${IP_URL}
+      # The bundled nginx is set up for addresses without "index.php".
+      REMOVE_INDEXPHP: "true"
+      MYSQL_HOST: invoiceplane-db
+      MYSQL_PORT: "3306"
+      MYSQL_DB: invoiceplane
+      MYSQL_USER: invoiceplane
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      # Trust Cloudgate's proxy on the private container network, so the app sees each
+      # visitor's own address (password-reset limits are counted per address).
+      PROXY_IPS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+    # The image keeps InvoicePlane's settings file (ipconfig.php: setup state and the
+    # encryption key for stored passwords) inside the container, so it would be lost
+    # whenever the container is replaced. This wrapper keeps it in a volume: it puts
+    # the saved copy back before the image's own start script runs, then links the
+    # file to the volume so the first-run setup's changes are saved there. Once setup
+    # is done it runs the database migrations on each start, as the image does.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        CONF=/var/lib/invoiceplane/config/ipconfig.php
+        mkdir -p /var/lib/invoiceplane/config
+        rm -f /var/www/html/ipconfig.php
+        if [ -f "$$CONF" ]; then
+          cp "$$CONF" /var/www/html/ipconfig.php
+          sed -i 's!^IP_URL=.*!IP_URL=!' /var/www/html/ipconfig.php
+        fi
+        exec /config/start.sh /bin/sh -c "
+          cp /var/www/html/ipconfig.php $$CONF &&
+          chown nobody:nginx $$CONF &&
+          ln -sf $$CONF /var/www/html/ipconfig.php &&
+          if grep -q '^SETUP_COMPLETED=true' $$CONF; then php index.php setup/cli/migrate; fi;
+          exec nginx -g 'daemon off;'"
+    volumes:
+      - invoiceplane-config:/var/lib/invoiceplane/config
+      # Logos and attachments.
+      - invoiceplane-uploads:/var/www/html/uploads
+      # Custom styles and customized invoice and quote templates, as the image documents.
+      - invoiceplane-css:/var/www/html/assets/core/css
+      - invoiceplane-views:/var/www/html/application/views
+
+  invoiceplane-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: invoiceplane
+      MARIADB_USER: invoiceplane
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - invoiceplane-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  invoiceplane-config:
+  invoiceplane-uploads:
+  invoiceplane-css:
+  invoiceplane-views:
+  invoiceplane-db-data:
