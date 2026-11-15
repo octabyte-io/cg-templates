@@ -1,0 +1,12 @@
+services:
+  watcharr:
+    image: ghcr.io/sbondco/watcharr:v4.3.0
+    restart: unless-stopped
+    volumes:
+      # Everything Watcharr keeps: the SQLite database, its watcharr.json
+      # settings (with the signing secret it generates on first start) and
+      # the image cache.
+      - watcharr-data:/data
+
+volumes:
+  watcharr-data:

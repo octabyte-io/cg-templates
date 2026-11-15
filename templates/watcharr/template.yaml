@@ -1,0 +1,19 @@
+name: Watcharr
+description: "Watcharr is a self-hosted watched list for movies, TV shows and anime: rate what you watch, track episodes and import your Trakt history."
+version: "v4.3.0"
+tags:
+  - trakt alternative
+  - movie tracker
+  - tv show tracker
+  - watchlist app
+  - tv time alternative
+  - self-hosted watchlist
+links:
+  website: https://watcharr.app
+  docs: https://watcharr.app/docs/introduction
+  source: https://github.com/sbondCo/Watcharr
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: watcharr, port: 3080 }

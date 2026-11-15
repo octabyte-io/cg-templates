@@ -1,0 +1,41 @@
+name: ImmichFrame
+description: "ImmichFrame is a self-hosted digital photo frame for Immich: it turns a tablet, TV or spare screen into a slideshow of your albums, with clock and weather."
+version: "v1.0.39.0"
+tags:
+  - immich photo frame
+  - digital photo frame
+  - nixplay alternative
+  - photo slideshow
+  - immich slideshow
+  - aura frame alternative
+links:
+  website: https://immichframe.dev
+  docs: https://immichframe.dev/docs/overview
+  source: https://github.com/immichFrame/ImmichFrame
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  IMMICH_SERVER_URL:
+    ask:
+      label: Immich address
+      description: The web address of your Immich server, for example https://photos.example.com. ImmichFrame shows the photos kept there.
+      format: url
+  IMMICH_API_KEY:
+    ask:
+      label: Immich API key
+      description: Create one in Immich under Account settings > API keys. You can change it later on ImmichFrame's admin page.
+      secret: true
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for the clock and calendar on the frame, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+  # The password for the admin page at /admin.
+  ADMIN_PASSWORD: { generate: password }
+  # Every screen needs this once to show the slideshow, so the address isn't open
+  # to anyone: open the address with ?authsecret=<value>, or type it in when asked.
+  AUTHENTICATION_SECRET: { generate: hex }
+domains:
+  - { service: immichframe, port: 8080 }

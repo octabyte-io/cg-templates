@@ -1,0 +1,52 @@
+name: Usertour
+description: "Usertour is self-hosted user onboarding software: build product tours, checklists, banners, surveys and a help center inside your web app, with no per-user fee."
+version: "0.9.8"
+tags:
+  - product tours
+  - user onboarding
+  - appcues alternative
+  - userpilot alternative
+  - in-app checklist
+  - nps survey
+  - userflow alternative
+links:
+  website: https://www.usertour.io
+  docs: https://docs.usertour.io
+  source: https://github.com/usertour/usertour
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.usertour.url}}" }
+  JWT_SECRET: { generate: hex }
+  # Encrypts two-factor secrets stored in the database; it must not change after setup.
+  ENCRYPTION_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  EMAIL_SENDER:
+    ask:
+      label: Sender
+      description: Optional. The name and address invitations and password resets come from, such as "Usertour <onboarding@yourdomain.com>". Leave the email settings empty to skip email.
+      required: false
+  EMAIL_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Needed to invite teammates by email and to reset passwords, for example smtp.resend.com.
+      required: false
+  EMAIL_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  EMAIL_USER:
+    ask:
+      label: Email server username
+      required: false
+  EMAIL_PASS:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: usertour, port: 80 }

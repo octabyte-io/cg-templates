@@ -1,0 +1,177 @@
+# Kyoo 5.3.0, from the official docker-compose.yml and .env.example at tag
+# v5.3.0 (https://github.com/zoriya/Kyoo). Changes: release tags instead of
+# :edge, settings written out instead of an .env file, a database password
+# instead of "trust", the CPU transcoder only (no GPU profiles), named volumes
+# for the library and transcode cache, and Traefik reading its routes from a
+# file (as the official Helm chart does) instead of the Docker socket.
+services:
+  # The router: the web address points here. It sends /api, /auth, /video and
+  # /scanner to the services below and everything else to the web app.
+  kyoo:
+    image: traefik:v3.7.15
+    restart: unless-stopped
+    command:
+      - "--entryPoints.web.address=:8901"
+      # Cloudgate's proxy sits in front and sets the X-Forwarded headers.
+      - "--entryPoints.web.forwardedHeaders.insecure=true"
+      - "--providers.file.filename=/etc/traefik/routes.yaml"
+      - "--ping=true"
+      - "--accesslog=true"
+      - "--accesslog.fields.queryparameters.defaultmode=drop"
+    volumes:
+      - ../files/traefik-routes.yaml:/etc/traefik/routes.yaml:ro
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - front
+      - auth
+      - api
+
+  # The web app (static files served by nginx).
+  front:
+    image: ghcr.io/zoriya/kyoo_front:5.3.0
+    restart: unless-stopped
+
+  # Accounts, sign-in and API keys. The first account created is the admin.
+  auth:
+    image: ghcr.io/zoriya/kyoo_auth:5.3.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PUBLIC_URL: ${PUBLIC_URL}
+      # Always allow the Kyoo mobile app's scheme.
+      EXTRA_OIDC_REDIRECT_URLS: kyoo
+      # New accounts can browse and play, but wait for the admin to verify them.
+      EXTRA_CLAIMS: '{"permissions": ["core.read", "core.play"], "verified": false}'
+      FIRST_USER_CLAIMS: '{"permissions": ["users.read", "users.write", "users.delete", "apikeys.read", "apikeys.write", "core.read", "core.write", "core.play", "scanner.trigger", "scanner.guess", "scanner.search", "scanner.add"], "verified": true}'
+      # Visitors who are not signed in can browse the library but not play it.
+      GUEST_CLAIMS: '{"permissions": ["core.read"], "verified": true}'
+      PROTECTED_CLAIMS: permissions,verified
+      KEIBI_APIKEY_SCANNER: lazy
+      KEIBI_APIKEY_SCANNER_CLAIMS: '{"permissions": ["core.read", "core.write"]}'
+      PGUSER: kyoo
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: kyoo
+      PGHOST: postgres
+      PGPORT: "5432"
+    volumes:
+      - kyoo-profile-pictures:/profile_pictures
+
+  # The library API; stores posters and artwork in kyoo-images.
+  api:
+    image: ghcr.io/zoriya/kyoo_api:5.3.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      JWT_ISSUER: ${PUBLIC_URL}
+      AUTH_SERVER: http://auth:4568
+      TRANSCODER_SERVER: http://transcoder:7666
+      IMAGES_PATH: /images
+      PGUSER: kyoo
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: kyoo
+      PGHOST: postgres
+      PGPORT: "5432"
+    volumes:
+      - kyoo-images:/images
+
+  # Watches the library for new video files and looks them up on TheMovieDB
+  # and TheTVDB (with Kyoo's built-in keys unless you give your own).
+  scanner:
+    image: ghcr.io/zoriya/kyoo_scanner:5.3.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth:
+        condition: service_started
+    environment:
+      KYOO_URL: http://kyoo:8901/api
+      AUTH_SERVER: http://auth:4568
+      JWKS_URL: http://auth:4568/.well-known/jwks.json
+      JWT_ISSUER: ${PUBLIC_URL}
+      LIBRARY_IGNORE_PATTERN: ".*/[dD]ownloads?/.*"
+      THEMOVIEDB_API_ACCESS_TOKEN: ${THEMOVIEDB_API_ACCESS_TOKEN:-}
+      TVDB_APIKEY: ${TVDB_APIKEY:-}
+      PGUSER: kyoo
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: kyoo
+      PGHOST: postgres
+      PGPORT: "5432"
+    volumes:
+      - kyoo-library:/video:ro
+
+  # Converts video as it plays, on the CPU (no graphics card needed).
+  transcoder:
+    image: ghcr.io/zoriya/kyoo_transcoder:5.3.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth:
+        condition: service_started
+    environment:
+      JWKS_URL: http://auth:4568/.well-known/jwks.json
+      GOCODER_HWACCEL: disabled
+      GOCODER_PRESET: fast
+      PGUSER: kyoo
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: kyoo
+      PGHOST: postgres
+      PGPORT: "5432"
+    volumes:
+      - kyoo-library:/video:ro
+      # Temporary transcodes; Kyoo cleans this up itself.
+      - kyoo-cache:/cache
+      - kyoo-transcoder-metadata:/metadata
+
+  postgres:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kyoo
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: kyoo
+    volumes:
+      - kyoo-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kyoo -d kyoo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # FileBrowser Quantum: upload films and series from the browser at its own
+  # address, into the library volume Kyoo scans (Kyoo mounts it read-only).
+  # Sign in as "admin" with FILEBROWSER_ADMIN_PASSWORD (set back to this value
+  # on every start). Runs as root so it can write to the shared volume.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - kyoo-library:/srv
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  kyoo-library:
+  kyoo-cache:
+  kyoo-images:
+  kyoo-profile-pictures:
+  kyoo-transcoder-metadata:
+  kyoo-db-data:
+  filebrowser-data:
