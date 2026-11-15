@@ -1,0 +1,180 @@
+services:
+  itop:
+    # Combodo publishes no image: this is the widely used community image
+    # (github.com/vbkunin/itop-docker), pinned to iTop 3.2.2, its latest stable image.
+    # The full variant is used for its MariaDB client tools (iTop's installer and its backup
+    # module need mysqldump); its bundled database server is switched off below, and iTop
+    # uses the itop-db service instead.
+    image: vbkunin/itop:3.2.2
+    restart: unless-stopped
+    depends_on:
+      itop-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      ITOP_URL: ${ITOP_URL}
+      ITOP_DB_HOST: itop-db
+      ITOP_DB_NAME: itop
+      ITOP_DB_USER: itop
+      ITOP_DB_PASSWORD: ${DB_PASSWORD}
+      ITOP_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ITOP_CRON_PASSWORD: ${CRON_PASSWORD}
+    # Runs as root on every start, then hands over to the image's own init (/sbin/my_init:
+    # Apache and cron). On the first start it installs iTop with iTop's own unattended
+    # installer (setup/unattended-install) instead of the web setup wizard, creating the
+    # "admin" account and a "cron" account for iTop's background tasks.
+    command:
+      - bash
+      - -c
+      - |
+        set -euo pipefail
+        cd /var/www/html
+
+        : "$${ITOP_URL:?}" "$${ITOP_DB_HOST:?}" "$${ITOP_DB_NAME:?}" "$${ITOP_DB_USER:?}" "$${ITOP_DB_PASSWORD:?}"
+        : "$${ITOP_ADMIN_PASSWORD:?}" "$${ITOP_CRON_PASSWORD:?}"
+        url="$${ITOP_URL%/}/"
+        # iTop's password policy wants upper and lower case, a digit and a symbol.
+        export ITOP_CRON_PWD="$${ITOP_CRON_PASSWORD}-Cg1"
+        config=conf/production/config-itop.php
+
+        # Switch off the image's bundled database server: iTop uses itop-db.
+        touch /etc/service/mysql/down
+        rm -f /etc/my_init.d/init-mysql.sh
+
+        # Named volumes: make sure the web server user owns them.
+        mkdir -p env-production
+        chown www-data:www-data conf data env-production
+
+        if [ ! -f "$$config" ]; then
+          echo "cloudgate: installing iTop (first start)"
+          params=$$(mktemp /tmp/itop-install.XXXXXX.xml)
+          cat > "$$params" <<XML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <installation>
+          <mode>install</mode>
+          <preinstall></preinstall>
+          <source_dir>datamodels/2.x/</source_dir>
+          <datamodel_version>2.7.0</datamodel_version>
+          <previous_configuration_file></previous_configuration_file>
+          <extensions_dir>extensions</extensions_dir>
+          <target_env>production</target_env>
+          <workspace_dir></workspace_dir>
+          <database>
+            <server>$${ITOP_DB_HOST}</server>
+            <user>$${ITOP_DB_USER}</user>
+            <pwd>$${ITOP_DB_PASSWORD}</pwd>
+            <name>$${ITOP_DB_NAME}</name>
+            <db_tls_enabled>0</db_tls_enabled>
+            <db_tls_ca></db_tls_ca>
+            <prefix></prefix>
+          </database>
+          <url>$${url}</url>
+          <graphviz_path>/usr/bin/dot</graphviz_path>
+          <admin_account>
+            <user>admin</user>
+            <pwd>$${ITOP_ADMIN_PASSWORD}</pwd>
+            <language>EN US</language>
+          </admin_account>
+          <language>EN US</language>
+          <selected_modules type="array"></selected_modules>
+          <selected_extensions type="array"></selected_extensions>
+          <sample_data>0</sample_data>
+          <old_addon></old_addon>
+          <options type="array"/>
+          <mysql_bindir></mysql_bindir>
+        </installation>
+        XML
+          chown www-data:www-data "$$params"
+          chmod 600 "$$params"
+          # An empty selected_extensions list means the setup wizard's default choices
+          # (configuration management, simple tickets with the user portal, simple change management).
+          su www-data -s /bin/bash -c "php setup/unattended-install/unattended-install.php \
+              --param-file='$$params' --installation_xml=datamodels/2.x/installation.xml" \
+            | tee /tmp/itop-install.log
+          rm -f "$$params"
+          if ! tail -n 5 /tmp/itop-install.log | grep -q "installed!"; then
+            echo "cloudgate: iTop installation failed" >&2
+            exit 1
+          fi
+        fi
+
+        # A dedicated "cron" administrator runs iTop's background tasks (notifications, email
+        # collection, SLAs), so changing the admin password never stops them. Created once.
+        su www-data -s /bin/bash -c "php" <<'PHP'
+        <?php
+        require_once '/var/www/html/approot.inc.php';
+        require_once APPROOT.'application/startup.inc.php';
+        UserRights::Login('admin');
+        if (MetaModel::GetObjectFromOQL("SELECT User WHERE login = 'cron'", null, true) === null) {
+            $$oProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = 'Administrator'", null, true);
+            $$oLinks = DBObjectSet::FromScratch('URP_UserProfile');
+            $$oLinks->AddObject(MetaModel::NewObject('URP_UserProfile', ['profileid' => $$oProfile->GetKey(), 'reason' => 'Runs background tasks']));
+            $$oUser = MetaModel::NewObject('UserLocal', [
+                'login' => 'cron',
+                'password' => getenv('ITOP_CRON_PWD'),
+                'language' => 'EN US',
+                'status' => 'enabled',
+                'expiration' => 'never_expire',
+                'profile_list' => $$oLinks,
+            ]);
+            $$oUser->DBInsert();
+            echo "cloudgate: created the cron account\n";
+        }
+        PHP
+
+        # On every start: keep iTop's own address in step with the app's domain.
+        chmod u+w "$$config"
+        sed -i "s|'app_root_url' => '[^']*'|'app_root_url' => '$${url}'|" "$$config"
+        chmod a-w "$$config"
+
+        # iTop's background tasks, every minute, as the cron account (credentials kept outside the web root).
+        printf 'auth_user=cron\nauth_pwd=%s\n' "$$ITOP_CRON_PWD" > /etc/itop-cron.params
+        chown www-data:www-data /etc/itop-cron.params
+        chmod 400 /etc/itop-cron.params
+        touch log/cron.log && chown www-data:www-data log/cron.log
+        echo "* * * * * www-data /usr/bin/php /var/www/html/webservices/cron.php --param_file=/etc/itop-cron.params >> /var/www/html/log/cron.log 2>&1" > /etc/cron.d/itop
+        chmod 644 /etc/cron.d/itop
+
+        exec /sbin/my_init
+    volumes:
+      # iTop's configuration (database settings, encryption key).
+      - itop-conf:/var/www/html/conf
+      # The compiled data model, caches and backups.
+      - itop-env:/var/www/html/env-production
+      - itop-data:/var/www/html/data
+      # Extensions added by hand.
+      - itop-extensions:/var/www/html/extensions
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/pages/UI.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 600s
+
+  itop-db:
+    # iTop 3.2 supports MariaDB 10.3 to 11.4.
+    image: mariadb:11.4.13
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: itop
+      MARIADB_USER: itop
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    command: ["--max-allowed-packet=64M", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - itop-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  itop-conf:
+  itop-env:
+  itop-data:
+  itop-extensions:
+  itop-db-data:

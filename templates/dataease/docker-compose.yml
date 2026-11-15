@@ -1,0 +1,94 @@
+# From the official installer (installer/dataease/docker-compose.yml and
+# docker-compose-mysql.yml at v3.2.1), community mode: DataEase and MySQL.
+# The installer writes its settings into config files; here the same settings
+# are Spring Boot environment variables.
+services:
+  dataease:
+    image: registry.cn-qingdao.aliyuncs.com/dataease/dataease:v3.2.1
+    restart: unless-stopped
+    stop_signal: SIGTERM
+    stop_grace_period: 15s
+    depends_on:
+      dataease-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mariadb://dataease-db:3306/dataease?autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      DATAEASE_ORIGINLIST: ${APP_URL}
+      DATAEASE_DATAEASESERVERS: dataease
+      DATAEASE_EXPORT_VIEWS_LIMIT: "100000"
+      DATAEASE_EXPORT_DATASET_LIMIT: "100000"
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      # The image refuses to start without this folder; the installer keeps its
+      # config files here. Settings above come from the environment instead.
+      - dataease-config:/opt/apps/config
+      - dataease-static-resource:/opt/dataease3.0/data/static-resource
+      - dataease-geo:/opt/dataease3.0/data/geo
+      - dataease-map:/opt/dataease3.0/data/map
+      - dataease-appearance:/opt/dataease3.0/data/appearance
+      - dataease-export:/opt/dataease3.0/data/exportData
+      - dataease-plugin:/opt/dataease3.0/data/plugin
+      - dataease-font:/opt/dataease3.0/data/font
+      - dataease-i18n:/opt/dataease3.0/data/i18n
+      - dataease-report:/opt/dataease3.0/data/report
+      - dataease-driver:/opt/dataease3.0/data/driver
+      - dataease-cache:/opt/dataease3.0/cache
+
+  # MySQL 8.4 with the settings from the installer's my.cnf, except the 1 GB
+  # buffer pool, which is left at MySQL's default to fit smaller servers.
+  #
+  # DataEase creates its admin account with the published default password
+  # DataEase@123456. A background step here waits until that account exists
+  # and replaces the password with the generated ADMIN_PASSWORD (DataEase
+  # stores it as an MD5 hash). It changes the password only while it is still
+  # the default, so a password changed in DataEase stays changed.
+  dataease-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    entrypoint:
+      - bash
+      - -c
+      - |
+        (
+          export MYSQL_PWD="$$MYSQL_ROOT_PASSWORD"
+          hash=$$(printf %s "$$ADMIN_PASSWORD" | md5sum | cut -d' ' -f1)
+          until mysql -h 127.0.0.1 -uroot -N -e "SELECT id FROM dataease.per_user WHERE account = 'admin'" 2>/dev/null | grep -q .; do sleep 10; done
+          mysql -h 127.0.0.1 -uroot -e "UPDATE dataease.per_user SET pwd = '$$hash' WHERE account = 'admin' AND pwd = '504c8c8dfcbbe5b50d676ad65ef43909'" \
+            && echo "Cloudgate: admin password checked"
+        ) &
+        exec docker-entrypoint.sh mysqld \
+          --transaction-isolation=READ-COMMITTED \
+          --max-allowed-packet=64M \
+          --max-connections=2000 \
+          --innodb-lock-wait-timeout=1800 \
+          --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION \
+          --skip-name-resolve
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: dataease
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      - dataease-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --protocol tcp"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  dataease-config:
+  dataease-static-resource:
+  dataease-geo:
+  dataease-map:
+  dataease-appearance:
+  dataease-export:
+  dataease-plugin:
+  dataease-font:
+  dataease-i18n:
+  dataease-report:
+  dataease-driver:
+  dataease-cache:
+  dataease-db-data:

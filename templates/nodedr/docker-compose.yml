@@ -1,0 +1,63 @@
+# From the project's docker-compose.yml (v1.37.0), using its published images.
+# Left out: the "updater" container (it mounts the Docker socket to replace the app's
+# own containers) and the host USB passthrough for direct-USB receipt printers.
+# Network (LAN) receipt printers still work.
+services:
+  backend:
+    # The web image sends /api and /socket.io to http://backend:4000 (fixed when the
+    # image is built), so this service must be called "backend".
+    image: ghcr.io/raktim94/nodedr-restaurant-pos-backend:1.37.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://nodedr:${POSTGRES_PASSWORD}@postgres:5432/nodedr_restaurant
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: "12h"
+      PORT: "4000"
+      CORS_ORIGIN: ${APP_URL}
+      # Cloudgate serves the app over HTTPS behind its proxy.
+      COOKIE_SECURE: "true"
+      # All traffic reaches the backend through Cloudgate's proxy and the web container.
+      TRUST_PROXY: "1"
+      # The https address customers and payment gateways reach (payment return page, webhooks).
+      PUBLIC_BASE_URL: ${APP_URL}
+      UPLOADS_DIR: /data/uploads
+    volumes:
+      - uploads-data:/data/uploads
+      - state-data:/data/state
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:4000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  web:
+    image: ghcr.io/raktim94/nodedr-restaurant-pos-web:1.37.0
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  postgres:
+    # 16, to match the pg_dump/pg_restore 16 client the backend's backup feature uses.
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nodedr
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: nodedr_restaurant
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nodedr -d nodedr_restaurant"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pg-data:
+  uploads-data:
+  state-data:

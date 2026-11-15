@@ -1,0 +1,93 @@
+# From btcpayserver-docker's generator fragments (btcpayserver, nbxplorer, postgres,
+# bitcoincore, opt-save-storage-xxs): Bitcoin only, mainnet, pruned, no Lightning.
+services:
+  btcpayserver:
+    image: btcpayserver/btcpayserver:2.4.7
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nbxplorer:
+        condition: service_started
+    environment:
+      BTCPAY_POSTGRES: User ID=postgres;Password=${POSTGRES_PASSWORD};Host=postgres;Port=5432;Application Name=btcpayserver;Database=btcpayservermainnet
+      BTCPAY_EXPLORERPOSTGRES: User ID=postgres;Password=${POSTGRES_PASSWORD};Host=postgres;Port=5432;Application Name=btcpayserver;MaxPoolSize=80;Database=nbxplorermainnet
+      BTCPAY_NETWORK: mainnet
+      BTCPAY_BIND: 0.0.0.0:49392
+      BTCPAY_ROOTPATH: /
+      BTCPAY_DEBUGLOG: btcpay.log
+      BTCPAY_UPDATEURL: https://api.github.com/repos/btcpayserver/btcpayserver/releases/latest
+      BTCPAY_NODEFAULTCHAIN: "true"
+      BTCPAY_CHAINS: btc
+      BTCPAY_BTCEXPLORERURL: http://nbxplorer:32838/
+    volumes:
+      - btcpay-datadir:/datadir
+      - btcpay-plugins:/root/.btcpayserver/Plugins
+      - nbxplorer-datadir:/root/.nbxplorer
+
+  # Watches the Bitcoin node for payments to the stores' wallets.
+  nbxplorer:
+    image: nicolasdorier/nbxplorer:2.6.23
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      bitcoind:
+        condition: service_started
+    environment:
+      NBXPLORER_NETWORK: mainnet
+      NBXPLORER_BIND: 0.0.0.0:32838
+      NBXPLORER_TRIMEVENTS: 10000
+      NBXPLORER_SIGNALFILESDIR: /datadir
+      NBXPLORER_POSTGRES: User ID=postgres;Password=${POSTGRES_PASSWORD};Host=postgres;Port=5432;Application Name=nbxplorer;MaxPoolSize=20;Database=nbxplorermainnet
+      NBXPLORER_CHAINS: btc
+      NBXPLORER_BTCRPCURL: http://bitcoind:43782/
+      NBXPLORER_BTCNODEENDPOINT: bitcoind:39388
+    volumes:
+      - nbxplorer-datadir:/datadir
+      # Reads the node's RPC cookie from here.
+      - bitcoin-datadir:/root/.bitcoin
+
+  # A pruned Bitcoin Core node: keeps about 5 GB of recent blocks plus the
+  # chain state (opt-save-storage-xxs, BTCPay's setting when there is no Lightning).
+  bitcoind:
+    image: btcpayserver/bitcoin:32.1
+    restart: unless-stopped
+    environment:
+      BITCOIN_NETWORK: mainnet
+      CREATE_WALLET: "false"
+      BITCOIN_WALLETDIR: /walletdata
+      BITCOIN_EXTRA_ARGS: |
+        rpcport=43782
+        rpcbind=0.0.0.0:43782
+        rpcallowip=0.0.0.0/0
+        port=39388
+        whitelist=0.0.0.0/0
+        maxmempool=500
+        prune=5000
+    volumes:
+      - bitcoin-datadir:/data
+      - bitcoin-wallet-datadir:/walletdata
+
+  postgres:
+    image: btcpayserver/postgres:18.7
+    restart: unless-stopped
+    shm_size: 256mb
+    command: ["-c", "random_page_cost=1.0", "-c", "shared_preload_libraries=pg_stat_statements"]
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-datadir:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  btcpay-datadir:
+  btcpay-plugins:
+  nbxplorer-datadir:
+  bitcoin-datadir:
+  bitcoin-wallet-datadir:
+  postgres-datadir:

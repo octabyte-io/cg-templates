@@ -1,0 +1,16 @@
+name: Overleaf Community Edition
+description: "Overleaf Community Edition, self-hosted: write LaTeX papers and theses together in your browser with a live PDF preview, without an overleaf.com plan."
+version: "6.3.3"
+tags: [self-hosted overleaf, overleaf alternative, latex editor, collaborative latex, academic writing, thesis writing]
+links:
+  website: https://www.overleaf.com
+  docs: https://docs.overleaf.com/on-premises
+  source: https://github.com/overleaf/overleaf
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  OVERLEAF_SITE_URL: { value: "{{domains.overleaf.url}}" }
+  OVERLEAF_INVITE_TOKEN_SECRET: { generate: base64 }
+domains:
+  - { service: overleaf, port: 80 }

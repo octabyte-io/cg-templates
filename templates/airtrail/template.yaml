@@ -1,0 +1,16 @@
+name: AirTrail
+description: "AirTrail is a self-hosted flight tracker: log every flight you take, see them on a world map and get statistics. Imports from Flighty and App in the Air."
+version: "3.14.0"
+tags: [flight tracker, flight log, flighty alternative, app in the air alternative, flight history map, travel statistics, myflightradar24 alternative]
+links:
+  website: https://airtrail.johan.ohly.dk
+  docs: https://airtrail.johan.ohly.dk/docs
+  source: https://github.com/johanohly/AirTrail
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ORIGIN: { value: "{{domains.airtrail.url}}" }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: airtrail, port: 3000 }

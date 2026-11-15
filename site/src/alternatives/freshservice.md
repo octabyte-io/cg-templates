@@ -6,8 +6,11 @@ apps:
   otobo:
     fit: "A deep, configurable service desk with ticket queues fed by email, phone and a portal, SLAs and escalations, process management, automations and a customer portal, plus free add-ons for incident, problem and change management, a CMDB and a FAQ. Unlike Freshservice and GLPI, it does not scan your computers into an asset inventory, its interface is dense and older-looking, and it needs a large server."
     import: no
+  itop:
+    fit: "A service desk tied to a CMDB: requests and incidents with SLAs, problems, changes, a user portal for staff, and a configurable record of servers, computers, applications and the services that depend on them. Freshservice is quicker to start; iTop takes setup, uses ITIL terms throughout, finds no devices on its own, and needs a free extension to turn emails into tickets."
+    import: partly
 moving: |
-  There is no Freshservice importer. Set up your technicians, ticket categories and SLAs in GLPI first, connect LDAP or Active Directory for your users, and install the GLPI Agent on your computers to fill the inventory automatically. Add a mailbox so tickets sent by email arrive in GLPI, then point your support address at it. Finish open tickets in Freshservice and keep an export of its history. OTOBO has no Freshservice importer either: create your queues, agents, groups and SLAs, add your support mailbox as an IMAP or POP3 mail account, and install its free ITSM and FAQ add-ons if you want problem and change management and a knowledge base.
+  There is no Freshservice importer. Set up your technicians, ticket categories and SLAs in GLPI first, connect LDAP or Active Directory for your users, and install the GLPI Agent on your computers to fill the inventory automatically. Add a mailbox so tickets sent by email arrive in GLPI, then point your support address at it. Finish open tickets in Freshservice and keep an export of its history. OTOBO has no Freshservice importer either: create your queues, agents, groups and SLAs, add your support mailbox as an IMAP or POP3 mail account, and install its free ITSM and FAQ add-ons if you want problem and change management and a knowledge base. With iTop, set up your organisations, teams, services, contracts and SLAs first, then bring in people, devices and other records from CSV files exported from Freshservice, since iTop's CSV import loads any kind of record. Add the free Mail to ticket extension if people open tickets by email, and give staff the address of iTop's user portal.
 faq:
   - q: "Should I choose GLPI or OTOBO?"
     a: "Choose GLPI if you want the service desk and an automatic inventory of every computer and device in one tool. Choose OTOBO for OTRS-style queues, SLAs and multi-step processes, with ITSM and a CMDB as free add-ons, if you can give it a large server."
@@ -15,8 +18,10 @@ faq:
     a: "Yes. GLPI includes forms and a service catalogue where staff open requests and follow their own tickets."
   - q: "What does GLPI charge for?"
     a: "Only extras. GLPI itself, with the service desk, inventory and portal, is free under the GPL. Its maker, Teclib', sells GLPI Network subscriptions for support and extra plugins, such as GLPI AI and an advanced dashboard."
+  - q: "Should I choose GLPI or iTop?"
+    a: "Choose GLPI if you want devices found and inventoried automatically by its agent. Choose iTop if your tickets should be tied to a CMDB of services, servers and applications, with impact analysis and service contracts, which also suits IT service providers."
 ---
 
 Freshservice, from Freshworks, is a hosted IT service management tool with a service desk, asset management, problem and change management, a self-service portal and automation.
 
-People look for an alternative because it is priced per agent, and asset management is sold in packs. When we checked its pricing page in November 2026, plans cost $19, $49 and $99 per agent a month, billed yearly, and assets were licensed in units of 500. GLPI has a service desk and a full asset inventory with no per-agent or per-asset price; in return, it takes more setup than a ready-made cloud service. OTOBO is a second option, built around ticket queues, SLAs and processes, with no fee per agent.
+People look for an alternative because it is priced per agent, and asset management is sold in packs. When we checked its pricing page in November 2026, plans cost $19, $49 and $99 per agent a month, billed yearly, and assets were licensed in units of 500. GLPI has a service desk and a full asset inventory with no per-agent or per-asset price; in return, it takes more setup than a ready-made cloud service. OTOBO is a second option, built around ticket queues, SLAs and processes, with no fee per agent. iTop, another free option, puts a CMDB of your services and their dependencies at the centre of the service desk.

@@ -1,0 +1,14 @@
+name: Rembg
+description: "Self-hosted Rembg removes the background from photos on your own server, through a simple web page or an API."
+version: "2.0.87"
+tags: [remove.bg alternative, background remover, remove image background, self-hosted background removal, background removal api, transparent png]
+links:
+  website: https://github.com/danielgatis/rembg
+  docs: https://github.com/danielgatis/rembg#readme
+  source: https://github.com/danielgatis/rembg
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs: {}
+domains:
+  - { service: rembg, port: 7000 }

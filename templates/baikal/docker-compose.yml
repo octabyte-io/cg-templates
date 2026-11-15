@@ -1,0 +1,76 @@
+services:
+  baikal:
+    # bfren/baikal (community-maintained, nginx + PHP-FPM 8.4 on Alpine with
+    # s6-overlay): Baïkal 0.13.0, pinned together with the image's own 3.0.2.
+    # The image Baïkal's repo points to, ckulka/baikal, stops at 0.10.1, which
+    # lacks the XSS fix in 0.12.1. Same image on Docker Hub as bfren/baikal.
+    image: quay.io/bfren/baikal:php8.4-baikal0.13.0-3.0.2
+    restart: unless-stopped
+    # Before Baïkal starts, do what its web install wizard would do
+    # (sabre-io/Baikal 0.13.0, Controller/Install/Initialize.php and
+    # Database.php), so nobody else can claim the admin account:
+    #   - first start: write config/baikal.yaml, create the SQLite database
+    #     from Core/Resources/Db/SQLite/db.sql and disable the wizard;
+    #   - every start: set the admin password to BAIKAL_ADMIN_PASSWORD, stored
+    #     as Baïkal stores it (sha256 of "admin:BaikalDAV:<password>").
+    # Then the image's own entrypoint (/init) runs; it has its own healthcheck.
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        cfg=/config/baikal.yaml
+        db=/data/db/db.sqlite
+        hash=$$(php -r 'echo hash("sha256", "admin:BaikalDAV:" . getenv("BAIKAL_ADMIN_PASSWORD"));')
+        if [ ! -f "$$cfg" ]; then
+          version=$$(php -r 'require "/etc/bf/src/baikal/Core/Distrib.php"; echo BAIKAL_VERSION;')
+          mkdir -p /data/db
+          if [ ! -f "$$db" ]; then
+            php -r '$$d = new PDO("sqlite:" . $$argv[1]); $$d->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); $$d->exec(file_get_contents("/etc/bf/src/baikal/Core/Resources/Db/SQLite/db.sql"));' "$$db"
+          fi
+          printf '%s\n' \
+            'system:' \
+            "    configured_version: '$$version'" \
+            '    timezone: UTC' \
+            '    card_enabled: true' \
+            '    cal_enabled: true' \
+            "    invite_from: ''" \
+            '    dav_auth_type: Digest' \
+            "    admin_passwordhash: $$hash" \
+            "    failed_access_message: 'user %u authentication failure for Baikal'" \
+            '    auth_realm: BaikalDAV' \
+            "    base_uri: ''" \
+            'database:' \
+            "    encryption_key: $$BAIKAL_ENCRYPTION_KEY" \
+            '    backend: sqlite' \
+            "    sqlite_file: $$db" \
+            "    mysql_host: ''" \
+            "    mysql_dbname: ''" \
+            "    mysql_username: ''" \
+            "    mysql_password: ''" \
+            "    mysql_ca_cert: ''" \
+            "    pgsql_host: ''" \
+            "    pgsql_dbname: ''" \
+            "    pgsql_username: ''" \
+            "    pgsql_password: ''" > "$$cfg"
+          touch /data/INSTALL_DISABLED
+          chown -R www:www /config /data
+          echo "baikal-setup: configured Baikal $$version with SQLite"
+        else
+          sed -i -E "s/^( *admin_passwordhash:).*/\1 $$hash/" "$$cfg"
+          echo "baikal-setup: admin password set"
+        fi
+        # The image's nginx also listens on [::]:80, which fails to start
+        # where the host has IPv6 turned off; drop that line only then.
+        [ -e /proc/net/if_inet6 ] || sed -i '/\[::\]:80/d' /etc/bf/templates/base.conf.esh
+        exec /init
+    environment:
+      BAIKAL_ADMIN_PASSWORD: ${BAIKAL_ADMIN_PASSWORD}
+      BAIKAL_ENCRYPTION_KEY: ${BAIKAL_ENCRYPTION_KEY}
+    volumes:
+      - baikal-config:/config
+      - baikal-data:/data
+
+volumes:
+  baikal-config:
+  baikal-data:

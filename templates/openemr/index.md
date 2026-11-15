@@ -1,7 +1,7 @@
 ---
 tagline: Open-source EHR for patient records, scheduling and billing.
 category: customers-sales
-alternativeTo: [tebra, drchrono, simplepractice]
+alternativeTo: [tebra, drchrono, simplepractice, healthie]
 ease: some-setup
 easeNote: Sign in as admin with the password Cloudgate generated, then add your practice, providers, users and the insurance companies you bill.
 license: GPL-3.0-or-later

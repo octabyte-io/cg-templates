@@ -1,0 +1,15 @@
+name: PrivateBin
+description: "Self-hosted PrivateBin shares passwords, private notes and code as encrypted links that expire or delete themselves after reading."
+version: "2.1.1"
+tags: [encrypted pastebin, pastebin alternative, onetimesecret alternative, share passwords securely, burn after reading, self-destructing notes]
+links:
+  website: https://privatebin.info
+  docs: https://github.com/PrivateBin/PrivateBin/wiki
+  source: https://github.com/PrivateBin/PrivateBin
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: privatebin, port: 8080 }
+files:
+  - { path: site.conf }

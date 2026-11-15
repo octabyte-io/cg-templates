@@ -1,0 +1,112 @@
+services:
+  gonic:
+    # The official image (hub.docker.com/r/sentriz/gonic), from gonic's Docker
+    # install guide. It listens on port 80 and keeps its SQLite database in /data.
+    image: sentriz/gonic:v0.23.0
+    restart: unless-stopped
+    environment:
+      # Scan the library when gonic starts, whenever files change (for example
+      # after an upload in FileBrowser Quantum), and every hour as a fallback.
+      GONIC_SCAN_AT_START_ENABLED: "true"
+      GONIC_SCAN_WATCHER_ENABLED: "true"
+      GONIC_SCAN_INTERVAL: "60"
+    volumes:
+      # The SQLite database: users, settings, playlists' metadata, play counts.
+      - gonic-data:/data
+      # The music library, shared with FileBrowser Quantum below. gonic only reads it.
+      - gonic-music:/music:ro
+      - gonic-podcasts:/podcasts
+      # Playlists, as m3u files.
+      - gonic-playlists:/playlists
+      # Transcoded audio and cover art.
+      - gonic-cache:/cache
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:80/ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Runs once at each start, after gonic answers. gonic creates the account
+  # "admin" with the password "admin" on its first start and has no setting to
+  # change that, so this signs in to gonic's web interface with admin/admin and
+  # sets ADMIN_PASSWORD instead. Later starts find that admin/admin no longer
+  # works and change nothing.
+  gonic-setup:
+    image: sentriz/gonic:v0.23.0
+    restart: "no"
+    depends_on:
+      gonic:
+        condition: service_healthy
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        # A form POST to gonic's web interface; prints the response. (The
+        # image's wget hides cookies, so this speaks HTTP through nc.)
+        post() {
+          printf 'POST /admin/%s HTTP/1.0\r\nHost: gonic\r\nCookie: %s\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: %s\r\n\r\n%s' \
+            "$$1" "$$2" "$${#3}" "$$3" | nc -w 10 gonic 80 | tr -d '\r'
+        }
+        # Signs in and prints "<where gonic sends the browser> <session cookie>".
+        login() {
+          post login_do "" "username=admin&password=$$1" \
+            | awk 'tolower($$1) == "location:" { loc = $$2 }
+                   tolower($$1) == "set-cookie:" { split($$2, a, ";"); ck = a[1] }
+                   END { print loc, ck }'
+        }
+        set -- $$(login admin)
+        if [ "$$1" = "/admin/login" ]; then
+          echo "The account admin no longer has the default password; nothing to do."
+          exit 0
+        elif [ "$$1" != "/admin/home" ]; then
+          echo "Could not reach gonic's sign-in page." >&2
+          exit 1
+        fi
+        post "change_password_do?user=admin" "$$2" \
+          "password_one=$$ADMIN_PASSWORD&password_two=$$ADMIN_PASSWORD" > /dev/null
+        set -- $$(login "$$ADMIN_PASSWORD")
+        if [ "$$1" != "/admin/home" ]; then
+          echo "Could not set the password of the account admin." >&2
+          exit 1
+        fi
+        echo "Set the password of the account admin."
+
+  # FileBrowser Quantum: gonic has no upload in its web interface, so this
+  # uploads music from the browser at its own address, into the same volume
+  # gonic plays from. Its default settings serve /srv with password sign-in and
+  # sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets the password of the user
+  # "admin" (created on first start, and set back to this value on every
+  # start). Runs as root so it can write to the shared volume, which both
+  # images create owned by root. Starts after gonic-setup has finished, so
+  # uploads only open once gonic's admin password is set.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    depends_on:
+      gonic-setup:
+        condition: service_completed_successfully
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - gonic-music:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  gonic-data:
+  gonic-music:
+  gonic-podcasts:
+  gonic-playlists:
+  gonic-cache:
+  filebrowser-data:

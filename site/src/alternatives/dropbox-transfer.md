@@ -9,17 +9,23 @@ apps:
   plik:
     fit: "Sends copies of files by link with an expiry time, one-time downloads, an optional password and optional end-to-end encryption, and recipients need no account. Your team signs in with its own accounts, and there is a command-line client. Like PsiTransfer, it has no cloud storage or sync behind it."
     import: no
+  erugo:
+    fit: "Sends files and whole folders by link with a password, expiry and download limit, emails the link to recipients and tells you when files are downloaded. Like PsiTransfer it is only for sending, with no storage or sync behind it; senders need an account, and shares are capped at 2 GB and 10 days until an admin raises the limits."
+    import: no
+  copyparty:
+    fit: "Sends files by share links with a password and an expiry time, from folders on your own server, and uploads of any size resume if they stop. Unlike PsiTransfer and Plik it keeps files after sending, with previews and folders, and can collect files through upload-only links. It has no sync app and no download notifications, and adding users means editing a settings file."
+    import: no
 moving: |
-  Nothing needs to move: Dropbox Transfer sends copies, and the originals stay in your Dropbox. Upload the files you want to send to PsiTransfer, set how long the link lasts and, if needed, a download password, then share the link by copying it or with the QR code. Keep the upload password for your team only. With Gokapi, sign in as admin with the password from the app's variables page, upload each file, set its download and day limits and an optional password, and share its link; use a file request when someone needs to send files to you. With Plik, the admin creates an account for each colleague rather than sharing an upload password, and each upload gets its own link with the expiry you choose, up to 30 days.
+  Nothing needs to move: Dropbox Transfer sends copies, and the originals stay in your Dropbox. Upload the files you want to send to PsiTransfer, set how long the link lasts and, if needed, a download password, then share the link by copying it or with the QR code. Keep the upload password for your team only. With Gokapi, sign in as admin with the password from the app's variables page, upload each file, set its download and day limits and an optional password, and share its link; use a file request when someone needs to send files to you. With Plik, the admin creates an account for each colleague rather than sharing an upload password, and each upload gets its own link with the expiry you choose, up to 30 days. With copyparty, upload the files to a folder, create a share with an expiry time and, if needed, a password, and send its link; delete the files once they have been collected. With Erugo, each sender signs in, drops in files or folders, sets the expiry and password, and adds the recipients' email addresses once Erugo's email is set up.
 faq:
-  - q: "Do PsiTransfer, Gokapi and Plik replace Dropbox itself?"
-    a: "No. They only send files by link and delete them when they expire. For storing and syncing files, see the self-hosted Dropbox alternatives instead."
+  - q: "Do PsiTransfer, Gokapi, Plik, Erugo or copyparty replace Dropbox itself?"
+    a: "Not fully. PsiTransfer, Gokapi, Plik and Erugo only send files by link and delete them when they expire. copyparty stores files and shares them, but has no sync app. For syncing files across devices, see the self-hosted Dropbox alternatives."
   - q: "Can recipients download everything at once?"
     a: "With PsiTransfer, yes, as a ZIP or tar.gz archive, or one file at a time; single files resume if the connection drops, the archive download does not. Plik offers each file or everything as one ZIP. Gokapi gives each file its own link."
   - q: "Can someone send files to me, like a Dropbox file request?"
-    a: "Yes, with Gokapi. Create a file request with a title, a limit on files and size and an expiry date, and send its upload link; the sender needs no account."
+    a: "Yes, with Gokapi. Create a file request with a title, a limit on files and size and an expiry date, and send its upload link; the sender needs no account. copyparty can also collect files through upload-only links."
 ---
 
 Dropbox Transfer is a Dropbox feature for sending a copy of files by link, with an expiry date and password on some plans, without sharing the original folder.
 
-People look for an alternative when the only thing they use Dropbox for is sending large files, or they want those files on their own server. A self-hosted PsiTransfer sends files by link with no account and no storage plan to keep paying for. Gokapi adds download limits and file requests for receiving files, and Plik adds a login for each colleague and optional end-to-end encryption.
+People look for an alternative when the only thing they use Dropbox for is sending large files, or they want those files on their own server. A self-hosted PsiTransfer sends files by link with no account and no storage plan to keep paying for. Gokapi adds download limits and file requests for receiving files, Plik adds a login for each colleague and optional end-to-end encryption, and Erugo adds sign-in for senders, emailed links and download alerts. copyparty sends share links from folders on your own server and keeps the files after they are sent.
