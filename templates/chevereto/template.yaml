@@ -1,0 +1,21 @@
+name: Chevereto
+description: "Chevereto is self-hosted image hosting: upload pictures and videos, sort them into albums and share each one by direct link or embed code, like Imgur."
+version: "4.5.9"
+tags: [image hosting, imgur alternative, self-hosted image host, photo sharing, image upload, sharex image host, flickr alternative]
+links:
+  website: https://chevereto.com
+  docs: https://v4-docs.chevereto.com
+  source: https://github.com/chevereto/chevereto
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Chevereto's own address without https://, which it builds every link from.
+  HOSTNAME: { value: "{{domains.chevereto.host}}" }
+  # Encrypts secrets Chevereto keeps in its database (the official setup uses 32 random bytes as base64).
+  ENCRYPTION_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: chevereto, port: 8080 }
