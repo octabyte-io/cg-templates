@@ -1,0 +1,16 @@
+name: CommaFeed
+description: "CommaFeed is a self-hosted RSS reader inspired by Google Reader: follow news sites and blogs in categories, on the web or in phone apps."
+version: "7.5.0-h2"
+tags: ["self-hosted rss reader", "feedly alternative", "inoreader alternative", "google reader alternative", "rss reader", "feed reader"]
+links:
+  website: https://www.commafeed.com
+  docs: https://athou.github.io/commafeed/documentation
+  source: https://github.com/Athou/commafeed
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Keeps people signed in when the app restarts (at least 16 characters).
+  SESSION_ENCRYPTION_KEY: { generate: hex }
+domains:
+  - { service: commafeed, port: 8082 }

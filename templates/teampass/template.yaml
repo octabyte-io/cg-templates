@@ -1,0 +1,24 @@
+name: TeamPass
+description: "TeamPass is a self-hosted team password manager: shared folders, roles and an audit log, so each person sees only the passwords they need."
+version: "3.2.4.3"
+tags: ["1password alternative", "lastpass alternative", "team password manager", "self-hosted password manager", "shared passwords"]
+links:
+  website: https://teampass.net
+  docs: https://documentation.teampass.net
+  source: https://github.com/nilsteampassnet/TeamPass
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  TEAMPASS_URL: { value: "{{domains.teampass.url}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of TeamPass's administrator account. You sign in as "admin" with the generated ADMIN_PASSWORD.
+      format: email
+domains:
+  - { service: teampass, port: 80 }
+files:
+  - { path: teampass-install.sh.txt }

@@ -1,0 +1,37 @@
+services:
+  part-db:
+    image: jbtronics/part-db1:v2.20.6
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: sqlite:///%kernel.project_dir%/var/db/app.db
+      DATABASE_SQLITE_ENFORCE_FOREIGN_KEYS: "1"
+      APP_ENV: docker
+      APP_SECRET: ${APP_SECRET}
+      # Creates the database on first start and applies migrations on upgrades
+      # (with a backup in uploads/.automigration-backup).
+      DB_AUTOMIGRATE: "true"
+      # Password of the "admin" user created on first start.
+      INITIAL_ADMIN_PW: ${INITIAL_ADMIN_PW}
+      DEFAULT_URI: ${APP_URL}
+      TRUSTED_PROXIES: 127.0.0.0/8,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      DEFAULT_LANG: en
+      DEFAULT_TIMEZONE: Etc/UTC
+      BASE_CURRENCY: EUR
+      INSTANCE_NAME: Part-DB
+      ALLOW_ATTACHMENT_DOWNLOADS: "0"
+      USE_GRAVATAR: "0"
+    volumes:
+      - part-db-uploads:/var/www/html/uploads
+      - part-db-media:/var/www/html/public/media
+      - part-db-db:/var/www/html/var/db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://localhost/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+volumes:
+  part-db-uploads:
+  part-db-media:
+  part-db-db:

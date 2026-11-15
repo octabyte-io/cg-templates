@@ -1,0 +1,13 @@
+name: An Otter Wiki
+description: "An Otter Wiki is a simple self-hosted wiki: write pages in Markdown, attach files and keep every change in Git. A light Confluence alternative for small teams."
+version: "2.27.0"
+tags: [self-hosted wiki, confluence alternative, markdown wiki, git wiki, team wiki, gitbook alternative, knowledge base]
+links:
+  website: https://otterwiki.com
+  docs: https://otterwiki.com/Installation
+  source: https://github.com/redimp/otterwiki
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: otterwiki, port: 80 }

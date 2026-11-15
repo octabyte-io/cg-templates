@@ -1,0 +1,35 @@
+services:
+  classicpress:
+    image: classicpress/classicpress:2.7.4-php8.4-apache
+    restart: unless-stopped
+    depends_on:
+      classicpress-db:
+        condition: service_healthy
+    environment:
+      CLASSICPRESS_DB_HOST: classicpress-db
+      CLASSICPRESS_DB_USER: classicpress
+      CLASSICPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      CLASSICPRESS_DB_NAME: classicpress
+    volumes:
+      - classicpress-files:/var/www/html
+      - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+
+  classicpress-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: classicpress
+      MARIADB_USER: classicpress
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - classicpress-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  classicpress-files:
+  classicpress-db-data:

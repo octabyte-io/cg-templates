@@ -1,0 +1,73 @@
+name: Urlaubsverwaltung
+description: "Urlaubsverwaltung is a self-hosted, open-source leave management app: staff request holiday, managers approve it, and a team calendar shows who is away."
+version: "6.23.0"
+tags: [timetastic alternative, leave management, absence management, vacation tracker, holiday planner, sick leave tracking, open source hr]
+links:
+  website: https://focus-shift.de/software/
+  docs: https://github.com/urlaubsverwaltung/urlaubsverwaltung#readme
+  source: https://github.com/urlaubsverwaltung/urlaubsverwaltung
+cloudgate: 0.1.0
+compose: app
+# Urlaubsverwaltung and Keycloak (both Java, each capped at a 768 MB heap), PostgreSQL and a small
+# proxy: about 1.6 GB in use after sign-ins, so 4 GB leaves room.
+size: large
+inputs:
+  UV_URL: { value: "{{domains.urlaubsverwaltung.url}}" }
+  KEYCLOAK_URL: { value: "{{domains.urlaubsverwaltung-keycloak.url}}" }
+  DB_PASSWORD: { generate: password }
+  # Shared by Urlaubsverwaltung and its client in Keycloak (files/keycloak-realm.json).
+  OIDC_CLIENT_SECRET: { generate: password }
+  # Keycloak's own administrator ("admin"), for the Keycloak admin console.
+  KEYCLOAK_ADMIN_PASSWORD: { generate: password }
+  # The first person's sign-in, made in Keycloak at the first start. The first person to
+  # sign in to Urlaubsverwaltung becomes its Office (admin).
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Your email
+      description: You sign in with this email and the generated password, and become the admin (Office) of Urlaubsverwaltung.
+      format: email
+  ADMIN_FIRST_NAME:
+    ask:
+      label: Your first name
+      description: Shown on your absences and leave requests.
+      pattern: '^[^"\\]+$'
+  ADMIN_LAST_NAME:
+    ask:
+      label: Your last name
+      pattern: '^[^"\\]+$'
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional, but recommended. Urlaubsverwaltung emails leave requests, approvals and reminders, and the sign-in page emails password resets, through an email sending service, for example smtp.resend.com. Without it no emails are sent. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Sender address
+      description: The address emails come from, for example leave@example.com.
+      format: email
+      required: false
+domains:
+  # Urlaubsverwaltung itself (through the small proxy in front of it).
+  - { service: urlaubsverwaltung, port: 80 }
+  # Keycloak: the sign-in page, and its admin console where you add staff.
+  - { service: urlaubsverwaltung-keycloak, port: 8080 }
+files:
+  - { path: keycloak-realm.json }
+  - { path: create-keycloak-db.sql }
+  - { path: Caddyfile.txt }

@@ -1,0 +1,50 @@
+# From DHIS2's production example (github.com/dhis2/docker-deployment), without
+# its reverse proxy, backup and monitoring services.
+services:
+  dhis2:
+    image: dhis2/core:2.43.2.1
+    restart: unless-stopped
+    depends_on:
+      dhis2-db:
+        condition: service_healthy
+    environment:
+      DHIS2_DB_PASSWORD: ${DB_PASSWORD}
+      DHIS2_BASE_URL: ${DHIS2_BASE_URL}
+      # A fixed heap leaves room for PostgreSQL on the same server.
+      JAVA_OPTS: -Xms1g -Xmx3g
+    volumes:
+      - dhis2-data:/opt/dhis2
+      - ../files/dhis.conf:/opt/dhis2/dhis.conf:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8080/dhis-web-login/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      # The first start creates the database and takes several minutes.
+      start_period: 600s
+
+  dhis2-db:
+    image: postgis/postgis:16-3.5-alpine
+    restart: unless-stopped
+    # DHIS2 creates its admin account as admin / district on the first start.
+    # files/admin-password.sh.txt waits for that account in the background and
+    # replaces "district" with the generated ADMIN_PASSWORD, writing its hash
+    # into the database as DHIS2's production example does.
+    entrypoint: ["/bin/sh", "-c", "sh /admin-password.sh & exec docker-entrypoint.sh postgres"]
+    environment:
+      POSTGRES_USER: dhis
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: dhis
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - dhis2-db-data:/var/lib/postgresql/data
+      - ../files/admin-password.sh.txt:/admin-password.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dhis -d dhis"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  dhis2-data:
+  dhis2-db-data:

@@ -1,0 +1,46 @@
+name: CourseLit
+description: "CourseLit is a self-hosted course platform to sell online courses and digital downloads from your own website, with your own Stripe checkout."
+version: "v0.74.6"
+tags: [teachable alternative, online course platform, sell online courses, self-hosted lms, thinkific alternative, digital downloads, course website]
+links:
+  website: https://courselit.app
+  docs: https://docs.courselit.app
+  source: https://github.com/codelitdev/courselit
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_HOST: { value: "{{domains.courselit.host}}" }
+  AUTH_SECRET: { generate: base64 }
+  COURSELIT_JWT_SECRET: { generate: hex }
+  PIXEL_SIGNING_SECRET: { generate: hex }
+  MONGO_PASSWORD: { generate: password }
+  SUPER_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the school's owner. CourseLit makes it the admin when it first starts, and you sign in with a code sent to it.
+      format: email
+  EMAIL_FROM:
+    ask:
+      label: Sender email
+      description: The address sign-in codes and your school's emails are sent from, for example school@yourdomain.com. Your email service must allow sending from it.
+      format: email
+  EMAIL_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: CourseLit signs everyone in with a code sent by email, so it needs an email sending service, for example smtp.resend.com or email-smtp.eu-west-1.amazonaws.com.
+  EMAIL_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services (CourseLit uses STARTTLS on it).
+      default: "587"
+      format: number
+  EMAIL_USER:
+    ask:
+      label: Email server username
+  EMAIL_PASS:
+    ask:
+      label: Email server password
+      secret: true
+domains:
+  - { service: courselit, port: 3000 }

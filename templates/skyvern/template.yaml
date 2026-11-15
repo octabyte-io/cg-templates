@@ -1,0 +1,38 @@
+name: Skyvern
+description: "Skyvern is self-hosted AI browser automation: describe a task and it fills in forms, downloads files and extracts data on websites for you."
+version: "1.0.58"
+tags: ["ai browser automation", "browse ai alternative", "ai web scraping", "web form automation", "ai web agent", "open source rpa"]
+links:
+  website: https://www.skyvern.com
+  docs: https://www.skyvern.com/docs
+  source: https://github.com/Skyvern-AI/skyvern
+cloudgate: 0.1.0
+compose: app
+# Chromium, the API and the web app together need about 4 GB of memory.
+size: large
+inputs:
+  APP_URL: { value: "{{domains.proxy.url}}" }
+  # The password the sign-in prompt in front of Skyvern asks for
+  # (username: admin). Skyvern's web app has no sign-in of its own.
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  LLM_PROVIDER:
+    ask:
+      label: AI provider
+      description: "Which AI service reads the web pages and decides what to click: openai, anthropic or gemini."
+      default: openai
+      pattern: "openai|anthropic|gemini"
+  LLM_API_KEY:
+    ask:
+      label: AI provider API key
+      description: The API key from your AI provider (OpenAI, Anthropic or Google AI Studio). Every task Skyvern runs uses it and is billed by that provider.
+      secret: true
+  LLM_MODEL:
+    ask:
+      label: AI model (optional)
+      description: "Skyvern's name for the model, for example OPENAI_GPT5_5, ANTHROPIC_CLAUDE4.7_OPUS or GEMINI_3.0_FLASH. Leave empty for that default for your provider."
+      required: false
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

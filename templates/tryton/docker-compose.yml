@@ -1,0 +1,85 @@
+# From Tryton's official compose file (foss.heptapod.net/tryton/tryton-docker, compose.yml) and
+# the image's docs (hub.docker.com/r/tryton/tryton): the server, which also serves the web
+# client (sao), the cron process for scheduled jobs, and PostgreSQL. The official file runs
+# `trytond-admin -d <db> --all` before the server starts; here that step is its own one-off
+# service so the server and cron both wait for it. Left out: published ports.
+
+x-tryton-env: &tryton-env
+  DB_HOSTNAME: tryton-db
+  DB_PORT: "5432"
+  DB_USER: tryton
+  DB_PASSWORD: ${DB_PASSWORD}
+  # Cloudgate serves the app behind one reverse proxy; Tryton uses this to see visitors'
+  # real addresses (its login attempt limits count them per address).
+  TRYTOND_WEB__NUM_PROXIES: "1"
+
+services:
+  tryton:
+    image: tryton/tryton:8.2
+    restart: unless-stopped
+    depends_on:
+      tryton-init:
+        condition: service_completed_successfully
+    environment: *tryton-env
+    volumes:
+      - tryton-data:/var/lib/trytond/db
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Runs once at each start. On the first start it creates Tryton's tables in the "tryton"
+  # database and the "admin" user, whose password is ADMIN_PASSWORD (read from
+  # TRYTONPASSFILE) and no email address: the empty line piped in answers trytond-admin's
+  # "email for admin" question, which --email '' does not skip. An email can be added later
+  # in the user's preferences. On later starts it updates the activated modules, as after
+  # an image update.
+  tryton-init:
+    image: tryton/tryton:8.2
+    restart: "no"
+    depends_on:
+      tryton-db:
+        condition: service_healthy
+    environment:
+      <<: *tryton-env
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - tryton-data:/var/lib/trytond/db
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - >-
+        umask 077 && printf '%s' "$$ADMIN_PASSWORD" > /tmp/.passwd &&
+        echo | TRYTONPASSFILE=/tmp/.passwd /entrypoint.sh trytond-admin -d tryton --all -v
+
+  # Runs Tryton's scheduled jobs (reminders, recurring tasks, cleanups).
+  tryton-cron:
+    image: tryton/tryton:8.2
+    restart: unless-stopped
+    depends_on:
+      tryton-init:
+        condition: service_completed_successfully
+    environment: *tryton-env
+    volumes:
+      - tryton-data:/var/lib/trytond/db
+    command: [trytond-cron, -d, tryton]
+
+  tryton-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tryton
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: tryton
+    volumes:
+      - tryton-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tryton -d tryton"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tryton-data:
+  tryton-db-data:
