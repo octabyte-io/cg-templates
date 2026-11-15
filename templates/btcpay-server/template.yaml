@@ -1,0 +1,17 @@
+name: BTCPay Server
+description: "Self-hosted BTCPay Server takes Bitcoin payments in your shop, on invoices and at the counter, paid straight to your own wallet with no processing fee."
+version: "2.4.7"
+tags: [bitcoin payment processor, accept bitcoin payments, bitpay alternative, crypto payment gateway, bitcoin point of sale, woocommerce bitcoin]
+links:
+  website: https://btcpayserver.org
+  docs: https://docs.btcpayserver.org
+  source: https://github.com/btcpayserver/btcpayserver
+cloudgate: 0.1.0
+compose: app
+# BTCPay's docs ask for at least 2 GB of memory and 80 GB of disk for a pruned
+# Bitcoin node. The first sync of the Bitcoin blockchain takes one to several days.
+size: medium
+inputs:
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: btcpayserver, port: 49392 }

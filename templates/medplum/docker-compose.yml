@@ -1,0 +1,130 @@
+# Based on docker-compose.full-stack.yml in medplum/medplum at tag v5.2.17.
+services:
+  # The web app. Its entrypoint writes the API address into the app's files at each start.
+  medplum-app:
+    image: medplum/medplum-app:5.2.17
+    restart: unless-stopped
+    # Plain web files: it needs no running API to start, so it comes up while the server
+    # is still preparing its database.
+    depends_on:
+      - medplum-server
+    environment:
+      MEDPLUM_BASE_URL: ${MEDPLUM_SERVER_URL}
+      # New projects are made by the super admin, not by anyone who finds the address.
+      MEDPLUM_REGISTER_ENABLED: "false"
+      MEDPLUM_AWS_TEXTRACT_ENABLED: "false"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # The FHIR API. On the first start it creates the database tables, loads the FHIR
+  # definitions and makes the super admin account. That first start takes 5 to 10 minutes;
+  # later starts take seconds.
+  medplum-server:
+    image: medplum/medplum-server:5.2.17
+    restart: unless-stopped
+    command: ["env"]
+    depends_on:
+      medplum-binary-init:
+        condition: service_completed_successfully
+      medplum-db:
+        condition: service_healthy
+      medplum-redis:
+        condition: service_healthy
+    environment:
+      MEDPLUM_PORT: 8103
+      MEDPLUM_BASE_URL: ${MEDPLUM_SERVER_URL}
+      MEDPLUM_APP_BASE_URL: ${MEDPLUM_APP_URL}
+      MEDPLUM_STORAGE_BASE_URL: ${MEDPLUM_SERVER_URL}storage/
+      MEDPLUM_DATABASE_HOST: medplum-db
+      MEDPLUM_DATABASE_PORT: 5432
+      MEDPLUM_DATABASE_DBNAME: medplum
+      MEDPLUM_DATABASE_USERNAME: medplum
+      MEDPLUM_DATABASE_PASSWORD: ${DB_PASSWORD}
+      MEDPLUM_REDIS_HOST: medplum-redis
+      MEDPLUM_REDIS_PORT: 6379
+      MEDPLUM_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MEDPLUM_BINARY_STORAGE: "file:./binary/"
+      MEDPLUM_SUPPORT_EMAIL: '"Medplum" <${ADMIN_EMAIL}>'
+      MEDPLUM_DEFAULT_SUPER_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      MEDPLUM_DEFAULT_SUPER_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      MEDPLUM_REGISTER_ENABLED: "false"
+      MEDPLUM_MAX_JSON_SIZE: 1mb
+      MEDPLUM_MAX_BATCH_SIZE: 50mb
+      # Bots run inside the server, not on AWS Lambda.
+      MEDPLUM_VM_CONTEXT_BOTS_ENABLED: "true"
+      MEDPLUM_DEFAULT_BOT_RUNTIME_VERSION: vmcontext
+      MEDPLUM_ALLOWED_ORIGINS: "*"
+      MEDPLUM_INTROSPECTION_ENABLED: "true"
+      MEDPLUM_SHUTDOWN_TIMEOUT_MILLISECONDS: 30000
+    volumes:
+      - medplum-binary:/usr/src/medplum/binary
+    healthcheck:
+      # The image has neither curl nor wget, so this uses Node's fetch, as the official file does.
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          'fetch("http://localhost:8103/healthcheck").then(r => { if (!r.ok) process.exit(1); }).catch(() => process.exit(1))',
+        ]
+      interval: 15s
+      timeout: 10s
+      start_period: 900s
+      retries: 10
+
+  # Uploaded files live in a volume; the server runs as user 1000, so this hands it the folder.
+  medplum-binary-init:
+    image: postgres:16.16-alpine
+    restart: "no"
+    user: "0"
+    entrypoint: ["sh", "-c", "chown 1000:1000 /binary"]
+    volumes:
+      - medplum-binary:/binary
+
+  medplum-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: medplum
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: medplum
+    command:
+      - postgres
+      - -c
+      - listen_addresses=*
+      - -c
+      - statement_timeout=60000
+      - -c
+      - default_transaction_isolation=REPEATABLE READ
+      - -c
+      - shared_preload_libraries=pg_stat_statements,auto_explain
+    volumes:
+      - medplum-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medplum -d medplum"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Valkey is the Redis-compatible cache the official file uses.
+  medplum-redis:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    command: ["valkey-server", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - medplum-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+volumes:
+  medplum-binary:
+  medplum-db-data:
+  medplum-redis-data:
