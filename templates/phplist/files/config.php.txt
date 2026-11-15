@@ -1,0 +1,51 @@
+<?php
+// phpList configuration for Cloudgate. Starts from the image's own
+// docker/docker-phplist-config-live.php and adds the app's address and the
+// email server (SMTP) settings, read from the environment.
+
+$database_host = getenv('DB_HOST');
+$database_name = getenv('DB_NAME');
+$database_user = getenv('DB_USER');
+$database_password = getenv('DB_PASSWORD');
+
+define('TEST', 0);
+define('HASH_ALGO', 'sha256');
+define('UPLOADIMAGES_DIR', 'images');
+define('MANUALLY_PROCESS_BOUNCES', 1);
+define('MANUALLY_PROCESS_QUEUE', 0);
+define('CHECK_REFERRER', false);
+define('PHPLIST_POWEREDBY_URLROOT', 'https://d3u7tsw7cvar0t.cloudfront.net/images');
+
+$addonsUpdater = ['work' => '/var/tmp/phplistupdate'];
+$updaterConfig = ['work' => '/var/tmp/phplistupdate'];
+
+// The app's address. Cloudgate's proxy serves it over HTTPS, so links in the
+// admin pages and in sent emails (unsubscribe, preferences) use the scheme of
+// APP_URL, also when the sending queue runs from cron. Its host is what phpList
+// stores as the website address on the first start.
+$cloudgateUrl = parse_url((string) getenv('APP_URL'));
+if (!empty($cloudgateUrl['scheme'])) {
+    define('ADMIN_PROTOCOL', $cloudgateUrl['scheme']);
+    define('PUBLIC_PROTOCOL', $cloudgateUrl['scheme']);
+}
+if (!empty($cloudgateUrl['host'])) {
+    $cloudgateHost = $cloudgateUrl['host'];
+    if (!empty($cloudgateUrl['port'])) {
+        $cloudgateHost .= ':'.$cloudgateUrl['port'];
+    }
+    putenv('HOSTNAME='.$cloudgateHost);
+    putenv('PORT=443');
+}
+
+// Email server. Without SMTP_HOST, phpList cannot send newsletters until one
+// is set here. Port 465 uses SSL; other ports use STARTTLS when the server
+// offers it.
+$smtpHost = (string) getenv('SMTP_HOST');
+define('PHPMAILERHOST', $smtpHost);
+if ($smtpHost !== '') {
+    $smtpPort = (int) (getenv('SMTP_PORT') ?: 587);
+    define('PHPMAILERPORT', $smtpPort);
+    define('PHPMAILER_SECURE', $smtpPort === 465 ? 'ssl' : 'auto');
+    $phpmailer_smtpuser = (string) getenv('SMTP_USER');
+    $phpmailer_smtppassword = (string) getenv('SMTP_PASSWORD');
+}

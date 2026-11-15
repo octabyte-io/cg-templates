@@ -1,0 +1,54 @@
+services:
+  request-tracker:
+    # Best Practical publishes no image of its own. This is the maintained Conarx Containers image
+    # (source: gitlab.conarx.tech/containers/request-tracker, mirrored on GitHub as
+    # AllWorldIT/containers-request-tracker): RT 6.0.2 on Alpine 3.22, served by Nginx on port 80
+    # with RT running as FastCGI. On the first start it creates RT's tables in the database; when
+    # the image's RT version changes it runs RT's database upgrade.
+    image: allworldit/request-tracker:3.22-6.0.2
+    restart: unless-stopped
+    depends_on:
+      request-tracker-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      MYSQL_HOST: request-tracker-db
+      MYSQL_DATABASE: rt
+      MYSQL_USER: rt
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      # Only used for RT's database upgrades when a newer image is installed.
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      # Read by files/cloudgate-init.sh.txt: RT's own address, and the password it gives the
+      # "root" account (RT's built-in admin, whose default password "password" is public).
+      RT_URL: ${RT_URL}
+      RT_ROOT_PASSWORD: ${RT_ROOT_PASSWORD}
+    volumes:
+      # RT_SiteConfig.pm (your own settings), attachments and the shredder's backups.
+      - request-tracker-data:/opt/rt
+      # Runs after the image's own setup on every start (scripts in init.d run in name order).
+      - ../files/cloudgate-init.sh.txt:/usr/local/share/flexible-docker-containers/init.d/47-cloudgate.sh:ro
+
+  request-tracker-db:
+    # RT 6 supports MariaDB 10.6 or later.
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: rt
+      MARIADB_USER: rt
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - request-tracker-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  request-tracker-data:
+  request-tracker-db-data:

@@ -9,8 +9,11 @@ apps:
   frappe-helpdesk:
     fit: "Email tickets with SLAs, working hours, assignment rules, saved replies, ticket types and custom fields, a customer portal and a knowledge base, all included free with no fee per agent. Freshdesk has chat, phone, social channels, AI and many more integrations; Frappe Helpdesk handles email only and has no Freshdesk importer."
     import: partly
+  request-tracker:
+    fit: "Email tickets in queues, with your own statuses and fields, SLAs with business hours, automation rules, a knowledge base, dashboards and a self-service portal, all free with no fee per agent. Freshdesk has chat, phone, social channels, AI and a more modern interface; Request Tracker is email-first, dense to look at and takes real setup, including a mail server."
+    import: partly
 moving: |
-  With Zammad, the built-in Freshdesk importer brings your tickets and customers across; then connect your support addresses as email channels and recreate your automations as triggers and macros. With FreeScout, add each Freshdesk support address to FreeScout as its own mailbox, and new emails arrive there as conversations. Recreate your canned responses as saved replies and your automations as workflows if you buy those add-ons. Past tickets do not move on their own: a paid third-party migration service can copy them, and it needs FreeScout's paid API module. Otherwise keep Freshdesk read-only for a while and start fresh. With Frappe Helpdesk, connect your support mailbox so new emails become tickets, set up your SLAs, teams and assignment rules, and bring contacts and customers in from a spreadsheet with its Data Import tool; there is no importer for past tickets, so most teams start fresh.
+  With Zammad, the built-in Freshdesk importer brings your tickets and customers across; then connect your support addresses as email channels and recreate your automations as triggers and macros. With FreeScout, add each Freshdesk support address to FreeScout as its own mailbox, and new emails arrive there as conversations. Recreate your canned responses as saved replies and your automations as workflows if you buy those add-ons. Past tickets do not move on their own: a paid third-party migration service can copy them, and it needs FreeScout's paid API module. Otherwise keep Freshdesk read-only for a while and start fresh. With Frappe Helpdesk, connect your support mailbox so new emails become tickets, set up your SLAs, teams and assignment rules, and bring contacts and customers in from a spreadsheet with its Data Import tool; there is no importer for past tickets, so most teams start fresh. With Request Tracker, create a queue for each support address, connect a mail server so emails become tickets, and rebuild your automations as scrips, its condition-and-action rules. Past tickets can be loaded from Freshdesk CSV exports with Best Practical's free CSV import extension, which is not installed on this template.
 faq:
   - q: "Should I choose Zammad, FreeScout or Frappe Helpdesk?"
     a: "Choose Zammad if you use Freshdesk's SLAs, automations and knowledge base and want your old tickets imported. Choose FreeScout if your team answers mainly by email and wants a simple shared inbox on a small server. Choose Frappe Helpdesk if you answer by email but want SLAs, a customer portal and a knowledge base included free, or already run ERPNext."
@@ -18,6 +21,8 @@ faq:
     a: "Yes, if your support happens mainly by email. FreeScout handles shared mailboxes for any number of agents; add paid modules for extras such as reports, workflows or a knowledge base."
   - q: "Does FreeScout have AI replies?"
     a: "Yes, through a free AI module that drafts and summarises replies. You connect your own AI provider, such as OpenAI or Anthropic, and pay it for what you use."
+  - q: "Is Request Tracker a good Freshdesk alternative?"
+    a: "Yes, if your team works mainly by email and wants queues and rules it can shape exactly. It has no chat, phone or social channels, and it needs setting up, including its email."
 ---
 
 Freshdesk, from Freshworks, is a help desk that turns emails, chats, calls and social messages into tickets, with automations, a knowledge base and AI features.

@@ -1,0 +1,20 @@
+# Serves the website you publish from the Silex editor: "Publish" writes its
+# pages into the shared folder mounted at /srv. Open to everyone, like any
+# website.
+{
+	admin off
+}
+
+:80 {
+	root * /srv
+
+	# Until the first publish there is no home page; say so instead of a blank 404.
+	@unpublished not file /index.html
+	handle @unpublished {
+		respond "Nothing is published here yet. Open the Silex editor, design your site and click Publish." 200
+	}
+
+	handle {
+		file_server
+	}
+}

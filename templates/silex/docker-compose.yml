@@ -1,0 +1,70 @@
+# Silex's official image (docs.silex.me, "Docker setup"), built from the
+# repository's Dockerfile on every release. It saves websites and publishes them
+# on this server's own disk (its "fs" connectors), so no GitLab account is
+# needed: the editor is at the first address and the published website at the
+# second.
+services:
+  # Silex has no sign-in of its own with these connectors. This proxy asks for
+  # the username "admin" and the generated password before anyone reaches the
+  # editor.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/editor.Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      silex:
+        condition: service_healthy
+
+  silex:
+    image: silexlabs/silex-platform:3.10.0
+    restart: unless-stopped
+    # Silex makes the css/ and assets/ folders Publish writes into only when the
+    # hosting folder is missing, and a volume is always there: make them first.
+    # (The image runs as root.)
+    command:
+      - sh
+      - -c
+      - mkdir -p /silex/hosting/css /silex/hosting/assets && exec pnpm start
+    environment:
+      SILEX_URL: ${SILEX_URL}
+      SILEX_SESSION_SECRET: ${SILEX_SESSION_SECRET}
+      # Save websites and publish them to this server's disk (the image's default).
+      STORAGE_CONNECTORS: fs
+      HOSTING_CONNECTORS: fs
+      SILEX_FS_ROOT: /silex/silex/storage
+      SILEX_FS_HOSTING_ROOT: /silex/hosting
+      # Room for images and large pages (the image's defaults are 1 MB and 10 MB).
+      SILEX_EXPRESS_JSON_LIMIT: 50mb
+      SILEX_EXPRESS_TEXT_LIMIT: 50mb
+      SILEX_EXPRESS_URLENCODED_LIMIT: 50mb
+    volumes:
+      # Your websites while you edit them, with their images.
+      - silex-storage:/silex/silex/storage
+      # What "Publish" writes: the website served at the second address.
+      - silex-hosting:/silex/hosting
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail --output /dev/null http://localhost:6805/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 10
+
+  # Serves the published website to everyone, without a password.
+  website:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/website.Caddyfile.txt:/etc/caddy/Caddyfile:ro
+      - silex-hosting:/srv:ro
+
+volumes:
+  silex-storage:
+  silex-hosting:

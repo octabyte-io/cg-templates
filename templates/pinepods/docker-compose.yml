@@ -1,0 +1,82 @@
+# From PinePods' official PostgreSQL compose file (deployment/docker/compose-files/docker-compose-postgres).
+services:
+  pinepods:
+    image: madeofpendletonwool/pinepods:0.9.2
+    restart: unless-stopped
+    depends_on:
+      pinepods-db:
+        condition: service_healthy
+      pinepods-valkey:
+        condition: service_healthy
+    environment:
+      # The address PinePods uses in links and in the RSS feeds it makes.
+      HOSTNAME: ${BASE_URL}
+      SERVER_URL: ${BASE_URL}
+      # The PinePods project's public podcast search (Podcast Index, iTunes) and people lookups.
+      SEARCH_API_URL: https://search.pinepods.online/api/search
+      PEOPLE_API_URL: https://people.pinepods.online
+      DB_TYPE: postgresql
+      DB_HOST: pinepods-db
+      DB_PORT: 5432
+      DB_USER: pinepods
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: pinepods_database
+      VALKEY_HOST: pinepods-valkey
+      VALKEY_PORT: 6379
+      VALKEY_PASSWORD: ${VALKEY_PASSWORD}
+      # The first admin account, created on the first start only. Change the password later in Settings.
+      FULLNAME: Administrator
+      USERNAME: ${ADMIN_USERNAME}
+      EMAIL: ${ADMIN_EMAIL}
+      PASSWORD: ${ADMIN_PASSWORD}
+      DEBUG_MODE: "false"
+      TZ: ${TIMEZONE:-Etc/UTC}
+      DEFAULT_LANGUAGE: en
+    volumes:
+      # Downloaded episodes.
+      - pinepods-downloads:/opt/pinepods/downloads
+      # Backups made from the web app.
+      - pinepods-backups:/opt/pinepods/backups
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8040/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      # Database migrations run at start.
+      start_period: 60s
+
+  pinepods-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pinepods
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: pinepods_database
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - pinepods-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pinepods -d pinepods_database"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  pinepods-valkey:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    command: ["valkey-server", "--requirepass", "${VALKEY_PASSWORD}"]
+    volumes:
+      - pinepods-valkey-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a \"$$VALKEY_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      VALKEY_PASSWORD: ${VALKEY_PASSWORD}
+
+volumes:
+  pinepods-downloads:
+  pinepods-backups:
+  pinepods-db-data:
+  pinepods-valkey-data:

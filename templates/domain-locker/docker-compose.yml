@@ -1,0 +1,24 @@
+services:
+  domain-locker:
+    image: lissy93/domain-locker:0.3.8
+    restart: unless-stopped
+    environment:
+      DL_ENV_TYPE: selfHosted
+      # The app's public address, so the browser's requests from it are accepted.
+      DL_BASE_URL: ${DL_BASE_URL}
+      # One shared password for the whole app; without it anyone who can reach
+      # the address could read and change your domains.
+      DL_AUTH_PASSWORD: ${DL_AUTH_PASSWORD}
+    # Data lives in a SQLite file here; the app runs its own scheduled jobs
+    # (domain refresh, uptime checks, expiry reminders), so no other service is needed.
+    volumes:
+      - domain-locker-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  domain-locker-data:

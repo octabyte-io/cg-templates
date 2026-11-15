@@ -1,0 +1,21 @@
+#!/bin/sh
+# Starts MyBB. The image's entrypoint has already copied MyBB into /var/www/html (first start
+# only). Until the installer's lock file exists, this runs MyBB's own installer step by step
+# with Cloudgate's settings (files/mybb-install.php.txt): PostgreSQL tables, default data,
+# the default theme, board settings and the admin user "admin". PHP-FPM starts only after
+# that, so nobody can reach the browser installer in the meantime.
+set -eu
+cd /var/www/html
+
+if [ ! -f install/lock ]; then
+  echo "Installing MyBB (first start)..."
+  for step in create_tables populate_tables templates adminuser final; do
+    php -d memory_limit=512M /cloudgate/mybb-install.php "$step"
+  done
+  echo "MyBB is installed. Sign in as \"admin\" with ADMIN_PASSWORD; the Admin CP is at /admin/."
+fi
+
+# MyBB writes its settings, cache, uploads and theme files as the PHP-FPM user.
+chown -R www-data:www-data /var/www/html
+
+exec php-fpm

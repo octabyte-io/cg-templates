@@ -1,0 +1,87 @@
+<?php
+// Runs one step of MyBB's own installer (install/index.php) from the command line, with the
+// answers the web installer would ask for taken from Cloudgate's settings. start.sh calls it
+// once per step, in order, so the browser installer never has to be opened.
+//
+//   php mybb-install.php <step>
+//
+// A step passes when the installer's page offers the step that follows it; otherwise this
+// prints what the page said and exits with 1.
+
+$step = $argv[1] ?? '';
+$url = rtrim(getenv('MYBB_BOARD_URL') ?: '', '/');
+$name = getenv('MYBB_BOARD_NAME') ?: 'Forums';
+$email = getenv('MYBB_ADMIN_EMAIL') ?: '';
+$password = getenv('MYBB_ADMIN_PASSWORD') ?: '';
+
+$database = [
+    'dbengine' => 'pgsql',
+    'config' => ['pgsql' => [
+        'dbhost' => getenv('MYBB_DB_HOST') ?: 'mybb-db',
+        'dbuser' => getenv('MYBB_DB_USER') ?: 'mybb',
+        'dbpass' => getenv('MYBB_DB_PASSWORD') ?: '',
+        'dbname' => getenv('MYBB_DB_NAME') ?: 'mybb',
+        'tableprefix' => 'mybb_',
+        'encoding' => 'utf8',
+    ]],
+];
+
+// Each step: what it posts, and the step the installer moves on to when it succeeds.
+$steps = [
+    'create_tables' => [$database, 'populate_tables'],
+    'populate_tables' => [[], 'templates'],
+    'templates' => [[], 'configuration'],
+    'adminuser' => [[
+        'bbname' => $name,
+        'bburl' => $url,
+        'websitename' => $name,
+        'websiteurl' => $url,
+        'cookiedomain' => '',
+        'cookiepath' => '/',
+        'contactemail' => $email,
+        'pin' => '',
+    ], 'final'],
+    'final' => [[
+        'adminuser' => 'admin',
+        'adminpass' => $password,
+        'adminpass2' => $password,
+        'adminemail' => $email,
+    ], null],
+];
+
+if (!isset($steps[$step])) {
+    fwrite(STDERR, "Unknown installer step: $step\n");
+    exit(2);
+}
+[$post, $next] = $steps[$step];
+
+$_POST = $post + ['action' => $step];
+$_GET = [];
+$_COOKIE = [];
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+$_SERVER['HTTP_HOST'] = parse_url($url, PHP_URL_HOST) ?: 'localhost';
+
+// The installer writes its lock file relative to its own folder.
+$installDir = '/var/www/html/install';
+chdir($installDir);
+
+register_shutdown_function(function () use ($step, $next, $installDir) {
+    $page = '';
+    while (ob_get_level() > 0) {
+        $page = ob_get_clean() . $page;
+    }
+    $ok = $next === null
+        ? file_exists("$installDir/lock")
+        : strpos($page, "name=\"action\" value=\"$next\"") !== false;
+    if ($ok) {
+        echo "MyBB installer: $step done\n";
+        return;
+    }
+    $text = trim(preg_replace('/\s+/', ' ', strip_tags(preg_replace('#<(script|style)\b.*?</\1>#s', '', $page))));
+    fwrite(STDERR, "MyBB installer: $step failed: " . substr($text, 0, 2000) . "\n");
+    exit(1);
+});
+
+ob_start();
+require "$installDir/index.php";

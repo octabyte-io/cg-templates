@@ -1,0 +1,17 @@
+name: OpenMRS
+description: "Self-hosted OpenMRS 3, the open-source EMR for clinics and hospitals: patient charts, lab orders, appointments, wards, billing and pharmacy."
+version: "3.8.0"
+tags: [open source emr, electronic medical records, hospital management system, clinic software, epic alternative, medical records software, fhir]
+links:
+  website: https://openmrs.org
+  docs: https://o3-docs.openmrs.org
+  source: https://github.com/openmrs/openmrs-distro-referenceapplication
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: gateway, port: 80 }

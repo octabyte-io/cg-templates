@@ -1,0 +1,55 @@
+services:
+  phplist:
+    image: phplist/phplist:3.6.17
+    restart: unless-stopped
+    depends_on:
+      phplist-db:
+        condition: service_healthy
+    # The image's entrypoint creates the database tables and the "admin" account from
+    # ADMIN_EMAIL and ADMIN_PASSWORD on the first start, runs the sending queue every
+    # minute from cron, then starts Apache. Sign in at <domain>/lists/admin/.
+    environment:
+      DB_HOST: phplist-db
+      DB_NAME: phplist
+      DB_USER: phplist
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_NAME: admin
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ORGANISATION_NAME: ${ORGANISATION_NAME}
+      APP_URL: ${APP_URL}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+    volumes:
+      # Images uploaded into campaigns.
+      - phplist-images:/var/www/phpList3/public_html/images
+      # The image's own config.php, extended to read the address and email server
+      # settings from the environment (files/config.php.txt).
+      - ../files/config.php.txt:/etc/phplist/config.php:ro
+      # Sends the bare domain to the sign-in page instead of a 403 (files/index.php.txt).
+      - ../files/index.php.txt:/var/www/phpList3/public_html/index.php:ro
+
+  phplist-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: phplist
+      MARIADB_USER: phplist
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - phplist-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  phplist-images:
+  phplist-db-data:
