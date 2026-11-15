@@ -1,0 +1,24 @@
+<?php
+/*
+ * ChurchCRM's Include/Config.php, written by Cloudgate in place of the setup wizard.
+ *
+ * The database login and the app's address come from the container's environment,
+ * so changing them in Cloudgate needs no edit here. On the first request with an
+ * empty database ChurchCRM installs its own tables.
+ */
+
+$sSERVERNAME = getenv('CHURCHCRM_DB_HOST');
+$dbPort = '3306';
+$sUSER = getenv('CHURCHCRM_DB_USER');
+$sPASSWORD = getenv('CHURCHCRM_DB_PASSWORD');
+$sDATABASE = getenv('CHURCHCRM_DB_NAME');
+
+// Installed at the top of its own web address, not in a subfolder.
+$sRootPath = '';
+
+// The app's address, with the trailing slash ChurchCRM requires.
+$URL[0] = rtrim((string) getenv('CHURCHCRM_URL'), '/') . '/';
+
+error_reporting(E_ERROR);
+
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'LoadConfigs.php';

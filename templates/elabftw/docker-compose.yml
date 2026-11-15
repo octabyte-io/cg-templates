@@ -1,0 +1,99 @@
+# From eLabFTW's official compose configuration (https://get.elabftw.net/?config, used by its
+# elabctl installer). Cloudgate's proxy handles HTTPS, so the container serves plain HTTP on 8080
+# (DISABLE_HTTPS=true, the documented setting for running behind a reverse proxy). The optional
+# OpenCloning companion is left out.
+services:
+  # Runs once before each start: makes the data volumes writable by the unprivileged user the
+  # app runs as (new named volumes belong to root). Uses the app's own image, so nothing extra
+  # is pulled.
+  elabftw-setup:
+    image: elabftw/elabimg:6.0.9
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["/bin/sh", "-c", "chown 1000:1000 /var/lib/elabftw/uploads /var/lib/elabftw/exports /var/cache/elabftw"]
+    volumes:
+      - elabftw-uploads:/var/lib/elabftw/uploads
+      - elabftw-exports:/var/lib/elabftw/exports
+      - elabftw-cache:/var/cache/elabftw
+
+  elabftw:
+    # The official image: nginx + PHP-FPM + eLabFTW, run by s6-overlay. Pinned to the latest
+    # stable release.
+    image: elabftw/elabimg:6.0.9
+    restart: unless-stopped
+    # Version 6 runs as an unprivileged user (PHP-FPM refuses to start as root), with /run as a
+    # memory-backed folder owned by that user, as in the official configuration.
+    user: "1000:1000"
+    tmpfs:
+      - /run:mode=755,uid=1000,gid=1000,exec,nosuid,nodev,size=64m
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      elabftw-setup:
+        condition: service_completed_successfully
+      elabftw-db:
+        condition: service_healthy
+    # eLabFTW's SECRET_KEY (it encrypts the SMTP and timestamping passwords stored in the
+    # database) must be a Defuse key: a "def00000" header, 32 key bytes and a SHA-256 checksum,
+    # in hex. That format can't come from a Cloudgate input directly, so on every start this
+    # derives the same key from the generated SECRET_KEY_SEED, then hands over to the image's own
+    # init (/init, which must stay PID 1).
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        SECRET_KEY=$$(php -d open_basedir= -r '$$b = "\xDE\xF0\x00\x00" . hash("sha256", getenv("SECRET_KEY_SEED"), true); echo bin2hex($$b . hash("sha256", $$b, true));')
+        export SECRET_KEY
+        unset SECRET_KEY_SEED
+        exec /init
+    environment:
+      DB_HOST: elabftw-db
+      DB_PORT: "3306"
+      DB_NAME: elabftw
+      DB_USER: elabftw
+      DB_PASSWORD: ${DB_PASSWORD}
+      SECRET_KEY_SEED: ${SECRET_KEY_SEED}
+      SITE_URL: ${SITE_URL}
+      DISABLE_HTTPS: "true"
+      # Requests arrive through Cloudgate's proxy; trust its X-Forwarded-For for the visitor's IP.
+      SET_REAL_IP: "true"
+      SET_REAL_IP_FROM: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+      PHP_TIMEZONE: ${TIMEZONE:-UTC}
+      TZ: ${TIMEZONE:-UTC}
+      # Create the database structure on the first start and apply schema updates after an
+      # image upgrade (both skip when there is nothing to do).
+      AUTO_DB_INIT: "true"
+      AUTO_DB_UPDATE: "true"
+    volumes:
+      # Files attached to experiments and resources.
+      - elabftw-uploads:/var/lib/elabftw/uploads
+      # Exports (PDF, ZIP, ELN archives) waiting to be downloaded.
+      - elabftw-exports:/var/lib/elabftw/exports
+      # PHP's temporary files and caches.
+      - elabftw-cache:/var/cache/elabftw
+
+  elabftw-db:
+    # The official configuration uses MySQL 8.4.
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: elabftw
+      MYSQL_USER: elabftw
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: ${TIMEZONE:-UTC}
+    volumes:
+      - elabftw-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute 'SHOW DATABASES;'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  elabftw-uploads:
+  elabftw-exports:
+  elabftw-cache:
+  elabftw-db-data:

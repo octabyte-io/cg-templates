@@ -1,0 +1,22 @@
+name: Jellystat
+description: "Self-hosted Jellystat: watch history and statistics for your Jellyfin media server, with live sessions and per-library and per-user stats."
+version: "1.1.12"
+tags: ["jellyfin statistics", "watch history", "tautulli for jellyfin", "tautulli alternative", "media server statistics", "jellyfin"]
+links:
+  website: https://github.com/CyferShepard/Jellystat
+  docs: https://github.com/CyferShepard/Jellystat#readme
+  source: https://github.com/CyferShepard/Jellystat
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  POSTGRES_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for the times shown in statistics, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: jellystat, port: 3000 }

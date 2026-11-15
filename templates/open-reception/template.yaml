@@ -1,0 +1,51 @@
+name: OpenReception
+description: "OpenReception is self-hosted, end-to-end encrypted appointment booking for medical practices: patients book online, and only your staff can read their details."
+version: "v2.8.1"
+tags: [doctolib alternative, appointment booking, online booking for doctors, medical practice scheduling, encrypted appointments, patient booking]
+links:
+  website: https://open-reception.org
+  docs: https://github.com/open-reception/appointment-booking-software/blob/v2.8.1/docs/deployment.md
+  source: https://github.com/open-reception/appointment-booking-software
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  MANAGEMENT_DOMAIN: { value: "{{domains.open-reception.host}}" }
+  DB_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: OpenReception emails staff invitations and booking confirmations, so it needs an email sending service, for example smtp.resend.com. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_SECURE:
+    ask:
+      label: Email server uses TLS from the start
+      description: "true for port 465, false for port 587 (STARTTLS)."
+      default: "false"
+      pattern: "true|false"
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM_EMAIL:
+    ask:
+      label: Sender email address
+      description: The address emails come from. Leave it empty to use the username.
+      format: email
+      required: false
+domains:
+  - { service: open-reception, port: 3000 }

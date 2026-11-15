@@ -1,0 +1,15 @@
+# GlobaLeaks always redirects plain-HTTP requests to HTTPS and has no setting
+# for running behind a proxy, so this proxy hands Cloudgate's requests to its
+# HTTPS port. The certificate there is GlobaLeaks' own self-signed one, used
+# only on the private network between the two containers.
+{
+	admin off
+}
+
+:80 {
+	reverse_proxy https://globaleaks:8443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}

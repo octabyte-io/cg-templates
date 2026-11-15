@@ -1,0 +1,55 @@
+services:
+  open-reception:
+    # The official image (docs/deployment.md, docker-compose.prod.yml), pinned to one release.
+    # SvelteKit on Node, port 3000. On the first request it creates its central database and
+    # runs the migrations; it creates one more database per organisation (tenant) you add.
+    image: openreception/open-reception:v2.8.1
+    restart: unless-stopped
+    user: "1001:1001"
+    depends_on:
+      open-reception-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://openreception:${DB_PASSWORD}@open-reception-db:5432/open_reception
+      JWT_SECRET: ${JWT_SECRET}
+      # The admin address (host name only, no https://). Links in emails to admins point here.
+      MANAGEMENT_DOMAIN: ${MANAGEMENT_DOMAIN}
+      # Email: staff invitations and booking confirmations go out over SMTP. Until a host is
+      # set, sending fails quietly and the rest of the app still works.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASSWORD:-}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-OpenReception}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
+    healthcheck:
+      # Same check as the official compose file; the Alpine image has busybox wget.
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  open-reception-db:
+    # The official compose file uses postgres:16-alpine. The app's user creates databases
+    # itself (one per tenant), so it is the database superuser here, as upstream.
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: open_reception
+      POSTGRES_USER: openreception
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    volumes:
+      - open-reception-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openreception -d open_reception"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  open-reception-db-data:

@@ -1,0 +1,18 @@
+name: PrivateGPT
+description: "Self-hosted PrivateGPT: ask an AI about your own documents, with citations, using a model that runs on your server so files stay private."
+version: "1.0.1"
+tags: ["private ai", "chat with documents", "notebooklm alternative", "local llm", "private document search", "document q&a", "ollama"]
+links:
+  website: https://privategpt.dev
+  docs: https://docs.privategpt.dev
+  source: https://github.com/zylon-ai/private-gpt
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: privategpt, port: 8080 }
+files:
+  - { path: settings-cloudgate.yaml }
+  - { path: privategpt-start.sh.txt }

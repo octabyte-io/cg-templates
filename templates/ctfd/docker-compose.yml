@@ -1,0 +1,60 @@
+services:
+  ctfd:
+    image: ctfd/ctfd:3.8.9
+    restart: unless-stopped
+    depends_on:
+      ctfd-db:
+        condition: service_healthy
+      ctfd-cache:
+        condition: service_healthy
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: mysql+pymysql://ctfd:${DB_PASSWORD}@ctfd-db/ctfd
+      REDIS_URL: redis://ctfd-cache:6379
+      WORKERS: 1
+      UPLOAD_FOLDER: /var/uploads
+      LOG_FOLDER: /var/log/CTFd
+      ACCESS_LOG: "-"
+      ERROR_LOG: "-"
+      # Cloudgate serves the app behind its HTTPS proxy.
+      REVERSE_PROXY: "true"
+    volumes:
+      - ctfd-uploads:/var/uploads
+      - ctfd-logs:/var/log/CTFd
+
+  ctfd-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    # Settings CTFd's own compose file requires.
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_USER: ctfd
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ctfd
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - ctfd-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  ctfd-cache:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - ctfd-cache-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ctfd-uploads:
+  ctfd-logs:
+  ctfd-db-data:
+  ctfd-cache-data:

@@ -1,0 +1,22 @@
+name: Zabbix
+description: "Self-hosted Zabbix monitors your servers, switches, printers and websites, with dashboards, network maps and alerts by email, Slack or Teams."
+version: "8.0.0"
+tags: [network monitoring, server monitoring, infrastructure monitoring, snmp monitoring, prtg alternative, datadog alternative, open source monitoring]
+links:
+  website: https://www.zabbix.com
+  docs: https://www.zabbix.com/documentation/8.0/en/manual
+  source: https://github.com/zabbix/zabbix
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for times shown in the web interface, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: zabbix-web, port: 8080 }
