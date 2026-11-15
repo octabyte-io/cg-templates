@@ -1,0 +1,146 @@
+# erxes 3.4.22, from the compose files erxes' self-hosting guide generates
+# (docs.erxes.io/self-hosting: docker-compose-dbs.yml and docker-compose.yml) with
+# its Frontline (inbox) plugin, plus the Sales plugin (deals and pipelines) from
+# the same release. Changes for Cloudgate:
+#   - plain Compose instead of a Swarm stack (no "deploy:", no external network);
+#   - the guide's nginx site runs as the "erxes" container, so the web app and the
+#     API gateway share one address (/ and /gateway/), as the guide sets them up;
+#   - MongoDB 8.0 (the release's driver supports it) as a one-member replica set
+#     inside the private network, without the guide's key file and root user;
+#   - the web app gets only the settings its 3.4.22 build reads (the API address
+#     and the upload limit), and the gateway leaves GraphQL introspection off;
+#   - uploads can be kept on the server: pick "Local" as the file storage in
+#     erxes' settings (the default is Amazon S3).
+x-erxes-env: &erxes-env
+  NODE_ENV: production
+  VERSION: os
+  DOMAIN: ${ERXES_URL}
+  JWT_TOKEN_SECRET: ${JWT_TOKEN_SECRET}
+  MONGO_URL: mongodb://erxes-mongo:27017/erxes?replicaSet=rs0
+  REDIS_HOST: erxes-redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  ENABLED_PLUGINS: frontline,sales
+  PORT: "80"
+  DEBUG: "*error*"
+
+services:
+  # The public address: the web app at /, the API gateway at /gateway/.
+  erxes:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      erxes-ui:
+        condition: service_started
+      erxes-gateway:
+        condition: service_started
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  erxes-ui:
+    image: erxes/erxes-next-ui:3.4.22
+    restart: unless-stopped
+    environment:
+      REACT_APP_API_URL: ${ERXES_URL}/gateway
+      REACT_APP_FILE_UPLOAD_MAX_SIZE: "524288000"
+      NODE_ENV: production
+
+  erxes-gateway:
+    image: erxes/erxes-next-gateway:3.4.22
+    restart: unless-stopped
+    depends_on:
+      erxes-mongo:
+        condition: service_healthy
+      erxes-redis:
+        condition: service_healthy
+    environment:
+      <<: *erxes-env
+      SERVICE_NAME: gateway
+      LOAD_BALANCER_ADDRESS: http://erxes-gateway
+
+  erxes-core-api:
+    image: erxes/erxes-next-core-api:3.4.22
+    restart: unless-stopped
+    depends_on:
+      erxes-mongo:
+        condition: service_healthy
+      erxes-redis:
+        condition: service_healthy
+    environment:
+      <<: *erxes-env
+      SERVICE_NAME: core-api
+      LOAD_BALANCER_ADDRESS: http://erxes-core-api
+      RELEASE_VERSION: "3.4.22"
+      EMAIL_VERIFIER_ENDPOINT: https://email-verifier.erxes.io
+      LOCAL_UPLOADS_DIR: /home/node/uploads
+    volumes:
+      - erxes-uploads:/home/node
+
+  # Inbox: messenger, email and social conversations in one place.
+  erxes-frontline-api:
+    image: erxes/erxes-next-frontline_api:3.4.22
+    restart: unless-stopped
+    depends_on:
+      erxes-mongo:
+        condition: service_healthy
+      erxes-redis:
+        condition: service_healthy
+    environment:
+      <<: *erxes-env
+      SERVICE_NAME: frontline
+      LOAD_BALANCER_ADDRESS: http://erxes-frontline-api
+      RELEASE_VERSION: "3.4.22"
+
+  # Sales: deals, pipelines and products.
+  erxes-sales-api:
+    image: erxes/erxes-next-sales_api:3.4.22
+    restart: unless-stopped
+    depends_on:
+      erxes-mongo:
+        condition: service_healthy
+      erxes-redis:
+        condition: service_healthy
+    environment:
+      <<: *erxes-env
+      SERVICE_NAME: sales
+      LOAD_BALANCER_ADDRESS: http://erxes-sales-api
+      RELEASE_VERSION: "3.4.22"
+
+  # A one-member replica set: erxes uses transactions, which need one. The
+  # healthcheck sets it up on first start.
+  erxes-mongo:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - erxes-mongo-data:/data/db
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - "try { rs.status() } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'erxes-mongo:27017' }] }) }; quit(db.hello().isWritablePrimary ? 0 : 1)"
+      interval: 10s
+      timeout: 10s
+      start_period: 30s
+      retries: 10
+
+  erxes-redis:
+    image: redis:7.2.17-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - erxes-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+volumes:
+  erxes-uploads:
+  erxes-mongo-data:
+  erxes-redis-data:

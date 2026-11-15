@@ -15,10 +15,15 @@ apps:
   poznote:
     fit: "Notes, tags, task lists with reminders and a Chrome extension that saves a page's link, a screenshot or text, in workspaces you can share with other people, with notes stored as plain files on your server. It has no Evernote importer, does not read text in images, and has no official phone app; it installs from the browser instead."
     import: no
+  notediscovery:
+    fit: "A simple notes app in the browser that keeps every note as a Markdown file on your server, with tags, templates, full-text search, images and PDFs in notes, and public links to share a note. It has no Evernote import, web clipper, text search in images or phone app, so it suits people starting fresh rather than moving a large Evernote library."
+    import: no
 moving: |
   Decide where each kind of note goes. For written notes, export each notebook from Evernote as an ENEX file and import it into Trilium, which adds the notebook's notes, images and attachments to your note tree; check a few notes with tables or checklists afterwards. For scanned paperwork, Paperless-ngx has no Evernote importer: export those notes and save their PDF and image attachments as files (a community script, enex2paperless, can do this from an Evernote export, but it is not part of Paperless-ngx). Upload the files in the browser or drop them into the consume folder, and Paperless-ngx reads and indexes each one. Turn your Evernote tags into tags there, and let it learn from the documents you tag by hand. For Notesnook, point the web or desktop app at your server, create your account, and import the ENEX files there (import runs in the web and desktop apps only); notebooks, tags, attachments and web clips come across, but reminders do not. Papra has no Evernote importer either: save the attachments from your Evernote export as files, upload them in the browser or with its Android app, and set up tagging rules so new documents are tagged as they arrive.
 
   Poznote has no Evernote importer, so copy across the notes you still use, folder by folder, and keep your ENEX export as an archive.
+
+  NoteDiscovery has no Evernote importer, so start fresh with it, or copy the notes you still need across by hand.
 faq:
   - q: "Should I choose Trilium, Notesnook, Poznote, Paperless-ngx or Papra?"
     a: "Choose Trilium for notes on a computer: writing, organising and finding what you have written. Choose Notesnook if you take notes on your phone or want them end-to-end encrypted. Choose Paperless-ngx for scanned paperwork such as bills, receipts and contracts, which it reads with OCR, or Papra for a simpler paperwork archive that a family shares. Choose Poznote for notes, tasks and a diary shared with family or a small team in the browser, if you can move your notes by hand. If you used Evernote for both notes and paperwork, run a notes app and Paperless-ngx side by side."
@@ -28,6 +33,8 @@ faq:
     a: "Notesnook has official apps for Android and iPhone that sync with your own server, and Papra has an official Android app. Trilium and Paperless-ngx have none: Trilium has a mobile web version and community apps, and Paperless-ngx works in a phone's browser, with community apps that upload and search documents through its API. Poznote has no official app either; it installs from the phone's browser."
   - q: "Does Paperless-ngx send my documents to an AI service?"
     a: "No. Its automatic tagging runs on your own server. Optional AI features are off by default and use a model you choose to connect."
+  - q: "Where does NoteDiscovery fit?"
+    a: "It suits people who want plain Markdown notes they can open in any browser and keep as files on their own server. It can't import Evernote notebooks or clip web pages, so Trilium or Notesnook are better for moving an existing Evernote library."
 ---
 
 Evernote is a note-taking app for writing notes, clipping web pages and keeping notebooks, and many people also used it as a digital filing cabinet for receipts, bills and PDFs, where its search could find words in images.

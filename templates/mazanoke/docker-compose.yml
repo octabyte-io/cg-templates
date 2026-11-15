@@ -1,0 +1,18 @@
+services:
+  mazanoke:
+    # The official image (github.com/civilblur/mazanoke, ghcr.io), built from
+    # each MAZANOKE release: nginx serving the static web app on port 80. Its
+    # own nginx config listens on IPv4 only (no "listen [::]"), so it starts
+    # on hosts without IPv6.
+    image: ghcr.io/civilblur/mazanoke:v1.1.7
+    restart: unless-stopped
+    # No sign-in and no volumes: MAZANOKE is a static web app. Images are
+    # optimized in the visitor's browser, so they are never uploaded to or
+    # kept on the server. (The image can add a basic-auth prompt when
+    # USERNAME and PASSWORD are set; left off, as in the official compose.)
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --spider http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

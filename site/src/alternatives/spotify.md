@@ -21,6 +21,9 @@ apps:
   gonic:
     fit: "The lightest server here: it streams the music files you own to Subsonic-compatible apps on phones, desktops and the web, with folder browsing for libraries organised in folders, podcasts, internet radio and an account for each person. It has no player of its own, only an admin page, so everyone listens through a Subsonic app, and like the others it has no catalogue or recommendations."
     import: no
+  feishin:
+    fit: "A Spotify-style player for the music server you run: it connects to Navidrome, Jellyfin or another Subsonic-compatible server and gives you home, album and artist pages, a queue, synced lyrics, smart playlists with Navidrome, ratings and scrobbling, in the browser and as a desktop app. It stores no music, so you install it alongside a server, and it has no phone app or catalogue."
+    import: no
   lightweight-music-server:
     fit: "A light server for well-tagged music collections: browse by genre, mood, release type and artist roles such as composer or conductor, get suggestions of similar artists and albums from your own library, and let radio mode keep the queue going. It streams to any browser and to Subsonic-compatible apps, and logs plays to ListenBrainz or Last.fm. It has no catalogue, no phone app of its own and a plainer interface, and one main developer."
     import: no
@@ -30,6 +33,8 @@ moving: |
   For Swing Music, upload your files at the File Browser address Cloudgate sets up, then run a scan from Swing Music's settings so it adds them. On Android, install its app and pair it by scanning the QR code in Swing Music's settings; on an iPhone, use the web player in the browser.
 
   For gonic, upload your music at its second, File Browser address, keeping one album per folder such as Artist/Album, and gonic adds new files by itself. Rebuild your playlists in your Subsonic app, then sign in from each phone or computer with gonic's address, your username and password.
+
+  Feishin is a player rather than a server: set up Navidrome or Jellyfin with your music first, then open Feishin, add that server's address and sign in with your account there.
 
   For LMS, upload your files through the File Browser address Cloudgate sets up, add the music folder as a library and run the first scan; it reads .m3u playlist files you put in the music folder. Sign in from a Subsonic-compatible app with an API key you create in LMS's settings.
 faq:
@@ -43,6 +48,8 @@ faq:
     a: "mStream: its official iPhone and Android apps are free and open source, and connect by scanning a QR code. Navidrome and Ampache rely on Subsonic-compatible apps made by others, and Koel's official app is paid."
   - q: "When is Ampache a better choice than Navidrome?"
     a: "When you want more than music streaming: podcasts, internet radio, smart playlists built in the web page, uploads, votes on what plays next, or connecting iTunes-style DAAP apps. Navidrome is lighter and simpler for music alone."
+  - q: "Where does Feishin fit?"
+    a: "Feishin is a player for a music server you already run, such as Navidrome or Jellyfin, with a look closer to Spotify's: home and artist pages, synced lyrics and a full-screen player. Use it in the browser or as a desktop app, with Navidrome as the server behind it."
   - q: "When is LMS a better choice than Navidrome?"
     a: "When your files are carefully tagged and you want to browse by mood, release type or composer and get suggestions of similar artists and albums from your own library, with a radio mode that keeps the queue going. Navidrome is the more widely used of the two and has a larger community."
 ---

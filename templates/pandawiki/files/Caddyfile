@@ -1,0 +1,6 @@
+# The public wiki's Caddy before the first knowledge base exists. Upstream's Caddy starts with an
+# empty config; PandaWiki replaces this whole config through Caddy's admin socket as soon as a
+# knowledge base is created, and again whenever its access settings change.
+:80 {
+	respond "This PandaWiki has no public wiki yet. Sign in to the admin console, create a knowledge base, and give it this address with port 80." 200
+}

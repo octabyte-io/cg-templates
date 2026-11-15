@@ -18,6 +18,9 @@ apps:
   poznote:
     fit: "The closest to Obsidian's way of working: notes kept as plain Markdown and HTML files, links between notes with backlinks and a graph view, and it imports a zipped Obsidian vault, all in a browser on your own server with accounts for other people. Aliases, heading links, embeds, Dataview and canvases don't carry over, there is no plugin ecosystem, and there is no official desktop or phone app, though it installs from the browser and keeps recent notes offline."
     import: yes
+  notediscovery:
+    fit: "Close to Obsidian's way of working: notes stay plain Markdown files in folders, with [[double bracket]] links, backlinks, a graph view, tags and templates, edited in any browser on your own server. It has far fewer plugins than Obsidian, no phone or desktop apps, and one shared password rather than user accounts."
+    import: partly
   flatnotes:
     fit: "Stores notes the way Obsidian does: every note is a plain Markdown file, with [[wikilinks]], #tags and fast full-text search, served in a browser from your server so every device sees the same notes without a sync subscription. It has no plugins, graph view, folders or phone app, and it reads only notes at the top level of its folder, so a vault with subfolders needs flattening."
     import: partly
@@ -40,12 +43,14 @@ moving: |
 
   Poznote imports an Obsidian vault directly: zip the vault folder and import it, and your notes, folders, front-matter tags, [[links]], images and PDFs come across. Aliases, links to headings, embeds, Dataview queries and canvases do not, so check the notes that rely on them.
 
+  NoteDiscovery keeps notes as Markdown files in folders, so you can copy your vault's notes and folders into its notes folder; check links and embedded images afterwards, since plugin features don't carry over.
+
   flatnotes reads Markdown files directly, so copy your vault's notes into its notes folder on the server; it reads only the top level of that folder, so move notes out of subfolders first and use #tags in place of folders.
 
   Many Notes imports whole vaults as zip files: zip your Obsidian vault folder and import it, and your Markdown files and folders come across, though wiki links and plugin features do not work there.
 faq:
   - q: "Which Obsidian alternative keeps notes as Markdown files?"
-    a: "SilverBullet, LeafWiki, Note Mark, Poznote, flatnotes, Many Notes and Jotty. Each keeps notes as plain Markdown or HTML files on your server, so you can read, back up or move them with any other tool; SilverBullet is the closest to a personal Obsidian vault, flatnotes also keeps wikilinks and tags, and Many Notes keeps each vault as a folder of Markdown files you can export as a zip. Trilium and SiYuan keep notes in their own storage, and Trilium exports Markdown or HTML when you ask."
+    a: "SilverBullet, LeafWiki, Note Mark, NoteDiscovery, Poznote, flatnotes, Many Notes and Jotty. Each keeps notes as plain Markdown or HTML files on your server, so you can read, back up or move them with any other tool; SilverBullet is the closest to a personal Obsidian vault, flatnotes also keeps wikilinks and tags, and Many Notes keeps each vault as a folder of Markdown files you can export as a zip. Trilium and SiYuan keep notes in their own storage, and Trilium exports Markdown or HTML when you ask."
   - q: "Does SilverBullet work on my phone and offline?"
     a: "Yes. SilverBullet installs from the browser as a web app on phones and computers, keeps a copy of your notes on the device, and syncs changes when you are back online. There is no app-store app."
   - q: "Should I choose SilverBullet, Trilium, SiYuan, Poznote, flatnotes or Jotty?"

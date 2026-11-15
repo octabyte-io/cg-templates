@@ -1,0 +1,22 @@
+services:
+  # Feishin's web build: static files served by nginx on port 9180. It keeps no
+  # data on the server; each browser stores its own servers and settings.
+  feishin:
+    image: ghcr.io/jeffvli/feishin:1.17.0
+    restart: unless-stopped
+    environment:
+      # Leave the music server open: on first visit, people add their own
+      # Navidrome, Jellyfin or (Open)Subsonic server with its address and login.
+      SERVER_LOCK: "false"
+      # Don't load the Umami analytics script in the web app.
+      ANALYTICS_DISABLED: "true"
+    volumes:
+      # The image's nginx config minus "listen [::]:9180", which makes nginx
+      # exit where containers have no IPv6 (see files/nginx.conf).
+      - ../files/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:9180/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

@@ -1,0 +1,181 @@
+# Based on the Docker Compose quickstart in Speckle's docs
+# (docs.speckle.systems/developers/server/getting-started) and the repo's
+# docker-compose-speckle.yml at 2.31.14: Postgres, Valkey, Garage for object storage,
+# Speckle's own nginx ingress, the frontend, the server, and the preview, webhook and
+# IFC import services. Dropped: the published ports and the SMTP placeholders (email is
+# off until you add a mail server).
+#
+# File uploads go through the server (FF_LEGACY_FILE_IMPORTS_ENABLED) instead of a
+# presigned URL straight to the object storage, because the storage has no public address
+# here. The imported files are still processed by the next-generation importer.
+
+x-db-url: &db-url postgresql://speckle:${POSTGRES_PASSWORD}@speckle-postgres/speckle
+
+services:
+  # Speckle's ingress: sends /graphql, /api, /auth, /objects, /preview and /static to the
+  # server and everything else to the frontend. Listens on 8080.
+  speckle-ingress:
+    image: speckle/speckle-docker-compose-ingress:2.31.14
+    restart: unless-stopped
+    environment:
+      FILE_SIZE_LIMIT_MB: "100"
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+    depends_on:
+      - speckle-server
+      - speckle-frontend-2
+
+  speckle-frontend-2:
+    image: speckle/speckle-frontend-2:2.31.14
+    restart: unless-stopped
+    environment:
+      NUXT_PUBLIC_SERVER_NAME: Speckle
+      NUXT_PUBLIC_API_ORIGIN: ${APP_URL}
+      NUXT_PUBLIC_BASE_URL: ${APP_URL}
+      NUXT_PUBLIC_BACKEND_API_ORIGIN: http://speckle-server:3000
+      NUXT_REDIS_URL: redis://speckle-redis
+      # Cloudgate serves the app over HTTPS.
+      NUXT_PUBLIC_SSL_ENABLED: "true"
+      NUXT_PUBLIC_LOG_LEVEL: warn
+      LOG_LEVEL: info
+      NUXT_PUBLIC_FF_NEXT_GEN_FILE_IMPORTER_ENABLED: "true"
+      NUXT_PUBLIC_FF_LEGACY_FILE_IMPORTS_ENABLED: "true"
+    depends_on:
+      speckle-server:
+        condition: service_healthy
+
+  speckle-server:
+    image: speckle/speckle-server:2.31.14
+    restart: unless-stopped
+    depends_on:
+      speckle-postgres:
+        condition: service_healthy
+      speckle-redis:
+        condition: service_healthy
+      speckle-garage:
+        condition: service_started
+    # From the repo's compose file: the image is distroless, so node is the only tool.
+    healthcheck:
+      test:
+        - CMD
+        - /nodejs/bin/node
+        - -e
+        - "try { require('node:http').request({headers: {'Content-Type': 'application/json'}, port:3000, hostname:'127.0.0.1', path:'/readiness', method: 'GET', timeout: 2000 }, (res) => { body = ''; res.on('data', (chunk) => {body += chunk;}); res.on('end', () => {process.exit(res.statusCode != 200 || body.toLowerCase().includes('error') ? 1 : 0);}); }).end(); } catch { process.exit(1); }"
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    environment:
+      CANONICAL_URL: ${APP_URL}
+      FRONTEND_ORIGIN: ${APP_URL}
+      # Other Speckle services reach the server inside this network.
+      PRIVATE_OBJECTS_SERVER_URL: http://speckle-server:3000
+      SESSION_SECRET: ${SESSION_SECRET}
+      # Sign-in with email and password.
+      STRATEGY_LOCAL: "true"
+      LOG_LEVEL: info
+
+      POSTGRES_URL: speckle-postgres
+      POSTGRES_USER: speckle
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: speckle
+
+      REDIS_URL: redis://speckle-redis
+      PREVIEW_SERVICE_USE_PRIVATE_OBJECTS_SERVER_URL: "true"
+      PREVIEW_SERVICE_REDIS_URL: redis://speckle-redis
+      FILEIMPORT_SERVICE_USE_PRIVATE_OBJECTS_SERVER_URL: "true"
+      FILEIMPORT_SERVICE_REDIS_URL: redis://speckle-redis
+      # File-import jobs are queued in the database for the IFC import service.
+      FILEIMPORT_QUEUE_POSTGRES_URL: *db-url
+      FF_NEXT_GEN_FILE_IMPORTER_ENABLED: "true"
+
+      S3_ENDPOINT: http://speckle-garage:9000
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: speckle-server
+      FILE_SIZE_LIMIT_MB: "100"
+
+      EMAIL_FROM: no-reply@example.org
+
+  preview-service:
+    image: speckle/speckle-preview-service:2.31.14
+    restart: unless-stopped
+    # From the repo's compose file: the service renders previews in a headless browser and
+    # needs PORT set to start; it only listens inside its own container.
+    mem_limit: 3000m
+    memswap_limit: 3000m
+    environment:
+      HOST: 127.0.0.1
+      PORT: "3001"
+      REDIS_URL: redis://speckle-redis
+      LOG_LEVEL: info
+    depends_on:
+      speckle-server:
+        condition: service_healthy
+
+  webhook-service:
+    image: speckle/speckle-webhook-service:2.31.14
+    restart: unless-stopped
+    environment:
+      PG_CONNECTION_STRING: *db-url
+      LOG_LEVEL: info
+    depends_on:
+      speckle-server:
+        condition: service_healthy
+
+  ifc-import-service:
+    image: speckle/speckle-ifc-import-service:2.31.14
+    restart: unless-stopped
+    environment:
+      FILEIMPORT_QUEUE_POSTGRES_URL: *db-url
+      LOG_LEVEL: info
+    depends_on:
+      speckle-server:
+        condition: service_healthy
+
+  speckle-postgres:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: speckle
+      POSTGRES_USER: speckle
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # Postgres 18 keeps its data under /var/lib/postgresql/18/docker.
+      - speckle-postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U speckle -d speckle"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  speckle-redis:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    volumes:
+      - speckle-redis-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # S3-compatible storage for models and files, as in Speckle's quickstart: one node that
+  # creates its access key and the speckle-server bucket on first start.
+  speckle-garage:
+    image: dxflrs/garage:v2.4.1
+    command: /garage server --single-node --default-access-key --default-bucket
+    restart: unless-stopped
+    environment:
+      GARAGE_CONFIG_FILE: /etc/garage.toml
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_DEFAULT_ACCESS_KEY: ${S3_ACCESS_KEY}
+      GARAGE_DEFAULT_SECRET_KEY: ${S3_SECRET_KEY}
+      GARAGE_DEFAULT_BUCKET: speckle-server
+    volumes:
+      - ../files/garage.toml:/etc/garage.toml:ro
+      - speckle-garage-data:/data
+
+volumes:
+  speckle-postgres-data:
+  speckle-redis-data:
+  speckle-garage-data:

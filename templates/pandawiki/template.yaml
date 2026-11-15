@@ -1,0 +1,39 @@
+name: PandaWiki
+description: "PandaWiki is a self-hosted AI knowledge base: publish product docs or a help centre and let visitors ask an AI that answers from your documents."
+version: "3.87.5"
+tags:
+  - gitbook alternative
+  - ai knowledge base
+  - chatbase alternative
+  - help center software
+  - documentation site
+  - ai wiki
+links:
+  website: https://pandawiki.docs.baizhi.cloud
+  docs: https://pandawiki.docs.baizhi.cloud
+  source: https://github.com/chaitin/PandaWiki
+cloudgate: 0.1.0
+compose: app
+# Twelve containers: the API, its background worker, the admin console, the public wiki app and
+# its Caddy proxy, PostgreSQL, Redis, NATS, MinIO, Qdrant, the document crawler and the
+# retrieval service, about 700 MB of memory idle. The AI features call model providers you
+# connect in the admin console; nothing runs a model locally.
+size: medium
+inputs:
+  ADMIN_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  NATS_PASSWORD: { generate: password }
+  S3_SECRET_KEY: { generate: password }
+  QDRANT_API_KEY: { generate: hex }
+# The first address is the admin console (sign in as "admin" with ADMIN_PASSWORD). The second is
+# the public wiki: create a knowledge base with that address and port 80 to publish it there.
+domains:
+  - { service: admin, port: 8080 }
+  - { service: wiki, port: 80 }
+# The admin console's nginx site over plain HTTP, and the public wiki's Caddy config until the
+# first knowledge base exists (see each file's first lines).
+files:
+  - { path: admin-server.conf }
+  - { path: Caddyfile }

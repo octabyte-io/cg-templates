@@ -1,0 +1,28 @@
+name: erxes
+description: "erxes is a self-hosted CRM with contacts, a shared customer inbox, a sales pipeline and tickets in one system, and no price per user."
+version: "3.4.22"
+tags:
+  - hubspot alternative
+  - self-hosted crm
+  - zendesk alternative
+  - shared inbox
+  - sales pipeline
+  - crm software
+links:
+  website: https://erxes.io
+  docs: https://docs.erxes.io
+  source: https://github.com/erxes/erxes
+cloudgate: 0.1.0
+compose: app
+# Four Node.js services (gateway, core, inbox, sales), the web app, an nginx front,
+# MongoDB and Redis; erxes asks for at least 2 GB for the core alone.
+size: large
+inputs:
+  ERXES_URL: { value: "{{domains.erxes.url}}" }
+  # Signs every session; shared by the gateway and the API services.
+  JWT_TOKEN_SECRET: { generate: hex }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: erxes, port: 80 }
+files:
+  - { path: nginx.conf }

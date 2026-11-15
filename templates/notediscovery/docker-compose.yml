@@ -1,0 +1,25 @@
+services:
+  notediscovery:
+    image: ghcr.io/gamosoft/notediscovery:0.34.1
+    restart: unless-stopped
+    environment:
+      TZ: UTC
+      # Require the login page, so the public address is not open to anyone.
+      # NoteDiscovery has one password and no user accounts.
+      AUTHENTICATION_ENABLED: "true"
+      AUTHENTICATION_PASSWORD: ${LOGIN_PASSWORD}
+      AUTHENTICATION_SECRET_KEY: ${SESSION_SECRET}
+      # Shared-note links and QR codes use the app's public address.
+      SHARE_PUBLIC_ORIGIN: ${APP_URL}
+    volumes:
+      # The notes, as plain Markdown files in folders.
+      - notediscovery-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  notediscovery-data:

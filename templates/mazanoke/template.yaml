@@ -1,0 +1,20 @@
+name: MAZANOKE
+description: "MAZANOKE is a self-hosted image optimizer that shrinks, resizes and converts photos in your browser, so nothing is uploaded, unlike TinyPNG."
+version: "1.1.7"
+tags:
+  - tinypng alternative
+  - image compressor
+  - image optimizer
+  - heic to jpg
+  - compress images
+  - iloveimg alternative
+links:
+  website: https://mazanoke.com
+  docs: https://github.com/civilblur/mazanoke#readme
+  source: https://github.com/civilblur/mazanoke
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs: {}
+domains:
+  - { service: mazanoke, port: 80 }
