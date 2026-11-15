@@ -28,6 +28,14 @@ services:
       WT_NAME: Administrator
       WT_PASS: ${ADMIN_PASSWORD}
       WT_EMAIL: ${ADMIN_EMAIL}
+    healthcheck:
+      # The image's own check, with room for the first-start setup wizard (it creates
+      # every table before the site answers); the image default gives up after ~90s.
+      test: ["CMD", "/docker-healthcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 180s
     volumes:
       # config.ini.php, uploaded media (data/media) and GEDCOM files.
       - webtrees-data:/var/www/webtrees/data
