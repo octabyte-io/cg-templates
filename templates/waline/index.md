@@ -36,7 +36,7 @@ switching:
     - Importing replaces what is already there, so move your Disqus comments before new ones arrive
 faq:
   - q: Is Waline free?
-    a: Yes, Waline is free and open source under the GPL-2.0 licence, with no paid edition and no ads. You pay only for the server it runs on.
+    a: Yes. Waline is open source under the GPL-2.0 licence, and the admin dashboard, spam filtering, reactions and Disqus import all come in the free app, with no ads. You pay only for the server and its database.
   - q: Is Waline a good alternative to Disqus?
     a: Yes, if you want comments without ads or tracking, kept on your own server, with a dashboard to review and approve them. Waline has replies, likes, reactions and email alerts, but no Disqus-style network across websites.
   - q: How do I become the admin of my Waline?

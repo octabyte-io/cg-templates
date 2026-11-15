@@ -1,0 +1,19 @@
+services:
+  peekaping:
+    # Single mode: one process serves the web app, the API and the websocket on
+    # port 8383, with its SQLite database in /app/data.
+    image: 0xfurai/peekaping:0.1.0
+    restart: unless-stopped
+    # Peekaping takes up to 30 seconds to shut down cleanly.
+    stop_grace_period: 35s
+    environment:
+      # The address people open, used for links in notifications.
+      CLIENT_URL: ${CLIENT_URL}
+      # Cloudgate's proxy sits in front on a private network; trust it so the
+      # login lockout counts each visitor's own address. The port is not published.
+      TRUSTED_PROXIES: 127.0.0.0/8,::1/128,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,fc00::/7
+    volumes:
+      - peekaping-data:/app/data
+
+volumes:
+  peekaping-data:

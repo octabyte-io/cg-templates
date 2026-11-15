@@ -1,0 +1,73 @@
+# From the srsolutions/ilias image's README (github.com/srsolutionsag/docker-ilias): the web
+# container with ILIAS_AUTO_SETUP, a cron container from the same image, and MariaDB. ILIAS has
+# no official image; this community image by sr solutions ag is versioned per ILIAS release.
+# Left out: published ports and the database root login for ILIAS (it gets its own user).
+# On the first start the image installs ILIAS (about 2 minutes) and sets the password of the
+# "root" admin account to ADMIN_PASSWORD.
+
+services:
+  ilias:
+    image: srsolutions/ilias:11.5-php8.4-apache
+    restart: unless-stopped
+    depends_on:
+      ilias-db:
+        condition: service_healthy
+    environment: &ilias-env
+      ILIAS_AUTO_SETUP: "1"
+      ILIAS_HTTP_PATH: ${ILIAS_HTTP_PATH}
+      ILIAS_DB_HOST: ilias-db
+      ILIAS_DB_NAME: ilias
+      ILIAS_DB_USER: ilias
+      ILIAS_DB_PASSWORD: ${DB_PASSWORD}
+      ILIAS_ROOT_PASSWORD: ${ADMIN_PASSWORD}
+      ILIAS_TIMEZONE: UTC
+      ILIAS_MEMORY_LIMIT: 512M
+    volumes:
+      - ilias-data:/var/www/html/public/data
+      - ilias-iliasdata:/var/iliasdata/ilias
+    # "localhost": ILIAS rejects requests for hosts other than its own address and localhost.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 600s
+
+  # ILIAS's scheduled jobs (notifications, learning progress, clean-up), run every 10 minutes
+  # by the image's cron, as the README's "Cron" section shows. Starts once the install is done.
+  ilias-cron:
+    image: srsolutions/ilias:11.5-php8.4-apache
+    restart: unless-stopped
+    command: cron -f
+    depends_on:
+      ilias:
+        condition: service_healthy
+    environment: *ilias-env
+    volumes:
+      - ilias-data:/var/www/html/public/data
+      - ilias-iliasdata:/var/iliasdata/ilias
+
+  ilias-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    # ILIAS supports only 3-byte utf8 (utf8mb3); utf8mb4 makes the install fail
+    # ("Row size too large"). See docs/configuration/install.md in the ILIAS repo.
+    command: ["--character-set-server=utf8mb3", "--collation-server=utf8mb3_general_ci"]
+    environment:
+      MARIADB_DATABASE: ilias
+      MARIADB_USER: ilias
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - ilias-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  ilias-data:
+  ilias-iliasdata:
+  ilias-db-data:

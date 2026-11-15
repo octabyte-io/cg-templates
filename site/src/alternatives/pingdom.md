@@ -9,15 +9,18 @@ apps:
   checkmate:
     fit: "Checks websites, APIs, ports, DNS, Docker containers and game servers as often as every 15 seconds, opens an incident when a check fails and alerts you through 13 channels such as email, Slack, Teams and SMS, with page-speed scores, status pages and several team logins. Checks run from your server, with optional checks from six continents through the GlobalPing network, and server metrics need its Capture agent. It shows when each SSL certificate expires but alerts only once a certificate fails, not in advance."
     import: no
+  peekaping:
+    fit: "Checks websites, APIs, ports, DNS, databases and message queues as often as every 20 seconds, alerts you through about 25 services and publishes status pages, with an API for everything. You can add small checkers on other machines to check from several locations. It is beta software with one admin login and no keyword checks yet, and has no real-user or transaction monitoring."
+    import: no
 moving: |
-  There is no import from Pingdom in any of these apps. In Uptime Kuma, adding a monitor takes seconds: paste the address, choose how often to check, and pick who gets alerted. Checkmate works the same way: create the admin account, add a monitor for each Pingdom check, and enter your email account's sending details if you want email alerts or team invitations. In Gatus, add an entry for each check to its settings file in the Cloudgate console, with the conditions it must meet. Set up your alert channels first, such as email, Slack or Telegram. Run whichever app you choose on a different server from the sites it watches, so it can still alert you when they go down.
+  There is no import from Pingdom in any of these apps. In Uptime Kuma, adding a monitor takes seconds: paste the address, choose how often to check, and pick who gets alerted. Checkmate works the same way: create the admin account, add a monitor for each Pingdom check, and enter your email account's sending details if you want email alerts or team invitations. In Peekaping, create the admin account, set up alert channels, then add a monitor for each check; to check from more places, run its small checker program on a machine in another region. In Gatus, add an entry for each check to its settings file in the Cloudgate console, with the conditions it must meet. Set up your alert channels first, such as email, Slack or Telegram. Run whichever app you choose on a different server from the sites it watches, so it can still alert you when they go down.
 faq:
   - q: "Should my uptime monitor run on the same server as my website?"
-    a: "No. If that server goes down, the monitor goes down with it and cannot alert you. Run Uptime Kuma, Checkmate or Gatus on a separate server."
-  - q: "Can Uptime Kuma, Checkmate or Gatus check from several countries?"
-    a: "Checkmate can, through the optional GlobalPing network, which adds checks from six continents. Uptime Kuma and Gatus check only from wherever their server is; to check from more places, run a second copy in another region."
-  - q: "Should I choose Uptime Kuma, Checkmate or Gatus?"
-    a: "Choose Uptime Kuma for the lightest setup, one container with alerts in over 90 services, where you add and change checks in a settings screen. Choose Checkmate if several people need their own logins with roles, or you also want incident history, page-speed scores and server metrics; it runs with its own database and has 13 alert channels. Choose Gatus if you are happy to set checks in one text file and want conditions on page content and a status page built from the same file."
+    a: "No. If that server goes down, the monitor goes down with it and cannot alert you. Run Uptime Kuma, Checkmate, Peekaping or Gatus on a separate server."
+  - q: "Can these apps check from several countries?"
+    a: "Checkmate can, through the optional GlobalPing network, which adds checks from six continents, and Peekaping can with its small checker program on machines in other places. Uptime Kuma and Gatus check only from wherever their server is; to check from more places, run a second copy in another region."
+  - q: "Should I choose Uptime Kuma, Checkmate, Peekaping or Gatus?"
+    a: "Choose Uptime Kuma for the lightest setup, one container with alerts in over 90 services, where you add and change checks in a settings screen. Choose Checkmate if several people need their own logins with roles, or you also want incident history, page-speed scores and server metrics. Choose Peekaping if you want to manage monitors through an API or watch databases and message queues, and don't mind beta software. Choose Gatus if you are happy to set checks in one text file and want conditions on page content and a status page built from the same file."
 ---
 
 Pingdom, from SolarWinds, monitors whether websites are up and how fast they load, with checks from locations around the world, transaction checks and real-user monitoring.
