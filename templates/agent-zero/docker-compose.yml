@@ -1,0 +1,19 @@
+services:
+  agent-zero:
+    # One container with Agent Zero's web UI and the Linux workspace its agents
+    # run code in. It needs no privileged mode or Docker socket.
+    image: agent0ai/agent-zero:v2.15
+    restart: unless-stopped
+    environment:
+      # The web UI's login. The agent runs code, so the UI is never left open.
+      AUTH_LOGIN: admin
+      AUTH_PASSWORD: ${AUTH_PASSWORD}
+      # Optional. An OpenRouter key to start chatting straight away; any other
+      # provider can be connected in the UI's model setup instead.
+      API_KEY_OPENROUTER: ${API_KEY_OPENROUTER}
+    volumes:
+      # Chats, settings, memory, knowledge and the agent's work folder.
+      - agent-zero-usr:/a0/usr
+
+volumes:
+  agent-zero-usr:

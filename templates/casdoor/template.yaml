@@ -1,0 +1,19 @@
+name: Casdoor
+description: "Casdoor is self-hosted single sign-on: one login page and user list for all your apps, with social logins, passkeys and two-step sign-in."
+version: "4.29.0"
+tags: [single sign-on, identity provider, auth0 alternative, okta alternative, aws cognito alternative, oauth oidc saml, two-factor authentication]
+links:
+  website: https://casdoor.ai
+  docs: https://casdoor.ai/docs/overview/
+  source: https://github.com/casdoor/casdoor
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ORIGIN: { value: "{{domains.casdoor.url}}" }
+  DB_PASSWORD: { generate: password }
+  # The password of the admin user "admin" (organization built-in), set when
+  # Casdoor creates its database on the first start.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: casdoor, port: 8000 }

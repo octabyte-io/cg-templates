@@ -1,0 +1,130 @@
+# Based on the official zabbix-docker compose files (branch 8.0: compose_pgsql.yaml,
+# compose_zabbix_components.yaml, compose_databases.yaml), PostgreSQL flavour.
+services:
+  # Runs once at each start: creates the database schema and initial data on the
+  # first start, and checks it afterwards (the official "server-db-init" step).
+  zabbix-db-init:
+    image: zabbix/zabbix-server-pgsql:alpine-8.0.0
+    init: true
+    restart: "no"
+    command: init_db_only
+    depends_on:
+      zabbix-db:
+        condition: service_healthy
+    environment:
+      DB_SERVER_HOST: zabbix-db
+      DB_SERVER_PORT: "5432"
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: zabbix
+
+  # The Zabbix server: collects data, evaluates triggers and sends alerts.
+  zabbix-server:
+    image: zabbix/zabbix-server-pgsql:alpine-8.0.0
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 30s
+    depends_on:
+      zabbix-db-init:
+        condition: service_completed_successfully
+      zabbix-db:
+        condition: service_healthy
+    environment:
+      DB_SERVER_HOST: zabbix-db
+      DB_SERVER_PORT: "5432"
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: zabbix
+    volumes:
+      - zabbix-export:/var/lib/zabbix/export
+      - zabbix-snmptraps:/var/lib/zabbix/snmptraps
+
+  # The web interface (nginx + PHP), listening on 8080.
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-8.0.0
+    restart: unless-stopped
+    depends_on:
+      zabbix-db-init:
+        condition: service_completed_successfully
+      zabbix-db:
+        condition: service_healthy
+    environment:
+      DB_SERVER_HOST: zabbix-db
+      DB_SERVER_PORT: "5432"
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: zabbix
+      ZBX_SERVER_HOST: zabbix-server
+      ZBX_SERVER_NAME: Zabbix
+      PHP_TZ: ${TIMEZONE:-Etc/UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  # Zabbix agent 2, so the built-in "Zabbix server" host has an agent to talk to.
+  zabbix-agent:
+    image: zabbix/zabbix-agent2:alpine-8.0.0
+    init: true
+    restart: unless-stopped
+    depends_on:
+      zabbix-server:
+        condition: service_started
+      # Starts once the one-shot setup below has finished (and gives it a
+      # service that waits on it, so "docker compose up --wait" accepts its exit).
+      zabbix-setup:
+        condition: service_completed_successfully
+    environment:
+      ZBX_HOSTNAME: Zabbix server
+      ZBX_SERVER_HOST: zabbix-server
+
+  # Runs once at each start, through the Zabbix API. On a new install it replaces
+  # the default Admin password ("zabbix") with ADMIN_PASSWORD and points the
+  # built-in "Zabbix server" host at the zabbix-agent container. Once the default
+  # password no longer works it does nothing, so later changes are kept.
+  zabbix-setup:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-8.0.0
+    restart: "no"
+    depends_on:
+      zabbix-web:
+        condition: service_healthy
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        api=http://zabbix-web:8080/api_jsonrpc.php
+        call() { curl -sS -H 'Content-Type: application/json-rpc' $${token:+-H "Authorization: Bearer $$token"} -d "$$1" "$$api"; }
+        out=$$(call '{"jsonrpc":"2.0","method":"user.login","params":{"username":"Admin","password":"zabbix"},"id":1}')
+        token=$$(echo "$$out" | sed -n 's/.*"result":"\([0-9a-f]*\)".*/\1/p')
+        if [ -z "$$token" ]; then echo "The default Admin password is already changed; nothing to do."; exit 0; fi
+        call '{"jsonrpc":"2.0","method":"host.update","params":{"hostid":"10084","interfaces":[{"interfaceid":"1","type":1,"main":1,"useip":0,"ip":"127.0.0.1","dns":"zabbix-agent","port":"10050"}]},"id":2}'; echo
+        res=$$(call '{"jsonrpc":"2.0","method":"user.update","params":{"userid":"1","current_passwd":"zabbix","passwd":"'"$$ADMIN_PASSWORD"'"},"id":3}')
+        echo "$$res"
+        echo "$$res" | grep -q '"result"' || exit 1
+        echo "Admin password set."
+
+  zabbix-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    stop_grace_period: 1m
+    environment:
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: zabbix
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - zabbix-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zabbix -d zabbix"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  zabbix-export:
+  zabbix-snmptraps:
+  zabbix-db-data:
