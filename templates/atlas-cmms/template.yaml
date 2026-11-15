@@ -1,0 +1,55 @@
+name: Atlas CMMS
+description: "Atlas CMMS is self-hosted, open-source maintenance software: work orders, preventive maintenance, equipment, spare parts and requests."
+version: "1.9.0"
+tags: [maintainx alternative, cmms, open source cmms, preventive maintenance software, work order software, upkeep alternative, maintenance management]
+links:
+  website: https://atlas-cmms.com
+  docs: https://github.com/Grashjs/cmms/tree/main/dev-docs
+  source: https://github.com/Grashjs/cmms
+cloudgate: 0.1.0
+compose: app
+# A Java (Spring Boot) API with PostgreSQL, file storage and a web app.
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.atlas-cmms.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  MINIO_PASSWORD: { generate: password }
+  # Signs sign-in tokens; upstream's example is 32 random bytes in base64.
+  JWT_SECRET_KEY: { generate: base64 }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The only address allowed to create your organization in Atlas CMMS. Sign up with it on the app's web address; everyone else joins by invitation.
+      format: email
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Lets Atlas CMMS send notifications and password resets, for example smtp.resend.com. Leave empty to run without email.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Sender email
+      description: The address emails are sent from, such as maintenance@yourdomain.com.
+      format: email
+      required: false
+domains:
+  # nginx in front of the web app (/), the API (/api/) and file storage (/storage/).
+  - { service: atlas-cmms, port: 80 }
+files:
+  - { path: nginx.conf }

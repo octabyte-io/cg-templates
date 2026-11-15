@@ -1,0 +1,42 @@
+# From GlobaLeaks' official docker/docker-compose.yml (release v5.0.101), using
+# the published image instead of a local build. GlobaLeaks keeps its database,
+# keys and files in one volume. It sends every plain-HTTP request to HTTPS, so
+# a small Caddy proxy talks to its HTTPS port and gets the web address.
+services:
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      globaleaks:
+        condition: service_healthy
+
+  globaleaks:
+    # The image is published for amd64 (x86-64) servers only.
+    image: globaleaks/globaleaks:v5.0.101
+    platform: linux/amd64
+    restart: unless-stopped
+    # The image's own command, plus --ip=0.0.0.0: GlobaLeaks listens on IPv6
+    # by default and fails to start on hosts where IPv6 is turned off. Only
+    # the proxy next to it connects, over the private IPv4 network.
+    command: ["/usr/bin/python3", "/usr/bin/globaleaks", "--working-path=/var/globaleaks/", "-n", "--ip=0.0.0.0"]
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /run/globaleaks:uid=1000,gid=1000,mode=0700
+      - /tmp:mode=1777
+    volumes:
+      - globaleaks-data:/var/globaleaks
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:8443/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+volumes:
+  globaleaks-data:
