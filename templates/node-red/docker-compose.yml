@@ -1,0 +1,20 @@
+# From Node-RED's official Docker guide (nodered.org/docs/getting-started/docker):
+# the official image with the user directory /data on a named volume. Node-RED's
+# editor is open to anyone by default, so files/settings.js.txt replaces
+# /data/settings.js and turns on its sign-in (adminAuth) with the generated
+# password. The image's own healthcheck (node /healthcheck.js) reads that file.
+services:
+  node-red:
+    image: nodered/node-red:5.0.9
+    restart: unless-stopped
+    environment:
+      NODE_RED_ADMIN_PASSWORD: ${NODE_RED_ADMIN_PASSWORD}
+      NODE_RED_CREDENTIAL_SECRET: ${NODE_RED_CREDENTIAL_SECRET}
+      TZ: ${TZ:-UTC}
+    volumes:
+      # Flows, credentials, installed extra nodes and the context store.
+      - node-red-data:/data
+      - ../files/settings.js.txt:/data/settings.js:ro
+
+volumes:
+  node-red-data:

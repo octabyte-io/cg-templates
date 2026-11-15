@@ -1,0 +1,15 @@
+name: Jotty
+description: "Jotty (formerly rwMarkable) is a self-hosted app for notes, checklists and Kanban boards, kept as Markdown files on your server, like Google Keep."
+version: "1.29.2"
+tags: [notes, checklists, google keep alternative, markdown notes, kanban board, shared to-do lists, rwmarkable]
+links:
+  website: https://jotty.page
+  docs: https://github.com/fccview/jotty/tree/main/howto
+  source: https://github.com/fccview/jotty
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  APP_URL: { value: "{{domains.jotty.url}}" }
+domains:
+  - { service: jotty, port: 3000 }

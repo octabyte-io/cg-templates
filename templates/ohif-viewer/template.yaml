@@ -1,0 +1,20 @@
+name: OHIF Viewer
+description: "The OHIF Viewer is a self-hosted web DICOM viewer for X-ray, CT and MRI scans, set up with an Orthanc image server to store your studies."
+version: "3.13.14"
+tags: ["dicom viewer", "web dicom viewer", "medical image viewer", "pacs viewer", "orthanc", "open source dicom viewer"]
+links:
+  website: https://ohif.org
+  docs: https://docs.ohif.org
+  source: https://github.com/OHIF/Viewers
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of the viewer and Orthanc asks
+  # for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }
+  - { path: app-config.js }

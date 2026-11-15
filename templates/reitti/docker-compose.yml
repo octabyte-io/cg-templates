@@ -1,0 +1,72 @@
+# From the official docker-compose.yml at v5.11.0. The optional Photon
+# geocoder is left out: Reitti runs without it (place names then come from
+# public geocoding services you can set up under Settings).
+services:
+  reitti:
+    image: dedicatedcode/reitti:5.11.0
+    restart: unless-stopped
+    depends_on:
+      reitti-db:
+        condition: service_healthy
+      reitti-redis:
+        condition: service_healthy
+      reitti-tile-cache:
+        condition: service_healthy
+    environment:
+      POSTGIS_HOST: reitti-db
+      POSTGIS_PORT: "5432"
+      POSTGIS_DB: reittidb
+      POSTGIS_USER: reitti
+      POSTGIS_PASSWORD: ${POSTGIS_PASSWORD}
+      REDIS_HOST: reitti-redis
+      REDIS_PORT: "6379"
+      TILES_CACHE: http://reitti-tile-cache
+      ADVERTISE_URI: ${ADVERTISE_URI}
+    volumes:
+      - reitti-data:/data
+    healthcheck:
+      # The image ships curl; this is its own check with more time for the first start (database migrations).
+      test: ["CMD-SHELL", "curl -fs --max-time 5 http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 60s
+
+  reitti-db:
+    image: postgis/postgis:17-3.5-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: reitti
+      POSTGRES_PASSWORD: ${POSTGIS_PASSWORD}
+      POSTGRES_DB: reittidb
+    volumes:
+      - reitti-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reitti -d reittidb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  reitti-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - reitti-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Caches OpenStreetMap map tiles so the map loads fast and the public tile servers are spared.
+  reitti-tile-cache:
+    image: dedicatedcode/reitti-tile-cache:5.11.0
+    restart: unless-stopped
+    volumes:
+      - reitti-tile-cache-data:/var/cache/nginx
+
+volumes:
+  reitti-data:
+  reitti-db-data:
+  reitti-redis-data:
+  reitti-tile-cache-data:

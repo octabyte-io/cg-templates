@@ -1,0 +1,72 @@
+services:
+  # The OHIF Viewer and Orthanc have no sign-in in this setup, and scans are
+  # private medical data. This proxy asks for the username "admin" and the
+  # generated password first, then sends /pacs/ to Orthanc and everything else
+  # to the viewer, all on one web address (as in OHIF's own Nginx + Orthanc
+  # recipe).
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      ohif:
+        condition: service_healthy
+      orthanc:
+        condition: service_healthy
+
+  # The viewer: a web app served by nginx. It reads its settings (which
+  # image server to use) from app-config.js; the image's start script writes
+  # APP_CONFIG into that file.
+  ohif:
+    image: ohif/app:v3.13.14
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+    # The image's nginx also listens on IPv6, which fails to start on servers
+    # with IPv6 turned off; drop that line after the start script writes it.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export APP_CONFIG="$$(cat /etc/ohif/app-config.js)"
+        exec /usr/src/entrypoint.sh /bin/sh -c "sed -i '/listen \[::\]/d' /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+    volumes:
+      - ../files/app-config.js:/etc/ohif/app-config.js:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  # Orthanc stores the scans and serves them to the viewer over DICOMweb.
+  # Its own web pages (Orthanc Explorer 2) are at /pacs/ui/app/ for uploading
+  # and managing studies.
+  orthanc:
+    image: orthancteam/orthanc:26.11.0
+    restart: unless-stopped
+    environment:
+      ORTHANC__NAME: Orthanc
+      # The proxy in front already asks for the password, and Orthanc is not
+      # reachable any other way.
+      ORTHANC__AUTHENTICATION_ENABLED: "false"
+      DICOM_WEB_PLUGIN_ENABLED: "true"
+    volumes:
+      - orthanc-data:/var/lib/orthanc/db
+    healthcheck:
+      test: ["CMD", "/probes/test-aliveness.py"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+
+volumes:
+  orthanc-data:

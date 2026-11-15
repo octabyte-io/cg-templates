@@ -1,0 +1,23 @@
+services:
+  jotty:
+    image: ghcr.io/fccview/jotty:1.29.2
+    restart: unless-stopped
+    # The image's own user (1000:1000) owns the data, config and cache folders.
+    user: "1000:1000"
+    environment:
+      NODE_ENV: production
+      # Cloudgate serves the app over HTTPS, so session cookies are marked secure.
+      HTTPS: "true"
+      APP_URL: ${APP_URL}
+    volumes:
+      # Notes, checklists, users and settings, as plain files.
+      - jotty-data:/app/data
+      # Themes and the settings the admin panel saves.
+      - jotty-config:/app/config
+      # Next.js build cache, so the app is faster after a restart.
+      - jotty-cache:/app/.next/cache
+
+volumes:
+  jotty-data:
+  jotty-config:
+  jotty-cache:

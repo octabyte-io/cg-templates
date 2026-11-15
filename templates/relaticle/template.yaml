@@ -1,0 +1,65 @@
+name: Relaticle
+description: "Relaticle is a self-hosted CRM for companies, contacts and deals, with an AI assistant you approve and a link for Claude and ChatGPT."
+version: "3.9.2"
+tags: [crm, sales pipeline, hubspot alternative, pipedrive alternative, attio alternative, ai crm, contact management]
+links:
+  website: https://relaticle.com
+  docs: https://relaticle.com/developers/self-hosting
+  source: https://github.com/relaticle/relaticle
+cloudgate: 0.1.0
+compose: app
+# Upstream asks for 2 GB of memory at least (Self-Hosting Guide, Requirements).
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.relaticle.url}}" }
+  # Laravel's APP_KEY (32 random bytes, base64); the compose file adds the "base64:" prefix.
+  APP_KEY: { generate: base64 }
+  PASSKEYS_USER_HANDLE_SECRET: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Relaticle with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  ANTHROPIC_API_KEY:
+    ask:
+      label: Anthropic API key
+      description: Optional. Lets Rela, the built-in AI assistant, use Claude models. Leave empty to set it up later, or use OpenAI instead.
+      secret: true
+      required: false
+  OPENAI_API_KEY:
+    ask:
+      label: OpenAI API key
+      description: Optional. Lets Rela, the built-in AI assistant, use GPT models.
+      secret: true
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional, but needed to send invitations, email verification and password resets, for example smtp.mailgun.org. Leave empty and mail is only written to the app's log.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Sender email
+      description: The address Relaticle sends mail from. Use one your email service lets you send from.
+      format: email
+      required: false
+domains:
+  - { service: relaticle, port: 8080 }

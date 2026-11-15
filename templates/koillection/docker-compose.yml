@@ -1,0 +1,45 @@
+services:
+  koillection:
+    image: koillection/koillection:1.8.6
+    restart: unless-stopped
+    depends_on:
+      koillection-db:
+        condition: service_healthy
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+      APP_SECRET: ${APP_SECRET}
+      # Fixed so the API keys made on the first start keep working after a restart.
+      JWT_PASSPHRASE: ${JWT_PASSPHRASE}
+      HTTPS_ENABLED: "1"
+      UPLOAD_MAX_FILESIZE: 20M
+      PHP_MEMORY_LIMIT: 512M
+      PHP_TZ: ${PHP_TZ:-Etc/UTC}
+      DB_DRIVER: pdo_pgsql
+      DB_NAME: koillection
+      DB_HOST: koillection-db
+      DB_PORT: "5432"
+      DB_USER: koillection
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_VERSION: "17"
+    volumes:
+      - koillection-uploads:/uploads
+
+  koillection-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: koillection
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: koillection
+    volumes:
+      - koillection-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U koillection"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  koillection-uploads:
+  koillection-db-data:

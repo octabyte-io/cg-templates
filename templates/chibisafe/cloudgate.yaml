@@ -1,0 +1,25 @@
+# cloudgate.yaml: the parts Cloudgate creates for this app.
+# Leave this file as it is if the app is described by docker-compose.yml.
+version: 1
+services:
+  app: { kind: compose, managed: console }
+
+# If the app is a single container that needs only a database, you can let
+# Cloudgate run both instead of using docker-compose.yml. Delete
+# docker-compose.yml, delete "compose", "size" and "domains" from
+# template.yaml, and replace "services" above with something like:
+#
+# services:
+#   app:
+#     kind: web
+#     description: The app's web pages.
+#     source: { image: "example/my-app:1.0.0" }   # always a version, never latest
+#     port: 3000
+#     env:
+#       - DATABASE_URL: db.url                      # filled in from the database
+#       - SECRET_KEY                                # needs a line in template.yaml inputs
+#   db:
+#     kind: postgres
+#     version: "16"
+#
+# In that case refer to the app's address as {{domains.app.url}}.

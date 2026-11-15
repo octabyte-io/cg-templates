@@ -1,0 +1,65 @@
+name: Pixelfed
+description: "Pixelfed is self-hosted photo sharing like Instagram, without ads: a time-ordered feed, likes, comments and messages for your club, school or family."
+version: "0.15.2"
+tags: [instagram alternative, photo sharing, self-hosted social network, private photo sharing, fediverse, flickr alternative]
+links:
+  website: https://pixelfed.org
+  docs: https://docs.pixelfed.org
+  source: https://github.com/pixelfed/pixelfed
+cloudgate: 0.1.0
+compose: app
+# The web app, the Horizon queue worker and the scheduler (three PHP containers),
+# MariaDB and Redis. 2 GB fits a small community; photos and videos fill the disk.
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.pixelfed.url}}" }
+  # Pixelfed only answers on this host name, and it is part of every username
+  # (@you@this-host), so it should not change once the server has accounts.
+  APP_DOMAIN: { value: "{{domains.pixelfed.host}}" }
+  # Laravel's APP_KEY (32 random bytes, base64); the compose file adds the "base64:" prefix.
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  # The admin account, made at the first start; read the password on the stack's
+  # variables page and change it after the first sign-in.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The username of the server's admin account, such as admin. Lowercase letters, digits and underscores.
+      default: admin
+      pattern: "[a-z0-9_]{2,30}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to the admin account with this email address.
+      format: email
+  MAIL_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Pixelfed emails people to confirm their address and to reset passwords. Your email provider gives you this, such as smtp.mailgun.org. You can leave it empty and add it later.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+  MAIL_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  MAIL_FROM_ADDRESS:
+    ask:
+      label: Send emails from
+      description: The address Pixelfed's emails come from, such as pixelfed@yourdomain.com.
+      format: email
+      required: false
+domains:
+  - { service: pixelfed, port: 8080 }
+files:
+  - { path: pixelfed-dotenv.txt }
