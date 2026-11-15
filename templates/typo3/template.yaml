@@ -1,0 +1,18 @@
+name: TYPO3
+description: "Self-hosted TYPO3, the open-source CMS for large, multilingual websites with many editors, workspaces and detailed permissions."
+version: "13.4"
+tags: ["sitecore alternative", "aem alternative", "typo3 cms", "enterprise cms", "multilingual website", "open source cms"]
+links:
+  website: https://typo3.org
+  docs: https://docs.typo3.org
+  source: https://github.com/TYPO3/typo3
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: typo3, port: 80 }
+files:
+  - { path: forwarded-https.conf }

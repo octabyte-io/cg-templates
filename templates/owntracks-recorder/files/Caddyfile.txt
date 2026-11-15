@@ -1,0 +1,19 @@
+# The OwnTracks Recorder has no sign-in of its own: anyone with the address
+# could read every location and delete data through its API. This proxy asks
+# for the username and password from the app's settings first, for the web
+# pages, the live map and the /pub address the OwnTracks phone app posts to.
+# Cloudgate's own proxy in front handles the domain and TLS. BASIC_AUTH_HASH is
+# the bcrypt hash of the password, made when the container starts (see
+# docker-compose.yml).
+{
+	admin off
+}
+
+:80 {
+	basic_auth {
+		{$BASIC_AUTH_USER} {$BASIC_AUTH_HASH}
+	}
+
+	# Also carries the live map's WebSocket (/ws).
+	reverse_proxy recorder:8083
+}

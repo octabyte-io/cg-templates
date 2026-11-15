@@ -1,0 +1,68 @@
+#!/bin/bash
+# Cloudgate's start-up step for Request Tracker. The image's entrypoint (fdc) sources every
+# init.d/*.sh in name order, so this runs after 46-rt.sh has created or upgraded the database
+# and before Nginx and RT start.
+
+# The image's Nginx listens on [::]:80 only, which fails on a server with IPv6 turned off.
+# There, listen on IPv4 instead.
+if [ ! -e /proc/net/if_inet6 ]; then
+	sed -i -E 's/listen \[::\]:80 ipv6only=off/listen 80/' /etc/nginx/http.d/*.conf
+fi
+
+# RT's address. RT builds every link and redirect from it, and checks that forms are posted
+# from it, so it must match the address people open. Rewritten on every start, so a changed
+# domain takes effect on the next restart. Your own settings go in /opt/rt/RT_SiteConfig.pm,
+# which is read after this file.
+rt_url="${RT_URL%/}"
+rt_scheme="${rt_url%%://*}"
+rt_hostport="${rt_url#*://}"
+rt_hostport="${rt_hostport%%/*}"
+rt_host="${rt_hostport%%:*}"
+if [ "$rt_hostport" != "$rt_host" ]; then
+	rt_port="${rt_hostport##*:}"
+elif [ "$rt_scheme" = "https" ]; then
+	rt_port=443
+else
+	rt_port=80
+fi
+
+cat <<PERL > /opt/rt6/etc/RT_SiteConfig.d/40-cloudgate.pm
+use utf8;
+
+Set(\$WebDomain, '$rt_host');
+Set(\$WebPort, $rt_port);
+Set(\$WebBaseURL, '$rt_scheme://$rt_hostport');
+Set(\$WebURL, '$rt_scheme://$rt_hostport/');
+# Cloudgate's proxy talks plain HTTP to the container; send redirects to the public address.
+Set(\$CanonicalizeRedirectURLs, 1);
+Set(\$rtname, '$rt_host');
+Set(\$Organization, '$rt_host');
+
+1;
+PERL
+chown root:www-data /opt/rt6/etc/RT_SiteConfig.d/40-cloudgate.pm
+chmod 0640 /opt/rt6/etc/RT_SiteConfig.d/40-cloudgate.pm
+
+# Once, after the first install: replace the public default password of RT's "root" account
+# with the generated one. Later starts leave it alone, so a password changed in RT stays changed.
+marker=/opt/rt/.cloudgate-root-password-set
+if [ ! -e "$marker" ] && [ -n "$RT_ROOT_PASSWORD" ]; then
+	fdc_notice "Setting the password of RT's root account"
+	if /usr/bin/perl -I/opt/rt6/local/lib -I/opt/rt6/lib -e '
+		use strict; use warnings;
+		use RT;
+		RT::LoadConfig();
+		RT::Init();
+		my $user = RT::User->new(RT->SystemUser);
+		$user->Load("root");
+		die "RT has no root user\n" unless $user->Id;
+		my ($ok, $msg) = $user->SetPassword($ENV{RT_ROOT_PASSWORD});
+		die "$msg\n" unless $ok;
+	'; then
+		touch "$marker"
+		fdc_notice "RT's root password is set"
+	else
+		fdc_error "Could not set the password of RT's root account"
+		exit 1
+	fi
+fi

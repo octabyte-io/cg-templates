@@ -1,0 +1,52 @@
+name: phpList
+description: "Self-hosted phpList, the open-source newsletter and mailing list manager: personalised campaigns, sign-up pages and click statistics, no fee per subscriber."
+version: "3.6.17"
+tags: [newsletter software, mailchimp alternative, email marketing, mailing list manager, email campaigns, open source newsletter]
+links:
+  website: https://www.phplist.org
+  docs: https://www.phplist.org/manual/
+  source: https://github.com/phpList/phplist3
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.phplist.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the phpList administrator, who signs in as "admin". Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  ORGANISATION_NAME:
+    ask:
+      label: Organisation name
+      description: The name your newsletters are sent from. You can change it later in phpList's settings.
+      default: My Organisation
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but phpList needs it to send newsletters. Your email provider gives you this, such as smtp.mailgun.org. You can add it later.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: Usually 587. Use 465 if your provider asks for SSL.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: phplist, port: 80 }
+files:
+  - { path: config.php.txt }
+  - { path: index.php.txt }

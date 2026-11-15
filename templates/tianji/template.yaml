@@ -1,0 +1,18 @@
+name: Tianji
+description: "Self-hosted Tianji puts cookie-free website analytics, uptime monitoring and server status in one open-source dashboard."
+version: "1.34.3"
+tags: [web analytics, uptime monitoring, server monitoring, status page, google analytics alternative, uptimerobot alternative, umami alternative]
+links:
+  website: https://tianji.dev
+  docs: https://tianji.dev/docs/intro
+  source: https://github.com/msgbyte/tianji
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PUBLIC_URL: { value: "{{domains.tianji.url}}" }
+  JWT_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: tianji, port: 12345 }

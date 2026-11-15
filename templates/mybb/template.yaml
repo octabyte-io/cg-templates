@@ -1,0 +1,34 @@
+name: MyBB
+description: "MyBB is free, self-hosted forum software: a classic message board with boards, threads, private messages, permissions and moderation tools."
+version: "1.8.41"
+tags: [xenforo alternative, vbulletin alternative, invision community alternative, free forum software, self-hosted forum, message board software, community forum]
+links:
+  website: https://mybb.com
+  docs: https://docs.mybb.com
+  source: https://github.com/mybb/mybb
+cloudgate: 0.1.0
+compose: app
+# Three containers: MyBB on PHP-FPM, nginx and PostgreSQL. A community forum runs well in 1 GB.
+size: small
+inputs:
+  BOARD_URL: { value: "{{domains.mybb-web.url}}" }
+  DB_PASSWORD: { generate: password }
+  # The first admin, created on the first start: user "admin" with this password.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The admin account's email and the board's contact address. You sign in as "admin" with the generated ADMIN_PASSWORD.
+      format: email
+  BOARD_NAME:
+    ask:
+      label: Forum name
+      description: The name shown at the top of every page. You can change it later in the Admin CP.
+      default: Forums
+      required: false
+domains:
+  - { service: mybb-web, port: 80 }
+files:
+  - { path: nginx.conf }
+  - { path: start.sh.txt }
+  - { path: mybb-install.php.txt }

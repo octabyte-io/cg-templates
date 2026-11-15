@@ -1,0 +1,20 @@
+services:
+  privatebin:
+    # Official all-in-one image: Nginx, PHP-FPM and PrivateBin on Alpine.
+    # The default configuration stores pastes as encrypted files in /srv/data.
+    image: privatebin/nginx-fpm-alpine:2.1.1
+    restart: unless-stopped
+    # Run as the project recommends: read-only, with in-memory scratch space.
+    read_only: true
+    tmpfs:
+      - /tmp:nodev,noexec,mode=1777
+      - /run:nodev,exec,mode=1777
+      - /var/lib/nginx/tmp:nodev,noexec,mode=1777
+    volumes:
+      - privatebin-data:/srv/data
+      # The image's own site.conf (2.1.1) without its IPv6 listen line, so nginx
+      # also starts on servers without IPv6. Cloudgate reaches it over IPv4.
+      - ../files/site.conf:/etc/nginx/http.d/site.conf:ro
+
+volumes:
+  privatebin-data:

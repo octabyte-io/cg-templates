@@ -1,0 +1,57 @@
+name: paperless-gpt
+description: "paperless-gpt is a self-hosted AI add-on for Paperless-ngx that suggests titles, tags and dates for your documents and re-reads poor scans."
+version: "0.31.0"
+tags: ["paperless-ngx ai", "ai document tagging", "llm ocr", "paperless-ai alternative", "automatic document titles"]
+links:
+  website: https://github.com/icereed/paperless-gpt
+  docs: https://github.com/icereed/paperless-gpt#readme
+  source: https://github.com/icereed/paperless-gpt
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of paperless-gpt asks for
+  # (username: admin). paperless-gpt has no sign-in of its own.
+  ADMIN_PASSWORD: { generate: password }
+  PAPERLESS_URL:
+    ask:
+      label: Paperless-ngx address
+      description: The web address of your Paperless-ngx, for example https://paperless.example.com. paperless-gpt reads and updates documents there.
+      format: url
+  PAPERLESS_API_TOKEN:
+    ask:
+      label: Paperless-ngx API token
+      description: In Paperless-ngx, open your profile (top right) and copy or create the API auth token.
+      secret: true
+  LLM_PROVIDER:
+    ask:
+      label: AI provider
+      description: "Which AI service writes the suggestions: openai, anthropic, mistral, googleai or ollama."
+      default: openai
+      pattern: "openai|anthropic|mistral|googleai|ollama"
+  LLM_MODEL:
+    ask:
+      label: AI model
+      description: The model name at that provider, for example gpt-4o, claude-sonnet-4-5, mistral-large-latest or qwen3:8b.
+      default: gpt-4o
+  LLM_API_KEY:
+    ask:
+      label: AI provider API key
+      description: The API key from your AI provider. Leave it empty for Ollama.
+      secret: true
+      required: false
+  OLLAMA_HOST:
+    ask:
+      label: Ollama address
+      description: Only for Ollama, the address of your Ollama server, for example http://ollama.example.com:11434.
+      format: url
+      required: false
+  VISION_LLM_MODEL:
+    ask:
+      label: AI model for reading scans (optional)
+      description: A model that can read images, at the same provider, for example gpt-4o or minicpm-v. Leave empty to keep only Paperless-ngx's own text recognition.
+      required: false
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

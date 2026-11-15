@@ -1,0 +1,23 @@
+name: Radicale
+description: "Radicale is a self-hosted calendar and contacts server that syncs your calendars, tasks and address books to iPhone, Android and desktop apps."
+version: "3.9.1"
+tags: [google calendar alternative, icloud calendar alternative, caldav server, carddav server, calendar sync, contacts sync, self-hosted calendar]
+links:
+  website: https://radicale.org
+  docs: https://radicale.org/v3.html
+  source: https://github.com/Kozea/Radicale
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  RADICALE_USER:
+    ask:
+      label: Username
+      description: The name you sign in with, in the web page and in your calendar and contacts apps. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_.-]{1,31}"
+  RADICALE_PASSWORD: { generate: password }
+domains:
+  - { service: radicale, port: 5232 }
+files:
+  - { path: radicale.conf }

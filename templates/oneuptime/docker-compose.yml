@@ -1,0 +1,219 @@
+# From OneUptime's official docker-compose.yml and docker-compose.base.yml at
+# tag 14.1.0, with the settings of config.example.env written in. Kept: the
+# app, its nginx ingress (the web address), one monitoring probe, Postgres,
+# ClickHouse and Valkey. Left out: the second probe, the global runner (runbook
+# JavaScript steps and AI code fixes; GLOBAL_RUNNER_REPLICAS 0 turns it off in
+# the app), the e2e and test-server services and the published ports.
+
+x-oneuptime-env: &oneuptime-env
+  HOST: ${HOST}
+  HTTP_PROTOCOL: https
+  PROVISION_SSL: "false"
+  STATUS_PAGE_CNAME_RECORD: ${HOST}
+  DASHBOARD_CNAME_RECORD: ${HOST}
+  NODE_ENV: production
+  LOG_LEVEL: ERROR
+  BILLING_ENABLED: "false"
+  IS_ENTERPRISE_EDITION: "false"
+  SERVER_APP_HOSTNAME: oneuptime-app
+  SERVER_HOME_HOSTNAME: home
+  APP_PORT: "3002"
+  HOME_PORT: "1444"
+  # Behind Cloudgate's proxy and then the ingress.
+  TRUSTED_PROXY_HOPS: "2"
+  ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
+  ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+  REGISTER_PROBE_KEY: ${REGISTER_PROBE_KEY}
+  GLOBAL_RUNNER_REPLICAS: "0"
+  DATABASE_HOST: oneuptime-postgres
+  DATABASE_PORT: "5432"
+  DATABASE_USERNAME: postgres
+  DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+  DATABASE_NAME: oneuptimedb
+  DATABASE_SSL_REJECT_UNAUTHORIZED: "false"
+  VALKEY_HOST: oneuptime-valkey
+  VALKEY_PORT: "6379"
+  VALKEY_DB: "0"
+  VALKEY_USERNAME: default
+  VALKEY_PASSWORD: ${VALKEY_PASSWORD}
+  VALKEY_TLS_SENTINEL_MODE: "false"
+  REDIS_HOST: oneuptime-valkey
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  REDIS_USERNAME: default
+  REDIS_PASSWORD: ${VALKEY_PASSWORD}
+  REDIS_TLS_SENTINEL_MODE: "false"
+  CLICKHOUSE_HOST: oneuptime-clickhouse
+  CLICKHOUSE_PORT: "8123"
+  CLICKHOUSE_USER: default
+  CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+  CLICKHOUSE_DATABASE: oneuptime
+  CLICKHOUSE_MAX_OPEN_CONNECTIONS: "100"
+  AVERAGE_SPAN_ROW_SIZE_IN_BYTES: "1024"
+  AVERAGE_LOG_ROW_SIZE_IN_BYTES: "1024"
+  AVERAGE_METRIC_ROW_SIZE_IN_BYTES: "1024"
+  AVERAGE_EXCEPTION_ROW_SIZE_IN_BYTES: "1024"
+  WORKFLOW_SCRIPT_TIMEOUT_IN_MS: "5000"
+  WORKFLOW_TIMEOUT_IN_MS: "120000"
+  DISABLE_AUTOMATIC_INCIDENT_CREATION: "false"
+  DISABLE_AUTOMATIC_ALERT_CREATION: "false"
+  DISABLE_TELEMETRY_INGESTION: "false"
+  SERVER_PRODUCTS: everything
+  ALLOWED_ACTIVE_MONITOR_COUNT_IN_FREE_PLAN: "10"
+  CAPTCHA_ENABLED: "false"
+  GOOGLE_TAG_MANAGER_ENABLED: "false"
+  VAPID_SUBJECT: mailto:support@oneuptime.com
+  PUSH_NOTIFICATION_RELAY_URL: https://oneuptime.com/api/notification/push-relay/send
+  INBOUND_EMAIL_PROVIDER: SendGrid
+  ENABLE_QUEUE_DASHBOARD: "false"
+  SUBSCRIPTION_PLAN_BASIC: Basic,priceMonthlyId,priceYearlyId,0,0,1,0
+  SUBSCRIPTION_PLAN_GROWTH: Growth,priceMonthlyId,priceYearlyId,0,0,2,14
+  SUBSCRIPTION_PLAN_SCALE: Scale,priceMonthlyId,priceYearlyId,0,0,3,0
+  SUBSCRIPTION_PLAN_ENTERPRISE: Enterprise,priceMonthlyId,priceYearlyId,-1,-1,4,14
+
+services:
+  # The web address: OneUptime's own nginx, which routes the dashboard, the
+  # status pages, the API and the probes' ingest to the app.
+  oneuptime-ingress:
+    image: ghcr.io/oneuptime/nginx:14.1.0
+    restart: unless-stopped
+    depends_on:
+      oneuptime-app:
+        condition: service_started
+    environment:
+      <<: *oneuptime-env
+      ONEUPTIME_HTTP_PORT: "7849"
+      NGINX_LISTEN_ADDRESS: ""
+      NGINX_LISTEN_OPTIONS: ""
+      NGINX_INGEST_ACCESS_LOG: "on"
+      DISABLE_TELEMETRY: "true"
+
+  oneuptime-app:
+    image: ghcr.io/oneuptime/app:14.1.0
+    restart: unless-stopped
+    depends_on:
+      oneuptime-postgres:
+        condition: service_healthy
+      oneuptime-valkey:
+        condition: service_healthy
+      oneuptime-clickhouse:
+        condition: service_healthy
+    environment:
+      <<: *oneuptime-env
+      PORT: "3002"
+      DISABLE_TELEMETRY: "true"
+      ENABLE_PROFILING: "false"
+      WORKER_CONCURRENCY: "100"
+      TELEMETRY_CONCURRENCY: "100"
+      TELEMETRY_FANIN_MAX_BATCH_ROWS: "100000"
+      TELEMETRY_FANIN_MAX_WAIT_MS: "5000"
+      TELEMETRY_FANIN_MAX_CONCURRENT_INSERTS: "4"
+      TELEMETRY_FANIN_MAX_PENDING_ROWS: "200000"
+      TELEMETRY_FANIN_RETRY_MAX_ATTEMPTS: "6"
+      TELEMETRY_FANIN_RETRY_BASE_DELAY_MS: "250"
+      TELEMETRY_FANIN_RETRY_MAX_DELAY_MS: "10000"
+      TELEMETRY_WAIT_FOR_ASYNC_INSERT: "false"
+      TELEMETRY_WRITER_REQUEST_TIMEOUT_MS: "90000"
+      TELEMETRY_WRITER_MAX_BODY_BYTES: "30000000"
+      TELEMETRY_WRITER_MAX_INFLIGHT_REQUESTS: "100"
+      MQTT_INGEST_ENABLED: "true"
+      MQTT_INGEST_PORT: "1883"
+
+  # Runs the uptime, API, ping, port and SSL checks. The official file puts it
+  # on the host network so it can also check addresses on the server's own
+  # network; here it checks public addresses through the ingress. Its browser
+  # sandbox needs a seccomp profile file, so synthetic (browser) monitors run
+  # Chromium without its own sandbox, still inside this locked-down container.
+  oneuptime-probe:
+    image: ghcr.io/oneuptime/probe:14.1.0
+    restart: unless-stopped
+    depends_on:
+      oneuptime-app:
+        condition: service_started
+    shm_size: 512m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - KILL
+      - NET_RAW
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      ONEUPTIME_URL: http://oneuptime-ingress:7849
+      REGISTER_PROBE_KEY: ${REGISTER_PROBE_KEY}
+      PROBE_NAME: Probe-1
+      PROBE_DESCRIPTION: Global probe to monitor oneuptime resources
+      PROBE_KEY: ${PROBE_KEY}
+      PROBE_MONITORING_WORKERS: "5"
+      PROBE_MONITOR_FETCH_LIMIT: "10"
+      PROBE_SYNTHETIC_MONITOR_SCRIPT_TIMEOUT_IN_MS: "60000"
+      PROBE_SYNTHETIC_MONITOR_MAX_CONCURRENCY: "2"
+      PROBE_SYNTHETIC_MONITOR_MAX_PROCESS_TREE_RSS_BYTES: "1610612736"
+      PROBE_SYNTHETIC_MONITOR_MAX_DISK_BYTES: "268435456"
+      PROBE_SYNTHETIC_MONITOR_CHROMIUM_SANDBOX_ENABLED: "false"
+      PROBE_CUSTOM_CODE_MONITOR_SCRIPT_TIMEOUT_IN_MS: "60000"
+      PROBE_ALLOW_PRIVATE_NETWORK_MONITORS: "false"
+      BILLING_ENABLED: "false"
+      PORT: "3874"
+      NODE_ENV: production
+      LOG_LEVEL: ERROR
+      DISABLE_TELEMETRY: "true"
+      ENABLE_PROFILING: "false"
+
+  oneuptime-postgres:
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: oneuptimedb
+    volumes:
+      - oneuptime-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U postgres -d oneuptimedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  oneuptime-clickhouse:
+    image: clickhouse/clickhouse-server:26.7.38.18
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DB: oneuptime
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - oneuptime-clickhouse:/var/lib/clickhouse/
+      - ../files/clickhouse-cluster.xml:/etc/clickhouse-server/config.d/cluster.xml:ro
+      - ../files/clickhouse-system-log-ttl.xml:/etc/clickhouse-server/config.d/system-log-ttl.xml:ro
+      - ../files/clickhouse-logger.xml:/etc/clickhouse-server/config.d/logger.xml:ro
+      - ../files/clickhouse-distributed-insert-tuning.xml:/etc/clickhouse-server/users.d/distributed-insert-tuning.xml:ro
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --query 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  oneuptime-valkey:
+    image: valkey/valkey:9.1.3-alpine
+    restart: unless-stopped
+    command: valkey-server --requirepass "${VALKEY_PASSWORD}" --save "" --appendonly no
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a \"$$VALKEY_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      VALKEY_PASSWORD: ${VALKEY_PASSWORD}
+
+volumes:
+  oneuptime-postgres:
+  oneuptime-clickhouse:

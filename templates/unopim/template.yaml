@@ -1,0 +1,35 @@
+name: UnoPim
+description: "UnoPim is a self-hosted, open-source PIM: keep product data, images and translations in one place for every sales channel, in place of Akeneo or Salsify."
+version: "3.1.3"
+tags: [pim, product information management, akeneo alternative, salsify alternative, open source pim, product catalog, product data management]
+links:
+  website: https://unopim.com
+  docs: https://devdocs.unopim.com
+  source: https://github.com/unopim/unopim
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.unopim.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to UnoPim's admin panel with this email.
+      format: email
+  CURRENCY:
+    ask:
+      label: Default currency
+      description: The catalogue's default currency, as a three-letter code such as USD, EUR or GBP. Set when UnoPim is installed.
+      default: USD
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: UnoPim's time zone, as an IANA name such as Europe/Berlin. Scheduled jobs run at times in this zone.
+      default: UTC
+      required: false
+domains:
+  - { service: unopim, port: 80 }

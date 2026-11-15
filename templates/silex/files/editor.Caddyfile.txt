@@ -1,0 +1,16 @@
+# Silex has no accounts or sign-in when it saves websites on this server: anyone
+# with the address could open, change or publish them. This small proxy asks for
+# the username "admin" and the generated password first. Cloudgate's own proxy
+# in front handles the domain and TLS. BASIC_AUTH_HASH is the bcrypt hash of
+# ADMIN_PASSWORD, made when the container starts (see docker-compose.yml).
+{
+	admin off
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	reverse_proxy silex:6805
+}

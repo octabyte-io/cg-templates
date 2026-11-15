@@ -1,0 +1,18 @@
+name: Netdata
+description: "Netdata is self-hosted server monitoring with a live dashboard: per-second CPU, memory and disk charts, built-in alerts and anomaly detection."
+version: "v2.12.3"
+tags: ["server monitoring", "datadog alternative", "real-time monitoring dashboard", "self-hosted monitoring", "netdata without cloud", "linux server monitoring"]
+links:
+  website: https://www.netdata.cloud
+  docs: https://learn.netdata.cloud
+  source: https://github.com/netdata/netdata
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of Netdata asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

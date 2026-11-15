@@ -1,0 +1,15 @@
+name: Bludit
+description: "Self-hosted Bludit is a free flat-file CMS: build a simple website or blog in a visual editor, with themes, plugins and no database."
+version: "3.20.0"
+tags: [flat-file cms, squarespace alternative, wix alternative, self-hosted cms, blog platform, no database cms, website builder]
+links:
+  website: https://www.bludit.com
+  docs: https://docs.bludit.com
+  source: https://github.com/bludit/bludit
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: bludit, port: 80 }
+files:
+  - { path: bludit-nginx.conf }

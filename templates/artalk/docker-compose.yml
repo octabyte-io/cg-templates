@@ -1,0 +1,36 @@
+# From Artalk's docker-compose.yml and Docker guide (github.com/ArtalkJS/Artalk,
+# tag v2.10.1; artalk.js.org/guide/deploy.html). One container: the comment
+# server, its dashboard and the embed script (/dist/Artalk.js). Comments, the
+# SQLite database and the generated artalk.yml are kept in /data.
+# Settings use Artalk's ATK_* environment variables (artalk.js.org/guide/env.html).
+services:
+  artalk:
+    image: artalk/artalk-go:2.10.1
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      ATK_LOCALE: en
+      # Signs dashboard and reader sign-in tokens.
+      ATK_APP_KEY: ${APP_KEY}
+      # The default site: its name is the "site" value in the embed snippet;
+      # comments load only on its address (more sites in the dashboard).
+      ATK_SITE_DEFAULT: ${SITE_NAME}
+      ATK_SITE_URL: ${WEBSITE_URL}
+      # The admin account, kept in sync with these values on every start.
+      ATK_ADMIN_USERS_0_NAME: ${ADMIN_NAME}
+      ATK_ADMIN_USERS_0_EMAIL: ${ADMIN_EMAIL}
+      ATK_ADMIN_USERS_0_PASSWORD: ${ADMIN_PASSWORD}
+      ATK_ADMIN_USERS_0_BADGE_NAME: Admin
+      ATK_ADMIN_USERS_0_BADGE_COLOR: "#0083FF"
+    volumes:
+      - artalk-data:/data
+    healthcheck:
+      # Alpine image: busybox wget.
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:23366/api/v2/version || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  artalk-data:

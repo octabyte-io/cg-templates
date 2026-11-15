@@ -1,0 +1,34 @@
+services:
+  # Beaver Habit Tracker's official image, set up as its README's compose file:
+  # habits, accounts and settings are kept in one SQLite database (habits.db)
+  # in the data volume. The image's own healthcheck calls /health.
+  beaverhabits:
+    image: daya0576/beaverhabits:0.10.0
+    restart: unless-stopped
+    depends_on:
+      beaverhabits-permissions:
+        condition: service_completed_successfully
+    environment:
+      # DATABASE keeps everything in .user/habits.db (the app's default).
+      HABITS_STORAGE: DATABASE
+      # The address people open; used in password-reset links.
+      APP_URL: ${APP_URL}
+      # Sign-in tokens, browser sessions and password-reset tokens.
+      JWT_SECRET: ${JWT_SECRET}
+      NICEGUI_STORAGE_SECRET: ${NICEGUI_STORAGE_SECRET}
+      RESET_PASSWORD_TOKEN_SECRET: ${RESET_PASSWORD_TOKEN_SECRET}
+    volumes:
+      - beaverhabits-data:/app/.user
+
+  # Runs once at each start: a new volume is owned by root, and the app runs as
+  # the image's user nobody (65534), so this hands the data folder to it.
+  beaverhabits-permissions:
+    image: daya0576/beaverhabits:0.10.0
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["chown", "65534:65534", "/app/.user"]
+    volumes:
+      - beaverhabits-data:/app/.user
+
+volumes:
+  beaverhabits-data:

@@ -1,0 +1,61 @@
+services:
+  # paperless-gpt has no accounts or sign-in: anyone with the address could
+  # rewrite documents in your Paperless-ngx and spend your AI credits. This
+  # proxy asks for the username "admin" and the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      paperless-gpt:
+        condition: service_healthy
+
+  paperless-gpt:
+    # Attaches to an existing Paperless-ngx through its address and API token.
+    # It starts even when Paperless-ngx can't be reached and retries later.
+    image: icereed/paperless-gpt:v0.31.0
+    restart: unless-stopped
+    environment:
+      PAPERLESS_BASE_URL: ${PAPERLESS_URL}
+      PAPERLESS_PUBLIC_URL: ${PAPERLESS_URL}
+      PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
+      LLM_PROVIDER: ${LLM_PROVIDER}
+      LLM_MODEL: ${LLM_MODEL}
+      # One key for whichever provider is chosen; each reads its own variable.
+      OPENAI_API_KEY: ${LLM_API_KEY:-}
+      ANTHROPIC_API_KEY: ${LLM_API_KEY:-}
+      MISTRAL_API_KEY: ${LLM_API_KEY:-}
+      GOOGLEAI_API_KEY: ${LLM_API_KEY:-}
+      OLLAMA_HOST: ${OLLAMA_HOST:-}
+      VISION_LLM_MODEL: ${VISION_LLM_MODEL:-}
+    # AI reading of scans (LLM OCR) is on only when a vision model is given;
+    # it then uses the same provider as the suggestions.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - if [ -n "$$VISION_LLM_MODEL" ]; then export VISION_LLM_PROVIDER="$$LLM_PROVIDER"; fi && exec /app/entrypoint.sh
+    volumes:
+      # Prompts edited in the web page, settings saved there, and the history
+      # used for undo.
+      - paperless-gpt-prompts:/app/prompts
+      - paperless-gpt-config:/app/config
+      - paperless-gpt-db:/app/db
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+
+volumes:
+  paperless-gpt-prompts:
+  paperless-gpt-config:
+  paperless-gpt-db:

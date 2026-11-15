@@ -1,0 +1,16 @@
+name: Domain Locker
+description: "Domain Locker is a self-hosted domain expiry tracker that watches your domains, SSL certificates, DNS and uptime, and warns you before anything lapses."
+version: "0.3.8"
+tags: [domain expiry tracker, uptimerobot alternative, ssl certificate monitoring, domain management, dns monitoring, domain portfolio]
+links:
+  website: https://domain-locker.com
+  docs: https://domain-locker.com/about/self-hosting
+  source: https://github.com/Lissy93/domain-locker
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DL_BASE_URL: { value: "{{domains.domain-locker.url}}" }
+  DL_AUTH_PASSWORD: { generate: password }
+domains:
+  - { service: domain-locker, port: 3000 }

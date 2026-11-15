@@ -1,0 +1,52 @@
+services:
+  # Netdata's dashboard has no accounts or sign-in: anyone with the address
+  # could see the server's activity. This proxy asks for the username
+  # "admin" and the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      netdata:
+        condition: service_healthy
+
+  netdata:
+    # The official image. The official "docker run" also gives Netdata the
+    # host's process list and network (pid/network: host), read-only mounts
+    # of /, /proc, /sys and the Docker socket, and extra privileges; here it
+    # runs as an ordinary container instead. Netdata still reads the
+    # server-wide CPU, memory, load and disk activity the kernel shows every
+    # container, but not other apps' processes, other containers, the
+    # server's own network cards or its disk space.
+    image: netdata/netdata:v2.12.3
+    restart: unless-stopped
+    hostname: netdata
+    environment:
+      # Turns off Netdata's anonymous usage statistics.
+      DO_NOT_TRACK: "1"
+    volumes:
+      # Settings, the metrics database and its cache.
+      - netdata-config:/etc/netdata
+      - netdata-lib:/var/lib/netdata
+      - netdata-cache:/var/cache/netdata
+    # The image's own check (/usr/sbin/health.sh, which calls curl) runs
+    # once a minute; this one reports sooner at startup.
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/sbin/health.sh"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+
+volumes:
+  netdata-config:
+  netdata-lib:
+  netdata-cache:

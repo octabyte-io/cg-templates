@@ -1,0 +1,15 @@
+name: Enclosed
+description: "Enclosed is a self-hosted app for sending end-to-end encrypted notes and files by link, with a password, an expiry time and deletion after reading."
+version: "1.16.1"
+tags: [privnote alternative, self-destructing notes, encrypted notes, send passwords securely, encrypted file sharing, one-time secret link, wetransfer alternative]
+links:
+  website: https://enclosed.cc
+  docs: https://docs.enclosed.cc
+  source: https://github.com/CorentinTh/enclosed
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  AUTHENTICATION_JWT_SECRET: { generate: hex }
+domains:
+  - { service: enclosed, port: 8787 }

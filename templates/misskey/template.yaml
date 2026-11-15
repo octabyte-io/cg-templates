@@ -1,0 +1,26 @@
+name: Misskey
+description: "Misskey is a self-hosted social network: members post notes, react with emoji and chat in channels, and follow people on Mastodon and the fediverse."
+version: "2026.11.0"
+tags: [misskey, self-hosted social network, twitter alternative, fediverse server, mastodon alternative, private social network]
+links:
+  website: https://misskey-hub.net/en/
+  docs: https://misskey-hub.net/en/docs/for-admin/install/guides/docker/
+  source: https://github.com/misskey-dev/misskey
+cloudgate: 0.1.0
+compose: app
+# Misskey's Node server, PostgreSQL and Redis; Misskey's guide asks for at
+# least 2 GB of memory on the server.
+size: medium
+inputs:
+  # The server's address in every username (@you@this-host). Misskey says it
+  # must not change once the server has started.
+  MISSKEY_URL: { value: "{{domains.misskey.url}}" }
+  DB_PASSWORD: { generate: password }
+  # Misskey asks for this password before the first visitor can create the
+  # admin account (setupPassword in default.yml); read it on the stack's
+  # variables page.
+  SETUP_PASSWORD: { generate: password }
+domains:
+  - { service: misskey, port: 3000 }
+files:
+  - { path: default.yml }

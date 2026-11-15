@@ -429,6 +429,8 @@ export function alternativesPages(): { product: Product; apps: Template[]; copy?
 
 /** How an app's code is shared: the words a visitor understands, from its SPDX licence id. */
 export function licenceKind(license: string): { label: string; openSource: boolean } {
+  // A mixed licence with a closed-source part (Netdata's NCUL1 dashboard) is only partly open source.
+  if (/\bNCUL/i.test(license)) return { label: 'Partly open source', openSource: false };
   if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub|NPL|Proprietary|FIT2CLOUD|erxes)/i.test(license)) {
     return { label: license.startsWith('SUL') ? 'Fair-code' : 'Source-available', openSource: false };
   }

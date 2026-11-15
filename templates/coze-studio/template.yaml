@@ -1,0 +1,33 @@
+name: Coze Studio
+description: "Coze Studio is the self-hosted, open-source edition of Coze: build AI agents, chatbots and workflows with your own knowledge and AI models."
+version: "0.5.1"
+tags: [coze alternative, coze studio, ai agent builder, ai workflow builder, self-hosted chatbot builder, voiceflow alternative]
+links:
+  website: https://github.com/coze-dev/coze-studio
+  docs: https://github.com/coze-dev/coze-studio/wiki
+  source: https://github.com/coze-dev/coze-studio
+cloudgate: 0.1.0
+compose: app
+# Ten containers and three one-shot setup jobs: the web front end, the Coze Studio server,
+# MySQL, Redis, Elasticsearch, a MinIO-compatible file store, Milvus with its etcd, and NSQ.
+# Upstream asks for at least 2 CPU cores and 4 GB of memory. Measured: about 2.5 GB just after
+# setup, most of it Elasticsearch (capped at 1 GB of heap) and MySQL.
+size: large
+inputs:
+  APP_URL: { value: "{{domains.coze-web.url}}" }
+  MYSQL_ROOT_PASSWORD: { generate: password }
+  MYSQL_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  MINIO_PASSWORD: { generate: password }
+  PLUGIN_AES_AUTH_SECRET: { generate: password }
+  PLUGIN_AES_STATE_SECRET: { generate: password }
+  PLUGIN_AES_OAUTH_TOKEN_SECRET: { generate: password }
+domains:
+  - { service: coze-web, port: 80 }
+files:
+  - { path: nginx-default.conf }
+  - { path: mysql-schema.sql }
+  - { path: opencoze-schema.hcl.txt }
+  - { path: coze_resource.index-template.json }
+  - { path: project_draft.index-template.json }
+  - { path: minio-icons.txt }

@@ -1,0 +1,47 @@
+services:
+  calibre-web-automated:
+    # The project's own image (Docker Hub), as in its docker-compose.yml.
+    image: crocodilestick/calibre-web-automated:v4.0.8
+    restart: unless-stopped
+    depends_on:
+      calibre-web-automated-setup:
+        condition: service_completed_successfully
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      NETWORK_SHARE_MODE: "false"
+    volumes:
+      # Settings, accounts (app.db) and CWA's processing logs.
+      - calibre-web-automated-config:/config
+      # The Calibre library. On the first start CWA creates an empty one here.
+      - calibre-web-automated-library:/calibre-library
+      # The ingest folder: books placed here are imported into the library,
+      # then removed. Uploads in the web interface go through it too.
+      - calibre-web-automated-ingest:/cwa-book-ingest
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8083/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # Runs once at each start, before CWA (files/cwa-setup.py.txt). On the first
+  # start it creates the settings and replaces the default admin password
+  # admin123 with the generated one. Later starts change nothing.
+  calibre-web-automated-setup:
+    image: crocodilestick/calibre-web-automated:v4.0.8
+    restart: "no"
+    entrypoint: ["python3", "/cwa-setup.py"]
+    environment:
+      PUID: 1000
+      PGID: 1000
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - calibre-web-automated-config:/config
+      - ../files/cwa-setup.py.txt:/cwa-setup.py:ro
+
+volumes:
+  calibre-web-automated-config:
+  calibre-web-automated-library:
+  calibre-web-automated-ingest:

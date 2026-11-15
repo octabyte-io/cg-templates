@@ -1,0 +1,22 @@
+name: Stump
+description: "Stump is a self-hosted comic, manga and e-book server: read your own DRM-free CBZ, EPUB and PDF files in the browser, OPDS apps or on a Kobo."
+version: "0.1.13"
+tags: ["self-hosted comic server", "manga server", "ebook server", "opds server", "comixology alternative", "stump vs komga"]
+links:
+  website: https://stumpapp.dev
+  docs: https://stumpapp.dev/docs
+  source: https://github.com/stumpapp/stump
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Stump's own address, allowed as an origin for its API (STUMP_ALLOWED_ORIGINS).
+  APP_URL: { value: "{{domains.stump.url}}" }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and scheduled library scans in Stump, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: stump, port: 10801 }

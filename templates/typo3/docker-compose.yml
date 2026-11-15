@@ -1,0 +1,60 @@
+services:
+  typo3:
+    # Community image (github.com/martin-helmich/docker-typo3): TYPO3 13.4 LTS on PHP 8.4 and Apache.
+    # It publishes only major.minor tags; 13.4 follows the 13.4.x patch releases.
+    image: martinhelmich/typo3:13.4
+    restart: unless-stopped
+    depends_on:
+      typo3-db:
+        condition: service_healthy
+    # The image ships a FIRST_INSTALL file, which opens TYPO3's install wizard at the site's address.
+    # Once the wizard has finished (settings.php exists), remove it again on every start, so a
+    # recreated container never reopens the wizard. Then start Apache as the image does.
+    entrypoint:
+      - sh
+      - -c
+      - |
+        if [ -f /var/www/html/typo3conf/system/settings.php ]; then rm -f /var/www/html/FIRST_INSTALL; fi
+        exec docker-php-entrypoint apache2-foreground
+    environment:
+      # The install wizard offers these as "configuration from environment": one click to connect.
+      TYPO3_INSTALL_DB_DRIVER: mysqli
+      TYPO3_INSTALL_DB_HOST: typo3-db
+      TYPO3_INSTALL_DB_PORT: "3306"
+      TYPO3_INSTALL_DB_USER: typo3
+      TYPO3_INSTALL_DB_PASSWORD: ${DB_PASSWORD}
+      TYPO3_INSTALL_DB_DBNAME: typo3
+    volumes:
+      # The volumes the image declares: uploaded files, configuration and extensions, caches and logs.
+      - typo3-fileadmin:/var/www/html/fileadmin
+      - typo3-typo3conf:/var/www/html/typo3conf
+      - typo3-typo3temp:/var/www/html/typo3temp
+      - typo3-uploads:/var/www/html/uploads
+      # Marks requests that reached Cloudgate's proxy over HTTPS as HTTPS.
+      - ../files/forwarded-https.conf:/etc/apache2/conf-enabled/forwarded-https.conf:ro
+
+  typo3-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: typo3
+      MARIADB_USER: typo3
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - typo3-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  typo3-fileadmin:
+  typo3-typo3conf:
+  typo3-typo3temp:
+  typo3-uploads:
+  typo3-db-data:

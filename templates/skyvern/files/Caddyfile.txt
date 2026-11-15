@@ -1,0 +1,39 @@
+# Skyvern's web app has no sign-in of its own: whoever opens it can run
+# browser tasks with your AI key and read the files Skyvern saved. This small
+# proxy asks for the username "admin" and the generated password first.
+# Cloudgate's own proxy in front handles the domain and TLS. BASIC_AUTH_HASH
+# is the bcrypt hash of ADMIN_PASSWORD, made when the container starts.
+#
+# One address serves everything:
+#   /api/* and /v1/*  the Skyvern API (it checks its own API key, so scripts
+#                     and the SDK reach it without the password prompt)
+#   /artifact/*       screenshots, recordings and logs (password protected)
+#   everything else   the web app (password protected)
+{
+	admin off
+}
+
+:80 {
+	@api path /api/* /v1/*
+	handle @api {
+		# A browser that passed the prompt also sends its "Basic" login
+		# here; the API only needs its own key, so drop it.
+		@basic header_regexp Authorization ^Basic\s
+		request_header @basic -Authorization
+		reverse_proxy skyvern:8000
+	}
+
+	handle {
+		basic_auth {
+			admin {$BASIC_AUTH_HASH}
+		}
+
+		handle /artifact/* {
+			reverse_proxy skyvern-ui:9090
+		}
+
+		handle {
+			reverse_proxy skyvern-ui:8080
+		}
+	}
+}

@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted webmail that reads all your email accounts in one inbox.
-category: team-chat
+category: email-calendars
 alternativeTo: [mailbird]
 ease: some-setup
 easeNote: You sign in as the admin, then add each email account you want to read, usually with an app password from that provider.
