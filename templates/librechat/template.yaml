@@ -1,0 +1,30 @@
+name: LibreChat
+description: "LibreChat is a self-hosted, open-source AI chat for teams that puts ChatGPT, Claude, Gemini and other models in one place, with shared agents."
+version: "0.8.8"
+tags: [chatgpt alternative, claude team alternative, self-hosted ai chat, open source chatgpt, ai chat for teams, multi-model ai chat]
+links:
+  website: https://www.librechat.ai
+  docs: https://www.librechat.ai/docs
+  source: https://github.com/LibreChat-AI/LibreChat
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.librechat.url}}" }
+  JWT_SECRET: { generate: hex }
+  JWT_REFRESH_SECRET: { generate: hex }
+  # CREDS_KEY must be 32 bytes written as hex (64 characters), which is what hex makes.
+  CREDS_KEY: { generate: hex }
+  # CREDS_IV must be 16 bytes written as hex (32 characters); docker-compose.yml
+  # keeps the first 32 characters of this value.
+  CREDS_IV_SEED: { generate: hex }
+  MEILI_MASTER_KEY: { generate: hex }
+  ALLOW_REGISTRATION:
+    ask:
+      label: Allow new sign-ups
+      description: Leave true so you can create the first account, which becomes the admin. Type false later so nobody else can sign up.
+      default: "true"
+      pattern: "^(true|false)$"
+      required: false
+domains:
+  - { service: librechat, port: 3080 }

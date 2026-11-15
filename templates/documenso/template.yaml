@@ -1,0 +1,54 @@
+name: Documenso
+description: "Self-hosted Documenso is an open-source e-signature app: upload a PDF, add signers and fields, and send it to be signed online instead of DocuSign."
+version: "2.22.0"
+tags: [docusign alternative, e-signature, electronic signature, document signing, open source e-signature, dropbox sign alternative, adobe sign alternative]
+links:
+  website: https://documenso.com
+  docs: https://docs.documenso.com
+  source: https://github.com/documenso/documenso
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  NEXT_PUBLIC_WEBAPP_URL: { value: "{{domains.documenso.url}}" }
+  NEXTAUTH_SECRET: { generate: hex }
+  NEXT_PRIVATE_ENCRYPTION_KEY: { generate: hex }
+  NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  # Protects the signing certificate made on first start; it must not change after that.
+  SIGNING_PASSPHRASE: { generate: password }
+  SMTP_FROM_ADDRESS:
+    ask:
+      label: Sender email
+      description: The address signing requests and account emails are sent from, for example sign@yourdomain.com. Your email service must allow sending from it.
+      format: email
+  SMTP_FROM_NAME:
+    ask:
+      label: Sender name
+      description: The name people see on signing requests, such as your company's name.
+      default: Documenso
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Documenso emails every signing request, and every new account confirms its email address before signing in, so it needs an email sending service, for example smtp.resend.com or email-smtp.eu-west-1.amazonaws.com.
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+  SMTP_SECURE:
+    ask:
+      label: Use TLS from the start
+      description: Keep "false" for port 587, which still switches to TLS with STARTTLS. Set "true" for port 465.
+      default: "false"
+      pattern: "true|false"
+domains:
+  - { service: documenso, port: 3000 }

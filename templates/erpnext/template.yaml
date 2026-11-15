@@ -1,0 +1,21 @@
+name: ERPNext
+description: "Self-hosted ERPNext runs accounting, stock, buying, selling, manufacturing and projects in one open-source ERP, with no fee per user."
+version: "16.55.0"
+tags: [erpnext, open source erp, netsuite alternative, sap business one alternative, free erp software, inventory management, manufacturing software]
+links:
+  website: https://frappe.io/erpnext
+  docs: https://docs.frappe.io/erpnext
+  source: https://github.com/frappe/erpnext
+cloudgate: 0.1.0
+compose: app
+# Nine containers (web, nginx, websocket, two queue workers, scheduler, MariaDB
+# and two Redis); creating the site on the first start takes several minutes.
+size: large
+inputs:
+  APP_URL: { value: "{{domains.frontend.url}}" }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+# ERPNext's own nginx serves the web pages and routes /socket.io to the
+# websocket container, so it is the service that gets the address.
+domains:
+  - { service: frontend, port: 8080 }

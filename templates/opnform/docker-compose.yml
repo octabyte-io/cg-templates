@@ -1,0 +1,158 @@
+# From OpnForm's official docker-compose.yml (v2.8.4) and its api/.env.docker
+# and client/.env.docker: the Laravel API, its queue worker and scheduler, the
+# Nuxt web app, Postgres, Redis and the nginx ingress (docker/nginx.conf,
+# unchanged), which routes /api to the API and the rest to the web app.
+# The API runs the database migrations on start. The first visit opens
+# OpnForm's setup page, where the owner creates the admin account; public
+# sign-up is closed after that.
+x-api-environment: &api-env
+  APP_NAME: OpnForm
+  APP_ENV: production
+  APP_DEBUG: "false"
+  APP_KEY: base64:${APP_KEY}
+  APP_URL: ${APP_URL}
+  FRONT_URL: ${APP_URL}
+  FRONT_API_SECRET: ${FRONT_API_SECRET}
+  JWT_SECRET: ${JWT_SECRET}
+  JWT_TTL: "1440"
+  JWT_SKIP_IP_UA_VALIDATION: "false"
+  SELF_HOSTED: "true"
+  # Only containers on the server's private Docker networks can reach the
+  # ingress (it has no published port), so trust their forwarding headers:
+  # that is how OpnForm sees the visitor's address and https.
+  TRUSTED_PROXIES: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+  LOG_CHANNEL: errorlog
+  LOG_LEVEL: warning
+  DB_CONNECTION: pgsql
+  DB_HOST: opnform-db
+  DB_PORT: "5432"
+  DB_DATABASE: opnform
+  DB_USERNAME: opnform
+  DB_PASSWORD: ${DB_PASSWORD}
+  REDIS_HOST: opnform-redis
+  CACHE_DRIVER: redis
+  QUEUE_CONNECTION: redis
+  SESSION_DRIVER: redis
+  FILESYSTEM_DRIVER: local
+  LOCAL_FILESYSTEM_VISIBILITY: public
+  # No email server by default: emails go to the log. Add MAIL_MAILER=smtp,
+  # MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD and MAIL_FROM_ADDRESS on
+  # the variables page to send notifications.
+  MAIL_MAILER: ${MAIL_MAILER:-log}
+  MAIL_HOST: ${MAIL_HOST:-}
+  MAIL_PORT: ${MAIL_PORT:-587}
+  MAIL_USERNAME: ${MAIL_USERNAME:-}
+  MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+  MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-}
+  MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-noreply@example.com}
+  MAIL_FROM_NAME: OpnForm
+  SHOW_OFFICIAL_TEMPLATES: "true"
+  PHP_MEMORY_LIMIT: 1G
+  PHP_MAX_EXECUTION_TIME: "600"
+  PHP_UPLOAD_MAX_FILESIZE: 64M
+  PHP_POST_MAX_SIZE: 64M
+
+services:
+  opnform:
+    image: nginx:1.30.2
+    restart: unless-stopped
+    environment:
+      NGINX_MAX_BODY_SIZE: 64m
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+    depends_on:
+      opnform-api:
+        condition: service_started
+      opnform-client:
+        condition: service_started
+
+  opnform-api:
+    image: jhumanj/opnform-api:2.8.4
+    restart: unless-stopped
+    environment: *api-env
+    volumes:
+      # Uploaded files, logos and the MCP OAuth keys.
+      - opnform-storage:/usr/share/nginx/html/storage
+    depends_on:
+      opnform-db:
+        condition: service_healthy
+      opnform-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "php /usr/share/nginx/html/artisan about || exit 1"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 60s
+
+  opnform-api-worker:
+    image: jhumanj/opnform-api:2.8.4
+    restart: unless-stopped
+    command: ["php", "artisan", "queue:work"]
+    environment: *api-env
+    volumes:
+      - opnform-storage:/usr/share/nginx/html/storage
+    depends_on:
+      opnform-api:
+        condition: service_healthy
+
+  opnform-api-scheduler:
+    image: jhumanj/opnform-api:2.8.4
+    restart: unless-stopped
+    command: ["php", "artisan", "schedule:work"]
+    environment: *api-env
+    volumes:
+      - opnform-storage:/usr/share/nginx/html/storage
+    depends_on:
+      opnform-api:
+        condition: service_healthy
+
+  opnform-client:
+    image: jhumanj/opnform-client:2.8.4
+    restart: unless-stopped
+    environment:
+      NUXT_PUBLIC_APP_URL: ${APP_URL}
+      NUXT_PUBLIC_API_BASE: ${APP_URL}/api
+      NUXT_PRIVATE_API_BASE: http://opnform/api
+      NUXT_API_SECRET: ${FRONT_API_SECRET}
+      NUXT_PUBLIC_ENV: production
+    depends_on:
+      opnform-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3000/login || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+
+  opnform-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: opnform
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: opnform
+    volumes:
+      - opnform-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opnform -d opnform"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  opnform-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - opnform-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  opnform-storage:
+  opnform-db-data:
+  opnform-redis-data:

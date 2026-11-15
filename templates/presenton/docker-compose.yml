@@ -1,0 +1,30 @@
+services:
+  presenton:
+    # The official image (github.com/presenton/presenton, built from each
+    # release). Presenton publishes only beta releases; this is the newest.
+    # One container runs nginx on port 80 in front of the web app, the API
+    # and the headless Chromium it exports PowerPoint and PDF files with.
+    image: ghcr.io/presenton/presenton:v0.9.12-beta
+    restart: unless-stopped
+    environment:
+      PRESENTON_PUBLIC_URL: ${PRESENTON_PUBLIC_URL}
+      MIGRATE_DATABASE_ON_STARTUP: "true"
+      # Presenton has sign-in. Without these, the first person to open the
+      # address would create the admin account; with them the admin exists
+      # from the first start. Other people's accounts are added in
+      # Admin > Users. The AI provider and its API key are set in Settings.
+      AUTH_USERNAME: admin
+      AUTH_PASSWORD: ${AUTH_PASSWORD}
+    volumes:
+      # The SQLite database, settings (including API keys), uploads, images
+      # and exported files.
+      - presenton-data:/app_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail --output /dev/null http://localhost/api/v1/auth/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  presenton-data:

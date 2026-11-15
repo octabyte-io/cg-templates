@@ -1,0 +1,19 @@
+name: Jellyfin
+description: "Jellyfin is a free, self-hosted media server that streams your family's films, series and home videos to any browser, phone or TV app."
+version: "12.4"
+tags: [self-hosted media server, plex alternative, emby alternative, home media server, free plex alternative, jellyfin, home video streaming]
+links:
+  website: https://jellyfin.org
+  docs: https://jellyfin.org/docs/
+  source: https://github.com/jellyfin/jellyfin
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  PUBLISHED_SERVER_URL: { value: "{{domains.jellyfin.url}}" }
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # media at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: jellyfin, port: 8096 }
+  - { service: filebrowser, port: 80 }

@@ -1,0 +1,161 @@
+# From solidtime's official self-hosting example (github.com/solidtime-io/self-hosting-examples,
+# 1-docker-with-database) and its Docker guide (docs.solidtime.io/self-hosting/guides/docker):
+# the web app, the scheduler, the queue worker, PostgreSQL and Gotenberg for PDF reports.
+# The guide's manual steps (keys, migrations, first user) run in solidtime-init instead.
+x-solidtime-env: &solidtime-env
+  APP_NAME: solidtime
+  VITE_APP_NAME: solidtime
+  APP_ENV: production
+  APP_DEBUG: "false"
+  APP_URL: ${APP_URL}
+  APP_FORCE_HTTPS: "true"
+  # Cloudgate's proxy sits in front on a private network; trust it so solidtime sees
+  # the visitor's https address.
+  TRUSTED_PROXIES: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+  # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+  # It encrypts stored data, so it must never change after the first start.
+  APP_KEY: base64:${APP_KEY}
+  # PASSPORT_PRIVATE_KEY and PASSPORT_PUBLIC_KEY are left unset: the API's OAuth keys are
+  # made once by solidtime-init as files in the storage volume, where Passport reads them.
+  # on, off or invite-only (solidtime's own default is off).
+  APP_ENABLE_REGISTRATION: ${REGISTRATION:-invite-only}
+  # The first account, which also gets solidtime's admin panel at /admin.
+  SUPER_ADMINS: ${ADMIN_EMAIL}
+  LOG_CHANNEL: stderr
+  LOG_LEVEL: warning
+  DB_CONNECTION: pgsql
+  DB_HOST: solidtime-db
+  DB_PORT: "5432"
+  DB_SSL_MODE: prefer
+  DB_DATABASE: solidtime
+  DB_USERNAME: solidtime
+  DB_PASSWORD: ${DB_PASSWORD}
+  QUEUE_CONNECTION: database
+  FILESYSTEM_DISK: local
+  PUBLIC_FILESYSTEM_DISK: public
+  GOTENBERG_URL: http://solidtime-gotenberg:3000
+  # No mail server is set up, so emails go to the log. To send invitations and password
+  # resets, set MAIL_MAILER=smtp, MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD and
+  # MAIL_FROM_ADDRESS on the app's variables page.
+  MAIL_MAILER: ${MAIL_MAILER:-log}
+  MAIL_HOST: ${MAIL_HOST:-}
+  MAIL_PORT: ${MAIL_PORT:-587}
+  MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
+  MAIL_USERNAME: ${MAIL_USERNAME:-}
+  MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+  MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-no-reply@example.com}
+  MAIL_FROM_NAME: solidtime
+
+services:
+  # Runs once at every start, then exits: the database migrations (the guide's
+  # "php artisan migrate --force", needed after every update), the OAuth keys on the first
+  # start ("passport:keys" writes storage/oauth-*.key; the guide's self-host:generate-keys
+  # prints the same kind of keys for an env file), and the first account.
+  solidtime-init:
+    image: solidtime/solidtime:0.22.1
+    restart: "no"
+    depends_on:
+      solidtime-db:
+        condition: service_healthy
+    command:
+      - sh
+      - -c
+      - >-
+        php artisan migrate --force &&
+        { [ -f storage/oauth-private.key ] || php artisan passport:keys; } &&
+        php /solidtime-admin.php
+    environment:
+      <<: *solidtime-env
+      # Read only by files/solidtime-admin.php.txt.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - solidtime-storage:/var/www/html/storage
+      - ../files/solidtime-admin.php.txt:/solidtime-admin.php:ro
+
+  solidtime:
+    # The official image: Laravel Octane on FrankenPHP, listening on 8000.
+    image: solidtime/solidtime:0.22.1
+    restart: unless-stopped
+    depends_on:
+      solidtime-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *solidtime-env
+      CONTAINER_MODE: http
+    volumes:
+      # Uploads, exports and the OAuth keys, shared by every solidtime container.
+      - solidtime-storage:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8000/health-check/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  solidtime-scheduler:
+    image: solidtime/solidtime:0.22.1
+    restart: unless-stopped
+    depends_on:
+      solidtime-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *solidtime-env
+      CONTAINER_MODE: scheduler
+    volumes:
+      - solidtime-storage:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  solidtime-queue:
+    image: solidtime/solidtime:0.22.1
+    restart: unless-stopped
+    depends_on:
+      solidtime-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *solidtime-env
+      CONTAINER_MODE: worker
+      WORKER_COMMAND: php /var/www/html/artisan queue:work
+    volumes:
+      - solidtime-storage:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  solidtime-db:
+    # The official example uses PostgreSQL 15.
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: solidtime
+      POSTGRES_USER: solidtime
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - solidtime-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -d solidtime -U solidtime"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Turns reports into PDFs.
+  solidtime-gotenberg:
+    image: gotenberg/gotenberg:8.40.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "--fail", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  solidtime-storage:
+  solidtime-db-data:
