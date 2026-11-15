@@ -1,0 +1,50 @@
+services:
+  cypht:
+    image: cypht/cypht:2.14.0
+    restart: unless-stopped
+    depends_on:
+      cypht-db:
+        condition: service_healthy
+    environment:
+      # The first account, made at each start if it does not exist yet and
+      # listed as an admin. Others are added under Settings > Users.
+      AUTH_USERNAME: ${ADMIN_USERNAME}
+      AUTH_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_USERS: ${ADMIN_USERNAME}
+      AUTH_TYPE: DB
+      DB_CONNECTION_TYPE: host
+      DB_DRIVER: mysql
+      DB_HOST: cypht-db
+      DB_PORT: 3306
+      DB_NAME: cypht
+      DB_USER: cypht
+      DB_PASS: ${DB_PASSWORD}
+      # Sessions and each user's settings (including their mail accounts)
+      # are kept in the database.
+      SESSION_TYPE: DB
+      USER_CONFIG_TYPE: DB
+      ATTACHMENT_DIR: /var/lib/hm3/attachments
+    volumes:
+      - cypht-data:/var/lib/hm3
+
+  cypht-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: cypht
+      MARIADB_USER: cypht
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - cypht-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  cypht-data:
+  cypht-db-data:

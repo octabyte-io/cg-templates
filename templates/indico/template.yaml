@@ -1,0 +1,52 @@
+name: Indico
+description: "Self-hosted Indico runs conferences and meetings: call for abstracts, registration with payments, timetables, badges and room booking. Made at CERN."
+version: "3.3.14"
+tags: [oxford abstracts alternative, cvent alternative, conftool alternative, conference management software, call for abstracts, event registration, room booking]
+links:
+  website: https://getindico.io
+  docs: https://docs.getindico.io
+  source: https://github.com/indico/indico
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.indico.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  SUPPORT_EMAIL:
+    ask:
+      label: Support email
+      description: Shown to Indico's users as the address to contact for help. Emails are sent from it too unless you give a sender address below.
+      format: email
+  MAIL_FROM:
+    ask:
+      label: Send emails from (optional)
+      description: The no-reply address registration confirmations, reminders and password resets come from. Leave the email questions empty to add them later on the app's variables page.
+      format: email
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host, optional)
+      description: From your email sending service, for example smtp.postmarkapp.com. Indico needs it to email participants, speakers and password resets.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 (STARTTLS) works with most email services; 465 uses SSL.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username (optional)
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password (optional)
+      secret: true
+      required: false
+domains:
+  - { service: indico, port: 59999 }
+files:
+  - { path: indico.conf }
+  - { path: logging.yaml }

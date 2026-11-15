@@ -1,0 +1,51 @@
+# Indico's logging, from indico-containers (indico-prod/logging.yaml) without
+# the email handler (it would need its own mail settings). Logs go to files in
+# the logs volume, and warnings and errors also to the container's output.
+version: 1
+
+root:
+  level: INFO
+  handlers: [other]
+
+loggers:
+  indico:
+    handlers: [indico, stderr]
+  celery:
+    handlers: [celery, stderr]
+
+handlers:
+  indico:
+    class: logging.FileHandler
+    filename: indico.log
+    filters: [indico]
+    formatter: default
+  celery:
+    class: logging.FileHandler
+    filename: celery.log
+    filters: [celery]
+    formatter: simple
+  other:
+    class: logging.FileHandler
+    filename: other.log
+    filters: [other]
+    formatter: simple
+    level: WARNING
+  stderr:
+    class: logging.StreamHandler
+    formatter: default
+    level: WARNING
+
+formatters:
+  default:
+    format: '%(asctime)s  %(levelname)-7s  %(request_id)s  %(user_id)-6s  %(name)-25s %(message)s'
+  simple:
+    format: '%(asctime)s  %(levelname)-7s  %(name)-25s %(message)s'
+
+filters:
+  indico:
+    name: indico
+  celery:
+    name: celery
+  other:
+    (): indico.core.logger.BlacklistFilter
+    names: [indico, celery]

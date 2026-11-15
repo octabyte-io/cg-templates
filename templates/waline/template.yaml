@@ -1,0 +1,80 @@
+name: Waline
+description: "Self-hosted Waline adds ad-free comments to your blog or website, with replies, reactions, email alerts and an admin panel to moderate, in place of Disqus."
+version: "1.43.7"
+tags: [disqus alternative, comment system, blog comments, self-hosted comments, comment moderation, website comments]
+links:
+  website: https://waline.js.org/en/
+  docs: https://waline.js.org/en/guide/get-started/
+  source: https://github.com/walinejs/waline
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  SERVER_URL: { value: "{{domains.waline.url}}" }
+  WALINE_HOST: { value: "{{domains.waline.host}}" }
+  # Signs the sign-in tokens.
+  JWT_TOKEN: { generate: hex }
+  PG_PASSWORD: { generate: password }
+  SITE_NAME:
+    ask:
+      label: Website name
+      description: The name of the website the comments appear on, used in notification emails.
+      default: My blog
+  SITE_URL:
+    ask:
+      label: Your website's address
+      description: The website where the comments appear, for example https://blog.example.com. Notification emails link back to it.
+      format: url
+  WEBSITE_DOMAINS:
+    ask:
+      label: Your website's domain
+      description: The domain the comments appear on, without https://, for example blog.example.com. Comments are accepted only from there. List several separated by commas, such as example.com,www.example.com.
+      pattern: "[A-Za-z0-9.-]+(,[A-Za-z0-9.-]+)*"
+  AUTHOR_EMAIL:
+    ask:
+      label: Your email
+      description: Where Waline tells you about new comments, once the email server settings below are filled in. Comments you post with this address send no alert.
+      format: email
+      required: false
+  SENDER_EMAIL:
+    ask:
+      label: Sender email
+      description: The address notifications come from, for example comments@yourdomain.com. Your email service must allow sending from it.
+      format: email
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: For email notifications, for example smtp.resend.com or smtp.eu.mailgun.org. Leave empty to send no email.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services; 465 needs "Use TLS" set to true.
+      default: "587"
+      format: number
+  SMTP_SECURE:
+    ask:
+      label: Use TLS
+      description: "true only for port 465; false for port 587."
+      default: "false"
+      pattern: "true|false"
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASS:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for the times in notification emails, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: waline, port: 8360 }
+files:
+  - { path: waline.sql }

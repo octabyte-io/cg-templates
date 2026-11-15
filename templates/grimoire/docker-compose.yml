@@ -1,0 +1,49 @@
+# From Grimoire's official docker-compose.yml (v1.3.1), using the published
+# image instead of a local build. Grimoire has no sign-in of its own: its
+# makers support it only behind an authenticated proxy (SECURITY.md,
+# docs/06-remote-access.md), so the "proxy" service below asks for a username
+# and password before any request reaches it.
+services:
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      grimoire:
+        condition: service_healthy
+
+  grimoire:
+    image: goniszewski/grimoire:1.3.1
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3210"
+      DATA_DIR: /data
+      XDG_CONFIG_HOME: /data/config
+      HOME: /data
+      NODE_ENV: production
+      LOG_FORMAT: json
+      LITTLEIMP_IN_CONTAINER: "1"
+      # Grimoire accepts changes only from browser origins it trusts: the
+      # app's own address.
+      CORS_ORIGINS: ${APP_URL}
+    volumes:
+      # The SQLite database, settings (including AI keys), backups and logs.
+      - grimoire-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3210/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  grimoire-data:

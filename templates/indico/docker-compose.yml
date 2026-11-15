@@ -1,0 +1,104 @@
+# Based on Indico's official Docker setup (github.com/indico/indico-containers,
+# indico-prod/): the web app (uWSGI), the Celery worker and Celery beat, all from
+# the getindico/indico image, with PostgreSQL and Redis. Left out: the nginx
+# proxy (Indico serves its own static files) and "privileged", which the
+# official file needs only for LaTeX PDF builds through podman.
+x-indico: &indico
+  image: getindico/indico:3.3.14
+  restart: unless-stopped
+  environment:
+    PGHOST: indico-db
+    PGUSER: indico
+    PGPASSWORD: ${DB_PASSWORD}
+    PGDATABASE: indico
+    INDICO_BASE_URL: ${BASE_URL}
+    INDICO_SECRET_KEY: ${SECRET_KEY}
+    INDICO_SUPPORT_EMAIL: ${SUPPORT_EMAIL}
+    # Email: optional at setup; can be added later on the app's variables page.
+    INDICO_MAIL_FROM: ${MAIL_FROM:-}
+    INDICO_SMTP_HOST: ${SMTP_HOST:-}
+    INDICO_SMTP_PORT: ${SMTP_PORT:-587}
+    INDICO_SMTP_USERNAME: ${SMTP_USERNAME:-}
+    INDICO_SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  volumes:
+    # Uploaded files (materials, abstracts, registration files).
+    - indico-archive:/opt/indico/archive
+    # Custom templates and CSS, if you add any.
+    - indico-custom:/opt/indico/custom
+    - indico-logs:/opt/indico/log
+    - ../files/indico.conf:/opt/indico/etc/indico.conf:ro
+    - ../files/logging.yaml:/opt/indico/etc/logging.yaml:ro
+  tmpfs:
+    - /opt/indico/tmp:mode=0777
+
+services:
+  # The web app. On its first start, run_indico.sh creates the database
+  # tables ("indico db prepare").
+  indico:
+    <<: *indico
+    command: /opt/indico/run_indico.sh
+    depends_on:
+      indico-db:
+        condition: service_healthy
+      indico-redis:
+        condition: service_healthy
+    healthcheck:
+      # Indico answers only for its own address (BASE_URL), so ask as the proxy does.
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null -H \"X-Forwarded-Host: $${INDICO_BASE_URL#*://}\" -H \"X-Forwarded-Proto: $${INDICO_BASE_URL%%://*}\" http://localhost:59999/"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 180s
+
+  # Background tasks: emails, reminders, PDF and export jobs.
+  indico-celery:
+    <<: *indico
+    command: /opt/indico/run_celery.sh
+    depends_on:
+      indico-db:
+        condition: service_healthy
+      indico-redis:
+        condition: service_healthy
+
+  # Periodic tasks.
+  indico-celery-beat:
+    <<: *indico
+    command: /opt/indico/run_celery.sh beat
+    depends_on:
+      indico-db:
+        condition: service_healthy
+      indico-redis:
+        condition: service_healthy
+
+  indico-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: indico
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: indico
+    volumes:
+      - indico-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U indico -d indico"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  indico-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - indico-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  indico-archive:
+  indico-custom:
+  indico-logs:
+  indico-db-data:
+  indico-redis-data:
