@@ -15,7 +15,7 @@ services:
       DATABASE_URL: postgresql://splitpro:${POSTGRES_PASSWORD}@splitpro-db:5432/splitpro
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
-      NEXTAUTH_URL_INTERNAL: http://localhost:3000
+      NEXTAUTH_URL_INTERNAL: http://127.0.0.1:3000
       ENABLE_SENDING_INVITES: "true"
       DISABLE_EMAIL_SIGNUP: "false"
       FROM_EMAIL: ${FROM_EMAIL}
@@ -26,8 +26,9 @@ services:
     volumes:
       - splitpro-uploads:/app/uploads
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/healthz"]
-      # Database migrations run on first start, so allow a slow first boot.
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/api/healthz"]
+      # 127.0.0.1, not localhost: the app listens on IPv4 only (HOSTNAME 0.0.0.0) and
+      # localhost can resolve to ::1. Migrations run on first start, so allow a slow boot.
       interval: 15s
       timeout: 10s
       retries: 10
