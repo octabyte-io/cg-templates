@@ -1,0 +1,71 @@
+# From TimeTracker's own compose files (github.com/DRYTRIX/TimeTracker, tag v5.20.0):
+# docker-compose.example.yml (the published image with PostgreSQL) with the HTTPS settings of
+# its production docker-compose.yml. Its nginx, certificate generator, Peppol bridge, Ollama
+# and monitoring services are left out: Cloudgate's proxy gives the https address.
+services:
+  timetracker:
+    image: ghcr.io/drytrix/timetracker:5.20.0
+    restart: unless-stopped
+    depends_on:
+      timetracker-db:
+        condition: service_healthy
+    environment:
+      TZ: ${TZ:-UTC}
+      CURRENCY: ${CURRENCY:-EUR}
+      # Sessions and CSRF tokens; at least 32 characters, and it must not change.
+      SECRET_KEY: ${SECRET_KEY}
+      # Encrypts the SMTP password, sign-in secrets and API keys saved in the settings.
+      SETTINGS_ENCRYPTION_KEY: ${SETTINGS_ENCRYPTION_KEY}
+      POSTGRES_DB: timetracker
+      POSTGRES_USER: timetracker
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_HOST: timetracker-db
+      DATABASE_URL: postgresql+psycopg2://timetracker:${DB_PASSWORD}@timetracker-db:5432/timetracker
+      # The app creates the user "admin" on its first start, without a password: whoever first
+      # signs in as admin chooses it. With self-registration off, nobody else can create an
+      # account until the admin allows it (Admin > Settings) or adds users.
+      ADMIN_USERNAMES: admin
+      ALLOW_SELF_REGISTER: ${ALLOW_SELF_REGISTER:-false}
+      # Cloudgate serves the app over https; the app trusts the proxy's X-Forwarded headers.
+      APP_BASE_URL: ${APP_URL}
+      PREFERRED_URL_SCHEME: https
+      WTF_CSRF_TRUSTED_ORIGINS: ${APP_URL}
+      WTF_CSRF_SSL_STRICT: "true"
+      SESSION_COOKIE_SECURE: "true"
+      REMEMBER_COOKIE_SECURE: "true"
+      CSRF_COOKIE_SECURE: "true"
+      ENABLE_TELEMETRY: "false"
+      AI_ENABLED: "false"
+    volumes:
+      - timetracker-data:/data
+      - timetracker-uploads:/app/app/static/uploads
+      - timetracker-logs:/app/logs
+    healthcheck:
+      # The image ships curl and the docs' /_ready endpoint (it checks the database too).
+      test: ["CMD", "curl", "-f", "-s", "-o", "/dev/null", "http://localhost:8080/_ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  timetracker-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: timetracker
+      POSTGRES_USER: timetracker
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - timetracker-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U timetracker -d timetracker"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  timetracker-data:
+  timetracker-uploads:
+  timetracker-logs:
+  timetracker-db-data:
