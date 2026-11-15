@@ -1,0 +1,86 @@
+services:
+  ojs:
+    # PKP's official image (github.com/pkp/containers, the successor of pkp/docker-ojs): the
+    # released OJS tarball on php:8.3-apache, running as www-data with Apache on port 80.
+    # Pinned to the latest stable release, OJS 3.5.0-6.
+    image: pkpofficial/ojs:3_5_0-6
+    restart: unless-stopped
+    depends_on:
+      ojs-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      OJS_URL: ${OJS_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD}
+      # The image's start script edits this file; it is kept in the files volume (below).
+      PKP_CONF: /var/www/files/config.inc.php
+    # The image only offers the web installer, which asks for the database password. Instead,
+    # on the first start this runs OJS's own command-line installer (tools/install.php, which
+    # reads its answers from stdin): it fills the empty database, creates the "admin" site
+    # administrator with the generated password and writes config.inc.php. That file lives in
+    # the files volume and is linked into the app folder, so it survives new containers; later
+    # starts skip the installer. Every start sets the journal's address (base_url and
+    # allowed_hosts) from the app's URL, then hands over to the image's own start script.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        conf=/var/www/files/config.inc.php
+        url="$${OJS_URL%/}"
+        host="$${url#*://}"; host="$${host%%/*}"
+        if [ ! -f "$$conf" ]; then
+          cp /var/www/html/config.TEMPLATE.inc.php "$$conf"
+        fi
+        ln -sfn "$$conf" /var/www/html/config.inc.php
+        set_address() {
+          sed -i \
+            -e "s|^base_url = .*|base_url = \"$$url\"|" \
+            -e "s|^allowed_hosts = .*|allowed_hosts = '[\"$$host\"]'|" \
+            -e "s|^restful_urls = .*|restful_urls = On|" \
+            -e "s|^trust_x_forwarded_for = .*|trust_x_forwarded_for = On|" \
+            -e "s|^time_zone = *$$|time_zone = \"UTC\"|" \
+            "$$conf"
+        }
+        set_address
+        if grep -q '^installed = Off' "$$conf"; then
+          echo "Installing OJS on the empty database..."
+          printf '%s\n' en '' /var/www/files admin "$$ADMIN_PASSWORD" "$$ADMIN_PASSWORD" \
+            "$$ADMIN_EMAIL" mysqli ojs-db ojs "$$DB_PASSWORD" ojs "$$host" n y \
+            | php tools/install.php
+          grep -q '^installed = On' "$$conf" || { echo "OJS installation failed."; exit 1; }
+          set_address
+        fi
+        exec /usr/local/bin/pkp-start
+    volumes:
+      # Uploaded manuscripts and other private files, and config.inc.php.
+      - ojs-files:/var/www/files
+      # Public files: journal logos, cover images and other files shown on the site.
+      - ojs-public:/var/www/html/public
+      - ../files/forwarded-https.conf:/etc/apache2/conf-enabled/forwarded-https.conf:ro
+
+  ojs-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ojs
+      MARIADB_USER: ojs
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - ojs-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  ojs-files:
+  ojs-public:
+  ojs-db-data:

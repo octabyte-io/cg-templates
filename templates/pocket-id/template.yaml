@@ -1,0 +1,16 @@
+name: Pocket ID
+description: "Pocket ID is a self-hosted single sign-on provider: your team signs in to all its apps with a passkey instead of a password."
+version: "2.19.2"
+tags: [single sign-on, passkey login, passwordless sso, oidc provider, okta alternative, jumpcloud alternative]
+links:
+  website: https://pocket-id.org
+  docs: https://pocket-id.org/docs/introduction
+  source: https://github.com/pocket-id/pocket-id
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  APP_URL: { value: "{{domains.pocket-id.url}}" }
+  ENCRYPTION_KEY: { generate: base64 }
+domains:
+  - { service: pocket-id, port: 1411 }
