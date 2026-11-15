@@ -1,0 +1,36 @@
+services:
+  anythingllm:
+    image: mintplexlabs/anythingllm:1.19.0
+    restart: unless-stopped
+    # The app saves the settings chosen in its first-run wizard (AI provider,
+    # API keys) to /app/server/.env. The official Docker instructions mount
+    # that file from the storage folder; here it is linked into the storage
+    # volume instead, so the settings survive a container rebuild.
+    entrypoint:
+      - /bin/bash
+      - -c
+      - touch /app/server/storage/.env && ln -sf /app/server/storage/.env /app/server/.env && exec /bin/bash /usr/local/bin/docker-entrypoint.sh
+    environment:
+      SERVER_PORT: "3001"
+      STORAGE_DIR: /app/server/storage
+      # Signs sign-in tokens.
+      JWT_SECRET: ${JWT_SECRET}
+      # Encrypt the API keys and other secrets the app stores.
+      SIG_KEY: ${SIG_KEY}
+      SIG_SALT: ${SIG_SALT}
+      # The official instructions add the SYS_ADMIN capability so the
+      # website scraper's Chromium can use its sandbox. Without it, Chromium
+      # runs without the sandbox instead, so no extra privileges are needed.
+      ANYTHINGLLM_CHROMIUM_ARGS: "--no-sandbox,--disable-setuid-sandbox"
+      DISABLE_TELEMETRY: "true"
+    volumes:
+      - anythingllm-storage:/app/server/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:3001/api/ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  anythingllm-storage:

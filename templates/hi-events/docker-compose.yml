@@ -1,0 +1,97 @@
+services:
+  hi-events:
+    image: daveearley/hi.events-all-in-one:v2.2.0
+    restart: unless-stopped
+    # The image's own start script runs the database migrations, then nginx, the
+    # web app, the queue worker and the scheduler. Before it:
+    #   - on a server with IPv6 turned off, drop nginx's IPv6 listen line, which
+    #     otherwise stops nginx from starting at all;
+    #   - without an email server, send mail to the log instead of failing, as in
+    #     the project's example settings.
+    command:
+      - sh
+      - -c
+      - >-
+        [ -e /proc/net/if_inet6 ] || sed -i '/listen \[::\]:80;/d' /etc/nginx/nginx.conf;
+        [ -n "$$MAIL_HOST" ] || export MAIL_MAILER=log;
+        exec /startup.sh
+    depends_on:
+      hi-events-db:
+        condition: service_healthy
+      hi-events-redis:
+        condition: service_healthy
+    environment:
+      VITE_FRONTEND_URL: ${APP_URL}
+      VITE_API_URL_CLIENT: ${APP_URL}/api
+      VITE_API_URL_SERVER: http://localhost:80/api
+      VITE_STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLIC_KEY:-}
+      VITE_APP_NAME: Hi.Events
+      APP_URL: ${APP_URL}
+      APP_FRONTEND_URL: ${APP_URL}
+      APP_CDN_URL: ${APP_URL}/storage
+      # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+      # Keep it once people have signed up (it encrypts two-factor secrets).
+      APP_KEY: base64:${APP_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+      # Open so the owner can create the first account (Hi.Events has no
+      # first-account exception). Add APP_DISABLE_REGISTRATION=true on the
+      # variables page afterwards to turn sign-up off.
+      APP_DISABLE_REGISTRATION: ${APP_DISABLE_REGISTRATION:-false}
+      APP_SAAS_MODE_ENABLED: "false"
+      APP_SAAS_STRIPE_APPLICATION_FEE_PERCENT: "0"
+      APP_SAAS_STRIPE_APPLICATION_FEE_FIXED: "0"
+      APP_TRUSTED_PROXIES: "*"
+      LOG_CHANNEL: stderr
+      QUEUE_CONNECTION: redis
+      FILESYSTEM_PUBLIC_DISK: public
+      FILESYSTEM_PRIVATE_DISK: local
+      DB_CONNECTION: pgsql
+      DATABASE_URL: postgresql://hi-events:${DB_PASSWORD}@hi-events-db:5432/hi-events
+      REDIS_HOST: hi-events-redis
+      REDIS_PASSWORD: ""
+      REDIS_PORT: "6379"
+      WEBHOOK_QUEUE_NAME: webhook-queue
+      MAIL_MAILER: smtp
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-}
+      MAIL_FROM_NAME: Hi.Events
+      STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+    volumes:
+      # Uploaded images and files (event covers, organizer logos, attachments).
+      - hi-events-uploads:/app/backend/storage/app
+
+  hi-events-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hi-events
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: hi-events
+    volumes:
+      - hi-events-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hi-events -d hi-events"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  hi-events-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - hi-events-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  hi-events-uploads:
+  hi-events-db-data:
+  hi-events-redis-data:

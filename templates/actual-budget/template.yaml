@@ -1,0 +1,13 @@
+name: Actual Budget
+description: "Actual Budget is a self-hosted envelope budget app like YNAB: plan every dollar, import bank statements and see reports, with your data on your server."
+version: "26.11.0"
+tags: [ynab alternative, budget app, envelope budgeting, personal finance, expense tracker, monarch alternative]
+links:
+  website: https://actualbudget.org
+  docs: https://actualbudget.org/docs/
+  source: https://github.com/actualbudget/actual
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: actual, port: 5006 }

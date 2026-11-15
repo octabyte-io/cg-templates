@@ -1,0 +1,17 @@
+name: AnythingLLM
+description: "AnythingLLM is self-hosted AI chat over your own documents, for your team and your website."
+version: "1.19.0"
+tags: [chatbase alternative, chat with your documents, ai chatbot for website, chatgpt for documents, private ai chat, chat with pdf]
+links:
+  website: https://anythingllm.com
+  docs: https://docs.anythingllm.com
+  source: https://github.com/Mintplex-Labs/anything-llm
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  JWT_SECRET: { generate: hex }
+  SIG_KEY: { generate: hex }
+  SIG_SALT: { generate: hex }
+domains:
+  - { service: anythingllm, port: 3001 }

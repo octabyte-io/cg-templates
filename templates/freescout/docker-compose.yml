@@ -1,0 +1,55 @@
+services:
+  freescout:
+    # FreeScout publishes no image of its own; its docs (freescout.net/docker) point to this
+    # community-maintained one (formerly tiredofit/freescout). Image 2.2.25 ships FreeScout 1.8.251.
+    # Nginx + PHP-FPM on port 80, with the queue worker and the scheduler in the same container.
+    image: nfrastack/freescout:2.2.25
+    restart: unless-stopped
+    depends_on:
+      freescout-db:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL}
+      TIMEZONE: ${TIMEZONE:-Etc/UTC}
+      DB_TYPE: mariadb
+      DB_HOST: freescout-db
+      DB_PORT: 3306
+      DB_NAME: freescout
+      DB_USER: freescout
+      DB_PASS: ${DB_PASSWORD}
+      # On the first start (empty database) the image creates this admin; later starts leave it alone.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASS: ${ADMIN_PASSWORD}
+      ADMIN_FIRST_NAME: Admin
+      ADMIN_LAST_NAME: User
+      # Cloudgate's proxy sits in front on a private network; trust it so FreeScout sees
+      # the visitor's https address and IP.
+      FREESCOUT_APP_TRUSTED_PROXIES: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+    volumes:
+      # Config (including the generated APP_KEY), attachments, sessions, cache and modules.
+      - freescout-data:/data
+
+  freescout-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: freescout
+      MARIADB_USER: freescout
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - freescout-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  freescout-data:
+  freescout-db-data:

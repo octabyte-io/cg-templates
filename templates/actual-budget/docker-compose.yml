@@ -1,0 +1,21 @@
+services:
+  actual:
+    image: actualbudget/actual-server:26.11.0
+    restart: unless-stopped
+    # The server password is set in the browser on the first visit, and
+    # budgets are kept in the data volume below.
+    environment:
+      # Listen on IPv4. The default ("::") needs IPv6, which many Docker
+      # networks lack; there the server fails to listen and exits.
+      ACTUAL_HOSTNAME: 0.0.0.0
+    volumes:
+      - actual-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "node scripts/health-check.js"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  actual-data:

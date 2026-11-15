@@ -247,7 +247,7 @@ function readTemplate(id: string): Template {
           problems.push(`  ${rel}/index.md: screenshots.src ${shot.src} is ${size.width}px wide; it needs to be at least 800px`);
         }
         const width = size?.width ?? 0;
-        const widths: number[] = SHOT_WIDTHS.filter((w) => w < width);
+        const widths: number[] = SHOT_WIDTHS.filter((w) => w < Math.min(width, SHOT_WIDTHS[SHOT_WIDTHS.length - 1]));
         widths.push(Math.min(width, SHOT_WIDTHS[SHOT_WIDTHS.length - 1]));
         const name = path.basename(shot.src, path.extname(shot.src));
         return {
@@ -353,6 +353,8 @@ export interface AlternativeCopy {
   movingHtml: string;
   moving: string;
   faq: { q: string; a: string }[];
+  /** Replaces the generated "Is it really free?" answer, for an app that is not free for every use. */
+  cost?: string;
 }
 
 const alternativeRules = z.strictObject({
@@ -362,6 +364,7 @@ const alternativeRules = z.strictObject({
   ),
   moving: plain('how to move from the product, one paragraph'),
   faq: z.array(z.strictObject({ q: plain('the question'), a: plain('the answer') })).default([]),
+  cost: plain('the answer to "Is it really free?", only when the app is not free for every use').optional(),
 });
 
 const alternativesDir = path.join(siteRoot, 'src', 'alternatives');
@@ -394,6 +397,7 @@ function readAlternativeCopy(product: Product, apps: Template[]): AlternativeCop
     moving: parsed.data.moving.trim(),
     movingHtml: html(parsed.data.moving),
     faq: parsed.data.faq,
+    cost: parsed.data.cost?.trim(),
   };
 }
 

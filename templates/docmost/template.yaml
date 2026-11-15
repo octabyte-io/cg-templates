@@ -1,0 +1,17 @@
+name: Docmost
+description: "Docmost is a self-hosted, open-source team wiki with spaces, live editing, permissions and diagrams, replacing Confluence and Notion for team docs."
+version: "0.97.0"
+tags: [team wiki, knowledge base, confluence alternative, notion alternative, open source wiki, documentation]
+links:
+  website: https://docmost.com
+  docs: https://docmost.com/docs/installation
+  source: https://github.com/docmost/docmost
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.docmost.url}}" }
+  APP_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: docmost, port: 3000 }
