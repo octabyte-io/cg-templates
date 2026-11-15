@@ -6,15 +6,18 @@ apps:
   formbricks:
     fit: "Covers the same job: one-question-at-a-time link surveys with logic, hidden fields, your own colours and CSS, and many question types, with unlimited responses on a self-hosted copy. Typeform has more polished conversational form design and features such as taking payments; Formbricks adds pop-up surveys inside your own website or web app. The free edition shows a small \"Powered by Formbricks\" line and has one workspace."
     import: no
+  limesurvey:
+    fit: "A different style of tool for longer surveys: many question types, skip logic, quotas, several languages per survey and export to SPSS or R, with no response limit. Surveys can show one question per page, but the feel is more of a classic questionnaire than Typeform's conversational forms, and the admin area takes longer to learn."
+    import: no
 moving: |
-  Neither app imports from Typeform, so you rebuild each form in the new editor. Export your existing Typeform responses first and keep the file, because past answers do not come across. In HeyForm, recreate logic in each question's Logic settings, add your own Stripe keys before you publish a payment form, and connect a webhook or Google Sheets where answers went to other apps. In Formbricks, recreate logic in its Flow view; in this template, file-upload questions and logo or image uploads need S3-compatible storage added first, and teammates join through a copyable invite link. Then replace the Typeform links and embeds on your website and in emails, and keep Typeform open until the last forms that use it have closed.
+  None of these apps imports from Typeform, so you rebuild each form in the new editor. Export your existing Typeform responses first and keep the file, because past answers do not come across. In HeyForm, recreate logic in each question's Logic settings, add your own Stripe keys before you publish a payment form, and connect a webhook or Google Sheets where answers went to other apps. In Formbricks, recreate logic in its Flow view; in this template, file-upload questions and logo or image uploads need S3-compatible storage added first, and teammates join through a copyable invite link. In LimeSurvey, rebuild each form as a survey and set it to show one question at a time if you want something close to Typeform's flow. Then replace the Typeform links and embeds on your website and in emails, and keep Typeform open until the last forms that use it have closed.
 faq:
   - q: "Should I choose HeyForm or Formbricks?"
     a: "HeyForm for Typeform-style forms, quizzes and payment forms that you share as a link or embed. Formbricks for surveys and feedback, especially pop-up surveys inside your own website or web app."
-  - q: "Can I import my Typeform forms into HeyForm or Formbricks?"
-    a: "No. Neither has a Typeform importer, so you rebuild each form in its editor and keep an export of your old Typeform responses."
-  - q: "Do HeyForm and Formbricks limit how many responses I can collect?"
-    a: "No. Self-hosted, neither limits forms or responses; you pay only for your server."
+  - q: "Can I import my Typeform forms into HeyForm, Formbricks or LimeSurvey?"
+    a: "No. None of them has a Typeform importer, so you rebuild each form in its editor and keep an export of your old Typeform responses."
+  - q: "Do HeyForm, Formbricks and LimeSurvey limit how many responses I can collect?"
+    a: "No. Self-hosted, none of them limits forms or responses; you pay only for your server."
   - q: "Can I put a form on my website like a Typeform embed?"
     a: "Yes. HeyForm embeds inline, as a pop-up or as a side panel, or you share a link. Formbricks can also pop a survey up on chosen pages or after a certain action in your web app."
 ---

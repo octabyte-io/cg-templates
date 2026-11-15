@@ -1,0 +1,25 @@
+name: LimeSurvey
+description: "LimeSurvey is self-hosted survey software: build detailed questionnaires with logic and quotas, invite participants and export answers to SPSS."
+version: "7.9.1"
+tags: [surveymonkey alternative, qualtrics alternative, open source survey software, online survey tool, questionnaire builder, self-hosted surveys]
+links:
+  website: https://www.limesurvey.org
+  docs: https://www.limesurvey.org/manual/LimeSurvey_Manual
+  source: https://github.com/LimeSurvey/LimeSurvey
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  LIMESURVEY_URL: { value: "{{domains.limesurvey.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the LimeSurvey administrator account (user name admin). Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ENCRYPT_SECRET_BOX_KEY: { generate: hex }
+  ENCRYPT_NONCE_SEED: { generate: hex }
+domains:
+  - { service: limesurvey, port: 8080 }

@@ -1,0 +1,34 @@
+name: OrangeHRM
+description: "OrangeHRM is free, self-hosted HR software: keep employee records, approve leave, track time and run hiring and performance reviews."
+version: "5.9"
+tags: [hr software, open source hrms, bamboohr alternative, zoho people alternative, leave management, employee records]
+links:
+  website: https://www.orangehrm.com/open-source
+  docs: https://starterhelp.orangehrm.com/hc/en-us
+  source: https://github.com/orangehrm/orangehrm
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The work email of the first OrangeHRM user. You sign in as "admin" with a password Cloudgate creates, shown afterwards on the app's variables page.
+      format: email
+  ORGANIZATION_NAME:
+    ask:
+      label: Organization name
+      description: Your company's name, shown in OrangeHRM. You can change it later under Admin, Organization.
+      default: My Company
+      required: false
+  COUNTRY:
+    ask:
+      label: Country
+      description: Your organization's country as a two-letter code, such as US, GB or DE. You can change it later under Admin, Organization.
+      default: US
+      required: false
+domains:
+  - { service: orangehrm, port: 80 }

@@ -1,0 +1,51 @@
+# MediaCMS settings for Cloudgate (Python; mounted as local_settings.py). Based on deploy/docker/local_settings.py
+# from the v7.2.0 release; the image's entrypoint copies this file to
+# cms/local_settings.py, which cms/settings.py imports last.
+import os
+
+FRONTEND_HOST = os.getenv("FRONTEND_HOST", "http://localhost")
+PORTAL_NAME = os.getenv("PORTAL_NAME", "MediaCMS")
+SECRET_KEY = os.environ["SECRET_KEY"]
+REDIS_LOCATION = os.getenv("REDIS_LOCATION", "redis://mediacms-redis:6379/1")
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_NAME", "mediacms"),
+        "HOST": os.getenv("POSTGRES_HOST", "mediacms-db"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "USER": os.getenv("POSTGRES_USER", "mediacms"),
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "OPTIONS": {"pool": True},
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_LOCATION,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
+# CELERY STUFF
+BROKER_URL = REDIS_LOCATION
+CELERY_RESULT_BACKEND = BROKER_URL
+
+MP4HLS_COMMAND = "/home/mediacms.io/bento4/bin/mp4hls"
+
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+# Cloudgate serves the app over HTTPS through its proxy, which sets
+# X-Forwarded-Proto; trust it so sign-in forms pass Django's CSRF check.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = [FRONTEND_HOST.rstrip("/")]
+
+# Self sign-up (the Register button and the sign-up page).
+_signups = os.getenv("ALLOW_SIGNUPS", "true").strip().lower() not in ("false", "no", "0", "off")
+REGISTER_ALLOWED = _signups
+USERS_CAN_SELF_REGISTER = _signups
+
+ADMIN_EMAIL_LIST = [os.getenv("ADMIN_EMAIL", "admin@localhost")]

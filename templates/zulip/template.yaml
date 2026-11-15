@@ -1,0 +1,63 @@
+name: Zulip
+description: "Self-hosted Zulip: open-source team chat where every conversation has its own topic, so busy channels stay easy to follow and catch up on."
+version: "13.2-0"
+tags: [zulip, self-hosted team chat, slack alternative, microsoft teams alternative, open source chat, threaded chat]
+links:
+  website: https://zulip.com
+  docs: https://zulip.readthedocs.io/projects/docker/
+  source: https://github.com/zulip/zulip
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  EXTERNAL_HOST: { value: "{{domains.zulip.host}}" }
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  MEMCACHED_PASSWORD: { generate: password }
+  RABBITMQ_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ORGANIZATION_NAME:
+    ask:
+      label: Organization name
+      description: The name of your team or company, shown at the top of Zulip. You can change it later.
+      default: My organization
+  ADMIN_EMAIL:
+    ask:
+      label: Your email
+      description: You sign in to Zulip with this email and the generated admin password. Zulip also lists it as the server's contact address.
+      format: email
+  ADMIN_NAME:
+    ask:
+      label: Your name
+      description: The name shown on your messages. You can change it later.
+      default: Admin
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed to invite people by email and to reset passwords. Your email provider gives you this, such as smtp.mailgun.org. Without it, invite people with an invitation link instead.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: Zulip uses STARTTLS, which is usually port 587.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Send emails from
+      description: The address Zulip's emails come from, such as zulip@yourcompany.com. Many email providers only accept an address you have verified with them. Leave empty to use noreply at Zulip's own address.
+      format: email
+      required: false
+domains:
+  - { service: zulip, port: 80 }
