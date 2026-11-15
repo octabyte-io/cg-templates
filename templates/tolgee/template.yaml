@@ -1,0 +1,23 @@
+name: Tolgee
+description: "Self-hosted Tolgee: an open-source localization platform where your team translates app text in a web editor or by clicking it in the app."
+version: "3.242.7"
+tags: [lokalise alternative, phrase alternative, crowdin alternative, localization platform, in-context translation, translation management, app translation]
+links:
+  website: https://tolgee.io
+  docs: https://docs.tolgee.io/platform
+  source: https://github.com/tolgee/tolgee-platform
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  FRONT_END_URL: { value: "{{domains.tolgee.url}}" }
+  JWT_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Tolgee with as its administrator.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: tolgee, port: 8080 }

@@ -1,0 +1,252 @@
+# From Stoat's official self-hosted compose.yml and generate_config.sh
+# (github.com/stoatchat/self-hosted). Changes:
+# - Settings come from environment variables (REVOLT__SECTION__KEY, which the services read
+#   on top of their built-in Revolt.toml) instead of a generated Revolt.toml and secrets.env.
+# - Upstream's generate_config.sh makes the web-push (VAPID) key pair with openssl; here
+#   stoat-keys makes it once on first start and keeps it in the stoat-config volume, which
+#   the API and push service read as their Revolt.toml.
+# - Storage uses path-style bucket addresses, so it needs no extra network aliases.
+# - Left out: voice and video calls (LiveKit and voice-ingress). LiveKit needs TCP 7881 and
+#   UDP 50000-50100 open on the server itself, which a template cannot publish.
+
+x-stoat-env: &stoat-env
+  REVOLT__HOSTS__APP: ${APP_URL}
+  REVOLT__HOSTS__API: ${APP_URL}/api
+  REVOLT__HOSTS__EVENTS: wss://${APP_HOST}/ws
+  REVOLT__HOSTS__AUTUMN: ${APP_URL}/autumn
+  REVOLT__HOSTS__JANUARY: ${APP_URL}/january
+  REVOLT__DATABASE__MONGODB: mongodb://stoat-db
+  REVOLT__DATABASE__REDIS: redis://stoat-redis/
+  REVOLT__RABBIT__HOST: stoat-rabbit
+  REVOLT__RABBIT__USERNAME: stoat
+  REVOLT__RABBIT__PASSWORD: ${RABBIT_PASSWORD}
+  REVOLT__FILES__ENCRYPTION_KEY: ${FILES_ENCRYPTION_KEY}
+  REVOLT__FILES__S3__ENDPOINT: http://stoat-storage:9000
+  REVOLT__FILES__S3__PATH_STYLE_BUCKETS: "true"
+  REVOLT__FILES__S3__ACCESS_KEY_ID: stoat
+  REVOLT__FILES__S3__SECRET_ACCESS_KEY: ${STORAGE_PASSWORD}
+  REVOLT__API__SMTP__HOST: ${SMTP_HOST}
+  REVOLT__API__SMTP__PORT: ${SMTP_PORT:-465}
+  REVOLT__API__SMTP__USERNAME: ${SMTP_USERNAME}
+  REVOLT__API__SMTP__PASSWORD: ${SMTP_PASSWORD}
+  REVOLT__API__SMTP__FROM_ADDRESS: ${SMTP_FROM:-noreply@example.com}
+  REVOLT__API__SECURITY__TENOR_KEY: ${GIFBOX_API_KEY}
+
+services:
+  # Caddy, as upstream: sends each path of the web address to the service behind it.
+  stoat:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      APP_URL: ${APP_URL}
+    depends_on:
+      stoat-web:
+        condition: service_started
+      stoat-api:
+        condition: service_started
+      stoat-events:
+        condition: service_started
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+      - stoat-caddy-data:/data
+
+  # The web app.
+  stoat-web:
+    image: ghcr.io/stoatchat/for-web:9fd140a # for-web v0.17.0
+    restart: unless-stopped
+    environment:
+      VITE_HOST: ${APP_HOST}
+      VITE_API_URL: ${APP_URL}/api
+      VITE_DEV_GIFBOX_URL: ${APP_URL}/gifbox
+
+  # API server.
+  stoat-api:
+    image: ghcr.io/stoatchat/api:v0.16.4
+    restart: unless-stopped
+    working_dir: /config
+    command: ["/home/nonroot/revolt-delta"]
+    environment: *stoat-env
+    depends_on:
+      stoat-keys:
+        condition: service_completed_successfully
+      stoat-db:
+        condition: service_healthy
+      stoat-redis:
+        condition: service_healthy
+      stoat-rabbit:
+        condition: service_healthy
+    volumes:
+      - stoat-config:/config:ro
+
+  # Events: the live connection (WebSocket) that delivers messages as they arrive.
+  stoat-events:
+    image: ghcr.io/stoatchat/events:v0.16.4
+    restart: unless-stopped
+    environment: *stoat-env
+    depends_on:
+      stoat-db:
+        condition: service_healthy
+      stoat-redis:
+        condition: service_healthy
+      stoat-rabbit:
+        condition: service_healthy
+
+  # Autumn: file uploads, avatars and attachments.
+  stoat-autumn:
+    image: ghcr.io/stoatchat/file-server:v0.16.4
+    restart: unless-stopped
+    environment: *stoat-env
+    depends_on:
+      stoat-db:
+        condition: service_healthy
+      stoat-buckets:
+        condition: service_completed_successfully
+
+  # January: link previews and the image proxy.
+  stoat-january:
+    image: ghcr.io/stoatchat/proxy:v0.16.4
+    restart: unless-stopped
+    environment: *stoat-env
+
+  # Gifbox: the GIF picker (needs a Gifbox API key to return results).
+  stoat-gifbox:
+    image: ghcr.io/stoatchat/gifbox:v0.16.4
+    restart: unless-stopped
+    environment: *stoat-env
+    depends_on:
+      stoat-db:
+        condition: service_healthy
+      stoat-redis:
+        condition: service_healthy
+
+  # Regular clean-up tasks.
+  stoat-crond:
+    image: ghcr.io/stoatchat/crond:v0.16.4
+    restart: unless-stopped
+    environment: *stoat-env
+    depends_on:
+      stoat-db:
+        condition: service_healthy
+      stoat-buckets:
+        condition: service_completed_successfully
+
+  # Push notifications.
+  stoat-pushd:
+    image: ghcr.io/stoatchat/pushd:v0.16.4
+    restart: unless-stopped
+    working_dir: /config
+    command: ["/home/nonroot/revolt-pushd"]
+    environment: *stoat-env
+    depends_on:
+      stoat-keys:
+        condition: service_completed_successfully
+      stoat-db:
+        condition: service_healthy
+      stoat-redis:
+        condition: service_healthy
+      stoat-rabbit:
+        condition: service_healthy
+    volumes:
+      - stoat-config:/config:ro
+
+  # Makes the web-push (VAPID) key pair once, in the same format as upstream's
+  # generate_config.sh, and changes nothing after that.
+  stoat-keys:
+    image: ghcr.io/stoatchat/for-web:9fd140a # for-web v0.17.0, used for its Node.js
+    restart: "no"
+    entrypoint:
+      - node
+      - -e
+      - |
+        const fs = require("node:fs");
+        const crypto = require("node:crypto");
+        const file = "/config/Revolt.toml";
+        if (fs.existsSync(file)) {
+          console.log("Web-push keys already there");
+          process.exit(0);
+        }
+        const { privateKey, publicKey } = crypto.generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+        const priv = Buffer.from(privateKey.export({ type: "sec1", format: "pem" })).toString("base64url");
+        const pub = publicKey.export({ type: "spki", format: "der" }).subarray(-65).toString("base64url");
+        fs.writeFileSync(file + ".tmp", "[pushd.vapid]\nprivate_key = \"" + priv + "\"\npublic_key = \"" + pub + "\"\n", { mode: 0o644 });
+        fs.renameSync(file + ".tmp", file);
+        console.log("Made the web-push keys");
+    volumes:
+      - stoat-config:/config
+
+  stoat-db:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    volumes:
+      - stoat-db-data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  stoat-redis:
+    image: valkey/valkey:9.1.3-alpine
+    restart: unless-stopped
+    volumes:
+      - stoat-redis-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  stoat-rabbit:
+    image: rabbitmq:4.3.7-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: stoat
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
+    volumes:
+      - stoat-rabbit-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  # S3-compatible storage for uploaded files (upstream's MinIO build, pgsty/silo).
+  stoat-storage:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    restart: unless-stopped
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: stoat
+      MINIO_ROOT_PASSWORD: ${STORAGE_PASSWORD}
+    volumes:
+      - stoat-storage-data:/data
+
+  # Creates the upload bucket, as upstream's createbuckets does; nothing changes once it exists.
+  stoat-buckets:
+    image: pgsty/mc:RELEASE.2026-09-13T00-00-00Z
+    restart: "no"
+    depends_on:
+      stoat-storage:
+        condition: service_started
+    environment:
+      STORAGE_PASSWORD: ${STORAGE_PASSWORD}
+    entrypoint:
+      - sh
+      - -c
+      - |
+        i=0
+        until mc alias set stoat http://stoat-storage:9000 stoat "$$STORAGE_PASSWORD" >/dev/null 2>&1 && mc ready stoat >/dev/null 2>&1; do
+          i=$$((i + 1)); [ "$$i" -lt 60 ] || { echo "Storage did not answer"; exit 1; }
+          echo "Waiting for storage..."; sleep 2
+        done
+        mc mb --ignore-existing stoat/revolt-uploads
+
+volumes:
+  stoat-config:
+  stoat-caddy-data:
+  stoat-db-data:
+  stoat-redis-data:
+  stoat-rabbit-data:
+  stoat-storage-data:

@@ -1,0 +1,127 @@
+# From lemmy-ansible's templates/docker-compose.yml for Lemmy 0.19.21 (the project's production
+# install), without the published port, the postfix mail relay and the optional pictrs-safety and
+# Anubis extras. The lemmy.hjson config is written at start from the values below.
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "50m"
+    max-file: "4"
+
+services:
+  proxy:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      lemmy:
+        condition: service_healthy
+      lemmy-ui:
+        condition: service_started
+      pictrs:
+        condition: service_started
+    logging: *default-logging
+
+  lemmy:
+    image: dessalines/lemmy:0.19.21
+    hostname: lemmy
+    restart: unless-stopped
+    environment:
+      RUST_LOG: warn
+      LEMMY_CONFIG_LOCATION: /tmp/config.hjson
+      LEMMY_HOST: ${LEMMY_HOST}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PICTRS_API_KEY: ${PICTRS_API_KEY}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Writes lemmy.hjson (as lemmy-ansible's templates/config.hjson, plus the setup block that
+    # creates the first admin) and starts the server. The setup block only acts on an empty database.
+    entrypoint:
+      - bash
+      - -c
+      - |
+        printf '%s\n' \
+          '{' \
+          '  database: {' \
+          '    host: "postgres"' \
+          '    password: "'"$$POSTGRES_PASSWORD"'"' \
+          '  }' \
+          '  hostname: "'"$$LEMMY_HOST"'"' \
+          '  pictrs: {' \
+          '    url: "http://pictrs:8080/"' \
+          '    api_key: "'"$$PICTRS_API_KEY"'"' \
+          '  }' \
+          '  setup: {' \
+          '    admin_username: "admin"' \
+          '    admin_password: "'"$$ADMIN_PASSWORD"'"' \
+          '    site_name: "Lemmy"' \
+          '  }' \
+          '}' > /tmp/config.hjson
+        exec lemmy_server
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8536/api/v3/site"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pictrs:
+        condition: service_started
+    logging: *default-logging
+
+  lemmy-ui:
+    image: dessalines/lemmy-ui:0.19.21
+    restart: unless-stopped
+    environment:
+      LEMMY_UI_LEMMY_INTERNAL_HOST: lemmy:8536
+      LEMMY_UI_LEMMY_EXTERNAL_HOST: ${LEMMY_HOST}
+      LEMMY_UI_HTTPS: "true"
+    volumes:
+      - lemmy-ui-themes:/app/extra_themes
+    depends_on:
+      lemmy:
+        condition: service_healthy
+    init: true
+    logging: *default-logging
+
+  pictrs:
+    image: asonix/pictrs:0.5.25
+    hostname: pictrs
+    restart: unless-stopped
+    user: 991:991
+    environment:
+      PICTRS__SERVER__API_KEY: ${PICTRS_API_KEY}
+      PICTRS__MEDIA__ANIMATION__MAX_WIDTH: 256
+      PICTRS__MEDIA__ANIMATION__MAX_HEIGHT: 256
+      PICTRS__MEDIA__ANIMATION__MAX_AREA: 65536
+      PICTRS__MEDIA__ANIMATION__MAX_FRAME_COUNT: 400
+      PICTRS__MEDIA__VIDEO__ENABLE: "True"
+      PICTRS__MEDIA__VIDEO__MAX_FILE_SIZE: 20
+      RUST_LOG: info
+    volumes:
+      - pictrs-data:/mnt
+    logging: *default-logging
+
+  postgres:
+    image: postgres:16.16-alpine
+    hostname: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lemmy
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: lemmy
+    shm_size: 256m
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lemmy -d lemmy"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+
+volumes:
+  lemmy-ui-themes:
+  pictrs-data:
+  postgres-data:

@@ -1,0 +1,43 @@
+services:
+  tolgee:
+    image: tolgee/tolgee:v3.242.7
+    restart: unless-stopped
+    depends_on:
+      tolgee-db:
+        condition: service_healthy
+    environment:
+      TOLGEE_FRONT_END_URL: ${FRONT_END_URL}
+      TOLGEE_AUTHENTICATION_ENABLED: "true"
+      TOLGEE_AUTHENTICATION_JWT_SECRET: ${JWT_SECRET}
+      # The first admin: Tolgee's sign-in form asks for an email, so the
+      # initial username is the admin's email address.
+      TOLGEE_AUTHENTICATION_INITIAL_USERNAME: ${ADMIN_EMAIL}
+      TOLGEE_AUTHENTICATION_INITIAL_PASSWORD: ${ADMIN_PASSWORD}
+      # Use the separate database below instead of the PostgreSQL bundled in
+      # the image (Tolgee v4 removes the bundled one).
+      TOLGEE_POSTGRES_AUTOSTART_ENABLED: "false"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://tolgee-db:5432/tolgee
+      SPRING_DATASOURCE_USERNAME: tolgee
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      TOLGEE_FILE_STORAGE_FS_DATA_PATH: /data
+    volumes:
+      - tolgee-data:/data
+
+  tolgee-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tolgee
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: tolgee
+    volumes:
+      - tolgee-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tolgee -d tolgee"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tolgee-data:
+  tolgee-db-data:

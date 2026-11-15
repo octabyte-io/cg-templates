@@ -1,0 +1,49 @@
+# From Stoat's official self-hosted Caddyfile (github.com/stoatchat/self-hosted): one web
+# address, with each path sent to the service behind it. Cloudgate's own proxy in front
+# handles the domain and TLS, so this listens on plain port 80. Left out: the /livekit and
+# /ingress routes for voice, which this template does not include.
+:80 {
+	# Tells Stoat apps where this instance's API is (upstream serves this as stoat.json).
+	route /.well-known/stoat {
+		header Access-Control-Allow-Origin *
+		header Content-Type application/json
+		respond `{"api":"{$APP_URL}/api"}` 200
+	}
+
+	route /api* {
+		uri strip_prefix /api
+		reverse_proxy http://stoat-api:14702 {
+			header_down Location "^/" "/api/"
+		}
+	}
+
+	route /ws {
+		uri strip_prefix /ws
+		reverse_proxy http://stoat-events:14703 {
+			header_down Location "^/" "/ws/"
+		}
+	}
+
+	route /autumn* {
+		uri strip_prefix /autumn
+		reverse_proxy http://stoat-autumn:14704 {
+			header_down Location "^/" "/autumn/"
+		}
+	}
+
+	route /january* {
+		uri strip_prefix /january
+		reverse_proxy http://stoat-january:14705 {
+			header_down Location "^/" "/january/"
+		}
+	}
+
+	route /gifbox* {
+		uri strip_prefix /gifbox
+		reverse_proxy http://stoat-gifbox:14706 {
+			header_down Location "^/" "/gifbox/"
+		}
+	}
+
+	reverse_proxy http://stoat-web:5000
+}

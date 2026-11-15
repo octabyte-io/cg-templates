@@ -1,0 +1,54 @@
+name: Stoat
+description: "Self-hosted Stoat, formerly Revolt: open-source, Discord-style community chat with servers, channels, roles, direct messages and bots on your own server."
+version: "0.16.4"
+tags: [discord alternative, community chat, revolt chat, group chat, chat server, open source chat]
+links:
+  website: https://stoat.chat
+  docs: https://github.com/stoatchat/self-hosted
+  source: https://github.com/stoatchat/stoatchat
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.stoat.url}}" }
+  APP_HOST: { value: "{{domains.stoat.host}}" }
+  FILES_ENCRYPTION_KEY: { generate: base64 }
+  RABBIT_PASSWORD: { generate: password }
+  STORAGE_PASSWORD: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed for email verification and password resets. Your email provider gives you this, such as smtp.mailgun.org. Without it, people sign up without confirming their email.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: Stoat connects with TLS from the start, which is usually port 465.
+      default: "465"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Send emails from
+      description: The address Stoat's emails come from, such as noreply@yourcompany.com. Needed if you fill in an email server above.
+      format: email
+      required: false
+  GIFBOX_API_KEY:
+    ask:
+      label: Gifbox API key
+      description: Optional. Turns on the GIF picker. Create a free key in your account settings at gifbox.me.
+      secret: true
+      required: false
+domains:
+  - { service: stoat, port: 80 }
+files:
+  - { path: Caddyfile }
