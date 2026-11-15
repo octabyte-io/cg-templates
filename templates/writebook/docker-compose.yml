@@ -1,0 +1,26 @@
+services:
+  writebook:
+    # The official image from 37signals (ghcr.io/basecamp/writebook). One
+    # container runs the web server (Thruster in front of Rails on port 80),
+    # its own Redis and the background workers; data is in SQLite.
+    image: ghcr.io/basecamp/writebook:1.2.8
+    restart: unless-stopped
+    environment:
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      # Puma otherwise starts one worker per two host CPUs, read from the
+      # host, not the container; two keep memory predictable.
+      WEB_CONCURRENCY: "2"
+      # SSL_DOMAIN and DISABLE_SSL are left unset: Cloudgate serves the app
+      # over HTTPS and Writebook treats every request as HTTPS.
+    volumes:
+      # The SQLite database and uploaded files.
+      - writebook-storage:/rails/storage
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  writebook-storage:
