@@ -1,0 +1,38 @@
+name: Fab-manager
+description: "Self-hosted Fab-manager runs your fab lab or makerspace: machine bookings, trainings, events, memberships and invoices, as an open-source Fabman alternative."
+version: "6.6.2"
+tags: [fab lab management software, makerspace management software, fabman alternative, machine booking, makerspace memberships, workshop booking, open source fab lab software]
+links:
+  website: https://www.fab-manager.com
+  docs: https://github.com/sleede/fab-manager/blob/master/doc/README.md
+  source: https://github.com/sleede/fab-manager
+cloudgate: 0.1.0
+compose: app
+# The first start compiles the web assets, which needs about 4 GB of memory.
+size: large
+inputs:
+  DEFAULT_HOST: { value: "{{domains.fabmanager.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  # Fab-manager refuses a password without an uppercase letter, a lowercase
+  # letter, a digit and a symbol, so the generated part gets a fixed prefix.
+  ADMIN_PASSWORD_RANDOM: { generate: password }
+  ADMIN_PASSWORD: { value: "Fab-1{{ADMIN_PASSWORD_RANDOM}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page as ADMIN_PASSWORD.
+      format: email
+  INTL_CURRENCY:
+    ask:
+      label: Currency
+      description: The three-letter code of the currency for prices and invoices, such as USD, EUR or GBP.
+      default: USD
+      pattern: "[A-Z]{3}"
+  TIME_ZONE:
+    ask:
+      label: Time zone
+      description: Used for the booking calendar, as an IANA name such as Europe/Paris or America/New_York.
+      default: UTC
+domains:
+  - { service: fabmanager, port: 3000 }

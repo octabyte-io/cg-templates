@@ -2623,6 +2623,56 @@ export const PRODUCTS: Product[] = [
     lede: 'Raneto is a free, open-source Helpjuice alternative for a simple help centre, FAQ or staff handbook: Markdown pages in categories, full-text search and a browser editor, on your own server. Helpjuice is a hosted knowledge base paid by subscription, with analytics and editing workflows; Raneto has none of those, but it costs nothing, needs no database and keeps every article as a plain file.',
     pick: 'raneto',
   },
+  {
+    id: 'fabman',
+    name: 'Fabman',
+    job: 'running a makerspace',
+    lede: 'Fab-manager is a free, open-source Fabman alternative for running a fab lab or makerspace: machine bookings that open after training, memberships, events, payments and invoices in one web app. Fabman is a monthly subscription with a fee for each connected machine and a fee on each transaction; self-hosted Fab-manager has neither, though it has no access hardware to switch machines on and off.',
+    pick: 'fab-manager',
+  },
+  {
+    id: 'jamf-pro',
+    name: 'Jamf Pro',
+    job: 'managing company Macs',
+    lede: 'Fleet is a free, open-source Jamf Pro alternative that shows every Mac, as well as every Windows and Linux computer, in one console: hardware, installed software, known vulnerabilities and whether each device passes your security checks. Jamf charges per device each month and covers Apple devices only; Fleet’s free edition has no per-device price, though app deployment, enforced disk encryption and OS updates, and lock and wipe are in its paid Premium tier.',
+    pick: 'fleet',
+  },
+  {
+    id: 'microsoft-intune',
+    name: 'Microsoft Intune',
+    job: 'managing company computers',
+    lede: 'Fleet is a free, open-source Microsoft Intune alternative for seeing and checking every Windows PC, Mac and Linux computer from one console on your own server, with software inventory, vulnerability scanning, policies and scripts. Intune is a per-user subscription in Microsoft’s cloud; Fleet’s free edition has no per-user price, though zero-touch setup, app deployment and enforced OS updates need its paid Premium tier.',
+    pick: 'fleet',
+  },
+  {
+    id: 'doctolib',
+    name: 'Doctolib',
+    job: 'online booking for medical practices',
+    lede: 'OpenReception is a free, open-source Doctolib alternative for practices that want their own online booking page, with patients’ details end-to-end encrypted so only practice staff can read them. Doctolib adds a patient marketplace, reminders, video consultations and practice-software connections; OpenReception has none of those, but the booking page, its wording and the patient relationship stay with the practice.',
+    pick: 'open-reception',
+  },
+  {
+    id: 'assoconnect',
+    name: 'AssoConnect',
+    job: 'association management',
+    lede: 'Galette is a free, open-source AssoConnect alternative for an association’s members and dues: one members list, contributions with due dates, automatic reminders, mailings, PDF membership cards and receipts. AssoConnect’s paid plan also covers accounting, a website and an online bank account; Galette does members and dues only, with no price per member, and leaves the accounts to your treasurer’s own tool.',
+    pick: 'galette',
+  },
+  {
+    id: 'chatgpt-deep-research',
+    name: 'ChatGPT deep research',
+    icon: 'openai',
+    job: 'AI research reports with sources',
+    lede: 'GPT Researcher is a free, open-source alternative to ChatGPT deep research: ask a question, and it searches the web, reads 20 or more sources and writes a long report with citations, which you can download as PDF, Word or Markdown. Deep research comes with ChatGPT’s plans, with limits on how much you can run; GPT Researcher runs on your server with the AI and search providers you choose, and you pay them only for what each report uses.',
+    pick: 'gpt-researcher',
+  },
+  {
+    id: 'chatpdf',
+    name: 'ChatPDF',
+    job: 'chatting with your PDFs',
+    lede: 'Kotaemon is a free, open-source ChatPDF alternative for asking questions about your PDFs and other files, with each answer citing the passage it came from, highlighted in a built-in viewer. ChatPDF’s free plan analyses two documents a day; self-hosted Kotaemon has no daily limit of its own and keeps your files on your server, though you connect your own AI provider or a local model.',
+    pick: 'kotaemon',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));
