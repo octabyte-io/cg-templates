@@ -1,0 +1,24 @@
+name: Group-Office
+description: "Self-hosted Group-Office gives your team shared email, calendars, contacts, tasks and files in one web app, synced to Outlook and phones."
+version: "26.0.59"
+tags: [group-office, self-hosted groupware, shared calendar, microsoft 365 alternative, zoho workplace alternative, exchange alternative, outlook alternative]
+links:
+  website: https://www.group-office.com
+  docs: https://groupoffice.readthedocs.io
+  source: https://github.com/Intermesh/groupoffice
+cloudgate: 0.1.0
+compose: app
+# Apache with PHP, a scheduler container and MariaDB; 2 GB keeps PHP and MariaDB comfortable.
+size: medium
+inputs:
+  GO_URL: { value: "{{domains.groupoffice.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of the "admin" account; Group-Office sends its system mail and password resets there.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: groupoffice, port: 80 }

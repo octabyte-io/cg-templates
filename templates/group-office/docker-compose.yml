@@ -1,0 +1,116 @@
+# From Group-Office's official Docker setup (github.com/Intermesh/docker-groupoffice, compose.yaml):
+# the Apache/PHP web app and MariaDB. Its README asks for a cron job that runs cron.php every minute
+# (reminders, mail fetching, cleanups); the groupoffice-cron service does that inside Docker.
+services:
+  groupoffice:
+    image: intermesh/groupoffice:26.0.59
+    restart: unless-stopped
+    depends_on:
+      groupoffice-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      MYSQL_HOST: groupoffice-db
+      MYSQL_DATABASE: groupoffice
+      MYSQL_USER: groupoffice
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      GO_URL: ${GO_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Before the web server starts for real:
+    #  - the image regenerates /etc/groupoffice/docker-config.php from a template on every start; the
+    #    template gets the app's address (so links in emails and CalDAV/CardDAV use it) and trusts
+    #    Cloudgate's web proxy for visitor IPs;
+    #  - on the first start only (empty database), Group-Office's own web installer (/install) is
+    #    run against a web server that only listens inside the container, creating the "admin"
+    #    account with the generated password, so nobody else can reach an open installer.
+    # Then the image's own entrypoint starts Apache.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        # Undo the install-time web server settings below, in case a first start stopped halfway.
+        sed -i 's/^Listen 127.0.0.1:8080$$/Listen 80/' /etc/apache2/ports.conf
+        sed -i 's/<VirtualHost \*:8080>/<VirtualHost *:80>/' /etc/apache2/sites-available/000-default.conf
+        tpl=/usr/local/share/groupoffice-docker-config.php.tpl
+        [ -f "$$tpl.orig" ] || cp "$$tpl" "$$tpl.orig"
+        {
+          cat "$$tpl.orig"
+          printf '$$config["core"]["URL"] = "%s/";\n' "$${GO_URL%/}"
+          printf '$$config["trustedProxies"] = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"];\n'
+        } > "$$tpl"
+        docker-go-entrypoint.sh true
+        if [ -z "$$(mariadb --skip-ssl -h "$$MYSQL_HOST" -u "$$MYSQL_USER" -p"$$MYSQL_PASSWORD" -N -e 'SHOW TABLES' "$$MYSQL_DATABASE")" ]; then
+          echo "Installing Group-Office with its installer..."
+          # Port 8080 on 127.0.0.1 only: unreachable from outside, and the healthcheck on port 80
+          # stays red until the install is done.
+          sed -i 's/^Listen 80$$/Listen 127.0.0.1:8080/' /etc/apache2/ports.conf
+          sed -i 's/<VirtualHost \*:80>/<VirtualHost *:8080>/' /etc/apache2/sites-available/000-default.conf
+          apache2ctl start
+          until curl -fsS -o /dev/null http://127.0.0.1:8080/install/; do sleep 1; done
+          curl -sS -o /dev/null http://127.0.0.1:8080/install/install.php \
+            --data-urlencode "email=$$ADMIN_EMAIL" --data-urlencode username=admin \
+            --data-urlencode "password=$$ADMIN_PASSWORD" --data-urlencode "passwordConfirm=$$ADMIN_PASSWORD" \
+            --data-urlencode language=en
+          apache2ctl stop
+          while curl -s -o /dev/null http://127.0.0.1:8080/; do sleep 1; done
+          sed -i 's/^Listen 127.0.0.1:8080$$/Listen 80/' /etc/apache2/ports.conf
+          sed -i 's/<VirtualHost \*:8080>/<VirtualHost *:80>/' /etc/apache2/sites-available/000-default.conf
+          if [ -z "$$(mariadb --skip-ssl -h "$$MYSQL_HOST" -u "$$MYSQL_USER" -p"$$MYSQL_PASSWORD" -N -e "SELECT id FROM core_user WHERE username = 'admin'" "$$MYSQL_DATABASE")" ]; then
+            echo "The Group-Office installer did not create the admin account." >&2
+            exit 1
+          fi
+        fi
+        exec docker-go-entrypoint.sh apache2-foreground
+    volumes:
+      - groupoffice-data:/var/lib/groupoffice
+      - groupoffice-etc:/etc/groupoffice
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  # The cron job from the official README, run every minute as www-data.
+  groupoffice-cron:
+    image: intermesh/groupoffice:26.0.59
+    restart: unless-stopped
+    depends_on:
+      groupoffice:
+        condition: service_healthy
+    entrypoint: ["bash", "-c"]
+    command:
+      - |
+        while true; do
+          su www-data -s /bin/sh -c 'php /usr/local/share/groupoffice/cron.php' || true
+          sleep 60
+        done
+    volumes:
+      - groupoffice-data:/var/lib/groupoffice
+      - groupoffice-etc:/etc/groupoffice
+
+  groupoffice-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: groupoffice
+      MARIADB_USER: groupoffice
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - groupoffice-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  groupoffice-data:
+  groupoffice-etc:
+  groupoffice-db-data:

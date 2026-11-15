@@ -1,0 +1,38 @@
+# Psono server settings without the secrets. psono-start.py.txt adds the secrets, the
+# database and the email server from the container's environment and writes the result
+# to /root/.psono_server/settings.yaml at each start.
+# Options: https://doc.psono.com/admin/installation/install-psono-ce.html
+
+# The web client's address, used in activation and password reset links.
+WEB_CLIENT_URL: '{{domains.psono.url}}'
+# The server's address: the combo image serves it under /server.
+HOST_URL: '{{domains.psono.url}}/server'
+
+DEBUG: False
+ALLOWED_HOSTS: ['*']
+# The last part of every username (e.g. alice@psono.example.com).
+ALLOWED_DOMAINS: ['{{domains.psono.host}}']
+
+# Cloudgate's proxy and the combo image's nginx sit in front of the server.
+NUM_PROXIES: 2
+
+# The admin portal at /portal.
+MANAGEMENT_ENABLED: True
+
+FAVICON_SERVICE_URL: 'https://favicon.psono.com/v1/icon/'
+
+TEMPLATES: [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': ['/root/psono/templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]

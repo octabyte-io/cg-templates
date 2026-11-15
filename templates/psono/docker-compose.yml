@@ -1,0 +1,62 @@
+services:
+  # Psono's combo image: the server, the web client and the admin portal (/portal) behind
+  # one nginx, as in Psono's Community Edition install guide
+  # (doc.psono.com/admin/installation/install-psono-ce.html).
+  psono:
+    image: psono/psono-combo:7.5.10-4.9.6-1.10.5
+    restart: unless-stopped
+    depends_on:
+      psono-db:
+        condition: service_healthy
+    # files/psono-start.py.txt writes the settings file, prepares the database and creates
+    # the first admin, then runs the image's own command.
+    command: ["python3", "/psono/psono-start.py"]
+    environment:
+      CG_SECRET_KEY_VALUE: ${SECRET_KEY}
+      CG_ACTIVATION_LINK_SECRET_VALUE: ${ACTIVATION_LINK_SECRET}
+      CG_DB_SECRET_VALUE: ${DB_SECRET}
+      CG_PRIVATE_KEY_HEX: ${PRIVATE_KEY}
+      CG_EMAIL_SALT_SEED: ${EMAIL_SALT_SEED}
+      CG_DB_PASSWORD: ${DB_PASSWORD}
+      CG_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      CG_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      CG_ADMIN_HOST: ${PSONO_HOST}
+      # Optional email server, for activation and password reset emails.
+      CG_SMTP_FROM: ${EMAIL_FROM}
+      CG_SMTP_HOST: ${SMTP_HOST}
+      CG_SMTP_PORT: ${SMTP_PORT}
+      CG_SMTP_SSL: ${SMTP_SSL}
+      CG_SMTP_USERNAME: ${SMTP_USERNAME}
+      CG_SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+      - ../files/settings.yaml:/psono/settings.yaml:ro
+      - ../files/psono-start.py.txt:/psono/psono-start.py:ro
+      # The web client's and the admin portal's settings: this server only.
+      - ../files/config.json:/usr/share/nginx/html/config.json:ro
+      - ../files/config.json:/usr/share/nginx/html/portal/config.json:ro
+    # The image's own check calls /server/healthcheck/ every 2 minutes; that endpoint allows
+    # 61 calls an hour, so a faster check would be throttled. /server/info/ allows 600.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/server/info/"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+
+  psono-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: psono
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: psono
+    volumes:
+      - psono-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U psono -d psono"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  psono-db-data:

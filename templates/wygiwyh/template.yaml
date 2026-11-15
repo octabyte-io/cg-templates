@@ -1,0 +1,34 @@
+name: WYGIWYH
+description: "WYGIWYH is a self-hosted, multi-currency finance tracker: log income, expenses and accounts, see monthly totals and net worth, with no budgeting."
+version: "0.27.0"
+tags: [monarch alternative, personal finance tracker, multi-currency expense tracker, net worth tracker, ynab alternative, quicken alternative]
+links:
+  website: https://github.com/eitchtee/WYGIWYH
+  docs: https://github.com/eitchtee/WYGIWYH#how-to-use
+  source: https://github.com/eitchtee/WYGIWYH
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Django answers only requests for these host names and accepts form posts
+  # only from these origins, so both are set to the app's own address.
+  ALLOWED_HOST: { value: "{{domains.wygiwyh.host}}" }
+  APP_URL: { value: "{{domains.wygiwyh.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  # The app creates this admin on its first start (python manage.py setup_users);
+  # it doesn't check the password's strength, so a generated one works.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for scheduled tasks such as recurring transactions, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: wygiwyh, port: 8000 }

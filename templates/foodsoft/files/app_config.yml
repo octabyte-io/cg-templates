@@ -1,0 +1,39 @@
+# Foodsoft configuration (config/app_config.yml), read once at start.
+# Foodsoft reads this file through ERB, so values can come from the environment.
+# Most of these settings can be changed later in Foodsoft under Administration > Configuration.
+
+default: &defaults
+  # One food coop per installation.
+  multi_coop_install: false
+  default_scope: 'f'
+
+  # The food coop's name and contact details; change them in Administration > Configuration.
+  name: Foodcoop
+  contact:
+    email: <%= ENV['FOODSOFT_EMAIL_SENDER'] %>
+
+  # Help pages and the apple points work system, as in Foodsoft's sample config.
+  help_url: https://github.com/foodcoops/foodsoft/wiki/Doku
+  applepear_url: https://github.com/foodcoops/foodsoft/wiki/%C3%84pfel-u.-Birnen
+
+  # Price markup in percent, and the default VAT for new articles.
+  price_markup: 0.0
+  tax_default: 7.0
+  tolerance_is_costly: false
+  use_nick: false
+
+  # Address Foodsoft's emails come from.
+  email_sender: <%= ENV['FOODSOFT_EMAIL_SENDER'] %>
+
+  # Links in emails point to the app's own web address.
+  protocol: https
+  host: <%= ENV['FOODSOFT_HOST'] %>
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

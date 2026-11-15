@@ -1,0 +1,107 @@
+# Foodsoft as its production docs describe it: the web process, the background worker and
+# the scheduled jobs, all from the official image, with MariaDB and Redis.
+# The optional "mail" process (replies by email) is left out: it needs a public SMTP port.
+x-foodsoft-env: &foodsoft-env
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  DATABASE_URL: mysql2://foodsoft:${DB_PASSWORD}@foodsoft-db/foodsoft?encoding=utf8mb4
+  REDIS_URL: redis://foodsoft-redis:6379
+  # Cloudgate serves the app over HTTPS in front of the container.
+  RAILS_FORCE_SSL: "false"
+  FOODSOFT_HOST: ${FOODSOFT_HOST}
+  FOODSOFT_EMAIL_SENDER: ${ADMIN_EMAIL}
+  SMTP_ADDRESS: ${SMTP_ADDRESS}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USER_NAME: ${SMTP_USER_NAME}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_DOMAIN: ${FOODSOFT_HOST}
+  SMTP_ENABLE_STARTTLS_AUTO: "true"
+
+x-foodsoft-config: &foodsoft-config ../files/app_config.yml:/usr/src/app/config/app_config.yml:ro
+
+services:
+  foodsoft:
+    image: foodcoops/foodsoft:4.9.2
+    restart: unless-stopped
+    depends_on:
+      foodsoft-db:
+        condition: service_healthy
+      foodsoft-redis:
+        condition: service_healthy
+    # Sets up the database and the admin on the first start (files/foodsoft-start.sh.txt),
+    # then starts the web process as the image does.
+    command: ["sh", "/cloudgate/foodsoft-start.sh"]
+    environment:
+      <<: *foodsoft-env
+      FOODSOFT_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      FOODSOFT_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - *foodsoft-config
+      - ../files/foodsoft-start.sh.txt:/cloudgate/foodsoft-start.sh:ro
+      - foodsoft-storage:/usr/src/app/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1:3000/f/login || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 180s
+
+  foodsoft-worker:
+    image: foodcoops/foodsoft:4.9.2
+    restart: unless-stopped
+    depends_on:
+      foodsoft:
+        condition: service_healthy
+    command: ["./proc-start", "worker"]
+    environment: *foodsoft-env
+    volumes:
+      - *foodsoft-config
+      - foodsoft-storage:/usr/src/app/storage
+
+  # Scheduled jobs: finishing ended orders, task reminders, bank imports.
+  foodsoft-cron:
+    image: foodcoops/foodsoft:4.9.2
+    restart: unless-stopped
+    depends_on:
+      foodsoft:
+        condition: service_healthy
+    command: ["./proc-start", "cron"]
+    environment: *foodsoft-env
+    volumes:
+      - *foodsoft-config
+      - foodsoft-storage:/usr/src/app/storage
+
+  foodsoft-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: foodsoft
+      MARIADB_USER: foodsoft
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - foodsoft-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  foodsoft-redis:
+    image: redis:7.2.17-alpine
+    restart: unless-stopped
+    volumes:
+      - foodsoft-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  foodsoft-storage:
+  foodsoft-db-data:
+  foodsoft-redis-data:

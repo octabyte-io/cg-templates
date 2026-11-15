@@ -1,0 +1,18 @@
+name: OTOBO
+description: "OTOBO is a self-hosted, open-source help desk and IT service desk with queues, SLAs and processes, and the free successor to OTRS Community Edition."
+version: "11.1.1"
+tags: [help desk, itsm, ticket system, otrs alternative, freshservice alternative, it service desk, customer portal]
+links:
+  website: https://otobo.io
+  docs: https://doc.otobo.org/manual/installation/11.1/en/content/installation/installation-docker.html
+  source: https://github.com/RotherOSS/otobo
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  OTOBO_FQDN: { value: "{{domains.otobo-web.host}}" }
+  DB_ROOT_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: otobo-web, port: 5000 }

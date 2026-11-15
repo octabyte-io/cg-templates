@@ -1,0 +1,137 @@
+# From the official otobo-docker compose files (github.com/RotherOSS/otobo-docker, tag rel-11_1_1):
+# docker-compose/otobo-base.yml with the HTTP override. Left out: the published port, the optional
+# nginx TLS proxy and the optional Redis cache (OTOBO 11.1 caches on disk by default).
+# The database and Elasticsearch keep their official service names, db and elastic, because
+# OTOBO's Docker config (Kernel/Config.pm) and its Elasticsearch web service connect to those names.
+x-otobo: &otobo
+  image: rotheross/otobo:rel-11_1_1
+  restart: unless-stopped
+  cap_drop:
+    - ALL
+  volumes:
+    - otobo-data:/opt/otobo
+
+services:
+  # Runs once at each start. The first time it copies OTOBO into its volume and does the
+  # installer's work with OTOBO's own bin/docker/quick_setup.pl (the "Automatic Installation"
+  # in the Docker docs): creates the database and its user (with a generated password instead
+  # of the image's default), loads the schema, writes the system config for this web address,
+  # sets up the Elasticsearch index and gives root@localhost the generated ADMIN_PASSWORD.
+  # Later starts find the config already written and do nothing.
+  otobo-setup:
+    <<: *otobo
+    restart: "no"
+    entrypoint: [bash, -c]
+    command:
+      - |
+        set -e
+        cd /opt/otobo
+        if [ -z "$$(ls /opt/otobo)" ]; then /opt/otobo_install/entrypoint.sh copy_otobo_next; fi
+        if [ -f Kernel/Config/Files/ZZZAAuto.pm ]; then echo "OTOBO is already set up."; exit 0; fi
+        perl -pi -e 's/^(\s*\$$Self->\{DatabasePw\}\s*=\s*).*$$/$${1}q{$$ENV{OTOBO_DB_PASSWORD}};/' Kernel/Config.pm
+        bin/docker/quick_setup.pl --db-password "$$DB_ROOT_PASSWORD" --http-type https --fqdn "$$OTOBO_FQDN" --activate-elasticsearch
+        bin/otobo.Console.pl Admin::User::SetPassword root@localhost "$$ADMIN_PASSWORD"
+        bin/otobo.Console.pl Admin::Config::Update --setting-name CheckEmailValidAddress --reset --no-deploy
+        bin/otobo.Console.pl Admin::Config::Update --setting-name MinimumLogLevel --reset
+        echo "OTOBO is set up: sign in as root@localhost."
+    environment:
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      OTOBO_DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      OTOBO_FQDN: ${OTOBO_FQDN}
+    depends_on:
+      db:
+        condition: service_healthy
+      elastic:
+        condition: service_healthy
+
+  # The web app (agent interface at /otobo/index.pl, customer portal at /otobo/customer.pl).
+  otobo-web:
+    <<: *otobo
+    command: web
+    volumes:
+      - otobo-data:/opt/otobo
+      - otobo-update:/opt/otobo_update
+    depends_on:
+      otobo-setup:
+        condition: service_completed_successfully
+    healthcheck:
+      test: curl -s -f http://localhost:5000/health | grep ✅ || exit 1
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+
+  # Background jobs: fetching and sending email, escalations, notifications, cleanup.
+  otobo-daemon:
+    <<: *otobo
+    command: daemon
+    depends_on:
+      otobo-web:
+        condition: service_healthy
+    healthcheck:
+      test: ./bin/otobo.Daemon.pl status | grep 'Daemon running'
+      interval: 60s
+      timeout: 20s
+      start_period: 180s
+      retries: 3
+
+  db:
+    image: mariadb:11.8.9
+    user: mysql:mysql
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - CAP_SYS_CHROOT
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_AUTO_UPGRADE: "1"
+    command:
+      - --max-allowed-packet=136314880
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --innodb-log-file-size=268435456
+      - --query-cache-size=33554432
+    volumes:
+      - otobo-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 10
+
+  # Elasticsearch for OTOBO's full-text and power search, with OTOBO's plugins.
+  elastic:
+    image: rotheross/otobo-elasticsearch:rel-11_1_1
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - CAP_SYS_CHROOT
+      - CAP_SETUID
+      - CAP_SETGID
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      # Disk thresholds in free space rather than Elasticsearch's default percentages (85/90/95 %
+      # used), which on a large disk make the search index read-only while gigabytes are still free.
+      cluster.routing.allocation.disk.watermark.low: 2gb
+      cluster.routing.allocation.disk.watermark.high: 1gb
+      cluster.routing.allocation.disk.watermark.flood_stage: 500mb
+    volumes:
+      - otobo-elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 10
+
+volumes:
+  otobo-data:
+  otobo-update:
+  otobo-db-data:
+  otobo-elasticsearch-data:

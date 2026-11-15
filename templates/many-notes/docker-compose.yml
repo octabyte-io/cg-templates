@@ -1,0 +1,24 @@
+# From the official README's "Docker with volumes" setup: one container that
+# runs the web app, its queue worker, live updates (Reverb) and the Typesense
+# search engine, with the default SQLite database.
+services:
+  many-notes:
+    image: brufdev/many-notes:0.18
+    restart: unless-stopped
+    environment:
+      APP_URL: ${APP_URL}
+      APP_KEY: base64:${APP_KEY}
+      # The image's nginx also listens on IPv6 by default and won't start on a
+      # host without IPv6; Cloudgate reaches the app over IPv4.
+      NGINX_LISTEN_IP_PROTOCOL: ipv4
+    volumes:
+      - many-notes-database:/var/www/html/database/sqlite
+      - many-notes-logs:/var/www/html/storage/logs
+      - many-notes-private:/var/www/html/storage/app/private
+      - many-notes-typesense:/var/www/html/typesense
+
+volumes:
+  many-notes-database:
+  many-notes-logs:
+  many-notes-private:
+  many-notes-typesense:

@@ -1,0 +1,28 @@
+# Based on titra's official docker-compose.yml (master): titra and MongoDB 8.0, pinned to versions.
+
+services:
+  titra:
+    image: titraio/titra:v1.2.0
+    restart: unless-stopped
+    depends_on:
+      titra-db:
+        condition: service_healthy
+    environment:
+      ROOT_URL: ${ROOT_URL}
+      MONGO_URL: mongodb://titra-db:27017/titra?directConnection=true
+      PORT: "3000"
+
+  titra-db:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    volumes:
+      - titra-db-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  titra-db-data:
