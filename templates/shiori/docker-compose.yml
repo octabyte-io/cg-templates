@@ -1,0 +1,26 @@
+services:
+  shiori:
+    # The project's own image in its Alpine variant (the plain one is built FROM scratch and has
+    # no shell), so the start script below and the healthcheck can run.
+    image: ghcr.io/go-shiori/shiori:alpine-v1.8.0
+    restart: unless-stopped
+    # files/shiori-start.sh.txt: on the first start, replaces the default password of the
+    # account "shiori" with ADMIN_PASSWORD before Shiori is reachable, then starts the server.
+    entrypoint: ["sh", "/shiori-start.sh"]
+    environment:
+      SHIORI_DIR: /shiori
+      SHIORI_HTTP_SECRET_KEY: ${SHIORI_HTTP_SECRET_KEY}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # The SQLite database, saved page archives, thumbnails and e-books.
+      - shiori-data:/shiori
+      - ../files/shiori-start.sh.txt:/shiori-start.sh:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/system/liveness"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  shiori-data:

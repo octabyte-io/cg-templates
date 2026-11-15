@@ -1,0 +1,15 @@
+name: Campfire
+description: "Campfire is simple self-hosted team chat from 37signals, the makers of Basecamp: rooms, direct messages, file sharing, search and @mentions."
+version: "1.5.9"
+tags: [team chat, group chat, slack alternative, self-hosted chat, 37signals campfire, microsoft teams alternative]
+links:
+  website: https://once.com/campfire
+  docs: https://github.com/basecamp/once-campfire/blob/main/docs/self-hosting.md
+  source: https://github.com/basecamp/once-campfire
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SECRET_KEY_BASE: { generate: hex }
+domains:
+  - { service: campfire, port: 80 }

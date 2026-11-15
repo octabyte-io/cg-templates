@@ -1,0 +1,28 @@
+name: Black Candy
+description: "Black Candy is a self-hosted music streaming server: upload the music you own and play it in your browser or its free iPhone and Android apps."
+version: "3.2.1"
+tags: [self-hosted music server, music streaming server, spotify alternative, apple music alternative, personal music streaming, black candy]
+links:
+  website: https://github.com/blackcandy-org/blackcandy
+  docs: https://github.com/blackcandy-org/blackcandy#readme
+  source: https://github.com/blackcandy-org/blackcandy
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Rails' secret for signing sessions; without it every restart signs everyone out.
+  SECRET_KEY_BASE: { generate: hex }
+  # Black Candy's first start creates an admin with a published default login.
+  # The compose file replaces it with this email and password.
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Black Candy with as its admin.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # music at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: blackcandy, port: 80 }
+  - { service: filebrowser, port: 80 }

@@ -1,0 +1,51 @@
+#!/bin/sh
+# Starts Shiori. On the first start, Shiori creates the owner account "shiori" with the
+# well-known password "gopher". Before the server is reachable from outside, this script runs
+# Shiori once on a private loopback port, replaces that password with ADMIN_PASSWORD through
+# Shiori's own API, and leaves a marker, so later starts (and a password changed in Shiori) are
+# left alone.
+set -eu
+
+marker="$SHIORI_DIR/.cloudgate-admin-password-set"
+port=8079
+
+if [ ! -f "$marker" ]; then
+  /usr/bin/shiori server --address 127.0.0.1 --port "$port" &
+  pid=$!
+
+  tries=0
+  until wget -q -O /dev/null "http://127.0.0.1:$port/system/liveness" 2>/dev/null; do
+    tries=$((tries + 1))
+    if [ "$tries" -ge 60 ] || ! kill -0 "$pid" 2>/dev/null; then
+      echo "Shiori did not start for the first-start setup." >&2
+      exit 1
+    fi
+    sleep 1
+  done
+
+  token=$(wget -q -O - --header 'Content-Type: application/json' \
+    --post-data '{"username":"shiori","password":"gopher"}' \
+    "http://127.0.0.1:$port/api/v1/auth/login" 2>/dev/null \
+    | sed -n 's/.*"token":"\([^"]*\)".*/\1/p') || token=""
+
+  if [ -n "$token" ]; then
+    # busybox wget cannot send PATCH, so write the request by hand. The sleep keeps the
+    # connection open until Shiori answers (it cancels a request whose client hung up).
+    body="{\"old_password\":\"gopher\",\"new_password\":\"$ADMIN_PASSWORD\"}"
+    status=$({ printf 'PATCH /api/v1/auth/account HTTP/1.0\r\nHost: 127.0.0.1\r\nAuthorization: Bearer %s\r\nContent-Type: application/json\r\nContent-Length: %s\r\n\r\n%s' \
+      "$token" "${#body}" "$body"; sleep 5; } | nc 127.0.0.1 "$port" | head -n 1)
+    case "$status" in
+      *" 200 "*) echo "Set the password of the account \"shiori\" to ADMIN_PASSWORD." ;;
+      *) echo "Could not set the password of the account \"shiori\": $status" >&2
+         kill "$pid"; exit 1 ;;
+    esac
+  else
+    echo "The default login no longer works; leaving the accounts as they are."
+  fi
+
+  kill "$pid"
+  wait "$pid" 2>/dev/null || true
+  touch "$marker"
+fi
+
+exec /usr/bin/shiori server

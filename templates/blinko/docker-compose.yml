@@ -1,0 +1,42 @@
+services:
+  blinko:
+    image: blinkospace/blinko:1.8.9
+    restart: unless-stopped
+    depends_on:
+      blinko-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      # The app's own address: used for sign-in redirects (needed for SSO) and links.
+      NEXTAUTH_URL: ${BLINKO_URL}
+      NEXT_PUBLIC_BASE_URL: ${BLINKO_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      DATABASE_URL: postgresql://blinko:${POSTGRES_PASSWORD}@blinko-db:5432/blinko
+    volumes:
+      # Uploaded files, the AI search index and plugins.
+      - blinko-data:/app/.blinko
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:1111/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  blinko-db:
+    image: postgres:14.25-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: blinko
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: blinko
+    volumes:
+      - blinko-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blinko -d blinko"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  blinko-data:
+  blinko-db-data:
