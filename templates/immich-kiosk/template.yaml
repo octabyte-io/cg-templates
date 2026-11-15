@@ -1,0 +1,39 @@
+name: Immich Kiosk
+description: "Immich Kiosk is a self-hosted Immich slideshow that runs in any web browser: each tablet, TV or screen can show its own albums, people and layout."
+version: "0.47.1"
+tags:
+  - immich slideshow
+  - digital photo frame
+  - nixplay alternative
+  - immich photo frame
+  - aura frame alternative
+  - photo kiosk
+links:
+  website: https://docs.immichkiosk.app
+  docs: https://docs.immichkiosk.app
+  source: https://github.com/damongolding/immich-kiosk
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  KIOSK_IMMICH_URL:
+    ask:
+      label: Immich address
+      description: The web address of your Immich server (version 3.2 or newer), for example https://photos.example.com. Kiosk must be able to reach it.
+      format: url
+  KIOSK_IMMICH_API_KEY:
+    ask:
+      label: Immich API key
+      description: Create one in Immich under Account settings > API keys. Kiosk shows the photos this Immich user can see.
+      secret: true
+  # Kiosk's own simple password: open the slideshow at its address followed by
+  # ?password=<this value>. Read it afterwards on the app's variables page.
+  KIOSK_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and the clock when Kiosk reads the time from the server, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: immich-kiosk, port: 3000 }

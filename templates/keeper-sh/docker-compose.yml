@@ -1,0 +1,25 @@
+services:
+  keeper:
+    # The "standalone" image: web, API, sync cron and worker, MCP server,
+    # PostgreSQL, Redis and Caddy in one container, as the README recommends.
+    image: ghcr.io/ridafkih/keeper-standalone:2.31.0
+    restart: unless-stopped
+    environment:
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      # Encrypts stored calendar credentials; keep it, or saved accounts stop working.
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      # The app's own address, for sign-in redirects and CSRF checks.
+      BETTER_AUTH_URL: ${KEEPER_URL}
+      TRUSTED_ORIGINS: ${KEEPER_URL}
+      # Optional: needed only to connect Google Calendar or Outlook, with
+      # OAuth apps you register yourself (see the README).
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID:-}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET:-}
+    volumes:
+      # The built-in PostgreSQL database holds every account and setting.
+      - keeper-data:/var/lib/postgresql/data
+
+volumes:
+  keeper-data:

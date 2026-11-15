@@ -1,0 +1,310 @@
+# OpenSlides 4.3.7, from the compose file the official setup tool writes
+# (openslides-cli contrib/docker-compose.yml.tmpl, `osmanage setup`) with
+# enableLocalHTTPS: false, as INSTALL.md says for a proxy that handles HTTPS:
+# Cloudgate serves the address over HTTPS and the OpenSlides proxy speaks plain
+# HTTP behind it.
+#
+# The setup tool writes its secrets into files that Docker hands to the services
+# under /run/secrets/. Here the openslides-secrets service writes the same files,
+# from the generated inputs, into a volume the services read at /run/secrets/.
+# Other changes from the official file: the services are named openslides-*, so
+# every *_HOST below says where each one is; the internal networks are left out,
+# so every service shares the stack's one network; and
+# backendManage's port 9002 is not published to the host.
+x-openslides-env: &openslides-env
+  ACTION_HOST: openslides-backend-action
+  ACTION_PORT: "9002"
+  PRESENTER_HOST: openslides-backend-presenter
+  PRESENTER_PORT: "9003"
+  AUTOUPDATE_HOST: openslides-autoupdate
+  AUTOUPDATE_PORT: "9012"
+  AUTH_HOST: openslides-auth
+  AUTH_PORT: "9004"
+  PROJECTOR_HOST: openslides-projector
+  PROJECTOR_PORT: "9051"
+  SEARCH_HOST: openslides-search
+  SEARCH_PORT: "9050"
+  RESTRICTER_URL: http://openslides-autoupdate:9012/internal/autoupdate
+  VOTE_HOST: openslides-vote
+  VOTE_PORT: "9013"
+  CACHE_HOST: openslides-redis
+  CACHE_PORT: "6379"
+  MESSAGE_BUS_HOST: openslides-redis
+  MESSAGE_BUS_PORT: "6379"
+  MEDIA_HOST: openslides-media
+  MEDIA_PORT: "9006"
+  ICC_HOST: openslides-icc
+  ICC_PORT: "9007"
+  CLIENT_HOST: openslides-client
+  CLIENT_PORT: "9001"
+  DATABASE_HOST: openslides-db
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: openslides
+  DATABASE_USER: openslides
+  DATABASE_PASSWORD_FILE: /run/secrets/postgres_password
+  MEDIA_DATABASE_HOST: openslides-db
+  MEDIA_DATABASE_PORT: "5432"
+  MEDIA_DATABASE_NAME: openslides
+  MEDIA_DATABASE_USER: openslides
+  MEDIA_DATABASE_PASSWORD_FILE: /run/secrets/postgres_password
+  VOTE_DATABASE_HOST: openslides-db
+  VOTE_DATABASE_PORT: "5432"
+  VOTE_DATABASE_NAME: openslides
+  VOTE_DATABASE_USER: openslides
+  VOTE_DATABASE_PASSWORD_FILE: /run/secrets/postgres_password
+  INTERNAL_AUTH_PASSWORD_FILE: /run/secrets/internal_auth_password
+  AUTH_TOKEN_KEY_FILE: /run/secrets/auth_token_key
+  AUTH_COOKIE_KEY_FILE: /run/secrets/auth_cookie_key
+  SUPERADMIN_PASSWORD_FILE: /run/secrets/superadmin
+  OPENSLIDES_LOGLEVEL: info
+  OPENSLIDES_DEVELOPMENT: "false"
+
+services:
+  # Runs once at each start: writes the generated secrets as the files the
+  # services read, without a trailing newline, as the setup tool writes them.
+  openslides-secrets:
+    image: busybox:1.37.0
+    restart: "no"
+    environment:
+      AUTH_TOKEN_KEY: ${AUTH_TOKEN_KEY}
+      AUTH_COOKIE_KEY: ${AUTH_COOKIE_KEY}
+      INTERNAL_AUTH_PASSWORD: ${INTERNAL_AUTH_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD}
+    command:
+      - sh
+      - -c
+      - >-
+        cd /secrets &&
+        printf '%s' "$$AUTH_TOKEN_KEY" > auth_token_key &&
+        printf '%s' "$$AUTH_COOKIE_KEY" > auth_cookie_key &&
+        printf '%s' "$$INTERNAL_AUTH_PASSWORD" > internal_auth_password &&
+        printf '%s' "$$POSTGRES_PASSWORD" > postgres_password &&
+        printf '%s' "$$SUPERADMIN_PASSWORD" > superadmin &&
+        chmod 0444 auth_token_key auth_cookie_key internal_auth_password postgres_password superadmin
+    volumes:
+      - openslides-secrets:/secrets
+
+  # The proxy (Traefik): the web address. It sends each path to its service.
+  openslides:
+    image: ghcr.io/openslides/openslides/openslides-proxy:4.3.7
+    restart: unless-stopped
+    depends_on:
+      - openslides-client
+      - openslides-backend-action
+      - openslides-backend-presenter
+      - openslides-autoupdate
+      - openslides-search
+      - openslides-projector
+      - openslides-auth
+      - openslides-media
+      - openslides-icc
+      - openslides-vote
+    environment:
+      <<: *openslides-env
+
+  # The web app people use in the browser.
+  openslides-client:
+    image: ghcr.io/openslides/openslides/openslides-client:4.3.7
+    restart: unless-stopped
+    environment:
+      <<: *openslides-env
+
+  openslides-backend-action:
+    image: ghcr.io/openslides/openslides/openslides-backend:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+      openslides-backend-manage:
+        condition: service_started
+    environment:
+      <<: *openslides-env
+      OPENSLIDES_BACKEND_COMPONENT: action
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  openslides-backend-presenter:
+    image: ghcr.io/openslides/openslides/openslides-backend:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+    environment:
+      <<: *openslides-env
+      OPENSLIDES_BACKEND_COMPONENT: presenter
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  # Sets up the database and, on the first start, the superadmin account with
+  # the generated SUPERADMIN_PASSWORD (OPENSLIDES_BACKEND_CREATE_INITIAL_DATA).
+  # The MIG0100_* settings are the example config's, for the 4.3 data migration.
+  openslides-backend-manage:
+    image: ghcr.io/openslides/openslides/openslides-backend:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+    environment:
+      <<: *openslides-env
+      OPENSLIDES_BACKEND_COMPONENT: action
+      OPENSLIDES_BACKEND_CREATE_INITIAL_DATA: "1"
+      MIG0100_I_READ_DOCS: "1"
+      MIG0100_TIMEZONE: Europe/Berlin
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  # Live updates to every open browser.
+  openslides-autoupdate:
+    image: ghcr.io/openslides/openslides/openslides-autoupdate:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+      openslides-redis:
+        condition: service_healthy
+    environment:
+      <<: *openslides-env
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  openslides-search:
+    image: ghcr.io/openslides/openslides/openslides-search:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+      openslides-autoupdate:
+        condition: service_started
+    environment:
+      <<: *openslides-env
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  # The projector: what the beamer in the meeting room shows.
+  openslides-projector:
+    image: ghcr.io/openslides/openslides/openslides-projector:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+      openslides-autoupdate:
+        condition: service_started
+      openslides-backend-action:
+        condition: service_started
+    environment:
+      <<: *openslides-env
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  openslides-auth:
+    image: ghcr.io/openslides/openslides/openslides-auth:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+      openslides-redis:
+        condition: service_healthy
+    environment:
+      <<: *openslides-env
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  # Electronic voting.
+  openslides-vote:
+    image: ghcr.io/openslides/openslides/openslides-vote:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+      openslides-redis:
+        condition: service_healthy
+      openslides-auth:
+        condition: service_started
+      openslides-autoupdate:
+        condition: service_started
+    environment:
+      <<: *openslides-env
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  # Uploaded files; OpenSlides 4.3 keeps them in the database.
+  openslides-media:
+    image: ghcr.io/openslides/openslides/openslides-media:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+    environment:
+      <<: *openslides-env
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  # Messages between clients (notifications, applause).
+  openslides-icc:
+    image: ghcr.io/openslides/openslides/openslides-icc:4.3.7
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+      openslides-db:
+        condition: service_healthy
+      openslides-redis:
+        condition: service_healthy
+    environment:
+      <<: *openslides-env
+    volumes:
+      - openslides-secrets:/run/secrets:ro
+
+  # The official file uses postgres:17.10; this is the current 17.x on Alpine.
+  openslides-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    depends_on:
+      openslides-secrets:
+        condition: service_completed_successfully
+    environment:
+      POSTGRES_DB: openslides
+      POSTGRES_USER: openslides
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+      - openslides-db-data:/var/lib/postgresql/data
+      - openslides-secrets:/run/secrets:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openslides -d openslides"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # A cache and message bus only: as upstream, it saves nothing to disk.
+  openslides-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", ""]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  openslides-db-data:
+  openslides-secrets:

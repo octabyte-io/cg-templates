@@ -1,0 +1,54 @@
+name: Gathio
+description: "Self-hosted Gathio makes simple event pages where guests RSVP without an account. Share one link, and edit your event with a private one."
+version: "1.6.7"
+tags: [evite alternative, facebook events alternative, partiful alternative, rsvp, event page, invitations, event planning]
+links:
+  website: https://gath.io
+  docs: https://docs.gath.io
+  source: https://github.com/lowercasename/gathio
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Gathio wants its address without https://.
+  GATHIO_DOMAIN: { value: "{{domains.gathio.host}}" }
+  GATHIO_EMAIL:
+    ask:
+      label: Contact and sender email
+      description: >-
+        Shown on the site as the contact address, and the address Gathio's emails
+        (such as the private edit link for a new event) come from.
+      format: email
+  GATHIO_SITE_NAME:
+    ask:
+      label: Site name
+      description: The name shown at the top of every page.
+      default: Gathio
+  GATHIO_SMTP_SERVER:
+    ask:
+      label: Email server (SMTP) address
+      description: >-
+        Optional, but recommended: without it Gathio can't email hosts the private link
+        that lets them edit their event. Your email provider gives you this, such as
+        smtp.mailgun.org. Leave it empty to turn email off.
+      default: ""
+      required: false
+  GATHIO_SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  GATHIO_SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  GATHIO_SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: gathio, port: 3000 }
+files:
+  - { path: config.toml }

@@ -1,0 +1,74 @@
+# Kyoo's routes, from the official Helm chart (chart/templates/traefikproxy/
+# configmap.yaml at v5.3.0). The official docker-compose.yml builds the same
+# routes from container labels, which needs the Docker socket; this file does
+# it without. Every request reaches Kyoo through this router.
+http:
+  routers:
+    front:
+      entryPoints: [web]
+      service: front
+      rule: "PathPrefix(`/`)"
+    video:
+      entryPoints: [web]
+      middlewares: [cors, phantomtoken]
+      service: transcoder
+      rule: "PathPrefix(`/video`)"
+    auth:
+      entryPoints: [web]
+      middlewares: [stripforwarded]
+      service: auth
+      rule: "PathPrefix(`/auth/`)"
+    wellknown:
+      entryPoints: [web]
+      service: auth
+      rule: "PathPrefix(`/.well-known/`)"
+    api:
+      entryPoints: [web]
+      middlewares: [cors, phantomtoken]
+      service: api
+      rule: "PathPrefix(`/api/`)"
+    swagger:
+      entryPoints: [web]
+      service: api
+      rule: "PathPrefix(`/swagger`)"
+    scanner:
+      entryPoints: [web]
+      middlewares: [phantomtoken]
+      service: scanner
+      rule: "PathPrefix(`/scanner/`)"
+  middlewares:
+    # The auth service turns a session cookie or API key into a signed token.
+    phantomtoken:
+      forwardAuth:
+        address: "http://auth:4568/auth/jwt"
+        authRequestHeaders: [Authorization, X-Api-Key, Cookie, Sec-WebSocket-Protocol]
+        authResponseHeaders: [Authorization]
+    # Only forwardAuth requests may set these (the auth service checks
+    # presigned links against them), never a client calling /auth/ directly.
+    stripforwarded:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Uri: ""
+          X-Forwarded-Method: ""
+    cors:
+      headers:
+        accessControlAllowOriginList: ["*"]
+        accessControlAllowMethods: [GET, OPTIONS]
+        accessControlAllowHeaders: [Authorization, Content-Type, Range, X-Api-Key]
+        addVaryHeader: true
+  services:
+    front:
+      loadBalancer:
+        servers: [{ url: "http://front:8901/" }]
+    api:
+      loadBalancer:
+        servers: [{ url: "http://api:3567/" }]
+    transcoder:
+      loadBalancer:
+        servers: [{ url: "http://transcoder:7666/" }]
+    auth:
+      loadBalancer:
+        servers: [{ url: "http://auth:4568/" }]
+    scanner:
+      loadBalancer:
+        servers: [{ url: "http://scanner:4389/" }]

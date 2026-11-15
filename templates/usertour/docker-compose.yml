@@ -1,0 +1,64 @@
+services:
+  usertour:
+    image: usertour/usertour:0.9.8
+    restart: unless-stopped
+    depends_on:
+      usertour-db:
+        condition: service_healthy
+      usertour-redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://usertour:${DB_PASSWORD}@usertour-db:5432/usertour?schema=usertour&sslmode=disable
+      DATABASE_DIRECT_URL: postgresql://usertour:${DB_PASSWORD}@usertour-db:5432/usertour?schema=usertour&sslmode=disable
+      Redis_HOST: usertour-redis
+      Redis_PORT: "6379"
+      Redis_PASS: ""
+      Redis_TLS: "false"
+      APP_HOMEPAGE_URL: ${APP_URL}
+      API_URL: ${APP_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_TIME: 1h
+      JWT_REFRESH_EXPIRATION_TIME: 7d
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      LOGIN_REDIRECT_URL: /env/1/flows
+      EMAIL_AUTH_ENABLED: "true"
+      GITHUB_AUTH_ENABLED: "false"
+      GOOGLE_AUTH_ENABLED: "false"
+      # Optional: an email service for team invitations and password resets.
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_USER: ${EMAIL_USER:-}
+      EMAIL_PASS: ${EMAIL_PASS:-}
+      EMAIL_SENDER: ${EMAIL_SENDER:-}
+
+  usertour-db:
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: usertour
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: usertour
+    volumes:
+      - usertour-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usertour"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  usertour-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: [redis-server, --appendonly, "yes"]
+    volumes:
+      - usertour-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  usertour-db-data:
+  usertour-redis-data:

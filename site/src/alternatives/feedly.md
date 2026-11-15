@@ -6,8 +6,11 @@ apps:
   miniflux:
     fit: "The lighter, minimalist choice: one fast, plain list of new articles from every feed, with full-text fetching for feeds that send only a summary, tracker removal and keyboard shortcuts, and no feed limit. It saves articles to apps such as Wallabag, Instapaper and Readwise Reader. It has no AI features, boards, plugins or official phone app, and shows no article thumbnails."
     import: yes
+  glance:
+    fit: "Not a feed reader but a start page that shows the latest headlines from your feeds next to weather, bookmarks and other widgets. It has no read or unread state, no starring, no OPML import and no phone-app sync, so it suits skimming headlines rather than reading everything."
+    import: no
 moving: |
-  In Feedly, export your sources as an OPML file. In FreshRSS, open Subscription management, then Import / export, and import that file; in Miniflux, use Import under Feeds. Your feeds come across with their folders as categories. Starred articles, boards and notes from Feedly do not move with the OPML file. To read on your phone, turn on the Google Reader or Fever API, in your FreshRSS profile or in Miniflux's Integrations settings, and add your reader's address to a phone app that supports it.
+  In Feedly, export your sources as an OPML file. In FreshRSS, open Subscription management, then Import / export, and import that file; in Miniflux, use Import under Feeds. Your feeds come across with their folders as categories. Starred articles, boards and notes from Feedly do not move with the OPML file. To read on your phone, turn on the Google Reader or Fever API, in your FreshRSS profile or in Miniflux's Integrations settings, and add your reader's address to a phone app that supports it. Glance has no OPML import: add each feed's address to an RSS widget in its glance.yml settings file.
 faq:
   - q: "Should I choose FreshRSS or Miniflux?"
     a: "Choose FreshRSS if you want extensions, grid and reading views, and feeds made from web pages. Choose Miniflux if you want the simplest, fastest reader with privacy filtering built in. Both are free, have no feed limit and sync with phone reader apps."
@@ -17,6 +20,8 @@ faq:
     a: "Not an official one. FreshRSS works with free and paid reader apps that use the Google Reader or Fever API, such as NetNewsWire, Reeder Classic, FeedMe and Readrops, and read and starred articles stay in step."
   - q: "Do FreshRSS and Miniflux have AI features like Feedly's?"
     a: "No. Neither has AI summaries or AI ranking. They show every article from your feeds, and you narrow them down with categories, search and filter rules."
+  - q: "Is Glance a Feedly alternative?"
+    a: "Only for skimming headlines. Glance shows the newest items from each feed on a start page, but it does not track what you have read, star articles or sync with phone apps; for that, choose FreshRSS or Miniflux."
 ---
 
 Feedly is a hosted feed reader: you follow news sites, blogs and other sources, and Feedly gathers their new articles in one place, on the web and in its phone apps.

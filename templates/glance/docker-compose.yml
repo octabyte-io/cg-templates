@@ -1,0 +1,27 @@
+# From Glance's official Docker setup (README, "Docker compose manual"), without
+# ports and the host's /etc/localtime: Cloudgate routes the web address. The
+# dashboard is files/glance.yml; Glance reloads it when it changes.
+services:
+  glance:
+    image: glanceapp/glance:v0.8.8
+    restart: unless-stopped
+    # files/glance-start.sh.txt makes the sign-in secret key once, keeps it in
+    # the data volume, then starts Glance as the image's entrypoint does.
+    entrypoint: ["sh", "/cloudgate/glance-start.sh"]
+    environment:
+      # Read by glance.yml as ${ADMIN_PASSWORD} and ${WEATHER_LOCATION}.
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      WEATHER_LOCATION: ${WEATHER_LOCATION}
+    volumes:
+      - ../files/glance.yml:/app/config/glance.yml:ro
+      - ../files/glance-start.sh.txt:/cloudgate/glance-start.sh:ro
+      - glance-data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/api/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+volumes:
+  glance-data:

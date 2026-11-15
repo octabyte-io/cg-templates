@@ -1,0 +1,38 @@
+services:
+  calnode:
+    # The official image (github.com/Calnode/calnode, DEPLOY.md "Generic Docker"), pinned to
+    # one release. A single Go binary with an embedded SQLite database on port 3000.
+    image: ghcr.io/calnode/calnode:0.14.0
+    restart: unless-stopped
+    environment:
+      # The app's own https address: admin UI, booking links and OAuth callbacks. An https
+      # address switches on production mode, which requires the encryption key below.
+      BASE_URL: ${BASE_URL}
+      DATABASE_URL: sqlite:///data/calnode.db
+      # Unlocks stored secrets (email, calendar and OAuth credentials). Losing it makes them
+      # unreadable; the recovery secret lets `calnode recover-key` restore access.
+      CALNODE_ENCRYPTION_KEY: ${CALNODE_ENCRYPTION_KEY}
+      CALNODE_RECOVERY_SECRET: ${CALNODE_RECOVERY_SECRET}
+      # Cloudgate's proxy sits in front on a private network; trust it so per-visitor rate
+      # limits see each visitor's own address.
+      TRUSTED_PROXY_CIDRS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      # Optional sign-in and calendar sync. Google can also be set later in Settings,
+      # Google OAuth; Microsoft only through these variables.
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID:-}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET:-}
+      # Email (SMTP or a Resend API key) is set in the app's Settings, Email.
+    volumes:
+      # The SQLite database.
+      - calnode-data:/data
+    healthcheck:
+      # The image is Alpine, so busybox wget is there. /healthz answers 200 once the server is up.
+      test: ["CMD-SHELL", "wget -qO /dev/null http://127.0.0.1:3000/healthz || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  calnode-data:

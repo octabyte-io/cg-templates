@@ -1,0 +1,24 @@
+services:
+  immich-kiosk:
+    image: ghcr.io/damongolding/immich-kiosk:0.47.1
+    restart: unless-stopped
+    # From the project's docker-compose.yaml; Kiosk keeps nothing on disk and
+    # is set up only through these environment variables (no config.yaml).
+    tty: true
+    environment:
+      TZ: ${TIMEZONE}
+      # The Immich server whose photos Kiosk shows, and an API key from it.
+      KIOSK_IMMICH_URL: ${KIOSK_IMMICH_URL}
+      KIOSK_IMMICH_API_KEY: ${KIOSK_IMMICH_API_KEY}
+      # Kiosk answers only requests that carry this password, as
+      # ?password=... in the address or an X-Api-Key / Authorization header.
+      KIOSK_PASSWORD: ${KIOSK_PASSWORD}
+      # Cloudgate's proxy sits in front: read the visitor's IP from
+      # X-Forwarded-For, which Kiosk uses to tell screens apart.
+      KIOSK_BEHIND_PROXY: "true"
+    healthcheck:
+      test: ["CMD", "/kiosk", "--healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

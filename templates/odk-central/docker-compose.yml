@@ -1,0 +1,222 @@
+# ODK Central, from the official getodk/central docker-compose.yml (v2026.3.1), using
+# only published images. Upstream builds four images itself; here:
+#   - service and nginx use the images ODK publishes on GHCR (central-service, central-nginx);
+#   - enketo uses Enketo's own published image, with ODK's config template from files/;
+#   - postgres14 uses the official postgres:14 image (a fresh install needs no 9.6 upgrade);
+#   - the secrets generator runs ODK's own commands in the central-service image.
+# nginx runs with SSL_TYPE=upstream: Cloudgate's proxy does HTTPS, so there is no
+# Let's Encrypt inside the stack.
+services:
+  odk-central:
+    image: ghcr.io/getodk/central-nginx:v2026.3.1
+    restart: unless-stopped
+    depends_on:
+      service:
+        condition: service_healthy
+      enketo:
+        condition: service_started
+    environment:
+      DOMAIN: ${DOMAIN}
+      CERTBOT_EMAIL: ${ADMIN_EMAIL}
+      SSL_TYPE: upstream
+      OIDC_ENABLED: "false"
+      SENTRY_ORG_SUBDOMAIN: o130137
+      SENTRY_KEY: 3cf75f54983e473da6bd07daddf0d2ee
+      SENTRY_PROJECT: "1298632"
+      SENTRY_DSN_FRONTEND: ""
+    volumes:
+      - ../files/nginx-odk.conf.tmpl:/usr/share/odk/nginx/odk.conf.template:ro
+      - ../files/nginx-client-config.json.tmpl:/usr/share/odk/nginx/client-config.json.template:ro
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 80 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  service:
+    image: ghcr.io/getodk/central-service:v2026.3.1
+    restart: unless-stopped
+    depends_on:
+      secrets:
+        condition: service_completed_successfully
+      postgres14:
+        condition: service_healthy
+      mail:
+        condition: service_started
+      pyxform:
+        condition: service_started
+    # The built-in mail relay takes mail without TLS; a real email server gets STARTTLS.
+    command:
+      - bash
+      - -c
+      - '[ "$$EMAIL_HOST" = mail ] || export EMAIL_IGNORE_TLS=false; exec ./start-odk.sh'
+    environment:
+      DOMAIN: ${DOMAIN}
+      SYSADMIN_EMAIL: ${ADMIN_EMAIL}
+      HTTPS_PORT: "443"
+      NODE_OPTIONS: ""
+      PGHOST: postgres14
+      PGDATABASE: odk
+      PGUSER: odk
+      PGPASSWORD: ${DB_PASSWORD}
+      PGAPPNAME: odkcentral
+      DB_SSL: "null"
+      DB_POOL_SIZE: "10"
+      EMAIL_FROM: ${EMAIL_FROM:-no-reply@${DOMAIN}}
+      EMAIL_HOST: ${EMAIL_HOST:-mail}
+      EMAIL_PORT: ${EMAIL_PORT:-25}
+      EMAIL_SECURE: ${EMAIL_SECURE:-false}
+      EMAIL_IGNORE_TLS: "true"
+      EMAIL_USER: ${EMAIL_USER:-}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD:-}
+      OIDC_ENABLED: "false"
+      OIDC_ISSUER_URL: ""
+      OIDC_CLIENT_ID: ""
+      OIDC_CLIENT_SECRET: ""
+      SENTRY_ORG_SUBDOMAIN: o130137
+      SENTRY_KEY: 3cf75f54983e473da6bd07daddf0d2ee
+      SENTRY_PROJECT: "1298632"
+      SENTRY_TRACE_RATE: "0.1"
+      S3_SERVER: ""
+      S3_ACCESS_KEY: ""
+      S3_SECRET_KEY: ""
+      S3_BUCKET_NAME: ""
+      SESSION_LIFETIME: "86400"
+    volumes:
+      - secrets:/etc/secrets
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8383 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # Runs once at each start: creates the first administrator (the email you gave, with the
+  # generated password) if that account does not exist yet. Upstream does this by hand
+  # with `odk-cmd user-create` and `odk-cmd user-promote`; this runs the same commands.
+  odk-central-admin:
+    image: ghcr.io/getodk/central-service:v2026.3.1
+    restart: "no"
+    depends_on:
+      service:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres14
+      PGDATABASE: odk
+      PGUSER: odk
+      PGPASSWORD: ${DB_PASSWORD}
+      NODE_CONFIG: '{"default":{"database":{"host":"","user":"","password":"","database":""}}}'
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    command:
+      - bash
+      - -c
+      - |
+        set -eu
+        exists=$$(echo "SELECT count(*) FROM users WHERE lower(email) = lower(:'email');" | psql -tA -v email="$$ADMIN_EMAIL")
+        if [ "$$exists" != "0" ]; then echo "Admin $$ADMIN_EMAIL already exists."; exit 0; fi
+        printf '%s\n' "$$ADMIN_PASSWORD" | odk-cmd --email "$$ADMIN_EMAIL" user-create
+        odk-cmd --email "$$ADMIN_EMAIL" user-promote
+        echo "Created admin $$ADMIN_EMAIL."
+
+  # Upstream's secrets.dockerfile + generate-secrets.sh: Enketo's keys, made once.
+  secrets:
+    image: ghcr.io/getodk/central-service:v2026.3.1
+    restart: "no"
+    command:
+      - bash
+      - -c
+      - |
+        cd /etc/secrets
+        [ -f enketo-secret ] || head -c1024 /dev/urandom | LC_ALL=C tr -dc '[:alnum:]' | head -c64 > enketo-secret
+        [ -f enketo-less-secret ] || head -c512 /dev/urandom | LC_ALL=C tr -dc '[:alnum:]' | head -c32 > enketo-less-secret
+        [ -f enketo-api-key ] || head -c2048 /dev/urandom | LC_ALL=C tr -dc '[:alnum:]' | head -c128 > enketo-api-key
+        ls -l /etc/secrets
+    volumes:
+      - secrets:/etc/secrets
+
+  enketo:
+    image: ghcr.io/enketo/enketo:7.6.4
+    restart: unless-stopped
+    depends_on:
+      secrets:
+        condition: service_completed_successfully
+      enketo_redis_main:
+        condition: service_healthy
+      enketo_redis_cache:
+        condition: service_healthy
+    working_dir: /srv/src/enketo/packages/enketo-express
+    environment:
+      DOMAIN: ${DOMAIN}
+    # Upstream's start-enketo.sh: fill ODK's config template with the secrets, then start.
+    command:
+      - bash
+      - -c
+      - |
+        set -eu
+        export BASE_URL="https://$$DOMAIN"
+        export SECRET="$$(cat /etc/secrets/enketo-secret)"
+        export LESS_SECRET="$$(cat /etc/secrets/enketo-less-secret)"
+        export API_KEY="$$(cat /etc/secrets/enketo-api-key)"
+        node -e 'const t=require("fs").readFileSync(0,"utf8");process.stdout.write(t.replace(/\$$\{([A-Z_][A-Z_0-9]*)\}/g,(m,k)=>{if(!(k in process.env))throw new Error("missing "+k);return process.env[k];}));' < /odk/enketo-config.json.tmpl > config/config.json
+        exec yarn workspace enketo-express start
+    volumes:
+      - secrets:/etc/secrets
+      - ../files/enketo-config.json.tmpl:/odk/enketo-config.json.tmpl:ro
+
+  enketo_redis_main:
+    image: redis:8.10.1
+    restart: unless-stopped
+    command: [redis-server, --port, "6379", --save, "300 1", --dbfilename, enketo-main.rdb]
+    volumes:
+      - enketo_redis_main:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  enketo_redis_cache:
+    image: redis:8.10.1
+    restart: unless-stopped
+    command: [redis-server, --port, "6380", --save, "3600 1", --dbfilename, enketo-cache.rdb]
+    volumes:
+      - enketo_redis_cache:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6380", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  pyxform:
+    image: ghcr.io/getodk/pyxform-http:v4.5.0
+    restart: unless-stopped
+
+  # Upstream's outgoing mail relay. Used unless you fill in your own email server.
+  mail:
+    image: registry.gitlab.com/egos-tech/smtp:2.0.7
+    restart: unless-stopped
+    environment:
+      MAILNAME: ${DOMAIN}
+
+  postgres14:
+    image: postgres:14.24
+    restart: unless-stopped
+    shm_size: 512m
+    environment:
+      POSTGRES_USER: odk
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: odk
+    volumes:
+      - postgres14:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odk -d odk"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  secrets:
+  postgres14:
+  enketo_redis_main:
+  enketo_redis_cache:
