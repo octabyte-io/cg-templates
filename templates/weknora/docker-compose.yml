@@ -1,0 +1,131 @@
+# Based on the official docker-compose.yml of WeKnora v0.9.0
+# (https://github.com/Tencent/WeKnora/blob/v0.9.0/docker-compose.yml): the
+# web UI, the app (API and background jobs), the document reader, ParadeDB
+# (Postgres with vector and full-text search) and Redis. The optional
+# profiles (sandbox, MinIO, Qdrant, Milvus, Weaviate, Doris, SearXNG,
+# Langfuse, MCP server, Dex) are left out. Files are kept on a local volume.
+# Language and embedding models are added in the web UI after setup.
+services:
+  frontend:
+    image: wechatopenai/weknora-ui:v0.9.0
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      MAX_FILE_SIZE_MB: "50"
+      # The UI defaults to Chinese; start it in English.
+      DEFAULT_LOCALE: en-US
+      # nginx in this container forwards /api to the app service.
+      APP_HOST: app
+      APP_PORT: "8080"
+      APP_SCHEME: http
+
+  app:
+    image: wechatopenai/weknora-app:v0.9.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      docreader:
+        condition: service_healthy
+    environment:
+      GIN_MODE: release
+      LOG_LEVEL: info
+      TZ: UTC
+      AUTO_MIGRATE: "true"
+      AUTO_RECOVER_DIRTY: "true"
+      # Used for invitation links.
+      FRONTEND_BASE_URL: ${APP_URL}
+      DB_DRIVER: postgres
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: weknora
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: weknora
+      RETRIEVE_DRIVER: postgres
+      STORAGE_TYPE: local
+      LOCAL_STORAGE_BASE_DIR: /data/files
+      DOCREADER_ADDR: docreader:50051
+      DOCREADER_TRANSPORT: grpc
+      STREAM_MANAGER_TYPE: redis
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_DB: "0"
+      REDIS_PREFIX: "stream:"
+      # No local Ollama: models come from the providers set up in the UI.
+      OLLAMA_OPTIONAL: "true"
+      # Signs sign-in tokens.
+      JWT_SECRET: ${JWT_SECRET}
+      # Encrypts stored API keys; must be exactly 32 characters.
+      SYSTEM_AES_KEY: ${SYSTEM_AES_KEY}
+      SYSTEM_SIGNING_KEY: ${SYSTEM_SIGNING_KEY}
+      # This account becomes the system administrator once it has signed up
+      # (checked at each start while no administrator exists).
+      WEKNORA_BOOTSTRAP_SYSTEM_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      MAX_FILE_SIZE_MB: "50"
+    volumes:
+      - weknora-files:/data/files
+      - weknora-docreader-tmp:/tmp/docreader:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  docreader:
+    image: wechatopenai/weknora-docreader:v0.9.0
+    restart: unless-stopped
+    environment:
+      TZ: UTC
+      DOCREADER_IMAGE_OUTPUT_DIR: /tmp/docreader
+      DOCREADER_GRPC_PORT: "50051"
+      DOCREADER_GRPC_MAX_FILE_SIZE_MB: "50"
+    volumes:
+      - weknora-docreader-tmp:/tmp/docreader
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr=localhost:50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  postgres:
+    image: paradedb/paradedb:v0.25.11-pg17
+    restart: unless-stopped
+    stop_grace_period: 1m
+    environment:
+      POSTGRES_USER: weknora
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: weknora
+    volumes:
+      - weknora-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U weknora -d weknora"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:7.0.15-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - weknora-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+volumes:
+  weknora-files:
+  weknora-docreader-tmp:
+  weknora-db-data:
+  weknora-redis-data:
