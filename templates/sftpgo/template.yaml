@@ -1,0 +1,19 @@
+name: SFTPGo
+description: "SFTPGo is a self-hosted file transfer server: give clients and partners their own accounts, folders and upload links to swap files in the browser."
+version: "v2.7.6-alpine"
+tags: [file transfer server, secure file sharing, client file exchange, sharefile alternative, box alternative, upload link, sftpgo]
+links:
+  website: https://sftpgo.com
+  docs: https://docs.sftpgo.com/
+  source: https://github.com/drakkan/sftpgo
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The password of the first admin, "admin". SFTPGo creates this admin on the
+  # first start only (when there is no admin yet); change it later in WebAdmin.
+  SFTPGO_DEFAULT_ADMIN_PASSWORD: { generate: password }
+  # Signs WebAdmin and WebClient sessions, so a restart doesn't sign everyone out.
+  SFTPGO_SIGNING_PASSPHRASE: { generate: hex }
+domains:
+  - { service: sftpgo, port: 8080 }

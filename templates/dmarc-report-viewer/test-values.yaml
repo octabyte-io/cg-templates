@@ -1,0 +1,5 @@
+IMAP_HOST: imap.example.com
+IMAP_PORT: "993"
+IMAP_USER: dmarc-reports@example.com
+IMAP_PASSWORD: example-mailbox-password
+IMAP_FOLDER: INBOX

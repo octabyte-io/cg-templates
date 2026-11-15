@@ -1,0 +1,24 @@
+name: Glance
+description: "Glance is a free, self-hosted start page with your news feeds, weather, calendar, bookmarks, to-dos and website status on one fast page."
+version: "v0.8.8"
+tags: [self-hosted start page, start.me alternative, personal dashboard, rss dashboard, homepage dashboard, feedly alternative]
+links:
+  website: https://github.com/glanceapp/glance
+  docs: https://github.com/glanceapp/glance/blob/main/docs/configuration.md
+  source: https://github.com/glanceapp/glance
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The password of the "admin" account on Glance's sign-in page.
+  ADMIN_PASSWORD: { generate: password }
+  WEATHER_LOCATION:
+    ask:
+      label: Weather location
+      description: The city the weather widget shows, as "City, Country". You can change it later in glance.yml.
+      default: "London, United Kingdom"
+domains:
+  - { service: glance, port: 8080 }
+files:
+  - { path: glance.yml }
+  - { path: glance-start.sh.txt }

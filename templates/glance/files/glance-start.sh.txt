@@ -1,0 +1,19 @@
+# Starts Glance. Glance's sign-in needs a secret key of 64 random bytes, made
+# with its own `secret:make` command. This makes one on the first start, keeps
+# it in the data volume so sign-ins survive restarts, and passes it to
+# glance.yml as ${GLANCE_SECRET_KEY}.
+set -eu
+
+key_file=/app/data/secret-key
+
+if [ ! -s "$key_file" ]; then
+  echo "cloudgate: first start, making the sign-in secret key"
+  /app/glance secret:make > "$key_file.tmp"
+  mv "$key_file.tmp" "$key_file"
+  chmod 600 "$key_file"
+fi
+
+GLANCE_SECRET_KEY="$(cat "$key_file")"
+export GLANCE_SECRET_KEY
+
+exec /app/glance --config /app/config/glance.yml

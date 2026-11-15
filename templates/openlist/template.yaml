@@ -1,0 +1,18 @@
+name: OpenList
+description: "Self-hosted OpenList puts your cloud drives, S3 buckets and server folders in one web file list to browse, preview, share and open over WebDAV."
+version: "4.2.9"
+tags: [multcloud alternative, alist alternative, cloud drive manager, multiple cloud storage, webdav server, file list, file sharing]
+links:
+  website: https://oplist.org
+  docs: https://doc.oplist.org
+  source: https://github.com/OpenListTeam/OpenList
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The first password of the user "admin", created on the first start only.
+  # Change it later in the app's own profile page.
+  OPENLIST_ADMIN_PASSWORD: { generate: password }
+  SITE_URL: { value: "{{domains.openlist.url}}" }
+domains:
+  - { service: openlist, port: 5244 }
