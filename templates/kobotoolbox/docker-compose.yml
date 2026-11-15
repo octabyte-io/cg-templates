@@ -124,7 +124,14 @@ services:
       - ../files/nginx-forms.conf:/etc/nginx/conf.d/default.conf:ro
       - ../files/nginx-uwsgi.conf:/etc/nginx/kobo-uwsgi.conf:ro
       - kpi-static:/srv/www/kpi:ro
-      - kobocat-media:/media:ro
+      # nocopy: an empty volume is not filled from this image's own /media,
+      # which both nginx containers would otherwise race to do.
+      - type: volume
+        source: kobocat-media
+        target: /media
+        read_only: true
+        volume:
+          nocopy: true
       - kpi-media:/srv/kpi_media:ro
 
   # The data-collection address, the server address KoboCollect asks for.
@@ -138,7 +145,14 @@ services:
       - ../files/nginx-collect.conf:/etc/nginx/conf.d/default.conf:ro
       - ../files/nginx-uwsgi.conf:/etc/nginx/kobo-uwsgi.conf:ro
       - kpi-static:/srv/www/kpi:ro
-      - kobocat-media:/media:ro
+      # nocopy: an empty volume is not filled from this image's own /media,
+      # which both nginx containers would otherwise race to do.
+      - type: volume
+        source: kobocat-media
+        target: /media
+        read_only: true
+        volume:
+          nocopy: true
 
   # Enketo Express: the web forms, which also work offline in a browser.
   kobotoolbox-enketo:
