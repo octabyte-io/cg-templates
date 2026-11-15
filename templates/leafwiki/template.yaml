@@ -1,0 +1,17 @@
+name: LeafWiki
+description: "LeafWiki is a light, self-hosted Markdown wiki for a small team's how-tos and runbooks, with pages in a tree you order and saved as plain files."
+version: "v0.14.2"
+tags: [self-hosted wiki, markdown wiki, confluence alternative, lightweight wiki, team documentation, obsidian wiki]
+links:
+  website: https://leafwiki.com
+  docs: https://github.com/perber/leafwiki#readme
+  source: https://github.com/perber/leafwiki
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  JWT_SECRET: { generate: hex }
+  ADMIN_PASSWORD: { generate: password }
+  PUBLIC_URL: { value: "{{domains.leafwiki.url}}" }
+domains:
+  - { service: leafwiki, port: 8080 }

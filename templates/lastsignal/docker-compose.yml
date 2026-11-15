@@ -1,0 +1,34 @@
+# Based on the official docker-compose.prod.yaml in github.com/giovantenne/lastsignal,
+# using the pre-built image. One container: Rails with Thruster on port 80, SQLite
+# databases and the background jobs (Solid Queue, inside Puma) that send the
+# check-ins and deliver messages. The container prepares its databases on start.
+services:
+  lastsignal:
+    image: ghcr.io/giovantenne/lastsignal:1.1.1
+    restart: unless-stopped
+    environment:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      APP_BASE_URL: ${APP_BASE_URL}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_DOMAIN: ${SMTP_DOMAIN}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+      SMTP_FROM_NAME: LastSignal
+      ALLOWED_EMAILS: ${ALLOWED_EMAILS:-}
+      PROCESS_CHECKINS_INTERVAL_MINUTES: "60"
+      SOLID_QUEUE_IN_PUMA: "true"
+    volumes:
+      - lastsignal-storage:/rails/storage
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  lastsignal-storage:
