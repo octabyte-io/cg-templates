@@ -2200,8 +2200,8 @@ export const PRODUCTS: Product[] = [
     name: 'Goodreads',
     icon: 'goodreads',
     job: 'tracking what you read',
-    lede: 'BookOrbit is a free, open-source Goodreads alternative for keeping a private record of your reading, with status, dates, ratings, reviews, goals and statistics, next to the e-books and audiobooks themselves. Goodreads is a social network owned by Amazon; BookOrbit keeps your reading history on your own server, but it has no friends, community reviews or recommendations, and no Goodreads import.',
-    pick: 'bookorbit',
+    lede: 'Ryot is the free, open-source Goodreads alternative we recommend for tracking what you read: log books and audiobooks with dates, ratings and reviews, see statistics, and import your Goodreads export. Goodreads is a social network owned by Amazon; a self-hosted tracker keeps your reading history on your own server, though it has no friends, community reviews or reading groups.',
+    pick: 'ryot',
   },
   {
     id: 'power-bi',
@@ -2438,6 +2438,13 @@ export const PRODUCTS: Product[] = [
     pick: 'usertour',
   },
   {
+    id: 'mailstore',
+    name: 'MailStore',
+    job: 'archiving company email',
+    lede: 'Open Archiver is a free, open-source MailStore alternative for archiving every company email from Google Workspace, Microsoft 365 or IMAP mailboxes, with full-text search across messages and attachments. MailStore Server is licensed per user and runs on Windows; Open Archiver runs on your own Linux server with no per-user fee in its free edition, though retention policies, legal holds and audit logs are in its paid Enterprise edition.',
+    pick: 'open-archiver',
+  },
+  {
     id: 'trakt',
     name: 'Trakt',
     icon: 'trakt',
@@ -2615,6 +2622,30 @@ export const PRODUCTS: Product[] = [
     job: 'chatting with your PDFs',
     lede: 'Kotaemon is a free, open-source ChatPDF alternative for asking questions about your PDFs and other files, with each answer citing the passage it came from, highlighted in a built-in viewer. ChatPDF’s free plan analyses two documents a day; self-hosted Kotaemon has no daily limit of its own and keeps your files on your server, though you connect your own AI provider or a local model.',
     pick: 'kotaemon',
+  },
+  {
+    id: 'hevy',
+    name: 'Hevy',
+    icon: 'hevy',
+    job: 'logging gym workouts',
+    lede: 'Ryot is a free, open-source Hevy alternative for logging gym workouts as you train, with over 800 exercises, rest timers, supersets and progress graphs, and it imports your Hevy history. Hevy’s free plan limits how many routines and custom exercises you can create; self-hosted Ryot has no subscription, though it has no native phone app and its workout templates are part of the paid Ryot Pro.',
+    pick: 'ryot',
+  },
+  {
+    id: 'elevenlabs',
+    name: 'ElevenLabs',
+    icon: 'elevenlabs',
+    job: 'turning text into natural-sounding speech',
+    lede: 'Kokoro-FastAPI is a free, open-source ElevenLabs alternative for turning text into natural-sounding speech, with 54 ready-made voices in 8 languages, a browser player and an API. ElevenLabs plans are priced by how much speech you generate; self-hosted Kokoro-FastAPI runs on an ordinary server with no graphics card and no per-character bill, though it cannot clone voices.',
+    pick: 'kokoro-fastapi',
+  },
+  {
+    id: 'openai-tts',
+    name: 'OpenAI Text to Speech',
+    icon: 'openai',
+    job: 'text to speech through an API',
+    lede: 'Kokoro-FastAPI is a free, open-source alternative to OpenAI’s text-to-speech API: it offers the same /v1/audio/speech endpoint and maps OpenAI’s voice names to its own voices, so most apps only need a new base address. OpenAI bills every request by usage; self-hosted Kokoro-FastAPI has no per-request charge, though it ignores the style instructions OpenAI’s newer speech models accept.',
+    pick: 'kokoro-fastapi',
   },
 ];
 

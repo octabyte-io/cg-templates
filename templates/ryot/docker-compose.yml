@@ -1,0 +1,38 @@
+services:
+  ryot:
+    image: ignisda/ryot:v10.5.8
+    restart: unless-stopped
+    depends_on:
+      ryot-db:
+        condition: service_healthy
+    environment:
+      TZ: ${TIMEZONE:-Etc/UTC}
+      FRONTEND_URL: ${FRONTEND_URL}
+      DATABASE_URL: postgres://ryot:${POSTGRES_PASSWORD}@ryot-db:5432/ryot
+      SERVER_ADMIN_ACCESS_TOKEN: ${SERVER_ADMIN_ACCESS_TOKEN}
+      DISABLE_TELEMETRY: "true"
+      # Optional provider keys: without them, movies, shows and video games
+      # can't be searched; books, music, podcasts, anime and fitness work.
+      MOVIES_AND_SHOWS_TMDB_ACCESS_TOKEN: ${TMDB_ACCESS_TOKEN:-}
+      VIDEO_GAMES_TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID:-}
+      VIDEO_GAMES_TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET:-}
+
+  ryot-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      TZ: ${TIMEZONE:-Etc/UTC}
+      POSTGRES_USER: ryot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ryot
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - ryot-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ryot -d ryot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ryot-db-data:
