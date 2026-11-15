@@ -1,5 +1,5 @@
 name: Open Journal Systems
-description: "Self-hosted Open Journal Systems (OJS) takes manuscript submissions, runs peer review and publishes journal issues, instead of Scholastica or ScholarOne."
+description: "Open Journal Systems (OJS) is self-hosted software that takes manuscript submissions, runs peer review and publishes journal issues, instead of Scholastica."
 version: "3.5.0-6"
 tags: [scholastica alternative, journal management software, peer review software, academic journal publishing, scholarone alternative, open access journal]
 links:

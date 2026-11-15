@@ -8,7 +8,7 @@ license: MIT
 goodFor: People and small teams wanting an always-on AI assistant in their own chat apps
 features:
   - title: Message it from the apps you already use
-    text: Talk to your assistant in WhatsApp, Telegram, Slack, Discord, Signal, Microsoft Teams and 20 more, in direct messages or group chats.
+    text: Talk to your assistant in WhatsApp, Telegram, Slack, Discord, Signal, Microsoft Teams and many more, in direct messages or group chats.
   - title: Choose the AI model
     text: Connect Anthropic, OpenAI, Google or another provider, or a local model through Ollama or LM Studio, and switch later.
   - title: Let it do tasks, not only answer
@@ -48,7 +48,7 @@ faq:
   - q: Is it safe to run OpenClaw on a server?
     a: Yes, if you keep access to OpenClaw tight. OpenClaw can run commands and use files on its server, so the project asks you to read its security guide before connecting other people, and to run a separate copy for people who don't trust each other. By default, strangers who message OpenClaw must be approved before it answers them.
   - q: What server size do I need for OpenClaw?
-    a: Plan for a server with at least 4 GB of memory when the AI model runs with a cloud provider. In our test OpenClaw used close to 2 GB with only the dashboard open, and using its web browser tool needs more. Running a local model needs a much larger server.
+    a: Plan for a server with at least 4 GB of memory when the AI model runs with a cloud provider. In our test OpenClaw used about 1.4 GB at idle, with no tasks running, and using its web browser tool needs more. Running a local model needs a much larger server.
 screenshots:
   - src: screenshots/chat.webp
     alt: "The OpenClaw dashboard chat for the main session: a sessions list on the left, the Assistant avatar with suggested prompts such as What can you do? and Help me configure a channel, a message box with a Llama 3.2 model picker, and a details panel showing a heartbeat automation that runs every 30 minutes"

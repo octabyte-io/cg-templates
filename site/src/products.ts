@@ -3005,7 +3005,7 @@ export const PRODUCTS: Product[] = [
     id: 'thinkific',
     name: 'Thinkific',
     job: 'selling online courses',
-    lede: 'CourseLit is a free, open-source Thinkific alternative for building and selling online courses from your own website, with drip-fed lessons, graded quizzes, certificates and a page builder for sales pages. Thinkific is a hosted platform you pay for each month; self-hosted CourseLit takes no fee of its own and you keep the students and content on your server, though you rebuild your courses by hand.',
+    lede: 'CourseLit is a free, open-source Thinkific alternative for building and selling online courses from your own website, with drip-fed lessons, graded quizzes, certificates and a page builder for sales pages. Thinkific runs your school on its hosted platform and plans; self-hosted CourseLit takes no fee of its own and you keep the students and content on your server, though you rebuild your courses by hand.',
     pick: 'courselit',
   },
   {
