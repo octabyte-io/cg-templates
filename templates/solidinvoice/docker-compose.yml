@@ -1,0 +1,84 @@
+# From SolidInvoice's official compose file (docker-compose.yml in the repository, also
+# shown on solidinvoice.co/docs/installation-guide/docker), with the images pinned, the
+# database given passwords, and the first-run wizard replaced by the app's own CLI
+# installer, as the official Helm chart does with install.enabled=true.
+services:
+  solidinvoice:
+    # One self-contained binary (FrankenPHP + Caddy) that serves the app on port 8765 and
+    # runs the background worker and scheduled tasks (recurring invoices, reminders,
+    # overdue flags) inside the same container.
+    image: solidinvoice/solidinvoice:3.1.3
+    restart: unless-stopped
+    command: [run, --disable-https, --skip-intro]
+    depends_on:
+      solidinvoice-install:
+        condition: service_completed_successfully
+    environment:
+      # Overrides the address the installer saved, so links in emails follow the domain.
+      SOLIDINVOICE_APPLICATION_URL: ${APP_URL}
+      # Trust Cloudgate's proxy (on the private container network) for the original
+      # https scheme and host, so redirects and links stay on https.
+      SYMFONY_TRUSTED_PROXIES: private_ranges
+    volumes:
+      # The app's encrypted settings vault: database address, app secret, install state.
+      - solidinvoice-config:/etc/solidinvoice
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8765/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+
+  # Runs once at each start. On the first start it runs SolidInvoice's installer: it
+  # creates the database and its tables, saves the settings in the vault and creates the
+  # admin account. Afterwards it sees the saved install and does nothing.
+  solidinvoice-install:
+    image: solidinvoice/solidinvoice:3.1.3
+    restart: "no"
+    entrypoint: [/bin/sh, -c]
+    command:
+      - |
+        if ls /etc/solidinvoice/solidinvoice.SOLIDINVOICE_INSTALLED.*.php >/dev/null 2>&1; then
+          echo "SolidInvoice is already installed."
+          exit 0
+        fi
+        /usr/local/bin/solidinvoice console solidinvoice:install --no-interaction --no-ansi \
+          --database-driver=pdo_mysql --database-host=solidinvoice-db --database-port=3306 \
+          --database-name=solidinvoice --database-user=solidinvoice \
+          --database-password="$$DB_PASSWORD" \
+          --admin-email="$$ADMIN_EMAIL" --admin-password="$$ADMIN_PASSWORD" \
+          --application-url="$$APP_URL" --locale=en --disable-telemetry
+        # The console wrapper exits 0 even when the installer fails, so check its result.
+        ls /etc/solidinvoice/solidinvoice.SOLIDINVOICE_INSTALLED.*.php >/dev/null 2>&1
+    depends_on:
+      solidinvoice-db:
+        condition: service_healthy
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      APP_URL: ${APP_URL}
+    volumes:
+      - solidinvoice-config:/etc/solidinvoice
+
+  solidinvoice-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      # No MYSQL_DATABASE: the installer creates the database itself (files/mysql-grant.sql).
+      MYSQL_USER: solidinvoice
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - solidinvoice-db-data:/var/lib/mysql
+      - ../files/mysql-grant.sql:/docker-entrypoint-initdb.d/10-grant.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  solidinvoice-config:
+  solidinvoice-db-data:

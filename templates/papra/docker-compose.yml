@@ -1,0 +1,24 @@
+services:
+  papra:
+    # The rootless image runs as its own user (nonroot, uid 999). Its data
+    # folder belongs to that user in the image, so the named volume below
+    # starts out writable without the "user:" line of the official file.
+    image: ghcr.io/papra-hq/papra:26.7.1-rootless
+    restart: unless-stopped
+    environment:
+      APP_BASE_URL: ${APP_BASE_URL}
+      AUTH_SECRET: ${AUTH_SECRET}
+    volumes:
+      # The SQLite database (db/) and the uploaded files (documents/).
+      - papra-data:/app/app-data
+    healthcheck:
+      # The image has neither wget nor curl, so ask Node to call Papra's
+      # health endpoint (it also reports whether the database answers).
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:1221/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  papra-data:

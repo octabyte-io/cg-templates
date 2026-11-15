@@ -1,0 +1,44 @@
+# From the "Multi-Image PostgreSQL" example in Corteza's DevOps guide
+# (docs.cortezaproject.org, Online Deployment Examples). The nginx-proxy and
+# Let's Encrypt parts are left out: Cloudgate gives the app its web address.
+services:
+  corteza:
+    image: cortezaproject/corteza:2026.9.0
+    restart: unless-stopped
+    depends_on:
+      corteza-db:
+        condition: service_healthy
+    environment:
+      DB_DSN: postgres://corteza:${DB_PASSWORD}@corteza-db:5432/corteza?sslmode=disable
+      # Serve the web apps (Low Code, Admin, Workflow, Reporter) alongside the API.
+      HTTP_WEBAPP_ENABLED: "true"
+      # The app's public host name; Corteza uses it to set up its web apps and
+      # sign-in on the first start.
+      DOMAIN: ${DOMAIN}
+      VIRTUAL_HOST: ${DOMAIN}
+      AUTH_BASE_URL: ${APP_URL}/auth
+      # HTTPS ends at Cloudgate's proxy in front of the app.
+      HTTP_SSL_TERMINATED: "true"
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+    volumes:
+      - corteza-data:/data
+
+  corteza-db:
+    # Corteza's docs list PostgreSQL 13 to 15 as supported.
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: corteza
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: corteza
+    volumes:
+      - corteza-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U corteza"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  corteza-data:
+  corteza-db-data:

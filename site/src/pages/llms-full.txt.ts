@@ -28,7 +28,7 @@ function body(): string {
     out.push('## Alternatives', '');
     for (const { product, apps, copy } of alternatives) {
       const pick = apps[0];
-      const simplest = apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
+      const simplest = pick.ease === 'easy' ? undefined : apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
       out.push(
         `### ${apps.every((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} alternatives to ${product.name}`,
         '',

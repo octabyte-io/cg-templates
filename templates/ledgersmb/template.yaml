@@ -1,0 +1,17 @@
+name: LedgerSMB
+description: "Self-hosted LedgerSMB: open-source double-entry accounting and ERP with quotes, orders, invoices, stock, and several currencies and companies."
+version: "1.13.9"
+tags: ["quickbooks alternative", "open source accounting software", "double entry accounting", "small business erp", "xero alternative", "free accounting software"]
+links:
+  website: https://ledgersmb.org
+  docs: https://ledgersmb.org/content/documentation
+  source: https://github.com/ledgersmb/LedgerSMB
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The PostgreSQL superuser ("postgres") password. LedgerSMB's setup.pl asks for it to
+  # create the company database and its first user.
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: ledgersmb, port: 5762 }

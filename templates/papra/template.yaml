@@ -1,0 +1,17 @@
+name: Papra
+description: "Papra is a light, self-hosted document archive that makes receipts, bills and contracts searchable."
+version: "26.7.1"
+tags: ["self-hosted document archive", "paperless-ngx alternative", "evernote alternative", "receipt storage", "document management", "digital filing cabinet"]
+links:
+  website: https://papra.app
+  docs: https://docs.papra.app
+  source: https://github.com/papra-hq/papra
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_BASE_URL: { value: "{{domains.papra.url}}" }
+  # Signs sessions; Papra needs at least 32 characters (hex is 64).
+  AUTH_SECRET: { generate: hex }
+domains:
+  - { service: papra, port: 1221 }

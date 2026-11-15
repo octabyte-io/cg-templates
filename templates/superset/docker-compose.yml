@@ -1,0 +1,162 @@
+# Based on Apache Superset's docker-compose-image-tag.yml (6.1.0), reshaped for
+# production: the gunicorn web app, a Celery worker, a PostgreSQL metadata
+# database and Redis. The 6.1.0 image ships no database drivers, so the one-shot
+# init installs psycopg2-binary (the version Superset pins for PostgreSQL) and
+# writes superset_config.py into a shared volume that the other containers read.
+x-superset: &superset
+  image: apache/superset:6.1.0
+  environment: &superset-env
+    SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
+    DATABASE_PASSWORD: ${DB_PASSWORD}
+    PYTHONPATH: /app/pythonpath:/app/pylib
+  volumes: &superset-volumes
+    - superset-pylib:/app/pylib
+    - superset-home:/app/superset_home
+
+services:
+  superset:
+    <<: *superset
+    restart: unless-stopped
+    depends_on:
+      superset-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8088/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 1m
+
+  superset-worker:
+    <<: *superset
+    restart: unless-stopped
+    command: ["celery", "--app=superset.tasks.celery_app:app", "worker", "-O", "fair", "-l", "INFO", "--concurrency=2"]
+    depends_on:
+      superset-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A superset.tasks.celery_app:app inspect ping -d celery@$$HOSTNAME"]
+      interval: 60s
+      timeout: 60s
+      retries: 5
+      start_period: 2m
+
+  # Runs at every start, then exits: installs the PostgreSQL driver (first start
+  # only), writes the settings, applies database migrations, creates the admin
+  # account (skipped once it exists) and sets up roles and permissions.
+  superset-init:
+    <<: *superset
+    restart: "no"
+    user: root
+    environment:
+      <<: *superset-env
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+    command:
+      - bash
+      - -ec
+      - |
+        if [ ! -d /app/pylib/psycopg2 ]; then
+          uv pip install --python /app/.venv/bin/python --target /app/pylib psycopg2-binary==2.9.9
+        fi
+        cat > /app/pylib/superset_config.py <<'CONFIG'
+        # Superset settings for Cloudgate. Values come from the environment.
+        import os
+
+        from flask_caching.backends.rediscache import RedisCache
+
+        SECRET_KEY = os.environ["SUPERSET_SECRET_KEY"]
+        SQLALCHEMY_DATABASE_URI = (
+            "postgresql+psycopg2://superset:"
+            + os.environ["DATABASE_PASSWORD"]
+            + "@superset-db:5432/superset"
+        )
+
+        # Superset runs behind Cloudgate's HTTPS proxy.
+        ENABLE_PROXY_FIX = True
+
+        REDIS_HOST = "superset-redis"
+        REDIS_PORT = 6379
+
+
+        def _redis_cache(prefix):
+            return {
+                "CACHE_TYPE": "RedisCache",
+                "CACHE_DEFAULT_TIMEOUT": 300,
+                "CACHE_KEY_PREFIX": prefix,
+                "CACHE_REDIS_HOST": REDIS_HOST,
+                "CACHE_REDIS_PORT": REDIS_PORT,
+                "CACHE_REDIS_DB": 1,
+            }
+
+
+        CACHE_CONFIG = _redis_cache("superset_")
+        DATA_CACHE_CONFIG = _redis_cache("superset_data_")
+        FILTER_STATE_CACHE_CONFIG = _redis_cache("superset_filter_")
+        EXPLORE_FORM_DATA_CACHE_CONFIG = _redis_cache("superset_explore_")
+        THUMBNAIL_CACHE_CONFIG = _redis_cache("superset_thumbnail_")
+
+        # Results of asynchronous SQL Lab queries, which the Celery worker runs.
+        RESULTS_BACKEND = RedisCache(
+            host=REDIS_HOST, port=REDIS_PORT, db=1, key_prefix="superset_results_"
+        )
+
+
+        class CeleryConfig:
+            broker_url = "redis://superset-redis:6379/0"
+            result_backend = "redis://superset-redis:6379/1"
+            imports = (
+                "superset.sql_lab",
+                "superset.tasks.scheduler",
+                "superset.tasks.thumbnails",
+                "superset.tasks.cache",
+            )
+            worker_prefetch_multiplier = 1
+            task_acks_late = False
+
+
+        CELERY_CONFIG = CeleryConfig
+        CONFIG
+        chown superset:superset /app/superset_home
+        su superset -s /bin/bash -c "/app/.venv/bin/superset db upgrade"
+        su superset -s /bin/bash -c '/app/.venv/bin/superset fab create-admin --username admin --firstname Superset --lastname Admin --email "$$ADMIN_EMAIL" --password "$$ADMIN_PASSWORD"'
+        su superset -s /bin/bash -c "/app/.venv/bin/superset init"
+    depends_on:
+      superset-db:
+        condition: service_healthy
+      superset-redis:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+
+  superset-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: superset
+    volumes:
+      - superset-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  superset-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - superset-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  superset-pylib:
+  superset-home:
+  superset-db-data:
+  superset-redis-data:

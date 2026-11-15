@@ -1,0 +1,62 @@
+services:
+  khoj:
+    image: ghcr.io/khoj-ai/khoj:2.0.0-beta.28
+    restart: unless-stopped
+    depends_on:
+      khoj-db:
+        condition: service_healthy
+    working_dir: /app
+    # From the official docker-compose.yml, without --anonymous-mode: Khoj is on
+    # a public address, so everyone signs in. Without an email service, people
+    # ask for a sign-in link and the admin copies it from the admin panel
+    # (Users > "Get email login URL"); set RESEND_API_KEY and RESEND_EMAIL in
+    # the app's variables to email the links instead.
+    command: --host="0.0.0.0" --port=42110 -vv --non-interactive
+    environment:
+      POSTGRES_DB: khoj
+      POSTGRES_USER: khoj
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: khoj-db
+      POSTGRES_PORT: "5432"
+      KHOJ_DJANGO_SECRET_KEY: ${KHOJ_DJANGO_SECRET_KEY}
+      KHOJ_DEBUG: "False"
+      # The admin account is created on the first start. Chat models are then
+      # added in the admin panel (AI Model API and Chat Model), with a key for
+      # OpenAI, Anthropic, Gemini or any OpenAI-compatible server.
+      KHOJ_ADMIN_EMAIL: ${KHOJ_ADMIN_EMAIL}
+      KHOJ_ADMIN_PASSWORD: ${KHOJ_ADMIN_PASSWORD}
+      # The public host name (no https://), for cookies, CSRF and links. HTTPS
+      # is terminated in front of Khoj, which reads X-Forwarded-Proto.
+      KHOJ_DOMAIN: ${KHOJ_DOMAIN}
+      KHOJ_TELEMETRY_DISABLE: "True"
+    volumes:
+      - khoj-config:/root/.khoj/
+      # The small search models (embeddings and reranker) downloaded on the first start.
+      - khoj-models:/root/.cache/torch/sentence_transformers
+      - khoj-models:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:42110/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 300s
+
+  khoj-db:
+    image: pgvector/pgvector:0.8.6-pg15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: khoj
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: khoj
+    volumes:
+      - khoj-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U khoj"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  khoj-config:
+  khoj-db-data:
+  khoj-models:

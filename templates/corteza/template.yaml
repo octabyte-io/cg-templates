@@ -1,0 +1,18 @@
+name: Corteza
+description: "Self-hosted Corteza: an open-source low-code platform to build your own CRM, service desk or records apps with forms, workflows, charts and permissions."
+version: "2026.9.0"
+tags: ["low-code platform", "open source low code", "salesforce platform alternative", "zoho creator alternative", "power apps alternative", "case management", "build your own crm"]
+links:
+  website: https://cortezaproject.org
+  docs: https://docs.cortezaproject.org
+  source: https://github.com/cortezaproject/corteza
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  DOMAIN: { value: "{{domains.corteza.host}}" }
+  APP_URL: { value: "{{domains.corteza.url}}" }
+  DB_PASSWORD: { generate: password }
+  AUTH_JWT_SECRET: { generate: hex }
+domains:
+  - { service: corteza, port: 80 }

@@ -1,0 +1,29 @@
+name: BookOrbit
+description: "BookOrbit, the successor to BookLore, is a self-hosted library for ebooks, comics and audiobooks, with your place synced to Kobo, KOReader and iPhone."
+version: "3.8.0"
+tags: ["self-hosted ebook library", "audiobook server", "booklore alternative", "kindle alternative", "goodreads alternative", "kobo sync", "opds server"]
+links:
+  website: https://bookorbit.app
+  docs: https://bookorbit.app/installation
+  source: https://github.com/bookorbit/bookorbit
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.bookorbit.url}}" }
+  DB_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  # Asked for on the first-run setup page; shown afterwards on the app's variables page.
+  SETUP_BOOTSTRAP_TOKEN: { generate: hex }
+  # Encrypts saved email (SMTP) passwords, e.g. for Send-to-Kindle. BookOrbit needs 64 hex characters.
+  EMAIL_ENCRYPTION_KEY: { generate: hex }
+  # Encrypts saved connection details for imports from another library, such as BookLore. 64 hex characters.
+  MIGRATION_ENCRYPTION_KEY: { generate: hex }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for reading statistics, streaks and scheduled tasks, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: bookorbit, port: 3000 }

@@ -1,0 +1,25 @@
+name: SolidInvoice
+description: "Self-hosted SolidInvoice: quotes and invoices your clients pay online by card or PayPal, with recurring billing and automatic payment reminders."
+version: "3.1.3"
+tags: ["freshbooks alternative", "wave alternative", "open source invoicing software", "online invoice payments", "recurring invoices", "payment reminders", "invoicing for freelancers"]
+links:
+  website: https://solidinvoice.co
+  docs: https://solidinvoice.co/docs/
+  source: https://github.com/SolidInvoice/SolidInvoice
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.solidinvoice.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: solidinvoice, port: 8765 }
+files:
+  - { path: mysql-grant.sql }

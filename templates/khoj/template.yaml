@@ -1,0 +1,23 @@
+name: Khoj
+description: "Khoj is a self-hosted AI second brain that answers questions from your own notes and documents with the AI you choose, in place of NotebookLM."
+version: "2.0.0-beta.28"
+tags: ["ai second brain", "notebooklm alternative", "chat with your documents", "ai research assistant", "self-hosted ai", "perplexity alternative", "khoj cloud alternative"]
+links:
+  website: https://khoj.dev
+  docs: https://docs.khoj.dev
+  source: https://github.com/khoj-ai/khoj
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  KHOJ_DOMAIN: { value: "{{domains.khoj.host}}" }
+  KHOJ_DJANGO_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  KHOJ_ADMIN_PASSWORD: { generate: password }
+  KHOJ_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Khoj's admin panel (<Khoj's address>/server/admin) with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: khoj, port: 42110 }

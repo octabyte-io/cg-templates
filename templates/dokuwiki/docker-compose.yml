@@ -1,0 +1,34 @@
+services:
+  dokuwiki:
+    # The LinuxServer.io image of DokuWiki (DokuWiki itself ships no image).
+    # 2026-07-14c is the DokuWiki release ("Mort"), ls334 the image build.
+    image: lscr.io/linuxserver/dokuwiki:2026-07-14c-ls334
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 and refuses to start on a server without it.
+    # On such a server, drop the IPv6 listen lines before the image's own /init starts.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        if [ ! -e /proc/net/if_inet6 ]; then
+        sed -i '/listen \[::\]/d' /defaults/nginx/site-confs/default.conf.sample;
+        if [ -f /config/nginx/site-confs/default.conf ]; then
+        sed -i '/listen \[::\]/d' /config/nginx/site-confs/default.conf; fi; fi;
+        exec /init
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      # Everything DokuWiki keeps: pages and their history (plain text files),
+      # uploaded media, settings, users, plugins and templates. No database.
+      - dokuwiki-config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/doku.php"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  dokuwiki-config:
