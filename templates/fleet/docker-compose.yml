@@ -1,0 +1,96 @@
+# From Fleet's official Docker Compose setup (docs/solutions/docker-compose at fleet-v4.94.1),
+# without host ports and Fleet's own TLS: Cloudgate's web address serves HTTPS in front of it.
+# No licence key is set, so this runs Fleet's free edition.
+services:
+  fleet:
+    image: fleetdm/fleet:v4.94.1
+    restart: unless-stopped
+    depends_on:
+      fleet-db:
+        condition: service_healthy
+      fleet-redis:
+        condition: service_healthy
+      fleet-permissions:
+        condition: service_completed_successfully
+    # Creates or upgrades the database tables, then starts the server.
+    command: ["sh", "-c", "/usr/bin/fleet prepare db --no-prompt && exec /usr/bin/fleet serve"]
+    environment:
+      FLEET_SERVER_ADDRESS: 0.0.0.0:1337
+      FLEET_SERVER_TLS: "false"
+      FLEET_SERVER_PRIVATE_KEY: ${SERVER_PRIVATE_KEY}
+      FLEET_MYSQL_ADDRESS: fleet-db:3306
+      FLEET_MYSQL_DATABASE: fleet
+      FLEET_MYSQL_USERNAME: fleet
+      FLEET_MYSQL_PASSWORD: ${DB_PASSWORD}
+      FLEET_REDIS_ADDRESS: fleet-redis:6379
+      FLEET_SESSION_DURATION: 24h
+      FLEET_LOGGING_JSON: "true"
+      FLEET_OSQUERY_STATUS_LOG_PLUGIN: filesystem
+      FLEET_OSQUERY_RESULT_LOG_PLUGIN: filesystem
+      FLEET_FILESYSTEM_STATUS_LOG_FILE: /logs/osqueryd.status.log
+      FLEET_FILESYSTEM_RESULT_LOG_FILE: /logs/osqueryd.results.log
+      FLEET_OSQUERY_LABEL_UPDATE_INTERVAL: 1h
+      FLEET_VULNERABILITIES_CURRENT_INSTANCE_CHECKS: "yes"
+      FLEET_VULNERABILITIES_DATABASES_PATH: /vulndb
+      FLEET_VULNERABILITIES_PERIODICITY: 1h
+    volumes:
+      # Software installers and other files Fleet keeps.
+      - fleet-data:/fleet
+      # Status and query results the devices send.
+      - fleet-logs:/logs
+      # Vulnerability databases (CVE feeds) Fleet downloads.
+      - fleet-vulndb:/vulndb
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:1337/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  # Runs once at each start: a new volume is owned by root, and Fleet runs as the
+  # image's user fleet, so this hands the three folders to it.
+  fleet-permissions:
+    image: fleetdm/fleet:v4.94.1
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["chown", "-R", "fleet:fleet", "/fleet", "/logs", "/vulndb"]
+    volumes:
+      - fleet-data:/fleet
+      - fleet-logs:/logs
+      - fleet-vulndb:/vulndb
+
+  fleet-db:
+    image: mysql:8.4.8
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: fleet
+      MYSQL_USER: fleet
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - fleet-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -ufleet -p$$MYSQL_PASSWORD --silent || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  fleet-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - fleet-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  fleet-data:
+  fleet-logs:
+  fleet-vulndb:
+  fleet-db-data:
+  fleet-redis-data:
