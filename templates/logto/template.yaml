@@ -1,0 +1,21 @@
+name: Logto
+description: "Self-hosted Logto: add sign-in, social logins, two-step sign-in, single sign-on and user roles to your own apps, with no per-user fees."
+version: "1.46.0"
+tags: ["auth0 alternative", "customer login", "single sign-on", "user authentication", "openid connect", "okta alternative", "multi-factor authentication"]
+links:
+  website: https://logto.io
+  docs: https://docs.logto.io
+  source: https://github.com/logto-io/logto
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The address your apps send people to for signing in (the OIDC issuer).
+  LOGTO_ENDPOINT: { value: "{{domains.logto.url}}" }
+  # The admin console's own address. The first person to open it creates the admin account.
+  LOGTO_ADMIN_ENDPOINT: { value: "{{domains.logto-admin.url}}" }
+  DB_PASSWORD: { generate: password }
+# The first address is where people sign in; the second is the admin console.
+domains:
+  - { service: logto, port: 3001 }
+  - { service: logto-admin, port: 3002 }

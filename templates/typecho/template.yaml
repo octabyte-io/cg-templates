@@ -1,0 +1,23 @@
+name: Typecho
+description: "Self-hosted Typecho: a small, fast blog you write in Markdown, with categories, comments, themes and plugins, on your own web address."
+version: "1.3.0"
+tags: ["blog", "markdown blog", "lightweight blog", "blogging platform", "self-hosted blog", "medium alternative"]
+links:
+  website: https://typecho.org
+  docs: https://docs.typecho.org
+  source: https://github.com/typecho/typecho
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SITE_URL: { value: "{{domains.typecho.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the Typecho admin account (username "admin").
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: typecho, port: 80 }
