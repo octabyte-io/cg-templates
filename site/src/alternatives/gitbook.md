@@ -15,17 +15,22 @@ apps:
   pandawiki:
     fit: "Publishes your documents as a public docs website with a table of contents and search, and adds AI answers: visitors ask a question and get a reply written from your pages, with links to its sources, also as a chat widget or a chat bot. The free edition allows one site, 300 documents and one admin, has no Git sync, private wikis or version history, and its screens are in Chinese only."
     import: partly
+  otter-wiki:
+    fit: "Like GitBook, it keeps every page as a Markdown file in a Git repository: you write in a browser Markdown editor, every change is in the page history, and it can push each change to a remote repository such as one on GitHub. Readers can be let in without an account. It is a plain, simple wiki rather than a polished public docs site, and it has no GitBook importer."
+    import: no
 moving: |
-  Neither Wiki.js nor BookStack has a GitBook importer, so start by syncing your GitBook space to a GitHub or GitLab repository as Markdown files. With Wiki.js, connect its Git storage to a copy of that repository so the Markdown pages sync in, then check each page, because GitBook's own blocks, such as hints and tabs, are not standard Markdown, and images may need uploading again. With BookStack, copy each page into its Markdown editor, one book per GitBook space and one chapter per group of pages, and upload images again. If your docs are public, give guests read access in Wiki.js or turn on public viewing in BookStack, then point your docs address at the new site.
+  None of these apps has a GitBook importer, so start by syncing your GitBook space to a GitHub or GitLab repository as Markdown files. With Wiki.js, connect its Git storage to a copy of that repository so the Markdown pages sync in, then check each page, because GitBook's own blocks, such as hints and tabs, are not standard Markdown, and images may need uploading again. With BookStack, copy each page into its Markdown editor, one book per GitBook space and one chapter per group of pages, and upload images again. If your docs are public, give guests read access in Wiki.js or turn on public viewing in BookStack, then point your docs address at the new site.
 
   Raneto and Writebook have no GitBook importer either. In Raneto, sign in as admin, create a category for each group of pages, and paste each page's Markdown into its editor, rewriting GitBook's own blocks as plain Markdown and uploading images again. In Writebook, create one book per GitBook space, paste each page's Markdown into a new page, upload images again, and switch the book to public when it is ready.
 
   PandaWiki has no GitBook importer either, but it can bring pages in from a web address or a sitemap, so point it at your published GitBook site, check the imported documents, then connect your AI models and publish the knowledge base at its wiki address.
+
+  With An Otter Wiki, paste each page into its Markdown editor and upload images as attachments; then, if you want the docs in a repository again, turn on its automatic push to a Git remote. For public docs, give anonymous users read access.
 faq:
   - q: "Can Wiki.js sync with Git like GitBook?"
-    a: "Yes. Wiki.js keeps pages in two-way sync with a Git repository as plain Markdown files, so people can edit in the wiki or change the files in the repository. BookStack has no Git sync."
+    a: "Yes. Wiki.js keeps pages in two-way sync with a Git repository as plain Markdown files, so people can edit in the wiki or change the files in the repository. An Otter Wiki also stores every page in Git, pushes each change to a remote repository and can pull changes back through a webhook. BookStack has no Git sync."
   - q: "Can Wiki.js and BookStack publish public documentation like GitBook?"
-    a: "Yes. Both can let people read some or all pages without signing in, while your team signs in to edit. In Wiki.js you give the guest group read access; in BookStack you turn on public viewing."
+    a: "Yes. Both can let people read some or all pages without signing in, while your team signs in to edit. In Wiki.js you give the guest group read access; in BookStack you turn on public viewing. An Otter Wiki can also let anonymous users read pages."
   - q: "When is Raneto enough instead of Wiki.js or BookStack?"
     a: "When you need a small public FAQ, help centre or handbook that a few people edit. Raneto needs no database and very little server, but it has no page history, comments, Git sync or per-page permissions."
   - q: "When is Writebook the better choice?"
@@ -38,4 +43,4 @@ faq:
 
 GitBook is a hosted platform for publishing documentation, often public product and developer docs, with an editor for your team and two-way sync with a Git repository.
 
-Teams look for an alternative because of how GitBook charges. When we checked its pricing page in November 2026, the free plan included one user, and paid plans charged a monthly fee for each published site plus a fee for every extra user. Some teams also want their documentation on their own server. Wiki.js and BookStack are free with no user limit and no paid edition, and keep every page on your own server; Wiki.js also keeps your docs in sync with Git, as GitBook does. For a small help site or FAQ, Raneto is a lighter option built from Markdown files with no database, and Writebook, also free, is the simplest way to publish a manual or handbook as an online book.
+Teams look for an alternative because of how GitBook charges. When we checked its pricing page in November 2026, the free plan included one user, and paid plans charged a monthly fee for each published site plus a fee for every extra user. Some teams also want their documentation on their own server. Wiki.js and BookStack are free with no user limit and no paid edition, and keep every page on your own server; Wiki.js also keeps your docs in sync with Git, as GitBook does, and An Otter Wiki, also free, keeps every page in Git too. For a small help site or FAQ, Raneto is a lighter option built from Markdown files with no database, and Writebook, also free, is the simplest way to publish a manual or handbook as an online book.

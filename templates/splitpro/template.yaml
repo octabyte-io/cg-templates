@@ -1,0 +1,39 @@
+name: SplitPro
+description: "SplitPro is a self-hosted app for sharing expenses with friends, housemates and trips: split bills, track balances and settle up, with no daily limit."
+version: "2.1.6"
+tags: [splitwise alternative, expense splitting, split bills with roommates, shared expenses, group expenses, tricount alternative]
+links:
+  website: https://splitpro.app
+  docs: https://github.com/oss-apps/split-pro/blob/main/docs/CONFIGURATION.md
+  source: https://github.com/oss-apps/split-pro
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  NEXTAUTH_URL: { value: "{{domains.splitpro.url}}" }
+  NEXTAUTH_SECRET: { generate: base64 }
+  POSTGRES_PASSWORD: { generate: password }
+  FROM_EMAIL:
+    ask:
+      label: Sender email
+      description: The address SplitPro sends sign-in links and codes from, for example noreply@yourdomain.com. Your email service must allow sending from it.
+      format: email
+  EMAIL_SERVER_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: SplitPro signs everyone in, including you, with a link or code sent by email, so it needs an email sending service, for example smtp.resend.com or email-smtp.eu-west-1.amazonaws.com.
+  EMAIL_SERVER_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services; 465 also works.
+      default: "587"
+      format: number
+  EMAIL_SERVER_USER:
+    ask:
+      label: Email server username
+  EMAIL_SERVER_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+domains:
+  - { service: splitpro, port: 3000 }

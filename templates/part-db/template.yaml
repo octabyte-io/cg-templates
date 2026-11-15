@@ -1,0 +1,17 @@
+name: Part-DB
+description: "Part-DB is a self-hosted electronic parts inventory: track components, stock, storage locations, prices and datasheets, with labels and KiCad."
+version: "2.20.6"
+tags: [electronic parts inventory, electronic component management, parts database, bom management, partsbox alternative, partkeepr alternative]
+links:
+  website: https://github.com/Part-DB/Part-DB-server
+  docs: https://docs.part-db.de/
+  source: https://github.com/Part-DB/Part-DB-server
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.part-db.url}}" }
+  APP_SECRET: { generate: hex }
+  INITIAL_ADMIN_PW: { generate: password }
+domains:
+  - { service: part-db, port: 80 }

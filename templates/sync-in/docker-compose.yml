@@ -1,0 +1,53 @@
+# From Sync-in's official docker/docker-compose.yaml (v2.6.3), with the settings
+# from its environment.yaml given as SYNCIN_* environment variables instead of a
+# mounted file, and the optional office editors, nginx and desktop-release
+# services left out.
+services:
+  sync-in:
+    image: syncin/server:2.6.3
+    restart: unless-stopped
+    depends_on:
+      sync-in-db:
+        condition: service_healthy
+    environment:
+      SYNCIN_SERVER_PUBLICURL: ${PUBLIC_URL}
+      SYNCIN_MYSQL_URL: mysql://root:${DB_PASSWORD}@sync-in-db:3306/sync_in
+      SYNCIN_AUTH_ENCRYPTIONKEY: ${ENCRYPTION_KEY}
+      SYNCIN_AUTH_TOKEN_ACCESS_SECRET: ${ACCESS_TOKEN_SECRET}
+      SYNCIN_AUTH_TOKEN_REFRESH_SECRET: ${REFRESH_TOKEN_SECRET}
+      # Creates the administrator account if it does not exist yet (it is
+      # skipped, with a warning, on later starts).
+      INIT_ADMIN: "true"
+      INIT_ADMIN_LOGIN: ${ADMIN_LOGIN}
+      INIT_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PUID: "8888"
+      PGID: "8888"
+    volumes:
+      # Everyone's files.
+      - sync-in-data:/app/data
+
+  sync-in-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    command:
+      - --innodb_ft_cache_size=16000000
+      - --max-allowed-packet=1G
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_uca1400_ai_ci
+    environment:
+      # Sync-in connects as root, as in its official file: it turns on MariaDB's
+      # event scheduler (SET GLOBAL) to clear its cache table.
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: sync_in
+    volumes:
+      - sync-in-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  sync-in-data:
+  sync-in-db-data:

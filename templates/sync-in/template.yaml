@@ -1,0 +1,26 @@
+name: Sync-in
+description: "Self-hosted Sync-in: a private file cloud where your team stores, shares and syncs files, with team spaces, protected share links and search inside documents."
+version: "2.6.3"
+tags: [file sharing, self-hosted cloud storage, dropbox alternative, google drive alternative, file sync, webdav]
+links:
+  website: https://sync-in.com
+  docs: https://sync-in.com/docs
+  source: https://github.com/Sync-in/server
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PUBLIC_URL: { value: "{{domains.sync-in.url}}" }
+  DB_PASSWORD: { generate: password }
+  ACCESS_TOKEN_SECRET: { generate: password }
+  REFRESH_TOKEN_SECRET: { generate: password }
+  ENCRYPTION_KEY: { generate: password }
+  ADMIN_LOGIN:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: sync-in, port: 8080 }

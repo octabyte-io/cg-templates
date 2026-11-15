@@ -1,0 +1,55 @@
+# Scoold is the website; Para is its backend, which stores everything in its
+# own embedded database and search index (no separate database server).
+# Based on the official compose file in github.com/Erudika/scoold.
+services:
+  scoold:
+    image: erudikaltd/scoold:1.70.3
+    restart: unless-stopped
+    depends_on:
+      para:
+        condition: service_healthy
+    environment:
+      # Scoold writes the Para app keys it creates on first start into this
+      # file, so it lives on a volume.
+      JAVA_OPTS: -Dconfig.file=/scoold/data/scoold-application.conf
+      SCOOLD_ENV: production
+      SCOOLD_HOST_URL: ${APP_URL}
+      SCOOLD_PARA_ENDPOINT: http://para:8080
+      # Lets Scoold create its own app in Para on first start.
+      SCOOLD_AUTOINIT_ROOT_APP_SECRET_KEY: ${PARA_ROOT_SECRET}
+      SCOOLD_APP_SECRET_KEY: ${SCOOLD_APP_SECRET}
+      # Whoever signs up with this email becomes the admin.
+      SCOOLD_ADMINS: ${ADMIN_EMAIL}
+      SCOOLD_PASSWORD_AUTH_ENABLED: "true"
+    volumes:
+      - scoold-data:/scoold/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+  para:
+    image: erudikaltd/para:1.57.0
+    restart: unless-stopped
+    environment:
+      JAVA_OPTS: -Dloader.path=/para/lib
+      PARA_ENV: production
+      # Sets the root app's secret on the first start, so Scoold can use it.
+      PARA_ROOT_SECRET_OVERRIDE: ${PARA_ROOT_SECRET}
+    volumes:
+      - para-data:/para/data
+      - para-lib:/para/lib
+    healthcheck:
+      # The image has neither curl nor wget, so this asks bash to fetch the page.
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /v1/_health HTTP/1.0\\r\\nHost: localhost\\r\\n\\r\\n' >&3 && head -n 1 <&3 | grep -q ' 200'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  scoold-data:
+  para-data:
+  para-lib:
