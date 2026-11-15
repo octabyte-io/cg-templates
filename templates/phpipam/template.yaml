@@ -1,0 +1,18 @@
+name: phpIPAM
+description: "phpIPAM is a self-hosted IP address manager: plan subnets, track every IP address, VLAN and device, and check which addresses are in use."
+version: "1.9.0"
+tags: [ip address management, ipam, subnet management, vlan management, network documentation, solarwinds ipam alternative, infoblox alternative]
+links:
+  website: https://phpipam.net
+  docs: https://phpipam.net/documents/
+  source: https://github.com/phpipam/phpipam
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.phpipam.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: phpipam, port: 80 }
