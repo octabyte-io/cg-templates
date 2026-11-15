@@ -1,0 +1,24 @@
+name: 4ga Boards
+description: "Self-hosted 4ga Boards is an open-source kanban board for teams: Trello-style boards, lists and cards that update in real time, with Trello import."
+version: "3.3.15"
+tags: [trello alternative, kanban board, self-hosted kanban, open source trello, planka alternative, project management]
+links:
+  website: https://4gaboards.com
+  docs: https://docs.4gaboards.com
+  source: https://github.com/RARgames/4gaBoards
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.fourga-boards.url}}" }
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email (or the username "admin"). Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: fourga-boards, port: 1337 }

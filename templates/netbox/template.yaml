@@ -1,0 +1,32 @@
+name: NetBox
+description: "Self-hosted NetBox documents your racks, devices, cables, IP addresses and circuits in one place, for IT teams and MSPs."
+version: "4.7.5"
+tags: [network documentation, ip address management, rack management, device42 alternative, ipam, dcim, it documentation for msps]
+links:
+  website: https://netboxlabs.com/oss/netbox/
+  docs: https://netboxlabs.com/docs/netbox/
+  source: https://github.com/netbox-community/netbox
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SECRET_KEY: { generate: hex }
+  API_TOKEN_PEPPER: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  REDIS_CACHE_PASSWORD: { generate: password }
+  SUPERUSER_NAME:
+    ask:
+      label: Admin username
+      description: The name you sign in to NetBox with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      required: false
+      pattern: "[A-Za-z0-9_.@+-]{1,150}"
+  SUPERUSER_PASSWORD: { generate: password }
+  SUPERUSER_EMAIL:
+    ask:
+      label: Admin email
+      description: The admin account's email address. You can change it later in your NetBox user profile.
+      format: email
+domains:
+  - { service: netbox, port: 8080 }
