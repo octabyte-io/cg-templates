@@ -1,0 +1,21 @@
+name: Kokoro-FastAPI
+description: "Self-hosted Kokoro-FastAPI turns text into natural speech with 54 voices in 8 languages, in a browser player or through an OpenAI-compatible speech API."
+version: "v0.10.0"
+tags: [text to speech, elevenlabs alternative, openai tts alternative, kokoro tts, tts server, ai voice generator]
+links:
+  website: https://github.com/remsky/Kokoro-FastAPI
+  docs: https://github.com/remsky/Kokoro-FastAPI/blob/master/docs/configuration.md
+  source: https://github.com/remsky/Kokoro-FastAPI
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  API_KEY:
+    ask:
+      label: API key (optional)
+      description: Leave empty to keep the web player working with no key. Type a key to make every API request need it; the web player then stops generating audio.
+      pattern: "^[A-Za-z0-9._-]*$"
+      required: false
+      secret: true
+domains:
+  - { service: kokoro, port: 8880 }

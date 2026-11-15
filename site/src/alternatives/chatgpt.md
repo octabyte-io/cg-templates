@@ -18,6 +18,9 @@ apps:
   khoj:
     fit: "A personal AI assistant more than a team chat: it answers from your own documents and the web with references, runs code for charts and analysis, has a research mode, custom agents, memories and scheduled questions, with any AI model you connect. It has no groups, roles or single sign-on, and ChatGPT’s own apps are more polished."
     import: no
+  huggingchat:
+    fit: "Hugging Face's Chat UI, the open-source app behind HuggingChat, is the simplest ChatGPT-style chat here: pick a model for each chat from open models such as Llama, Qwen and DeepSeek through Hugging Face's router, or any OpenAI-compatible API, including OpenAI's and a local Ollama. Models can use tools such as web search through MCP servers. It has no memory, custom GPTs, document knowledge bases or admin console, and Cloudgate puts one shared login in front of it, so everyone uses the same password until you set up OpenID Connect sign-in."
+    import: no
 moving: |
   With Open WebUI, each person can bring their old chats across: export your data from ChatGPT, then in Open WebUI open Settings, Data Controls, Import Chats and choose the conversations.json file from the export. Chats come across; custom GPTs, memory and uploaded files do not, so rebuild the custom GPTs your team uses as custom models with the same instructions and knowledge files. Before inviting anyone, the admin adds an AI connection under Admin Panel, Settings, Connections, for example an OpenAI API key or any OpenAI-compatible service. Then add your colleagues, or turn on sign-in through your identity provider, and put them in groups for the assistants they share.
 
@@ -29,10 +32,12 @@ moving: |
 
   LobeHub cannot import ChatGPT chats. Each person creates an account and adds an API key for a provider such as OpenAI under Settings, Provider, then rebuilds the custom GPTs they use as agents with the same instructions, and uploads their files into a knowledge base.
 
+  HuggingChat cannot import ChatGPT chats. When you install it with Cloudgate, choose the model provider and paste its API key, such as a Hugging Face access token, and its models appear on the Models page. Your browser then asks for a login: the username is admin and the password is the one Cloudgate generates, and everyone you share it with uses that same login. For a sign-in per person, set up OpenID Connect with your identity provider and limit it to your company's email addresses or domain.
+
   Khoj cannot import ChatGPT chats. Sign in to its admin page, add an AI provider key and a chat model, then upload your files or sync them from the desktop app, Obsidian or Emacs. Rebuild the custom GPTs you rely on as Khoj agents with the same instructions and knowledge files.
 faq:
-  - q: "Should I choose Open WebUI, LibreChat, AnythingLLM, Onyx, LobeHub or Khoj?"
-    a: "Choose Open WebUI for one general ChatGPT-style chat for the whole team. Choose LibreChat if you want an MIT-licensed chat with many hosted providers side by side and shared agents. Choose AnythingLLM if most questions are about documents you upload, or if you also want a chat on your website that answers visitors from them. Choose Onyx if you want answers from the apps your company already uses, such as Slack, Google Drive and Confluence, and have a large server to run it. Choose LobeHub for the most polished personal app with agents and many models, if each person managing their own account and API key is fine. Choose Khoj for a personal research assistant over your own documents and notes rather than a team chat."
+  - q: "Should I choose Open WebUI, LibreChat, AnythingLLM, Onyx, LobeHub, Khoj or HuggingChat?"
+    a: "Choose Open WebUI for one general ChatGPT-style chat for the whole team. Choose LibreChat if you want an MIT-licensed chat with many hosted providers side by side and shared agents. Choose AnythingLLM if most questions are about documents you upload, or if you also want a chat on your website that answers visitors from them. Choose Onyx if you want answers from the apps your company already uses, such as Slack, Google Drive and Confluence, and have a large server to run it. Choose LobeHub for the most polished personal app with agents and many models, if each person managing their own account and API key is fine. Choose Khoj for a personal research assistant over your own documents and notes rather than a team chat. Choose HuggingChat, Hugging Face's Chat UI, for the simplest chat built around open models, for one person or a small group that can do without accounts and admin tools."
   - q: "Does Open WebUI include an AI model?"
     a: "No. Open WebUI is the chat interface. You connect it to an AI provider with an API key, such as OpenAI or Anthropic, or to a model server you run, such as Ollama or vLLM. The provider bills you for what you use."
   - q: "Is LibreChat open source?"

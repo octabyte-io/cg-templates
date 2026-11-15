@@ -1,0 +1,32 @@
+name: HuggingChat
+description: "Chat UI, the open-source app behind HuggingChat, self-hosted: a private AI chat for open models from Hugging Face, Ollama or any OpenAI-compatible API."
+version: "0.20.0"
+tags: [chatgpt alternative, self-hosted huggingchat, hugging face chat ui, open source ai chat, ollama chat ui, private ai chat]
+links:
+  website: https://huggingface.co/chat
+  docs: https://huggingface.co/docs/chat-ui
+  source: https://github.com/huggingface/chat-ui
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PUBLIC_ORIGIN: { value: "{{domains.proxy.url}}" }
+  # The password the sign-in prompt in front of Chat UI asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_TOKEN: { generate: hex }
+  OPENAI_BASE_URL:
+    ask:
+      label: AI provider address (OpenAI-compatible)
+      description: The /v1 address of the model API. Keep the Hugging Face router, or use e.g. https://api.openai.com/v1 or https://openrouter.ai/api/v1. It must answer when the app starts.
+      default: "https://router.huggingface.co/v1"
+      required: false
+  OPENAI_API_KEY:
+    ask:
+      label: AI provider API key (optional)
+      description: A Hugging Face access token (hf_...) for the router, or your provider's key. Leave empty to add it later on the app's variables page; chatting needs it.
+      secret: true
+      required: false
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }
