@@ -1,5 +1,5 @@
 name: Keycloak
-description: "Self-hosted Keycloak gives your team one login, with two-step sign-in and passkeys, for every app, replacing Okta, Auth0 or Entra ID."
+description: "Self-hosted Keycloak gives your apps single sign-on with passkeys and two-step sign-in, LDAP logins and realms for staff and customers. Replaces Okta or Auth0."
 version: "26.8.2"
 tags:
   - okta alternative

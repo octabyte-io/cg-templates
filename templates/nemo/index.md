@@ -29,7 +29,7 @@ switching:
     - Code you can adapt, with plugins from NIST and the NEMO community
   different:
     - Core NEMO produces usage data; invoices need a billing plugin or your own billing system
-    - There is no importer from iLab, PPMS or FOM
+    - There is no importer from iLab or PPMS
     - Interlocks and door kiosks need hardware and some setup
     - Settings live in a plain admin back office rather than a guided setup
 faq:
@@ -37,7 +37,7 @@ faq:
     a: NEMO is free laboratory logistics software from the US National Institute of Standards and Technology (NIST). It handles instrument reservations, tool access with interlocks, training records, maintenance and usage tracking for shared labs and cleanrooms.
   - q: Is NEMO free?
     a: Yes. NEMO is free to use, change and share under NIST's software licence; code written by NIST staff is not under copyright in the US. You only acknowledge NIST and keep the notice, and you pay only for your server.
-  - q: Is NEMO a good alternative to iLab, PPMS or FOM?
+  - q: Is NEMO a good alternative to iLab or PPMS?
     a: Yes, for labs whose main needs are instrument booking, tool control and usage tracking per project. Those products are hosted services licensed to institutions and include invoicing; with NEMO you run it yourself and send its usage data to a billing plugin or your institution's finance system.
   - q: How do I sign in to NEMO the first time?
     a: Sign in with the username admin and the password Cloudgate shows on the app's variables page. To add a lab user, create them with a password on the user directory page, then add a NEMO user with the same username.
@@ -45,6 +45,8 @@ faq:
     a: Partly. NEMO records every tool use, room visit, staff charge and supply against a project, with monthly reports and a billing data feed. Rates and invoices come from the NEMO-billing plugin or your own billing system.
   - q: Do I need special hardware to use NEMO?
     a: No. Booking, usage tracking and maintenance work in any web browser. Interlocks that cut a tool's power and badge readers at the door are optional extras that need hardware.
+  - q: Can I import my data from iLab or PPMS?
+    a: "No. NEMO has no importer from iLab or PPMS, so you set up your tools, projects and users again in its admin back office, which most labs do at the start of a billing period. Keep your old system's exports for past billing."
   - q: What server size does NEMO need?
     a: A small server with 1 GB of memory is enough for one lab, because NEMO is a light web app with a single-file database. Cloudgate sets it up with a small user directory for sign-in.
 screenshots:
@@ -59,7 +61,7 @@ screenshots:
     caption: "Monthly usage, charged to projects, with a way to ask for corrections."
 ---
 
-NEMO is free, self-hosted lab management software from NIST that books shared instruments, controls who can switch each tool on, and records every minute of use against a project for billing. Labs use it in place of hosted core-facility systems such as iLab, PPMS and FOM.
+NEMO is free, self-hosted lab management software from NIST that books shared instruments, controls who can switch each tool on, and records every minute of use against a project for billing. Labs use it in place of hosted core-facility systems such as iLab and PPMS.
 
 NIST's Center for Nanoscale Science and Technology built it to run its own cleanroom, and other university and government labs have adopted it. Users reserve a tool on the calendar, enable it when they start, and disable it when they finish; staff see who is in the lab, which tools are busy, which need repair and who is trained on what. A university microscopy core, for example, could let only trained students book its electron microscope, charge each session to the right grant, and send the monthly usage report to the finance office.
 

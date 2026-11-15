@@ -45,6 +45,8 @@ faq:
     a: Open the dashboard, sign in with the username and password Cloudgate shows, connect with the API key, and start a session. Then scan the QR code with WhatsApp on your phone, under Settings, Linked devices.
   - q: Can WAHA work with n8n or Chatwoot?
     a: Yes. WAHA has an n8n community node and works with Chatwoot and Typebot, and any tool that can call a web address and receive webhooks can use it.
+  - q: How do I switch from the WhatsApp Business API to WAHA?
+    a: "There is nothing to import. Start a session in the WAHA dashboard, scan its QR code from WhatsApp on the phone, point WAHA's webhook at your app and change your code to call WAHA's send endpoints. Test with a spare number first, because WhatsApp can ban a number used this way."
   - q: What server size does WAHA need?
     a: A small server with 1 GB of memory is enough for one or a few WhatsApp numbers. Each extra number needs more memory, because WAHA runs a copy of WhatsApp Web for each one. The template runs on servers with Intel or AMD (x86) processors, not ARM.
 screenshots:

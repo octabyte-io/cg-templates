@@ -45,6 +45,8 @@ faq:
     a: Yes, Helfertool emails each volunteer a confirmation with their shifts, once you give it the details of an email sending service at setup. Without one, sign-ups still work but no emails go out.
   - q: Which languages does Helfertool support?
     a: Helfertool is in English and German, and shows each visitor the language of their browser.
+  - q: Can I import my sign-ups from SignUpGenius?
+    a: "No, Helfertool has no SignUpGenius importer. Download your current sign-up lists from SignUpGenius to keep them, set up your next event's jobs and shifts in Helfertool, and share its sign-up link where you posted the old one."
   - q: What server size do I need for Helfertool?
     a: A small server is enough, because Helfertool and its database use less than 1 GB of memory. Cloudgate sets up everything it needs.
 screenshots:
@@ -62,7 +64,7 @@ screenshots:
     caption: "Statistics for helpers, shifts and food preferences."
 ---
 
-Helfertool is free, open-source, self-hosted volunteer shift planning for events, an alternative to SignUpGenius and VolunteerHub: you set up jobs and shifts, volunteers sign up online, and you see who works when. Each shift has a start, an end and the number of helpers it needs, so you can see straight away where you are short.
+Helfertool is free, open-source, self-hosted volunteer shift planning for events, an alternative to SignUpGenius: you set up jobs and shifts, volunteers sign up online, and you see who works when. Each shift has a start, an end and the number of helpers it needs, so you can see straight away where you are short.
 
 Volunteers need no account: they open your event's page, tick their shifts and get a confirmation email. Team leads can look after the helpers of their own job, and you can email everyone, print badges, and note who got their T-shirt or thank-you gift. A town festival, for example, could fill its drinks stand, welcome desk and clean-up shifts from one link in its newsletter, then duplicate the event next year with all its shifts.
 

@@ -41,6 +41,8 @@ faq:
     a: No. Anyone who has the web address can convert books and download the audiobooks on it, so keep the address private.
   - q: How long does it take to convert a book?
     a: It depends on the engine and the server. On an ordinary server without a graphics card, a full novel with the default XTTSv2 voice can take several hours, and books are converted one at a time. This template converts on the processor only; ebook2audiobook's graphics-card version is much faster but needs a server with an NVIDIA card.
+  - q: Is there anything to import from ElevenLabs?
+    a: "No. ebook2audiobook reads your e-book files directly: upload a book you have the right to convert, choose a language and a voice, or upload a short recording of a voice you may use, and start the conversion."
   - q: What server size does ebook2audiobook need?
     a: At least 2 GB of memory, with 8 GB recommended, and plenty of disk, because the app takes about 10 GB and its voice models several more. Plan for 20 GB or more of free space.
   - q: Can I listen to the audiobooks in Audiobookshelf?

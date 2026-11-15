@@ -1,5 +1,5 @@
 ---
-tagline: One login and two-step sign-in for all your apps, on your server.
+tagline: Single sign-on for all your apps, with realms for staff and customers.
 category: security
 alternativeTo: [okta, auth0]
 ease: some-setup
@@ -33,7 +33,7 @@ switching:
     - You connect each app yourself, without a catalogue of ready-made app connections
     - The admin console uses technical terms such as realms and clients, so it takes time to learn
     - If Keycloak is down, nobody can sign in to the connected apps, so keep it backed up
-    - No tool to import users and settings from Okta, Auth0 or Entra ID
+    - No tool to import users and settings from Okta or Auth0
 faq:
   - q: Is Keycloak free?
     a: Yes, Keycloak is free and open source under the Apache 2.0 licence, with no limit on users or apps and no paid edition of its own. You pay only for your server. Red Hat and other companies sell support if you want it.
@@ -46,7 +46,7 @@ faq:
   - q: Can I move my users from Okta or Auth0 to Keycloak?
     a: Not with a built-in tool. You can add your existing directory through LDAP or Active Directory, or let people sign in through the old service while you switch, and create other accounts in Keycloak.
   - q: What happens if Keycloak is down?
-    a: People cannot sign in to the apps that rely on it until it is back. Keep regular backups, and keep a local admin login in your most important apps.
+    a: Signing in to every app that hands its login to Keycloak stops until it is back, so treat it as a core service. Back up its database regularly, and keep a local admin account in your most important apps as a way in.
   - q: What server size do I need for Keycloak?
     a: Keycloak needs about 2 GB of memory, so Cloudgate asks for a medium server. That is enough for a small or mid-sized organisation; choose a larger one for many thousands of users.
 screenshots:
@@ -64,7 +64,7 @@ screenshots:
     caption: "The sign-in page your team sees, with your organisation's name."
 ---
 
-Keycloak is a free, open-source, self-hosted single sign-on and identity server, an alternative to Okta, Auth0 and Microsoft Entra ID: your people sign in once, with two-step verification, and open all your apps. You add, change and remove accounts in one place, and their access to every connected app follows.
+Keycloak is a free, open-source, self-hosted single sign-on and identity server, an alternative to Okta and Auth0 for single sign-on: your people sign in once, with two-step verification, and open all your apps. You add, change and remove accounts in one place, and their access to every connected app follows.
 
 Apps that support OpenID Connect, OAuth 2.0 or SAML, which includes many self-hosted tools, hand their login to Keycloak. People can sign in with an authenticator app, a security key or a passkey, log in with Google, Microsoft or GitHub, and reset their own password. A design studio with ten staff, for example, could give everyone one login for Nextcloud, the wiki and Grafana, and turn off a freelancer's access to all three when their project ends.
 

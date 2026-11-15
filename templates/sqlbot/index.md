@@ -45,6 +45,8 @@ faq:
     a: Partly. Your questions, table descriptions and the results it needs to explain go to the AI provider you set up; the database itself stays where it is. To keep everything in-house, connect a model you run yourself through an OpenAI-compatible server.
   - q: Is SQLBot a good alternative to ThoughtSpot?
     a: Yes, for a small team that mainly wants to ask its own database questions in plain language without a per-user subscription. ThoughtSpot is a much larger hosted analytics service with more reporting, sharing and governance features.
+  - q: Can I import my ThoughtSpot setup into SQLBot?
+    a: "No, there is no ThoughtSpot importer. SQLBot connects to the same databases directly, so you connect each one with a read-only account, describe its main tables and add a glossary of your business terms, then check answers against your existing reports."
   - q: What server size do I need for SQLBot?
     a: SQLBot needs a medium server with about 2 GB of memory and several gigabytes of disk, because it includes its own database and a model for searching your table descriptions. The AI answers come from your AI provider, so no graphics card is needed.
 screenshots: []
