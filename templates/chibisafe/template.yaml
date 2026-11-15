@@ -1,0 +1,20 @@
+name: Chibisafe
+description: "Chibisafe is a self-hosted file uploader: drop in screenshots and files, get share links, sort them into albums and upload straight from ShareX."
+version: "6.7.0"
+tags: ["self-hosted file uploader", "zight alternative", "droplr alternative", "sharex upload server", "screenshot sharing", "image hosting"]
+links:
+  website: https://chibisafe.app
+  docs: https://chibisafe.app/docs/intro
+  source: https://github.com/chibisafe/chibisafe
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Password of the "admin" account Chibisafe creates on first start.
+  ADMIN_PASSWORD: { generate: password }
+# Chibisafe's official setup puts Caddy in front: it serves uploaded files
+# itself and sends /api and /docs to the server and everything else to the web app.
+domains:
+  - { service: caddy, port: 80 }
+files:
+  - { path: Caddyfile }

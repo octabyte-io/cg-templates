@@ -1,0 +1,16 @@
+name: SearXNG
+description: "Self-hosted SearXNG is a private search engine that searches Google, DuckDuckGo, Brave and many more at once, with no account, ad profile or tracking."
+version: "2026.11.15-2d500cb6b"
+tags: [private search engine, metasearch engine, kagi alternative, google alternative, self-hosted search engine, searxng docker, web search for ai]
+links:
+  website: https://searxng.org
+  docs: https://docs.searxng.org
+  source: https://github.com/searxng/searxng
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  SEARXNG_BASE_URL: { value: "{{domains.searxng.url}}" }
+  SEARXNG_SECRET: { generate: hex }
+domains:
+  - { service: searxng, port: 8080 }

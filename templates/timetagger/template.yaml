@@ -1,0 +1,21 @@
+name: TimeTagger
+description: "TimeTagger is a self-hosted time tracker for freelancers: log your hours with tags on a timeline and send clients PDF or CSV reports."
+version: "26.1.3"
+tags: [time tracking, timesheets, toggl alternative, clockify alternative, freelance time tracker, billable hours]
+links:
+  website: https://timetagger.app
+  docs: https://timetagger.readthedocs.io
+  source: https://github.com/almarklein/timetagger
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  ADMIN_USER:
+    ask:
+      label: Username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: timetagger, port: 80 }

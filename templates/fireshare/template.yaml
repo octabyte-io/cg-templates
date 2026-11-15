@@ -1,0 +1,18 @@
+name: Fireshare
+description: "Fireshare is a self-hosted app for sharing game clips and videos by link, with Discord previews, games, tags and private clips."
+version: "1.9.0"
+tags: ["streamable alternative", "game clip sharing", "self-hosted video sharing", "share videos by link", "fireshare"]
+links:
+  website: https://github.com/fireshare-app/fireshare
+  docs: https://github.com/fireshare-app/fireshare#readme
+  source: https://github.com/fireshare-app/fireshare
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ADMIN_USERNAME: { value: "admin" }
+  ADMIN_PASSWORD: { generate: password }
+  SECRET_KEY: { generate: hex }
+  DOMAIN: { value: "{{domains.fireshare.host}}" }
+domains:
+  - { service: fireshare, port: 80 }

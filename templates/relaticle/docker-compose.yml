@@ -1,0 +1,185 @@
+# Relaticle, from upstream's compose.yml (v3.9.2): the web app, the Horizon queue worker,
+# the scheduler and the Reverb websocket server, all from one image, with PostgreSQL and
+# Redis. The web app's own nginx proxies the websocket under /reverb, so one address does.
+x-relaticle-env: &relaticle-env
+  APP_NAME: Relaticle
+  APP_ENV: production
+  APP_KEY: base64:${APP_KEY}
+  APP_DEBUG: "false"
+  APP_TIMEZONE: UTC
+  APP_URL: ${APP_URL}
+  # The APP_URL host is always accepted; localhost is for the container's health check.
+  TRUSTED_HOSTS: localhost
+  PASSKEYS_USER_HANDLE_SECRET: ${PASSKEYS_USER_HANDLE_SECRET}
+  REQUIRE_EMAIL_VERIFICATION: "true"
+  LOG_CHANNEL: stderr
+  LOG_LEVEL: warning
+  DB_CONNECTION: pgsql
+  DB_HOST: relaticle-db
+  DB_PORT: "5432"
+  DB_DATABASE: relaticle
+  DB_USERNAME: relaticle
+  DB_PASSWORD: ${DB_PASSWORD}
+  REDIS_HOST: relaticle-redis
+  REDIS_PASSWORD: "null"
+  REDIS_PORT: "6379"
+  CACHE_STORE: redis
+  SESSION_DRIVER: redis
+  QUEUE_CONNECTION: redis
+  BROADCAST_CONNECTION: reverb
+  BROADCAST_REVERB_HOST: reverb
+  BROADCAST_REVERB_PORT: "8080"
+  BROADCAST_REVERB_SCHEME: http
+  # Rela, the AI assistant, answers once a provider key is set; both are optional.
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  # "failover" sends through SMTP and, when no mail server is set or it can't be reached,
+  # writes the message to the log instead (upstream's default is log only).
+  MAIL_MAILER: failover
+  MAIL_HOST: ${SMTP_HOST:-}
+  MAIL_PORT: ${SMTP_PORT:-587}
+  MAIL_USERNAME: ${SMTP_USERNAME:-}
+  MAIL_PASSWORD: ${SMTP_PASSWORD:-}
+  MAIL_ENCRYPTION: tls
+  MAIL_FROM_ADDRESS: ${SMTP_FROM:-hello@example.com}
+  MAIL_FROM_NAME: Relaticle
+
+services:
+  relaticle:
+    image: ghcr.io/relaticle/relaticle:3.9.2
+    restart: unless-stopped
+    environment:
+      <<: *relaticle-env
+      # serversideup/php runs the migrations at start.
+      AUTORUN_ENABLED: "true"
+      AUTORUN_LARAVEL_MIGRATION: "true"
+      AUTORUN_LARAVEL_MIGRATION_ISOLATION: "true"
+      # nginx listens on IPv4 only: on a server with IPv6 switched off, the image's
+      # default ("all") stops nginx from starting.
+      NGINX_LISTEN_IP_PROTOCOL: ipv4
+    volumes:
+      - relaticle-storage:/var/www/html/storage/app
+    depends_on:
+      relaticle-db:
+        condition: service_healthy
+      relaticle-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+
+  # Creates the first sign-in (the email typed at setup, the generated password) once,
+  # the way upstream's guide does with "php artisan make:filament-user".
+  relaticle-admin:
+    image: ghcr.io/relaticle/relaticle:3.9.2
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - >-
+        if PGPASSWORD="$$DB_PASSWORD" psql -h relaticle-db -U relaticle -d relaticle -tAc
+        "select 1 from users where lower(email) = lower('$$ADMIN_EMAIL')" | grep -q 1;
+        then echo "Admin $$ADMIN_EMAIL already exists.";
+        else php /var/www/html/artisan make:filament-user --no-interaction --panel=app
+        --name=Admin --email="$$ADMIN_EMAIL" --password="$$ADMIN_PASSWORD"; fi
+    environment:
+      <<: *relaticle-env
+      AUTORUN_ENABLED: "false"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    depends_on:
+      relaticle:
+        condition: service_healthy
+
+  relaticle-horizon:
+    image: ghcr.io/relaticle/relaticle:3.9.2
+    restart: unless-stopped
+    command: ["php", "/var/www/html/artisan", "horizon"]
+    stop_signal: SIGTERM
+    environment:
+      <<: *relaticle-env
+      AUTORUN_ENABLED: "false"
+    volumes:
+      - relaticle-storage:/var/www/html/storage/app
+    depends_on:
+      relaticle:
+        condition: service_healthy
+      relaticle-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "healthcheck-horizon"]
+      start_period: 10s
+
+  relaticle-scheduler:
+    image: ghcr.io/relaticle/relaticle:3.9.2
+    restart: unless-stopped
+    command: ["php", "/var/www/html/artisan", "schedule:work"]
+    stop_signal: SIGTERM
+    environment:
+      <<: *relaticle-env
+      AUTORUN_ENABLED: "false"
+    volumes:
+      - relaticle-storage:/var/www/html/storage/app
+    # Waits for the admin step, so a stack start also waits for (and reports) that step.
+    depends_on:
+      relaticle:
+        condition: service_healthy
+      relaticle-admin:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "healthcheck-schedule"]
+      start_period: 10s
+
+  # The image's nginx sends /reverb/app/ to the host "reverb", hence the alias.
+  relaticle-reverb:
+    image: ghcr.io/relaticle/relaticle:3.9.2
+    restart: unless-stopped
+    command: ["php", "/var/www/html/artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    stop_signal: SIGTERM
+    environment:
+      <<: *relaticle-env
+      AUTORUN_ENABLED: "false"
+    networks:
+      default:
+        aliases: [reverb]
+    depends_on:
+      relaticle:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "healthcheck-reverb"]
+      start_period: 10s
+
+  relaticle-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: relaticle
+      POSTGRES_USER: relaticle
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - relaticle-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U relaticle -d relaticle"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  relaticle-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - relaticle-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  relaticle-storage:
+  relaticle-db-data:
+  relaticle-redis-data:
