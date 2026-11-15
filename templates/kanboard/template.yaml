@@ -1,0 +1,17 @@
+name: Kanboard
+description: "Kanboard is a self-hosted Kanban board: drag tasks across columns, limit work in progress, use swimlanes and automate routine changes."
+version: "v1.2.57"
+tags: [kanban board, self-hosted kanban, task management, project management, trello alternative, asana alternative]
+links:
+  website: https://kanboard.org
+  docs: https://docs.kanboard.org/v1/
+  source: https://github.com/kanboard/kanboard
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The password of the user "admin". Set once, on the first start; change it
+  # afterwards in Kanboard.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: kanboard, port: 80 }

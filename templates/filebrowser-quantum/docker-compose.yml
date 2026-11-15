@@ -1,0 +1,39 @@
+services:
+  # FileBrowser Quantum with its built-in settings: it serves the files in /srv,
+  # with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD is the
+  # password of the user "admin", created on the first start and set back to
+  # this value on every start.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable
+    restart: unless-stopped
+    depends_on:
+      filebrowser-permissions:
+        condition: service_completed_successfully
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      # The files people upload and browse.
+      - filebrowser-files:/srv
+      # The SQLite database, config.yaml and the thumbnail cache.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Runs once at each start: a new volume is owned by root, and the app runs as
+  # the image's user filebrowser (1000:1000), so this hands both folders to it.
+  filebrowser-permissions:
+    image: gtstef/filebrowser:2.0.2-stable
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["chown", "1000:1000", "/srv", "/home/filebrowser/data"]
+    volumes:
+      - filebrowser-files:/srv
+      - filebrowser-data:/home/filebrowser/data
+
+volumes:
+  filebrowser-files:
+  filebrowser-data:

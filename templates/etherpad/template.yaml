@@ -1,0 +1,23 @@
+name: Etherpad
+description: "Etherpad is a self-hosted collaborative editor: write meeting notes and documents together in real time, with author colours and full history."
+version: "3.3.17"
+tags: [collaborative editor, real-time collaboration, meeting notes, online text editor, google docs alternative, dropbox paper alternative]
+links:
+  website: https://etherpad.org
+  docs: https://docs.etherpad.org
+  source: https://github.com/ether/etherpad
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.etherpad.url}}" }
+  # The password of the user "admin", who signs in at /admin to manage pads,
+  # plugins and settings. Pads themselves need no account.
+  ADMIN_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  # Secrets of Etherpad's built-in sign-in service (OpenID Connect), used by
+  # the /admin page.
+  ADMIN_SECRET: { generate: hex }
+  USER_SECRET: { generate: hex }
+domains:
+  - { service: etherpad, port: 9001 }

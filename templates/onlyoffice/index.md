@@ -1,7 +1,7 @@
 ---
 tagline: Edit Word, Excel and PowerPoint files together in the browser.
 category: documents
-alternativeTo: [microsoft-365, google-workspace]
+alternativeTo: [microsoft-365, google-workspace, google-docs]
 ease: some-setup
 easeNote: You connect it to your Nextcloud or Seafile by pasting this app's address and the secret Cloudgate shows you; on its own it opens no files.
 license: AGPL-3.0-only

@@ -1,0 +1,15 @@
+name: HomeBox
+description: "HomeBox is a self-hosted home inventory app: record what you own and where it is, with photos, receipts, warranties and QR code labels."
+version: "0.27.1"
+tags: [home inventory, home inventory app, warranty tracker, asset tracking, sortly alternative, encircle alternative]
+links:
+  website: https://homebox.software
+  docs: https://homebox.software/en/quick-start/
+  source: https://github.com/sysadminsmedia/homebox
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  HBOX_AUTH_API_KEY_PEPPER: { generate: hex }
+domains:
+  - { service: homebox, port: 7745 }

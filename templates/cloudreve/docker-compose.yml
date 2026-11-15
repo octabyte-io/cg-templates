@@ -1,0 +1,54 @@
+# From Cloudreve's official docker-compose.yml (Community edition), with the
+# database protected by a password instead of "trust", and the offline-download
+# (BitTorrent) ports left out.
+services:
+  cloudreve:
+    image: cloudreve/cloudreve:4.19.1
+    restart: unless-stopped
+    depends_on:
+      cloudreve-db:
+        condition: service_healthy
+      cloudreve-redis:
+        condition: service_healthy
+    environment:
+      CR_CONF_Database.Type: postgres
+      CR_CONF_Database.Host: cloudreve-db
+      CR_CONF_Database.User: cloudreve
+      CR_CONF_Database.Password: ${DB_PASSWORD}
+      CR_CONF_Database.Name: cloudreve
+      CR_CONF_Database.Port: 5432
+      CR_CONF_Redis.Server: cloudreve-redis:6379
+    volumes:
+      # Settings (conf.ini, with its generated session secret) and uploaded files.
+      - cloudreve-data:/cloudreve/data
+
+  cloudreve-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cloudreve
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: cloudreve
+    volumes:
+      - cloudreve-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudreve"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  cloudreve-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - cloudreve-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  cloudreve-data:
+  cloudreve-db-data:
+  cloudreve-redis-data:

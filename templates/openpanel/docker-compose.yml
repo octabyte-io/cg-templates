@@ -1,0 +1,145 @@
+# From OpenPanel's self-hosting compose file (self-hosting/docker-compose.template.yml
+# at tag v2.3.0) and its .env template: the Caddy proxy that puts the API under /api,
+# the API, dashboard and worker, PostgreSQL, Redis and ClickHouse. The proxy serves
+# plain HTTP (Cloudgate's web address adds HTTPS) and the worker's basic-auth
+# address is left out.
+
+x-openpanel-env: &openpanel-env
+  NODE_ENV: production
+  SELF_HOSTED: "true"
+  BATCH_SIZE: "5000"
+  BATCH_INTERVAL: "10000"
+  # The first person to sign up becomes the owner; after that people join by invitation.
+  ALLOW_REGISTRATION: "false"
+  ALLOW_INVITATION: "true"
+  REDIS_URL: redis://openpanel-redis:6379
+  CLICKHOUSE_URL: http://openpanel-clickhouse:8123/openpanel
+  DATABASE_URL: postgresql://openpanel:${DB_PASSWORD}@openpanel-db:5432/openpanel?schema=public
+  DATABASE_URL_DIRECT: postgresql://openpanel:${DB_PASSWORD}@openpanel-db:5432/openpanel?schema=public
+  DASHBOARD_URL: ${DASHBOARD_URL}
+  API_URL: ${DASHBOARD_URL}/api
+  # The dashboard's server reaches the API directly instead of through the public address.
+  API_URL_SSR: http://openpanel-api:3000
+  COOKIE_SECRET: ${COOKIE_SECRET}
+
+services:
+  openpanel-proxy:
+    image: caddy:2.11.4-alpine
+    restart: unless-stopped
+    depends_on:
+      openpanel-dashboard:
+        condition: service_healthy
+      openpanel-api:
+        condition: service_healthy
+    volumes:
+      - ../files/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - openpanel-proxy-data:/data
+      - openpanel-proxy-config:/config
+
+  openpanel-api:
+    image: lindesvard/openpanel-api:2.3.0
+    restart: unless-stopped
+    command: >
+      sh -c "
+        echo 'Running migrations...'
+        CI=true pnpm -r run migrate:deploy
+
+        pnpm start
+      "
+    depends_on:
+      openpanel-db:
+        condition: service_healthy
+      openpanel-clickhouse:
+        condition: service_healthy
+      openpanel-redis:
+        condition: service_healthy
+    environment: *openpanel-env
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 1m
+
+  openpanel-dashboard:
+    image: lindesvard/openpanel-dashboard:2.3.0
+    restart: unless-stopped
+    depends_on:
+      openpanel-api:
+        condition: service_healthy
+    environment: *openpanel-env
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  openpanel-worker:
+    image: lindesvard/openpanel-worker:2.3.0
+    restart: unless-stopped
+    depends_on:
+      openpanel-api:
+        condition: service_healthy
+    environment: *openpanel-env
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  openpanel-db:
+    image: postgres:14.25-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: openpanel
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: openpanel
+    volumes:
+      - openpanel-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openpanel"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  openpanel-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - openpanel-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  openpanel-clickhouse:
+    image: clickhouse/clickhouse-server:25.10.2.65
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_SKIP_USER_SETUP: 1
+    volumes:
+      - openpanel-clickhouse-data:/var/lib/clickhouse
+      - ../files/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/op-config.xml:ro
+      - ../files/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/op-user-config.xml:ro
+      - ../files/clickhouse/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD-SHELL", 'clickhouse-client --query "SELECT 1"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  openpanel-proxy-data:
+  openpanel-proxy-config:
+  openpanel-db-data:
+  openpanel-redis-data:
+  openpanel-clickhouse-data:

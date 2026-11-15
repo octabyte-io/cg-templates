@@ -1,0 +1,117 @@
+# From the official example (github.com/LibreBooking/docker, .examples/docker/docker-compose-local.yml,
+# tag 3.5.2, the image build that 7.2.0 ships with). Settings are LB_* variables, each one
+# overriding a key of config.php (LB_ + the key in capitals, dots as underscores).
+x-librebooking-env: &librebooking-env
+  LB_DATABASE_HOSTSPEC: librebooking-db
+  LB_DATABASE_NAME: librebooking
+  LB_DATABASE_USER: librebooking
+  LB_DATABASE_PASSWORD: ${DB_PASSWORD}
+  # Needed only for /install/configure.php, which upgrades the database after an image update.
+  LB_INSTALL_PASSWORD: ${INSTALL_PASSWORD}
+  LB_DEFAULT_TIMEZONE: ${TIMEZONE:-UTC}
+  LB_SCRIPT_URL: ${APP_URL}/Web
+  # Whoever registers with this email address is an application administrator.
+  LB_ADMIN_EMAIL: ${ADMIN_EMAIL}
+  LB_LOGGING_FOLDER: /var/log/librebooking
+  LB_LOGGING_LEVEL: error
+  LB_LOGGING_SQL: "false"
+  # Email (registration, reminders, approvals). Empty values keep the app's defaults,
+  # so nothing is sent until a server is set.
+  LB_PHPMAILER_SMTP_HOST: ${SMTP_HOST:-}
+  LB_PHPMAILER_SMTP_PORT: ${SMTP_PORT:-587}
+  LB_PHPMAILER_SMTP_USERNAME: ${SMTP_USER:-}
+  LB_PHPMAILER_SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  LB_EMAIL_DEFAULT_FROM_ADDRESS: ${MAIL_FROM:-}
+
+services:
+  # Apache + PHP on port 8080. / redirects to /Web.
+  librebooking:
+    image: librebooking/librebooking:7.2.0
+    restart: unless-stopped
+    depends_on:
+      librebooking-db:
+        condition: service_healthy
+    environment: *librebooking-env
+    volumes:
+      - librebooking-config:/config
+      - librebooking-images:/var/www/html/Web/uploads/images
+      - librebooking-reservations:/var/www/html/Web/uploads/reservation
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1:8080/Web/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # The background jobs (reminders, waitlist, auto-release, clean-up), on the
+  # schedule the image ships in /config/lb-jobs-cron, as the official example runs them.
+  librebooking-cron:
+    image: librebooking/librebooking:7.2.0
+    restart: unless-stopped
+    command: [supercronic, /config/lb-jobs-cron]
+    depends_on:
+      librebooking-db:
+        condition: service_healthy
+    environment: *librebooking-env
+    volumes:
+      - librebooking-config:/config
+      - librebooking-images:/var/www/html/Web/uploads/images
+      - librebooking-reservations:/var/www/html/Web/uploads/reservation
+
+  # The web installer (/install) needs the database root password and creates the tables
+  # by hand. Instead, this job writes the same scripts the installer runs, in its order
+  # (create-schema, every upgrade, create-data with your time zone), into a volume that
+  # MariaDB runs on its first start. MariaDB ignores the folder once its data exists.
+  librebooking-initdb:
+    image: librebooking/librebooking:7.2.0
+    restart: "no"
+    user: "0"
+    environment:
+      TIMEZONE: ${TIMEZONE:-UTC}
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - >-
+        set -euo pipefail;
+        cd /var/www/html/database_schema;
+        {
+        cat create-schema.sql; echo;
+        for v in $$(ls upgrades | sort -V); do
+        for f in schema.sql data.sql; do
+        if [ -f "upgrades/$$v/$$f" ]; then cat "upgrades/$$v/$$f"; echo; fi;
+        done;
+        done;
+        sed "s|America/New_York|$$TIMEZONE|g" create-data.sql; echo;
+        } > /initdb/librebooking.sql;
+        chmod 644 /initdb/librebooking.sql
+    volumes:
+      - librebooking-initdb:/initdb
+
+  librebooking-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    depends_on:
+      librebooking-initdb:
+        condition: service_completed_successfully
+    environment:
+      MARIADB_DATABASE: librebooking
+      MARIADB_USER: librebooking
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - librebooking-db-data:/var/lib/mysql
+      - librebooking-initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # healthcheck.sh --connect uses TCP, which MariaDB opens only after the
+      # first-start scripts have run.
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  librebooking-config:
+  librebooking-images:
+  librebooking-reservations:
+  librebooking-initdb:
+  librebooking-db-data:

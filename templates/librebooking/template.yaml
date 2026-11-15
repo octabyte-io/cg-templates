@@ -1,0 +1,57 @@
+name: LibreBooking
+description: "LibreBooking is self-hosted room booking software: your team books meeting rooms, desks and equipment from one calendar, with approvals, quotas and reports."
+version: "7.2.0"
+tags: [room booking, meeting room booking, desk booking, resource scheduling, equipment booking, skedda alternative, robin alternative]
+links:
+  website: https://github.com/LibreBooking/librebooking
+  docs: https://librebooking.readthedocs.io/en/latest/
+  source: https://github.com/LibreBooking/librebooking
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.librebooking.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  INSTALL_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: Register in LibreBooking with this email address and that account is the administrator.
+      format: email
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The default time zone for schedules and new users, as an IANA name such as Europe/Berlin.
+      default: UTC
+      pattern: "[A-Za-z][A-Za-z0-9_+/-]{1,40}"
+      required: false
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: LibreBooking emails booking confirmations, approvals and reminders, so it needs an email sending service, for example smtp.resend.com. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  MAIL_FROM:
+    ask:
+      label: Sender address
+      description: The From address on LibreBooking's emails, for example bookings@yourcompany.com.
+      format: email
+      required: false
+domains:
+  - { service: librebooking, port: 8080 }

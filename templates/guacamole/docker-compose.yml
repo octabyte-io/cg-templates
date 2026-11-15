@@ -1,0 +1,93 @@
+services:
+  # The web app (Tomcat) on port 8080, served at the root of the address
+  # (WEBAPP_CONTEXT=ROOT). Users, connections and history live in PostgreSQL.
+  guacamole:
+    image: guacamole/guacamole:1.6.0
+    restart: unless-stopped
+    depends_on:
+      guacamole-db:
+        condition: service_healthy
+      guacd:
+        condition: service_started
+    environment:
+      WEBAPP_CONTEXT: ROOT
+      GUACD_HOSTNAME: guacd
+      GUACD_PORT: "4822"
+      POSTGRESQL_HOSTNAME: guacamole-db
+      POSTGRESQL_DATABASE: guacamole
+      POSTGRESQL_USERNAME: guacamole
+      POSTGRESQL_PASSWORD: ${DB_PASSWORD}
+      # Cloudgate's proxy sits in front: trust its X-Forwarded-For so logins and
+      # history show each visitor's own address.
+      REMOTE_IP_VALVE_ENABLED: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1:8080/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  # The proxy daemon that speaks RDP, VNC, SSH and Telnet to the machines you add.
+  # It has no authentication of its own, so it is never published, only reached
+  # by the web app on this private network.
+  guacd:
+    image: guacamole/guacd:1.6.0
+    restart: unless-stopped
+    healthcheck:
+      # The image's own check, run every 15 seconds instead of every 5 minutes.
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 4822 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # Guacamole doesn't create its own tables (guacamole.apache.org/doc/1.6.0/gug/guacamole-docker.html),
+  # so this job writes the official schema from the image's initdb.sh into a volume
+  # that PostgreSQL runs on its first start. It also writes the admin account with
+  # the password Cloudgate generated, in place of the default guacadmin/guacadmin:
+  # Guacamole stores SHA-256(password + uppercase hex salt), computed here so the
+  # password itself is never written to disk. PostgreSQL ignores the folder once its
+  # data exists, so later runs change nothing.
+  guacamole-initdb:
+    image: guacamole/guacamole:1.6.0
+    restart: "no"
+    user: "0"
+    environment:
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - >-
+        set -eu;
+        /opt/guacamole/bin/initdb.sh --postgresql > /initdb/001-guacamole-schema.sql;
+        salt=$$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n' | tr a-f A-F);
+        hash=$$(printf '%s%s' "$$ADMIN_PASSWORD" "$$salt" | sha256sum | cut -d' ' -f1);
+        printf "UPDATE guacamole_user SET password_hash = decode('%s', 'hex'), password_salt = decode('%s', 'hex'), password_date = CURRENT_TIMESTAMP WHERE entity_id = (SELECT entity_id FROM guacamole_entity WHERE name = 'guacadmin' AND type = 'USER');\nUPDATE guacamole_entity SET name = '%s' WHERE name = 'guacadmin' AND type = 'USER';\n" "$$hash" "$$salt" "$$ADMIN_USERNAME" > /initdb/002-cloudgate-admin.sql;
+        chmod 644 /initdb/*.sql
+    volumes:
+      - guacamole-initdb:/initdb
+
+  guacamole-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    depends_on:
+      guacamole-initdb:
+        condition: service_completed_successfully
+    environment:
+      POSTGRES_USER: guacamole
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: guacamole
+    volumes:
+      - guacamole-db-data:/var/lib/postgresql/data
+      - guacamole-initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # Over TCP: during first-start initialisation PostgreSQL listens only on its
+      # socket, so this waits until the schema is in place.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U guacamole -d guacamole"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  guacamole-initdb:
+  guacamole-db-data:
