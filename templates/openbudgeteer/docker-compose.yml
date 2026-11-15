@@ -1,0 +1,60 @@
+# From the PostgreSQL example in OpenBudgeteer's install docs
+# (https://theaxelander.github.io/latest/install/), without the optional API.
+services:
+  openbudgeteer:
+    image: axelander/openbudgeteer:1.11.3
+    restart: unless-stopped
+    depends_on:
+      openbudgeteer-db:
+        condition: service_healthy
+      openbudgeteer-redis:
+        condition: service_healthy
+    environment:
+      CONNECTION_PROVIDER: postgres
+      CONNECTION_SERVER: openbudgeteer-db
+      CONNECTION_PORT: 5432
+      CONNECTION_DATABASE: openbudgeteer
+      CONNECTION_USER: openbudgeteer
+      CONNECTION_PASSWORD: ${POSTGRES_PASSWORD}
+      CONNECTION_REDIS_SERVER: openbudgeteer-redis
+      CONNECTION_REDIS_PORT: 6379
+      APPSETTINGS_CULTURE: ${CULTURE:-en-US}
+      # Login is off by default in OpenBudgeteer; this turns on its single
+      # username-and-password login.
+      APPSETTINGS_AUTH_ENABLED: "true"
+      APPSETTINGS_AUTH_USERNAME: ${AUTH_USERNAME}
+      APPSETTINGS_AUTH_PASSWORD: ${AUTH_PASSWORD}
+      # Trust Cloudgate's HTTPS proxy, so the login cookie is marked secure.
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+
+  openbudgeteer-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: openbudgeteer
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: openbudgeteer
+    volumes:
+      - openbudgeteer-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openbudgeteer -d openbudgeteer"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Keeps the login sessions, the password hash and display settings.
+  openbudgeteer-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: [redis-server, --appendonly, "yes"]
+    volumes:
+      - openbudgeteer-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  openbudgeteer-db-data:
+  openbudgeteer-redis-data:

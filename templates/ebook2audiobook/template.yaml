@@ -1,0 +1,20 @@
+name: ebook2audiobook
+description: "Self-hosted ebook2audiobook turns EPUB, PDF and other e-books into M4B audiobooks with chapters, using AI voices and voice cloning on your server."
+version: "v26.11.11"
+tags:
+  - elevenlabs alternative
+  - ebook to audiobook
+  - epub to audiobook
+  - text to speech audiobook
+  - voice cloning
+  - epub to m4b
+links:
+  website: https://github.com/DrewThomasson/ebook2audiobook
+  docs: https://github.com/DrewThomasson/ebook2audiobook#readme
+  source: https://github.com/DrewThomasson/ebook2audiobook
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs: {}
+domains:
+  - { service: ebook2audiobook, port: 7860 }

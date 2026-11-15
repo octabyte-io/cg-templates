@@ -1,0 +1,26 @@
+name: WeKnora
+description: "WeKnora is a self-hosted, open-source document Q&A tool from Tencent: upload your files and get answers with citations, plus an automatic wiki."
+version: "v0.9.0"
+tags: [document question answering, chat with documents, rag knowledge base, ai knowledge base, glean alternative, guru alternative]
+links:
+  website: https://weknora.weixin.qq.com
+  docs: https://weknora.weixin.qq.com/docs/
+  source: https://github.com/Tencent/WeKnora
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  APP_URL: { value: "{{domains.frontend.url}}" }
+  DB_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  # Must be exactly 32 characters: a generated password is 32 letters and digits.
+  SYSTEM_AES_KEY: { generate: password }
+  SYSTEM_SIGNING_KEY: { generate: hex }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: Sign up with this email first; after the next restart this account becomes the system administrator.
+      format: email
+domains:
+  - { service: frontend, port: 80 }

@@ -1,0 +1,16 @@
+# TaxHacker's self-hosted mode has no sign-in of its own: anyone who opens the
+# address sees every receipt and transaction. This small proxy asks for a
+# username and password first. Cloudgate's own proxy in front handles the
+# domain and TLS. BASIC_AUTH_HASH is the bcrypt hash of ADMIN_PASSWORD, made
+# when the container starts (see docker-compose.yml).
+{
+	admin off
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	reverse_proxy taxhacker:7331
+}

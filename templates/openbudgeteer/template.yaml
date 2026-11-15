@@ -1,0 +1,29 @@
+name: OpenBudgeteer
+description: "OpenBudgeteer is a self-hosted bucket budgeting app: give your money a job in buckets, import bank CSV files and see what's left to spend, like YNAB."
+version: "1.11.3"
+tags: [ynab alternative, budgeting app, envelope budgeting, bucket budgeting, personal finance, goodbudget alternative]
+links:
+  website: https://github.com/TheAxelander/OpenBudgeteer
+  docs: https://theaxelander.github.io/latest/
+  source: https://github.com/TheAxelander/OpenBudgeteer
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  AUTH_USERNAME:
+    ask:
+      label: Username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[A-Za-z][A-Za-z0-9_.-]{2,31}"
+  AUTH_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  CULTURE:
+    ask:
+      label: Language and currency format
+      description: Sets the currency, date and number format, as a language tag such as en-US, en-GB, de-DE or fr-FR.
+      default: en-US
+      required: false
+      pattern: "[a-z]{2,3}(-[A-Za-z0-9]{2,8})*"
+domains:
+  - { service: openbudgeteer, port: 8080 }

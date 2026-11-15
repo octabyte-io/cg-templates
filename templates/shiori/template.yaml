@@ -1,0 +1,20 @@
+name: Shiori
+description: "Shiori is a light, self-hosted bookmark manager: save links with tags, read a clean copy later and keep pages offline, instead of Pocket."
+version: "1.8.0"
+tags: [self-hosted bookmark manager, pocket alternative, read it later, offline web archive, open source bookmark manager, raindrop alternative]
+links:
+  website: https://github.com/go-shiori/shiori
+  docs: https://go-shiori.github.io/shiori/
+  source: https://github.com/go-shiori/shiori
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Signs login sessions, so people stay signed in when Shiori restarts.
+  SHIORI_HTTP_SECRET_KEY: { generate: hex }
+  # Replaces the default password ("gopher") of the account "shiori" on the first start.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: shiori, port: 8080 }
+files:
+  - { path: shiori-start.sh.txt }

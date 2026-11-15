@@ -1,0 +1,49 @@
+name: ZITADEL
+description: "Self-hosted ZITADEL adds sign-up, login, passkeys and single sign-on to your apps, with organisations for business customers, replacing Auth0."
+version: "v4.20.3"
+tags:
+  - auth0 alternative
+  - identity and access management
+  - single sign-on
+  - passkeys
+  - okta alternative
+  - customer identity
+  - oidc
+links:
+  website: https://zitadel.com
+  docs: https://zitadel.com/docs/self-hosting/deploy/compose
+  source: https://github.com/zitadel/zitadel
+cloudgate: 0.1.0
+compose: app
+# API, login UI, PostgreSQL and a small proxy; ZITADEL's docs ask for at least
+# 2 GB of memory.
+size: medium
+inputs:
+  ZITADEL_DOMAIN: { value: "{{domains.proxy.host}}" }
+  # Encrypts ZITADEL's stored secrets; ZITADEL requires exactly 32 characters,
+  # which is the length of a generated password. Never change it afterwards.
+  ZITADEL_MASTERKEY: { generate: password }
+  LOGIN_SESSION_COOKIE_SECRET: { generate: hex }
+  # When the login UI's own access token expires, as in ZITADEL's official
+  # setup. Passed as a variable so it stays text, not a YAML date.
+  LOGIN_CLIENT_PAT_EXPIRATION: { value: "2099-01-01T00:00:00Z" }
+  DB_PASSWORD: { generate: password }
+  # The first admin's password. It is letters and digits only, so the compose
+  # file turns off ZITADEL's "must contain a symbol" password rule.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The first admin's email, which is also their login name. The password is created by Cloudgate and shown afterwards on the app's variables page as ADMIN_PASSWORD.
+      format: email
+  ORG_NAME:
+    ask:
+      label: Organization name
+      description: The name of the first organization in ZITADEL, usually your company's name.
+      default: ZITADEL
+# The Caddy proxy sends each path to the API or the login UI, as ZITADEL's
+# official Traefik setup does, so it is the service that gets the address.
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile }

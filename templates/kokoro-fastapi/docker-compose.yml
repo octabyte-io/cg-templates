@@ -1,0 +1,29 @@
+services:
+  kokoro:
+    # The official CPU image (github.com/remsky/Kokoro-FastAPI, docker/cpu),
+    # with the Kokoro-82M model and its voices baked in, so it starts without
+    # downloading anything. It is large (about 1.5 GB to download). No GPU is
+    # needed. FastAPI serves the API on 8880 and the web player at /web/.
+    image: ghcr.io/remsky/kokoro-fastapi-cpu:v0.10.0
+    restart: unless-stopped
+    environment:
+      # The default log level is DEBUG, which logs every request in detail.
+      API_LOG_LEVEL: INFO
+      # Optional shared key. The app reads API_KEYS as a JSON list, so the
+      # command below turns the one key typed at setup into that list; left
+      # empty, the API stays open (the app's default) and the web player works.
+      KOKORO_API_KEY: ${API_KEY}
+    command:
+      - sh
+      - -c
+      - |
+        if [ -n "$$KOKORO_API_KEY" ]; then export API_KEYS="[\"$$KOKORO_API_KEY\"]"; fi
+        exec ./entrypoint.sh
+    # No volumes: the model and voices are in the image, and generated audio
+    # is returned to the caller rather than kept on the server.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8880/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s

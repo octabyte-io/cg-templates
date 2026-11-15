@@ -1,0 +1,29 @@
+# From MaxKB's quick start at v2.10.8-lts (README.md: one container, data in /opt/maxkb). The
+# image runs PostgreSQL with pgvector, Redis and MaxKB together, as upstream ships it. Here the
+# built-in passwords the image sets by default are replaced with generated ones.
+services:
+  maxkb:
+    image: 1panel/maxkb:v2.10.8-lts
+    restart: unless-stopped
+    environment:
+      # The first password of the built-in "admin" account (upstream default: MaxKB@123..).
+      MAXKB_DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
+      # Signs sessions and background tasks.
+      MAXKB_SECRET_KEY: ${SECRET_KEY}
+      # The bundled PostgreSQL and Redis: the server reads POSTGRES_PASSWORD and REDIS_PASSWORD,
+      # MaxKB the MAXKB_ ones.
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      MAXKB_DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MAXKB_REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - maxkb-data:/opt/maxkb
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8080/admin/"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 300s
+
+volumes:
+  maxkb-data:

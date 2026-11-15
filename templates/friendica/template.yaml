@@ -1,0 +1,30 @@
+name: Friendica
+description: "Self-hosted Friendica: a Facebook-style social network with profiles, groups, events and photo albums, connected to Mastodon and the fediverse."
+version: "2026.05"
+tags:
+  - facebook alternative
+  - decentralised social network
+  - fediverse
+  - self-hosted social network
+  - friendica
+  - activitypub
+links:
+  website: https://friendi.ca
+  docs: https://wiki.friendi.ca
+  source: https://github.com/friendica/friendica
+cloudgate: 0.1.0
+compose: app
+# Apache with PHP serves the site, a second container runs Friendica's worker daemon, next to
+# MariaDB; 2 GB keeps all three comfortable.
+size: medium
+inputs:
+  FRIENDICA_URL: { value: "{{domains.friendica.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The account that registers with this email address becomes Friendica's admin.
+      format: email
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: friendica, port: 80 }

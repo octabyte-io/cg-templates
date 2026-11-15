@@ -1,0 +1,32 @@
+services:
+  campfire:
+    image: ghcr.io/basecamp/once-campfire:1.5.9
+    restart: unless-stopped
+    # One container runs the web app, background jobs and its own Redis.
+    # The push-notification (VAPID) keys are a key pair, so they are made once
+    # with the app's own script/admin/generate-secrets on first start and kept
+    # in the data volume; later starts reuse them.
+    command:
+      - bash
+      - -c
+      - |
+        if [ ! -s /rails/storage/vapid.env ]; then
+          script/admin/generate-secrets | grep '^VAPID_' > /rails/storage/vapid.env.tmp && mv /rails/storage/vapid.env.tmp /rails/storage/vapid.env
+        fi
+        set -a; . /rails/storage/vapid.env; set +a
+        exec bin/boot
+    environment:
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      # Cloudgate serves the web address over HTTPS in front of the app.
+      DISABLE_SSL: "true"
+    volumes:
+      - campfire-data:/rails/storage
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  campfire-data:

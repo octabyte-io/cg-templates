@@ -1,0 +1,113 @@
+# FitTrackee, from upstream's docker-compose.yml and .env.docker.example (v1.3.8),
+# with the Redis and workers services it says a multi-user server needs (archive
+# uploads, data export, API rate limits). Without ports, and logging to stdout.
+# Email stays off (no EMAIL_URL), so fittrackee-owner creates the owner account.
+x-fittrackee-env: &fittrackee-env
+  FLASK_APP: fittrackee
+  FLASK_SKIP_DOTENV: "1"
+  APP_SECRET_KEY: ${APP_SECRET_KEY}
+  UI_URL: ${UI_URL}
+  UPLOAD_FOLDER: /usr/src/app/uploads
+  STATICMAP_CACHE_DIR: /usr/src/app/.staticmap_cache
+  DATABASE_URL: postgresql://fittrackee:${POSTGRES_PASSWORD}@fittrackee-db:5432/fittrackee
+  REDIS_URL: redis://fittrackee-redis:6379
+  API_RATE_LIMITS: "300 per 5 minutes"
+  GUNICORN_LOG: "-"
+
+services:
+  fittrackee:
+    image: fittrackee/fittrackee:v1.3.8
+    restart: unless-stopped
+    command: ["sh", "docker-entrypoint.sh"]
+    environment: *fittrackee-env
+    volumes:
+      - fittrackee-uploads:/usr/src/app/uploads
+      - fittrackee-staticmap-cache:/usr/src/app/.staticmap_cache
+    depends_on:
+      fittrackee-permissions:
+        condition: service_completed_successfully
+      fittrackee-db:
+        condition: service_healthy
+      fittrackee-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5000/api/check-db || exit 1"]
+      interval: 10s
+      timeout: 15s
+      retries: 6
+      start_period: 60s
+
+  # Background tasks: workout archive uploads and account data exports.
+  fittrackee-workers:
+    image: fittrackee/fittrackee:v1.3.8
+    restart: unless-stopped
+    command: ["dramatiq", "fittrackee.tasks:broker", "--processes=2"]
+    environment: *fittrackee-env
+    volumes:
+      - fittrackee-uploads:/usr/src/app/uploads
+      - fittrackee-staticmap-cache:/usr/src/app/.staticmap_cache
+    depends_on:
+      fittrackee:
+        condition: service_healthy
+      fittrackee-redis:
+        condition: service_healthy
+
+  # Runs once at each start: new volumes belong to root and FitTrackee runs as
+  # the image's user fittrackee (1000:1000). Upstream does this with post_start.
+  fittrackee-permissions:
+    image: fittrackee/fittrackee:v1.3.8
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["chown", "-R", "1000:1000", "/usr/src/app/uploads", "/usr/src/app/.staticmap_cache"]
+    volumes:
+      - fittrackee-uploads:/usr/src/app/uploads
+      - fittrackee-staticmap-cache:/usr/src/app/.staticmap_cache
+
+  # Runs once at each start, after the app has set up the database: creates the
+  # owner account, already active, with ftcli (FitTrackee's admin tool). Once
+  # the account exists, ftcli only reports that and changes nothing.
+  fittrackee-owner:
+    image: fittrackee/fittrackee:v1.3.8
+    restart: "no"
+    entrypoint: ["sh", "-c", 'ftcli users create "$$ADMIN_USERNAME" --email "$$ADMIN_EMAIL" --password "$$ADMIN_PASSWORD" --role owner']
+    environment:
+      <<: *fittrackee-env
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    depends_on:
+      fittrackee:
+        condition: service_healthy
+
+  fittrackee-db:
+    image: postgis/postgis:18-3.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fittrackee
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: fittrackee
+    volumes:
+      # PostgreSQL 18 keeps its data in a versioned folder under this path.
+      - fittrackee-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fittrackee -d fittrackee"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  fittrackee-redis:
+    image: redis:8.0.6-alpine
+    restart: unless-stopped
+    volumes:
+      - fittrackee-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  fittrackee-uploads:
+  fittrackee-staticmap-cache:
+  fittrackee-db-data:
+  fittrackee-redis-data:

@@ -1,0 +1,53 @@
+# From the official image's README-Docker.md (github.com/Admidio/admidio, tag v5.0.18) and
+# its Docker Compose example. Left out: published ports, the mail relay host and the
+# organisation short name (no longer read from config.php in Admidio 5).
+# The image writes config.php from these settings on every start; the first visit to the
+# web address opens Admidio's installation wizard, which asks for the organisation's name
+# and creates the administrator account.
+
+services:
+  admidio:
+    image: admidio/admidio:v5.0.18
+    restart: unless-stopped
+    depends_on:
+      admidio-db:
+        condition: service_healthy
+    environment:
+      ADMIDIO_DB_TYPE: mysql
+      ADMIDIO_DB_HOST: admidio-db:3306
+      ADMIDIO_DB_NAME: admidio
+      ADMIDIO_DB_USER: admidio
+      ADMIDIO_DB_PASSWORD: ${DB_PASSWORD}
+      ADMIDIO_DB_TABLE_PRAEFIX: adm
+      ADMIDIO_LOGIN_FOR_UPDATE: "1"
+      ADMIDIO_PASSWORD_HASH_ALGORITHM: DEFAULT
+      ADMIDIO_ROOT_PATH: ${ADMIDIO_ROOT_PATH}
+      TZ: ${TZ}
+    volumes:
+      - admidio-files:/opt/app-root/src/adm_my_files
+      - admidio-plugins:/opt/app-root/src/adm_plugins
+      - admidio-themes:/opt/app-root/src/themes
+    # The image has its own healthcheck (dockerscripts/healthcheck.sh, using curl).
+
+  admidio-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: admidio
+      MARIADB_USER: admidio
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - admidio-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  admidio-files:
+  admidio-plugins:
+  admidio-themes:
+  admidio-db-data:

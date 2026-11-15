@@ -1,0 +1,22 @@
+name: Homepage
+description: "Homepage is a self-hosted dashboard and start page: links to every app your team uses, with live status and figures from over 100 apps on one page."
+version: "2.8.0"
+tags: [self-hosted dashboard, start page, homelab dashboard, start.me alternative, app dashboard, gethomepage]
+links:
+  website: https://gethomepage.dev
+  docs: https://gethomepage.dev/installation/
+  source: https://github.com/gethomepage/homepage
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Homepage refuses requests whose Host is not on this list.
+  HOMEPAGE_ALLOWED_HOSTS: { value: "{{domains.homepage.host}}" }
+  HOMEPAGE_EXTERNAL_URL: { value: "{{domains.homepage.url}}" }
+  # Signs the sign-in cookies (at least 32 characters).
+  HOMEPAGE_AUTH_SECRET: { generate: hex }
+  # The password for the sign-in page, shown afterwards on the app's variables page.
+  HOMEPAGE_AUTH_PASSWORD: { generate: password }
+domains:
+  - { service: homepage, port: 3000 }
+files: []

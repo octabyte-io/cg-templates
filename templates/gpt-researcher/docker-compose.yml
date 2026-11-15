@@ -1,0 +1,59 @@
+services:
+  # GPT Researcher has no accounts or sign-in: anyone with the address could
+  # run research and spend your AI and search credits. This proxy asks for the
+  # username "admin" and the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      gpt-researcher:
+        condition: service_healthy
+
+  gpt-researcher:
+    # The image the project publishes from its Dockerfile: the research API
+    # with its built-in web page on port 8000. (The official compose file also
+    # builds a Next.js front end from source; it is a development setup with
+    # no published image, so it is left out.)
+    image: ghcr.io/assafelovic/gpt-researcher:3.8.0
+    restart: unless-stopped
+    # As in the official compose file: the app writes reports, uploaded
+    # documents and its report list into the volumes below.
+    user: root
+    environment:
+      # The app starts without keys; research needs them. Change them later
+      # in the app's variables. Other AI providers (Anthropic, Gemini, an
+      # OpenAI-compatible server, ...) are chosen with FAST_LLM, SMART_LLM,
+      # STRATEGIC_LLM and EMBEDDING plus that provider's key.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      TAVILY_API_KEY: ${TAVILY_API_KEY:-}
+      # tavily (needs TAVILY_API_KEY) or duckduckgo (no key).
+      RETRIEVER: ${RETRIEVER:-tavily}
+      LOGGING_LEVEL: INFO
+      IMAGE_GENERATION_ENABLED: "false"
+    volumes:
+      # Finished reports (PDF, Word, Markdown).
+      - gpt-researcher-outputs:/usr/src/app/outputs
+      # Documents uploaded to research "My documents".
+      - gpt-researcher-docs:/usr/src/app/my-docs
+      # The list of past reports (data/reports.json).
+      - gpt-researcher-data:/usr/src/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  gpt-researcher-outputs:
+  gpt-researcher-docs:
+  gpt-researcher-data:

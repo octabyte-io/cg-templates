@@ -1,0 +1,106 @@
+# From farmOS's production compose file (docker/docker-compose.production.yml at the
+# 4.0.9 tag): the farmOS web server and its PostgreSQL database, with the sites and
+# keys folders it persists. Left out: published ports.
+# The image opens a browser installer that asks for the database login, so
+# farmos-install below installs farmOS once instead, and farmos-cron runs the
+# routine tasks the install guide asks a host to schedule (farmos.org/hosting/install, "Cron").
+
+x-farmos-env: &farmos-env
+  FARMOS_DB_HOST: farmos-db
+  FARMOS_DB_NAME: farm
+  FARMOS_DB_USER: farm
+  FARMOS_DB_PASSWORD: ${DB_PASSWORD}
+  FARMOS_HOST: ${FARMOS_HOST}
+
+x-farmos-volumes: &farmos-volumes
+  # Settings and uploaded files (sites), and the API's OAuth2 keys. The farmOS
+  # codebase itself comes from the image.
+  - farmos-sites:/opt/drupal/web/sites
+  - farmos-keys:/opt/drupal/keys
+  - ../files/settings-cloudgate.php.txt:/cloudgate/settings-cloudgate.php:ro
+
+services:
+  farmos:
+    image: farmos/farmos:4.0.9
+    restart: unless-stopped
+    depends_on:
+      farmos-install:
+        condition: service_completed_successfully
+    environment: *farmos-env
+    volumes:
+      - farmos-sites:/opt/drupal/web/sites
+      - farmos-keys:/opt/drupal/keys
+      - ../files/settings-cloudgate.php.txt:/cloudgate/settings-cloudgate.php:ro
+      # Marks requests that reached Cloudgate's proxy over HTTPS as HTTPS.
+      - ../files/forwarded-https.conf:/etc/apache2/conf-enabled/forwarded-https.conf:ro
+    healthcheck:
+      # farmOS answers only on its own address, so the check sends that address as the Host.
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null -H \"Host: $${FARMOS_HOST}\" http://localhost/user/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Sign in at https://<domain>/user/login as "admin" with the password Cloudgate made.
+  farmos-install:
+    image: farmos/farmos:4.0.9
+    restart: "no"
+    # Starts as root only to hand the new keys volume to www-data; drush runs as www-data.
+    user: "0"
+    depends_on:
+      farmos-db:
+        condition: service_healthy
+    environment:
+      <<: *farmos-env
+      FARMOS_FARM_NAME: ${FARM_NAME}
+      FARMOS_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      FARMOS_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - farmos-sites:/opt/drupal/web/sites
+      - farmos-keys:/opt/drupal/keys
+      - ../files/settings-cloudgate.php.txt:/cloudgate/settings-cloudgate.php:ro
+      - ../files/install.sh.txt:/cloudgate/install.sh:ro
+    entrypoint: ["sh", "/cloudgate/install.sh"]
+    healthcheck:
+      disable: true
+
+  # farmOS's routine tasks (database clean-up and garbage collection), once a day.
+  farmos-cron:
+    image: farmos/farmos:4.0.9
+    restart: unless-stopped
+    depends_on:
+      farmos:
+        condition: service_healthy
+    environment: *farmos-env
+    volumes: *farmos-volumes
+    working_dir: /opt/drupal
+    entrypoint: ["sh", "-c"]
+    command:
+      - >-
+        while true; do
+        drush cron || echo "cron run failed";
+        sleep 86400;
+        done
+    healthcheck:
+      disable: true
+
+  farmos-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: farm
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: farm
+    volumes:
+      - farmos-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U farm -d farm"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  farmos-sites:
+  farmos-keys:
+  farmos-db-data:

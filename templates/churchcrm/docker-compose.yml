@@ -1,0 +1,98 @@
+# From ChurchCRM's production compose file (github.com/ChurchCRM/CRM, docker/production/compose.yaml
+# at tag 7.8.4). Changes: no published ports; the image pinned to the release instead of
+# latest-php8-apache; Include/Config.php supplied from files/ (read from the environment), so
+# there is no setup wizard and nothing is lost when the container is replaced; and
+# churchcrm-admin, which replaces the installer's default "changeme" password once.
+
+x-churchcrm-db: &churchcrm-db
+  CHURCHCRM_DB_HOST: churchcrm-db
+  CHURCHCRM_DB_NAME: churchcrm
+  CHURCHCRM_DB_USER: churchcrm
+  CHURCHCRM_DB_PASSWORD: ${DB_PASSWORD}
+
+services:
+  churchcrm:
+    image: churchcrm/crm:7.8.4-php8-apache
+    restart: unless-stopped
+    depends_on:
+      churchcrm-db:
+        condition: service_healthy
+    environment:
+      <<: *churchcrm-db
+      CHURCHCRM_URL: ${CHURCHCRM_URL}
+    volumes:
+      # Only the two directories that are empty in the image hold uploads (people's and
+      # families' photos); the rest of Images/ ships logos the app needs.
+      - churchcrm-person-photos:/var/www/html/Images/Person
+      - churchcrm-family-photos:/var/www/html/Images/Family
+      - ../files/Config.php.txt:/var/www/html/Include/Config.php:ro
+      # Marks requests that reached Cloudgate's proxy over HTTPS as HTTPS.
+      - ../files/forwarded-https.conf:/etc/apache2/conf-enabled/forwarded-https.conf:ro
+    healthcheck:
+      # The image ships curl but no wget. Apache listens on 8080, not 80.
+      # GET / answers 302 to the login page, which curl without -L counts as success.
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  # Runs once at each start. The first time, it replaces the installer's default
+  # password for the account "Admin" with ADMIN_PASSWORD; after that it does nothing.
+  churchcrm-admin:
+    image: churchcrm/crm:7.8.4-php8-apache
+    restart: "no"
+    depends_on:
+      churchcrm:
+        condition: service_healthy
+    environment:
+      <<: *churchcrm-db
+      CHURCHCRM_INTERNAL_URL: http://churchcrm:8080/
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ../files/set-admin-password.php.txt:/cloudgate/set-admin-password.php:ro
+    # Sets the admin password once, then stays idle so `docker compose up --wait`
+    # sees a running service rather than an exited one.
+    entrypoint: ["sh", "-c", "php /cloudgate/set-admin-password.php && exec sleep infinity"]
+    healthcheck:
+      disable: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  churchcrm-db:
+    image: mariadb:11.4.13
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: churchcrm
+      MARIADB_USER: churchcrm
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - churchcrm-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 10
+    cap_drop:
+      - ALL
+    cap_add:
+      # MariaDB's entrypoint starts as root and drops to the mysql user.
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  churchcrm-person-photos:
+  churchcrm-family-photos:
+  churchcrm-db-data:

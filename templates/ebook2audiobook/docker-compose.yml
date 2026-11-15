@@ -1,0 +1,35 @@
+services:
+  ebook2audiobook:
+    # The project's CPU image (amd64 and arm64). Servers with an NVIDIA GPU can
+    # use the matching -cu130 tag instead, with the NVIDIA Container Toolkit.
+    # The image's own entrypoint starts the web app on port 7860.
+    image: athomasson2/ebook2audiobook:v26.11.11-cpu
+    restart: unless-stopped
+    volumes:
+      # Uploaded e-books and the finished audiobooks.
+      - ebook2audiobook-ebooks:/app/ebooks
+      - ebook2audiobook-audiobooks:/app/audiobooks
+      # Text-to-speech models, downloaded the first time each one is used
+      # (the default XTTSv2 model is about 2 GB).
+      - ebook2audiobook-models:/app/models
+      # The voices that come with the app, plus voices uploaded for cloning.
+      - ebook2audiobook-voices:/app/voices
+      # Conversion sessions, so an interrupted book can be resumed.
+      - ebook2audiobook-tmp:/app/tmp
+      # Extra text-to-speech engines the app installs on demand.
+      - ebook2audiobook-venvs:/app/lib/classes/tts_engines/venvs
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:7860/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      # Loading the speech libraries takes a while on a CPU server.
+      start_period: 5m
+
+volumes:
+  ebook2audiobook-ebooks:
+  ebook2audiobook-audiobooks:
+  ebook2audiobook-models:
+  ebook2audiobook-voices:
+  ebook2audiobook-tmp:
+  ebook2audiobook-venvs:

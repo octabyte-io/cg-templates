@@ -1,0 +1,23 @@
+name: tududi
+description: "Self-hosted tududi is a to-do list and day planner with projects, recurring tasks, habits and shared family lists, in place of Todoist or TickTick."
+version: "2.1.0"
+tags: [todoist alternative, ticktick alternative, things alternative, task manager, to-do list, habit tracker, family planner]
+links:
+  website: https://tududi.com
+  docs: https://docs.tududi.com
+  source: https://github.com/chrisvel/tududi
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.tududi.url}}" }
+  DB_PASSWORD: { generate: password }
+  SESSION_SECRET: { generate: hex }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: tududi, port: 3002 }

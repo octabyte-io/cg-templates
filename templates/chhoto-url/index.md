@@ -36,7 +36,7 @@ switching:
     - No campaigns, link-in-bio pages or phone app
 faq:
   - q: Is Chhoto URL free?
-    a: Yes, Chhoto URL is free and open source under the MIT licence, with no paid edition and no limit on links or clicks. You pay only for your server.
+    a: Yes, Chhoto URL costs nothing. It is open source under the MIT licence, every feature is in the free app, and there is no cap on links or clicks. Your only cost is the server, and it fits the smallest one.
   - q: Is Chhoto URL a good alternative to Bitly?
     a: Yes, if you want plain short links on your own domain, with custom endings, expiry dates and QR codes, and a hit count is all the stats you need. It has no click charts, campaigns, link-in-bio pages or team accounts.
   - q: How do I sign in to Chhoto URL the first time?
@@ -46,7 +46,7 @@ faq:
   - q: Should I choose Chhoto URL or YOURLS?
     a: Choose Chhoto URL for the simplest app, with link expiry, QR codes, notes and a phone-friendly page built in. Choose YOURLS if you want detailed stats for each link, such as clicks over time, countries and referring sites, or its plugins.
   - q: Can I import my links from Bitly into Chhoto URL?
-    a: No, Chhoto URL has no Bitly import. Your bit.ly links stay with Bitly; create new links in Chhoto URL for the ones you still use, with the same endings if they were on your own domain.
+    a: No, there is no importer for Bitly or any other service, and bit.ly links can never leave Bitly. Recreate the links you still share in Chhoto URL; if they used a branded domain of yours, point that domain at Chhoto URL and reuse the same endings so printed links keep working.
   - q: Can each person on my team have their own login?
     a: No, Chhoto URL has one password and no user accounts, by design. Everyone who has the password sees and manages every link; for separate links per person, install a separate copy for each.
 screenshots:

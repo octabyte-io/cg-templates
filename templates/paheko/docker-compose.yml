@@ -1,0 +1,24 @@
+services:
+  paheko:
+    # The official image, built by Libretic with the Paheko team (Apache + PHP, plugins included).
+    image: paheko/paheko:1.3.24
+    restart: unless-stopped
+    environment:
+      # Paheko reads every PAHEKO_<NAME> variable as its <NAME> setting (config.dist.php lists them).
+      # The public address, so links and redirects use https:// behind Cloudgate's proxy.
+      PAHEKO_WWW_URL: ${WWW_URL}
+      # Protects forms; set here so Paheko doesn't write it into config.local.php.
+      PAHEKO_SECRET_KEY: ${SECRET_KEY}
+    volumes:
+      # The SQLite database, uploaded documents, backups and plugins.
+      - paheko-data:/var/www/paheko/data
+    # The image's own healthcheck, with a start period for the first start.
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://127.0.0.1/admin/ > /dev/null"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+
+volumes:
+  paheko-data:

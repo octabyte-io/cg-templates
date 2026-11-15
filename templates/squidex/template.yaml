@@ -1,0 +1,23 @@
+name: Squidex
+description: "Self-hosted Squidex is an open-source headless CMS: model content, publish with review workflows and feed any website or app through REST and GraphQL."
+version: "7.24.0"
+tags: [headless cms, contentful alternative, open source headless cms, self-hosted cms, graphql cms, sanity alternative, content api]
+links:
+  website: https://squidex.io
+  docs: https://docs.squidex.io/id-01-getting-started/installation/platforms/install-on-docker
+  source: https://github.com/Squidex/squidex
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.squidex.url}}" }
+  MONGO_PASSWORD: { generate: password }
+  LOCK_NEW_USERS:
+    ask:
+      label: Lock new accounts
+      description: The first person to sign up becomes the admin. While this is true, everyone who signs up after them stays locked until the admin unlocks them. Type false to let anyone with the address sign up and use Squidex.
+      default: "true"
+      pattern: "true|false"
+      required: false
+domains:
+  - { service: squidex, port: 5000 }

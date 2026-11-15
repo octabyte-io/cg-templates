@@ -7,7 +7,10 @@ import { absolute, cloudgate, deployUrl, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME
 /** The llmstxt.org index: what the site is, then one line per page worth reading. */
 function body(): string {
   const templates = getTemplates();
-  const steps = templates[0] ? HOW_IT_WORKS(templates[0]) : [];
+  // The example app in the site-wide text: the first one whose name starts with a letter,
+  // so a name like "4ga Boards" (sorted first) isn't the catalogue's example.
+  const example = templates.find((t) => /^[a-z]/i.test(t.name)) ?? templates[0];
+  const steps = example ? HOW_IT_WORKS(example) : [];
   const out: string[] = [
     `# ${SITE_NAME}`,
     '',
@@ -23,7 +26,7 @@ function body(): string {
   out.push(
     '## Deploying an app from this directory',
     '',
-    `- Each app page has a Deploy button that opens hosted Cloudgate (${HOSTED_URL}) with the app chosen, for example ${templates[0] ? deployUrl(templates[0].id) : deployUrl('<id>')}. People without a server can get one from Cloudgate when they deploy; people who already rent one can connect it instead.`,
+    `- Each app page has a Deploy button that opens hosted Cloudgate (${HOSTED_URL}) with the app chosen, for example ${example ? deployUrl(example.id) : deployUrl('<id>')}. People without a server can get one from Cloudgate when they deploy; people who already rent one can connect it instead.`,
     '- Passwords and keys are generated at setup. In a self-hosted Cloudgate console, every app here is on the Templates screen, and setting one up lists everything Cloudgate will create before anything is created.',
     '- Each app gets a free web address, which is plain http (not encrypted), or the user\'s own domain with an automatic https certificate. Cloudgate never updates an app on its own.',
     '',
@@ -70,7 +73,6 @@ function body(): string {
   }
   out.push('');
 
-  const example = templates[0];
   out.push(
     '## Optional',
     '',

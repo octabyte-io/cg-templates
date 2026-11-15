@@ -1,0 +1,162 @@
+# From Fab-manager's official setup (setup/docker-compose.yml and setup/env.example at
+# v6.6.2). The official image runs the web server and the Sidekiq worker under supervisord
+# and leaves database setup and asset compiling to setup.sh; here the web service does
+# those steps on start and the worker runs as its own service of the same image.
+x-fabmanager-env: &fabmanager-env
+  RAILS_ENV: production
+  RACK_ENV: production
+  RAILS_LOG_TO_STDOUT: "true"
+  LOG_LEVEL: info
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  POSTGRES_HOST: fabmanager-db
+  POSTGRES_USERNAME: postgres
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  REDIS_HOST: fabmanager-redis
+  ELASTICSEARCH_HOST: fabmanager-elasticsearch
+  DEFAULT_HOST: ${DEFAULT_HOST}
+  DEFAULT_PROTOCOL: https
+  ALLOW_INSECURE_HTTP: "false"
+  SLOT_DURATION: "60"
+  FEATURE_TOUR_DISPLAY: once
+  DELIVERY_METHOD: smtp
+  RAILS_LOCALE: en
+  APP_LOCALE: en
+  MOMENT_LOCALE: en
+  SUMMERNOTE_LOCALE: en-US
+  ANGULAR_LOCALE: en-us
+  FULLCALENDAR_LOCALE: en
+  INTL_LOCALE: en-US
+  INTL_CURRENCY: ${INTL_CURRENCY}
+  POSTGRESQL_LANGUAGE_ANALYZER: english
+  TIME_ZONE: ${TIME_ZONE}
+  WEEK_STARTING_DAY: monday
+  D3_DATE_FORMAT: "%m/%d/%y"
+  UIB_DATE_FORMAT: MM/dd/yyyy
+  EXCEL_DATE_FORMAT: mm/dd/yyyy
+  OPENLAB_BASE_URI: https://openprojects.fab-manager.com
+  OPENLAB_SSL_VERIFY: "true"
+  DISK_SPACE_MB_ALERT: "1024"
+  ENABLE_SENTRY: "false"
+  MAX_IMPORT_SIZE: "5242880"
+  MAX_IMAGE_SIZE: "10485760"
+  MAX_CAO_SIZE: "20971520"
+  MAX_SUPPORTING_DOCUMENT_FILE_SIZE: "5242880"
+
+x-fabmanager-volumes: &fabmanager-volumes
+  - fabmanager-packs:/usr/src/app/public/packs
+  - fabmanager-uploads:/usr/src/app/public/uploads
+  - fabmanager-invoices:/usr/src/app/invoices
+  - fabmanager-payment-schedules:/usr/src/app/payment_schedules
+  - fabmanager-exports:/usr/src/app/exports
+  - fabmanager-imports:/usr/src/app/imports
+  - fabmanager-supporting-documents:/usr/src/app/supporting_document_files
+  - fabmanager-accounting:/usr/src/app/accounting
+
+services:
+  fabmanager:
+    image: sleede/fab-manager:release-v6.6.2
+    restart: unless-stopped
+    depends_on:
+      fabmanager-db:
+        condition: service_healthy
+      fabmanager-redis:
+        condition: service_healthy
+      fabmanager-elasticsearch:
+        condition: service_healthy
+    # The steps setup.sh and upgrade.sh run: create and migrate the database, seed it with
+    # the first admin (only while no user exists), compile the web assets (again only when
+    # the image's version changes), and build the statistics index once.
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        bundle exec rails db:create
+        bundle exec rails db:migrate
+        bundle exec rails runner 'Rails.application.load_seed unless User.exists?'
+        if ! cmp -s package.json public/packs/.cloudgate-version; then
+          bundle exec rake assets:precompile
+          cp package.json public/packs/.cloudgate-version
+        fi
+        if ! curl -fs -o /dev/null http://fabmanager-elasticsearch:9200/stats; then
+          bundle exec rake fablab:es:build_stats
+        fi
+        rm -f tmp/pids/server.pid
+        exec bundle exec rails server -u puma -p 3000 -b 0.0.0.0
+    environment:
+      <<: *fabmanager-env
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Not read by Fab-manager: ADMIN_PASSWORD is built from it in template.yaml, and
+      # every input has to appear in this file.
+      ADMIN_PASSWORD_RANDOM: ${ADMIN_PASSWORD_RANDOM}
+    volumes: *fabmanager-volumes
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs -o /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 1200s
+
+  fabmanager-worker:
+    image: sleede/fab-manager:release-v6.6.2
+    restart: unless-stopped
+    depends_on:
+      fabmanager:
+        condition: service_healthy
+    command: ["bundle", "exec", "sidekiq", "-C", "/usr/src/app/config/sidekiq.yml"]
+    environment: *fabmanager-env
+    volumes: *fabmanager-volumes
+
+  fabmanager-db:
+    image: postgres:9.6.24
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - fabmanager-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  fabmanager-redis:
+    image: redis:6.2.24-alpine
+    restart: unless-stopped
+    volumes:
+      - fabmanager-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  fabmanager-elasticsearch:
+    image: elasticsearch:5.6.16
+    restart: unless-stopped
+    command: ["-Ehttp.host=0.0.0.0", "-Etransport.host=127.0.0.1", "-Escript.inline=true"]
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true"
+    volumes:
+      - fabmanager-elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+volumes:
+  fabmanager-packs:
+  fabmanager-uploads:
+  fabmanager-invoices:
+  fabmanager-payment-schedules:
+  fabmanager-exports:
+  fabmanager-imports:
+  fabmanager-supporting-documents:
+  fabmanager-accounting:
+  fabmanager-db-data:
+  fabmanager-redis-data:
+  fabmanager-elasticsearch-data:

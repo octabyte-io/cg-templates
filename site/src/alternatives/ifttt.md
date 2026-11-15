@@ -9,8 +9,11 @@ apps:
   automatisch:
     fit: "Close to IFTTT's simplicity: a trigger and a few steps, filled in from menus. It focuses on business apps rather than smart-home devices."
     import: no
+  huginn:
+    fit: "Built for the watch-and-notify side of IFTTT: agents read web pages, feeds, mailboxes and webhooks on a schedule, act only when something changes, and send an email, a daily digest or a chat message. Each agent is set up in a form with a block of JSON settings, so it takes more learning than IFTTT, and it has far fewer ready-made app connections."
+    import: no
 moving: |
-  Applets cannot be imported, but most are a single trigger and action, so rebuilding them takes a few minutes. Note that IFTTT's smart-home and phone triggers, such as a doorbell press or arriving home, often have no equivalent in these business-focused tools; they work best for web apps, email, forms, spreadsheets and chat.
+  Applets cannot be imported, but most are a single trigger and action, so rebuilding them takes a few minutes. Note that IFTTT's smart-home and phone triggers, such as a doorbell press or arriving home, often have no equivalent in these business-focused tools; they work best for web apps, email, forms, spreadsheets and chat. In Huginn, an applet such as "email me when this page changes" or "send me tomorrow's weather" becomes one or two agents; start from its example agents and change their settings.
 faq:
   - q: "Do these apps work with smart-home devices like IFTTT?"
     a: "Mostly not. They connect web and business apps such as Gmail, Google Sheets, Slack and CRMs. Some devices can be reached through webhooks or a home automation hub, but that takes extra setup."

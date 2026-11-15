@@ -1,0 +1,29 @@
+name: HortusFox
+description: "HortusFox is a self-hosted plant manager for house plants and gardens: care records, tasks, supplies and a calendar your household shares."
+version: "6.4"
+tags: [planta alternative, plant manager, plant care app, house plants, garden planner, plant care reminders, open source plant tracker]
+links:
+  website: https://www.hortusfox.com
+  docs: https://github.com/danielbrendel/hortusfox-web#installation
+  source: https://github.com/danielbrendel/hortusfox-web
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # HortusFox has no sign-up page: the first start creates this admin account.
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address you sign in to HortusFox with as its admin.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates, tasks and reminders in HortusFox, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: hortusfox, port: 80 }

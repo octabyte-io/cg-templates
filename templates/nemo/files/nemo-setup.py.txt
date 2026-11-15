@@ -1,0 +1,29 @@
+# Runs once at each start, before NEMO (the nemo-setup service).
+# Creates NEMO's folders, brings the database up to date, and on the first start
+# creates the administrator "admin". NEMO stores no passwords: admin signs in
+# with the password of the LLDAP account "admin" (ADMIN_PASSWORD).
+import os
+
+os.makedirs("/nemo/media", exist_ok=True)
+os.makedirs("/nemo/emails", exist_ok=True)
+
+import django
+
+django.setup()
+
+from django.core.management import call_command
+
+from NEMO.models import User
+
+call_command("migrate", interactive=False)
+
+if not User.objects.filter(username__iexact="admin").exists():
+    User.objects.create_superuser(
+        username="admin",
+        first_name="NEMO",
+        last_name="Administrator",
+        email=os.environ.get("ADMIN_EMAIL") or "admin@example.com",
+    )
+    print("Created the NEMO administrator: admin")
+else:
+    print("The NEMO administrator admin already exists")

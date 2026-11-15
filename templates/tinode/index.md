@@ -24,7 +24,7 @@ features:
 switching:
   gain:
     - Chats and files stay on your own server, not on Meta's or Telegram's
-    - Accounts use an email and password, so nobody has to share a phone number
+    - Accounts use a username and password, so nobody has to share a phone number
     - No fee per person, however many people you add
     - Free Android and iOS apps that connect to your own server
   different:
@@ -38,7 +38,7 @@ faq:
   - q: Is Tinode a good alternative to WhatsApp?
     a: Yes, if you want a private WhatsApp-style messenger for a team, club or family on your own server. It has groups, channels, voice messages, file sharing and one-to-one calls, but chats are not end-to-end encrypted and there are no group calls.
   - q: How do I sign in to Tinode the first time?
-    a: Open your Tinode web address and choose Sign up to create your account with a name, email and password. There is no email check until you set up email, so anyone who can reach the address can sign up; share it only with the people you want.
+    a: Open your Tinode web address and choose Sign up to create your account with a username and password. There is no email check until you set up email, so anyone who can reach the address can sign up; share it only with the people you want.
   - q: Does Tinode have phone apps?
     a: Yes, Tinode has free apps for Android and iOS in the app stores, and you point them at your own server's address. Without push notifications set up, the apps show new messages only while they are open.
   - q: Does Tinode have voice and video calls?
@@ -60,7 +60,7 @@ screenshots:
 
 Tinode is a free, open-source instant messenger you can self-host as a private alternative to WhatsApp or Telegram. People chat one to one or in groups, follow broadcast channels, share photos, files and voice messages, and make one-to-one voice and video calls, from a web app or the Android and iOS apps.
 
-Accounts use an email and password instead of a phone number, and every message and file stays on your server. A small charity, for example, could give its volunteers one place to chat, keep a channel for weekly rota updates, and stop asking everyone to share their phone numbers in a WhatsApp group.
+Accounts use a username and password instead of a phone number, and every message and file stays on your server. A small charity, for example, could give its volunteers one place to chat, keep a channel for weekly rota updates, and stop asking everyone to share their phone numbers in a WhatsApp group.
 
 Be aware of the trade-offs: Tinode chats are not end-to-end encrypted, calls are one to one only, and phone apps show new messages only while open until push notifications are set up. The project describes itself as beta software that is stable and feature-complete.
 

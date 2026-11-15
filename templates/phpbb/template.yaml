@@ -1,0 +1,37 @@
+name: phpBB
+description: "phpBB is self-hosted forum software in place of a paid forum licence: categories, topics, private messages, polls and permissions on your own domain."
+version: "3.3.19"
+tags: [forum software, bulletin board, community forum, xenforo alternative, vbulletin alternative, phpbb hosting, discussion board]
+links:
+  website: https://www.phpbb.com
+  docs: https://www.phpbb.com/support/docs/en/3.3/ug/
+  source: https://github.com/phpbb/phpbb
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SERVER_NAME: { value: "{{domains.phpbb.host}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  # The administrator's password, set on the first start.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The username you sign in with as the forum's administrator, 3 to 20 letters, digits, dots, dashes or underscores.
+      default: admin
+      pattern: "[A-Za-z0-9._-]{3,20}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The administrator's email address, also used as the forum's contact address.
+      format: email
+  FORUM_NAME:
+    ask:
+      label: Forum name
+      description: Shown at the top of every page. You can change it later in the Administration Control Panel.
+      default: My phpBB Forum
+domains:
+  - { service: phpbb, port: 8080 }
+files:
+  - { path: set-admin-password.php.txt }

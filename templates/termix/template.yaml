@@ -1,0 +1,20 @@
+name: Termix
+description: "Self-hosted Termix puts SSH terminals, SFTP files and remote desktop for all your servers in one browser tab, replacing Termius."
+version: "26.11.1"
+tags:
+  - termius alternative
+  - web ssh client
+  - ssh terminal in browser
+  - sftp file manager
+  - server management
+  - remote desktop
+links:
+  website: https://termix.site
+  docs: https://docs.termix.site
+  source: https://github.com/Termix-SSH/Termix
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs: {}
+domains:
+  - { service: termix, port: 8080 }

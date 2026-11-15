@@ -1,0 +1,25 @@
+services:
+  kitchenowl:
+    # KitchenOwl's official all-in-one image (web app and server in one
+    # container), as in its "Docker compose (All-in-one)" install guide. It keeps
+    # its data in the built-in SQLite database, the project's default.
+    image: tombursch/kitchenowl:v0.8.1
+    restart: unless-stopped
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      # The app's own address, so the browser may call its API (CORS).
+      FRONT_URL: ${FRONT_URL}
+      OPEN_REGISTRATION: ${OPEN_REGISTRATION:-false}
+    volumes:
+      # The database and uploaded images.
+      - kitchenowl-data:/data
+    healthcheck:
+      # The image's own check, run more often so the app is marked ready sooner.
+      test: ["CMD-SHELL", "uwsgi_curl localhost:5000 /api/health/8M4F88S8ooi4sMbLBfkkV7ctWwgibW6V || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  kitchenowl-data:

@@ -1,0 +1,118 @@
+# Based on the official docker-compose.yml and docs/self-hosting-docker.md in
+# getmaxun/maxun at tag v0.1.0. Redis from the docs is left out: v0.1.0 doesn't use it.
+x-maxun-env: &maxun-env
+  NODE_ENV: production
+  JWT_SECRET: ${JWT_SECRET}
+  SESSION_SECRET: ${SESSION_SECRET}
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+  DB_NAME: maxun
+  DB_USER: postgres
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_HOST: maxun-db
+  DB_PORT: "5432"
+  MINIO_ENDPOINT: maxun-minio
+  MINIO_PORT: "9000"
+  MINIO_ACCESS_KEY: maxun
+  MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+  # Screenshot links point at the app's own address; nginx passes /files/ to MinIO.
+  MINIO_PUBLIC_URL: ${PUBLIC_URL}/files
+  BACKEND_PORT: "8080"
+  FRONTEND_PORT: "5173"
+  # The web app and the API share one address (see files/nginx.conf).
+  BACKEND_URL: ${PUBLIC_URL}
+  PUBLIC_URL: ${PUBLIC_URL}
+  VITE_BACKEND_URL: ${PUBLIC_URL}
+  VITE_PUBLIC_URL: ${PUBLIC_URL}
+  # Upstream's default is on, and it sends sign-up emails to the makers' analytics.
+  MAXUN_TELEMETRY: "false"
+
+services:
+  maxun:
+    image: nginx:1.31.8-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - maxun-frontend
+      - maxun-backend
+      - maxun-minio
+
+  maxun-frontend:
+    image: getmaxun/maxun-frontend:v0.1.0
+    restart: unless-stopped
+    environment:
+      <<: *maxun-env
+
+  maxun-backend:
+    image: getmaxun/maxun-backend:v0.1.0
+    restart: unless-stopped
+    environment:
+      <<: *maxun-env
+      BROWSER_WS_HOST: maxun-browser
+      BROWSER_WS_PORT: "3001"
+      BROWSER_HEALTH_PORT: "3002"
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      CHROMIUM_FLAGS: "--disable-gpu --no-sandbox --headless=new"
+    depends_on:
+      maxun-db:
+        condition: service_healthy
+      maxun-minio:
+        condition: service_started
+      maxun-browser:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8080/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 10s
+      start_period: 120s
+      retries: 10
+
+  # The headless Chromium that robots browse with. Upstream's file adds SYS_ADMIN and
+  # seccomp=unconfined, but Chromium here starts with --no-sandbox, so neither is needed.
+  maxun-browser:
+    image: getmaxun/maxun-browser:v0.0.2
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      BROWSER_WS_PORT: "3001"
+      BROWSER_HEALTH_PORT: "3002"
+      BROWSER_WS_HOST: maxun-browser
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    shm_size: 1gb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 6
+
+  # The official minio/minio image is no longer published; pgsty/silo is a maintained
+  # MinIO fork (the Plane template uses it too). It keeps the screenshots robots capture.
+  maxun-minio:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    restart: unless-stopped
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: maxun
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    volumes:
+      - maxun-minio-data:/data
+
+  maxun-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: maxun
+    volumes:
+      - maxun-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d maxun"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  maxun-minio-data:
+  maxun-db-data:

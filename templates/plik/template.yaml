@@ -1,0 +1,19 @@
+name: Plik
+description: "Self-hosted Plik sends large files by link that expires, with optional passwords, one-time downloads and end-to-end encryption."
+version: "1.4.3"
+tags: ["file transfer", "wetransfer alternative", "send large files", "temporary file sharing", "encrypted file sharing", "file sharing link"]
+links:
+  website: https://root-gg.github.io/plik/
+  docs: https://root-gg.github.io/plik/guide/installation
+  source: https://github.com/root-gg/plik
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The app's own address: used for links, CORS and secure (HTTPS-only) cookies.
+  PLIK_URL: { value: "{{domains.plik.url}}" }
+  # Password of the "admin" account Plik creates on its first start. Uploading
+  # needs an account, so strangers can't use the server to share files.
+  PLIK_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: plik, port: 8080 }

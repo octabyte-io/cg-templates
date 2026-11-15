@@ -1,0 +1,59 @@
+# From Invoicerr's official docker-compose.yml at the v1.4.6b tag
+# (github.com/invoicerr-app/invoicerr), with the images pinned and the settings filled in.
+services:
+  invoicerr:
+    # One container: nginx serves the web app on port 80 and proxies /api to the
+    # NestJS backend. The backend creates and upgrades the database tables at start.
+    image: ghcr.io/invoicerr-app/invoicerr:v1.4.6b
+    restart: unless-stopped
+    # The image ships Prisma's schema engine but, without this, downloads another copy
+    # from binaries.prisma.sh at every start, and the backend never starts if that
+    # download fails. Use the shipped engine when it runs on this machine.
+    command:
+      - sh
+      - -c
+      - >-
+        engine=/usr/share/nginx/backend/node_modules/@prisma/engines/schema-engine-debian-openssl-1.1.x;
+        if "$$engine" --version >/dev/null 2>&1; then export PRISMA_SCHEMA_ENGINE_BINARY="$$engine"; fi;
+        exec /usr/share/nginx/entrypoint.sh
+    depends_on:
+      invoicerr-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://invoicerr:${POSTGRES_PASSWORD}@invoicerr-db:5432/invoicerr
+      # Used in email links back to the app, and trusted for sign-in requests.
+      APP_URL: ${APP_URL}
+      CORS_ORIGINS: ${APP_URL}
+      # Signs sign-in sessions.
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      # Email for sending quotes, invoices and receipts. The app starts without it;
+      # sending fails until a mail server is set.
+      MAIL_PROVIDER: smtp
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    volumes:
+      # Plugins installed from the app's settings are cloned here.
+      - invoicerr-plugins:/usr/share/nginx/plugins
+
+  invoicerr-db:
+    image: postgres:15.19-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: invoicerr
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: invoicerr
+    volumes:
+      - invoicerr-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U invoicerr -d invoicerr"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  invoicerr-plugins:
+  invoicerr-db-data:

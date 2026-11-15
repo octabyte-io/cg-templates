@@ -1,0 +1,28 @@
+# Runs once at each start, with `rails runner`, after the database migrations
+# and before Password Pusher's web server starts.
+#
+# Password Pusher has no administrator until someone is marked as one from the
+# command line. While the instance has no administrator at all, this creates
+# one with the email you entered and the generated ADMIN_PASSWORD, so the admin
+# dashboard (/admin) works from the first sign-in. Once any administrator
+# exists, it changes nothing.
+
+email = ENV["ADMIN_EMAIL"].to_s.strip
+password = ENV["ADMIN_PASSWORD"].to_s
+
+if email.empty? || password.empty?
+  puts "pwpush-setup: ADMIN_EMAIL or ADMIN_PASSWORD is empty; no admin created"
+elsif User.where(admin: true).exists?
+  puts "pwpush-setup: an administrator already exists; nothing to do"
+elsif User.where(email: email.downcase).exists?
+  puts "pwpush-setup: #{email} already signed up without admin rights; promote it with ./bin/promote_to_admin"
+else
+  user = User.new(email: email, password: password, password_confirmation: password, admin: true)
+  # Only present when account emails (and so email confirmation) are turned on.
+  if user.respond_to?(:skip_confirmation!)
+    user.skip_confirmation_notification!
+    user.skip_confirmation!
+  end
+  user.save!
+  puts "pwpush-setup: created the administrator #{email}"
+end

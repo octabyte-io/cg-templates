@@ -1,0 +1,27 @@
+# From Isso's production Dockerfile (github.com/isso-comments/isso, tag 0.14.0)
+# and its docs (isso-comments.de/docs). The image runs gunicorn on port 8080
+# and reads /config/isso.cfg; files/isso.cfg fills its settings from the
+# environment below. Comments are kept in a SQLite file under /db.
+services:
+  isso:
+    image: ghcr.io/isso-comments/isso:0.14.0
+    restart: unless-stopped
+    environment:
+      ISSO_URL: ${ISSO_URL}
+      WEBSITE_URL: ${WEBSITE_URL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      HASH_SALT: ${HASH_SALT}
+      MODERATION: ${MODERATION:-false}
+    volumes:
+      - ../files/isso.cfg:/config/isso.cfg:ro
+      - isso-data:/db
+    healthcheck:
+      # The image is python:alpine, so busybox wget is there.
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:8080/info || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  isso-data:
