@@ -1,0 +1,28 @@
+name: Paymenter
+description: "Paymenter is self-hosted, open-source billing for hosting businesses: recurring invoices, a client portal, payments, server setup and support tickets."
+version: "1.5.9"
+tags: [whmcs alternative, hosting billing software, open source billing, client portal, game server billing, recurring invoices]
+links:
+  website: https://paymenter.org
+  docs: https://paymenter.org/docs
+  source: https://github.com/Paymenter/Paymenter
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.paymenter.url}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to the admin area at /admin with this email and the generated ADMIN_PASSWORD.
+      format: email
+  COMPANY_NAME:
+    ask:
+      label: Company name
+      description: The name shown on your client portal and invoices. You can change it later under Admin > Settings.
+      default: Paymenter
+      required: false
+domains:
+  - { service: paymenter, port: 80 }

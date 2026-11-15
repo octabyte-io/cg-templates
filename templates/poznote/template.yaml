@@ -1,0 +1,14 @@
+name: Poznote
+description: "Poznote is a self-hosted note-taking app for Markdown and rich-text notes, task lists, Kanban boards and a daily diary, saved as plain files."
+version: "6.148.1"
+tags: [note taking, self-hosted notes, markdown notes, obsidian alternative, notion alternative, evernote alternative, personal knowledge base]
+links:
+  website: https://poznote.com
+  docs: https://github.com/timothepoznanski/Poznote#readme
+  source: https://github.com/timothepoznanski/Poznote
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs: {}
+domains:
+  - { service: webserver, port: 80 }

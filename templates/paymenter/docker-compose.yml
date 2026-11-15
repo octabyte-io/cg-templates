@@ -1,0 +1,131 @@
+# From Paymenter's official Docker setup (docker-compose.example.yml, paymenter.org/docs/installation/docker),
+# with the images pinned, no published ports, named volumes, database healthchecks, and the
+# documented first-run commands (app:init, the custom property seeder, app:user:create) run
+# unattended on the first start.
+services:
+  paymenter:
+    # Official image: nginx + PHP-FPM on port 80, with a queue worker under supervisord and
+    # cron running Paymenter's scheduler (invoices, renewals, suspensions) every minute. Its
+    # entrypoint waits for the database, keeps APP_KEY in /app/var/.env and runs the
+    # migrations on every start.
+    image: ghcr.io/paymenter/paymenter:v1.5.9
+    restart: unless-stopped
+    depends_on:
+      paymenter-db:
+        condition: service_healthy
+      paymenter-cache:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      APP_URL: ${APP_URL}
+      DB_CONNECTION: mariadb
+      DB_HOST: paymenter-db
+      DB_PORT: "3306"
+      DB_DATABASE: paymenter
+      DB_USERNAME: paymenter
+      DB_PASSWORD: ${DB_PASSWORD}
+      CACHE_STORE: redis
+      REDIS_HOST: paymenter-cache
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      COMPANY_NAME: ${COMPANY_NAME:-Paymenter}
+      # The image renews its bundled themes and extensions on every start (official default).
+      PAYMENTER_SKIP_DEFAULT: "false"
+    # The docs finish a Docker install by hand: "php artisan app:init" (company name and URL),
+    # the CustomPropertySeeder, and "php artisan app:user:create" for the first admin. While
+    # there is no user yet, this does the same with the app's own commands: it sets the
+    # company name and https address, seeds the client profile fields, creates the admin with
+    # ADMIN_EMAIL and the generated ADMIN_PASSWORD, and trusts X-Forwarded-* headers from the
+    # private networks Cloudgate's proxy uses (Admin > Settings > Security, which the docs say
+    # file uploads need behind a proxy). Later starts find the admin and skip it.
+    command:
+      - /bin/ash
+      - -c
+      - |
+        set -e
+        # The image's nginx also listens on [::]:80 and exits where the container has no
+        # IPv6 (Docker's default network); drop that line there so nginx starts.
+        [ -e /proc/net/if_inet6 ] || sed -i '/listen \[::\]:80/d' /etc/nginx/http.d/default.conf
+        php -r '
+          require "/app/vendor/autoload.php";
+          $$app = require "/app/bootstrap/app.php";
+          $$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+          if (App\Models\User::count() > 0) { echo "Paymenter is already set up.\n"; exit(0); }
+          echo "Setting up Paymenter for the first time...\n";
+          $$artisan = function ($$command, $$args) {
+            $$code = Illuminate\Support\Facades\Artisan::call($$command, $$args + ["--no-interaction" => true]);
+            echo Illuminate\Support\Facades\Artisan::output();
+            if ($$code !== 0) { fwrite(STDERR, "$$command failed\n"); exit(1); }
+          };
+          $$artisan("app:init", ["name" => getenv("COMPANY_NAME") ?: "Paymenter", "url" => rtrim(getenv("APP_URL"), "/")]);
+          $$artisan("db:seed", ["--class" => "CustomPropertySeeder", "--force" => true]);
+          App\Models\Setting::updateOrCreate(
+            ["key" => "trusted_proxies", "settingable_type" => null],
+            ["value" => ["127.0.0.1", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"], "type" => "array"]
+          );
+          $$artisan("app:user:create", [
+            "first_name" => "Admin",
+            "last_name" => "User",
+            "email" => getenv("ADMIN_EMAIL"),
+            "password" => getenv("ADMIN_PASSWORD"),
+            "role" => App\Models\Role::where("name", "admin")->value("id"),
+          ]);
+          App\Providers\SettingsProvider::flushCache();
+          if (App\Models\User::count() === 0) { fwrite(STDERR, "The admin was not created\n"); exit(1); }
+          echo "Paymenter is set up. Sign in at /admin with ADMIN_EMAIL and ADMIN_PASSWORD.\n";
+        '
+        exec supervisord -n -c /etc/supervisord.conf
+    volumes:
+      # The official setup keeps .env (APP_KEY) in /app/var, plus storage (uploads, logs),
+      # themes and extensions. The whole of /app/storage is kept here so private files survive too.
+      - paymenter-var:/app/var
+      - paymenter-storage:/app/storage
+      - paymenter-themes:/app/themes
+      - paymenter-extensions:/app/extensions
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  paymenter-db:
+    # The official setup uses mariadb:lts; 11.8 is the current LTS series.
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: paymenter
+      MARIADB_USER: paymenter
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+      MARIADB_AUTO_UPGRADE: "1"
+      MARIADB_DISABLE_UPGRADE_BACKUP: "1"
+    volumes:
+      - paymenter-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  paymenter-cache:
+    # Cache, sessions and the job queue.
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - paymenter-cache-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  paymenter-var:
+  paymenter-storage:
+  paymenter-themes:
+  paymenter-extensions:
+  paymenter-db-data:
+  paymenter-cache-data:

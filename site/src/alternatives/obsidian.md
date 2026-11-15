@@ -12,9 +12,16 @@ apps:
   note-mark:
     fit: "Keeps your notes as Markdown files in folders, much like a vault, in notebooks with notes nested inside notes, and can make any note public at a clean web address at no cost, which covers what many people use Obsidian Publish for. It has no backlinks, graph view, plugins or offline apps, search looks at titles only, and it cannot import a vault."
     import: no
+  poznote:
+    fit: "The closest to Obsidian's way of working: notes kept as plain Markdown and HTML files, links between notes with backlinks and a graph view, and it imports a zipped Obsidian vault, all in a browser on your own server with accounts for other people. Aliases, heading links, embeds, Dataview and canvases don't carry over, there is no plugin ecosystem, and there is no official desktop or phone app, though it installs from the browser and keeps recent notes offline."
+    import: yes
 moving: |
   Trilium imports Markdown, so bring your Obsidian vault across as files: zip the vault folder and import it into a note in Trilium, which keeps your folders as a tree. Check links between notes and embedded images afterwards, since Obsidian's wiki-style links and plugin features may not all carry over. Then install the Trilium desktop app on each computer and connect it to your server so your notes sync. SiYuan's server version can't import Markdown files, so with SiYuan you copy notes across by hand, starting with the ones you use most, and keep your vault as a read-only archive. LeafWiki imports a vault directly: zip the vault folder and import it as an editor or admin, and Obsidian-style links become links between pages; it works best with a tidy folder structure, and plugin content does not carry over. Note Mark has no import, so paste notes in one at a time, starting with the ones you want to share or publish.
+
+  Poznote imports an Obsidian vault directly: zip the vault folder and import it, and your notes, folders, front-matter tags, [[links]], images and PDFs come across. Aliases, links to headings, embeds, Dataview queries and canvases do not, so check the notes that rely on them.
 faq:
+  - q: "Should I choose Trilium, SiYuan or Poznote?"
+    a: "Choose Poznote to keep your notes as Markdown files and bring your vault with you, since it imports Obsidian vaults. Choose Trilium for a large personal knowledge base with desktop apps that sync with your server. Choose SiYuan for block references, databases and flashcards."
   - q: "Does Trilium store notes as Markdown files?"
     a: "No. Trilium keeps notes in a database on your server, and exports them as Markdown or HTML when you want files."
   - q: "Can Trilium sync between computers like Obsidian Sync?"
@@ -22,11 +29,11 @@ faq:
   - q: "Is there a Trilium phone app?"
     a: "Not an official one. Trilium's server has a mobile web version you can add to your home screen, and community apps exist for Android and iPhone."
   - q: "Which of these keeps my notes as Markdown files?"
-    a: "LeafWiki and Note Mark. Both save every note as a plain Markdown file on your server, as Obsidian does on your device. Trilium keeps notes in a database, though it exports them as Markdown, and SiYuan uses its own format."
+    a: "LeafWiki, Note Mark and Poznote. LeafWiki and Note Mark save every note as a plain Markdown file on your server, as Obsidian does on your device, and Poznote keeps each note as a Markdown or HTML file. Trilium keeps notes in a database, though it exports them as Markdown, and SiYuan uses its own format."
   - q: "Can I publish notes as web pages, like Obsidian Publish?"
     a: "Yes, with Note Mark or LeafWiki, at no cost. Note Mark makes any single note public at a clean web address; LeafWiki can open the whole wiki for anyone to read while only signed-in people edit."
 ---
 
 Obsidian is a note-taking app that keeps your notes as Markdown files on your own device, with links between notes, a graph view, a large collection of community plugins and official apps for computers and phones.
 
-People look for an alternative because Obsidian is proprietary and its sync is a paid add-on. When we checked its pricing page in November 2026, the app was free, Obsidian Sync cost $4 per user a month and Publish $8 per site a month, both billed yearly. Trilium Notes is open source and has sync and web access built in: its desktop apps sync with your own server, and you can open your notes in any browser. SiYuan, also open source, runs in the browser on your own server and adds databases and flashcards, though it keeps notes in its own format. LeafWiki and Note Mark, both open source, keep your notes as Markdown files on your server: LeafWiki as a shared wiki that imports your vault, Note Mark as a simple notebook that can publish notes as web pages.
+People look for an alternative because Obsidian is proprietary and its sync is a paid add-on. When we checked its pricing page in November 2026, the app was free, Obsidian Sync cost $4 per user a month and Publish $8 per site a month, both billed yearly. Trilium Notes is open source and has sync and web access built in: its desktop apps sync with your own server, and you can open your notes in any browser. SiYuan, also open source, runs in the browser on your own server and adds databases and flashcards, though it keeps notes in its own format. LeafWiki and Note Mark, both open source, keep your notes as Markdown files on your server: LeafWiki as a shared wiki that imports your vault, Note Mark as a simple notebook that can publish notes as web pages. Poznote, open source too, keeps notes as Markdown files like Obsidian and imports your vault, with backlinks and a graph view.
