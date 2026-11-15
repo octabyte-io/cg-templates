@@ -1,0 +1,17 @@
+---
+apps:
+  libretranslate:
+    fit: "Translates text and documents on your own server, in a web page or through an API for your own tools, with no fees and no text sent outside. DeepL's translations are clearly more fluent, especially between less common languages, so LibreTranslate suits drafts, gist and high volumes better than text you publish without checking."
+    import: no
+moving: |
+  DeepL keeps nothing you need to bring over, so moving is about where your text goes. Install LibreTranslate with the languages you use, then connect the tools that offer a LibreTranslate option to your web address and API key. Code written for DeepL's API needs changing, because LibreTranslate's requests are different. Many teams keep DeepL for text that is published or sent to customers and use LibreTranslate for everything else, such as reading incoming messages or translating internal notes.
+faq:
+  - q: "Should I keep DeepL for some texts?"
+    a: "Often, yes. LibreTranslate is good enough to understand a message or draft a reply, but DeepL is more fluent. Use LibreTranslate for high volumes and private text, and DeepL, or a person, for text you publish."
+  - q: "Can LibreTranslate translate Word and PowerPoint files like DeepL?"
+    a: "Yes. Its web page and API take Word, PowerPoint, OpenDocument, PDF, EPUB, HTML, subtitle and plain text files and return them translated."
+---
+
+DeepL is a translation service known for natural, fluent translations. It offers a translator in the browser and in apps, DeepL Pro subscriptions for people and teams, and an API that developers build into their own apps.
+
+People look for an alternative because DeepL Pro is paid per user: when we checked its website in November 2026, DeepL Pro cost €24.99 per user a month, billed yearly, so the cost grows with every person who translates. Every text you translate is also sent to DeepL's servers, which some companies can't allow for customer data or confidential documents. A self-hosted translation server such as LibreTranslate translates on your own server with no fees, though its translations are less fluent than DeepL's.

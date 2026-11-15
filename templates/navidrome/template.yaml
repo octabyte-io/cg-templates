@@ -1,0 +1,19 @@
+name: Navidrome
+description: "Navidrome is a self-hosted music server: upload the music you own and stream it in your browser or Subsonic phone apps, with no subscription."
+version: "0.64.2"
+tags: [self-hosted music server, music streaming server, spotify alternative, subsonic server, personal music streaming, navidrome]
+links:
+  website: https://www.navidrome.org
+  docs: https://www.navidrome.org/docs/
+  source: https://github.com/navidrome/navidrome
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.navidrome.url}}" }
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # music at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: navidrome, port: 4533 }
+  - { service: filebrowser, port: 80 }

@@ -1,0 +1,15 @@
+services:
+  omni-tools:
+    # The official image (hub.docker.com/r/iib0011/omni-tools), built from
+    # each OmniTools release: nginx serving the built web app on port 80.
+    image: iib0011/omni-tools:0.7.0
+    restart: unless-stopped
+    # No sign-in and no volumes: OmniTools is a static web app. Every tool
+    # runs in the visitor's browser, so files are never uploaded to or kept
+    # on the server.
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --spider http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

@@ -1,0 +1,20 @@
+name: Audiobookshelf
+description: "Audiobookshelf is a self-hosted audiobook and podcast server: stream the books you own on any device and keep your listening progress in sync."
+version: "2.37.2"
+tags: [self-hosted audiobook server, audiobook server, audible alternative, podcast server, audiobook player, audiobookshelf]
+links:
+  website: https://www.audiobookshelf.org
+  docs: https://www.audiobookshelf.org/docs
+  source: https://github.com/advplyr/audiobookshelf
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for listening stats, backups and the podcast download schedule, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: audiobookshelf, port: 80 }

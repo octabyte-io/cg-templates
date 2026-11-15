@@ -1,0 +1,39 @@
+name: Mealie
+description: "Mealie is a self-hosted recipe manager and meal planner: save recipes from any website, plan the week's meals and share one shopping list."
+version: "3.31.0"
+tags: [recipe manager, self-hosted recipe manager, meal planner, paprika alternative, plan to eat alternative, shopping list, recipe organizer]
+links:
+  website: https://mealie.io
+  docs: https://docs.mealie.io
+  source: https://github.com/mealie-recipes/mealie
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.mealie.url}}" }
+  DB_PASSWORD: { generate: password }
+  # The password of the administrator, set on first start in place of Mealie's
+  # built-in default (MyPassword).
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Mealie with as its administrator. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ALLOW_SIGNUP:
+    ask:
+      label: Allow new sign-ups
+      description: Type true to let anyone who can reach the app create their own account. Leave it false to add people by invitation from Mealie instead.
+      default: "false"
+      pattern: "true|false"
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for meal plan dates and scheduled tasks, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: mealie, port: 9000 }
+files:
+  - { path: mealie-admin.py.txt }

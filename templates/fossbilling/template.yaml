@@ -1,0 +1,29 @@
+name: FOSSBilling
+description: "FOSSBilling is self-hosted billing for web hosts: recurring invoices, a client area, payments, hosting account setup and support tickets, without a WHMCS fee."
+version: "0.8.9"
+tags: [whmcs alternative, hosting billing software, open source billing, client area, recurring invoices, blesta alternative]
+links:
+  website: https://fossbilling.org
+  docs: https://docs.fossbilling.org
+  source: https://github.com/FOSSBilling/FOSSBilling
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SYSTEM_URL: { value: "{{domains.fossbilling.url}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to the admin area at /admin with this email and the generated ADMIN_PASSWORD.
+      format: email
+  CURRENCY:
+    ask:
+      label: Default currency
+      description: The currency your prices and invoices use, as a three-letter code such as USD, EUR or GBP. You can add more currencies later.
+      default: USD
+      required: false
+      pattern: "[A-Z]{3}"
+domains:
+  - { service: fossbilling, port: 80 }

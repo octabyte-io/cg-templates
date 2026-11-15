@@ -1,0 +1,63 @@
+services:
+  mealie:
+    # Mealie's official image, as in its PostgreSQL install guide.
+    image: ghcr.io/mealie-recipes/mealie:v3.31.0
+    restart: unless-stopped
+    # Mealie creates its first administrator as changeme@example.com with the
+    # password MyPassword. At each start, files/mealie-admin.py.txt runs next to
+    # Mealie: while that default account still exists, it gives it the email you
+    # entered and the generated password through Mealie's API, so the well-known
+    # default never works on your server. Afterwards it sees the default is gone
+    # and stops without changing anything. The image's own start script runs as usual.
+    entrypoint:
+      - sh
+      - -c
+      - /opt/mealie/bin/python -I /mealie-admin.py & exec /app/run.sh
+    depends_on:
+      mealie-db:
+        condition: service_healthy
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      BASE_URL: ${BASE_URL}
+      ALLOW_SIGNUP: ${ALLOW_SIGNUP:-false}
+      DB_ENGINE: postgres
+      POSTGRES_USER: mealie
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_SERVER: mealie-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: mealie
+      # Read only by files/mealie-admin.py.txt.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # Recipe images, uploaded files, backups and logs.
+      - mealie-data:/app/data
+      - ../files/mealie-admin.py.txt:/mealie-admin.py:ro
+    healthcheck:
+      # The image's own check: curl to /api/app/about.
+      test: ["CMD-SHELL", "/app/healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  mealie-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mealie
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: mealie
+    volumes:
+      - mealie-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mealie -d mealie"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mealie-data:
+  mealie-db-data:

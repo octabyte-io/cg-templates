@@ -1,0 +1,46 @@
+services:
+  calibre-web:
+    # LinuxServer.io's image, the one Calibre-Web's README points to for Docker.
+    # It tracks every Calibre-Web release and adds kepubify and ImageMagick.
+    image: lscr.io/linuxserver/calibre-web:0.6.27-ls409
+    restart: unless-stopped
+    depends_on:
+      calibre-web-setup:
+        condition: service_completed_successfully
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      # Calibre-Web's settings and accounts (app.db).
+      - calibre-web-config:/config
+      # The Calibre library: metadata.db and the book files.
+      - calibre-web-books:/books
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8083/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # Runs once at each start, before Calibre-Web (files/calibre-web-setup.py.txt).
+  # On the first start it creates an empty Calibre library and Calibre-Web's
+  # settings pointing at it, and replaces the default admin password admin123
+  # with the generated one. Later starts find all of that done and change nothing.
+  calibre-web-setup:
+    image: lscr.io/linuxserver/calibre-web:0.6.27-ls409
+    restart: "no"
+    entrypoint: ["python3", "/calibre-web-setup.py"]
+    environment:
+      PUID: 1000
+      PGID: 1000
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - calibre-web-config:/config
+      - calibre-web-books:/books
+      - ../files/calibre-web-setup.py.txt:/calibre-web-setup.py:ro
+      - ../files/calibre-metadata.sql:/calibre-metadata.sql:ro
+
+volumes:
+  calibre-web-config:
+  calibre-web-books:
