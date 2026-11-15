@@ -1,0 +1,62 @@
+{
+  "realm": "urlaubsverwaltung",
+  "displayName": "Urlaubsverwaltung",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["de", "en"],
+  "defaultLocale": "de",
+  "smtpServer": {
+    "host": "${SMTP_HOST}",
+    "port": "${SMTP_PORT}",
+    "from": "${SMTP_FROM}",
+    "fromDisplayName": "Urlaubsverwaltung",
+    "starttls": "true",
+    "auth": "true",
+    "user": "${SMTP_USER}",
+    "password": "${SMTP_PASSWORD}"
+  },
+  "clients": [
+    {
+      "clientId": "urlaubsverwaltung",
+      "name": "Urlaubsverwaltung",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${OIDC_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "${UV_URL}",
+      "baseUrl": "${UV_URL}/",
+      "redirectUris": ["${UV_URL}/*"],
+      "webOrigins": ["${UV_URL}"],
+      "attributes": {
+        "post.logout.redirect.uris": "${UV_URL}/*"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "${ADMIN_EMAIL}",
+      "email": "${ADMIN_EMAIL}",
+      "firstName": "${ADMIN_FIRST_NAME}",
+      "lastName": "${ADMIN_LAST_NAME}",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "${ADMIN_PASSWORD}", "temporary": false }
+      ],
+      "clientRoles": {
+        "realm-management": ["realm-admin"]
+      }
+    }
+  ]
+}

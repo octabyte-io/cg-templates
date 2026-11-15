@@ -1,0 +1,29 @@
+name: Elmo
+description: "Elmo is a self-hosted AI visibility tracker: see how ChatGPT, Gemini, Claude and Google's AI answers mention, rank and cite your brand against competitors."
+version: "0.7.12"
+tags: [ai visibility tracking, profound alternative, peec ai alternative, answer engine optimization, generative engine optimization, track brand in chatgpt, ai search monitoring]
+links:
+  website: https://www.elmohq.com
+  docs: https://www.elmohq.com/docs
+  source: https://github.com/elmohq/elmo
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.elmo-web.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  BETTER_AUTH_SECRET: { generate: hex }
+  ELMO_ENCRYPTION_KEY: { generate: base64 }
+  DEPLOYMENT_ID: { generate: uuid }
+  OPENROUTER_API_KEY:
+    ask:
+      label: OpenRouter API key
+      description: From openrouter.ai/settings/keys. Elmo uses it to ask the AI models your prompts and to read each answer (mentions and sentiment). OpenRouter bills your account per call.
+      secret: true
+  SCRAPE_TARGETS:
+    ask:
+      label: AI models to track
+      description: Comma-separated model:provider:version[:online] entries. The default asks ChatGPT, Claude and Gemini through OpenRouter with web search. Add scraper entries (for example chatgpt:cloro:online) after adding that provider's key on the app's variables page.
+      default: "chatgpt:openrouter:openai/gpt-6-luna:online,claude:openrouter:anthropic/claude-haiku-5.5:online,gemini:openrouter:google/gemini-2.5-flash:online"
+domains:
+  - { service: elmo-web, port: 3000 }

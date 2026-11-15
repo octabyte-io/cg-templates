@@ -1,0 +1,44 @@
+name: KoboToolbox
+description: "Self-hosted KoboToolbox: build field surveys, collect answers offline on Android or the web, and map and export the data. Replaces SurveyCTO."
+version: "2.026.37g"
+tags: [field data collection, offline surveys, surveycto alternative, survey123 alternative, xlsform, humanitarian data collection, mobile data collection]
+links:
+  website: https://www.kobotoolbox.org
+  docs: https://support.kobotoolbox.org
+  source: https://github.com/kobotoolbox/kpi
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  # The main address (form builder and data), the data-collection address that
+  # KoboCollect and the web forms send submissions to, and the web forms.
+  KOBOFORM_URL: { value: "{{domains.kobotoolbox.url}}" }
+  KOBOCAT_URL: { value: "{{domains.kobotoolbox-collect.url}}" }
+  ENKETO_URL: { value: "{{domains.kobotoolbox-enketo.url}}" }
+  DJANGO_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  MONGO_PASSWORD: { generate: password }
+  # Shared by the app and the web forms (Enketo).
+  ENKETO_API_KEY: { generate: hex }
+  ENKETO_ENCRYPTION_KEY: { generate: hex }
+  ENKETO_LESS_SECURE_ENCRYPTION_KEY: { generate: hex }
+  # The administrator's password, created at the first start; sign in with the
+  # username below and this password.
+  KOBO_SUPERUSER_PASSWORD: { generate: password }
+  KOBO_SUPERUSER_USERNAME:
+    ask:
+      label: Admin username
+      description: The username of the KoboToolbox administrator Cloudgate creates. Lowercase letters, digits and underscores, starting with a letter.
+      default: admin
+      pattern: "^[a-z][a-z0-9_]{2,29}$"
+domains:
+  - { service: kobotoolbox, port: 80 }
+  - { service: kobotoolbox-collect, port: 80 }
+  - { service: kobotoolbox-enketo, port: 8005 }
+files:
+  - { path: enketo-config.json }
+  - { path: nginx-forms.conf }
+  - { path: nginx-collect.conf }
+  - { path: nginx-uwsgi.conf }
+  - { path: wait_for_mongo.bash.txt }
+  - { path: wait_for_postgres.bash.txt }

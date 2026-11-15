@@ -1,0 +1,271 @@
+# From Tiledesk's official Community compose (Tiledesk/tiledesk-deployment, docker-compose/),
+# pinned to the current stable releases. Left out: the two AI back ends (backend-llm-train,
+# backend-llm-qa, about 5 GB each) and Qdrant, which only the knowledge-base (RAG) answers use.
+# Every key, token and password the official file hard-codes is generated at setup instead.
+services:
+  tiledesk:
+    image: tiledesk/tiledesk-docker-proxy:v1.1.6
+    restart: unless-stopped
+    command: ["nginx", "-g", "daemon off;"]
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      server:
+        condition: service_healthy
+      dashboard:
+        condition: service_started
+      cds:
+        condition: service_started
+      ionic:
+        condition: service_started
+      webwidget:
+        condition: service_started
+      chat21httpserver:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
+  dashboard:
+    image: tiledesk/tiledesk-dashboard:2.8.42
+    restart: unless-stopped
+    environment:
+      FEATURES_TOKEN: "PAY:F-ANA:T-ACT:T-TRI:T-GRO:T-DEP:T-OPH:T-MTL:T-CAR:T-PSA:F-MTT:T-SUP:T-LBS:T-APP:T-DEV:F-NOT:T-IPS:F-ETK:F-RAS:F-PPB:F-PET:F-MTS:F-TIL:T-DGF:T-NAT:T-HPB:F-TOW:F-KNB:T-GPT:T-BAN:F-AST:F-MON:T-CNT:F-AUT:F-WUN:F-INT:T-DPA:T"
+      BOT_CREDENTIAL_URL: /api/modules/dialogflow/botcredendials/
+      WIDGET_LOCATION: ${EXTERNAL_BASE_URL}/widget/
+      SERVER_BASE_URL: /api/
+      CHAT_BASE_URL: /chat/
+      CDS_BASE_URL: /cds/
+      WS_URL_RELATIVE: /ws/
+      CHAT21_ENGINE: mqtt
+      UPLOAD_ENGINE: native
+      PUSH_ENGINE: none
+      LOG_LEVEL: info
+      APPS_URL: /api/modules/apps/
+      API_BASEIMAGE_URL: /api/
+      COMMUNITY_TEMPLATES_URL: /api/modules/templates/public/community
+      TEMPLATES_URL: /api/modules/templates/public/templates
+      FILE_UPLOAD_ACCEPT: "*/*"
+
+  cds:
+    image: tiledesk/design-studio:1.41.3
+    restart: unless-stopped
+    environment:
+      FEATURES_TOKEN: "PAY:F-ANA:T-ACT:T-TRI:T-GRO:T-DEP:T-OPH:T-MTL:T-CAR:T-PSA:F-MTT:T-SUP:T-LBS:T-APP:T-DEV:F-NOT:T-IPS:F-ETK:F-RAS:F-PPB:F-PET:F-MTS:F-TIL:T-DGF:T-NAT:T-HPB:F-TOW:F-KNB:T-GPT:T-BAN:F-AST:F-MON:T-CNT:F-AUT:F-WUN:F-INT:T-DPA:T"
+      WIDGET_LOCATION: ${EXTERNAL_BASE_URL}/widget/
+      SERVER_BASE_URL: /api/
+      DASHBOARD_URL: /dashboard/
+      WS_URL_RELATIVE: /ws/
+      UPLOAD_ENGINE: native
+      LOG_LEVEL: info
+      CDS_STORAGE_PREFIX: cds_sv5
+      API_BASEIMAGE_URL: /api/
+      FILE_UPLOAD_ACCEPT: "*/*"
+      AI_MODELS: "gpt-5:4;gpt-5-mini:0.8;gpt-5-nano:0.16;gpt-4.1:3;gpt-4.1-mini:0.6;gpt-4.1-nano:0.16;gpt-4o:4;gpt-4o-mini:0.3;gpt-4:25;gpt-4-turbo-preview:12;gpt-3.5-turbo:0.6"
+      MQTT_APPID: tilechat
+      MQTT_ENDPOINT: ${EXTERNAL_MQTT_BASE_URL}/mqws/ws
+
+  webwidget:
+    image: chat21/chat21-web-widget:5.3.1
+    restart: unless-stopped
+    environment:
+      CHAT21_ENGINE: mqtt
+      MQTT_APPID: tilechat
+      PUSH_ENGINE: none
+      LOG_LEVEL: info
+      MQTT_ENDPOINT: ${EXTERNAL_MQTT_BASE_URL}/mqws/ws
+      MQTT_APIENDPOINT: ${EXTERNAL_BASE_URL}/chatapi/api
+      FIREBASE_TENANT: tilechat
+      UPLOAD_ENGINE: native
+      SERVER_BASE_URL: ${EXTERNAL_BASE_URL}/api/
+      TRANSLATIONS_URL: ${EXTERNAL_BASE_URL}/api/
+      API_BASEIMAGE_URL: ${EXTERNAL_BASE_URL}/api/
+      DASHBOARD_URL: /dashboard/
+      AUTH_PERSISTENCE: LOCAL
+      ENBED_JS: "true"
+      FILE_UPLOAD_ACCEPT: "*/*"
+
+  ionic:
+    image: chat21/chat21-ionic:3.4.37
+    restart: unless-stopped
+    environment:
+      DASHBOARD_URL: /dashboard/
+      API_BASEIMAGE_URL: /api/
+      SERVER_BASE_URL: /api/
+      FEATURES_TOKEN: "PAY:F-ANA:T-ACT:T-TRI:T-GRO:T-DEP:T-OPH:T-MTL:T-CAR:T-PSA:F-MTT:T-SUP:T-LBS:T-APP:T-DEV:F-NOT:T-IPS:F-ETK:F-RAS:F-PPB:F-PET:F-MTS:F-TIL:T-DGF:T-NAT:T-HPB:F-TOW:F-KNB:T-GPT:T-BAN:F-AST:F-MON:T-CNT:F-AUT:F-WUN:F-INT:T-DPA:T"
+      WIDGET_LOCATION: /widget/
+      PUSH_ENGINE: none
+      LOG_LEVEL: info
+      FILE_UPLOAD_ACCEPT: "*/*"
+      CHAT21_ENGINE: mqtt
+      MQTT_APPID: tilechat
+      MQTT_ENDPOINT: ${EXTERNAL_MQTT_BASE_URL}/mqws/ws
+      MQTT_APIENDPOINT: /chatapi/api
+      UPLOAD_ENGINE: native
+      FIREBASE_TENANT: tilechat
+      SUPPORT_MODE: "true"
+      WRITE_TO_BUTTON: "true"
+      ARCHIVED_BUTTON: "true"
+      AUTH_PERSISTENCE: LOCAL
+      EMAIL_SECTION: "true"
+      CHAT_STORAGE_PREFIX: chat_sv5
+      WS_URL_RELATIVE: /ws/
+
+  chatbot:
+    image: tiledesk/tiledesk-chatbot:3.0.7
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      API_ENDPOINT: http://server:3000
+      TILEBOT_ENDPOINT: http://chatbot:3000
+      API_URL: ${EXTERNAL_BASE_URL}/api
+      MONGODB_URI: mongodb://mongo/tiledesk
+      CACHE_ENABLED: "true"
+      CACHE_REDIS_HOST: redis
+      CACHE_REDIS_PORT: "6379"
+      TILEBOT_LOG: info
+      FLOW_LOGS_ENABLED: "true"
+      AMQP_MANAGER_URL: amqp://ignored:${CHAT21_OBSERVER_TOKEN}@rabbitmq:5672?heartbeat=60
+      OPENAI_ENDPOINT: https://api.openai.com/v1
+
+  server:
+    image: tiledesk/tiledesk-server:3.3.3
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      LOG_LEVEL: info
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SUPER_PASSWORD: ${SUPER_PASSWORD}
+      GLOBAL_SECRET: ${GLOBAL_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      APPS_ACCESS_TOKEN_SECRET: ${APPS_ACCESS_TOKEN_SECRET}
+      KB_WEBHOOK_TOKEN: ${KB_WEBHOOK_TOKEN}
+      CHAT21_ENABLED: "true"
+      CHAT21_ENGINE: mqtt
+      CHAT21_URL: http://chat21httpserver:8004
+      CHAT21_JWT_SECRET: ${CHAT21_JWT_SECRET}
+      CHAT21_APPID: tilechat
+      CHAT21_ADMIN_TOKEN: ${CHAT21_ADMIN_TOKEN}
+      AMQP_MANAGER_URL: amqp://ignored:${CHAT21_OBSERVER_TOKEN}@rabbitmq:5672?heartbeat=60
+      RESTHOOK_ENABLED: "true"
+      ALLOW_REOPEN_CHAT: "true"
+      MONGODB_URI: mongodb://mongo/tiledesk
+      API_URL: ${EXTERNAL_BASE_URL}/api
+      EMAIL_BASEURL: ${EXTERNAL_BASE_URL}/dashboard
+      WEBHOOK_ORIGIN: ${EXTERNAL_BASE_URL}/api/
+      WIDGET_LOCATION: ${EXTERNAL_BASE_URL}/widget/
+      BASE_FILE_URL: ${EXTERNAL_BASE_URL}/api/
+      CACHE_ENABLED: "true"
+      CACHE_ENGINE: redis
+      CACHE_REDIS_HOST: redis
+      CACHE_REDIS_PORT: "6379"
+      BOOT_LOADING: "true"
+      META_GRAPH_URL: https://graph.facebook.com/v20.0/
+      TELEGRAM_API_URL: https://api.telegram.org/bot
+      TELEGRAM_FILE_URL: https://api.telegram.org/file/bot
+      TELEGRAM_LOG: info
+      AI_MODELS: "gpt-5:4;gpt-5-mini:0.8;gpt-5-nano:0.16;gpt-4.1:3;gpt-4.1-mini:0.6;gpt-4.1-nano:0.16;gpt-4o:4;gpt-4o-mini:0.3;gpt-4:25;gpt-4-turbo-preview:12;gpt-3.5-turbo:0.6"
+      OPENAI_ENDPOINT: https://api.openai.com/v1
+      COMMUNITY_VERSION: "true"
+      QUOTES_ENABLED: "false"
+      TILEBOT_ENDPOINT: http://chatbot:3000
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  chat21httpserver:
+    image: chat21/chat21-http-server:0.3.1
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      LOG_LEVEL: info
+      MONGODB_URI: mongodb://mongo/chat21
+      JWT_KEY: ${CHAT21_JWT_SECRET}
+      RABBITMQ_URI: amqp://ignored:${CHAT21_ADMIN_TOKEN}@rabbitmq:5672?heartbeat=60
+      PUSH_ENABLED: "false"
+      PUSH_WH_CHAT21_API_ADMIN_TOKEN: ${CHAT21_ADMIN_TOKEN}
+      PUSH_WH_NOTIFY_URL: http://localhost:8004/api/tilechat/notify
+      PUSH_WH_WEBHOOK_TOKEN: ${PUSH_WH_WEBHOOK_TOKEN}
+      CHAT21HTTP_CACHE_ENABLED: "false"
+      CONTACTS_LOOKUP_ENDPOINT: http://server:3000/users_util
+
+  chat21server:
+    image: chat21/chat21-server:1.1.0
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      server:
+        condition: service_started
+    environment:
+      LOG_LEVEL: info
+      MONGODB_URI: mongodb://mongo/chat21
+      APP_ID: tilechat
+      WEBHOOK_ENABLED: "true"
+      WEBHOOK_ENDPOINTS: http://server:3000/chat21/requests,http://chat21httpserver:8004/api/tilechat/push/webhook/endpoint/${PUSH_WH_WEBHOOK_TOKEN}
+      WEBHOOK_EVENTS: message-sent,message-delivered,conversation-unarchived
+      RABBITMQ_URI: amqp://ignored:${CHAT21_OBSERVER_TOKEN}@rabbitmq:5672?heartbeat=60
+
+  rabbitmq:
+    image: chat21/chat21-rabbitmq:v1.0.0
+    restart: unless-stopped
+    volumes:
+      - ../files/rabbitmq-advanced.conf:/etc/rabbitmq/advanced.config:ro
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5672"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  mongo:
+    image: mongo:7.0.48
+    restart: unless-stopped
+    command: ["--bind_ip_all"]
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  rabbitmq-data:
+  mongo-data:
+  redis-data:

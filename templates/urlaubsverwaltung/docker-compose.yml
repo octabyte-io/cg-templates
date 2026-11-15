@@ -1,0 +1,130 @@
+# Based on the project's own example (.examples/with-docker-compose at tag urlaubsverwaltung-6.23.0):
+# Urlaubsverwaltung, PostgreSQL and Keycloak. Urlaubsverwaltung has no passwords of its own; people
+# sign in through Keycloak, which runs here on its own web address. On its first start Keycloak
+# imports files/keycloak-realm.json (the app's client and the first person's account), filling
+# its placeholders from the Keycloak container's environment.
+services:
+  # Cloudgate's web address for the app points here (see files/Caddyfile.txt: it passes everything
+  # to the app and makes signing out also sign out of Keycloak).
+  urlaubsverwaltung:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      UV_URL: ${UV_URL}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - urlaubsverwaltung-app
+
+  urlaubsverwaltung-app:
+    image: urlaubsverwaltung/urlaubsverwaltung:6.23.0
+    restart: unless-stopped
+    depends_on:
+      urlaubsverwaltung-db:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: "8080"
+      # Caps the Java heap, so the app and Keycloak share the server's memory.
+      JAVA_TOOL_OPTIONS: -Xmx768m
+      # Cloudgate serves the app over https; the proxy in front passes that on.
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      SPRING_DATASOURCE_URL: jdbc:postgresql://urlaubsverwaltung-db:5432/urlaubsverwaltung
+      SPRING_DATASOURCE_USERNAME: urlaubsverwaltung
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      # Email. The app starts without a server and sends nothing until one is set. It refuses to
+      # start with an empty sender, so an unset one gets a placeholder.
+      UV_MAIL_FROM: ${SMTP_FROM:-no-reply@example.com}
+      UV_MAIL_REPLYTO: ${SMTP_FROM:-no-reply@example.com}
+      UV_MAIL_APPLICATIONURL: ${UV_URL}
+      UV_CALENDAR_ORGANIZER: ${SMTP_FROM:-no-reply@example.com}
+      SPRING_MAIL_HOST: ${SMTP_HOST}
+      SPRING_MAIL_PORT: ${SMTP_PORT}
+      SPRING_MAIL_USERNAME: ${SMTP_USER}
+      SPRING_MAIL_PASSWORD: ${SMTP_PASSWORD}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+      # Sign-in through the bundled Keycloak. The browser goes to Keycloak's public address; the
+      # app fetches tokens and keys from Keycloak inside the stack, so it never depends on reaching
+      # its own public addresses.
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DEFAULT_CLIENT-ID: urlaubsverwaltung
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DEFAULT_CLIENT-SECRET: ${OIDC_CLIENT_SECRET}
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DEFAULT_CLIENT-NAME: urlaubsverwaltung
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DEFAULT_PROVIDER: default
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DEFAULT_SCOPE: openid,profile,email
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DEFAULT_AUTHORIZATION-GRANT-TYPE: authorization_code
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DEFAULT_REDIRECT-URI: ${UV_URL}/login/oauth2/code/default
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_DEFAULT_AUTHORIZATION-URI: ${KEYCLOAK_URL}/realms/urlaubsverwaltung/protocol/openid-connect/auth
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_DEFAULT_TOKEN-URI: http://urlaubsverwaltung-keycloak:8080/realms/urlaubsverwaltung/protocol/openid-connect/token
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_DEFAULT_JWK-SET-URI: http://urlaubsverwaltung-keycloak:8080/realms/urlaubsverwaltung/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_DEFAULT_USER-INFO-URI: http://urlaubsverwaltung-keycloak:8080/realms/urlaubsverwaltung/protocol/openid-connect/userinfo
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_DEFAULT_USER-NAME-ATTRIBUTE: sub
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: http://urlaubsverwaltung-keycloak:8080/realms/urlaubsverwaltung/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: ${KEYCLOAK_URL}/realms/urlaubsverwaltung
+
+  urlaubsverwaltung-keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2-1
+    restart: unless-stopped
+    command: ["start", "--import-realm"]
+    depends_on:
+      urlaubsverwaltung-db:
+        condition: service_healthy
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://urlaubsverwaltung-db:5432/keycloak
+      KC_DB_USERNAME: urlaubsverwaltung
+      KC_DB_PASSWORD: ${DB_PASSWORD}
+      # Keycloak's public address; requests from the app inside the stack are answered too.
+      KC_HOSTNAME: ${KEYCLOAK_URL}
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_PORT: "8080"
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: "true"
+      KC_CACHE: local
+      JAVA_OPTS_KC_HEAP: -Xms64m -Xmx768m
+      # The administrator of Keycloak itself (master realm), made on the first start.
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      # Read by files/keycloak-realm.json when the realm is imported on the first start.
+      UV_URL: ${UV_URL}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_FIRST_NAME: ${ADMIN_FIRST_NAME}
+      ADMIN_LAST_NAME: ${ADMIN_LAST_NAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_FROM: ${SMTP_FROM:-no-reply@example.com}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+      - ../files/keycloak-realm.json:/opt/keycloak/data/import/urlaubsverwaltung-realm.json:ro
+    healthcheck:
+      # The image has no curl or wget; this is the check the project's own example uses.
+      test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live']
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 60s
+
+  urlaubsverwaltung-db:
+    image: postgres:18.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: urlaubsverwaltung
+      POSTGRES_USER: urlaubsverwaltung
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # PostgreSQL 18 images keep data under /var/lib/postgresql/<version>.
+      - urlaubsverwaltung-db-data:/var/lib/postgresql
+      - ../files/create-keycloak-db.sql:/docker-entrypoint-initdb.d/10-create-keycloak-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -d urlaubsverwaltung -U urlaubsverwaltung"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  urlaubsverwaltung-db-data:
