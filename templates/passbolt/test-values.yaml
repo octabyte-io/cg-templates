@@ -1,0 +1,5 @@
+EMAIL_FROM: passbolt@example.com
+SMTP_HOST: smtp.example.com
+SMTP_PORT: "587"
+SMTP_USERNAME: passbolt
+SMTP_PASSWORD: not-a-real-password

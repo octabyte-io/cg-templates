@@ -1,0 +1,21 @@
+name: Wiki.js
+description: "Wiki.js is a free, open-source, self-hosted wiki with Markdown, live co-writing, approvals and Git sync, in place of Confluence and GitBook."
+version: "3.3.1"
+tags: [self-hosted wiki, confluence alternative, gitbook alternative, markdown wiki, open source wiki, knowledge base, documentation]
+links:
+  website: https://js.wiki
+  docs: https://docs.js.wiki
+  source: https://github.com/requarks/wiki
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Wiki.js with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: wikijs, port: 3000 }

@@ -1,0 +1,79 @@
+# From the official image's README and its examples/with-cron compose file
+# (github.com/Dolibarr/dolibarr-docker). Left out: published ports and the hard-coded
+# root password. The image installs Dolibarr on its first start (DOLI_INSTALL_AUTO is on
+# by default), creates the admin account and turns on the modules listed below.
+
+services:
+  dolibarr:
+    image: dolibarr/dolibarr:24.0.2
+    restart: unless-stopped
+    depends_on:
+      dolibarr-db:
+        condition: service_healthy
+    environment: &dolibarr-env
+      DOLI_DB_TYPE: mysqli
+      DOLI_DB_HOST: dolibarr-db
+      DOLI_DB_HOST_PORT: "3306"
+      DOLI_DB_NAME: dolibarr
+      DOLI_DB_USER: dolibarr
+      DOLI_DB_PASSWORD: ${DB_PASSWORD}
+      DOLI_URL_ROOT: ${DOLI_URL_ROOT}
+      DOLI_INSTANCE_UNIQUE_ID: ${DOLI_INSTANCE_UNIQUE_ID}
+      # Created on the first start only: sign in as "admin" with this password.
+      DOLI_ADMIN_LOGIN: admin
+      DOLI_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DOLI_INIT_DEMO: "0"
+      DOLI_COMPANY_NAME: ${DOLI_COMPANY_NAME}
+      DOLI_COMPANY_COUNTRYCODE: ${DOLI_COMPANY_COUNTRYCODE}
+      # Third parties, products, stock, proposals, orders, invoices, bank accounts, and
+      # scheduled jobs (run by dolibarr-cron below).
+      DOLI_ENABLE_MODULES: Societe,Product,Stock,Propale,Commande,Facture,Banque,Cron
+      DOLI_CRON: "0"
+      DOLI_CRON_KEY: ${DOLI_CRON_KEY}
+      DOLI_CRON_USER: admin
+    volumes:
+      - dolibarr-documents:/var/www/documents
+      - dolibarr-custom:/var/www/html/custom
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+
+  # Same image with DOLI_CRON=1: runs Dolibarr's scheduled jobs every 5 minutes
+  # (recurring invoices, reminders, emails), as in upstream's with-cron example.
+  dolibarr-cron:
+    image: dolibarr/dolibarr:24.0.2
+    restart: unless-stopped
+    depends_on:
+      dolibarr:
+        condition: service_healthy
+    environment:
+      <<: *dolibarr-env
+      DOLI_CRON: "1"
+    volumes:
+      - dolibarr-documents:/var/www/documents
+      - dolibarr-custom:/var/www/html/custom
+
+  dolibarr-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: dolibarr
+      MARIADB_USER: dolibarr
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - dolibarr-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  dolibarr-documents:
+  dolibarr-custom:
+  dolibarr-db-data:
