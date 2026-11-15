@@ -1,0 +1,70 @@
+services:
+  wordpress:
+    image: wordpress:7.1.4-apache
+    restart: unless-stopped
+    depends_on:
+      wordpress-db:
+        condition: service_healthy
+      woocommerce-install:
+        condition: service_completed_successfully
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: wordpress
+      # WooCommerce asks for at least 256 MB; WordPress's own default is 40 MB.
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_MEMORY_LIMIT', '256M' );
+    volumes:
+      - wordpress-files:/var/www/html
+      - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+
+  # Runs once at each start, before WordPress: puts WooCommerce into the site's files the first
+  # time (a copy already there, and any update made from the dashboard, is left alone), and the
+  # must-use plugin that switches WooCommerce on when an administrator first opens the dashboard.
+  woocommerce-install:
+    image: wordpress:cli-2.12.0
+    restart: "no"
+    # Root, to hand the files to www-data (uid 33 in the WordPress image, 82 in this one).
+    user: "0:0"
+    entrypoint: ["sh", "-euc"]
+    command:
+      - |
+        site=/var/www/html
+        mkdir -p "$$site/wp-content/plugins" "$$site/wp-content/mu-plugins"
+        if [ -f "$$site/wp-content/plugins/woocommerce/woocommerce.php" ]; then
+          echo "WooCommerce is already installed"
+        else
+          echo "Installing WooCommerce $$WOOCOMMERCE_VERSION"
+          curl -fsSL --retry 5 --retry-delay 5 -o /tmp/woocommerce.zip \
+            "https://downloads.wordpress.org/plugin/woocommerce.$$WOOCOMMERCE_VERSION.zip"
+          unzip -qo /tmp/woocommerce.zip -d "$$site/wp-content/plugins"
+        fi
+        cp /cloudgate/activate-woocommerce.php.txt "$$site/wp-content/mu-plugins/cloudgate-activate-woocommerce.php"
+        chown 33:33 "$$site" "$$site/wp-content"
+        chown -R 33:33 "$$site/wp-content/plugins" "$$site/wp-content/mu-plugins"
+    environment:
+      WOOCOMMERCE_VERSION: "11.3.0"
+    volumes:
+      - wordpress-files:/var/www/html
+      - ../files/activate-woocommerce.php.txt:/cloudgate/activate-woocommerce.php.txt:ro
+
+  wordpress-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - wordpress-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wordpress-files:
+  wordpress-db-data:

@@ -1,0 +1,102 @@
+# From FOSSBilling's official Docker Compose setup (docs.fossbilling.org/getting-started/docker),
+# with the images pinned, no published ports, a database healthcheck, and an unattended
+# first-run install in place of the public web installer.
+services:
+  fossbilling:
+    # Official image: Apache + PHP on port 80. Its cron runs FOSSBilling's scheduled jobs
+    # (invoices, reminders, suspensions) every five minutes inside the container.
+    image: fossbilling/fossbilling:0.8.9
+    restart: unless-stopped
+    depends_on:
+      fossbilling-db:
+        condition: service_healthy
+    environment:
+      SYSTEM_URL: ${SYSTEM_URL}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      CURRENCY: ${CURRENCY:-USD}
+    # The image only serves the web installer, which anyone who reached the address first
+    # could complete. On the first start this runs FOSSBilling's own installer class from the
+    # command line instead (install/install.php: the same database schema, admin account,
+    # currency, config.php and email templates): it creates the admin with ADMIN_EMAIL and
+    # the generated ADMIN_PASSWORD, and trusts X-Forwarded-* headers from the private
+    # networks Cloudgate's proxy uses, so links and redirects stay on https://. The web
+    # installer's password-strength check is skipped, as the generated password is long
+    # and random. Later starts find config.php and skip this; FOSSBilling then deletes the
+    # leftover install folder itself.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        cd /var/www/html
+        if [ ! -f config.php ]; then
+          echo "Installing FOSSBilling on the empty database..."
+          php -r '
+            require "install/install.php";
+            ini_set("display_errors", "stderr");
+            $$installer = new FOSSBilling_Installer(Symfony\Component\HttpFoundation\Request::create("/install/install.php", "POST"));
+            $$values = [
+              "system_url" => rtrim(getenv("SYSTEM_URL"), "/") . "/",
+              "trusted_proxy_enabled" => true,
+              "trusted_proxy_proxies" => ["127.0.0.1", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
+              "trusted_proxy_headers" => "x_forwarded",
+              "error_reporting" => null,
+              "currency_code" => strtoupper(getenv("CURRENCY") ?: "USD"),
+              "database_hostname" => "fossbilling-db",
+              "database_port" => 3306,
+              "database_name" => "fossbilling",
+              "database_username" => "fossbilling",
+              "database_password" => getenv("DB_PASSWORD"),
+              "admin_name" => "Admin",
+              "admin_email" => getenv("ADMIN_EMAIL"),
+              "admin_password" => getenv("ADMIN_PASSWORD"),
+              "admin_api_token" => null,
+            ];
+            foreach ($$values as $$key => $$value) { $$_SESSION[$$key] = $$value; }
+            foreach (["connectDatabase", "install", "generateEmailTemplates"] as $$step) {
+              (new ReflectionMethod($$installer, $$step))->invoke($$installer);
+            }
+          '
+          test -f config.php
+          chown -R www-data:www-data /var/www/html
+          echo "FOSSBilling is installed. Sign in at /admin with ADMIN_EMAIL and ADMIN_PASSWORD."
+        fi
+        cron
+        exec apache2-foreground
+    volumes:
+      # The whole web root, as in the official setup: the code (which FOSSBilling's built-in
+      # updater replaces), config.php, theme settings, uploads, cache and logs.
+      - fossbilling-data:/var/www/html
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  fossbilling-db:
+    # The official setup uses mariadb:lts; 11.8 is the current LTS series.
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: fossbilling
+      MARIADB_USER: fossbilling
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - fossbilling-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  fossbilling-data:
+  fossbilling-db-data:

@@ -1,0 +1,46 @@
+services:
+  langflow:
+    image: langflowai/langflow:1.13.2
+    restart: unless-stopped
+    depends_on:
+      langflow-db:
+        condition: service_healthy
+    environment:
+      LANGFLOW_DATABASE_URL: postgresql://langflow:${POSTGRES_PASSWORD}@langflow-db:5432/langflow
+      LANGFLOW_CONFIG_DIR: /app/langflow
+      LANGFLOW_HOST: 0.0.0.0
+      LANGFLOW_PORT: 7860
+      LANGFLOW_AUTO_LOGIN: "false"
+      LANGFLOW_SUPERUSER: ${LANGFLOW_SUPERUSER}
+      LANGFLOW_SUPERUSER_PASSWORD: ${LANGFLOW_SUPERUSER_PASSWORD}
+      LANGFLOW_SECRET_KEY: ${LANGFLOW_SECRET_KEY}
+      LANGFLOW_NEW_USER_IS_ACTIVE: "false"
+      LANGFLOW_ENABLE_SIGNUP: ${LANGFLOW_ENABLE_SIGNUP:-true}
+      DO_NOT_TRACK: "true"
+    volumes:
+      - langflow-data:/app/langflow
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:7860/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+
+  langflow-db:
+    image: postgres:16.16-trixie
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: langflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: langflow
+    volumes:
+      - langflow-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  langflow-data:
+  langflow-db-data:

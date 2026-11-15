@@ -1,0 +1,28 @@
+name: InvenTree
+description: "Self-hosted InvenTree is open-source inventory software for parts and stock: locations, suppliers, bills of materials, builds and orders."
+version: "1.7.2"
+tags: [sortly alternative, inventory management, parts inventory software, stock control, bill of materials, open source inventory, barcode inventory]
+links:
+  website: https://inventree.org
+  docs: https://docs.inventree.org/en/stable/
+  source: https://github.com/inventree/InvenTree
+cloudgate: 0.1.0
+compose: app
+# Web server, background worker, PostgreSQL, Redis and the proxy; InvenTree's
+# Python processes need about 1.5 GB together.
+size: medium
+inputs:
+  INVENTREE_SITE_URL: { value: "{{domains.inventree-proxy.url}}" }
+  INVENTREE_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the admin account. You sign in as "admin" with a strong password Cloudgate creates, shown afterwards on the app's variables page.
+      format: email
+  INVENTREE_ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+# The proxy serves uploaded files and static files and passes everything else
+# to the InvenTree server, so it is the service that gets the address.
+domains:
+  - { service: inventree-proxy, port: 80 }
+files:
+  - { path: Caddyfile.conf }

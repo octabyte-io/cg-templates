@@ -1,0 +1,83 @@
+services:
+  ghostfolio:
+    image: ghostfolio/ghostfolio:3.99.0
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 1m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # On each start the image applies database migrations, then serves the
+    # app and its API on port 3333. The first account created in the browser
+    # becomes the admin.
+    environment:
+      ROOT_URL: ${ROOT_URL}
+      ACCESS_TOKEN_SALT: ${ACCESS_TOKEN_SALT}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      DATABASE_URL: postgresql://ghostfolio:${POSTGRES_PASSWORD}@ghostfolio-db:5432/ghostfolio?connect_timeout=300
+      REDIS_HOST: ghostfolio-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      HOST: 0.0.0.0
+      PORT: 3333
+      # Cloudgate's proxy sits in front of the app; this lets the rate limiter
+      # see the visitor's address instead of the proxy's.
+      TRUST_PROXY: 1
+    depends_on:
+      ghostfolio-db:
+        condition: service_healthy
+      ghostfolio-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3333/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  ghostfolio-db:
+    image: postgres:15.15-alpine
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_READ_SEARCH
+      - FOWNER
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_USER: ghostfolio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ghostfolio
+    volumes:
+      - ghostfolio-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ghostfolio -U ghostfolio"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  # Cache and job queue for market data and portfolio calculations.
+  ghostfolio-redis:
+    image: redis:8.2.3-alpine
+    restart: unless-stopped
+    user: "999:1000"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: ["sh", "-c", "redis-server --requirepass \"$$REDIS_PASSWORD\""]
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --pass \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ghostfolio-db-data:

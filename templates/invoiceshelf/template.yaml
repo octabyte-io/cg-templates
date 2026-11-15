@@ -1,0 +1,25 @@
+name: InvoiceShelf
+description: "Self-hosted InvoiceShelf: free invoicing for freelancers and small businesses, with estimates, payments, expenses and recurring invoices."
+version: "2.4.7"
+tags: [freshbooks alternative, invoicing software, free invoice generator, crater alternative, estimates and quotes, recurring invoices, expense tracking]
+links:
+  website: https://invoiceshelf.com
+  docs: https://docs.invoiceshelf.com
+  source: https://github.com/InvoiceShelf/InvoiceShelf
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.invoiceshelf.url}}" }
+  APP_HOST: { value: "{{domains.invoiceshelf.host}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in the app, such as when recurring invoices go out, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: invoiceshelf, port: 8080 }

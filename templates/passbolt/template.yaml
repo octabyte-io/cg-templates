@@ -1,0 +1,45 @@
+name: Passbolt
+description: "Self-hosted Passbolt Community Edition: an open-source team password manager that shares end-to-end encrypted passwords by group and folder."
+version: "5.18.0"
+tags: [team password manager, password sharing, self-hosted password manager, open source password manager, 1password alternative, lastpass alternative, passbolt]
+links:
+  website: https://www.passbolt.com
+  docs: https://www.passbolt.com/docs/hosting/install/ce/docker/
+  source: https://github.com/passbolt/passbolt_api
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_FULL_BASE_URL: { value: "{{domains.passbolt.url}}" }
+  DB_PASSWORD: { generate: password }
+  EMAIL_FROM:
+    ask:
+      label: Sender email
+      description: The address Passbolt sends invitations, account recovery and notifications from, for example passbolt@yourdomain.com. Your email service must allow sending from it.
+      format: email
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Passbolt invites every user, including you, with a link sent by email, so it needs an email sending service, for example smtp.resend.com or email-smtp.eu-west-1.amazonaws.com.
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+  SMTP_TLS:
+    ask:
+      label: Use STARTTLS
+      description: Keep "true" for port 587, which most email services use. Clear it for port 465 (then write ssl:// before the host, e.g. ssl://smtp.example.com) or for a server without encryption.
+      default: "true"
+      pattern: "true"
+      required: false
+domains:
+  - { service: passbolt, port: 80 }

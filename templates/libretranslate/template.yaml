@@ -1,0 +1,21 @@
+name: LibreTranslate
+description: "Self-hosted LibreTranslate translates text and documents on your own server, with a web page and an API your apps can call, and keeps your text private."
+version: "1.9.6"
+tags: [self-hosted translation api, machine translation, google translate alternative, deepl alternative, free translation api, offline translator]
+links:
+  website: https://libretranslate.com
+  docs: https://docs.libretranslate.com
+  source: https://github.com/LibreTranslate/LibreTranslate
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  API_KEY: { generate: uuid }
+  LANGUAGES:
+    ask:
+      label: Languages
+      description: Language codes to download, separated by commas (for example en,de,fr). Each language adds a few hundred MB; more can be added later.
+      default: "en,de,es,fr,it,pt"
+      required: false
+domains:
+  - { service: libretranslate, port: 5000 }

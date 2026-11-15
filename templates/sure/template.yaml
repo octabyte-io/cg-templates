@@ -1,0 +1,49 @@
+name: Sure
+description: "Sure is a self-hosted personal finance app: all your accounts, net worth, spending and budgets in one private dashboard, with imports from Mint and YNAB."
+version: "0.7.6-hotfix.1"
+tags: [personal finance, monarch money alternative, net worth tracker, budgeting app, quicken alternative, mint alternative]
+links:
+  website: https://sure.am
+  docs: https://github.com/we-promise/sure/blob/main/docs/hosting/docker.md
+  source: https://github.com/we-promise/sure
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_DOMAIN: { value: "{{domains.sure.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  DISABLE_SIGNUPS:
+    ask:
+      label: Turn off new sign-ups
+      description: Type true once your own account exists, so nobody else can create an account.
+      default: "false"
+      required: false
+  EMAIL_SENDER:
+    ask:
+      label: Send emails from
+      description: The address Sure's emails come from, such as money@yourdomain.com. Needed if you fill in an email server below.
+      format: email
+      required: false
+  SMTP_ADDRESS:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed for password resets and invitations by email. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      default: "465"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+domains:
+  - { service: sure, port: 3000 }

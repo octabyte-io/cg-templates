@@ -1,0 +1,60 @@
+services:
+  bookstack:
+    # The LinuxServer.io image that BookStack's installation docs point to.
+    image: lscr.io/linuxserver/bookstack:v26.09.3-ls297
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 and refuses to start on a server without it.
+    # On such a server, drop the IPv6 listen lines before the image's own /init starts.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        if [ ! -e /proc/net/if_inet6 ]; then
+        sed -i '/listen \[::\]/d' /defaults/nginx/site-confs/default.conf.sample;
+        if [ -f /config/nginx/site-confs/default.conf ]; then
+        sed -i '/listen \[::\]/d' /config/nginx/site-confs/default.conf; fi; fi;
+        exec /init
+    depends_on:
+      bookstack-db:
+        condition: service_healthy
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      APP_URL: ${APP_URL}
+      # Laravel's application key: 32 random bytes, written as base64:<key>.
+      APP_KEY: base64:${APP_KEY}
+      DB_HOST: bookstack-db
+      DB_PORT: 3306
+      DB_USERNAME: bookstack
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: bookstack
+      # Sends email and webhooks in the background, through the queue worker the image runs.
+      QUEUE_CONNECTION: database
+    volumes:
+      # BookStack's .env, uploaded images and files, themes, backups and logs.
+      - bookstack-config:/config
+
+  bookstack-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: bookstack
+      MARIADB_USER: bookstack
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - bookstack-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  bookstack-config:
+  bookstack-db-data:

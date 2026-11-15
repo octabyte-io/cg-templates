@@ -1,0 +1,85 @@
+# From HumHub's official Docker image and quick start (github.com/humhub/docker): one container
+# runs the web server (FrankenPHP/Caddy), the scheduler (cron jobs), the queue workers and the
+# live-update hub, next to MariaDB.
+services:
+  humhub:
+    image: humhub/humhub:1.19.4
+    restart: unless-stopped
+    depends_on:
+      humhub-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      # Cloudgate's web proxy terminates HTTPS, so the container serves plain HTTP on port 80
+      # (the image's documented reverse-proxy setting) ...
+      SERVER_NAME: ":80"
+      # ... and HumHub trusts the proxy's X-Forwarded-* headers for https links and visitor IPs.
+      HUMHUB_WEB_CONFIG__COMPONENTS__REQUEST__TRUSTED_HOSTS: '["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"]'
+      HUMHUB_CONFIG__COMPONENTS__DB__DSN: "mysql:host=humhub-db;dbname=humhub"
+      HUMHUB_CONFIG__COMPONENTS__DB__USERNAME: humhub
+      HUMHUB_CONFIG__COMPONENTS__DB__PASSWORD: ${DB_PASSWORD}
+      HUMHUB_URL: ${HUMHUB_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # HumHub's own console installer instead of the web wizard, run before the web server
+    # starts so nobody else can reach an open installer. On the first start only, it creates the
+    # database, the site, and the "admin" account with the generated password, sets the address,
+    # and turns off open self-registration (people join by invitation until the admin turns it on
+    # under Administration > Users > Settings). Then the image's own entrypoint takes over: it runs
+    # migrations and module updates and starts the web server, scheduler and workers.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        mkdir -p /data/uploads /data/assets /data/logs /data/config /data/modules /data/modules-custom /data/themes /data/caddy
+        touch /data/logs/app.log
+        cp -rn /opt/humhub/protected/config/ /data/
+        cp -rn /opt/humhub/uploads/ /data/
+        chown -R www-data:www-data /data /app/runtime
+        hh() { su www-data -s /bin/bash -c "/app/yii $$(printf '%q ' "$$@")--interactive=0"; }
+        if ! hh settings/list-module admin 2>&1 | grep -q installationId; then
+          echo "Installing HumHub with the console installer..."
+          hh installer/install-db
+          hh installer/write-site-config HumHub HumHub
+          hh installer/create-admin-account admin "$$ADMIN_EMAIL" "$$ADMIN_PASSWORD"
+          hh settings/set base mailerSystemEmailAddress "$$ADMIN_EMAIL"
+          hh settings/set user auth.anonymousRegistration 0
+        fi
+        hh installer/set-base-url "$${HUMHUB_URL%/}"
+        exec /docker-entrypoint.sh
+    volumes:
+      # Config, uploaded files, logs, marketplace modules and custom themes.
+      - humhub-data:/data
+    healthcheck:
+      test: ["CMD", "/app/bin/humhub-simple-healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+
+  humhub-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: humhub
+      MARIADB_USER: humhub
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - humhub-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  humhub-data:
+  humhub-db-data:

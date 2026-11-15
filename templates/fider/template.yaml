@@ -1,0 +1,46 @@
+name: Fider
+description: "Self-hosted Fider is a feedback board where customers post feature requests, vote and comment, so you know what to build next. Replaces Canny and UserVoice."
+version: "0.39.0"
+tags: [canny alternative, uservoice alternative, feature request board, feature voting, customer feedback, self-hosted feedback board]
+links:
+  website: https://fider.io
+  docs: https://docs.fider.io/hosting-instance
+  source: https://github.com/getfider/fider
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.fider.url}}" }
+  JWT_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  EMAIL_NOREPLY:
+    ask:
+      label: Sender email
+      description: The address Fider sends sign-in links and notifications from, for example noreply@yourdomain.com. Your email service must allow sending from it.
+      format: email
+  EMAIL_SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Fider signs everyone in, including you as the first admin, with a link sent by email, so it needs an email sending service, for example smtp.resend.com or email-smtp.eu-west-1.amazonaws.com.
+  EMAIL_SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+  EMAIL_SMTP_USERNAME:
+    ask:
+      label: Email server username
+  EMAIL_SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+  EMAIL_SMTP_ENABLE_IMPLICIT_TLS:
+    ask:
+      label: Use implicit TLS
+      description: "true only for port 465; false for port 587 (STARTTLS)."
+      default: "false"
+      pattern: "true|false"
+      required: false
+domains:
+  - { service: fider, port: 3000 }

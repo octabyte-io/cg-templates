@@ -1,0 +1,45 @@
+# From Reactive Resume's official Docker Compose setup (docs/self-hosting/docker.mdx at v6.1.1):
+# the app and PostgreSQL. Uploads use the app's local storage at /app/data. PDFs are rendered by the
+# app itself, so there is no separate Chrome/printer service, and Redis is optional on one server.
+# The image has its own healthcheck on /api/health.
+services:
+  reactive-resume:
+    image: amruthpillai/reactive-resume:v6.1.1
+    restart: unless-stopped
+    depends_on:
+      reactive-resume-db:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL}
+      PORT: "3000"
+      DATABASE_URL: postgresql://reactive-resume:${POSTGRES_PASSWORD}@reactive-resume-db:5432/reactive-resume
+      AUTH_SECRET: ${AUTH_SECRET}
+      # Lets people save their own AI provider keys (encrypted with this secret).
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      STORAGE_BACKEND: local
+      LOCAL_STORAGE_PATH: /app/data
+      # Anyone who can reach the address can sign up. After creating your own account,
+      # set this to "true" to close sign-ups; existing accounts keep working.
+      FLAG_DISABLE_SIGNUPS: ${DISABLE_SIGNUPS:-false}
+    volumes:
+      - reactive-resume-data:/app/data
+
+  reactive-resume-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: reactive-resume
+      POSTGRES_USER: reactive-resume
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - reactive-resume-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reactive-resume -d reactive-resume"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  reactive-resume-data:
+  reactive-resume-db-data:

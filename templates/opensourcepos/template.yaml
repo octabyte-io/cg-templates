@@ -1,0 +1,22 @@
+name: Open Source Point of Sale
+description: "Open Source Point of Sale is a free, self-hosted POS for shops and cafés: ring up sales, print receipts, track stock and customers, and run reports."
+version: "3.4.3"
+tags: [square alternative, point of sale, free pos software, open source pos, pos system for small business, inventory management, retail pos]
+links:
+  website: https://opensourcepos.org
+  docs: https://github.com/opensourcepos/opensourcepos/blob/3.4.3/docs/INSTALL.md
+  source: https://github.com/opensourcepos/opensourcepos
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ADMIN_PASSWORD: { generate: password }
+  ALLOWED_HOSTNAMES: { value: "{{domains.opensourcepos.host}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ENCRYPTION_KEY: { generate: hex }
+  THROTTLE_KEY: { generate: hex }
+domains:
+  - { service: opensourcepos, port: 80 }
+files:
+  - { path: set-admin-password.php.txt }

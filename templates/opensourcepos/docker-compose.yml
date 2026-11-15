@@ -1,0 +1,81 @@
+# From upstream's docker-compose.yml and docker/docker-mysql.yml at tag 3.4.3, with the
+# release image instead of :master. Upstream bind-mounts a .env file so the app can write
+# its encryption and login-throttle keys into it; the image also reads both keys from the
+# ENCRYPTION_KEY and THROTTLE_KEY variables (see .env.example), so Cloudgate generates them
+# here and no .env file is needed.
+
+services:
+  opensourcepos:
+    # Apache + PHP 8.2 on port 80.
+    image: jekkos/opensourcepos:3.4.3
+    restart: unless-stopped
+    depends_on:
+      opensourcepos-setup:
+        condition: service_completed_successfully
+    environment: &ospos-env
+      CI_ENVIRONMENT: production
+      # Host header allow-list (required in production); only the host name, no scheme.
+      ALLOWED_HOSTNAMES: ${ALLOWED_HOSTNAMES}
+      # Cloudgate serves the app over HTTPS from its proxy, so links must be https.
+      FORCE_HTTPS: "true"
+      # The shop's own time zone is set in the app under Configuration.
+      PHP_TIMEZONE: UTC
+      MYSQL_HOST_NAME: opensourcepos-db
+      MYSQL_DB_NAME: ospos
+      MYSQL_USERNAME: ospos
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      THROTTLE_KEY: ${THROTTLE_KEY}
+    volumes:
+      # Item pictures and the company logo.
+      - opensourcepos-uploads:/app/public/uploads
+      - opensourcepos-logs:/app/writable/logs
+    healthcheck:
+      # / answers with a redirect to the login page, which curl (without -L) accepts.
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  # Runs once at each start, before the app. Upstream creates and upgrades the tables when
+  # someone presses "Initialize" or "Migrate" on the sign-in page; this runs the same
+  # migrations from the command line instead, so nobody else can initialize the shop first.
+  # Then it replaces the default admin password "pointofsale" with ADMIN_PASSWORD, only
+  # while it is still the default, so a password changed in the app is never overwritten.
+  opensourcepos-setup:
+    image: jekkos/opensourcepos:3.4.3
+    restart: "no"
+    depends_on:
+      opensourcepos-db:
+        condition: service_healthy
+    working_dir: /app
+    entrypoint: ["sh", "-c", "php spark migrate -n App && php /set-admin-password.php"]
+    environment:
+      <<: *ospos-env
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ../files/set-admin-password.php.txt:/set-admin-password.php:ro
+
+  opensourcepos-db:
+    # Upstream uses MariaDB 10.5 (end of life); 10.11 is the current 10.x LTS the docs support.
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ospos
+      MARIADB_USER: ospos
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - opensourcepos-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  opensourcepos-uploads:
+  opensourcepos-logs:
+  opensourcepos-db-data:

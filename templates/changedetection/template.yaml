@@ -1,0 +1,15 @@
+name: changedetection.io
+description: "changedetection.io is a free, self-hosted website change monitor that alerts you when a web page, a price or stock status changes."
+version: "0.70.3"
+tags: [website change detection, monitor web page for changes, price drop alert, back in stock alert, visualping alternative, distill alternative]
+links:
+  website: https://changedetection.io
+  docs: https://changedetection.io/tutorials
+  source: https://github.com/dgtlmoon/changedetection.io
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.changedetection.url}}" }
+domains:
+  - { service: changedetection, port: 5000 }

@@ -1,0 +1,19 @@
+name: Ghostfolio
+description: "Self-hosted Ghostfolio: an open-source portfolio tracker for stocks, ETFs and crypto across all your accounts, with performance, dividends and allocation."
+version: "3.99.0"
+tags: [portfolio tracker, investment tracker, net worth tracker, wealth management, self-hosted portfolio tracker, sharesight alternative, empower alternative]
+links:
+  website: https://ghostfol.io
+  docs: https://github.com/ghostfolio/ghostfolio#self-hosting
+  source: https://github.com/ghostfolio/ghostfolio
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ROOT_URL: { value: "{{domains.ghostfolio.url}}" }
+  ACCESS_TOKEN_SALT: { generate: hex }
+  JWT_SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: ghostfolio, port: 3333 }

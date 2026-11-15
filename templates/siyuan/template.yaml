@@ -1,0 +1,23 @@
+name: SiYuan
+description: "Self-hosted SiYuan is a private, block-based notes app with backlinks, databases and flashcards, used in any browser as your personal knowledge base."
+version: "v3.8.10"
+tags: [personal knowledge base, note taking app, notion alternative, obsidian alternative, self-hosted notes, siyuan note]
+links:
+  website: https://b3log.org/siyuan/en/
+  docs: https://github.com/siyuan-note/siyuan#docker-hosting
+  source: https://github.com/siyuan-note/siyuan
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The lock screen password ("access authorization code") asked for on every
+  # new browser before any note is shown.
+  SIYUAN_ACCESS_AUTH_CODE: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in your notes, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: siyuan, port: 6806 }

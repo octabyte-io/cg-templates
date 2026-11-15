@@ -1,0 +1,26 @@
+name: HeyForm
+description: "Self-hosted HeyForm builds Typeform-style conversational forms, quizzes and surveys with logic, themes, payments and no response limits."
+version: "3.0.6"
+tags: [typeform alternative, google forms alternative, jotform alternative, conversational forms, form builder, online surveys, quiz maker]
+links:
+  website: https://heyform.net
+  docs: https://docs.heyform.net/open-source/self-hosting
+  source: https://github.com/heyform/heyform
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_HOMEPAGE_URL: { value: "{{domains.heyform.url}}" }
+  SESSION_KEY: { generate: hex }
+  FORM_ENCRYPTION_KEY: { generate: hex }
+  INTEGRATION_ENCRYPTION_KEY: { generate: base64 }
+  MONGO_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  DISABLE_SIGNUPS:
+    ask:
+      label: Turn off new sign-ups
+      description: Type true once your team has signed up, so nobody else can create an account. Invitation links still work.
+      default: "false"
+      required: false
+domains:
+  - { service: heyform, port: 9157 }

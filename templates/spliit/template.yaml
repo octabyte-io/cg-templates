@@ -1,0 +1,23 @@
+name: Spliit
+description: "Spliit is a free, self-hosted app for splitting group expenses: share a group by link, log who paid and see who owes whom. No accounts needed."
+version: "1.30.0"
+tags: [splitwise alternative, tricount alternative, split expenses, group expenses, shared costs, expense splitting app, who owes whom]
+links:
+  website: https://spliit.app
+  docs: https://github.com/spliit-app/spliit#readme
+  source: https://github.com/spliit-app/spliit
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.spliit.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  DEFAULT_CURRENCY_CODE:
+    ask:
+      label: Default currency
+      description: The three-letter currency code new groups start with, such as USD, EUR or GBP. Each group can still pick its own.
+      default: "USD"
+      pattern: "[A-Z]{3}"
+      required: false
+domains:
+  - { service: spliit, port: 3000 }

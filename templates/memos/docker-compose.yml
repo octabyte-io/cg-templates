@@ -1,0 +1,24 @@
+services:
+  memos:
+    image: neosmemo/memos:26.11.0
+    restart: unless-stopped
+    environment:
+      MEMOS_INSTANCE_URL: ${MEMOS_INSTANCE_URL}
+      # Read by files/memos-config.json, Memos' declarative configuration: on
+      # first start it creates the administrator "admin" with this password and
+      # turns new sign-ups off. Both stay editable in Memos afterwards; the file
+      # never resets them on a restart.
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # The SQLite database and uploaded attachments.
+      - memos-data:/var/opt/memos
+      - ../files/memos-config.json:/etc/memos/config/cloudgate.json:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5230/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  memos-data:

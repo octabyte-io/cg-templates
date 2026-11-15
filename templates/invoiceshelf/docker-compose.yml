@@ -1,0 +1,71 @@
+# From InvoiceShelf's official MariaDB compose file (github.com/InvoiceShelf/docker,
+# docker-compose.mysql.yml), with the image pinned and the settings filled in.
+services:
+  invoiceshelf:
+    # Official image: nginx + PHP-FPM (serversideup/php) on port 8080, with Laravel's
+    # scheduler (recurring invoices, overdue flags) supervised in the same container.
+    # 2.4.7 is the release the project asks everyone to run (PHP security fix, Oct 2026).
+    image: invoiceshelf/invoiceshelf:2.4.7
+    restart: unless-stopped
+    depends_on:
+      invoiceshelf-db:
+        condition: service_healthy
+    environment:
+      APP_NAME: InvoiceShelf
+      APP_ENV: production
+      APP_DEBUG: "false"
+      # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+      APP_KEY: base64:${APP_KEY}
+      APP_URL: ${APP_URL}
+      APP_TIMEZONE: ${TIMEZONE:-UTC}
+      # The app's own host name, so sign-in cookies and the SPA's API calls work.
+      SESSION_DOMAIN: ${APP_HOST}
+      SANCTUM_STATEFUL_DOMAINS: ${APP_HOST}
+      DB_CONNECTION: mariadb
+      DB_HOST: invoiceshelf-db
+      DB_PORT: 3306
+      DB_DATABASE: invoiceshelf
+      DB_USERNAME: invoiceshelf
+      DB_PASSWORD: ${DB_PASSWORD}
+      CACHE_STORE: file
+      SESSION_DRIVER: file
+      SESSION_LIFETIME: 240
+      # The image's own startup steps; migrations run from the first-run wizard.
+      AUTORUN_ENABLED: "true"
+      AUTORUN_LARAVEL_MIGRATION: "false"
+      AUTORUN_LARAVEL_OPTIMIZE: "false"
+      PHP_OPCACHE_ENABLE: 1
+      # serversideup/php setting: listen on IPv4 only. Cloudgate's proxy reaches the app
+      # over the IPv4 container network, and nginx fails to start on hosts with IPv6 off.
+      NGINX_LISTEN_IP_PROTOCOL: ipv4
+    volumes:
+      # Uploads, PDFs, logs and the install state.
+      - invoiceshelf-storage:/var/www/html/storage
+      # Modules installed from InvoiceShelf's marketplace.
+      - invoiceshelf-modules:/var/www/html/Modules
+
+  invoiceshelf-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: invoiceshelf
+      MARIADB_USER: invoiceshelf
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - invoiceshelf-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  invoiceshelf-storage:
+  invoiceshelf-modules:
+  invoiceshelf-db-data:

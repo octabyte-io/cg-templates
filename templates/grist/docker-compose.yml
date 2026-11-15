@@ -1,0 +1,30 @@
+services:
+  grist:
+    image: gristlabs/grist:1.7.22
+    restart: unless-stopped
+    environment:
+      # The public address: share links, sign-in callbacks and emails use it.
+      APP_HOME_URL: ${APP_HOME_URL}
+      GRIST_SESSION_SECRET: ${GRIST_SESSION_SECRET}
+      # On first visit Grist shows its Quick setup page and asks for this key
+      # (it is on the app's variables page), so only the owner can set it up.
+      GRIST_BOOT_KEY: ${GRIST_BOOT_KEY}
+      # The installation admin. Until a sign-in method is chosen in Quick setup,
+      # Grist runs as this single user.
+      GRIST_ADMIN_EMAIL: ${OWNER_EMAIL}
+      GRIST_DEFAULT_EMAIL: ${OWNER_EMAIL}
+      # One team site at the root of the address; "Sign in with getgrist.com"
+      # needs single-team mode.
+      GRIST_SINGLE_ORG: team
+    volumes:
+      # Documents (SQLite files), the home database and settings.
+      - grist-data:/persist
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8484/status || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  grist-data:

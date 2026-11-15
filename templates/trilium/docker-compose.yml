@@ -1,0 +1,17 @@
+services:
+  trilium:
+    # The official TriliumNext server image (the maintained continuation of
+    # Trilium Notes). It has its own healthcheck built in.
+    image: triliumnext/trilium:v0.107.0
+    restart: unless-stopped
+    environment:
+      # Cloudgate's proxy reaches the app over a private Docker network, so trust
+      # the visitor address it forwards from private addresses. Sign-in rate
+      # limits then apply per visitor, not to everyone at once.
+      TRILIUM_NETWORK_TRUSTEDREVERSEPROXY: uniquelocal
+    volumes:
+      # The notes database, attachments, backups and logs.
+      - trilium-data:/home/node/trilium-data
+
+volumes:
+  trilium-data:

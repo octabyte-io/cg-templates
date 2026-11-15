@@ -1,0 +1,25 @@
+name: Monica
+description: "Monica is a self-hosted personal CRM that remembers birthdays, family details, calls and gifts for the friends and relatives you care about."
+version: "4.1.2"
+tags: [personal crm, self-hosted personal crm, relationship manager, birthday reminders, dex alternative, address book]
+links:
+  website: https://www.monicahq.com
+  docs: https://github.com/monicahq/docker
+  source: https://github.com/monicahq/monica
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.monica.url}}" }
+  APP_KEY: { generate: base64 }
+  HASH_SALT: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  DISABLE_SIGNUPS:
+    ask:
+      label: Turn off new sign-ups
+      description: With true, only the first account can be created (yours, on your first visit); nobody else can sign up. Type false to let others register.
+      default: "true"
+      required: false
+domains:
+  - { service: monica, port: 80 }

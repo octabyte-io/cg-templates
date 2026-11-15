@@ -1,0 +1,19 @@
+name: Castopod
+description: "Castopod is self-hosted podcast hosting: publish episodes, get an RSS feed for every podcast app, a public podcast page and listener stats."
+version: "1.15.6"
+tags: [buzzsprout alternative, transistor alternative, self-hosted podcast hosting, open source podcast hosting, podcast analytics, podcasting 2.0, fediverse podcast]
+links:
+  website: https://castopod.org
+  docs: https://docs.castopod.org
+  source: https://code.castopod.org/adaures/castopod
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.castopod.url}}" }
+  ANALYTICS_SALT: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: castopod, port: 8080 }

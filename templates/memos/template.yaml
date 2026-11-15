@@ -1,0 +1,19 @@
+name: Memos
+description: "Memos is a self-hosted note app for quick thoughts, checklists and links, written in Markdown on a private timeline and organised with tags."
+version: "26.11.0"
+tags: [google keep alternative, quick notes, note taking, markdown notes, self-hosted notes, memos app]
+links:
+  website: https://usememos.com
+  docs: https://usememos.com/docs
+  source: https://github.com/usememos/memos
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  MEMOS_INSTANCE_URL: { value: "{{domains.memos.url}}" }
+  # The password of the administrator "admin", created on first start.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: memos, port: 5230 }
+files:
+  - { path: memos-config.json }

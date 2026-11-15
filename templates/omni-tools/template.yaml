@@ -1,0 +1,14 @@
+name: OmniTools
+description: "Self-hosted OmniTools: 128 free browser tools to merge PDFs, compress images, trim video and format JSON, without uploading files to tool sites."
+version: "0.7.0"
+tags: [self-hosted online tools, ilovepdf alternative, smallpdf alternative, pdf tools, image compressor, video trimmer, json formatter]
+links:
+  website: https://omnitools.app
+  docs: https://github.com/iib0011/omni-tools#readme
+  source: https://github.com/iib0011/omni-tools
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs: {}
+domains:
+  - { service: omni-tools, port: 80 }

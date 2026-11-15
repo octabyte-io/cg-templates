@@ -1,0 +1,12 @@
+# From EspoCRM's official Caddy setup (docs.espocrm.com/administration/docker/caddy/):
+# /ws goes to the WebSocket server for live notifications, everything else to
+# the web container. Cloudgate's own proxy in front handles the domain and TLS.
+:80 {
+    reverse_proxy /ws espocrm-websocket:8080
+
+    reverse_proxy * espocrm:80 {
+        # Pass on the scheme and client address set by the proxy in front (Cloudgate's).
+        header_up X-Forwarded-Proto {header.X-Forwarded-Proto}
+        header_up X-Forwarded-For {header.X-Forwarded-For}
+    }
+}

@@ -1,0 +1,47 @@
+services:
+  libretranslate:
+    image: libretranslate/libretranslate:v1.9.6
+    restart: unless-stopped
+    # Before the image's own entrypoint starts, add the API key Cloudgate
+    # generated to the key database (again on every start, so the key in
+    # Cloudgate always works). The key has a generous limit of 10000
+    # requests a minute; more keys can be added with "ltmanage keys add".
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        ./venv/bin/python -c "import os; from libretranslate.api_keys import Database;
+        Database(os.environ['LT_API_KEYS_DB_PATH']).add(10000, os.environ['ADMIN_API_KEY'])"
+        && exec ./scripts/entrypoint.sh
+    environment:
+      ADMIN_API_KEY: ${API_KEY}
+      # Turn on API keys and require one for every translation. The origin
+      # pattern "(?!)" never matches, so no web page is let in without a key;
+      # people using the web page enter the key once with its key button.
+      LT_API_KEYS: "true"
+      LT_API_KEYS_DB_PATH: /app/db/api_keys.db
+      LT_REQUIRE_API_KEY_ORIGIN: "(?!)"
+      # Only download and load these languages (all of them would be many GB).
+      # Language models are downloaded at the first start and whenever the
+      # list changes; models already on disk are kept and updated.
+      LT_LOAD_ONLY: ${LANGUAGES:-en,de,es,fr,it,pt}
+      LT_UPDATE_MODELS: "true"
+      # Two worker processes keep memory within a 2 GB server.
+      LT_THREADS: "2"
+    volumes:
+      # The API key database.
+      - libretranslate-db:/app/db
+      # The downloaded language models, so they survive restarts.
+      - libretranslate-models:/home/libretranslate/.local
+    healthcheck:
+      # The official compose file's healthcheck. It passes while models are
+      # still downloading at the first start.
+      test: ["CMD-SHELL", "./venv/bin/python scripts/healthcheck.py"]
+      interval: 10s
+      timeout: 4s
+      retries: 4
+      start_period: 5s
+
+volumes:
+  libretranslate-db:
+  libretranslate-models:

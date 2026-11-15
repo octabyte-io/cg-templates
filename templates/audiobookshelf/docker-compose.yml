@@ -1,0 +1,30 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:2.37.2
+    restart: unless-stopped
+    environment:
+      TZ: ${TIMEZONE:-Etc/UTC}
+      # Serve the app at the root of its address (the default is /audiobookshelf,
+      # with requests to / rewritten to it).
+      ROUTER_BASE_PATH: ""
+    volumes:
+      # Library folders: point a library at /audiobooks or /podcasts in the
+      # web UI. Books are added with the Upload page; podcast episodes are
+      # downloaded by the app itself.
+      - audiobookshelf-audiobooks:/audiobooks
+      - audiobookshelf-podcasts:/podcasts
+      # The database and settings, and the covers, cache and backups.
+      - audiobookshelf-config:/config
+      - audiobookshelf-metadata:/metadata
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  audiobookshelf-audiobooks:
+  audiobookshelf-podcasts:
+  audiobookshelf-config:
+  audiobookshelf-metadata:

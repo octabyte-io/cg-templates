@@ -1,0 +1,19 @@
+name: Zammad
+description: "Self-hosted Zammad: an open-source help desk that turns customer emails, chat, phone calls and social messages into tickets your team answers together."
+version: "7.2.3"
+tags: [help desk, ticketing system, customer support, open source help desk, zendesk alternative, freshdesk alternative]
+links:
+  website: https://zammad.org
+  docs: https://docs.zammad.org/en/latest/install/docker-compose.html
+  source: https://github.com/zammad/zammad
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  ZAMMAD_FQDN: { value: "{{domains.zammad-nginx.host}}" }
+  POSTGRES_PASS: { generate: password }
+  POSTGRES_SUPERUSER_PASS: { generate: password }
+domains:
+  - { service: zammad-nginx, port: 8080 }
+files:
+  - { path: postgresql-initdb.sql }

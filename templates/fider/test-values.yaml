@@ -1,0 +1,5 @@
+EMAIL_NOREPLY: noreply@example.com
+EMAIL_SMTP_HOST: smtp.example.com
+EMAIL_SMTP_PORT: "587"
+EMAIL_SMTP_USERNAME: fider
+EMAIL_SMTP_PASSWORD: not-a-real-password

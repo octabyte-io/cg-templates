@@ -1,0 +1,18 @@
+name: Vane
+description: "Vane (formerly Perplexica) is a self-hosted AI answer engine that searches the web privately and answers with cited sources, using the AI you choose."
+version: "1.12.2"
+tags: [perplexity alternative, perplexica, self-hosted ai search, ai answer engine, ai search engine, private search with sources]
+links:
+  website: https://github.com/ItzCrazyKns/Vane
+  docs: https://github.com/ItzCrazyKns/Vane/tree/master/docs
+  source: https://github.com/ItzCrazyKns/Vane
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The password the sign-in prompt in front of Vane asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

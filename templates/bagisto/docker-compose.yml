@@ -1,0 +1,79 @@
+# From Bagisto's official production image (docker/production/README.md in the Bagisto repo),
+# in its "external database mode" with a MySQL container next to it.
+services:
+  bagisto:
+    # Official image: nginx + PHP-FPM, Bagisto's queue worker and its scheduler (cron), run by
+    # Supervisor. Its bundled MySQL stays off because DB_HOST points at bagisto-db.
+    image: webkul/bagisto:2.5.1
+    restart: unless-stopped
+    # The image only installs Bagisto into its bundled database, at build time. With an external
+    # database it expects the tables to be made by hand, so this runs Bagisto's own installer
+    # once (when the database has no "admins" table yet), then gives the admin the email and
+    # password from Cloudgate. On later starts it runs the migrations a newer image brings.
+    # The image's entrypoint has already written the settings and waited for the database.
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        cd /var/www/bagisto
+        if ! php -r 'exit((new PDO("mysql:host=bagisto-db;dbname=bagisto", "bagisto", getenv("DB_PASSWORD")))->query("SHOW TABLES LIKE \"admins\"")->fetch() ? 0 : 1);'; then
+          echo "* Installing Bagisto into the new database"
+          php artisan bagisto:install --no-interaction --force
+          # The installer writes a fresh key into .env; keep the one Cloudgate generated.
+          sed -i "s|^APP_KEY=.*|APP_KEY=$$APP_KEY|" .env
+          php artisan tinker --execute='DB::table("admins")->where("id", 1)->update(["email" => getenv("ADMIN_EMAIL"), "password" => bcrypt(getenv("ADMIN_PASSWORD"))]);'
+          echo "* Admin set to $$ADMIN_EMAIL"
+        else
+          php artisan migrate --force
+        fi
+        php artisan optimize
+        find storage bootstrap/cache -user root -exec chown www-data:www-data {} +
+        # nginx also listens on IPv6 ([::]:80) and fails to start on hosts without it.
+        if [ ! -e /proc/net/if_inet6 ]; then sed -i '/listen \[::\]/d' /etc/nginx/conf.d/bagisto.conf; fi
+        exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+    depends_on:
+      bagisto-db:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL}
+      # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+      APP_KEY: base64:${APP_KEY}
+      APP_CURRENCY: ${CURRENCY:-USD}
+      APP_TIMEZONE: ${TIMEZONE:-UTC}
+      DB_CONNECTION: mysql
+      DB_HOST: bagisto-db
+      DB_PORT: 3306
+      DB_DATABASE: bagisto
+      DB_USERNAME: bagisto
+      DB_PASSWORD: ${DB_PASSWORD}
+      # The admin the first start creates; sign in at <address>/admin.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # Product and category images, other uploads, logs and sessions.
+      - bagisto-storage:/var/www/bagisto/storage
+
+  bagisto-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    environment:
+      MYSQL_DATABASE: bagisto
+      MYSQL_USER: bagisto
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - bagisto-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -uroot -p$$MYSQL_ROOT_PASSWORD ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  bagisto-storage:
+  bagisto-db-data:

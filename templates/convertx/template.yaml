@@ -1,0 +1,21 @@
+name: ConvertX
+description: "ConvertX is a self-hosted file converter for images, video, audio, documents and e-books, with over a thousand formats in your browser."
+version: "v0.20.0"
+tags: [cloudconvert alternative, file converter, video converter, image converter, document converter, heic to jpg converter, convertio alternative]
+links:
+  website: https://github.com/C4illin/ConvertX
+  docs: https://github.com/C4illin/ConvertX#readme
+  source: https://github.com/C4illin/ConvertX
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  JWT_SECRET: { generate: hex }
+  ACCOUNT_REGISTRATION:
+    ask:
+      label: Allow new sign-ups
+      description: Type true only while colleagues create their accounts, then set it back to false.
+      default: "false"
+      required: false
+domains:
+  - { service: convertx, port: 3000 }

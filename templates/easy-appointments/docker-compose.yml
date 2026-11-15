@@ -1,0 +1,61 @@
+services:
+  easyappointments:
+    # The official production image (github.com/alextselegidis/easyappointments-docker),
+    # pinned to one release. Apache + PHP on port 80. Its entrypoint writes config.php and
+    # the email settings from the variables below on every start.
+    image: alextselegidis/easyappointments:1.6.1
+    restart: unless-stopped
+    depends_on:
+      easyappointments-db:
+        condition: service_healthy
+    environment:
+      BASE_URL: ${BASE_URL}
+      LANGUAGE: english
+      DEBUG_MODE: "FALSE"
+      DB_HOST: easyappointments-db
+      DB_NAME: easyappointments
+      DB_USERNAME: easyappointments
+      DB_PASSWORD: ${DB_PASSWORD}
+      # Cloudgate's proxy sits in front on a private network; trust it so the rate limiter
+      # sees each visitor's own address (docs/installation-guide.md, "Behind a Reverse Proxy").
+      PROXY_IPS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      # Email notifications go out over SMTP. Until a host is set, sending fails quietly and
+      # bookings still work. The sender is the company email set in the app's settings.
+      MAIL_PROTOCOL: smtp
+      MAIL_SMTP_AUTH: "TRUE"
+      MAIL_SMTP_HOST: ${SMTP_HOST:-}
+      MAIL_SMTP_PORT: ${SMTP_PORT:-587}
+      MAIL_SMTP_USER: ${SMTP_USER:-}
+      MAIL_SMTP_PASS: ${SMTP_PASSWORD:-}
+      MAIL_SMTP_CRYPTO: ${SMTP_CRYPTO:-tls}
+    volumes:
+      # Uploads, backups, sessions, cache and logs.
+      - easyappointments-storage:/var/www/html/storage
+    healthcheck:
+      # Before the installer has run, / answers with a redirect to it, which curl accepts.
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  easyappointments-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: easyappointments
+      MYSQL_USER: easyappointments
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - easyappointments-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -uroot -p$$MYSQL_ROOT_PASSWORD ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  easyappointments-storage:
+  easyappointments-db-data:

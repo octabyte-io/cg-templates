@@ -1,0 +1,82 @@
+services:
+  piwigo:
+    # The official Piwigo image (Alpine, nginx and PHP-FPM), from Piwigo's install guide.
+    image: piwigo/piwigo:16.5.0
+    restart: unless-stopped
+    depends_on:
+      piwigo-install:
+        condition: service_completed_successfully
+    environment:
+      # The image's start script needs TZ set.
+      TZ: ${TIMEZONE:-Etc/UTC}
+      PIWIGO_UID: 1000
+      PIWIGO_GID: 1000
+    volumes:
+      # Piwigo's code, its local/config/database.inc.php (written at install),
+      # uploaded photos (upload/), resized copies (_data/), plugins and themes.
+      - piwigo-data:/var/www/html/piwigo
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # Runs once at each start, before the web server. On the first start it copies
+  # Piwigo into the volume and runs its installer (files/piwigo-install.php.txt):
+  # database tables and the webmaster "admin" with the generated password, so the
+  # web installer is never open to visitors. Later it sees the install and stops.
+  piwigo-install:
+    image: piwigo/piwigo:16.5.0
+    restart: "no"
+    depends_on:
+      piwigo-db:
+        condition: service_healthy
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        set -eu;
+        cd /var/www/html/piwigo;
+        if [ -f local/config/database.inc.php ]; then echo 'Piwigo is already installed.'; exit 0; fi;
+        if [ ! -f include/constants.php ]; then cp -arT /var/www/source/piwigo /var/www/html/piwigo; fi;
+        echo 'Installing Piwigo...';
+        php$${PHP_VERSION} /piwigo-install.php > /tmp/install.html || true;
+        if [ -f local/config/database.inc.php ] && grep -q 'installation is completed' /tmp/install.html;
+        then echo 'Piwigo is installed.'; exit 0; fi;
+        echo 'The Piwigo install failed:';
+        sed -e 's/<[^>]*>//g' /tmp/install.html | grep -v '^[[:space:]]*$$' | head -n 20;
+        if [ -f local/config/database.inc.php ]; then mv local/config/database.inc.php local/config/database.inc.php.failed; fi;
+        exit 1
+    volumes:
+      - piwigo-data:/var/www/html/piwigo
+      - ../files/piwigo-install.php.txt:/piwigo-install.php:ro
+
+  piwigo-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: piwigo
+      MARIADB_USER: piwigo
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+      TZ: ${TIMEZONE:-Etc/UTC}
+    volumes:
+      - piwigo-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  piwigo-data:
+  piwigo-db-data:

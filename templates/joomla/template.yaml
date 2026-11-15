@@ -1,0 +1,29 @@
+name: Joomla
+description: "Self-hosted Joomla is a free, open-source CMS for company, club and community websites, with several languages and detailed user permissions built in."
+version: "6.2.0"
+tags: [joomla, cms, multilingual website, website builder, wix alternative, squarespace alternative, joomla hosting]
+links:
+  website: https://www.joomla.org
+  docs: https://docs.joomla.org
+  source: https://github.com/joomla/joomla-cms
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SITE_NAME:
+    ask:
+      label: Site name
+      description: The name of your website, shown in its title. You can change it later in Joomla.
+      default: My Joomla Site
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the Joomla administrator account; password resets go here.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: joomla, port: 80 }
+files:
+  - { path: forwarded-https.conf }

@@ -1,0 +1,116 @@
+# From InvenTree's official production compose (contrib/container at 1.7.2):
+# PostgreSQL, the Redis cache, the gunicorn web server, the background worker
+# and the Caddy proxy. The proxy stays because it is how InvenTree serves
+# uploaded files (part images, attachments) and static files in production, so
+# it is the service that gets the address.
+services:
+  inventree-proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    depends_on:
+      inventree-server:
+        condition: service_healthy
+    volumes:
+      - ../files/Caddyfile.conf:/etc/caddy/Caddyfile:ro
+      # Static and media files live in the InvenTree data volume.
+      - inventree-data:/srv/inventree:ro
+
+  inventree-server:
+    image: inventree/inventree:1.7.2
+    restart: unless-stopped
+    depends_on:
+      inventree-db:
+        condition: service_healthy
+      inventree-cache:
+        condition: service_healthy
+    # The official setup runs "invoke update" by hand after the first start;
+    # this copies the static files (the web interface) into the data volume on
+    # every start, then runs the image's own gunicorn command. Migrations run
+    # on start because of INVENTREE_AUTO_UPDATE.
+    command: >-
+      sh -c "invoke static &&
+      exec gunicorn -c ./gunicorn.conf.py InvenTree.wsgi -b 0.0.0.0:8000 --chdir $${INVENTREE_BACKEND_DIR}/InvenTree"
+    environment: &inventree-env
+      INVENTREE_SITE_URL: ${INVENTREE_SITE_URL}
+      INVENTREE_SERVER: http://inventree-server:8000
+      INVENTREE_WEB_PORT: "8000"
+      INVENTREE_USE_X_FORWARDED_HOST: "True"
+      INVENTREE_USE_X_FORWARDED_PORT: "True"
+      INVENTREE_USE_X_FORWARDED_PROTO: "True"
+      INVENTREE_LOG_LEVEL: WARNING
+      INVENTREE_PLUGINS_ENABLED: "True"
+      # Run database migrations and collect static files on start.
+      INVENTREE_AUTO_UPDATE: "True"
+      INVENTREE_ADMIN_USER: admin
+      INVENTREE_ADMIN_EMAIL: ${INVENTREE_ADMIN_EMAIL}
+      INVENTREE_ADMIN_PASSWORD: ${INVENTREE_ADMIN_PASSWORD}
+      INVENTREE_DB_ENGINE: postgresql
+      INVENTREE_DB_NAME: inventree
+      INVENTREE_DB_HOST: inventree-db
+      INVENTREE_DB_PORT: "5432"
+      INVENTREE_DB_USER: inventree
+      INVENTREE_DB_PASSWORD: ${DB_PASSWORD}
+      INVENTREE_CACHE_ENABLED: "True"
+      INVENTREE_CACHE_HOST: inventree-cache
+      INVENTREE_CACHE_PORT: "6379"
+      INVENTREE_GUNICORN_TIMEOUT: "90"
+      # The image defaults to 4 web and 4 background workers; 2 each fits a
+      # 2 GB server.
+      INVENTREE_GUNICORN_WORKERS: "2"
+      INVENTREE_BACKGROUND_WORKERS: "2"
+    volumes:
+      # Config, secret key, static files, media and plugins.
+      - inventree-data:/home/inventree/data
+    healthcheck:
+      test: ["CMD-SHELL", 'invoke server-health --address "http://localhost:8000"']
+      interval: 20s
+      timeout: 5s
+      retries: 15
+      start_period: 300s
+
+  inventree-worker:
+    image: inventree/inventree:1.7.2
+    restart: unless-stopped
+    command: invoke worker
+    depends_on:
+      inventree-server:
+        condition: service_healthy
+    environment: *inventree-env
+    volumes:
+      - inventree-data:/home/inventree/data
+    healthcheck:
+      test: ["CMD-SHELL", "invoke worker-health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 180s
+
+  inventree-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: inventree
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: inventree
+    volumes:
+      - inventree-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventree -d inventree"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  inventree-cache:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    # A cache only: no data written to disk, as in the official compose.
+    command: redis-server --save "" --appendonly no
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  inventree-data:
+  inventree-db-data:

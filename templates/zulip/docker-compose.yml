@@ -1,0 +1,162 @@
+# From Zulip's official compose.yaml (github.com/zulip/docker-zulip, tag 13.2-0). The official
+# file passes the internal passwords as Docker secrets; here each service gets them as environment
+# variables instead (the image reads SECRETS_<name> into zulip-secrets.conf).
+services:
+  zulip:
+    image: ghcr.io/zulip/zulip-server:13.2-0
+    restart: unless-stopped
+    # Zulip has no first-run sign-up: an organization is normally created through a one-time link
+    # from `manage.py generate_realm_creation_link`. Instead, this adds a post-setup script (the
+    # image runs /data/post-setup.d/* after its database migrations) that creates the organization
+    # and its owner once, with the email and generated password from Cloudgate, then starts Zulip
+    # as the image normally does.
+    entrypoint: ["/bin/bash", "-c"]
+    # It also gives a host name without a dot (such as "localhost" in a local trial) the
+    # ".localdomain" suffix Zulip itself suggests, since Zulip refuses to start without one.
+    command:
+      - |
+        case "$$SETTING_EXTERNAL_HOST" in
+          *.*) ;;
+          *) export SETTING_EXTERNAL_HOST="$$SETTING_EXTERNAL_HOST.localdomain" ;;
+        esac
+        # nginx also listens on IPv6 and refuses to start on a server without it; there, drop the
+        # IPv6 listen lines from the template Zulip's setup builds the nginx site from.
+        if [ ! -e /proc/net/if_inet6 ]; then
+          sed -i '/listen \[::\]/d' \
+            /home/zulip/deployments/current/puppet/zulip/templates/nginx/zulip-enterprise.template.erb \
+            /etc/nginx/sites-available/default
+        fi
+        mkdir -p /data/post-setup.d
+        cat > /data/post-setup.d/cloudgate-create-organization <<'EOF'
+        #!/bin/bash
+        marker=/data/.cloudgate-organization-created
+        [ -e "$$marker" ] && exit 0
+        pwfile="$$(mktemp)"
+        printf '%s' "$$CLOUDGATE_ADMIN_PASSWORD" > "$$pwfile"
+        chown zulip "$$pwfile"
+        if runuser -u zulip -- /home/zulip/deployments/current/manage.py create_realm \
+            "$$CLOUDGATE_ORGANIZATION_NAME" "$$CLOUDGATE_ADMIN_EMAIL" "$$CLOUDGATE_ADMIN_NAME" \
+            --password-file "$$pwfile"; then
+          touch "$$marker"
+          echo "Created the organization and its owner $$CLOUDGATE_ADMIN_EMAIL."
+        fi
+        rm -f "$$pwfile"
+        EOF
+        chmod 755 /data/post-setup.d/cloudgate-create-organization
+        exec /sbin/entrypoint.sh app:run
+    depends_on:
+      zulip-db:
+        condition: service_healthy
+      zulip-memcached:
+        condition: service_started
+      zulip-rabbitmq:
+        condition: service_healthy
+      zulip-redis:
+        condition: service_healthy
+    environment:
+      SETTING_EXTERNAL_HOST: ${EXTERNAL_HOST}
+      SETTING_ZULIP_ADMINISTRATOR: ${ADMIN_EMAIL}
+      SETTING_REMOTE_POSTGRES_HOST: zulip-db
+      SETTING_MEMCACHED_LOCATION: zulip-memcached:11211
+      SETTING_RABBITMQ_HOST: zulip-rabbitmq
+      SETTING_REDIS_HOST: zulip-redis
+      # Cloudgate's proxy terminates HTTPS, so the container serves plain HTTP on port 80 and
+      # trusts the proxy's X-Forwarded-For and X-Forwarded-Proto headers from private networks.
+      CERTIFICATES: ""
+      # Zulip's process manager wants 40000 open files by default (upstream raises the container's
+      # limit to 1048576 with ulimits, which many Docker hosts refuse). 16384 is plenty for a team
+      # of a few hundred people and starts on hosts with a lower limit.
+      CONFIG_application_server__service_file_descriptor_limit: "16384"
+      LOADBALANCER_IPS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      SECRETS_postgres_password: ${POSTGRES_PASSWORD}
+      SECRETS_memcached_password: ${MEMCACHED_PASSWORD}
+      SECRETS_rabbitmq_password: ${RABBITMQ_PASSWORD}
+      SECRETS_redis_password: ${REDIS_PASSWORD}
+      SECRETS_secret_key: ${SECRET_KEY}
+      # Outgoing email. Without an email server Zulip still runs, but sends no invitations,
+      # password resets or notification emails.
+      SETTING_EMAIL_HOST: ${SMTP_HOST}
+      SETTING_EMAIL_PORT: ${SMTP_PORT}
+      SETTING_EMAIL_HOST_USER: ${SMTP_USERNAME}
+      SETTING_EMAIL_USE_TLS: "True"
+      SETTING_NOREPLY_EMAIL_ADDRESS: ${SMTP_FROM}
+      SECRETS_email_password: ${SMTP_PASSWORD}
+      # Read by the post-setup script above, on the first start only.
+      CLOUDGATE_ORGANIZATION_NAME: ${ORGANIZATION_NAME}
+      CLOUDGATE_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      CLOUDGATE_ADMIN_NAME: ${ADMIN_NAME}
+      CLOUDGATE_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - zulip-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-isfL", "http://localhost/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 300s
+
+  zulip-db:
+    # Zulip's PostgreSQL image: postgres 14 with the dictionaries Zulip's full-text search uses.
+    image: zulip/zulip-postgresql:14
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: zulip
+      POSTGRES_USER: zulip
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - zulip-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zulip"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  zulip-memcached:
+    image: memcached:1.6.45-alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -euc
+      - |
+        echo 'mech_list: plain' > "$$SASL_CONF_PATH"
+        echo "zulip@$$HOSTNAME:$$MEMCACHED_PASSWORD" > "$$MEMCACHED_SASL_PWDB"
+        echo "zulip@localhost:$$MEMCACHED_PASSWORD" >> "$$MEMCACHED_SASL_PWDB"
+        exec memcached -S
+    environment:
+      SASL_CONF_PATH: /home/memcache/memcached.conf
+      MEMCACHED_SASL_PWDB: /home/memcache/memcached-sasl-db
+      MEMCACHED_PASSWORD: ${MEMCACHED_PASSWORD}
+
+  zulip-rabbitmq:
+    image: rabbitmq:4.2.9
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: zulip
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - zulip-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  zulip-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    volumes:
+      - zulip-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  zulip-data:
+  zulip-db-data:
+  zulip-rabbitmq-data:
+  zulip-redis-data:
