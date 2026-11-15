@@ -1,0 +1,80 @@
+x-davis-env: &davis-env
+  APP_ENV: prod
+  APP_SECRET: ${APP_SECRET}
+  APP_TIMEZONE: ${APP_TIMEZONE:-Etc/UTC}
+  DATABASE_DRIVER: mysql
+  DATABASE_URL: mysql://davis:${DB_PASSWORD}@davis-db:3306/davis?serverVersion=10.11.19-MariaDB&charset=utf8mb4
+  ADMIN_LOGIN: ${ADMIN_LOGIN}
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+  ADMIN_AUTH_BYPASS: "false"
+  AUTH_METHOD: Basic
+  # Never change the realm on a running install: it is part of every stored password hash.
+  AUTH_REALM: SabreDAV
+  CALDAV_ENABLED: "true"
+  CARDDAV_ENABLED: "true"
+  WEBDAV_ENABLED: "false"
+  PUBLIC_CALENDARS_ENABLED: "true"
+  BIRTHDAY_REMINDER_OFFSET: PT9H
+  INVITE_FROM_ADDRESS: ${INVITE_FROM_ADDRESS:-no-reply@example.org}
+  APP_KEYS_ENABLED: "false"
+  UPDATE_CHECK_ENABLED: "false"
+  LOG_FILE_PATH: php://stderr
+  # Cloudgate's proxy sets X-Forwarded-Proto; the image's own Caddy passes it on.
+  SYMFONY_TRUSTED_PROXIES: REMOTE_ADDR
+  MAILER_DSN: "null://null"
+
+services:
+  # The standalone image: Davis with its own Caddy web server on port 9000.
+  davis:
+    image: ghcr.io/tchapi/davis-standalone:5.6.3
+    restart: unless-stopped
+    depends_on:
+      davis-migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *davis-env
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+    # Sends invitations through the email server when one is filled in; otherwise
+    # Davis sends no email. php-fpm keeps the environment, so MAILER_DSN reaches the app.
+    command:
+      - sh
+      - -c
+      - >-
+        if [ -n "$$MAIL_HOST" ]; then
+        export MAILER_DSN="smtp://$$(php -r 'echo rawurlencode(getenv("MAIL_USERNAME"));'):$$(php -r 'echo rawurlencode(getenv("MAIL_PASSWORD"));')@$$MAIL_HOST:$$MAIL_PORT";
+        fi;
+        exec /usr/bin/supervisord -c /etc/supervisord.conf
+
+  # Runs once at each start: creates the database tables on the first start and
+  # applies the new release's migrations after an image update.
+  davis-migrate:
+    image: ghcr.io/tchapi/davis-standalone:5.6.3
+    restart: "no"
+    depends_on:
+      davis-db:
+        condition: service_healthy
+    environment:
+      <<: *davis-env
+    command: [bin/console, doctrine:migrations:migrate, --no-interaction, --allow-no-migration]
+
+  davis-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: davis
+      MARIADB_USER: davis
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - davis-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  davis-db-data:

@@ -1,0 +1,26 @@
+services:
+  # Paisa's official image (ledger edition), run as its docs show: the journal,
+  # config and database live in /root/Documents/paisa.
+  paisa:
+    image: ananthakumaran/paisa:v0.8.0
+    restart: unless-stopped
+    # files/paisa-start.sh.txt writes the first config with a login (Paisa has
+    # none by default), then runs "paisa serve" as the image does.
+    entrypoint: ["/bin/sh", "/paisa-start.sh"]
+    environment:
+      PAISA_CONFIG: /root/Documents/paisa/paisa.yaml
+      PAISA_USERNAME: ${PAISA_USERNAME}
+      PAISA_PASSWORD: ${PAISA_PASSWORD}
+    volumes:
+      - ../files/paisa-start.sh.txt:/paisa-start.sh:ro
+      - paisa-data:/root/Documents/paisa
+    healthcheck:
+      # The page itself; everything under /api needs the login.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:7500/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  paisa-data:

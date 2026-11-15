@@ -1,0 +1,13 @@
+services:
+  termix:
+    image: ghcr.io/termix-ssh/termix:26.11.1
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+    # Termix keeps its SQLite database and the secrets it generates on first
+    # start (JWT secret, database and encryption keys) in this volume.
+    volumes:
+      - termix-data:/app/data
+
+volumes:
+  termix-data:

@@ -1,0 +1,51 @@
+name: Invoicerr
+description: "Self-hosted Invoicerr: quotes your clients sign online, plus invoices, receipts and e-invoices, for freelancers and small studios."
+version: "1.4.6b"
+tags: [freshbooks alternative, zoho invoice alternative, invoicing software, quotes and invoices, freelancer invoicing, quote e-signature, e-invoicing]
+links:
+  website: https://invoicerr.app
+  docs: https://docs.invoicerr.app
+  source: https://github.com/invoicerr-app/invoicerr
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.invoicerr.url}}" }
+  BETTER_AUTH_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: SMTP server
+      description: The mail server Invoicerr sends quotes, invoices and receipts through, such as smtp.example.com. Leave empty to set up email later.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: SMTP port
+      description: 587 for most servers (STARTTLS), 465 for SSL.
+      default: "587"
+      required: false
+  SMTP_SECURE:
+    ask:
+      label: SMTP uses SSL
+      description: "true if the port is 465, otherwise false."
+      default: "false"
+      required: false
+  SMTP_USER:
+    ask:
+      label: SMTP username
+      description: The account name for the mail server, often an email address.
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: SMTP password
+      description: The password for the mail server account.
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Sender address
+      description: The address emails come from. Leave empty to use the SMTP username.
+      format: email
+      required: false
+domains:
+  - { service: invoicerr, port: 80 }

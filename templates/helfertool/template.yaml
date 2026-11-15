@@ -1,0 +1,64 @@
+name: Helfertool
+description: "Self-hosted Helfertool lets volunteers sign up for your event's shifts online, with badges, emails and no ads, replacing SignUpGenius."
+version: "4.1.0"
+tags:
+  - signupgenius alternative
+  - volunteer shift scheduling
+  - volunteer sign up
+  - volunteer management
+  - event volunteers
+  - festival volunteer planning
+links:
+  website: https://www.helfertool.org
+  docs: https://docs.helfertool.org
+  source: https://github.com/helfertool/helfertool
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  RABBITMQ_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the "admin" account Cloudgate creates for you. Helfertool also sends error reports here and shows it as the contact address.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The time zone your events' shifts are shown in, for example Europe/Berlin or America/New_York.
+      default: Europe/Berlin
+      pattern: "^[A-Za-z_]+(/[A-Za-z0-9_+-]+)*$"
+  MAIL_FROM:
+    ask:
+      label: Send emails from (optional)
+      description: The address sign-up confirmations and newsletters come from. Leave the email questions empty to add them later in files/helfertool.yaml.
+      format: email
+      required: false
+  MAIL_HOST:
+    ask:
+      label: Email server (SMTP host, optional)
+      description: From your email sending service, for example smtp.postmarkapp.com. Helfertool needs it to send confirmations to helpers and password resets.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      description: Helfertool connects with STARTTLS, which most email services offer on port 587.
+      default: "587"
+      format: number
+  MAIL_USERNAME:
+    ask:
+      label: Email server username (optional)
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password (optional)
+      secret: true
+      required: false
+domains:
+  - { service: helfertool, port: 8000 }
+files:
+  - { path: helfertool.yaml }
+  - { path: nginx.conf }

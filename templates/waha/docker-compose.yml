@@ -1,0 +1,36 @@
+services:
+  waha:
+    image: devlikeapro/waha:latest-2026.10.1
+    restart: unless-stopped
+    environment:
+      # Security: every API call needs the key (X-Api-Key header); the
+      # dashboard (/dashboard) and the API docs (/) ask for a username and
+      # password.
+      WAHA_API_KEY: ${WAHA_API_KEY}
+      WAHA_DASHBOARD_ENABLED: "True"
+      WAHA_DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
+      WAHA_DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
+      WHATSAPP_SWAGGER_ENABLED: "True"
+      WHATSAPP_SWAGGER_USERNAME: ${DASHBOARD_USERNAME}
+      WHATSAPP_SWAGGER_PASSWORD: ${DASHBOARD_PASSWORD}
+      # WEBJS (the default) runs WhatsApp Web in Chromium inside the
+      # container; GOWS or NOWEB use less memory.
+      WHATSAPP_DEFAULT_ENGINE: WEBJS
+      WAHA_NAMESPACE: all
+      # The app's public address, used in webhook payloads and file links.
+      WAHA_BASE_URL: ${WAHA_URL}
+      WAHA_PUBLIC_URL: ${WAHA_URL}
+      WAHA_LOG_FORMAT: JSON
+      WAHA_LOG_LEVEL: info
+      WAHA_PRINT_QR: "False"
+      WAHA_MEDIA_STORAGE: LOCAL
+      WHATSAPP_FILES_LIFETIME: "0"
+      WHATSAPP_FILES_FOLDER: /app/.media
+    volumes:
+      # WhatsApp sessions (the linked-device login) and received media.
+      - waha-sessions:/app/.sessions
+      - waha-media:/app/.media
+
+volumes:
+  waha-sessions:
+  waha-media:

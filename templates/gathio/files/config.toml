@@ -1,0 +1,40 @@
+# Gathio's config file, from config/config.example.toml in its repo (v1.6.7).
+# Gathio fills in each ${GATHIO_...} from the environment that
+# docker-compose.yml sets from this template's inputs.
+
+[general]
+# The web address without https://, as Gathio expects.
+domain = "${GATHIO_DOMAIN}"
+port = "3000"
+# Shown as the contact address, and the address Gathio's emails come from.
+email = "${GATHIO_EMAIL}"
+site_name = "${GATHIO_SITE_NAME}"
+is_federated = true
+# Events are deleted this many days after they end (0 keeps them forever).
+delete_after_days = 7
+email_logo_url = ""
+show_kofi = false
+show_public_event_list = false
+max_comment_length = 5000
+# "nodemailer" when an email server is filled in, otherwise "none"
+# (set by the gathio service's command in docker-compose.yml).
+mail_service = "${GATHIO_MAIL_SERVICE}"
+# Empty: anyone who opens the address can create events.
+creator_email_addresses = []
+
+[database]
+mongodb_url = "mongodb://gathio-db:27017/gathio"
+
+[nodemailer]
+smtp_server = "${GATHIO_SMTP_SERVER}"
+smtp_port = "${GATHIO_SMTP_PORT}"
+smtp_username = "${GATHIO_SMTP_USERNAME}"
+smtp_password = "${GATHIO_SMTP_PASSWORD}"
+
+[sendgrid]
+api_key = ""
+
+[mailgun]
+domain = ""
+api_key = ""
+api_url = "https://api.mailgun.net"

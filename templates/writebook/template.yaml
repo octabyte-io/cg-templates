@@ -1,0 +1,16 @@
+name: Writebook
+description: "Self-hosted Writebook publishes books, manuals and handbooks on the web, public or private, written in simple Markdown."
+version: "1.2.8"
+tags: [gitbook alternative, publish a book online, online manual, employee handbook, markdown books, documentation]
+links:
+  website: https://once.com/writebook
+  docs: https://github.com/basecamp/writebook#readme
+  source: https://github.com/basecamp/writebook
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # Rails signs sessions and cookies with this.
+  SECRET_KEY_BASE: { generate: hex }
+domains:
+  - { service: writebook, port: 80 }

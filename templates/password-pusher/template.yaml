@@ -1,0 +1,27 @@
+name: Password Pusher
+description: "Self-hosted Password Pusher sends passwords, notes and files by secret links that delete themselves after a set number of views or days, with an audit log."
+version: "2.17.2"
+tags: [password sharing, share passwords securely, self-destructing links, secure file sharing, one-time secret, privnote alternative]
+links:
+  website: https://pwpush.com
+  docs: https://docs.pwpush.com
+  source: https://github.com/pglombardo/PasswordPusher
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.password-pusher.url}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  # 64 hex characters, the format Password Pusher's encryption key needs.
+  PWPUSH_MASTER_KEY: { generate: hex }
+  # The password of the administrator account created on the first start.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in with as the administrator. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: password-pusher, port: 5100 }
+files:
+  - { path: pwpush-setup.rb.txt }

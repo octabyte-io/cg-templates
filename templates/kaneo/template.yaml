@@ -1,0 +1,54 @@
+name: Kaneo
+description: "Self-hosted Kaneo: simple, open-source project management with boards, lists, calendars and Gantt charts, and an importer for Linear, Jira and Trello."
+version: "2.49.0"
+tags: [project management, linear alternative, trello alternative, jira alternative, kanban board, gantt chart, task tracker]
+links:
+  website: https://kaneo.app
+  docs: https://kaneo.app/docs/core/installation
+  source: https://github.com/usekaneo/kaneo
+cloudgate: 0.1.0
+compose: app
+# Kaneo's docs ask for at least 2 GB of memory.
+size: medium
+inputs:
+  KANEO_CLIENT_URL: { value: "{{domains.kaneo.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  # Kaneo needs 32 or more characters; hex gives 64.
+  AUTH_SECRET: { generate: hex }
+  # Encrypts personal notification tokens and webhook signing secrets.
+  NOTIFICATION_SECRET_ENCRYPTION_KEY: { generate: hex }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Kaneo works without email; add an email sending service, for example smtp.resend.com, to send invitations, sign-in codes and notifications. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 465 works with most email services.
+      default: "465"
+      format: number
+      required: false
+  SMTP_SECURE:
+    ask:
+      label: Use implicit TLS
+      description: "true for port 465; false for port 587 (STARTTLS)."
+      default: "true"
+      pattern: "true|false"
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Sender
+      description: "The address emails come from, for example kaneo@example.com."
+      required: false
+domains:
+  - { service: kaneo, port: 5173 }

@@ -1,0 +1,94 @@
+# From the project's deployment/docker-compose-standalone.yaml (release 1.1.0):
+# the backend image serves the web UI and the API on one port, and a Celery
+# worker reads uploaded documents and builds the search index.
+x-docsgpt-env: &docsgpt-env
+  LLM_PROVIDER: ${LLM_PROVIDER:-docsgpt}
+  API_KEY: ${API_KEY:-}
+  VITE_API_STREAMING: "true"
+  # The worker uses it to hand finished indexes to the API.
+  INTERNAL_KEY: ${INTERNAL_KEY}
+  # One shared access token protects the app; it is signed with this key and
+  # printed in the docsgpt service's log ("Generated Simple JWT Token: ...").
+  # Without it, anyone who finds the address could use and change everything.
+  AUTH_TYPE: simple_jwt
+  JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+  DEPLOYMENT_TYPE: production
+  # Seals the credentials of connected services and tools.
+  ENCRYPTION_SECRET_KEY: ${ENCRYPTION_SECRET_KEY}
+  CELERY_BROKER_URL: redis://docsgpt-redis:6379/0
+  CELERY_RESULT_BACKEND: redis://docsgpt-redis:6379/1
+  CACHE_REDIS_URL: redis://docsgpt-redis:6379/2
+  POSTGRES_URI: postgresql://docsgpt:${POSTGRES_PASSWORD}@docsgpt-db:5432/docsgpt
+  EMBEDDINGS_NAME: ibm-granite/granite-embedding-311m-multilingual-r2
+
+services:
+  docsgpt:
+    image: arc53/docsgpt:1.1.0
+    # As in the official file: the data volumes are written by root.
+    user: root
+    restart: unless-stopped
+    environment:
+      <<: *docsgpt-env
+      # The public address, used for the links the app hands out (agent
+      # images, webhooks, sign-in callbacks).
+      API_URL: ${API_URL}
+    volumes:
+      - docsgpt-indexes:/app/indexes
+      - docsgpt-inputs:/app/inputs
+      - docsgpt-vectors:/app/vectors
+      - docsgpt-models:/app/models/decision
+    depends_on:
+      docsgpt-redis:
+        condition: service_healthy
+      docsgpt-db:
+        condition: service_healthy
+
+  docsgpt-worker:
+    image: arc53/docsgpt:1.1.0
+    user: root
+    restart: unless-stopped
+    command: celery -A docsgpt.app.celery worker -l INFO -B -Q docsgpt,parsing,embeddings,ingest,analytics
+    environment:
+      <<: *docsgpt-env
+      API_URL: http://docsgpt:7091
+    volumes:
+      - docsgpt-indexes:/app/indexes
+      - docsgpt-inputs:/app/inputs
+      - docsgpt-vectors:/app/vectors
+      - docsgpt-models:/app/models/decision
+    depends_on:
+      docsgpt-redis:
+        condition: service_healthy
+      docsgpt-db:
+        condition: service_healthy
+
+  docsgpt-redis:
+    image: redis:6.2.21-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  docsgpt-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docsgpt
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: docsgpt
+    volumes:
+      - docsgpt-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docsgpt -d docsgpt"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  docsgpt-indexes:
+  docsgpt-inputs:
+  docsgpt-vectors:
+  docsgpt-models:
+  docsgpt-db-data:

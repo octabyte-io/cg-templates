@@ -1,0 +1,20 @@
+services:
+  shaarli:
+    image: ghcr.io/shaarli/shaarli:v0.16.10
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 ([::]:80) and refuses to start on
+    # Docker hosts without IPv6. Drop that line, then start the image's own
+    # process supervisor as usual.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - sed -i '/listen *\[::\]:80;/d' /etc/nginx/nginx.conf && exec /usr/bin/s6-svscan /etc/services.d
+    # Shaarli keeps everything in flat files (no database). The first visitor
+    # to the web address sees the install page and sets the login.
+    volumes:
+      - shaarli-cache:/var/www/shaarli/cache
+      - shaarli-data:/var/www/shaarli/data
+
+volumes:
+  shaarli-cache:
+  shaarli-data:

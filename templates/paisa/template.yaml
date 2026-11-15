@@ -1,0 +1,23 @@
+name: Paisa
+description: "Paisa is a self-hosted personal finance manager and Quicken alternative for spending, budgets, investments and net worth, kept in a plain-text journal."
+version: "0.8.0"
+tags: [quicken alternative, personal finance manager, plain text accounting, investment tracker, budget app, net worth tracker]
+links:
+  website: https://paisa.fyi
+  docs: https://paisa.fyi/getting-started/installation/
+  source: https://github.com/ananthakumaran/paisa
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  PAISA_USERNAME:
+    ask:
+      label: Username
+      description: The name you sign in to Paisa with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_.-]{2,31}"
+  PAISA_PASSWORD: { generate: password }
+domains:
+  - { service: paisa, port: 7500 }
+files:
+  - { path: paisa-start.sh.txt }

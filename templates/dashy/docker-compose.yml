@@ -1,0 +1,23 @@
+services:
+  dashy:
+    image: ghcr.io/lissy93/dashy:4.9.18
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      # Server-side HTTP Basic Auth: the browser asks for this username and
+      # password before Dashy serves conf.yml or any of its API endpoints.
+      BASIC_AUTH_USERNAME: admin
+      BASIC_AUTH_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # conf.yml and any icons or assets; the image's sample conf.yml is
+      # copied in on first start, and edits saved in the UI are kept here.
+      - dashy-data:/app/user-data
+    healthcheck:
+      test: ["CMD", "node", "/app/services/healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  dashy-data:

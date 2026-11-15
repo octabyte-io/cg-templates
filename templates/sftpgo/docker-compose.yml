@@ -1,0 +1,31 @@
+services:
+  # SFTPGo (open-source edition) with its built-in SQLite database. It serves
+  # WebAdmin at /web/admin and WebClient at /web/client on port 8080.
+  sftpgo:
+    image: ghcr.io/drakkan/sftpgo:v2.7.6-alpine
+    restart: unless-stopped
+    environment:
+      # Create the admin "admin" on the first start, while no admin exists.
+      SFTPGO_DATA_PROVIDER__CREATE_DEFAULT_ADMIN: "true"
+      SFTPGO_DEFAULT_ADMIN_USERNAME: admin
+      SFTPGO_DEFAULT_ADMIN_PASSWORD: ${SFTPGO_DEFAULT_ADMIN_PASSWORD}
+      # Signs sign-in sessions; fixed so people stay signed in across restarts.
+      SFTPGO_HTTPD__SIGNING_PASSPHRASE: ${SFTPGO_SIGNING_PASSPHRASE}
+      # SFTP needs a raw TCP port, which a web address can't carry, so the SFTP
+      # server is off; files move through the web client over HTTPS.
+      SFTPGO_SFTPD__BINDINGS__0__PORT: "0"
+    volumes:
+      # The SQLite database (users, admins, settings) and the server keys.
+      - sftpgo-config:/var/lib/sftpgo
+      # Users' files (/srv/sftpgo/data) and backups (/srv/sftpgo/backups).
+      - sftpgo-data:/srv/sftpgo
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  sftpgo-config:
+  sftpgo-data:

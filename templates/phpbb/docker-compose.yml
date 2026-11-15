@@ -1,0 +1,88 @@
+# phpBB has no official image. This uses evandarwin/phpbb (github.com/EvanDarwin/phpbb-docker,
+# MIT), the maintained community image made after Bitnami dropped theirs: Alpine, nginx and
+# PHP-FPM on port 8080, running as a non-root user, with a tag for every phpBB release. Its
+# README's compose example uses MySQL; this uses MariaDB, which phpBB supports the same way.
+# Left out: published ports and the hard-coded passwords.
+
+x-phpbb-env: &phpbb-env
+  PHPBB_FORUM_NAME: ${FORUM_NAME}
+  PHPBB_USERNAME: ${ADMIN_USERNAME}
+  PHPBB_EMAIL: ${ADMIN_EMAIL}
+  PHPBB_DATABASE_DRIVER: mysqli
+  PHPBB_DATABASE_HOST: phpbb-db
+  PHPBB_DATABASE_PORT: "3306"
+  PHPBB_DATABASE_NAME: phpbb
+  PHPBB_DATABASE_USER: phpbb
+  PHPBB_DATABASE_PASSWORD: ${DB_PASSWORD}
+  # Cloudgate serves the board over HTTPS on its own address.
+  SERVER_PROTOCOL: https://
+  SERVER_NAME: ${SERVER_NAME}
+  SERVER_PORT: "443"
+  COOKIE_SECURE: "true"
+  # Only Cloudgate's proxy reaches the container, so take visitors' addresses from it
+  # (phpBB uses them for bans, spam checks and "who is online").
+  TRUSTED_PROXIES: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+
+services:
+  phpbb:
+    image: evandarwin/phpbb:3.3.19
+    restart: unless-stopped
+    depends_on:
+      phpbb-setup:
+        condition: service_completed_successfully
+    environment: *phpbb-env
+    volumes:
+      # config.php, attachments, avatars, extensions, styles and language packs.
+      - phpbb-data:/opt/phpbb
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # Runs once at each start, before phpBB. The image's own start script installs phpBB on
+  # the first start (and upgrades the database after a version change), creating the
+  # administrator from PHPBB_USERNAME and PHPBB_PASSWORD. phpBB's installer takes at most
+  # 30 characters, so it gets the first 30 of the generated password, and
+  # files/set-admin-password.php.txt then stores the whole one. Later starts change nothing.
+  phpbb-setup:
+    image: evandarwin/phpbb:3.3.19
+    restart: "no"
+    depends_on:
+      phpbb-db:
+        condition: service_healthy
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        PHPBB_PASSWORD="$$(printf '%s' "$$ADMIN_PASSWORD" | cut -c1-30)"
+        /opt/.docker/docker-entrypoint.sh true
+        && php84 /set-admin-password.php
+    environment:
+      <<: *phpbb-env
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - phpbb-data:/opt/phpbb
+      - ../files/set-admin-password.php.txt:/set-admin-password.php:ro
+
+  phpbb-db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: phpbb
+      MARIADB_USER: phpbb
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - phpbb-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  phpbb-data:
+  phpbb-db-data:

@@ -1,0 +1,18 @@
+name: Fleet
+description: "Fleet is self-hosted, open-source device management: see every Mac, Windows and Linux computer, its software, vulnerabilities and security checks."
+version: "4.94.1"
+tags: [jamf alternative, intune alternative, open source mdm, device management, osquery, device inventory, vulnerability management]
+links:
+  website: https://fleetdm.com
+  docs: https://fleetdm.com/docs
+  source: https://github.com/fleetdm/fleet
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # Encrypts the secrets Fleet stores (MDM certificates, API keys); keep it for the life of the install.
+  SERVER_PRIVATE_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: fleet, port: 1337 }

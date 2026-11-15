@@ -1,0 +1,122 @@
+services:
+  # Cloudgate's web address points here. It passes every request to alf.io,
+  # marked as https as Cloudgate serves it (see files/Caddyfile.txt).
+  alf-io-proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      alf-io:
+        condition: service_healthy
+
+  alf-io:
+    image: alfio/alf.io:2.0-M5-2609
+    restart: unless-stopped
+    depends_on:
+      alf-io-base-url:
+        condition: service_completed_successfully
+    environment:
+      # The names alf.io reads to find its database when it runs in Docker, as
+      # in the project's own .env file.
+      POSTGRES_PORT_5432_TCP_ADDR: alf-io-db
+      POSTGRES_PORT_5432_TCP_PORT: "5432"
+      POSTGRES_ENV_POSTGRES_DB: alfio
+      POSTGRES_ENV_POSTGRES_USERNAME: alfio
+      POSTGRES_ENV_POSTGRES_PASSWORD: ${DB_PASSWORD}
+      # Keeps sign-ins in the database, so they survive a restart.
+      SPRING_PROFILES_ACTIVE: jdbc-session
+    healthcheck:
+      # /healthz is the one page alf.io serves without redirecting to https.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
+
+  # Runs once at each start: the same image creates or upgrades alf.io's tables
+  # and then stops, so the next step can write a setting into them before the
+  # app starts.
+  alf-io-migrate:
+    image: alfio/alf.io:2.0-M5-2609
+    restart: "no"
+    depends_on:
+      alf-io-db-user:
+        condition: service_completed_successfully
+    environment:
+      POSTGRES_PORT_5432_TCP_ADDR: alf-io-db
+      POSTGRES_PORT_5432_TCP_PORT: "5432"
+      POSTGRES_ENV_POSTGRES_DB: alfio
+      POSTGRES_ENV_POSTGRES_USERNAME: alfio
+      POSTGRES_ENV_POSTGRES_PASSWORD: ${DB_PASSWORD}
+      ALFIO_JAVA_OPTS: -Dspring.context.exit=onRefresh -Dspring.profiles.active=disable-jobs
+
+  # alf.io builds links in emails and tickets, and payment callbacks, from its
+  # "Base application url" setting, which starts empty. This sets it to the
+  # app's address, and leaves it alone if someone has already changed it on the
+  # admin's settings page.
+  alf-io-base-url:
+    image: postgres:17.11-alpine
+    restart: "no"
+    depends_on:
+      alf-io-migrate:
+        condition: service_completed_successfully
+    environment:
+      PGHOST: alf-io-db
+      PGUSER: alfio
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: alfio
+      APP_URL: ${APP_URL}
+    command:
+      - sh
+      - -c
+      - >-
+        echo "INSERT INTO configuration (c_key, c_value, description)
+        VALUES ('BASE_URL', :'url', 'Base application url')
+        ON CONFLICT (c_key) DO NOTHING;"
+        | psql -v ON_ERROR_STOP=1 -v url="$$APP_URL"
+
+  # Runs once at each start. alf.io keeps each organization's data apart with
+  # PostgreSQL row security, which a superuser skips, so the app connects as
+  # its own ordinary user that owns its database. This creates that user and
+  # database the first time, and does nothing once they exist.
+  alf-io-db-user:
+    image: postgres:17.11-alpine
+    restart: "no"
+    depends_on:
+      alf-io-db:
+        condition: service_healthy
+    environment:
+      PGHOST: alf-io-db
+      PGUSER: postgres
+      PGPASSWORD: ${DB_ROOT_PASSWORD}
+      PGDATABASE: postgres
+      ALFIO_DB_PASSWORD: ${DB_PASSWORD}
+    command:
+      - sh
+      - -c
+      - >-
+        printf '%s\n'
+        "SELECT 'CREATE ROLE alfio LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD ' || quote_literal(:'pw')
+        WHERE NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'alfio') \\gexec"
+        "SELECT 'CREATE DATABASE alfio OWNER alfio'
+        WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'alfio') \\gexec"
+        | psql -v ON_ERROR_STOP=1 -v pw="$$ALFIO_DB_PASSWORD"
+
+  alf-io-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - alf-io-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  alf-io-db-data:

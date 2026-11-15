@@ -1,0 +1,23 @@
+services:
+  eigenfocus:
+    # The free edition; Eigenfocus PRO is a separate paid image.
+    image: eigenfocus/eigenfocus:1.6.0-free
+    restart: unless-stopped
+    environment:
+      DEFAULT_HOST_URL: ${DEFAULT_HOST_URL}
+      # The free edition has no accounts or sign-in. These turn on its built-in
+      # HTTP Basic Auth so the web address is not open to everyone.
+      HTTP_AUTH_USER: admin
+      HTTP_AUTH_PASSWORD: ${HTTP_AUTH_PASSWORD}
+    volumes:
+      # SQLite databases, uploaded files and the generated app secret.
+      - eigenfocus-data:/eigenfocus-app/app-data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null -u \"$$HTTP_AUTH_USER:$$HTTP_AUTH_PASSWORD\" http://localhost:3000/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  eigenfocus-data:

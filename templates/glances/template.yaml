@@ -1,0 +1,21 @@
+name: Glances
+description: "Glances is a self-hosted server monitor: one live, password-protected web page with your server's CPU, memory, load, disk activity and free disk space."
+version: "4.5.9"
+tags:
+  - server monitoring
+  - system monitor
+  - glances web ui
+  - cpu memory monitor
+  - server dashboard
+  - htop alternative
+links:
+  website: https://nicolargo.github.io/glances/
+  docs: https://glances.readthedocs.io
+  source: https://github.com/nicolargo/glances
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  GLANCES_PASSWORD: { generate: password }
+domains:
+  - { service: glances, port: 61208 }

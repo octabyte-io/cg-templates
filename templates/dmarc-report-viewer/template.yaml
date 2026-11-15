@@ -1,0 +1,39 @@
+name: DMARC Report Viewer
+description: "Self-hosted DMARC report viewer: see who sends email as your domain and whether it passes SPF and DKIM, from the DMARC and SMTP TLS reports in your mailbox."
+version: "2.7.0"
+tags: [dmarc report viewer, dmarc reports, dmarcian alternative, easydmarc alternative, email spoofing, smtp tls reports, email security]
+links:
+  website: https://github.com/cry-inc/dmarc-report-viewer
+  docs: https://github.com/cry-inc/dmarc-report-viewer#configuration
+  source: https://github.com/cry-inc/dmarc-report-viewer
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  HTTP_SERVER_PASSWORD: { generate: password }
+  IMAP_HOST:
+    ask:
+      label: Mail server (IMAP) address
+      description: The IMAP server of the mailbox your DMARC reports are sent to (the rua address in your DMARC record), such as imap.yourmailprovider.com.
+  IMAP_PORT:
+    ask:
+      label: IMAP port
+      description: The app connects over TLS, which is usually port 993.
+      default: "993"
+      format: number
+  IMAP_USER:
+    ask:
+      label: Mailbox username
+      description: Usually the full address of the reports mailbox, such as dmarc@yourcompany.com.
+  IMAP_PASSWORD:
+    ask:
+      label: Mailbox password
+      description: Password-based sign-in only; Microsoft 365 mailboxes need an IMAP proxy such as DavMail.
+      secret: true
+  IMAP_FOLDER:
+    ask:
+      label: Mailbox folder
+      description: The folder the reports arrive in.
+      default: INBOX
+domains:
+  - { service: dmarc-report-viewer, port: 8080 }

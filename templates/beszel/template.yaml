@@ -1,0 +1,15 @@
+name: Beszel
+description: "Beszel is self-hosted server monitoring: CPU, memory, disk and Docker container stats for all your servers, with history and alerts."
+version: "0.21.2"
+tags: [server monitoring, docker monitoring, datadog alternative, self-hosted monitoring, open source server monitoring, server alerts]
+links:
+  website: https://beszel.dev
+  docs: https://beszel.dev/guide/getting-started
+  source: https://github.com/henrygd/beszel
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  APP_URL: { value: "{{domains.beszel.url}}" }
+domains:
+  - { service: beszel, port: 8090 }

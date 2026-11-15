@@ -1,0 +1,25 @@
+name: Note Mark
+description: "Note Mark is a self-hosted Markdown notes app: write in notebooks, share notes with people or publish them on the web, and keep every note as a plain file."
+version: "1.1.2"
+tags: [markdown notes, self-hosted notes, obsidian alternative, obsidian publish alternative, note taking app, markdown editor]
+links:
+  website: https://notemark.docs.enchantedcode.co.uk
+  docs: https://notemark.docs.enchantedcode.co.uk/docs/setup/install/
+  source: https://github.com/enchant97/note-mark
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Signs login tokens; Note Mark wants base64 of at least 32 bytes.
+  AUTH_TOKEN_SECRET: { generate: base64 }
+  # Note Mark's own address, no trailing slash.
+  PUBLIC_URL: { value: "{{domains.note-mark.url}}" }
+  ENABLE_INTERNAL_SIGNUP:
+    ask:
+      label: Allow new sign-ups
+      description: Leave true until your own account exists, then set it to false on the app's variables page so nobody else can sign up.
+      default: "true"
+      pattern: "true|false"
+      required: false
+domains:
+  - { service: note-mark, port: 8080 }

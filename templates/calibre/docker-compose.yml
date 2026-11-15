@@ -1,0 +1,33 @@
+services:
+  calibre:
+    # LinuxServer.io's image: the Calibre desktop app, streamed to the browser
+    # (Selkies web desktop). Calibre itself is by Kovid Goyal.
+    image: lscr.io/linuxserver/calibre:v9.18.0-ls432
+    restart: unless-stopped
+    # Recommended for all LinuxServer.io desktop images.
+    shm_size: "1gb"
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TIMEZONE:-Etc/UTC}
+      # The web desktop's nginx otherwise also listens on IPv6 and won't start
+      # on a server with IPv6 turned off. Cloudgate reaches it over IPv4.
+      DISABLE_IPV6: "true"
+      # Without these the desktop is open to anyone who has the address:
+      # they turn on a password prompt (HTTP basic auth) in front of it.
+      CUSTOM_USER: ${CALIBRE_USER}
+      PASSWORD: ${CALIBRE_PASSWORD}
+    volumes:
+      # Calibre's settings and the library ("/config/Calibre Library").
+      - calibre-config:/config
+    healthcheck:
+      # Any HTTP answer means the web desktop is up; it answers 401 until the
+      # password is given, so curl's status is not checked.
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:8080/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 30s
+
+volumes:
+  calibre-config:

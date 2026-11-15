@@ -1,0 +1,16 @@
+name: Yamtrack
+description: "Yamtrack is a self-hosted media tracker and Trakt alternative for the movies, TV shows, anime, games and books you watch, play and read."
+version: "0.26.3"
+tags: [self-hosted media tracker, trakt alternative, myanimelist alternative, movie and tv tracker, anime tracker, game and book tracker]
+links:
+  website: https://github.com/FuzzyGrim/Yamtrack
+  docs: https://fuzzygrim.github.io/Yamtrack/release/
+  source: https://github.com/FuzzyGrim/Yamtrack
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SECRET: { generate: hex }
+  URLS: { value: "{{domains.yamtrack.url}}" }
+domains:
+  - { service: yamtrack, port: 8000 }

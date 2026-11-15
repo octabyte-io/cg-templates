@@ -1,0 +1,19 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v2.8.0
+    restart: unless-stopped
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: ${HOMEPAGE_ALLOWED_HOSTS}
+      # The dashboard is on a public address, so turn on Homepage's own
+      # password sign-in (since v2.0) for every page and API route.
+      HOMEPAGE_AUTH_ENABLED: "true"
+      HOMEPAGE_AUTH_SECRET: ${HOMEPAGE_AUTH_SECRET}
+      HOMEPAGE_AUTH_PASSWORD: ${HOMEPAGE_AUTH_PASSWORD}
+      HOMEPAGE_EXTERNAL_URL: ${HOMEPAGE_EXTERNAL_URL}
+    volumes:
+      # services.yaml, widgets.yaml, settings.yaml and the rest; Homepage
+      # writes starter files here on the first start. No Docker socket.
+      - homepage-config:/app/config
+
+volumes:
+  homepage-config:

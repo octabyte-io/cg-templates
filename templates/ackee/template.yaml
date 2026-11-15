@@ -1,0 +1,21 @@
+name: Ackee
+description: "Self-hosted Ackee shows page views, referrers, visit times and devices for all your websites in one minimal dashboard, with no cookies."
+version: "3.7.1"
+tags: ["web analytics", "google analytics alternative", "fathom alternative", "cookieless analytics", "privacy analytics", "website statistics"]
+links:
+  website: https://ackee.electerious.com
+  docs: https://docs.ackee.electerious.com
+  source: https://github.com/electerious/Ackee
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ACKEE_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in to Ackee with.
+      default: admin
+  ACKEE_PASSWORD: { generate: password }
+  MONGO_PASSWORD: { generate: password }
+domains:
+  - { service: ackee, port: 3000 }

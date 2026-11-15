@@ -1,0 +1,18 @@
+name: Tinode
+description: "Self-hosted Tinode is a private messenger for chats, groups, channels and one-to-one calls, with web, Android and iOS apps."
+version: "0.25.3"
+tags: [whatsapp alternative, telegram alternative, instant messaging, private messenger, group chat, self-hosted chat]
+links:
+  website: https://tinode.co
+  docs: https://github.com/tinode/chat/blob/master/INSTALL.md
+  source: https://github.com/tinode/chat
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.tinode.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  AUTH_TOKEN_KEY: { generate: base64 }
+  UID_KEY_SEED: { generate: password }
+domains:
+  - { service: tinode, port: 6060 }

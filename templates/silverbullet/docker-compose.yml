@@ -1,0 +1,13 @@
+services:
+  silverbullet:
+    # The default image: it includes headless Chromium for SilverBullet's
+    # Runtime API (an "-slim" variant without it also exists).
+    image: ghcr.io/silverbulletmd/silverbullet:2.12.1
+    restart: unless-stopped
+    # Pages, spaces and the server's accounts are all kept in /data.
+    # On first visit the setup wizard creates the admin account and the first space.
+    volumes:
+      - silverbullet-data:/data
+
+volumes:
+  silverbullet-data:

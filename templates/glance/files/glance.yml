@@ -1,0 +1,79 @@
+# Glance's dashboard, in one file. Edit it to add pages and widgets; Glance
+# reloads it on save. Every widget is described at
+# https://github.com/glanceapp/glance/blob/main/docs/configuration.md
+#
+# The dollar-brace values below are filled in from the app's settings when
+# Glance reads the file. Glance reads them even inside comments, so don't
+# write that form in a comment.
+
+server:
+  # Cloudgate's proxy sits in front of Glance; this lets Glance see the real
+  # visitor address, so it can block repeated failed sign-ins.
+  proxied: true
+
+# Sign-in. The admin password is generated at setup and shown on the app's
+# variables page. Add more people under users, each with a password.
+auth:
+  secret-key: ${GLANCE_SECRET_KEY}
+  users:
+    admin:
+      password: ${ADMIN_PASSWORD}
+
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: calendar
+            first-day-of-week: monday
+
+          - type: weather
+            location: ${WEATHER_LOCATION}
+            units: metric # or imperial
+            hour-format: 24h # or 12h
+
+          - type: bookmarks
+            groups:
+              - title: Bookmarks
+                links:
+                  - title: Wikipedia
+                    url: https://en.wikipedia.org/
+                  - title: GitHub
+                    url: https://github.com/
+                  - title: Glance documentation
+                    url: https://github.com/glanceapp/glance/blob/main/docs/configuration.md
+
+      - size: full
+        widgets:
+          - type: search
+            search-engine: duckduckgo
+
+          - type: group
+            widgets:
+              - type: hacker-news
+              - type: lobsters
+
+          - type: rss
+            title: News
+            limit: 10
+            collapse-after: 5
+            cache: 1h
+            feeds:
+              - url: https://feeds.bbci.co.uk/news/world/rss.xml
+                title: BBC World
+              - url: https://selfh.st/rss/
+                title: selfh.st
+
+      - size: small
+        widgets:
+          - type: markets
+            markets:
+              - symbol: SPY
+                name: S&P 500
+              - symbol: BTC-USD
+                name: Bitcoin
+
+          - type: releases
+            cache: 1d
+            repositories:
+              - glanceapp/glance

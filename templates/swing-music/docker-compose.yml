@@ -1,0 +1,83 @@
+services:
+  swingmusic:
+    image: ghcr.io/swingmx/swingmusic:v3.0.0
+    restart: unless-stopped
+    depends_on:
+      swingmusic-client:
+        condition: service_completed_successfully
+    environment:
+      SWINGMUSIC_PORT: "1970"
+      # The server name shown to the Android app and other clients.
+      SWINGMUSIC_DEVICE_NAME: Cloudgate
+    volumes:
+      # Settings, the user accounts and the library database.
+      - swingmusic-config:/config
+      # The music library, shared with FileBrowser Quantum below. Choose /music
+      # as the root folder during the first-run setup.
+      - swingmusic-music:/music
+    healthcheck:
+      # The image is python:slim, with neither curl nor wget.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:1970/', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Runs once at each start, before Swing Music. The image has no web client
+  # built in: on first start Swing Music looks it up through GitHub's API,
+  # which allows 60 anonymous calls an hour per IP address and makes the app
+  # exit when that limit is reached. This puts the web client of the same
+  # release (a direct download, not rate limited) where Swing Music looks for
+  # it, /config/swingmusic/client. Later starts find it there and change nothing.
+  swingmusic-client:
+    image: ghcr.io/swingmx/swingmusic:v3.0.0
+    restart: "no"
+    entrypoint:
+      - python
+      - -c
+      - |
+        import io, pathlib, shutil, tempfile, zipfile, requests
+        version = "3.0.0"
+        url = "https://github.com/swingmx/webclient/releases/download/v" + version + "/client.zip"
+        client = pathlib.Path("/config/swingmusic/client")
+        stamp = client / "version.txt"
+        if stamp.exists() and stamp.read_text().strip() == version:
+            print("Web client " + version + " is already in place.")
+            raise SystemExit(0)
+        response = requests.get(url, timeout=120)
+        response.raise_for_status()
+        with tempfile.TemporaryDirectory() as tmp:
+            zipfile.ZipFile(io.BytesIO(response.content)).extractall(tmp)
+            shutil.rmtree(client, ignore_errors=True)
+            shutil.copytree(pathlib.Path(tmp) / "client", client)
+        print("Web client " + version + " installed.")
+    volumes:
+      - swingmusic-config:/config
+
+  # FileBrowser Quantum: upload music from the browser at its own address,
+  # into the same volume Swing Music plays from. Its default settings serve /srv
+  # with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets the
+  # password of the user "admin" (created on first start, and set back to this
+  # value on every start). Runs as root so it can write to the shared volume,
+  # which both images create owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - swingmusic-music:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  swingmusic-config:
+  swingmusic-music:
+  filebrowser-data:

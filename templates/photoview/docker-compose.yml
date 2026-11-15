@@ -1,0 +1,101 @@
+services:
+  # Based on Photoview's docker-compose.example.yml (MariaDB, its default
+  # database), without host folders, Watchtower or hardware video encoding.
+  photoview:
+    image: photoview/photoview:2.4.0
+    restart: unless-stopped
+    depends_on:
+      photoview-prepare:
+        condition: service_completed_successfully
+      photoview-db:
+        condition: service_healthy
+    environment:
+      PHOTOVIEW_DATABASE_DRIVER: mysql
+      PHOTOVIEW_MYSQL_URL: "photoview:${DB_PASSWORD}@tcp(photoview-db)/photoview"
+      PHOTOVIEW_LISTEN_IP: "0.0.0.0"
+      PHOTOVIEW_LISTEN_PORT: "80"
+    volumes:
+      # Thumbnails and web-sized copies Photoview makes of each photo and video.
+      - photoview-cache:/home/photoview/media-cache
+      # The photo library, shared with FileBrowser Quantum below. Photoview only
+      # reads it. In the first-run setup, keep the photo path /photos; new
+      # files show up after a scan (Settings > Scan All, or a periodic scan).
+      - photoview-photos:/photos:ro
+    healthcheck:
+      # The check from Photoview's own Dockerfile.
+      test:
+        - CMD-SHELL
+        - >-
+          curl -fsS -o /dev/null http://127.0.0.1:80/api/graphql -X POST
+          -H 'Content-Type: application/json'
+          --data-raw '{"operationName":"CheckInitialSetup","variables":{},"query":"query CheckInitialSetup { siteInfo { initialSetup }}"}'
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # Runs once at each start, as in Photoview's example: makes the media cache
+  # volume (created owned by root) writable by the image's user "photoview".
+  photoview-prepare:
+    image: photoview/photoview:2.4.0
+    restart: "no"
+    user: root
+    entrypoint: []
+    command: ["chown", "-R", "photoview:photoview", "/home/photoview/media-cache"]
+    volumes:
+      - photoview-cache:/home/photoview/media-cache
+
+  photoview-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    # The server settings from Photoview's example, with a smaller buffer pool.
+    command: >-
+      mariadbd --innodb-buffer-pool-size=256M --transaction-isolation=READ-COMMITTED
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: photoview
+      MARIADB_USER: photoview
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - photoview-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # FileBrowser Quantum: Photoview has no upload of its own (it shows the
+  # photos in a folder on the server), so this uploads photos and videos from
+  # the browser at its own address, into the same volume Photoview reads.
+  # Its default settings serve /srv with password sign-in and sign-ups off.
+  # FILEBROWSER_ADMIN_PASSWORD sets the password of the user "admin" (created on
+  # first start, and set back to this value on every start). Runs as root so it
+  # can write to the shared volume, which both images create owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - photoview-photos:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  photoview-cache:
+  photoview-photos:
+  photoview-db-data:
+  filebrowser-data:

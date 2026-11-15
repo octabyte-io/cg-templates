@@ -1,0 +1,18 @@
+name: ezBookkeeping
+description: "ezBookkeeping is a self-hosted expense tracker for households: log spending and income across accounts and currencies, see charts, and import bank files."
+version: "2.1.1"
+tags: [expense tracker, personal finance, household expenses, money manager, quicken alternative, money lover alternative, spendee alternative]
+links:
+  website: https://ezbookkeeping.mayswind.net
+  docs: https://ezbookkeeping.mayswind.net/installation/installation-docker
+  source: https://github.com/mayswind/ezbookkeeping
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.ezbookkeeping.url}}" }
+  APP_DOMAIN: { value: "{{domains.ezbookkeeping.host}}" }
+  SECRET_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: ezbookkeeping, port: 8080 }

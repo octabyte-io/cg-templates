@@ -1,0 +1,97 @@
+# ArchivesSpace's official Docker setup (docker-compose-prod.yml and its
+# configuration package, v4.2.1): the app, MySQL and its own Solr build. Left out:
+# the nightly backup container and the single nginx proxy, which put the staff and
+# public interfaces under one address; here each interface has its own address.
+services:
+  # One container runs the staff interface (8080), the public interface (8081),
+  # the REST API (8089), the OAI-PMH feed (8082) and the search indexer.
+  archivesspace:
+    image: archivesspace/archivesspace:4.2.1
+    restart: unless-stopped
+    depends_on:
+      archivesspace-db:
+        condition: service_healthy
+      archivesspace-solr:
+        condition: service_healthy
+    environment:
+      # Run pending database migrations at every start (sets up the database the first time).
+      ASPACE_DB_MIGRATE: "true"
+      # Upstream gives the app 2 GB; 1.5 GB leaves room for MySQL and Solr on a 4 GB server.
+      ASPACE_JAVA_XMX: "-Xmx1536m"
+      JAVA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xss1024k"
+      # Any APPCONFIG_<NAME> variable sets AppConfig[:<name>] from config.rb.
+      APPCONFIG_DB_URL: "jdbc:mysql://archivesspace-db:3306/archivesspace?useUnicode=true&characterEncoding=UTF-8&user=as&password=${DB_PASSWORD}&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+      APPCONFIG_SOLR_URL: http://archivesspace-solr:8983/solr/archivesspace
+      # The addresses people open, used in links, redirects and finding aids.
+      APPCONFIG_FRONTEND_PROXY_URL: ${STAFF_URL}
+      APPCONFIG_PUBLIC_PROXY_URL: ${PUBLIC_URL}
+      APPCONFIG_OAI_PROXY_URL: ${PUBLIC_URL}/oai
+      # The password of the "admin" account, set when the database is first created
+      # (upstream's default is "admin"). Changing it later happens in the app.
+      APPCONFIG_DEFAULT_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - archivesspace-data:/archivesspace/data
+    # The image's own check calls the API once a minute; this one checks the staff
+    # interface sooner. First start sets up the database and search index (minutes).
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 15m
+
+  # The public interface's address: passes it (and /oai) to the app container.
+  archivesspace-public:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      archivesspace:
+        condition: service_started
+    volumes:
+      - ../files/public-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+
+  archivesspace-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --innodb_buffer_pool_size=256M
+      - --log_bin_trust_function_creators=1
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: archivesspace
+      MYSQL_USER: as
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - archivesspace-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u as -p\"$$MYSQL_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 1m
+
+  # ArchivesSpace's own Solr build, with its schema; creates the core on first start.
+  archivesspace-solr:
+    image: archivesspace/solr:4.2.1
+    restart: unless-stopped
+    command:
+      - solr-precreate
+      - archivesspace
+      - /opt/solr/server/solr/configsets/archivesspace
+    environment:
+      SOLR_JAVA_MEM: "-Xms512m -Xmx768m"
+    volumes:
+      - archivesspace-solr-data:/var/solr
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8983/solr/archivesspace/admin/ping >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 2m
+
+volumes:
+  archivesspace-data:
+  archivesspace-db-data:
+  archivesspace-solr-data:

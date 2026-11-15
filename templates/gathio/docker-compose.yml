@@ -1,0 +1,54 @@
+# Gathio's docker-compose.yml, with its published image instead of a local build
+# and MongoDB pinned. Settings live in files/config.toml, which reads the
+# GATHIO_* variables below.
+services:
+  gathio:
+    image: ghcr.io/lowercasename/gathio:1.6.7
+    restart: unless-stopped
+    depends_on:
+      gathio-db:
+        condition: service_healthy
+    # Turns email on when an email server is filled in, then starts Gathio the
+    # way the image does (npm run start).
+    command:
+      - sh
+      - -c
+      - >-
+        if [ -n "$$GATHIO_SMTP_SERVER" ]; then export GATHIO_MAIL_SERVICE=nodemailer;
+        else export GATHIO_MAIL_SERVICE=none; fi;
+        exec npm run start
+    environment:
+      NODE_ENV: production
+      GATHIO_DOMAIN: ${GATHIO_DOMAIN}
+      GATHIO_EMAIL: ${GATHIO_EMAIL}
+      GATHIO_SITE_NAME: ${GATHIO_SITE_NAME}
+      GATHIO_SMTP_SERVER: ${GATHIO_SMTP_SERVER:-}
+      GATHIO_SMTP_PORT: ${GATHIO_SMTP_PORT:-587}
+      GATHIO_SMTP_USERNAME: ${GATHIO_SMTP_USERNAME:-}
+      GATHIO_SMTP_PASSWORD: ${GATHIO_SMTP_PASSWORD:-}
+    volumes:
+      - ../files/config.toml:/app/config/config.toml:ro
+      # Pictures people upload to their events.
+      - gathio-images:/app/public/events
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 1m
+
+  gathio-db:
+    image: mongo:7.0.48
+    restart: unless-stopped
+    volumes:
+      - gathio-db-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  gathio-images:
+  gathio-db-data:

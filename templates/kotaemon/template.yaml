@@ -1,0 +1,15 @@
+name: Kotaemon
+description: "Kotaemon is a self-hosted ChatPDF alternative to chat with your documents: ask about your PDFs and get answers that cite and highlight the source."
+version: "0.11.0"
+tags: [chat with your documents, chatpdf alternative, notebooklm alternative, chat with pdf, document question answering, rag ui]
+links:
+  website: https://cinnamon.github.io/kotaemon/
+  docs: https://cinnamon.github.io/kotaemon/
+  source: https://github.com/Cinnamon/kotaemon
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  KOTAEMON_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: kotaemon, port: 7860 }

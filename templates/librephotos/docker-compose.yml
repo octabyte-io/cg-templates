@@ -1,0 +1,72 @@
+# LibrePhotos, from the official LibrePhotos/librephotos-docker compose file:
+# - proxy (nginx) is the web address; it sends /api and /media to backend and the rest to
+#   frontend, by those service names, and serves photos straight from the shared volumes.
+# - The photo folder (/data) is a named volume: people add photos by uploading them in the
+#   web app. The admin points their scan folder at /data in Settings.
+# - The backend runs the face, scene and caption models on the CPU; no GPU is used.
+# - Left out: the pgautoupgrade database image (pinned to plain PostgreSQL here).
+services:
+  proxy:
+    image: reallibrephotos/librephotos-proxy:1.6.0
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - librephotos-photos:/data
+      - librephotos-media:/protected_media
+
+  frontend:
+    image: reallibrephotos/librephotos-frontend:1.6.0
+    restart: unless-stopped
+
+  backend:
+    image: reallibrephotos/librephotos:1.6.0
+    restart: unless-stopped
+    depends_on:
+      librephotos-db:
+        condition: service_healthy
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      BACKEND_HOST: backend
+      ADMIN_USERNAME: admin
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_BACKEND: postgresql
+      DB_NAME: librephotos
+      DB_USER: librephotos
+      DB_PASS: ${DB_PASSWORD}
+      DB_HOST: librephotos-db
+      DB_PORT: "5432"
+      WEB_CONCURRENCY: "1"
+      ALLOW_UPLOAD: "true"
+      CSRF_TRUSTED_ORIGINS: ${APP_URL}
+      FRONTEND_BASE_URL: ${APP_URL}
+      DEBUG: "0"
+    volumes:
+      - librephotos-photos:/data
+      - librephotos-media:/protected_media
+      - librephotos-logs:/logs
+      - librephotos-cache:/root/.cache
+
+  librephotos-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: librephotos
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: librephotos
+    volumes:
+      - librephotos-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U librephotos -d librephotos"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  librephotos-photos:
+  librephotos-media:
+  librephotos-logs:
+  librephotos-cache:
+  librephotos-db-data:
