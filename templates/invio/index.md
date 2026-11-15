@@ -10,7 +10,7 @@ features:
   - title: Create invoices in minutes
     text: Pick a customer, add lines from your product list, and Invio works out discounts, taxes and totals, with numbers that follow your own pattern.
   - title: Share as a PDF or a link
-    text: Download each invoice as a PDF, send it by email from the app, or share a private link where your client can view and download it.
+    text: Download each invoice as a PDF, send it by email from the app, or share a link where your client can view and download it.
   - title: Export e-invoices
     text: Export invoices as Factur-X / ZUGFeRD, UBL 2.1 for PEPPOL, or Italy's FatturaPA, and attach the e-invoice file inside the PDF.
   - title: See what's paid and what's late

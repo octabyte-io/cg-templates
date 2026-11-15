@@ -3,7 +3,7 @@ tagline: A self-hosted CRM for your deals, with an AI assistant you approve.
 category: customers-sales
 alternativeTo: [hubspot, pipedrive, attio, salesforce]
 ease: some-setup
-easeNote: The admin signs in, invites the team, and adds a Claude or OpenAI key or a local model if they want the AI assistant.
+easeNote: The admin signs in at /app, invites the team, and adds a Claude or OpenAI key at setup if they want the AI assistant.
 license: AGPL-3.0-only
 goodFor: Small sales teams and agencies who want a simple CRM their AI assistant can work in
 features:

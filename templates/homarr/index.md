@@ -42,11 +42,11 @@ faq:
   - q: How do I sign in to Homarr the first time?
     a: There is no default password. The first time you open Homarr's web address, a short setup wizard asks you to create the admin account and builds your first board; that admin then adds or invites everyone else.
   - q: Can my staff sign in with their existing work accounts?
-    a: Yes, Homarr can sign people in through LDAP, including Microsoft Active Directory, or through a single sign-on provider that uses OpenID Connect. It also has its own simple username and password accounts.
+    a: Yes, Homarr can sign people in through LDAP, including Microsoft Active Directory, or through a single sign-on provider that uses OpenID Connect, once the admin adds those settings. It also has its own simple username and password accounts.
   - q: Can I import my start.me pages or browser bookmarks into Homarr?
     a: No, Homarr has no importer for start.me or browser bookmarks. You add the apps and links again as tiles, which is quick for a page of a few dozen links.
   - q: Does Homarr work on phones?
-    a: Yes, in the phone's browser. Each board has its own phone layout, and you can add Homarr to your home screen like an app; there is no app-store app.
+    a: Yes, in the phone's browser. Each board has its own phone layout; there is no app-store app.
   - q: What server size does Homarr need?
     a: A small server is enough. The Homarr project asks for about 500 MB of memory, and Cloudgate sets it up on a server it provides or one you connect.
 screenshots:

@@ -10,7 +10,7 @@ features:
   - title: Tick off checklists
     text: Make lists with categories, drag items into order, add many at once and watch a progress bar fill up.
   - title: Run projects on a board
-    text: Turn a checklist into a Kanban board with your own columns, subtasks and a timer on each task.
+    text: Make a task project a Kanban board with your own columns, subtasks and a timer on each task.
   - title: Write notes your way
     text: Use a rich text editor or switch to plain Markdown, with headings, tables and code blocks.
   - title: Link notes together
@@ -70,7 +70,7 @@ screenshots:
 
 Jotty is a free, open-source, self-hosted app for notes and checklists, and an alternative to Google Keep and simple Todoist lists. Formerly called rwMarkable, it keeps your notes, checklists and task boards on your own server as plain Markdown files, with no database to look after.
 
-Notes open in a rich text editor or in plain Markdown, and you can link them with [[wikilinks]] the way Obsidian does. Checklists have categories, drag and drop and a progress bar, and any list can become a Kanban board with its own columns and a timer on each task. A small cleaning company, for example, could keep a checklist for each client's home, share it with the cleaners who go there, and run the week's jobs on one board.
+Notes open in a rich text editor or in plain Markdown, and you can link them with [[wikilinks]] the way Obsidian does. Checklists have categories, drag and drop and a progress bar, and task projects run as Kanban boards with their own columns and a timer on each task. A small cleaning company, for example, could keep a checklist for each client's home, share it with the cleaners who go there, and run the week's jobs on one board.
 
 Each person gets their own account, and you can share a note, a list or a whole folder with set permissions, or send a public link. Private notes can be encrypted. Jotty works in any browser and installs on a phone's home screen like an app, though there is no app-store app.
 

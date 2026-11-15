@@ -3091,7 +3091,7 @@ export const PRODUCTS: Product[] = [
     id: 'customer-io',
     name: 'Customer.io',
     job: 'automated email from your app’s events',
-    lede: 'Notifuse is a free-to-self-host Customer.io alternative for email: automated journeys triggered by what people do in your app, campaigns from a drag-and-drop editor, and an API for transactional email, on your own server. Customer.io prices by profile and adds SMS, push and in-app messages; Notifuse is email only, source-available rather than open source, with single sign-on and more than three workspaces behind a paid key.',
+    lede: 'Notifuse is a free-to-self-host Customer.io alternative for email: automated journeys triggered by what people do in your app, campaigns from a drag-and-drop editor, and an API for transactional email, on your own server. Customer.io is hosted and adds SMS, push and in-app messages; Notifuse is email only, source-available rather than open source, with single sign-on and more than three workspaces behind a paid key.',
     pick: 'notifuse',
   },
 ];

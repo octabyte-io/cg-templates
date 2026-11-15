@@ -12,7 +12,7 @@ features:
   - title: See posts in time order
     text: The home feed shows the people you follow, newest first, with no ads and no algorithm choosing what you see.
   - title: Like, comment and message
-    text: Members like and comment on each other's posts, bookmark favourites and send direct messages.
+    text: Members like, comment on and share each other's posts, and send direct messages.
   - title: Explore what your group posts
     text: A Discover page shows trending posts, and anyone can browse a hashtag or a member's grid of photos.
   - title: Gather posts into collections

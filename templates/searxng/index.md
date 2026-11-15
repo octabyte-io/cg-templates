@@ -36,7 +36,7 @@ faq:
   - q: Is SearXNG free?
     a: Yes, SearXNG is free and open source under the AGPL-3.0 licence, with no paid edition and no search limit. You pay only for your server.
   - q: Is SearXNG a good alternative to Kagi?
-    a: Yes, if you want private, ad-free search without a subscription. Kagi ranks results with its own index and tools; SearXNG combines results from other engines such as DuckDuckGo, Brave and Google, so results can be less tuned and a little slower.
+    a: Yes, if you want private, ad-free search without a subscription. Kagi has its own ranking and AI tools; SearXNG combines results from other engines such as DuckDuckGo, Brave and Google, so results can be less tuned and a little slower.
   - q: Is SearXNG really private?
     a: Yes, SearXNG does not track or profile you and keeps no search history, and the engines it asks see your server instead of your browser. They do still see the searches themselves and your server's address, so it hides who is searching rather than what is searched.
   - q: How do I sign in to SearXNG the first time?
