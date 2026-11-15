@@ -1,0 +1,175 @@
+# From Worklenz's official docker-compose.yml (v3.3.1). The nginx in front is the
+# official setup's proxy, here without TLS: it puts the frontend, the backend and
+# file downloads on one web address.
+x-backend-env: &backend-env
+  NODE_ENV: production
+  PORT: "3000"
+  WORKLENZ_DEPLOYMENT_MODE: self_hosted
+  DB_HOST: db
+  DB_PORT: "5432"
+  DB_NAME: worklenz_db
+  DB_USER: postgres
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_MAX_CLIENTS: "50"
+  USE_PG_NATIVE: "false"
+  SESSION_NAME: worklenz.sid
+  SESSION_SECRET: ${SESSION_SECRET}
+  COOKIE_SECRET: ${COOKIE_SECRET}
+  JWT_SECRET: ${JWT_SECRET}
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+  ENCRYPTION_SALT: ${ENCRYPTION_SALT}
+  FRONTEND_URL: ${APP_URL}
+  SERVER_CORS: ${APP_URL}
+  SOCKET_IO_CORS: ${APP_URL}
+  STORAGE_PROVIDER: s3
+  S3_REGION: us-east-1
+  S3_BUCKET: worklenz-bucket
+  S3_ACCESS_KEY_ID: worklenz
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+  S3_ENDPOINT: http://seaweedfs:8333
+  S3_PUBLIC_URL: ${APP_URL}/worklenz-bucket
+  # Google sign-in is off; the published image needs these set to start.
+  GOOGLE_CLIENT_ID: disabled
+  GOOGLE_CLIENT_SECRET: disabled
+  GOOGLE_CALLBACK_URL: ${APP_URL}/secure/google/verify
+  EMAIL_PROVIDER: smtp
+  ENABLE_EMAIL_CRONJOBS: "false"
+  TZ: UTC
+
+services:
+  worklenz:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  frontend:
+    image: chamikajaycey/worklenz-frontend:3.3.1
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: ${APP_URL}
+      VITE_SOCKET_URL: ${APP_URL}
+      VITE_APP_TITLE: Worklenz
+
+  backend:
+    image: chamikajaycey/worklenz-backend:3.3.1
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      seaweedfs:
+        condition: service_healthy
+      configure-seaweedfs:
+        condition: service_completed_successfully
+    environment: *backend-env
+
+  # Applies the versioned migrations on top of the base schema, as the
+  # official install steps do with "npm run migrate:up", then exits.
+  migrate:
+    image: chamikajaycey/worklenz-backend:3.3.1
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: *backend-env
+    # Worklenz 3.3.1's migrations stop on a new database: migration
+    # 1791454074122 re-creates client_portal_notification_reads with new
+    # columns, but an older migration already made the table with the old ones.
+    # So run them once (it stops there), drop that old, still empty table only
+    # if it has the old shape, then run the rest. On later starts nothing is left
+    # to run and nothing is dropped.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        node scripts/migrate.js up || true
+        node -e '
+          const { Client } = require("pg");
+          const c = new Client({ host: process.env.DB_HOST, port: process.env.DB_PORT, user: process.env.DB_USER, password: process.env.DB_PASSWORD, database: process.env.DB_NAME });
+          (async () => {
+            await c.connect();
+            const r = await c.query("SELECT 1 FROM information_schema.columns WHERE table_name = $$1 AND column_name = $$2", ["client_portal_notification_reads", "client_id"]);
+            if (r.rowCount > 0) { await c.query("DROP TABLE client_portal_notification_reads"); console.log("Dropped the old client_portal_notification_reads table"); }
+            await c.end();
+          })().catch((e) => { console.error(e); process.exit(1); });
+        '
+        node scripts/migrate.js up
+    volumes:
+      # One migration needs this helper, which the published image leaves out.
+      - ../files/team-lead-prerequisites.js:/app/database/pg-migrations-support/team-lead-prerequisites.js:ro
+
+  db:
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: worklenz_db
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - worklenz-db-data:/var/lib/postgresql/data
+      # The official base schema, run once when the database is first created,
+      # in the order the official 00_init.sh and install steps use
+      # (4_functions.sql is split in two to stay under the 256 KB file limit).
+      - ../files/0_extensions.sql:/docker-entrypoint-initdb.d/01-0_extensions.sql:ro
+      - ../files/1_tables.sql:/docker-entrypoint-initdb.d/02-1_tables.sql:ro
+      - ../files/indexes.sql:/docker-entrypoint-initdb.d/03-indexes.sql:ro
+      - ../files/4_functions_part1.sql:/docker-entrypoint-initdb.d/04-4_functions_part1.sql:ro
+      - ../files/4_functions_part2.sql:/docker-entrypoint-initdb.d/05-4_functions_part2.sql:ro
+      - ../files/triggers.sql:/docker-entrypoint-initdb.d/06-triggers.sql:ro
+      - ../files/3_views.sql:/docker-entrypoint-initdb.d/07-3_views.sql:ro
+      - ../files/2_dml.sql:/docker-entrypoint-initdb.d/08-2_dml.sql:ro
+      - ../files/5_database_user.sql:/docker-entrypoint-initdb.d/09-5_database_user.sql:ro
+    healthcheck:
+      # -h 127.0.0.1: only ready once the init scripts are done and the real
+      # server listens on TCP.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -d worklenz_db -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.41
+    restart: unless-stopped
+    command: ["mini", "-dir=/data"]
+    environment:
+      AWS_ACCESS_KEY_ID: worklenz
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      S3_BUCKET: worklenz-bucket
+    volumes:
+      - worklenz-files:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9333/cluster/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  # Creates the storage bucket once SeaweedFS is up, then exits.
+  configure-seaweedfs:
+    image: amazon/aws-cli:2.27.49
+    restart: "no"
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: worklenz
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: us-east-1
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if ! aws --endpoint-url http://seaweedfs:8333 s3api create-bucket --bucket worklenz-bucket; then
+          aws --endpoint-url http://seaweedfs:8333 s3api head-bucket --bucket worklenz-bucket
+        fi
+
+volumes:
+  worklenz-db-data:
+  worklenz-files:

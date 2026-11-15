@@ -1,0 +1,81 @@
+services:
+  dawarich:
+    image: freikin/dawarich:1.22.0
+    restart: unless-stopped
+    entrypoint: web-entrypoint.sh
+    command: ["bin/rails", "server", "-p", "3000", "-b", "::"]
+    stop_grace_period: 60s
+    depends_on:
+      dawarich-db:
+        condition: service_healthy
+      dawarich-redis:
+        condition: service_healthy
+    environment:
+      RAILS_ENV: production
+      REDIS_URL: redis://dawarich-redis:6379
+      DATABASE_HOST: dawarich-db
+      DATABASE_PORT: "5432"
+      DATABASE_USERNAME: dawarich
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_NAME: dawarich
+      APPLICATION_HOSTS: ${APPLICATION_HOSTS}
+      APPLICATION_PROTOCOL: https
+      TIME_ZONE: ${TIME_ZONE}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      RAILS_LOG_TO_STDOUT: "true"
+      SELF_HOSTED: "true"
+      STORE_GEODATA: "true"
+      PROMETHEUS_EXPORTER_ENABLED: "false"
+      # Background jobs (Sidekiq) run inside the app container, as in the official compose file.
+      SIDEKIQ_EMBEDDED: "true"
+      WEB_CONCURRENCY: "0"
+      BACKGROUND_PROCESSING_CONCURRENCY: "2"
+      OTP_ENCRYPTION_PRIMARY_KEY: ${OTP_ENCRYPTION_PRIMARY_KEY}
+      OTP_ENCRYPTION_DETERMINISTIC_KEY: ${OTP_ENCRYPTION_DETERMINISTIC_KEY}
+      OTP_ENCRYPTION_KEY_DERIVATION_SALT: ${OTP_ENCRYPTION_KEY_DERIVATION_SALT}
+    volumes:
+      - dawarich-public:/var/app/public
+      - dawarich-watched:/var/app/tmp/imports/watched
+      - dawarich-storage:/var/app/storage
+    healthcheck:
+      # The header stops force_ssl (APPLICATION_PROTOCOL=https) redirecting the check to HTTPS.
+      test: ["CMD-SHELL", "wget -qO - --header 'X-Forwarded-Proto: https' http://127.0.0.1:3000/api/v1/health | grep -q '\"status\"\\s*:\\s*\"ok\"'"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
+  dawarich-db:
+    image: postgis/postgis:17-3.5-alpine
+    restart: unless-stopped
+    shm_size: 1g
+    environment:
+      POSTGRES_USER: dawarich
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: dawarich
+    volumes:
+      - dawarich-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dawarich -d dawarich"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  dawarich-redis:
+    image: redis:8.10.3-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "900", "1", "--save", "300", "10", "--appendonly", "no"]
+    volumes:
+      - dawarich-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  dawarich-public:
+  dawarich-watched:
+  dawarich-storage:
+  dawarich-db-data:
+  dawarich-redis-data:

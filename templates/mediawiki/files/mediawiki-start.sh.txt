@@ -1,0 +1,39 @@
+#!/bin/bash
+# Starts MediaWiki without the browser installer.
+# First start: runs MediaWiki's command-line installer, which creates the database tables, the
+# administrator account and LocalSettings.php (with its own secret keys), and keeps that file in
+# /var/www/config. Every start: links LocalSettings.php into the web root, applies any database
+# updates a newer MediaWiki needs, then starts Apache.
+set -euo pipefail
+cd /var/www/html
+settings=/var/www/config/LocalSettings.php
+
+if [ ! -f "$settings" ]; then
+  echo "First start: installing MediaWiki..."
+  rm -rf /tmp/mw-install && mkdir -p /tmp/mw-install
+  php maintenance/run.php install \
+    --dbtype mysql --dbserver "$MW_DB_HOST" --dbname "$MW_DB_NAME" \
+    --dbuser "$MW_DB_USER" --dbpass "$MW_DB_PASSWORD" \
+    --installdbuser "$MW_DB_USER" --installdbpass "$MW_DB_PASSWORD" \
+    --server "$MW_SERVER" --scriptpath "" --lang en \
+    --pass "$MW_ADMIN_PASSWORD" --confpath /tmp/mw-install \
+    --skins Vector,MinervaNeue,MonoBook,Timeless \
+    --extensions CategoryTree,Cite,CiteThisPage,CodeEditor,ConfirmEdit,DiscussionTools,Echo,Gadgets,ImageMap,InputBox,Linter,LoginNotify,MultimediaViewer,Nuke,OATHAuth,PageImages,ParserFunctions,PdfHandler,Poem,ReplaceText,Scribunto,SecureLinkFixer,SpamBlacklist,TemplateData,TemplateStyles,TextExtracts,Thanks,TitleBlacklist,VisualEditor,WikiEditor \
+    "$MW_SITE_NAME" "$MW_ADMIN_USER"
+  cat >> /tmp/mw-install/LocalSettings.php <<'PHP'
+
+# Added by Cloudgate's template: allow file uploads, resized with ImageMagick.
+$wgEnableUploads = true;
+$wgUseImageMagick = true;
+$wgImageMagickConvertCommand = "/usr/bin/convert";
+PHP
+  install -m 0640 -o root -g www-data /tmp/mw-install/LocalSettings.php "$settings"
+  rm -rf /tmp/mw-install
+  echo "MediaWiki installed. Sign in as \"$MW_ADMIN_USER\" with ADMIN_PASSWORD."
+fi
+
+ln -sf "$settings" /var/www/html/LocalSettings.php
+chown -R www-data:www-data /var/www/html/images
+php maintenance/run.php update --quick
+
+exec docker-php-entrypoint "$@"

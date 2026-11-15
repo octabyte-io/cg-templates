@@ -1,0 +1,75 @@
+# From wallabag's official Docker image README (wallabag/docker): wallabag, MariaDB and Redis.
+services:
+  wallabag:
+    image: wallabag/wallabag:2.6.17
+    restart: unless-stopped
+    # files/wallabag-start.sh.txt: lets nginx start on a server without IPv6, and replaces the
+    # default password of the account "wallabag" with ADMIN_PASSWORD on the first start.
+    # It then runs the image's own entrypoint.
+    entrypoint: ["sh", "/wallabag-start.sh"]
+    depends_on:
+      wallabag-db:
+        condition: service_healthy
+      wallabag-redis:
+        condition: service_healthy
+    environment:
+      # Lets the image create the database and run wallabag:install on the first start.
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      SYMFONY__ENV__DATABASE_DRIVER: pdo_mysql
+      SYMFONY__ENV__DATABASE_HOST: wallabag-db
+      SYMFONY__ENV__DATABASE_PORT: "3306"
+      SYMFONY__ENV__DATABASE_NAME: wallabag
+      SYMFONY__ENV__DATABASE_USER: wallabag
+      SYMFONY__ENV__DATABASE_PASSWORD: ${DB_PASSWORD}
+      SYMFONY__ENV__DATABASE_CHARSET: utf8mb4
+      SYMFONY__ENV__DATABASE_TABLE_PREFIX: wallabag_
+      SYMFONY__ENV__SECRET: ${SECRET}
+      SYMFONY__ENV__DOMAIN_NAME: ${DOMAIN_NAME}
+      SYMFONY__ENV__SERVER_NAME: wallabag
+      SYMFONY__ENV__REDIS_HOST: wallabag-redis
+      SYMFONY__ENV__FOSUSER_REGISTRATION: "false"
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # Images saved with articles.
+      - wallabag-images:/var/www/wallabag/web/assets/images
+      # wallabag's data folder (also holds the marker of the first-start password change).
+      - wallabag-data:/var/www/wallabag/data
+      - ../files/wallabag-start.sh.txt:/wallabag-start.sh:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  wallabag-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - wallabag-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  wallabag-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - wallabag-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wallabag-images:
+  wallabag-data:
+  wallabag-db-data:
+  wallabag-redis-data:

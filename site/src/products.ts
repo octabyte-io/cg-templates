@@ -1655,6 +1655,53 @@ export const PRODUCTS: Product[] = [
     lede: 'HedgeDoc is the free, open-source HackMD alternative: real-time Markdown notes shared by link, with a live preview, slides and read-only publishing, and it grew out of HackMD’s own open-source edition. HackMD can’t be self-hosted and charges per seat for team plans; self-hosted HedgeDoc has no seat price, though it lacks GitHub sync and team workspaces.',
     pick: 'hedgedoc',
   },
+  {
+    id: 'instapaper',
+    name: 'Instapaper',
+    icon: 'instapaper',
+    job: 'saving articles to read later',
+    lede: 'Readeck is a free, open-source Instapaper alternative: save articles to read later in a clean reader view, highlight passages with notes, and send whole collections to an e-reader as e-books. Instapaper keeps full-text search and unlimited highlights for its paid Premium plan; a self-hosted read-it-later app includes them free and keeps your reading list on your own server.',
+    pick: 'readeck',
+  },
+  {
+    id: 'front',
+    name: 'Front',
+    job: 'a shared team inbox for customer messages',
+    lede: 'Libredesk is a free, open-source Front alternative: one shared inbox where your team answers customer email, website chat and WhatsApp, with assignment, saved replies, SLAs and reports. Front charges per seat; self-hosted Libredesk has no fee per agent and every feature is in the free app, though it has fewer channels than Front.',
+    pick: 'libredesk',
+  },
+  {
+    id: 'fandom',
+    name: 'Fandom',
+    icon: 'fandom',
+    job: 'hosting a community wiki',
+    lede: 'MediaWiki is the free, open-source Fandom alternative: the same wiki software that runs Fandom and Wikipedia, on your own server and address, with no ads. Fandom hosts community wikis for free but shows ads and sets the rules; a self-hosted MediaWiki has no ads and leaves the wiki, its look and its rules to your community.',
+    pick: 'mediawiki',
+  },
+  {
+    id: 'google-maps-timeline',
+    name: 'Google Maps Timeline',
+    icon: 'googlemaps',
+    job: 'keeping your location history',
+    lede: 'Dawarich is a free, open-source Google Maps Timeline alternative that keeps your location history on a map and a day-by-day timeline in your browser, and imports your Google Timeline data. Google removed Timeline from the web and now keeps it on the phone only, with limited retention; self-hosted Dawarich keeps your whole history on your own server, sent from a tracking app on your phone.',
+    pick: 'dawarich',
+  },
+  {
+    id: 'okta',
+    name: 'Okta',
+    icon: 'okta',
+    job: 'single sign-on for your team',
+    lede: 'authentik is a free, open-source Okta alternative: one sign-in for all your team’s apps, with two-step verification, users and groups and an app dashboard, on your own server. Okta charges per user each month; authentik’s open-source edition has no user fee, though it has fewer ready-made app connections and some business features need its paid Enterprise licence.',
+    pick: 'authentik',
+  },
+  {
+    id: 'auth0',
+    name: 'Auth0',
+    icon: 'auth0',
+    job: 'sign-in for your own apps',
+    lede: 'authentik is a free, open-source Auth0 alternative for adding sign-in to your own apps: customer sign-up, social logins, two-step verification and standard OpenID Connect and SAML, on your own server. Auth0 is a hosted service with SDKs for developers; self-hosted authentik keeps your users’ accounts on your server, and you look after it yourself.',
+    pick: 'authentik',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));

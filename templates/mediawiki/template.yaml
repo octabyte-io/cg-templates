@@ -1,0 +1,27 @@
+name: MediaWiki
+description: "MediaWiki is the self-hosted wiki software behind Wikipedia: build a wiki your community or team writes together, with full page history."
+version: "1.46.2"
+tags: [wiki software, wikipedia software, fandom alternative, community wiki, knowledge base, confluence alternative]
+links:
+  website: https://www.mediawiki.org
+  docs: https://www.mediawiki.org/wiki/Manual:Contents
+  source: https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SERVER_URL: { value: "{{domains.mediawiki.url}}" }
+  SITE_NAME:
+    ask:
+      label: Wiki name
+      description: The name of your wiki, shown in its title and logo area. You can change it later in LocalSettings.php.
+      default: My Wiki
+  # The password of the wiki's administrator account "Admin" (32 letters and digits, which
+  # meets MediaWiki's password policy for administrators).
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: mediawiki, port: 80 }
+files:
+  - { path: mediawiki-start.sh.txt }

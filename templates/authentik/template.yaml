@@ -1,0 +1,23 @@
+name: authentik
+description: "authentik is self-hosted single sign-on: one login with two-step sign-in for all your team's apps, replacing Okta or Auth0."
+version: "2026.8.5"
+tags: [okta alternative, single sign-on, sso, identity provider, two-factor authentication, auth0 alternative, ldap]
+links:
+  website: https://goauthentik.io
+  docs: https://docs.goauthentik.io
+  source: https://github.com/goauthentik/authentik
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  AUTHENTIK_SECRET_KEY: { generate: base64 }
+  PG_PASS: { generate: password }
+  # The password of the admin user "akadmin", set on the first start.
+  AUTHENTIK_BOOTSTRAP_PASSWORD: { generate: password }
+  AUTHENTIK_BOOTSTRAP_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the admin user akadmin. You sign in as akadmin with the password Cloudgate creates, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: server, port: 9000 }

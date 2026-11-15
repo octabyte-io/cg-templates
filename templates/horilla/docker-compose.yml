@@ -1,0 +1,101 @@
+# From Horilla's official docker-compose.yml with its docker-compose.prod.yml
+# overlay (production settings, Redis cache, scheduler), using the published
+# image and without the optional nginx front end: Cloudgate's proxy is the way in.
+services:
+  horilla:
+    image: horilla/horilla-hr:2.4.0
+    restart: unless-stopped
+    depends_on:
+      horilla-db:
+        condition: service_healthy
+      horilla-redis:
+        condition: service_healthy
+    environment:
+      DEBUG: "0"
+      HORILLA_ENV: production
+      SECRET_KEY: ${SECRET_KEY}
+      # localhost is kept for the image's own health check.
+      ALLOWED_HOSTS: ${APP_HOST},localhost,127.0.0.1
+      CSRF_TRUSTED_ORIGINS: ${APP_URL}
+      DATABASE_URL: postgres://horilla:${POSTGRES_PASSWORD}@horilla-db:5432/horilla
+      DB_HOST: horilla-db
+      DB_PORT: "5432"
+      # Asked for on Horilla's first-run screen before the first admin is created.
+      DB_INIT_PASSWORD: ${DB_INIT_PASSWORD}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@horilla-redis:6379/0
+      TIME_ZONE: ${TIME_ZONE}
+      # Cloudgate's proxy reaches the app over a private Docker network; trust its
+      # X-Forwarded-For so login lockouts see the visitor's address.
+      HORILLA_TRUSTED_PROXIES: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+    volumes:
+      - horilla-media:/app/media
+      - horilla-static:/app/staticfiles
+    # The image's own check, polled more often: the first start applies every
+    # migration (about five minutes) before the web server answers.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 15s
+      timeout: 30s
+      retries: 3
+      start_period: 15m
+
+  # Runs Horilla's scheduled jobs; it skips migrations, so it starts once the web
+  # container has applied them.
+  horilla-scheduler:
+    image: horilla/horilla-hr:2.4.0
+    restart: unless-stopped
+    command: ["python", "manage.py", "run_scheduler"]
+    depends_on:
+      horilla:
+        condition: service_healthy
+    environment:
+      DEBUG: "0"
+      HORILLA_ENV: production
+      SECRET_KEY: ${SECRET_KEY}
+      ALLOWED_HOSTS: ${APP_HOST},localhost,127.0.0.1
+      DATABASE_URL: postgres://horilla:${POSTGRES_PASSWORD}@horilla-db:5432/horilla
+      DB_HOST: horilla-db
+      DB_PORT: "5432"
+      DB_INIT_PASSWORD: ${DB_INIT_PASSWORD}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@horilla-redis:6379/0
+      TIME_ZONE: ${TIME_ZONE}
+      HORILLA_SKIP_RELEASE_TASKS: "1"
+    volumes:
+      - horilla-media:/app/media
+    healthcheck:
+      disable: true
+
+  horilla-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: horilla
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: horilla
+    volumes:
+      - horilla-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U horilla -d horilla"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  horilla-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - horilla-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+volumes:
+  horilla-media:
+  horilla-static:
+  horilla-db-data:
+  horilla-redis-data:

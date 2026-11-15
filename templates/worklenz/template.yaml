@@ -1,0 +1,34 @@
+name: Worklenz
+description: "Worklenz is self-hosted project management with time tracking, team workload and budgets, an open-source alternative to ClickUp and Asana."
+version: "3.3.1"
+tags: [clickup alternative, project management, time tracking, resource planning, asana alternative, task management, agency project management]
+links:
+  website: https://worklenz.com
+  docs: https://github.com/Worklenz/worklenz/blob/main/DOCKER_SETUP.md
+  source: https://github.com/Worklenz/worklenz
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.worklenz.url}}" }
+  DB_PASSWORD: { generate: password }
+  SESSION_SECRET: { generate: hex }
+  COOKIE_SECRET: { generate: hex }
+  JWT_SECRET: { generate: hex }
+  ENCRYPTION_KEY: { generate: hex }
+  ENCRYPTION_SALT: { generate: hex }
+  S3_SECRET_ACCESS_KEY: { generate: password }
+domains:
+  - { service: worklenz, port: 80 }
+files:
+  - { path: nginx.conf }
+  - { path: 0_extensions.sql }
+  - { path: 1_tables.sql }
+  - { path: indexes.sql }
+  - { path: 4_functions_part1.sql }
+  - { path: 4_functions_part2.sql }
+  - { path: triggers.sql }
+  - { path: 3_views.sql }
+  - { path: 2_dml.sql }
+  - { path: 5_database_user.sql }
+  - { path: team-lead-prerequisites.js }

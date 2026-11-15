@@ -1,0 +1,17 @@
+name: XWiki
+description: "XWiki is a self-hosted enterprise wiki for team docs and intranets, with page trees, real-time editing, forms and fine-grained permissions."
+version: "17.10.15"
+tags: [enterprise wiki, confluence alternative, knowledge base, intranet, team documentation, structured wiki]
+links:
+  website: https://www.xwiki.org
+  docs: https://www.xwiki.org/xwiki/bin/view/Documentation/AdminGuide/Installation/InstallationViaDocker/
+  source: https://github.com/xwiki/xwiki-platform
+cloudgate: 0.1.0
+compose: app
+# XWiki runs on Java in Tomcat (with LibreOffice for office imports); its docs ask
+# for at least 2 GB of memory for the wiki alone, plus PostgreSQL.
+size: large
+inputs:
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: xwiki, port: 8080 }

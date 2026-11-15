@@ -1,0 +1,56 @@
+# The official MediaWiki image with MariaDB, as on its Docker Hub page. Instead of the browser
+# installer, files/mediawiki-start.sh.txt runs MediaWiki's command-line installer on the first
+# start and keeps the LocalSettings.php it writes in the mediawiki-config volume.
+services:
+  mediawiki:
+    image: mediawiki:1.46.2
+    restart: unless-stopped
+    depends_on:
+      mediawiki-db:
+        condition: service_healthy
+    entrypoint: ["bash", "/mediawiki-start.sh"]
+    command: ["apache2-foreground"]
+    environment:
+      MW_SERVER: ${SERVER_URL}
+      MW_SITE_NAME: ${SITE_NAME}
+      MW_ADMIN_USER: Admin
+      MW_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      MW_DB_HOST: mediawiki-db
+      MW_DB_NAME: mediawiki
+      MW_DB_USER: mediawiki
+      MW_DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # Uploaded files and images.
+      - mediawiki-images:/var/www/html/images
+      # LocalSettings.php (outside the web root, linked into it at start).
+      - mediawiki-config:/var/www/config
+      - ../files/mediawiki-start.sh.txt:/mediawiki-start.sh:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/api.php?action=query&meta=siteinfo&format=json"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 120s
+
+  mediawiki-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: mediawiki
+      MARIADB_USER: mediawiki
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - mediawiki-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  mediawiki-images:
+  mediawiki-config:
+  mediawiki-db-data:

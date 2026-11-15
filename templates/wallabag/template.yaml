@@ -1,0 +1,22 @@
+name: wallabag
+description: "wallabag is a self-hosted read-it-later app: save web articles from your browser or phone and read them later without ads, or on an e-reader."
+version: "2.6.17"
+tags: [read it later, pocket alternative, instapaper alternative, save articles, article reader, epub export]
+links:
+  website: https://wallabag.org
+  docs: https://doc.wallabag.org
+  source: https://github.com/wallabag/wallabag
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DOMAIN_NAME: { value: "{{domains.wallabag.url}}" }
+  SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  # Replaces the default password ("wallabag") of the account "wallabag" on the first start.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: wallabag, port: 80 }
+files:
+  - { path: wallabag-start.sh.txt }

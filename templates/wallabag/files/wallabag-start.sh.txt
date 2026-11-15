@@ -1,0 +1,29 @@
+#!/bin/sh
+# Starts wallabag through the image's own entrypoint, with two additions.
+set -e
+
+# 1. The image's nginx listens on IPv6 only (with ipv6only=off) and refuses to start on a
+#    server without IPv6. On such a server, listen on IPv4 instead.
+if [ ! -e /proc/net/if_inet6 ]; then
+  sed -i 's/listen \[::\]:80 ipv6only=off;/listen 80;/; /listen \[::\]/d' \
+    /etc/nginx/nginx.conf /etc/nginx/http.d/default.conf
+fi
+
+# 2. wallabag's installer creates the account "wallabag" with the password "wallabag". Once
+#    wallabag answers on the first start, replace that password with ADMIN_PASSWORD and leave a
+#    marker, so later starts (and a password changed in wallabag) are left alone.
+marker=/var/www/wallabag/data/.cloudgate-admin-password-set
+if [ ! -f "$marker" ]; then
+  (
+    until curl -fsS -o /dev/null http://localhost/login 2>/dev/null; do sleep 3; done
+    cd /var/www/wallabag
+    if su -c 'php bin/console fos:user:change-password wallabag "$ADMIN_PASSWORD" --env=prod' -s /bin/sh nobody; then
+      touch "$marker"
+      echo "Set the password of the account \"wallabag\" to ADMIN_PASSWORD."
+    else
+      echo "Could not set the password of the account \"wallabag\"; it is still \"wallabag\"." >&2
+    fi
+  ) &
+fi
+
+exec /entrypoint.sh wallabag
