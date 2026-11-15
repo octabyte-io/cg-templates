@@ -1,0 +1,46 @@
+name: Easy!Appointments
+description: "Easy!Appointments is a self-hosted appointment booking app: customers book a service with your staff online, like Acuity Scheduling."
+version: "1.6.1"
+tags: [acuity scheduling alternative, appointment scheduling, online booking, booking software, calendly alternative, open source appointment scheduler]
+links:
+  website: https://easyappointments.org
+  docs: https://github.com/alextselegidis/easyappointments/blob/1.6.1/docs/readme.md
+  source: https://github.com/alextselegidis/easyappointments
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.easyappointments.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Easy!Appointments emails booking confirmations and changes to customers and staff, so it needs an email sending service, for example smtp.resend.com or email-smtp.eu-west-1.amazonaws.com. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      description: Avoid a single quote (') in it; the app's config file can't hold one.
+      secret: true
+      required: false
+  SMTP_CRYPTO:
+    ask:
+      label: Email server encryption
+      description: "tls for port 587 (STARTTLS), ssl for port 465."
+      default: "tls"
+      pattern: "tls|ssl"
+      required: false
+domains:
+  - { service: easyappointments, port: 80 }

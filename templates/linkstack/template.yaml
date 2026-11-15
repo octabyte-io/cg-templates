@@ -1,0 +1,13 @@
+name: LinkStack
+description: "LinkStack is a self-hosted link-in-bio page: put your shop, menu, bookings and social profiles on one page you own, instead of Linktree."
+version: "v4.8.8"
+tags: [linktree alternative, link in bio, self-hosted link in bio, link page, bio link, social media links]
+links:
+  website: https://linkstack.org
+  docs: https://docs.linkstack.org
+  source: https://github.com/LinkStackOrg/linkstack
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: linkstack, port: 80 }

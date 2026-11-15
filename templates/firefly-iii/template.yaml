@@ -1,0 +1,26 @@
+name: Firefly III
+description: "Firefly III is a free, self-hosted personal finance manager: track spending, budgets, bills and savings across all your bank accounts."
+version: "6.7.9"
+tags: [personal finance, money manager, expense tracker, budgeting app, ynab alternative, monarch alternative, mint alternative]
+links:
+  website: https://www.firefly-iii.org
+  docs: https://docs.firefly-iii.org
+  source: https://github.com/firefly-iii/firefly-iii
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.firefly-iii.url}}" }
+  # Laravel's encryption key: Firefly III needs exactly 32 characters (password is 32).
+  APP_KEY: { generate: password }
+  # The cron container calls /api/v1/cron/<token>; Firefly III needs exactly 32 characters.
+  STATIC_CRON_TOKEN: { generate: password }
+  DB_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in your transactions and reports, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: firefly-iii, port: 8080 }

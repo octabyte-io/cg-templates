@@ -1,0 +1,16 @@
+services:
+  changedetection:
+    image: ghcr.io/dgtlmoon/changedetection.io:0.70.3
+    restart: unless-stopped
+    environment:
+      # The app's own address, used in the links that alerts point back to.
+      BASE_URL: ${BASE_URL}
+      # Trust the X-Forwarded-* headers from Cloudgate's web proxy, so links
+      # and redirects use the public https address.
+      USE_X_SETTINGS: "1"
+    volumes:
+      # Watches, history, snapshots and settings all live in /datastore.
+      - changedetection-data:/datastore
+
+volumes:
+  changedetection-data:

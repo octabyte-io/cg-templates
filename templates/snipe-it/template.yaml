@@ -1,0 +1,24 @@
+name: Snipe-IT
+description: "Snipe-IT is self-hosted IT asset management: track laptops, software licences and accessories, who has each one, and when audits are due."
+version: "8.8.3"
+tags: [asset panda alternative, it asset management, asset tracking software, inventory management, software license management, ezofficeinventory alternative, barcode asset tracking]
+links:
+  website: https://snipeitapp.com
+  docs: https://snipe-it.readme.io/docs
+  source: https://github.com/grokability/snipe-it
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.snipe-it.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for dates and times in Snipe-IT, as an IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: snipe-it, port: 80 }

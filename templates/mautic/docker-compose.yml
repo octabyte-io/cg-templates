@@ -1,0 +1,92 @@
+# Based on the official example: github.com/mautic/docker-mautic, examples/basic.
+# One image runs three roles: the web app, the cron jobs (segments, campaigns,
+# segment emails) and the queue workers (sending email, recording page hits).
+x-mautic-env: &mautic-env
+  MAUTIC_DB_HOST: mautic-db
+  MAUTIC_DB_PORT: 3306
+  MAUTIC_DB_DATABASE: mautic
+  MAUTIC_DB_USER: mautic
+  MAUTIC_DB_PASSWORD: ${DB_PASSWORD}
+  MAUTIC_MESSENGER_DSN_EMAIL: doctrine://default
+  MAUTIC_MESSENGER_DSN_HIT: doctrine://default
+
+services:
+  mautic:
+    image: mautic/mautic:7.2.2-apache
+    restart: unless-stopped
+    depends_on:
+      mautic-db:
+        condition: service_healthy
+    environment:
+      <<: *mautic-env
+      DOCKER_MAUTIC_ROLE: mautic_web
+    volumes:
+      # config holds local.php, written by the installer and read by all three roles.
+      - mautic-config:/var/www/html/config
+      - mautic-logs:/var/www/html/var/logs
+      - mautic-media-files:/var/www/html/docroot/media/files
+      - mautic-media-images:/var/www/html/docroot/media/images
+      - ../files/forwarded-proto.conf:/etc/apache2/conf-enabled/forwarded-proto.conf:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # Waits until the installer has run, then runs Mautic's scheduled jobs.
+  mautic-cron:
+    image: mautic/mautic:7.2.2-apache
+    restart: unless-stopped
+    depends_on:
+      mautic:
+        condition: service_healthy
+    environment:
+      <<: *mautic-env
+      DOCKER_MAUTIC_ROLE: mautic_cron
+    volumes:
+      - mautic-config:/var/www/html/config
+      - mautic-logs:/var/www/html/var/logs
+      - mautic-media-files:/var/www/html/docroot/media/files
+      - mautic-media-images:/var/www/html/docroot/media/images
+      - ../files/crontab.txt:/opt/mautic/cron/mautic:ro
+
+  # Waits until the installer has run, then works through the email and hit queues.
+  mautic-worker:
+    image: mautic/mautic:7.2.2-apache
+    restart: unless-stopped
+    depends_on:
+      mautic:
+        condition: service_healthy
+    environment:
+      <<: *mautic-env
+      DOCKER_MAUTIC_ROLE: mautic_worker
+    volumes:
+      - mautic-config:/var/www/html/config
+      - mautic-logs:/var/www/html/var/logs
+      - mautic-media-files:/var/www/html/docroot/media/files
+      - mautic-media-images:/var/www/html/docroot/media/images
+
+  mautic-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: mautic
+      MYSQL_USER: mautic
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mautic-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u mautic --password=\"$$MYSQL_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  mautic-config:
+  mautic-logs:
+  mautic-media-files:
+  mautic-media-images:
+  mautic-db-data:
