@@ -1,0 +1,61 @@
+name: Tiledesk
+description: "Self-hosted Tiledesk adds live chat to your website, with no-code chatbots that answer first and hand over to your team, like Intercom or Tidio."
+version: "3.3.3"
+tags: [intercom alternative, live chat, chatbot builder, tidio alternative, customer support chat, whatsapp chatbot]
+links:
+  website: https://tiledesk.com
+  docs: https://github.com/Tiledesk/tiledesk-deployment/tree/master/docker-compose
+  source: https://github.com/Tiledesk/tiledesk
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  EXTERNAL_BASE_URL: { value: "{{domains.tiledesk.url}}" }
+  EXTERNAL_MQTT_BASE_URL: { value: "wss://{{domains.tiledesk.host}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Tiledesk with this email. The password is generated; find it as ADMIN_PASSWORD on this app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  SUPER_PASSWORD: { generate: password }
+  GLOBAL_SECRET: { generate: hex }
+  SESSION_SECRET: { generate: hex }
+  JWT_SECRET_KEY: { generate: hex }
+  APPS_ACCESS_TOKEN_SECRET: { generate: hex }
+  KB_WEBHOOK_TOKEN: { generate: password }
+  PUSH_WH_WEBHOOK_TOKEN: { generate: password }
+  CHAT21_JWT_SECRET: { generate: hex }
+  CHAT21_OBSERVER_TOKEN:
+    generate: jwt
+    secret: CHAT21_JWT_SECRET
+    payload:
+      sub: 01-OBSERVER
+      scope: ["rabbitmq.read:*/*/*", "rabbitmq.write:*/*/*", "rabbitmq.configure:*/*/*"]
+      client_id: 01-OBSERVER
+      cid: 01-OBSERVER
+      azp: 01-OBSERVER
+      user_id: 01-OBSERVER
+      app_id: tilechat
+      aud: [rabbitmq, 01-OBSERVER]
+      kid: tiledesk-key
+      tiledesk_api_roles: user
+  CHAT21_ADMIN_TOKEN:
+    generate: jwt
+    secret: CHAT21_JWT_SECRET
+    payload:
+      sub: 100-APIADMIN
+      scope: ["rabbitmq.read:*/*/*", "rabbitmq.write:*/*/*", "rabbitmq.configure:*/*/*"]
+      client_id: 100-APIADMIN
+      cid: 100-APIADMIN
+      azp: 100-APIADMIN
+      user_id: 100-APIADMIN
+      app_id: tilechat
+      aud: [rabbitmq, 100-APIADMIN]
+      kid: tiledesk-key
+      tiledesk_api_roles: admin
+domains:
+  - { service: tiledesk, port: 80 }
+files:
+  - { path: nginx.conf }
+  - { path: rabbitmq-advanced.conf }

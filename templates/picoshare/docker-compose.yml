@@ -1,0 +1,23 @@
+services:
+  picoshare:
+    image: mtlynch/picoshare:v1.5.4
+    restart: unless-stopped
+    command: ["-db", "/data/store.db"]
+    environment:
+      PORT: "4001"
+      # The passphrase the admin signs in with; there are no user accounts.
+      PS_SHARED_SECRET: ${PS_SHARED_SECRET}
+      # Cloudgate puts a reverse proxy in front, so log the real client address.
+      PS_BEHIND_PROXY: "true"
+    volumes:
+      # The SQLite database holds the settings and every uploaded file.
+      - picoshare-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:4001/login"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  picoshare-data:

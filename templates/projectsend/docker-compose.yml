@@ -1,0 +1,75 @@
+# From ProjectSend's official production setup (docker/production/compose.example.yaml at v2.9.0),
+# with the images pinned, no published ports, mail written to the log until it is set up in
+# the app, and the first administrator created unattended instead of by the setup screen.
+# The optional ClamAV virus scanner is left out.
+services:
+  projectsend:
+    # Official image: nginx, PHP-FPM, the queue worker and the scheduler in one container,
+    # on port 80. On every start it waits for the database and runs the migrations.
+    image: projectsend/projectsend:2.9.0
+    restart: unless-stopped
+    depends_on:
+      projectsend-db:
+        condition: service_healthy
+      projectsend-redis:
+        condition: service_started
+    environment:
+      APP_URL: ${APP_URL}
+      APP_ENV: production
+      APP_DEBUG: "false"
+      # Laravel's application key: 32 random bytes, written as base64:<key>. It decrypts
+      # saved SMTP and LDAP passwords, so it must never change on a running install.
+      APP_KEY: base64:${APP_KEY}
+      DB_CONNECTION: mysql
+      DB_HOST: projectsend-db
+      DB_PORT: "3306"
+      DB_DATABASE: projectsend
+      DB_USERNAME: projectsend
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: projectsend-redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      # Email is set up in the app (System > Settings > Email, with a test button). Until
+      # then messages go to the log instead of failing against a placeholder server.
+      MAIL_MAILER: log
+      # Only Cloudgate's proxy reaches the container (no published ports), so trusting it
+      # gives ProjectSend the visitor's real address and https:// links.
+      TRUSTED_PROXIES: "*"
+      # Creates the first administrator on first start (ignored once any user exists), so
+      # nobody else can claim the setup screen.
+      ADMIN_NAME: Administrator
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # Every uploaded file, thumbnails and the generated .env.
+      - projectsend-storage:/var/www/html/storage
+
+  projectsend-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: projectsend
+      MYSQL_USER: projectsend
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - projectsend-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -uroot -p$$MYSQL_ROOT_PASSWORD ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  projectsend-redis:
+    # Sessions, the cache and the job queue (emails, zip downloads).
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - projectsend-redis-data:/data
+
+volumes:
+  projectsend-storage:
+  projectsend-db-data:
+  projectsend-redis-data:

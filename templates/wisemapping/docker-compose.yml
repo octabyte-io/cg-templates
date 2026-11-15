@@ -1,0 +1,109 @@
+# Based on the project's distribution/app-postgresql setup, configured with
+# environment variables instead of a mounted app.yml.
+services:
+  wisemapping:
+    image: wisemapping/wisemapping:6.0.11
+    restart: unless-stopped
+    depends_on:
+      wisemapping-admin:
+        condition: service_completed_successfully
+    environment:
+      JAVA_OPTS: -Xms256m -Xmx1024m
+      SPRING_DATASOURCE_URL: jdbc:postgresql://wisemapping-db:5432/wisemapping
+      SPRING_DATASOURCE_USERNAME: wisemapping
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_SQL_INIT_MODE: always
+      SPRING_SQL_INIT_PLATFORM: postgresql
+      SPRING_SQL_INIT_SCHEMA_LOCATIONS: classpath:schema-postgresql.sql
+      # The image's own data file creates two accounts with published passwords
+      # (test@ and admin@wisemapping.org) at every start. Point it at a file that
+      # does not exist instead; wisemapping-admin creates the real admin.
+      SPRING_SQL_INIT_DATA_LOCATIONS: optional:file:/app/config/no-sample-accounts.sql
+      APP_ADMIN_USER: ${ADMIN_EMAIL}
+      APP_JWT_SECRET: ${JWT_SECRET}
+      APP_OAUTH_TOKEN_SECRET: ${OAUTH_TOKEN_SECRET}
+      APP_SITE_UI_BASE_URL: ${APP_URL}
+      APP_SITE_API_BASE_URL: ${APP_URL}
+    healthcheck:
+      # Goes through nginx to the Java backend, so it passes only once both answer.
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/api/restful/app/config || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+  # Runs once at each start: copies the database layout (schema) that this
+  # WiseMapping version ships, so wisemapping-admin can create the tables first.
+  wisemapping-schema:
+    image: wisemapping/wisemapping:6.0.11
+    restart: "no"
+    entrypoint: ["sh", "-c", "unzip -p /app/wisemapping-api.jar BOOT-INF/classes/schema-postgresql.sql > /schema/schema-postgresql.sql"]
+    volumes:
+      - wisemapping-schema:/schema
+
+  # Runs once at each start, before WiseMapping: creates the tables (WiseMapping
+  # runs the same CREATE TABLE IF NOT EXISTS file itself), then creates the admin
+  # account (ADMIN_EMAIL, ADMIN_PASSWORD) if it does not exist yet, and removes
+  # the image's sample accounts if they exist. A password changed later in the
+  # app is kept.
+  wisemapping-admin:
+    image: postgres:17.12-alpine
+    restart: "no"
+    depends_on:
+      wisemapping-db:
+        condition: service_healthy
+      wisemapping-schema:
+        condition: service_completed_successfully
+    environment:
+      PGHOST: wisemapping-db
+      PGUSER: wisemapping
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: wisemapping
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - wisemapping-schema:/schema:ro
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        psql -q -v ON_ERROR_STOP=1 -f /schema/schema-postgresql.sql
+        psql -v ON_ERROR_STOP=1 -v email="$$ADMIN_EMAIL" -v pw="$$ADMIN_PASSWORD" <<'SQL'
+        CREATE EXTENSION IF NOT EXISTS pgcrypto;
+        DELETE FROM collaborator
+          WHERE email IN ('test@wisemapping.org', 'admin@wisemapping.org')
+            AND email <> :'email'
+            AND id IN (SELECT collaborator_id FROM account WHERE password IN
+              ('ENC:5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
+               'ENC:6c69d1e41a95462be1ff01decc9c4d4022c6a082'));
+        INSERT INTO collaborator (email, creation_date)
+          VALUES (:'email', now()) ON CONFLICT (email) DO NOTHING;
+        INSERT INTO account (collaborator_id, firstname, lastname, password,
+            activation_code, activation_date, allow_send_email, authentication_type)
+          SELECT id, 'Admin', 'User', '{bcrypt}' || crypt(:'pw', gen_salt('bf', 12)),
+            floor(random() * 1000000000)::bigint, now(), true, 'D'
+          FROM collaborator WHERE email = :'email'
+          ON CONFLICT (collaborator_id) DO NOTHING;
+        SQL
+
+  wisemapping-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wisemapping
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: wisemapping
+    volumes:
+      - wisemapping-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wisemapping -d wisemapping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wisemapping-schema:
+  wisemapping-db-data:

@@ -1,0 +1,58 @@
+# Based on GrowthBook's official docker-compose.yml (repo root, tag v5.2.0) and its production
+# self-hosting docs: the GrowthBook image and MongoDB. The image runs two processes, the web app
+# (port 3000) and the API (port 3100), which each need their own web address. Its process runner
+# takes "--only <app>", so the same image runs here as two containers, one per address.
+# The image is distroless (no shell, curl or wget), so the app containers have no healthcheck.
+
+x-growthbook-env: &growthbook-env
+  NODE_ENV: production
+  # The web app's and the API's public addresses, so links, cookies and CORS line up.
+  APP_ORIGIN: ${APP_ORIGIN}
+  API_HOST: ${API_HOST}
+  MONGODB_URI: mongodb://growthbook:${MONGO_PASSWORD}@growthbook-mongo:27017/growthbook?authSource=admin
+  JWT_SECRET: ${JWT_SECRET}
+  # Encrypts saved data source credentials.
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+
+services:
+  # The web app, where people sign in and work.
+  growthbook:
+    image: growthbook/growthbook:5.2.0
+    restart: unless-stopped
+    command: ["/usr/local/bin/node", "scripts/run-apps.js", "start", "ecosystem.config.js", "--only", "front-end"]
+    depends_on:
+      - growthbook-api
+    environment:
+      <<: *growthbook-env
+
+  # The API, which the web app and the SDKs in your own apps call.
+  growthbook-api:
+    image: growthbook/growthbook:5.2.0
+    restart: unless-stopped
+    command: ["/usr/local/bin/node", "scripts/run-apps.js", "start", "ecosystem.config.js", "--only", "back-end"]
+    depends_on:
+      growthbook-mongo:
+        condition: service_healthy
+    environment:
+      <<: *growthbook-env
+    volumes:
+      - growthbook-uploads:/usr/local/src/app/packages/back-end/uploads
+
+  growthbook-mongo:
+    image: mongo:8.0.38
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: growthbook
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - growthbook-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  growthbook-uploads:
+  growthbook-mongo-data:

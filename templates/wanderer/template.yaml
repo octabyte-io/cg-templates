@@ -1,0 +1,25 @@
+name: wanderer
+description: "wanderer is a self-hosted trail database: upload GPS tracks, plan hiking and cycling routes, and share them privately, instead of AllTrails or komoot."
+version: "0.21.2"
+tags: [alltrails alternative, komoot alternative, self-hosted trail database, gpx track manager, hiking route planner, cycling route planner]
+links:
+  website: https://wanderer.to
+  docs: https://wanderer.to/run/installation/docker
+  source: https://github.com/open-wanderer/wanderer
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  ORIGIN: { value: "{{domains.wanderer.url}}" }
+  MEILI_MASTER_KEY: { generate: hex }
+  # PocketBase needs an AES key of exactly 32 characters.
+  POCKETBASE_ENCRYPTION_KEY: { generate: password }
+  POCKETBASE_PROXY_SECRET: { generate: hex }
+  PUBLIC_DISABLE_SIGNUP:
+    ask:
+      label: Turn off new sign-ups
+      description: Type true once your own account exists, so nobody else can create an account.
+      default: "false"
+      required: false
+domains:
+  - { service: wanderer, port: 3000 }

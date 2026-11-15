@@ -1,0 +1,48 @@
+name: Tymeslot
+description: "Tymeslot is self-hosted meeting scheduling: share a booking link, sync your calendars, add video links and send reminders."
+version: "1.44.0"
+tags: [calendly alternative, meeting scheduling, booking page, appointment booking, calendar sync, open source scheduling]
+links:
+  website: https://tymeslot.app
+  docs: https://tymeslot.app/docs
+  source: https://github.com/Tymeslot/tymeslot
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PHX_HOST: { value: "{{domains.tymeslot.host}}" }
+  # Phoenix needs at least 64 characters; hex is 64.
+  SECRET_KEY_BASE: { generate: hex }
+  # Encrypts calendar and video credentials at rest; must decode to 32+ bytes and never change.
+  DATA_ENCRYPTION_KEY: { generate: base64 }
+  # Password of the PostgreSQL bundled inside the image (never exposed).
+  POSTGRES_PASSWORD: { generate: password }
+  # Required: Tymeslot verifies every password sign-up by email, including the
+  # first (admin) account, and without an email service that link is never sent.
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Tymeslot emails a link to confirm your account when you sign up, and sends booking confirmations, reminders and password resets, so it needs an email sending service, for example smtp.postmarkapp.com or email-smtp.eu-west-1.amazonaws.com.
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      description: Leave empty, together with the password, only for a server that needs no login.
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  EMAIL_FROM_ADDRESS:
+    ask:
+      label: Sender email
+      description: The address Tymeslot's emails come from, on a domain your email service lets you send from.
+      format: email
+domains:
+  - { service: tymeslot, port: 4000 }

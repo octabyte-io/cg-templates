@@ -1,0 +1,19 @@
+name: VoidAuth
+description: "Self-hosted VoidAuth: simple, open-source single sign-on with passkeys, two-step sign-in and invitations for your self-hosted apps, replacing Okta."
+version: "1.19.1"
+tags: [self-hosted single sign-on, okta alternative, jumpcloud alternative, openid connect provider, forward auth, passkey login, voidauth]
+links:
+  website: https://voidauth.app
+  docs: https://voidauth.app/#/Getting-Started
+  source: https://github.com/voidauth/voidauth
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.voidauth.url}}" }
+  # Encrypts secrets kept in the database, such as OIDC client secrets.
+  # VoidAuth needs at least 32 characters; hex gives 64.
+  STORAGE_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: voidauth, port: 3000 }

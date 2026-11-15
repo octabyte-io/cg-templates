@@ -1,0 +1,21 @@
+name: DHIS2
+description: "Self-hosted DHIS2 collects routine health data from clinics and field teams and shows it on dashboards, charts and maps, offline and on Android."
+version: "2.43.2.1"
+tags: [health information system, commcare alternative, health data dashboard, offline data collection, ngo reporting, self-hosted dhis2]
+links:
+  website: https://dhis2.org
+  docs: https://docs.dhis2.org
+  source: https://github.com/dhis2/dhis2-core
+cloudgate: 0.1.0
+compose: app
+# DHIS2's own sizing guide asks for 8 GB of memory and 4 cores for a small instance.
+size: xlarge
+inputs:
+  DHIS2_BASE_URL: { value: "{{domains.dhis2.url}}" }
+  DB_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: dhis2, port: 8080 }
+files:
+  - { path: dhis.conf }
+  - { path: admin-password.sh.txt }

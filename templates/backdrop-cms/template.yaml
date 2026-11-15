@@ -1,0 +1,34 @@
+name: Backdrop CMS
+description: "Self-hosted Backdrop CMS, a free and maintained fork of Drupal 7 for small organisations' websites. Replaces Squarespace or Wix, and upgrades Drupal 7 sites."
+version: "1.34.2"
+tags: [backdrop cms, drupal 7 alternative, drupal 7 upgrade, nonprofit website, open source cms, squarespace alternative]
+links:
+  website: https://backdropcms.org
+  docs: https://docs.backdropcms.org
+  source: https://github.com/backdrop/backdrop
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SITE_NAME:
+    ask:
+      label: Site name
+      description: The name of your website, shown in its title. You can change it later in Backdrop.
+      default: My Backdrop Site
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of the Backdrop administrator account and the site's sender address; password resets go here.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  HASH_SALT: { generate: hex }
+  BACKDROP_HOST: { value: "{{domains.backdrop.host}}" }
+domains:
+  - { service: backdrop, port: 80 }
+files:
+  - { path: start.sh.txt }
+  - { path: settings.php.txt }
+  - { path: php.ini }
+  - { path: forwarded-https.conf }

@@ -1,0 +1,19 @@
+# Cells' non-interactive installation file (docs: Admin Guide > Advanced >
+# YAML/JSON Installation). "cells configure" reads it on the first start only,
+# replaces each {$NAME} with that environment variable, sets up the database
+# and creates the admin, so nobody has to go through the browser installer.
+proxyconfig:
+  # Plain HTTP on 8080: Cloudgate's proxy terminates HTTPS in front of it.
+  binds:
+    - 0.0.0.0:8080
+  reverseproxyurl: {$CELLS_SITE_EXTERNAL}
+frontendlogin: admin
+frontendpassword: {$CELLS_ADMIN_PASSWORD}
+frontendrepeatpassword: {$CELLS_ADMIN_PASSWORD}
+frontendapplicationtitle: Pydio Cells
+dbconnectiontype: tcp
+dbtcphostname: pydio-cells-db
+dbtcpport: 3306
+dbtcpname: cells
+dbtcpuser: pydio
+dbtcppassword: {$CELLS_DB_PASSWORD}

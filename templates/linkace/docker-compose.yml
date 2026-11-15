@@ -1,0 +1,110 @@
+# From Kovah/LinkAce's docker-compose.production.yml and .env.docker.production
+# (v2.6.3), with the .env file written out as settings and every image pinned.
+# Settings given as environment variables win over the .env file inside the
+# image, so the setup wizard's own edits to that file don't matter.
+x-linkace-env: &linkace-env
+  APP_KEY: base64:${APP_KEY}
+  APP_URL: ${APP_URL}
+  # Cloudgate's HTTPS proxy sits in front of the app.
+  TRUSTED_PROXIES: "*"
+  DB_CONNECTION: mysql
+  DB_HOST: linkace-db
+  DB_PORT: "3306"
+  DB_DATABASE: linkace
+  DB_USERNAME: linkace
+  DB_PASSWORD: ${DB_PASSWORD}
+  REDIS_HOST: linkace-redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  # Keep sessions and cache in Redis, so sign-ins survive an app restart.
+  CACHE_DRIVER: redis
+  SESSION_DRIVER: redis
+  APP_SEARCH_DRIVER: meilisearch
+  MEILISEARCH_HOST: http://linkace-meilisearch:7700
+  MEILISEARCH_KEY: ${MEILISEARCH_KEY}
+
+services:
+  linkace:
+    image: linkace/linkace:v2.6.3
+    restart: unless-stopped
+    depends_on:
+      linkace-db:
+        condition: service_healthy
+      linkace-redis:
+        condition: service_healthy
+      linkace-meilisearch:
+        condition: service_healthy
+    environment: *linkace-env
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost/_health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 5
+
+  # LinkAce's scheduler, which its docs ask to run every minute (they use a
+  # host cron job). It works the import and Wayback Machine queue and checks
+  # saved links for dead ones every two hours. Before that it applies the
+  # Meilisearch index settings (`search:setup`), a step the web setup skips.
+  linkace-cron:
+    image: linkace/linkace:v2.6.3
+    restart: unless-stopped
+    depends_on:
+      linkace-db:
+        condition: service_healthy
+      linkace-redis:
+        condition: service_healthy
+      linkace-meilisearch:
+        condition: service_healthy
+    environment: *linkace-env
+    command:
+      - sh
+      - -c
+      - until php artisan search:setup; do sleep 10; done; exec php artisan schedule:work
+
+  linkace-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: linkace
+      MARIADB_USER: linkace
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - linkace-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  linkace-meilisearch:
+    image: getmeili/meilisearch:v1.16.0
+    restart: unless-stopped
+    environment:
+      MEILI_ENV: production
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: ${MEILISEARCH_KEY}
+    volumes:
+      - linkace-meilisearch-data:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:7700/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  linkace-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["sh", "-c", "exec redis-server --requirepass \"$$REDIS_PASSWORD\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  linkace-db-data:
+  linkace-meilisearch-data:
