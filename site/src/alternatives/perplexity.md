@@ -6,13 +6,16 @@ apps:
   khoj:
     fit: "Searches the web through its bundled SearXNG and answers with sources, with a research mode that digs deeper, and can draw on your own documents in the same answer. It is a broader personal assistant than a search engine, with agents and scheduled questions; answers depend on the AI model you connect, and it has no phone app, though it installs as a web app."
     import: no
+  gpt-researcher:
+    fit: "Writes long research reports rather than quick answers: it searches the web, reads 20 or more sources and writes a cited report you can download as PDF, Word or Markdown, with the AI and search providers you choose. It has no chat-style follow-ups or user accounts, a report takes a few minutes, and each one costs API usage on your own keys."
+    import: no
 moving: |
-  There is nothing to import: Vane starts with an empty library. Sign in, connect an AI provider such as OpenAI, Anthropic or Google with an API key, or a local model through Ollama or LM Studio, and choose your default model. To search from your browser's address bar, add Vane as a search engine with your Vane address followed by /?q=%s. Keep any Perplexity threads you need in Perplexity, or copy out the answers you want to keep. Khoj starts empty too: sign in to its admin page, add an AI provider key and a chat model, and web search works through its bundled SearXNG with no extra key.
+  There is nothing to import: Vane starts with an empty library. Sign in, connect an AI provider such as OpenAI, Anthropic or Google with an API key, or a local model through Ollama or LM Studio, and choose your default model. To search from your browser's address bar, add Vane as a search engine with your Vane address followed by /?q=%s. Keep any Perplexity threads you need in Perplexity, or copy out the answers you want to keep. Khoj starts empty too: sign in to its admin page, add an AI provider key and a chat model, and web search works through its bundled SearXNG with no extra key. GPT Researcher starts empty as well: add an AI provider key and a search engine, such as Tavily or DuckDuckGo, then run a short Summary report to check it works.
 faq:
   - q: "Does Vane need a paid AI subscription?"
     a: "No, but it needs an AI model. Use an API key from a provider such as OpenAI, Anthropic, Google or Groq, which charge for what you use, or run a local model with Ollama or LM Studio on your own hardware."
-  - q: "Should I choose Vane or Khoj?"
-    a: "Choose Vane for a dedicated answer engine that searches the web. Choose Khoj if you also want answers from your own documents and notes, with user accounts, agents and scheduled questions."
+  - q: "Should I choose Vane, Khoj or GPT Researcher?"
+    a: "Choose Vane for a dedicated answer engine that searches the web. Choose Khoj if you also want answers from your own documents and notes, with user accounts, agents and scheduled questions. Choose GPT Researcher for long, cited reports like Perplexity's deep research, which you download as PDF, Word or Markdown."
   - q: "Is Vane the same as Perplexica?"
     a: "Yes. Perplexica was renamed Vane in March 2026; it is the same project by the same developer."
   - q: "Can several people use Vane?"

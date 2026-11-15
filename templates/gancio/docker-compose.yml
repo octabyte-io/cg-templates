@@ -1,0 +1,18 @@
+# Based on Gancio's official Docker guide (gancio.org/install/docker, the
+# sqlite docker-compose.yml). The database settings below skip the database
+# step of Gancio's first-run setup page; everything (config.json, the SQLite
+# database, uploaded images, logs) is kept in the data volume.
+services:
+  gancio:
+    image: cisti/gancio:1.28.2
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      GANCIO_DATA: /home/node/data
+      GANCIO_DB_DIALECT: sqlite
+      GANCIO_DB_STORAGE: ./gancio.sqlite
+    volumes:
+      - gancio-data:/home/node/data
+
+volumes:
+  gancio-data:
