@@ -9,17 +9,20 @@ apps:
   grist:
     fit: "The most spreadsheet-like of these apps: typed columns, linked tables, Python formulas, forms, charts and linked widgets on one page, and access rules down to single rows and columns. It imports Airtable bases directly, with their records and attachments. Kanban is a custom widget, and automations need Grist's paid full edition."
     import: yes
+  teable:
+    fit: "Spreadsheet-style tables on a PostgreSQL database, with linked records, lookups, formulas, comments, record history and grid, kanban, calendar, gallery and form views, all free in the open-source Community Edition with no row limit. Airtable has more views, such as timeline and Gantt, plus interfaces and automations; Teable's automations, AI features and SSO are paid when self-hosted, and its Airtable import works only once an Airtable integration is set up."
+    import: partly
 moving: |
-  All three apps can import an Airtable base with its tables, fields and records. Baserow imports a whole base from its share link; NocoDB imports a base or a shared view, keeps links, lookups and rollups, but leaves out formula fields, so rewrite those after the import. Grist imports a base straight from Airtable, with its tables, records and attachments but not its views, interfaces or forms; connect it with a personal access token from Airtable. All three also import CSV, Excel and JSON files. Airtable automations, interfaces and extensions do not carry over, so rebuild the automations you need with an automation app such as n8n, and check linked fields and formulas after the import.
+  Baserow, NocoDB and Grist can import an Airtable base with its tables, fields and records. Baserow imports a whole base from its share link; NocoDB imports a base or a shared view, keeps links, lookups and rollups, but leaves out formula fields, so rewrite those after the import. Grist imports a base straight from Airtable, with its tables, records and attachments but not its views, interfaces or forms; connect it with a personal access token from Airtable. All three also import CSV, Excel and JSON files. Teable's import dialog has an Airtable option that brings in records and attachments, but only once an Airtable integration is configured on your server; otherwise export each table as CSV from Airtable and import it, then set field types and turn link columns into linked records. Airtable automations, interfaces and extensions do not carry over, so rebuild the automations you need with an automation app such as n8n, and check linked fields and formulas after the import.
 faq:
-  - q: "Should I choose Baserow, NocoDB or Grist?"
-    a: "Choose Baserow if you want open-source code and the simplest setup. Choose Grist if your team thinks in spreadsheets and wants Python formulas and permissions down to single rows. Choose NocoDB if you want free kanban and calendar views, or a spreadsheet view of a PostgreSQL or MySQL database you already have. NocoDB is fair-code: free to self-host for your own organisation, but not open source since January 2026."
+  - q: "Should I choose Baserow, NocoDB, Grist or Teable?"
+    a: "Choose Baserow if you want open-source code and the simplest setup. Choose Grist if your team thinks in spreadsheets and wants Python formulas and permissions down to single rows. Choose NocoDB if you want free kanban and calendar views, or a spreadsheet view of a PostgreSQL or MySQL database you already have. NocoDB is fair-code: free to self-host for your own organisation, but not open source since January 2026. Choose Teable if you want kanban, calendar and gallery views free in open-source code, and can do without built-in automations."
   - q: "How many rows can a self-hosted Airtable alternative hold?"
-    a: "As many as your server can handle. None of Baserow, NocoDB and Grist sets a row limit on a self-hosted copy; very large tables need a bigger server."
-  - q: "Do Baserow, NocoDB and Grist have an API?"
-    a: "Yes. All three give every table a REST API, and webhooks tell other apps when rows change."
+    a: "As many as your server can handle. None of Baserow, NocoDB, Grist and Teable sets a row limit on a self-hosted copy; very large tables need a bigger server."
+  - q: "Do Baserow, NocoDB, Grist and Teable have an API?"
+    a: "Yes. All four give every table a REST API. Baserow, NocoDB and Grist also have webhooks that tell other apps when rows change; in Teable, webhook triggers are part of its paid automations."
 ---
 
 Airtable is a spreadsheet-style database: tables with typed fields, records linked between tables, and views, forms, automations and interfaces on top. Teams use it for CRMs, content calendars, inventories and project trackers.
 
-Teams look for an alternative because of limits and price. The free plan caps each base at 1,000 records and limits automation runs, and paid plans are charged per editor, so a growing team pays more each month. And all your business data sits on Airtable's servers. A self-hosted database such as Baserow, NocoDB or Grist has no price per editor and no record cap of its own; the size of your server is the limit.
+Teams look for an alternative because of limits and price. The free plan caps each base at 1,000 records and limits automation runs, and paid plans are charged per editor, so a growing team pays more each month. And all your business data sits on Airtable's servers. A self-hosted database such as Baserow, NocoDB, Grist or Teable has no price per editor and no record cap of its own; the size of your server is the limit.

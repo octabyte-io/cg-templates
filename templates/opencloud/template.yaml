@@ -1,0 +1,16 @@
+name: OpenCloud
+description: "OpenCloud is self-hosted file sync and sharing with team Spaces, desktop and phone apps, and secure share links, replacing Dropbox or Google Drive."
+version: "7.2.5"
+tags: [dropbox alternative, self-hosted file sync, file sharing, google drive alternative, team drives, owncloud infinite scale, self-hosted cloud storage]
+links:
+  website: https://opencloud.eu/en
+  docs: https://docs.opencloud.eu/docs/admin/getting-started/container/docker-compose/docker-compose-base
+  source: https://github.com/opencloud-eu/opencloud
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  OC_URL: { value: "{{domains.opencloud.url}}" }
+  IDM_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: opencloud, port: 9200 }

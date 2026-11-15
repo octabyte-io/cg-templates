@@ -1,0 +1,22 @@
+name: Frappe HR
+description: "Self-hosted Frappe HR: open-source HR and payroll for employee records, leave, attendance, shifts, expense claims, hiring and salary slips."
+version: "15.64.8"
+tags: [hr software, payroll software, bamboohr alternative, gusto alternative, open source hrms, leave management, attendance tracking]
+links:
+  website: https://frappe.io/hr
+  docs: https://docs.frappe.io/hr
+  source: https://github.com/frappe/hrms
+cloudgate: 0.1.0
+compose: app
+# Nine containers (web, nginx, websocket, two queue workers, scheduler, MariaDB
+# and two Redis); Frappe HR runs on top of ERPNext, and creating the site on the
+# first start takes several minutes.
+size: large
+inputs:
+  APP_URL: { value: "{{domains.frontend.url}}" }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+# Frappe's own nginx serves the web pages (Desk at /app, the mobile app at
+# /hrms) and routes /socket.io to the websocket container, so it gets the address.
+domains:
+  - { service: frontend, port: 8080 }

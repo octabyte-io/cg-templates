@@ -1,0 +1,33 @@
+name: CryptPad
+description: "CryptPad is a self-hosted, end-to-end encrypted office suite: documents, spreadsheets, forms and kanban boards your team edits together in the browser."
+version: "2026.10.1"
+tags: [cryptpad, google docs alternative, encrypted office suite, end-to-end encrypted documents, proton docs alternative, collaborative editing, private document editor]
+links:
+  website: https://cryptpad.org
+  docs: https://docs.cryptpad.org
+  source: https://github.com/cryptpad/cryptpad
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  CPAD_MAIN_DOMAIN: { value: "{{domains.cryptpad.url}}" }
+  CPAD_SANDBOX_DOMAIN: { value: "{{domains.cryptpad-sandbox.url}}" }
+  # The one-time token in the first admin's setup link.
+  CPAD_INSTALL_TOKEN: { generate: hex }
+  # Open this link once to create the first admin account. The same link is
+  # printed in the CryptPad service's logs at every start until then.
+  CPAD_ADMIN_SETUP_URL: { value: "{{domains.cryptpad.url}}/install/#{{CPAD_INSTALL_TOKEN}}" }
+  CPAD_INSTALL_OFFICE:
+    ask:
+      label: Install the office editors (yes or no)
+      description: >-
+        yes downloads the Euro-Office editors (AGPL-3.0, based on ONLYOFFICE) from GitHub on the
+        first start, for the Document, Spreadsheet and Presentation apps, and accepts their
+        licence. no leaves them out; every other app works without them.
+      default: "yes"
+      pattern: "^(yes|no)$"
+domains:
+  - { service: cryptpad, port: 3000 }
+  - { service: cryptpad-sandbox, port: 3001 }
+files:
+  - { path: cryptpad-start.sh.txt }

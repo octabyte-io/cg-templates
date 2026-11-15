@@ -1,0 +1,37 @@
+#!/bin/bash
+# Starts CryptPad in place of the image's docker-entrypoint.sh, doing the same
+# steps (office editors, page build, server) with three changes:
+#   - the first admin's install token is the generated CPAD_INSTALL_TOKEN, so
+#     the setup link is known before the first start;
+#   - a failed office download is reported and the server still starts;
+#   - the server reads the image's example config (config.local), which the
+#     admin panel adjusts, instead of copying it into a writable folder.
+set -e
+cd /cryptpad
+
+# The server takes its install token from the decree log. Add the generated one
+# once, on a first start, before the server would make a random one.
+decrees=/cryptpad/data/decrees/decree.ndjson
+mkdir -p /cryptpad/data/decrees
+if ! grep -qs 'ADD_INSTALL_TOKEN\|ADD_FIRST_ADMIN' "$decrees"; then
+  printf '["ADD_INSTALL_TOKEN",["%s"],"",%s000]\n' "$CPAD_INSTALL_TOKEN" "$(date +%s)" >> "$decrees"
+fi
+
+if [ "$CPAD_INSTALL_OFFICE" = "yes" ]; then
+  # Downloads the Euro-Office editors from GitHub on the first start (later
+  # starts find them installed and download nothing).
+  if ! ./install-office.sh --accept-license --trust-repository; then
+    echo "WARNING: the office editors could not be downloaded; CryptPad starts without"
+    echo "the Document, Spreadsheet and Presentation apps and tries again at the next start."
+  fi
+fi
+
+node scripts/build.js
+
+echo "============================="
+echo "Create the first admin account by opening:"
+echo "$CPAD_ADMIN_SETUP_URL"
+echo "(it works once, until an admin account exists)"
+echo "============================="
+
+exec node server.js

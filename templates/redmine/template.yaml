@@ -1,0 +1,27 @@
+name: Redmine
+description: "Redmine is a self-hosted, open-source issue tracker and project management app with Gantt charts, wikis, forums and time tracking for many projects."
+version: "7.0.3"
+tags: [jira alternative, issue tracker, project management, gantt chart, time tracking, zoho projects alternative, bug tracker]
+links:
+  website: https://www.redmine.org
+  docs: https://www.redmine.org/projects/redmine/wiki/Guide
+  source: https://github.com/redmine/redmine
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.redmine.url}}" }
+  DB_PASSWORD: { generate: password }
+  SECRET_KEY_BASE: { generate: hex }
+  # The password of the admin account, set on first start in place of
+  # Redmine's built-in default (admin / admin).
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of Redmine's admin account (user name admin). Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+domains:
+  - { service: redmine, port: 3000 }
+files:
+  - { path: redmine-setup.rb.txt }

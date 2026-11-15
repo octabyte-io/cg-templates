@@ -1,0 +1,29 @@
+name: CiviCRM
+description: "Self-hosted CiviCRM: a free, open-source nonprofit CRM for donors, donations, memberships, events and bulk email, with no fee per user or contact."
+version: "6.20.0"
+tags: [nonprofit crm, donor management software, salesforce nonprofit cloud alternative, bloomerang alternative, raisers edge alternative, membership management, fundraising software]
+links:
+  website: https://civicrm.org
+  docs: https://docs.civicrm.org/user/en/latest/
+  source: https://github.com/civicrm/civicrm-core
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  CIVICRM_UF_BASEURL: { value: "{{domains.civicrm.url}}" }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with at /civicrm/login. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The admin's email address, used for password resets. You can change it later on the admin's contact record.
+      format: email
+domains:
+  - { service: civicrm, port: 80 }

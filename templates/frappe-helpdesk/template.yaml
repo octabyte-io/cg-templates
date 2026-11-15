@@ -1,0 +1,21 @@
+name: Frappe Helpdesk
+description: "Frappe Helpdesk is a self-hosted Zendesk replacement that turns support email into tickets with SLAs, a customer portal and a knowledge base."
+version: "16.1.0"
+tags: [help desk, ticketing system, zendesk alternative, freshdesk alternative, customer support, knowledge base, erpnext helpdesk]
+links:
+  website: https://frappe.io/helpdesk
+  docs: https://docs.frappe.io/helpdesk
+  source: https://github.com/frappe/helpdesk
+cloudgate: 0.1.0
+compose: app
+# Nine containers (web, nginx, websocket, two queue workers, scheduler, MariaDB
+# and two Redis); creating the site on the first start takes a few minutes.
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.frontend.url}}" }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+# Frappe's own nginx serves the web pages (the agent app at /helpdesk) and
+# routes /socket.io to the websocket container, so it gets the address.
+domains:
+  - { service: frontend, port: 8080 }
