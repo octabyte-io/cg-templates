@@ -1,0 +1,17 @@
+name: HedgeDoc
+description: "HedgeDoc is a self-hosted collaborative Markdown editor and HackMD alternative: write notes together live, add diagrams and maths, and present them as slides."
+version: "1.12.0"
+tags: [collaborative markdown editor, meeting notes, real-time collaboration, markdown slides, hackmd alternative, self-hosted notes]
+links:
+  website: https://hedgedoc.org
+  docs: https://docs.hedgedoc.org
+  source: https://github.com/hedgedoc/hedgedoc
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  CMD_DOMAIN: { value: "{{domains.hedgedoc.host}}" }
+  CMD_SESSION_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: hedgedoc, port: 3000 }

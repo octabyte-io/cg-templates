@@ -1,0 +1,74 @@
+# From EverShop's official docker-compose.yml (the app and PostgreSQL), with a
+# password on the database, uploaded media kept in a volume, and a one-off step
+# that creates the first admin account.
+
+x-evershop-db: &evershop-db
+  DB_HOST: evershop-db
+  DB_PORT: 5432
+  DB_USER: evershop
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_NAME: evershop
+  DB_SSLMODE: disable
+
+services:
+  evershop:
+    image: evershop/evershop:2.4.0
+    restart: unless-stopped
+    depends_on:
+      evershop-db:
+        condition: service_healthy
+    environment: *evershop-db
+    volumes:
+      # Product images and other uploads.
+      - evershop-media:/app/media
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 1m
+
+  # EverShop creates its tables when the app first starts. Once it is up, this
+  # creates the admin account (the official docs do it by hand with
+  # "npm run user:create"), only once, so a password changed later is kept.
+  evershop-admin:
+    image: evershop/evershop:2.4.0
+    restart: "no"
+    depends_on:
+      evershop:
+        condition: service_healthy
+    environment:
+      <<: *evershop-db
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # user:create reports success at the info level, which the default (warn) hides.
+      LOGGER_LEVEL: info
+    volumes:
+      - evershop-setup:/setup
+    command:
+      - sh
+      - -c
+      - >-
+        if [ -f /setup/admin-created ]; then exit 0; fi;
+        npm run user:create -- --name Admin --email "$$ADMIN_EMAIL" --password "$$ADMIN_PASSWORD" 2>&1 | tee /tmp/out;
+        grep -q "created successfully" /tmp/out && touch /setup/admin-created
+
+  evershop-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: evershop
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: evershop
+    volumes:
+      - evershop-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evershop"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  evershop-media:
+  evershop-setup:
+  evershop-db-data:

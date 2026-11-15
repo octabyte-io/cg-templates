@@ -1,0 +1,19 @@
+services:
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:0.27.1
+    restart: unless-stopped
+    environment:
+      HBOX_LOG_LEVEL: info
+      HBOX_LOG_FORMAT: text
+      HBOX_WEB_MAX_UPLOAD_SIZE: "10"
+      HBOX_OPTIONS_ALLOW_ANALYTICS: "false"
+      # Cloudgate's proxy terminates HTTPS; trust its X-Forwarded-Proto header.
+      HBOX_OPTIONS_TRUST_PROXY: "true"
+      # Required: at least 32 bytes, kept stable (it keys the stored API key hashes).
+      HBOX_AUTH_API_KEY_PEPPER: ${HBOX_AUTH_API_KEY_PEPPER}
+    # The image's own healthcheck calls /api/v1/status with wget.
+    volumes:
+      - homebox-data:/data
+
+volumes:
+  homebox-data:

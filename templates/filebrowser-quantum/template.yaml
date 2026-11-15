@@ -1,0 +1,17 @@
+name: FileBrowser Quantum
+description: "FileBrowser Quantum is a self-hosted web file manager: browse, preview, search and share your server's files from a browser, with expiring share links."
+version: "2.0.2-stable"
+tags: [web file manager, file sharing, share links, file browser, google drive alternative, wetransfer alternative]
+links:
+  website: https://filebrowserquantum.com
+  docs: https://filebrowserquantum.com/en/docs/
+  source: https://github.com/gtsteffaniak/filebrowser
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The password of the user "admin". FileBrowser Quantum sets it back to this
+  # value on every start, so change it here, not in the app.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: filebrowser, port: 80 }

@@ -1,0 +1,11 @@
+# OpenPanel's own Caddyfile, served over plain HTTP: Cloudgate's web address
+# handles HTTPS. The API lives under /api on the same address as the dashboard.
+:80 {
+    encode gzip
+
+    handle_path /api* {
+        reverse_proxy openpanel-api:3000
+    }
+
+    reverse_proxy /* openpanel-dashboard:3000
+}

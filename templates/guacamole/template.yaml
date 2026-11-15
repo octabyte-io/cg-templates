@@ -1,0 +1,22 @@
+name: Apache Guacamole
+description: "Apache Guacamole is a self-hosted remote desktop gateway: open office PCs and servers in a web browser over RDP, VNC and SSH, with nothing to install."
+version: "1.6.0"
+tags: [remote desktop, rdp in browser, clientless remote access, ssh web client, vnc, citrix alternative, splashtop alternative]
+links:
+  website: https://guacamole.apache.org
+  docs: https://guacamole.apache.org/doc/1.6.0/gug/
+  source: https://github.com/apache/guacamole-client
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: guacadmin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: guacamole, port: 8080 }

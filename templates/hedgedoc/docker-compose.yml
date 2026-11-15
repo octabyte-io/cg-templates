@@ -1,0 +1,40 @@
+services:
+  hedgedoc:
+    image: quay.io/hedgedoc/hedgedoc:1.12.0
+    restart: unless-stopped
+    depends_on:
+      hedgedoc-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      CMD_DB_URL: postgres://hedgedoc:${POSTGRES_PASSWORD}@hedgedoc-db:5432/hedgedoc
+      # The host name only; Cloudgate's proxy serves it over HTTPS on port 443.
+      CMD_DOMAIN: ${CMD_DOMAIN}
+      CMD_PROTOCOL_USESSL: "true"
+      CMD_URL_ADDPORT: "false"
+      CMD_SESSION_SECRET: ${CMD_SESSION_SECRET}
+      # HedgeDoc's production guide: no notes from signed-out guests.
+      CMD_ALLOW_ANONYMOUS: "false"
+    # The image's own healthcheck runs "node healthcheck.mjs".
+    volumes:
+      - hedgedoc-uploads:/hedgedoc/public/uploads
+
+  hedgedoc-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hedgedoc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: hedgedoc
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<major>.
+      - hedgedoc-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hedgedoc"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  hedgedoc-uploads:
+  hedgedoc-db-data:

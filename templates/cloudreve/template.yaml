@@ -1,0 +1,15 @@
+name: Cloudreve
+description: "Self-hosted Cloudreve: a private web drive where your team uploads, previews and shares files, stored on your own disk or S3 storage."
+version: "4.19.1"
+tags: [self-hosted cloud storage, file sharing, google drive alternative, dropbox alternative, webdav, nextcloud alternative]
+links:
+  website: https://cloudreve.org
+  docs: https://docs.cloudreve.org
+  source: https://github.com/cloudreve/cloudreve
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: cloudreve, port: 5212 }

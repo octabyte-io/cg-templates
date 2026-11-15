@@ -1,0 +1,54 @@
+services:
+  # Kanboard with its built-in SQLite database, kept in the data volume. The
+  # image has its own healthcheck (it calls /healthcheck.php).
+  kanboard:
+    image: kanboard/kanboard:v1.2.57
+    restart: unless-stopped
+    depends_on:
+      kanboard-admin:
+        condition: service_completed_successfully
+    environment:
+      # Plugins are installed by hand into the plugins volume, as the official
+      # setup recommends.
+      PLUGIN_INSTALLER: "false"
+    volumes:
+      # The SQLite database, uploaded files and the cache.
+      - kanboard-data:/var/www/app/data
+      - kanboard-plugins:/var/www/app/plugins
+      # A self-signed certificate the image makes for its port 443, not used here.
+      - kanboard-certs:/etc/nginx/ssl
+
+  # Runs once at each start, before Kanboard: creates or upgrades the database
+  # tables, and on the first start replaces the password of the user "admin"
+  # (which Kanboard creates as admin/admin) with ADMIN_PASSWORD. A password
+  # someone has changed is left alone.
+  kanboard-admin:
+    image: kanboard/kanboard:v1.2.57
+    restart: "no"
+    working_dir: /var/www/app
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        ./cli db:migrate
+        php -r '
+          require "app/common.php";
+          $$users = $$container["db"]->table("users");
+          $$admin = $$users->eq("username", "admin")->findOne();
+          if ($$admin && password_verify("admin", $$admin["password"])) {
+            $$container["db"]->table("users")->eq("id", $$admin["id"])
+              ->update(["password" => password_hash(getenv("ADMIN_PASSWORD"), PASSWORD_BCRYPT)]);
+            echo "Set the password of the user admin.\n";
+          }
+        '
+        chown -R nginx:nginx data
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - kanboard-data:/var/www/app/data
+
+volumes:
+  kanboard-data:
+  kanboard-plugins:
+  kanboard-certs:
