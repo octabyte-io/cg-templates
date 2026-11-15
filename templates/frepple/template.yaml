@@ -1,0 +1,19 @@
+name: frePPLe
+description: "frePPLe is self-hosted, open-source production planning for manufacturers: capacity-aware plans and sales forecasts from your Excel or ERP data."
+version: "9.19.0"
+tags: [production planning, production scheduling, demand forecasting, supply chain planning, katana alternative, mrp software, open source aps]
+links:
+  website: https://frepple.com
+  docs: https://frepple.com/docs/current/
+  source: https://github.com/frePPLe/frepple
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.frepple.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: frepple, port: 80 }
+files:
+  - { path: frepple-start.sh.txt }

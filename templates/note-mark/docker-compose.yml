@@ -1,0 +1,15 @@
+# From Note Mark's official compose example (docs: setup/install), all-in-one image.
+# The image is distroless (no shell, curl or wget), so there is no app healthcheck.
+services:
+  note-mark:
+    image: ghcr.io/enchant97/note-mark:1.1.2
+    restart: unless-stopped
+    environment:
+      AUTH_TOKEN__SECRET: ${AUTH_TOKEN_SECRET}
+      PUBLIC_URL: ${PUBLIC_URL}
+      ENABLE_INTERNAL_SIGNUP: ${ENABLE_INTERNAL_SIGNUP}
+    volumes:
+      - note-mark-data:/data
+
+volumes:
+  note-mark-data:

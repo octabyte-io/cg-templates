@@ -1,0 +1,20 @@
+services:
+  leafwiki:
+    image: ghcr.io/perber/leafwiki:v0.14.2
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      LEAFWIKI_JWT_SECRET: ${JWT_SECRET}
+      LEAFWIKI_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      LEAFWIKI_PUBLIC_URL: ${PUBLIC_URL}
+    volumes:
+      - leafwiki-data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+volumes:
+  leafwiki-data:

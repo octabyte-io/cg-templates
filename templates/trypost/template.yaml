@@ -1,0 +1,24 @@
+name: TryPost
+description: "Self-hosted TryPost queues and schedules social media posts to Instagram, LinkedIn, X, TikTok and more, and lets an AI assistant plan them."
+version: "2.0.1"
+tags: [buffer alternative, social media scheduler, hootsuite alternative, schedule social media posts, social media queue, open source social media management]
+links:
+  website: https://trypost.it
+  docs: https://docs.trypost.it
+  source: https://github.com/trypostit/trypost
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  TRYPOST_URL: { value: "{{domains.trypost.url}}" }
+  APP_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  REVERB_APP_SECRET: { generate: hex }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to TryPost with this email and the generated ADMIN_PASSWORD.
+      format: email
+domains:
+  - { service: trypost, port: 80 }
