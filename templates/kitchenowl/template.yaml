@@ -1,0 +1,24 @@
+name: KitchenOwl
+description: "KitchenOwl is a self-hosted grocery list your household shares, with recipes, a weekly meal plan, split shopping costs and phone apps."
+version: "v0.8.1"
+tags: [grocery list, shared shopping list, anylist alternative, meal planner, recipe manager, household expenses]
+links:
+  website: https://kitchenowl.org
+  docs: https://docs.kitchenowl.org
+  source: https://github.com/TomBursch/kitchenowl
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Signs the login tokens of every account; changing it signs everyone out.
+  JWT_SECRET_KEY: { generate: hex }
+  FRONT_URL: { value: "{{domains.kitchenowl.url}}" }
+  OPEN_REGISTRATION:
+    ask:
+      label: Allow new sign-ups
+      description: Type true to let anyone who can reach the app create their own account. Leave it false to add people from KitchenOwl's admin settings instead.
+      default: "false"
+      pattern: "true|false"
+      required: false
+domains:
+  - { service: kitchenowl, port: 8080 }

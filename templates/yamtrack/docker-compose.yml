@@ -1,0 +1,35 @@
+services:
+  yamtrack:
+    image: ghcr.io/fuzzygrim/yamtrack:0.26.3
+    restart: unless-stopped
+    # On each start the image applies database migrations, then runs the web
+    # app, its background worker and nginx on port 8000. The image has its own
+    # healthcheck (wget on /health/). Data lives in SQLite under /yamtrack/db,
+    # as in the project's default compose file.
+    environment:
+      TZ: UTC
+      SECRET: ${SECRET}
+      # The public address: Django trusts it for CSRF and allowed hosts.
+      URLS: ${URLS}
+      REDIS_URL: redis://yamtrack-redis:6379
+    depends_on:
+      yamtrack-redis:
+        condition: service_healthy
+    volumes:
+      - yamtrack-data:/yamtrack/db
+
+  # Cache, and the queue for background jobs (imports, metadata refreshes).
+  yamtrack-redis:
+    image: redis:8.10.3-alpine
+    restart: unless-stopped
+    volumes:
+      - yamtrack-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  yamtrack-data:
+  yamtrack-redis-data:

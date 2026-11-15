@@ -1,0 +1,18 @@
+name: Swing Music
+description: "Swing Music is a self-hosted music streaming server: play the music you own in a polished web player or the Android app, with no subscription."
+version: "v3.0.0"
+tags: [self-hosted music server, music streaming server, spotify alternative, personal music streaming, swing music, web music player]
+links:
+  website: https://swingmx.com
+  docs: https://swingmx.com/guide/introduction.html
+  source: https://github.com/swingmx/swingmusic
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # music at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: swingmusic, port: 1970 }
+  - { service: filebrowser, port: 80 }

@@ -1,0 +1,67 @@
+# From upstream's compose.yml (v3.13.0). Upstream asks you to paste an Argon2id
+# hash of your password into WF_AUTH_PASSWORD_HASH; here a one-shot service makes
+# that hash from a password Cloudgate generated, at each start. Left out: the
+# optional OIDC, MCP and database-encryption settings (all off by default).
+
+services:
+  wealthfolio:
+    image: wealthfolio/wealthfolio:3.13.0
+    restart: unless-stopped
+    depends_on:
+      wealthfolio-auth:
+        condition: service_completed_successfully
+    command:
+      - /bin/sh
+      - -c
+      - WF_AUTH_PASSWORD_HASH="$$(cat /auth/password-hash)" exec /usr/local/bin/wealthfolio-server
+    environment:
+      WF_LISTEN_ADDR: "0.0.0.0:8088"
+      WF_DB_PATH: /data/wealthfolio.db
+      WF_SECRET_KEY: ${WF_SECRET_KEY}
+      # Required when sign-in is on: the app's own address, never "*".
+      WF_CORS_ALLOW_ORIGINS: ${APP_URL}
+      WF_AUTH_TOKEN_TTL_MINUTES: "60"
+      WF_REQUEST_TIMEOUT_MS: "30000"
+    volumes:
+      - wealthfolio-data:/data
+      - wealthfolio-auth:/auth:ro
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8088/api/v1/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64M
+
+  # Makes the Argon2id hash of ADMIN_PASSWORD that Wealthfolio's sign-in checks,
+  # with Node's built-in argon2 (OWASP parameters: 19 MiB, 2 passes, 1 lane).
+  wealthfolio-auth:
+    image: node:24.22.3-alpine
+    restart: "no"
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - wealthfolio-auth:/auth
+    command:
+      - node
+      - -e
+      - |
+        const { argon2Sync, randomBytes } = require("node:crypto");
+        const { writeFileSync } = require("node:fs");
+        const b64 = (b) => b.toString("base64").replace(/=+$$/, "");
+        const nonce = randomBytes(16);
+        const tag = argon2Sync("argon2id", {
+          message: process.env.ADMIN_PASSWORD, nonce,
+          parallelism: 1, tagLength: 32, memory: 19456, passes: 2,
+        });
+        const phc = "$$argon2id$$v=19$$m=19456,t=2,p=1$$" + b64(nonce) + "$$" + b64(tag);
+        writeFileSync("/auth/password-hash", phc, { mode: 0o644 });
+        console.log("Sign-in password hash written");
+
+volumes:
+  wealthfolio-data:
+  wealthfolio-auth:

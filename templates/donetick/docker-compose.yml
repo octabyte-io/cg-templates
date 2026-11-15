@@ -1,0 +1,34 @@
+services:
+  donetick:
+    # Donetick's official image (API and web app in one container), set up as
+    # in the "Using Docker Compose" section of its README, with the built-in
+    # SQLite database.
+    image: donetick/donetick:v0.1.86
+    restart: unless-stopped
+    environment:
+      DT_ENV: selfhosted
+      DT_SQLITE_PATH: /donetick-data/donetick.db
+      # Overrides the secret in the generated config file, so it is kept
+      # across restarts and set by Cloudgate.
+      DT_JWT_SECRET: ${JWT_SECRET}
+      # The app's own address, used in calendar feeds, API docs and emails.
+      DT_SERVER_PUBLIC_HOST: ${PUBLIC_URL}
+      DT_EMAIL_APP_HOST: ${PUBLIC_URL}
+      TZ: Etc/UTC
+    volumes:
+      # The SQLite database.
+      - donetick-data:/donetick-data
+      # selfhosted.yaml, written on first start; edit it for email, OAuth
+      # sign-in or notifications.
+      - donetick-config:/config
+    healthcheck:
+      # The image's own check (Alpine, so wget is there), run more often.
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:2021/api/v1/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  donetick-data:
+  donetick-config:

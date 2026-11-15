@@ -1,0 +1,18 @@
+services:
+  gatus:
+    image: twinproduction/gatus:v5.38.0
+    restart: unless-stopped
+    environment:
+      GATUS_CONFIG_PATH: /config/config.yaml
+      # Gatus fills in ${SITE_URL} and ${STATUS_PAGE_NAME} in config.yaml.
+      SITE_URL: ${SITE_URL}
+      STATUS_PAGE_NAME: ${STATUS_PAGE_NAME}
+    volumes:
+      # The checks and the status page's settings: edit this file to add
+      # websites and alerts, then redeploy.
+      - ../files/config.yaml:/config/config.yaml:ro
+      # The check history, kept in SQLite.
+      - gatus-data:/data
+
+volumes:
+  gatus-data:

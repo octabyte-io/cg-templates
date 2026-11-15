@@ -1,5 +1,5 @@
 name: Waline
-description: "Self-hosted Waline adds ad-free comments to your blog or website, with replies, reactions, email alerts and an admin panel to moderate, in place of Disqus."
+description: "Waline is a self-hosted Disqus alternative: a comment box for any website, plus an admin dashboard with a review queue, spam folder and email alerts."
 version: "1.43.7"
 tags: [disqus alternative, comment system, blog comments, self-hosted comments, comment moderation, website comments]
 links:

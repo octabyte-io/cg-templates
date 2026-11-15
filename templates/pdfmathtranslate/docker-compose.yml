@@ -1,0 +1,32 @@
+services:
+  pdfmathtranslate:
+    image: byaidu/pdf2zh:1.9.11
+    restart: unless-stopped
+    # The image's own command is "pdf2zh -i" (the web page on port 7860).
+    # Write the sign-in file first so the web page asks for the user "admin"
+    # and the password Cloudgate generated; it is rewritten on every start.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        printf 'admin,%s\n' "$$ADMIN_PASSWORD" > /tmp/users.txt
+        && exec pdf2zh -i --authorized /tmp/users.txt
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      # Settings and API keys saved from the web page.
+      - pdfmathtranslate-config:/root/.config/PDFMathTranslate
+      # Translation cache, fonts and layout models, so they survive restarts.
+      - pdfmathtranslate-cache:/root/.cache
+    healthcheck:
+      # The image has Python but no curl or wget.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7860/', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+volumes:
+  pdfmathtranslate-config:
+  pdfmathtranslate-cache:

@@ -1,0 +1,15 @@
+name: Peekaping
+description: "Peekaping is self-hosted uptime monitoring that checks your websites and services, alerts you when one goes down and publishes status pages."
+version: "0.1.0"
+tags: [uptime monitoring, uptimerobot alternative, uptime kuma alternative, pingdom alternative, status page, website monitoring, self-hosted monitoring]
+links:
+  website: https://peekaping.com
+  docs: https://docs.peekaping.com
+  source: https://github.com/0xfurai/peekaping
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  CLIENT_URL: { value: "{{domains.peekaping.url}}" }
+domains:
+  - { service: peekaping, port: 8383 }

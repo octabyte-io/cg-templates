@@ -1,0 +1,26 @@
+# The routes of ZITADEL's official Docker Compose proxy (deploy/compose in the
+# zitadel repo): / and /ui/v2/login go to the login UI, /api/... is an alias
+# for the API, and everything else (console, OIDC, SAML, gRPC, REST) goes to
+# the API over h2c. Cloudgate's proxy in front handles the domain and TLS.
+{
+	servers {
+		# Keep the X-Forwarded-* headers set by Cloudgate's proxy.
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	rewrite / /ui/v2/login/
+
+	handle /ui/v2/login* {
+		reverse_proxy zitadel-login:3000
+	}
+
+	handle_path /api/* {
+		reverse_proxy h2c://zitadel-api:8080
+	}
+
+	handle {
+		reverse_proxy h2c://zitadel-api:8080
+	}
+}

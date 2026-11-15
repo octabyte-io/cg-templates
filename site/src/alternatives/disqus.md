@@ -6,22 +6,27 @@ apps:
   waline:
     fit: "Adds a comment box to any page with threaded replies, likes, pinned comments, Markdown and emoji reactions, and gives you a separate admin panel with Approved, Waiting and Spam tabs, spam filtering and a review-before-publish option. It imports a Disqus export from a button in that panel, and it shows page view and comment counts. It needs a database, sends comments to Akismet for spam checks and uses an online sign-in and avatar service by default, and it has no cross-site network like Disqus."
     import: yes
+  isso:
+    fit: "The simplest choice: readers comment with an optional name, email and website, with no accounts or sign-in, write in Markdown and reply in threads, and you moderate on a separate admin page with a password, approving comments first if you choose. It has no ads or tracking and keeps every comment in one small database on your server. It has no social sign-in or image uploads, its spam protection is rate limiting plus that approval queue, and it imports a Disqus export without the votes."
+    import: yes
 moving: |
   Export your comments from Disqus; it emails you an XML file. Remark42's import is a one-time step run on the server rather than a button in the app: upload the file and run the Disqus import for your site, and the comments appear under the same posts, as long as your page addresses have not changed. Then replace Disqus's embed code with Remark42's short snippet and the line that marks where comments go, set up at least one sign-in method, and sign in once to make yourself an admin. Remark42 can also import WordPress and Commento comments. With Waline, register the first account at your Waline address followed by /ui/register to become the admin, then open the Migration page in its admin panel and import the Disqus file there, before new comments arrive, because an import replaces the existing data. Paste Waline's snippet into your pages with your Waline address as the server.
+
+  Isso imports the same Disqus XML file with a one-time command on the server, `isso import` with the Disqus type; comments land under the same posts if your page addresses are unchanged, and votes are not carried over. Then paste Isso's script tag and the line that marks where comments go into your pages, and moderate new comments on Isso's admin page with the password Cloudgate creates. Isso can import WordPress comments too.
 faq:
-  - q: "Can I import my Disqus comments into Remark42 or Waline?"
-    a: "Yes, into both. Remark42 imports the XML export Disqus emails you, with each comment placed under its post; the import is run once on the server, not from a button in the app. Waline imports the same file from the Migration page of its admin panel."
-  - q: "Should I choose Remark42 or Waline?"
-    a: "Choose Remark42 for a light comment section with many sign-in options that needs no database. Choose Waline if you want a separate admin dashboard with a review queue and a spam folder, emoji reactions and page view counts."
+  - q: "Can I import my Disqus comments into Remark42, Waline or Isso?"
+    a: "Yes, into both. Remark42 imports the XML export Disqus emails you, with each comment placed under its post; the import is run once on the server, not from a button in the app. Waline imports the same file from the Migration page of its admin panel, and Isso with a one-time command on the server, without votes."
+  - q: "Should I choose Remark42, Waline or Isso?"
+    a: "Choose Remark42 for a light comment section with many sign-in options that needs no database. Choose Waline if you want a separate admin dashboard with a review queue and a spam folder, emoji reactions and page view counts. Choose Isso for the simplest comment section, where readers just type a name or nothing at all, and you approve comments on a small admin page."
   - q: "Does Remark42 show ads or track my readers?"
     a: "No. Remark42 has no ads, no tracking and no third-party analytics, and it keeps only a reader's ID, name and avatar link from their sign-in provider. Readers can export their data or ask for it to be deleted."
   - q: "Does Remark42 work with static sites?"
     a: "Yes. It is a widget you paste into any web page, so it works with static site generators such as Hugo, Astro and Gatsby, as well as hand-written HTML."
   - q: "Can one Remark42 serve several websites?"
     a: "Yes. Its multi-site mode runs comments for more than one website from a single install."
-developer: "No, if you can edit your website's HTML or theme. Cloudgate installs the app and gives it a secure web address; you then paste a short snippet into your pages where comments should appear. Importing Disqus comments is a one-time step: on the server for Remark42, from the admin panel for Waline."
+developer: "No, if you can edit your website's HTML or theme. Cloudgate installs the app and gives it a secure web address; you then paste a short snippet into your pages where comments should appear. Importing Disqus comments is a one-time step: on the server for Remark42 and Isso, from the admin panel for Waline."
 ---
 
 Disqus is a hosted comment system that many blogs and websites embed under their posts. Readers sign in once and can comment on any site that uses it, and site owners moderate from Disqus's dashboard.
 
-People look for an alternative because Disqus's free plan shows ads under your posts and tracks your readers, and removing the ads means paying for a plan. Every comment also lives on Disqus's servers. A self-hosted Remark42 adds a comment section with no ads and no tracking, keeps every comment on your own server, and imports your Disqus comments. Waline does the same with a separate admin dashboard for moderation.
+People look for an alternative because Disqus's free plan shows ads under your posts and tracks your readers, and removing the ads means paying for a plan. Every comment also lives on Disqus's servers. A self-hosted Remark42 adds a comment section with no ads and no tracking, keeps every comment on your own server, and imports your Disqus comments. Waline does the same with a separate admin dashboard for moderation, and Isso with even less: no reader accounts at all, and a simple approval queue.

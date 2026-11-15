@@ -1,7 +1,7 @@
 ---
 tagline: Know the moment your website goes down, and tell customers.
 category: monitoring
-alternativeTo: [pingdom, statuspage]
+alternativeTo: [pingdom, statuspage, uptimerobot]
 ease: easy
 license: MIT
 goodFor: Watching websites and online services, with a public status page

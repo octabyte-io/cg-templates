@@ -1,0 +1,71 @@
+# Based on 4ga Boards' docker-compose.yml at tag v3.3.15: the app, PostgreSQL and Redis (which
+# holds the upload rate limits). Instead of the default demo@demo.demo / demo account, the first
+# start creates the admin from the email and generated password below, and leaves sign-up off
+# (an admin can turn it on in Settings).
+
+services:
+  fourga-boards:
+    image: ghcr.io/rargames/4gaboards:3.3.15
+    restart: unless-stopped
+    depends_on:
+      fourga-boards-db:
+        condition: service_healthy
+      fourga-boards-redis:
+        condition: service_healthy
+    environment:
+      BASE_URL: ${BASE_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      SYSTEM_NOTIFICATIONS_DISABLED: "true"
+      DATABASE_URL: postgresql://postgres:${DB_PASSWORD}@fourga-boards-db/4gaBoards
+      NODE_ENV: production
+      # Cloudgate's proxy terminates HTTPS in front of the app.
+      TRUST_PROXY: "true"
+      UPLOAD_RATE_LIMIT_STORE: redis
+      UPLOAD_RATE_LIMIT_REDIS_URL: redis://:${REDIS_PASSWORD}@fourga-boards-redis:6379/0
+      # Read only on the first start, when the database is created.
+      DEFAULT_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      DEFAULT_ADMIN_USERNAME: admin
+      DEFAULT_ADMIN_NAME: Admin
+      DEFAULT_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DEFAULT_REGISTRATION_ENABLED: "false"
+    volumes:
+      - fourga-boards-avatars:/app/public/user-avatars
+      - fourga-boards-backgrounds:/app/public/project-background-images
+      - fourga-boards-attachments:/app/private/attachments
+
+  fourga-boards-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: 4gaBoards
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "-A scram-sha-256"
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<version>.
+      - fourga-boards-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d 4gaBoards"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  fourga-boards-redis:
+    image: redis:8.10.3-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - fourga-boards-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+volumes:
+  fourga-boards-avatars:
+  fourga-boards-backgrounds:
+  fourga-boards-attachments:
+  fourga-boards-db-data:
+  fourga-boards-redis-data:

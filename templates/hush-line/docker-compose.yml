@@ -1,0 +1,53 @@
+services:
+  hush-line:
+    image: scidsg/hushline:v0.7.36
+    restart: unless-stopped
+    depends_on:
+      hush-line-db:
+        condition: service_healthy
+    environment:
+      FLASK_APP: hushline
+      SECRET_KEY: ${SECRET_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      SESSION_FERNET_KEY: ${SESSION_FERNET_KEY}
+      SQLALCHEMY_DATABASE_URI: postgresql://hushline:${DB_PASSWORD}@hush-line-db:5432/hushline
+      # Links in emails and on profiles use this address.
+      PUBLIC_BASE_URL: ${APP_URL}
+      # Passkeys (WebAuthn) are tied to the app's own address.
+      WEBAUTHN_RP_ID: ${APP_HOST}
+      WEBAUTHN_ORIGIN: ${APP_URL}
+      WEBAUTHN_RP_NAME: Hush Line
+      # The verified-accounts directory tab is for the hosted hushline.app service.
+      DIRECTORY_VERIFIED_TAB_ENABLED: "false"
+      # Profile pictures and other public files are kept on a volume.
+      BLOB_STORAGE_PUBLIC_DRIVER: file-system
+      BLOB_STORAGE_PUBLIC_FS_ROOT: /data/public
+      # The image runs the database migrations at every start, before the web server.
+      RUN_STARTUP_MIGRATIONS: "true"
+    volumes:
+      - hush-line-files:/data/public
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  hush-line-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hushline
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: hushline
+    volumes:
+      - hush-line-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hushline"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  hush-line-files:
+  hush-line-db-data:

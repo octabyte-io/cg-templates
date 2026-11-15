@@ -1,0 +1,63 @@
+name: La Suite Docs
+description: "La Suite Docs is a self-hosted, open-source editor where your team writes, comments on and shares documents together live, like Notion or Google Docs."
+version: "6.1.0"
+tags: [notion alternative, google docs alternative, collaborative editor, open source document editor, team knowledge base, self-hosted docs]
+links:
+  website: https://docs.numerique.gouv.fr
+  docs: https://github.com/suitenumerique/docs/blob/main/documentation/installation/compose.md
+  source: https://github.com/suitenumerique/docs
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  DOCS_URL: { value: "{{domains.docs.url}}" }
+  DOCS_HOST: { value: "{{domains.docs.host}}" }
+  KEYCLOAK_URL: { value: "{{domains.docs-keycloak.url}}" }
+  DJANGO_SECRET_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  KEYCLOAK_DB_PASSWORD: { generate: password }
+  S3_ACCESS_KEY: { generate: password }
+  S3_SECRET_KEY: { generate: password }
+  Y_PROVIDER_API_KEY: { generate: hex }
+  OIDC_CLIENT_SECRET: { generate: hex }
+  # Keycloak's own administrator ("admin"), for its master realm.
+  KEYCLOAK_ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Docs with this email address. Cloudgate creates a strong password for it, shown afterwards on the app's variables page as ADMIN_PASSWORD.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Docs emails people when you share a document with them or mention them, so add an email sending service, for example smtp.resend.com, to send those emails. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: Usually 587 (STARTTLS).
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_FROM:
+    ask:
+      label: Sender address
+      description: The address Docs emails come from, for example docs@yourcompany.com.
+      format: email
+      required: false
+domains:
+  - { service: docs, port: 8083 }
+  - { service: docs-keycloak, port: 8080 }
+files:
+  - { path: nginx/docs.conf }
+  - { path: keycloak/docs-realm.json }

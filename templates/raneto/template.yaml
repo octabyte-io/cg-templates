@@ -1,0 +1,22 @@
+name: Raneto
+description: "Self-hosted Raneto turns simple Markdown pages into a searchable help centre, FAQ or staff handbook, edited in your browser, with no database."
+version: "0.18.1"
+tags: ["knowledge base", "helpjuice alternative", "gitbook alternative", "markdown wiki", "faq site", "help centre software"]
+links:
+  website: https://raneto.com
+  docs: https://docs.raneto.com
+  source: https://github.com/ryanlelek/Raneto
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  RANETO_ADMIN_PASSWORD: { generate: password }
+  RANETO_SECRET: { generate: hex }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for page dates, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: raneto, port: 3000 }

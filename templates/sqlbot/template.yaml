@@ -1,0 +1,25 @@
+name: SQLBot
+description: "Self-hosted SQLBot answers questions about your database in plain language with SQL, tables and charts, using the AI model you choose."
+version: "1.10.3"
+tags:
+  - text to sql
+  - ask your database
+  - chatbi
+  - thoughtspot alternative
+  - ai data analysis
+  - natural language query
+  - julius ai alternative
+links:
+  website: https://sqlbot.org
+  docs: https://dataease.cn/sqlbot/v1/
+  source: https://github.com/dataease/SQLBot
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.sqlbot.url}}" }
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  DEFAULT_PWD: { generate: password }
+domains:
+  - { service: sqlbot, port: 8000 }

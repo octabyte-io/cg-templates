@@ -1,0 +1,46 @@
+services:
+  crawl4ai:
+    image: unclecode/crawl4ai:0.9.5
+    restart: unless-stopped
+    environment:
+      # The token every API call must send as "Authorization: Bearer <token>".
+      # The playground (the web address itself) asks for it once. Without a
+      # token the server only listens inside its own container.
+      CRAWL4AI_API_TOKEN: ${API_TOKEN}
+      # Listen on IPv4. The image's default with a token is "[::]", which
+      # fails on servers and Docker networks without IPv6.
+      GUNICORN_BIND: 0.0.0.0:11235
+      # Deep crawling (following links across a site) over the API stays off,
+      # as in the official compose file.
+      CRAWL4AI_ALLOW_DEEP_CRAWL: "false"
+      # Optional AI extraction: the provider/model and its key. Crawling to
+      # Markdown works without them.
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai/gpt-4o-mini}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+    # Chromium needs shared memory; a private 1 GB tmpfs as upstream uses.
+    shm_size: "1gb"
+    # Upstream's hardening: no capabilities, no privilege escalation, a
+    # read-only root filesystem with only these paths writable. Crawl4AI
+    # keeps no data between restarts (results expire from its built-in
+    # Redis after an hour), so there are no volumes.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/lib/redis:uid=999,gid=999,mode=0700
+      - /var/lib/crawl4ai/outputs:uid=999,gid=999,mode=0700
+      - /home/appuser/.crawl4ai:uid=999,gid=999,mode=0700
+      - /home/appuser/.cache/url_seeder:uid=999,gid=999,mode=0700
+      - /home/appuser/.gunicorn:uid=999,gid=999,mode=0700
+    user: "appuser"
+    # The official compose file's check. It replaces the image's own, which
+    # also fails whenever the server has less than 2 GB of memory in total.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11235/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

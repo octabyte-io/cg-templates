@@ -1,0 +1,19 @@
+name: Gokapi
+description: "Gokapi is a self-hosted file sharing app: send large files with links that expire after a set number of downloads or days, and collect files from clients."
+version: "v2.2.4"
+tags: [file sharing, wetransfer alternative, large file transfer, expiring download links, file request link, self-hosted file sharing]
+links:
+  website: https://github.com/Forceu/Gokapi
+  docs: https://gokapi.readthedocs.io
+  source: https://github.com/Forceu/Gokapi
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The app's public address; Gokapi builds every download link from it.
+  GOKAPI_URL: { value: "{{domains.gokapi.url}}" }
+  # The password of the admin user "admin", set once on the first start.
+  # Change it later in Gokapi itself.
+  GOKAPI_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: gokapi, port: 53842 }

@@ -1,0 +1,68 @@
+name: NEMO
+description: "Self-hosted NEMO from NIST: book lab instruments, control who can use each tool, track training and maintenance, and record usage for billing."
+version: "8.2.1"
+tags:
+  - lab management software
+  - lab equipment booking
+  - core facility management
+  - cleanroom management
+  - ilab alternative
+  - instrument scheduling
+links:
+  website: https://github.com/usnistgov/NEMO
+  docs: https://github.com/usnistgov/NEMO/wiki
+  source: https://github.com/usnistgov/NEMO
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  NEMO_URL: { value: "{{domains.nemo.url}}" }
+  LLDAP_URL: { value: "{{domains.nemo-ldap.url}}" }
+  SECRET_KEY: { generate: hex }
+  LLDAP_JWT_SECRET: { generate: hex }
+  LLDAP_KEY_SEED: { generate: hex }
+  # The password of the account "admin", in NEMO and on the user directory page.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of NEMO's administrator account (username admin), and the sender of NEMO's emails unless you set one below.
+      format: email
+  TIME_ZONE:
+    ask:
+      label: Time zone
+      description: Used for reservations and dates in NEMO, as an IANA name such as America/New_York.
+      default: Etc/UTC
+      required: false
+  EMAIL_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. NEMO emails reservation reminders, problem reports and notices. Without an email server they are not sent. You can add it later on the app's variables page.
+      required: false
+  EMAIL_PORT:
+    ask:
+      label: Email server port
+      description: Usually 587.
+      default: "587"
+      required: false
+  EMAIL_HOST_USER:
+    ask:
+      label: Email server username
+      required: false
+  EMAIL_HOST_PASSWORD:
+    ask:
+      label: Email server password
+      required: false
+  DEFAULT_FROM_EMAIL:
+    ask:
+      label: Sender address
+      description: The address NEMO's emails come from, for example nemo@yourlab.org.
+      format: email
+      required: false
+domains:
+  - { service: nemo, port: 80 }
+  - { service: nemo-ldap, port: 17170 }
+files:
+  - { path: nemo-settings.py.txt }
+  - { path: nemo-setup.py.txt }
+  - { path: nginx.conf }

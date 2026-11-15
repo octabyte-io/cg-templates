@@ -1,0 +1,32 @@
+name: Isso
+description: "Self-hosted Isso adds lightweight, private comments to your blog or website, with replies and moderation and no reader accounts, in place of Disqus."
+version: "0.14.0"
+tags: [disqus alternative, blog comments, self-hosted comments, comment system for static sites, website comments, anonymous comments]
+links:
+  website: https://isso-comments.de
+  docs: https://isso-comments.de/docs/
+  source: https://github.com/isso-comments/isso
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  ISSO_URL: { value: "{{domains.isso.url}}" }
+  # Password for the moderation page at <Isso address>/admin.
+  ADMIN_PASSWORD: { generate: password }
+  # Salt for the hashed identifiers of anonymous commenters.
+  HASH_SALT: { generate: hex }
+  WEBSITE_URL:
+    ask:
+      label: Your website's address
+      description: The website where the comments appear, for example https://blog.example.com. Only this site can show and post comments.
+      format: url
+  MODERATION:
+    ask:
+      label: Approve comments before they appear
+      description: "true holds each new comment until you approve it on the admin page; false publishes comments straight away."
+      default: "false"
+      pattern: "true|false"
+domains:
+  - { service: isso, port: 8080 }
+files:
+  - { path: isso.cfg }

@@ -1,0 +1,20 @@
+name: Open Archiver
+description: "Open Archiver is self-hosted email archiving: keep every email from Google Workspace, Microsoft 365 or IMAP in one searchable archive."
+version: "0.6.2"
+tags: [email archiving, self-hosted email archive, mailstore alternative, mimecast alternative, email search, pst import, google workspace email archive]
+links:
+  website: https://openarchiver.com
+  docs: https://docs.openarchiver.com
+  source: https://github.com/LogicLabs-OU/OpenArchiver
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.open-archiver.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  MEILI_MASTER_KEY: { generate: hex }
+  JWT_SECRET: { generate: hex }
+  ENCRYPTION_KEY: { generate: hex }
+domains:
+  - { service: open-archiver, port: 3000 }

@@ -1,0 +1,161 @@
+# Based on ClassroomIO's docker-compose.images.yaml (pre-built images) at v1.0.0.
+x-database-url: &database-url postgresql://classroomio:${POSTGRES_PASSWORD}@classroomio-db:5432/classroomio
+
+x-storage-env: &storage-env
+  OBJECT_STORAGE_ENDPOINT: http://classroomio-storage:9000
+  OBJECT_STORAGE_PUBLIC_ENDPOINT: ${STORAGE_URL}
+  OBJECT_STORAGE_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY}
+  OBJECT_STORAGE_SECRET_ACCESS_KEY: ${STORAGE_SECRET_KEY}
+  OBJECT_STORAGE_FORCE_PATH_STYLE: "true"
+  OBJECT_STORAGE_MEDIA_PUBLIC_BASE_URL: ${STORAGE_URL}/media
+  OBJECT_STORAGE_BUCKET_VIDEOS: videos
+  OBJECT_STORAGE_BUCKET_DOCUMENTS: documents
+  OBJECT_STORAGE_BUCKET_MEDIA: media
+
+x-smtp-env: &smtp-env
+  SMTP_HOST: ${SMTP_HOST}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USER: ${SMTP_USER}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_SENDER: ${SMTP_SENDER}
+
+services:
+  # The web app people use. It passes the browser's API calls on to the API.
+  classroomio:
+    image: classroomio/dashboard:1.0.0
+    restart: unless-stopped
+    depends_on:
+      classroomio-api:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3082
+      ORIGIN: ${APP_URL}
+      PUBLIC_IS_SELFHOSTED: "true"
+      PRIVATE_SERVER_URL: http://classroomio-api:3081
+      PRIVATE_SERVER_KEY: ${PRIVATE_SERVER_KEY}
+      PRIVATE_APP_HOST: ${APP_HOST}
+      PRIVATE_APP_SUBDOMAINS: app
+      # Let pages upload to and show files from the storage address.
+      CSP_CONNECT_SRC_DOMAINS: ${STORAGE_URL}
+      CSP_MEDIA_SRC_DOMAINS: ${STORAGE_URL}
+
+  # Sets up and upgrades the database at each start, then serves the API.
+  classroomio-api:
+    image: classroomio/api:1.0.0
+    restart: unless-stopped
+    depends_on:
+      classroomio-db:
+        condition: service_healthy
+      classroomio-redis:
+        condition: service_healthy
+      classroomio-storage-init:
+        condition: service_completed_successfully
+    environment:
+      <<: [*storage-env, *smtp-env]
+      NODE_ENV: production
+      PORT: 3081
+      PUBLIC_IS_SELFHOSTED: "true"
+      DATABASE_URL: *database-url
+      REDIS_URL: redis://classroomio-redis:6379
+      DASHBOARD_ORIGIN: ${APP_URL}
+      PRIVATE_SERVER_KEY: ${PRIVATE_SERVER_KEY}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      # The official compose file's placeholders; Google sign-in stays off.
+      GOOGLE_CLIENT_ID: docker-local-client-id
+      GOOGLE_CLIENT_SECRET: docker-local-client-secret
+    healthcheck:
+      # The image has no curl or wget; Node's fetch is the official check.
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3081/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # Background worker: video processing, AI course drafting and most emails.
+  classroomio-jobs:
+    image: classroomio/jobs:1.0.0
+    restart: unless-stopped
+    # Waits for the API, which creates the database tables the worker reads.
+    depends_on:
+      classroomio-api:
+        condition: service_healthy
+    environment:
+      <<: [*storage-env, *smtp-env]
+      NODE_ENV: production
+      DATABASE_URL: *database-url
+      REDIS_URL: redis://classroomio-redis:6379
+
+  classroomio-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: classroomio
+      POSTGRES_USER: classroomio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - classroomio-db-data:/var/lib/postgresql/data
+    healthcheck:
+      # A real query, so it passes only once Postgres is out of recovery (as upstream).
+      test: ["CMD-SHELL", "pg_isready -U classroomio -d classroomio && psql -U classroomio -d classroomio -tAc 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  classroomio-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - classroomio-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # S3-compatible file storage (a maintained MinIO build) for videos,
+  # documents and images.
+  classroomio-storage:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    restart: unless-stopped
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY}
+      MINIO_BROWSER: "off"
+    volumes:
+      - classroomio-storage-data:/data
+    healthcheck:
+      test: ["CMD", "silo", "healthcheck", "ready"]
+      interval: 10s
+      timeout: 30s
+      retries: 10
+      start_period: 20s
+
+  # Makes the videos, documents and media buckets (media readable by anyone,
+  # for course images), then exits.
+  classroomio-storage-init:
+    image: pgsty/mc:RELEASE.2026-09-13T00-00-00Z
+    restart: "no"
+    depends_on:
+      classroomio-storage:
+        condition: service_healthy
+    environment:
+      STORAGE_ACCESS_KEY: ${STORAGE_ACCESS_KEY}
+      STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY}
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        until mc alias set local http://classroomio-storage:9000 "$$STORAGE_ACCESS_KEY" "$$STORAGE_SECRET_KEY"; do
+          sleep 1;
+        done;
+        mc mb --ignore-existing local/videos local/documents local/media &&
+        mc anonymous set download local/media
+
+volumes:
+  classroomio-db-data:
+  classroomio-redis-data:
+  classroomio-storage-data:

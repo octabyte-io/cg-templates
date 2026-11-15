@@ -1,0 +1,21 @@
+name: Lowcoder
+description: "Self-hosted Lowcoder Community Edition: build internal tools, dashboards and public web apps on your own databases and APIs, with no per-user fee."
+version: "3.0.0"
+tags: [retool alternative, internal tools, low-code, app builder, power apps alternative, softr alternative, customer portal]
+links:
+  website: https://www.lowcoder.cloud
+  docs: https://docs.lowcoder.cloud
+  source: https://github.com/lowcoder-org/lowcoder
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  LOWCODER_PUBLIC_URL: { value: "{{domains.lowcoder.url}}" }
+  LOWCODER_DB_ENCRYPTION_PASSWORD: { generate: hex }
+  LOWCODER_DB_ENCRYPTION_SALT: { generate: hex }
+  LOWCODER_API_KEY_SECRET: { generate: hex }
+  LOWCODER_NODE_SERVICE_SECRET: { generate: hex }
+  LOWCODER_NODE_SERVICE_SECRET_SALT: { generate: hex }
+  LOWCODER_SUPERUSER_PASSWORD: { generate: password }
+domains:
+  - { service: lowcoder, port: 3000 }

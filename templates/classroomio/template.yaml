@@ -1,0 +1,54 @@
+name: ClassroomIO
+description: "Self-hosted ClassroomIO is an open-source LMS for staff onboarding, compliance and customer courses, with quizzes, certificates and no fee per learner."
+version: "1.0.0"
+tags: [lms, employee training, compliance training, online courses, course certificates, talentlms alternative, skilljar alternative]
+links:
+  website: https://classroomio.com
+  docs: https://classroomio.com/docs/self-hosted/docker
+  source: https://github.com/classroomio/classroomio
+cloudgate: 0.1.0
+compose: app
+# Three Node.js services plus PostgreSQL, Redis and file storage use about
+# 700 MB at rest (measured); 2 GB leaves room for video processing.
+size: medium
+inputs:
+  # The academy's address: sign-in, invite and password-reset links point here.
+  APP_URL: { value: "{{domains.classroomio.url}}" }
+  APP_HOST: { value: "{{domains.classroomio.host}}" }
+  # File storage for videos, documents and images. Browsers upload to it and
+  # load course images from it, so it has its own address.
+  STORAGE_URL: { value: "{{domains.classroomio-storage.url}}" }
+  # Signs sign-in sessions.
+  BETTER_AUTH_SECRET: { generate: hex }
+  # Shared by the dashboard and the API so the API trusts the dashboard.
+  PRIVATE_SERVER_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  STORAGE_ACCESS_KEY: { generate: password }
+  STORAGE_SECRET_KEY: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional, but recommended. ClassroomIO emails invitations, password resets and course notifications through an email sending service, for example smtp.resend.com. Without it those emails are not sent. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 465 works with most email services.
+      default: "465"
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_SENDER:
+    ask:
+      label: Sender address
+      description: The address emails come from, for example academy@example.com.
+      required: false
+domains:
+  - { service: classroomio, port: 3082 }
+  - { service: classroomio-storage, port: 9000 }

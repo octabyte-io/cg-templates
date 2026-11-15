@@ -1,0 +1,22 @@
+name: Agent Zero
+description: "Agent Zero is a self-hosted AI agent that runs code, browses the web and creates files on its own computer, like Manus or ChatGPT agent."
+version: "2.15"
+tags: [ai agent, self-hosted ai agent, manus alternative, chatgpt agent alternative, personal ai assistant, autonomous ai agent]
+links:
+  website: https://agent-zero.ai
+  docs: https://github.com/agent0ai/agent-zero/tree/main/docs
+  source: https://github.com/agent0ai/agent-zero
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  # Password for the web UI's login (user name "admin").
+  AUTH_PASSWORD: { generate: password }
+  API_KEY_OPENROUTER:
+    ask:
+      label: OpenRouter API key (optional)
+      description: Lets Agent Zero use AI models through OpenRouter. Leave it empty to connect OpenAI, Anthropic, Google, a local model or another provider in the app's model setup instead.
+      secret: true
+      required: false
+domains:
+  - { service: agent-zero, port: 80 }

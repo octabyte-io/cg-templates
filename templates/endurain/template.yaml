@@ -1,0 +1,26 @@
+name: Endurain
+description: "Endurain is a self-hosted fitness tracker for runs, rides and swims, with maps, gear and health logs, synced from Garmin Connect and Strava."
+version: "v0.20.2"
+tags: [strava alternative, self-hosted fitness tracker, garmin connect alternative, running log, cycling tracker, gpx fit import]
+links:
+  website: https://endurain.com
+  docs: https://docs.endurain.com
+  source: https://github.com/endurain-project/endurain
+cloudgate: 0.1.0
+compose: app
+# FastAPI app and PostgreSQL.
+size: small
+inputs:
+  ENDURAIN_HOST: { value: "{{domains.endurain.url}}" }
+  SECRET_KEY: { generate: hex }
+  # Fernet needs 32 random bytes in base64, which is what base64 generates.
+  FERNET_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  TZ:
+    ask:
+      label: Time zone
+      description: Used for activities without GPS, such as indoor swims or gym sessions, as a tz database name such as Europe/Lisbon or America/New_York.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: endurain, port: 8080 }
