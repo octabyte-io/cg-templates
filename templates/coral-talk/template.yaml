@@ -1,0 +1,17 @@
+name: Coral
+description: "Coral is a self-hosted comments platform for news sites and blogs, with moderation queues, word filters and roles to keep discussions civil."
+version: "9.11.9"
+tags: ["disqus alternative", "comment system", "comment moderation", "self-hosted comments", "news site comments"]
+links:
+  website: https://coralproject.net
+  docs: https://docs.coralproject.net
+  source: https://github.com/coralproject/talk
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SIGNING_SECRET: { generate: hex }
+  MONGO_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: coral, port: 5000 }

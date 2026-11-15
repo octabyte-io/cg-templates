@@ -1,0 +1,38 @@
+services:
+  stump:
+    # The official image from Stump's Docker docs (stumpapp.dev/docs/getting-started/installation/docker).
+    # It runs as root by default (PUID/PGID 0); the docs' PUID/PGID 1000 is only
+    # for matching host folder owners, which named volumes don't need.
+    image: aaronleopold/stump:0.1.13
+    restart: unless-stopped
+    # On a brand-new database, 0.1.12 and 0.1.13 stop once on a database
+    # migration ("index idx_media_annotations_user_media already exists") and
+    # start normally when run again, so the image's entrypoint gets one retry
+    # inside the container instead of a crash and a container restart.
+    entrypoint: ["/bin/sh", "-c", "/entrypoint.sh || exec /entrypoint.sh"]
+    environment:
+      TZ: ${TIMEZONE:-Etc/UTC}
+      STUMP_CONFIG_DIR: /config
+      STUMP_ALLOWED_ORIGINS: ${APP_URL}
+      # Stump's built-in upload ("Files" > upload in a library), off by default.
+      # Only the server owner and users given the "File Upload" or "Manage
+      # Library" permission can upload. Limit raised from 20 MB to 1 GB per file.
+      STUMP_ENABLE_UPLOAD: "true"
+      STUMP_MAX_FILE_UPLOAD_SIZE: "1073741824"
+    volumes:
+      # The SQLite database, settings and thumbnails.
+      - stump-config:/config
+      # The library. Create a library in Stump's web UI pointing at /data (or a
+      # folder under it), then upload books into it from the browser.
+      - stump-data:/data
+    healthcheck:
+      # The image is distroless "debug": busybox's wget is the only HTTP tool.
+      test: ["CMD", "/busybox/wget", "-q", "-O", "/dev/null", "http://127.0.0.1:10801/api/v2/ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  stump-config:
+  stump-data:

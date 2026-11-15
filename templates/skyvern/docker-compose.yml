@@ -1,0 +1,139 @@
+services:
+  # Skyvern's web app has no accounts or sign-in, and its file server reads
+  # any path it's given. This proxy asks for the username "admin" and the
+  # generated password before anyone reaches them, and passes the API
+  # (protected by Skyvern's own API key) straight through. See the Caddyfile.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      skyvern-ui:
+        condition: service_healthy
+
+  # The Skyvern API and the browser it drives (Chromium on a virtual screen).
+  # At the first start it creates the organization and its API key and writes
+  # them to /app/.skyvern/credentials.toml, which the web app reads.
+  skyvern:
+    image: skyvern/skyvern:v1.0.58
+    restart: unless-stopped
+    environment:
+      LLM_PROVIDER: ${LLM_PROVIDER}
+      LLM_API_KEY: ${LLM_API_KEY}
+      LLM_MODEL: ${LLM_MODEL:-}
+      DATABASE_STRING: postgresql+psycopg://skyvern:${DB_PASSWORD}@postgres:5432/skyvern
+      SKYVERN_APP_URL: ${APP_URL}
+      BROWSER_STREAMING_MODE: cdp
+      BROWSER_TYPE: chromium-headful
+      BROWSER_REMOTE_DEBUGGING_URL: http://127.0.0.1:9222
+      BROWSER_CDP_CONNECT_TIMEOUT_MS: "120000"
+      DOWNLOAD_PATH: /data/downloads
+      BROWSER_SESSION_BASE_PATH: /data/browser_sessions
+      CREDENTIAL_VAULT_TYPE: skyvern
+      ENABLE_LOCAL_CREDENTIAL_VAULT: "true"
+      LOCAL_CREDENTIAL_VAULT_PATH: /data/credential_vault
+      ENABLE_CODE_BLOCK: "true"
+    # Skyvern turns on one AI provider at a time: ENABLE_<PROVIDER>, its key
+    # and LLM_KEY (Skyvern's name for the model). Map the three settings to
+    # those, then start the image's own entrypoint.
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        case "$$LLM_PROVIDER" in
+          anthropic) export ENABLE_ANTHROPIC=true ANTHROPIC_API_KEY="$$LLM_API_KEY" LLM_KEY="$${LLM_MODEL:-ANTHROPIC_CLAUDE4.7_OPUS}" ;;
+          gemini) export ENABLE_GEMINI=true GEMINI_API_KEY="$$LLM_API_KEY" LLM_KEY="$${LLM_MODEL:-GEMINI_3.0_FLASH}" ;;
+          *) export ENABLE_OPENAI=true OPENAI_API_KEY="$$LLM_API_KEY" LLM_KEY="$${LLM_MODEL:-OPENAI_GPT5_5}" ;;
+        esac
+        exec /bin/bash /app/entrypoint-skyvern.sh
+    volumes:
+      - skyvern-artifacts:/data/artifacts
+      - skyvern-videos:/data/videos
+      - skyvern-har:/data/har
+      - skyvern-log:/data/log
+      - skyvern-downloads:/data/downloads
+      - skyvern-browser-sessions:/data/browser_sessions
+      - skyvern-credential-vault:/data/credential_vault
+      - skyvern-credentials:/app/.skyvern
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/heartbeat', timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 24
+      start_period: 180s
+
+  # The web app (port 8080) and the server that shows saved screenshots,
+  # recordings and logs (port 9090). It reads the API key Skyvern created.
+  skyvern-ui:
+    image: skyvern/skyvern-ui:v1.0.58
+    restart: unless-stopped
+    environment:
+      APP_URL: ${APP_URL}
+      # How the web app's server reaches the API inside this stack.
+      SKYVERN_API_BASE_URL: http://skyvern:8000/api/v1
+      VITE_API_BASE_URL: ${APP_URL}/api/v1
+      VITE_ARTIFACT_API_BASE_URL: ${APP_URL}
+      VITE_BROWSER_STREAMING_MODE: cdp
+      VITE_ENABLE_CODE_BLOCK: "true"
+      VITE_ENABLE_LOG_ARTIFACTS: "false"
+    # The live browser view uses a websocket on the same address:
+    # https:// becomes wss:// (http:// becomes ws://).
+    command:
+      - /bin/bash
+      - -c
+      - export VITE_WSS_BASE_URL="$$(printf '%s' "$$APP_URL" | sed 's|^http|ws|')/api/v1" && exec /bin/bash ./entrypoint-skyvernui.sh
+    volumes:
+      - skyvern-artifacts:/data/artifacts
+      - skyvern-videos:/data/videos
+      - skyvern-har:/data/har
+      - skyvern-credentials:/app/.skyvern
+    depends_on:
+      skyvern:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 10
+
+  postgres:
+    # The official file uses PostgreSQL 14, which reached end of life in
+    # November 2026, so this uses 17 (not yet proven by template try).
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: skyvern
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: skyvern
+    volumes:
+      - skyvern-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skyvern"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  skyvern-artifacts:
+  skyvern-videos:
+  skyvern-har:
+  skyvern-log:
+  skyvern-downloads:
+  skyvern-browser-sessions:
+  skyvern-credential-vault:
+  skyvern-credentials:
+  skyvern-db:

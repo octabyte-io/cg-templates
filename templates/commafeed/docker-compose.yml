@@ -1,0 +1,22 @@
+services:
+  commafeed:
+    # The native build with the embedded H2 database, which CommaFeed's docs
+    # call fine for small instances. Its data lives in the data volume.
+    image: athou/commafeed:7.5.0-h2
+    restart: unless-stopped
+    environment:
+      # Fixed key for the sign-in cookie, so people stay signed in across
+      # restarts (the default is a new random key at each start).
+      QUARKUS_HTTP_AUTH_SESSION_ENCRYPTION_KEY: ${SESSION_ENCRYPTION_KEY}
+      # Cloudgate's proxy sits in front of the app.
+      QUARKUS_HTTP_PROXY_PROXY_ADDRESS_FORWARDING: "true"
+      QUARKUS_HTTP_PROXY_ALLOW_X_FORWARDED: "true"
+      # No public sign-ups (CommaFeed's default); the admin adds users.
+      COMMAFEED_USERS_ALLOW_REGISTRATIONS: "false"
+      # No demo account with a known password.
+      COMMAFEED_USERS_CREATE_DEMO_ACCOUNT: "false"
+    volumes:
+      - commafeed-data:/commafeed/data
+
+volumes:
+  commafeed-data:

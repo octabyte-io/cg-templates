@@ -1,0 +1,46 @@
+services:
+  # Damselfly's server answers every request without checking who asks (its
+  # log-in only changes what the web pages show), so anyone with the address
+  # could browse and download the photos. This proxy asks for the username
+  # "admin" and the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SESSION_TOKEN: ${SESSION_TOKEN}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      damselfly:
+        condition: service_healthy
+
+  damselfly:
+    image: webreaper/damselfly:4.5.3
+    restart: unless-stopped
+    volumes:
+      # The photo library Damselfly indexes and watches. Copy pictures into
+      # this volume (subfolders become folders in Damselfly).
+      - damselfly-pictures:/pictures
+      # Database, settings and logs.
+      - damselfly-config:/config
+      # Thumbnails it generates.
+      - damselfly-thumbs:/thumbs
+    # The image has neither curl nor wget; check that the web port accepts
+    # connections with bash.
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/6363"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  damselfly-pictures:
+  damselfly-config:
+  damselfly-thumbs:
