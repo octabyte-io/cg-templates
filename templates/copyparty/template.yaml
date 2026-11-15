@@ -1,0 +1,19 @@
+name: copyparty
+description: "copyparty is a self-hosted file server to upload, share and collect large files from any browser, with share links, passwords and expiry dates."
+version: "1.20.26"
+tags: [wetransfer alternative, dropbox alternative, file sharing, file server, send large files, share links]
+links:
+  website: https://copyparty.eu
+  docs: https://github.com/9001/copyparty#readme
+  source: https://github.com/9001/copyparty
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password of the user "admin", set from this value on every start, so
+  # change it here, not in the app.
+  COPYPARTY_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: copyparty, port: 3923 }
+files:
+  - { path: copyparty.conf }

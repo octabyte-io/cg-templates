@@ -1,0 +1,26 @@
+name: Silex
+description: "Silex is a free, self-hosted visual website builder: design pages without code and publish fast static HTML and CSS, an open-source Webflow alternative."
+version: "3.10.0"
+tags: [website builder, webflow alternative, no-code website builder, static site builder, visual web design, wix alternative]
+links:
+  website: https://www.silex.me
+  docs: https://docs.silex.me
+  source: https://github.com/silexlabs/Silex
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The editor's public address.
+  SILEX_URL: { value: "{{domains.proxy.url}}" }
+  # Signs the editor's session cookie; Silex wants at least 32 characters.
+  SILEX_SESSION_SECRET: { generate: hex }
+  # The password the sign-in prompt in front of the editor asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  # The Silex editor, behind the password prompt.
+  - { service: proxy, port: 80 }
+  # The website you publish from the editor.
+  - { service: website, port: 80 }
+files:
+  - { path: editor.Caddyfile.txt }
+  - { path: website.Caddyfile.txt }

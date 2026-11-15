@@ -1,0 +1,23 @@
+services:
+  paperless-ai:
+    image: clusterzx/paperless-ai:4.0.0
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges=true
+    environment:
+      PAPERLESS_AI_PORT: "3000"
+      # Cloudgate's reverse proxy is one hop in front of the app: needed for
+      # secure session cookies and the login rate limit.
+      TRUST_PROXY: "1"
+      # Nothing else is set here: the sign-in secret and the webhook API key
+      # are generated on first start and kept in the data volume, and the
+      # account, the Paperless-ngx connection and the AI provider are set in
+      # the app's setup wizard (settings given as variables would be locked).
+    # The image has its own healthcheck (node fetch on /health).
+    volumes:
+      - paperless-ai-data:/app/data
+
+volumes:
+  paperless-ai-data:

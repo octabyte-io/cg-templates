@@ -1,0 +1,13 @@
+name: Erugo
+description: "Erugo is self-hosted file sharing: send large files by password-protected, expiring link, like WeTransfer, and let clients upload files back to you."
+version: "0.2.15"
+tags: [file sharing, wetransfer alternative, send large files, self-hosted file transfer, password protected share links, request files from clients]
+links:
+  website: https://erugo.app
+  docs: https://erugo.app/docs
+  source: https://github.com/ErugoOSS/Erugo
+cloudgate: 0.1.0
+compose: app
+size: small
+domains:
+  - { service: erugo, port: 80 }

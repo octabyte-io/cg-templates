@@ -1,0 +1,17 @@
+name: Nodedr OrderRestro
+description: "Nodedr OrderRestro is a self-hosted restaurant POS: billing, a kitchen display, tables, reservations, stock and staff payroll in one app, with no fee per till."
+version: "1.37.0"
+tags: [toast alternative, self-hosted restaurant pos, restaurant pos, kitchen display system, square for restaurants alternative, qr table ordering, open source restaurant pos]
+links:
+  website: https://orderrestro.nodedr.com/
+  docs: https://github.com/Raktim94/nodedr-restaurant-pos/blob/master/TUTORIAL.md
+  source: https://github.com/Raktim94/nodedr-restaurant-pos
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.web.url}}" }
+  JWT_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: web, port: 3000 }

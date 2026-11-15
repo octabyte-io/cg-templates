@@ -1,0 +1,93 @@
+services:
+  ampache:
+    # The official image without a built-in database (github.com/ampache/ampache-docker,
+    # "nosql" variant): Apache, PHP, cron and a folder watcher, with Ampache inside.
+    image: ampache/ampache:nosql8.4.0
+    restart: unless-stopped
+    depends_on:
+      ampache-db:
+        condition: service_healthy
+    # The image's own start script (run.sh), with the first start done here so
+    # the web install wizard is never left open:
+    # - install.sh creates the database, the database user and the admin
+    #   account from the environment (it runs only while there is no config file);
+    # - then a catalog named "music" on /media (the image's folder watcher keeps
+    #   that catalog up to date) and uploads switched on, into that catalog;
+    # - custom.ini raises PHP's 2 MB upload limit so whole songs and albums fit.
+    #   It lives in the config volume, so it can be edited and is kept.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        cp -p /var/tmp/*.dist /var/www/config/
+        chown www-data:www-data /media
+        if [ ! -f /var/www/config/custom.ini ]; then
+          printf '%s\n' 'upload_max_filesize = 1024M' 'post_max_size = 1024M' \
+            'memory_limit = 512M' 'max_execution_time = 300' > /var/www/config/custom.ini
+        fi
+        if [ ! -f /var/www/config/ampache.cfg.php ]; then
+          install.sh
+          test -f /var/www/config/ampache.cfg.php
+          chown www-data:www-data /var/www/config/ampache.cfg.php
+          su -s /bin/sh -c 'php /var/www/bin/cli run:addCatalog music /media music' www-data
+          mariadb -h ampache-db -u ampache -p"$$AMPACHE_DB_PASSWORD" ampache -e "
+            UPDATE user_preference SET value = '1' WHERE user = -1 AND name = 'allow_upload';
+            UPDATE user_preference SET value = (SELECT id FROM catalog WHERE name = 'music')
+              WHERE name = 'upload_catalog';"
+        fi
+        exec run.sh
+    environment:
+      DB_HOST: ampache-db
+      DB_PORT: "3306"
+      DB_NAME: ampache
+      # The installer signs in as root once to create the database and the
+      # user "ampache"; Ampache itself then runs as "ampache".
+      DB_USER: root
+      DB_PASSWORD: ${DB_ROOT_PASSWORD}
+      AMPACHE_DB_USER: ampache
+      AMPACHE_DB_PASSWORD: ${DB_PASSWORD}
+      AMPACHE_ADMIN_USER: admin
+      AMPACHE_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      AMPACHE_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # ampache.cfg.php and custom.ini.
+      - ampache-config:/var/www/config
+      # The music library: uploaded songs land here, in a folder per user.
+      - ampache-media:/media
+      - ampache-log:/var/log/ampache
+      # Database dumps made with "backup-db.sh".
+      - ampache-backup:/var/www/backup
+    # The image has neither curl nor wget; PHP is there.
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1/login.php') === false ? 1 : 0);"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  ampache-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    # No database or user here: Ampache's installer creates both, and refuses
+    # a database that already exists but is empty.
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+      MARIADB_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - ampache-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  ampache-config:
+  ampache-media:
+  ampache-log:
+  ampache-backup:
+  ampache-db-data:

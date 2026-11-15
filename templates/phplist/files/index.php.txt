@@ -1,0 +1,4 @@
+<?php
+// The image serves only index.php at the site root, so "/" was a 403 page.
+// Send visitors to phpList's sign-in page; a relative address keeps HTTPS.
+header('Location: /lists/admin/', true, 302);

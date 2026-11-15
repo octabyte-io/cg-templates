@@ -1,0 +1,21 @@
+name: Kill Bill
+description: "Kill Bill is self-hosted, open-source subscription billing: plans, trials, invoices, card payments and dunning on your own server, in place of Chargebee."
+version: "0.24.22"
+tags: [subscription billing, chargebee alternative, recurly alternative, recurring payments, invoicing, dunning, billing software]
+links:
+  website: https://killbill.io
+  docs: https://docs.killbill.io/latest/
+  source: https://github.com/killbill/killbill
+cloudgate: 0.1.0
+compose: app
+# Two Java servers (Kill Bill and Kaui) plus MariaDB use about 1.7 GB of memory at rest.
+size: large
+inputs:
+  DB_ROOT_PASSWORD: { generate: password }
+  # The password of Kill Bill's "admin" account, used to sign in to Kaui. It replaces the
+  # image's default ("password") and is shown afterwards on the app's variables page.
+  ADMIN_PASSWORD: { generate: password }
+  KAUI_SECRET_KEY_BASE: { generate: hex }
+# The address is Kaui, the admin UI. Kill Bill's REST API stays on the private network.
+domains:
+  - { service: kaui, port: 8080 }

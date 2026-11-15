@@ -1,0 +1,69 @@
+# From the MyBB Docker image's example stack (github.com/mybb/docker, README "How to use this
+# image"): MyBB on PHP-FPM, nginx in front of it with the virtual host the README links to,
+# and PostgreSQL. Images are pinned, ports removed, and the web installer is run unattended
+# on the first start (files/start.sh.txt) instead of being left open to the first visitor.
+services:
+  mybb:
+    # Official image: PHP 8.2 FPM on port 9000, no web server of its own. Its entrypoint copies
+    # MyBB into /var/www/html when the volume is empty, then runs the command below.
+    image: mybb/mybb:1.8.41
+    restart: unless-stopped
+    depends_on:
+      mybb-db:
+        condition: service_healthy
+    command: ["sh", "/cloudgate/start.sh"]
+    environment:
+      MYBB_BOARD_URL: ${BOARD_URL}
+      MYBB_BOARD_NAME: ${BOARD_NAME:-Forums}
+      MYBB_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      MYBB_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      MYBB_DB_HOST: mybb-db
+      MYBB_DB_NAME: mybb
+      MYBB_DB_USER: mybb
+      MYBB_DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # The whole web root, as in the official example: MyBB's code, inc/config.php,
+      # settings, uploads, avatars, theme cache, and any plugins or themes you add.
+      - mybb-data:/var/www/html
+      - ../files/start.sh.txt:/cloudgate/start.sh:ro
+      - ../files/mybb-install.php.txt:/cloudgate/mybb-install.php:ro
+    healthcheck:
+      # Healthy once the install has finished and PHP-FPM is accepting connections.
+      test: ["CMD-SHELL", "test -f /var/www/html/install/lock && nc -z 127.0.0.1 9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+
+  mybb-web:
+    # PHP-FPM can't serve images, CSS or JavaScript, so nginx reads them from the same volume.
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    depends_on:
+      mybb:
+        condition: service_healthy
+    volumes:
+      - mybb-data:/var/www/html:ro
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  mybb-db:
+    image: postgres:17.12-alpine
+    # The healthcheck asks over TCP: during first-start setup Postgres answers only on its
+    # socket, so this stays unhealthy until the real server is up.
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mybb
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: mybb
+    volumes:
+      - mybb-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U mybb -d mybb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  mybb-data:
+  mybb-db-data:

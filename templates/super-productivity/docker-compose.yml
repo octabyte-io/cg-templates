@@ -1,0 +1,33 @@
+# From the app's own docker-compose.yaml (services "app" and "webdav") at v20.0.0.
+# The web app keeps its data in each browser; the webdav service stores the
+# synced copy on the server so every browser and device sees the same tasks.
+services:
+  super-productivity:
+    image: johannesjo/super-productivity:v20.0.0
+    restart: unless-stopped
+    environment:
+      # The image's nginx forwards /webdav/ to this address (prefix removed),
+      # so sync works from the app's own web address without extra CORS.
+      WEBDAV_BACKEND: http://webdav:2345
+      # Defaults written into Settings > Sync: WebDAV at this address, user
+      # "admin". Each device still types the password once and turns sync on.
+      WEBDAV_BASE_URL: ${WEBDAV_BASE_URL}
+      WEBDAV_USERNAME: admin
+      WEBDAV_SYNC_FOLDER_PATH: /
+      SYNC_INTERVAL: "15"
+      IS_COMPRESSION_ENABLED: "true"
+      IS_ENCRYPTION_ENABLED: "false"
+    depends_on:
+      - webdav
+
+  webdav:
+    image: hacdias/webdav:v5.17.3
+    restart: unless-stopped
+    environment:
+      WEBDAV_PASSWORD: ${WEBDAV_PASSWORD}
+    volumes:
+      - ../files/webdav.yaml:/etc/webdav/config.yaml:ro
+      - super-productivity-sync:/data
+
+volumes:
+  super-productivity-sync:

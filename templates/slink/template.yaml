@@ -1,0 +1,27 @@
+name: Slink
+description: "Slink is a self-hosted image sharing app: upload screenshots and photos, then share them by private link with a password or expiry date."
+version: "1.14.6"
+tags: [image sharing, image hosting, imgur alternative, screenshot sharing, sharex uploader, private image links]
+links:
+  website: https://docs.slinkapp.io
+  docs: https://docs.slinkapp.io
+  source: https://github.com/andrii-kryvoviaz/slink
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ORIGIN: { value: "{{domains.slink.url}}" }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address you sign in to Slink with as its admin.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for the dates shown on uploads, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: slink, port: 3000 }

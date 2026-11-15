@@ -1,0 +1,12 @@
+services:
+  erugo:
+    image: wardy784/erugo:0.2.15
+    restart: unless-stopped
+    # No settings needed: on first start Erugo creates its app key, its JWT
+    # secret and a SQLite database inside the storage volume below, and the
+    # first visitor creates the admin account.
+    volumes:
+      - erugo-storage:/var/www/html/storage
+
+volumes:
+  erugo-storage:

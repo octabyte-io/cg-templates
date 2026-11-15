@@ -1,0 +1,72 @@
+# From the project's simple stack (docker/compose/docker-compose.simple.yml at
+# v0.26.19): the web app and Valkey, which holds every secret and account.
+services:
+  onetimesecret:
+    image: onetimesecret/onetimesecret:v0.26.19
+    restart: unless-stopped
+    # Web process only, as in the simple stack. The image's default entrypoint
+    # also starts the email worker and scheduler, which need RabbitMQ.
+    entrypoint: ["./bin/entrypoint.sh"]
+    depends_on:
+      onetimesecret-valkey:
+        condition: service_healthy
+    environment:
+      RACK_ENV: production
+      SECRET: ${SECRET}
+      VALKEY_URL: redis://:${VALKEY_PASSWORD}@onetimesecret-valkey:6379/0
+      AUTHENTICATION_MODE: simple
+      # The public address used in secret links, and HTTPS from Cloudgate's
+      # web proxy (session cookies are marked Secure).
+      HOST: ${HOST}
+      SSL: "true"
+      # Read the visitor's address from the proxy's X-Forwarded-For, so rate
+      # limits apply per visitor rather than to the proxy.
+      TRUSTED_PROXY_ENABLED: "true"
+      TRUSTED_PROXY_MODE: depth
+      TRUSTED_PROXY_DEPTH: "1"
+      # Email is only needed for account sign-up and notifications; anonymous
+      # secret sharing works without it. Fill these in to turn email on.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      FROM_EMAIL: ${FROM_EMAIL:-}
+    healthcheck:
+      # The image's own check: curl /health/advanced, then /health.
+      test: ["CMD", "bin/healthcheck.sh"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  onetimesecret-valkey:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    environment:
+      # Lets the healthcheck's valkey-cli authenticate.
+      REDISCLI_AUTH: ${VALKEY_PASSWORD}
+    command:
+      - valkey-server
+      - --appendonly
+      - "yes"
+      - --appendfilename
+      - onetime.aof
+      - --appendfsync
+      - everysec
+      - --dbfilename
+      - onetime.rdb
+      - --requirepass
+      - ${VALKEY_PASSWORD}
+      - --databases
+      - "1"
+    volumes:
+      - onetimesecret-valkey-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  onetimesecret-valkey-data:

@@ -1,0 +1,54 @@
+# From the community self-hosting build's compose file (github.com/awinterstein/habitica-self-host,
+# README "Simple Setup with Docker Compose"). Habitica's makers publish no image; these images are
+# built from their code with self-hosting changes (no payments, SMTP email, first user is admin).
+# Changes: images pinned, MongoDB data in named volumes, settings from template.yaml.
+services:
+  # The server, which also serves the web app.
+  habitica:
+    image: awinterstein/habitica-server:5.51.0
+    restart: unless-stopped
+    depends_on:
+      habitica-db:
+        condition: service_healthy
+    environment:
+      NODE_DB_URI: mongodb://habitica-db:27017/habitica?replicaSet=rs
+      BASE_URL: ${BASE_URL}
+      TRUSTED_DOMAINS: ${BASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      SESSION_SECRET_KEY: ${SESSION_SECRET_KEY}
+      INVITE_ONLY: ${INVITE_ONLY}
+      EMAIL_SERVER_URL: ${SMTP_HOST:-}
+      EMAIL_SERVER_PORT: ${SMTP_PORT:-587}
+      EMAIL_SERVER_AUTH_USER: ${SMTP_USERNAME:-}
+      EMAIL_SERVER_AUTH_PASSWORD: ${SMTP_PASSWORD:-}
+      ADMIN_EMAIL: ${SMTP_FROM:-}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/api/v3/status"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+  # MongoDB as a single-member replica set, which Habitica needs for transactions.
+  # The healthcheck starts the replica set on the first run.
+  habitica-db:
+    image: mongo:7.0.48
+    hostname: habitica-db
+    restart: unless-stopped
+    command: ["--replSet", "rs", "--bind_ip_all", "--port", "27017"]
+    volumes:
+      - habitica-db-data:/data/db
+      - habitica-db-config:/data/configdb
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "echo 'try { rs.status() } catch (err) { rs.initiate() }; quit(db.hello().isWritablePrimary ? 0 : 1)' | mongosh --port 27017 --quiet"
+      interval: 10s
+      timeout: 30s
+      retries: 30
+      start_period: 60s
+      start_interval: 2s
+
+volumes:
+  habitica-db-data:
+  habitica-db-config:

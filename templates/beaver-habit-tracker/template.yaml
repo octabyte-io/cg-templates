@@ -1,0 +1,18 @@
+name: Beaver Habit Tracker
+description: "Beaver Habit Tracker is a self-hosted habit tracker: tick off each day on a simple grid and follow your streaks and notes, with no goals."
+version: "0.10.0"
+tags: [habit tracker, self-hosted habit tracker, habitify alternative, streaks alternative, daily habits, open source habit tracker]
+links:
+  website: https://beaverhabits.com
+  docs: https://github.com/daya0576/beaverhabits/wiki
+  source: https://github.com/daya0576/beaverhabits
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  APP_URL: { value: "{{domains.beaverhabits.url}}" }
+  JWT_SECRET: { generate: hex }
+  NICEGUI_STORAGE_SECRET: { generate: hex }
+  RESET_PASSWORD_TOKEN_SECRET: { generate: hex }
+domains:
+  - { service: beaverhabits, port: 8080 }

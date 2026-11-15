@@ -1,0 +1,38 @@
+services:
+  # MeTube has no accounts or sign-in: anyone with the address could start
+  # downloads on your server, fill its disk and fetch every file it holds.
+  # This proxy asks for the username "admin" and the generated password first.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      metube:
+        condition: service_healthy
+
+  metube:
+    # The official image (hub.docker.com/r/alexta69/metube), built from each
+    # MeTube release: the web UI with yt-dlp and ffmpeg, listening on 8081.
+    image: alexta69/metube:2026.11.14
+    restart: unless-stopped
+    volumes:
+      # Downloaded files, plus MeTube's queue, history and subscriptions in
+      # /downloads/.metube.
+      - metube-downloads:/downloads
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail --output /dev/null http://localhost:8081/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+volumes:
+  metube-downloads:

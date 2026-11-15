@@ -1,0 +1,74 @@
+# Based on Misskey's official compose_example.yml and .config/docker_example.yml
+# (misskey-dev/misskey, tag 2026.11.0), using the published image instead of a
+# local build, without the published port and the optional mCaptcha and
+# Meilisearch services. PostgreSQL 17 instead of the example's 18 (Misskey
+# supports 15 and newer).
+services:
+  # The image has no /misskey/files folder, so a new volume would belong to
+  # root; this makes it Misskey's (uid 991) before the server starts.
+  misskey-init:
+    image: misskey/misskey:2026.11.0
+    restart: on-failure
+    user: root
+    entrypoint: ["sh", "-c", "chown 991:991 /misskey/files"]
+    volumes:
+      - misskey-files:/misskey/files
+
+  misskey:
+    image: misskey/misskey:2026.11.0
+    restart: unless-stopped
+    # The image's default: run database migrations, then start the server.
+    environment:
+      MISSKEY_URL: ${MISSKEY_URL}
+      DATABASE_USER: misskey
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      # Also written into default.yml as setupPassword (Misskey reads it only
+      # from there); kept here so the stack's variables show where it is used.
+      SETUP_PASSWORD: ${SETUP_PASSWORD}
+    volumes:
+      - misskey-files:/misskey/files
+      - ../files/default.yml:/misskey/.config/default.yml:ro
+    healthcheck:
+      test: ["CMD", "curl", "-sSfo", "/dev/null", "http://localhost:3000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 3m
+    depends_on:
+      misskey-init:
+        condition: service_completed_successfully
+      misskey-db:
+        condition: service_healthy
+      misskey-redis:
+        condition: service_healthy
+
+  misskey-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: misskey
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: misskey
+    volumes:
+      - misskey-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U misskey -d misskey"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  misskey-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - misskey-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  misskey-files:
+  misskey-db-data:
+  misskey-redis-data:
