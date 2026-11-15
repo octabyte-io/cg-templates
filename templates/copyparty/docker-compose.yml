@@ -1,0 +1,30 @@
+# From upstream's docs/examples/docker/basic-docker-compose (v1.20.26), with
+# files/copyparty.conf as the config. No visitor has access until they sign in;
+# the only account is "admin", whose password is COPYPARTY_ADMIN_PASSWORD.
+services:
+  copyparty:
+    image: copyparty/ac:1.20.26
+    restart: unless-stopped
+    user: "1000:1000"
+    # Added to the image's own arguments: our config file and the admin account.
+    command: ["-c", "/etc/copyparty/copyparty.conf", "-a", "admin:${COPYPARTY_ADMIN_PASSWORD}"]
+    environment:
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ../files/copyparty.conf:/etc/copyparty/copyparty.conf:ro
+      # The shared files.
+      - copyparty-files:/w
+      # Sessions, the file index and thumbnails.
+      - copyparty-config:/cfg
+    stop_grace_period: 15s
+    healthcheck:
+      # Upstream's check; "/._" keeps it out of the access log.
+      test: ["CMD-SHELL", "wget --spider -q 127.0.0.1:3923/?reset=/._"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  copyparty-files:
+  copyparty-config:

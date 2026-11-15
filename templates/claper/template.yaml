@@ -1,0 +1,57 @@
+name: Claper
+description: "Claper is a self-hosted Slido and Mentimeter alternative: live polls, audience Q&A and quizzes on your own slides, joined from any phone with a code."
+version: "3.3.0"
+tags: [slido alternative, mentimeter alternative, live polls, audience q&a, interactive presentations, classroom quizzes, wooclap alternative]
+links:
+  website: https://claper.co
+  docs: https://docs.claper.co
+  source: https://github.com/ClaperCo/Claper
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.claper.url}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in with as Claper's admin. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  ENABLE_ACCOUNT_CREATION:
+    ask:
+      label: Open sign-up
+      description: "true lets anyone who opens the app create a presenter account. Leave it false and add presenters yourself under Admin > Users. Attendees never need an account."
+      default: "false"
+      pattern: "true|false"
+      required: false
+  SMTP_RELAY:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Claper works without email, with password sign-in; add an email sending service, for example smtp.resend.com, to send sign-in links and password resets. You can add it later on the app's variables page.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 465 works with most email services; 587 uses STARTTLS.
+      default: "465"
+      format: number
+      required: false
+  SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  MAIL_FROM:
+    ask:
+      label: Sender address
+      description: The address Claper's emails come from, for example claper@yourdomain.com. Your email service must allow sending from it.
+      format: email
+      required: false
+domains:
+  - { service: claper, port: 4000 }

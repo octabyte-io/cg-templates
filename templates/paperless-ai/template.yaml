@@ -1,0 +1,13 @@
+name: Paperless-AI
+description: "Self-hosted Paperless-AI titles, tags and dates new Paperless-ngx documents with the AI you choose and answers questions about your archive."
+version: "4.0.0"
+tags: [paperless-ngx ai, ai document tagging, chat with your documents, nanonets alternative, ai document classification, paperless ai]
+links:
+  website: https://github.com/clusterzx/paperless-ai
+  docs: https://github.com/clusterzx/paperless-ai#readme
+  source: https://github.com/clusterzx/paperless-ai
+cloudgate: 0.1.0
+compose: app
+size: small
+domains:
+  - { service: paperless-ai, port: 3000 }
