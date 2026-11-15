@@ -3524,6 +3524,55 @@ export const PRODUCTS: Product[] = [
     lede: 'Saltcorn is a free, open-source Microsoft Access alternative: you build linked tables, forms, lists and reports without code, and the result is a web app many people use at once in their browsers. Access is a Windows desktop database that comes with some Microsoft 365 plans, and a database file is awkward to share across a team; Saltcorn runs on your own server with no limit on users, though it cannot import Access files, so your tables come across as CSV.',
     pick: 'saltcorn',
   },
+  {
+    id: 'solarwinds',
+    name: 'SolarWinds',
+    job: 'IT infrastructure monitoring',
+    lede: 'Checkmk Community is a free, open-source SolarWinds alternative for monitoring servers, network devices and applications from one web interface, with alerts, graphs and a hardware and software inventory. SolarWinds sells its monitoring tools as paid licences that grow with what you monitor; self-hosted Checkmk Community has no licence fee, though it has no PDF or SLA reports and you install its agent on each server yourself.',
+    pick: 'checkmk',
+  },
+  {
+    id: 'opendatasoft',
+    name: 'Opendatasoft',
+    job: 'running an open data portal',
+    lede: 'CKAN is the free, open-source Opendatasoft alternative for running an open data portal: publish datasets with their descriptions, and let people search, preview and download them or reach them through an API. Opendatasoft is a hosted platform priced on quote; self-hosted CKAN has no licence fee, though it shows fewer charts out of the box and setting it up takes technical work.',
+    pick: 'ckan',
+  },
+  {
+    id: 'socrata',
+    name: 'Socrata',
+    job: 'publishing government open data',
+    lede: 'CKAN is the free, open-source Socrata alternative behind national open data portals such as Canada’s and Australia’s: publish datasets with their descriptions, group them by organisation, and offer each for download and through an API. Socrata, now Tyler Data & Insights, is a hosted-only subscription; self-hosted CKAN runs on your own server with no licence fee, but has fewer built-in charts and visualisations.',
+    pick: 'ckan',
+  },
+  {
+    id: 'streamable',
+    name: 'Streamable',
+    job: 'sharing video clips by link',
+    lede: 'Fireshare is a free, open-source Streamable alternative for sharing game clips and other videos by link from your own server, with a clean watch page and a rich preview in Discord. Streamable’s free plan caps uploads at 250 MB and deletes videos after 90 days; self-hosted Fireshare keeps clips as long as you like, limited only by your disk, though it has no phone app.',
+    pick: 'fireshare',
+  },
+  {
+    id: 'go-vocal',
+    name: 'Go Vocal',
+    job: 'engaging residents online',
+    lede: 'Decidim is the free, open-source Go Vocal alternative for running consultations, proposals, participatory budgets and meetings online, on your own server. Go Vocal, formerly CitizenLab, is a hosted platform sold to councils by subscription; self-hosted Decidim has no licence fee, but you set it up and run it yourself, with no vendor onboarding.',
+    pick: 'decidim',
+  },
+  {
+    id: 'engagementhq',
+    name: 'EngagementHQ',
+    job: 'online community engagement',
+    lede: 'Decidim is a free, open-source EngagementHQ alternative for consulting residents and members online, with surveys, proposals, debates, participatory budgets, meetings and reports on what was done. EngagementHQ, from Granicus (formerly Bang the Table), is a hosted platform sold by subscription; self-hosted Decidim has no licence fee, though you configure and run it yourself.',
+    pick: 'decidim',
+  },
+  {
+    id: 'clz',
+    name: 'CLZ (Collectorz)',
+    job: 'cataloguing your collection',
+    lede: 'Koillection is a free, open-source CLZ alternative for cataloguing a collection of any kind, from books and records to cards and figures, with photos, your own fields, wishlists and loans. CLZ sells a separate subscription app for each type of collection, with barcode scanning and automatic details; self-hosted Koillection is one free app for everything, but you type the details in yourself.',
+    pick: 'koillection',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));

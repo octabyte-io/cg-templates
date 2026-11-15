@@ -1,0 +1,20 @@
+# Based on Checkmk's official Docker instructions:
+# https://docs.checkmk.com/latest/en/introduction_docker.html
+services:
+  checkmk:
+    image: checkmk/check-mk-community:2.5.0p19
+    restart: unless-stopped
+    environment:
+      # The monitoring site's name; the web interface lives at /cmk/ and
+      # the address's root redirects there.
+      CMK_SITE_ID: cmk
+      # Password of the "cmkadmin" user, used only when the site is created.
+      CMK_PASSWORD: ${CMK_PASSWORD}
+    # Checkmk keeps its temporary files in memory, as its docs recommend.
+    tmpfs:
+      - /opt/omd/sites/cmk/tmp:uid=1000,gid=1000
+    volumes:
+      - checkmk-sites:/omd/sites
+
+volumes:
+  checkmk-sites:

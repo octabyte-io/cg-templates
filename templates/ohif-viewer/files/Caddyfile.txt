@@ -1,0 +1,24 @@
+# The OHIF Viewer and Orthanc have no sign-in in this setup, so this small
+# proxy asks for a username and password before anyone reaches them.
+# Cloudgate's own proxy in front handles the domain and TLS. BASIC_AUTH_HASH is
+# the bcrypt hash of ADMIN_PASSWORD, made when the container starts (see
+# docker-compose.yml).
+{
+	admin off
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	# Orthanc: DICOMweb for the viewer (/pacs/dicom-web) and its own pages.
+	handle_path /pacs/* {
+		reverse_proxy orthanc:8042
+	}
+
+	# Everything else is the viewer.
+	handle {
+		reverse_proxy ohif:8080
+	}
+}

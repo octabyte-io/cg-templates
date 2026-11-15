@@ -1,0 +1,47 @@
+services:
+  lms:
+    image: epoupon/lms:3.82.0
+    restart: unless-stopped
+    # The image runs as its own unprivileged "lms" user and reads its default
+    # settings from /etc/lms.conf. The first person to open the address creates
+    # the admin account; then add /music as a library under Administration.
+    volumes:
+      # The SQLite database, artwork cache and settings.
+      - lms-data:/var/lms
+      # The music library, shared with FileBrowser Quantum below. LMS only
+      # reads it.
+      - lms-music:/music:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5082/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # FileBrowser Quantum: upload music from the browser at its own address,
+  # into the same volume LMS plays from. Its default settings serve /srv
+  # with password sign-in and sign-ups off. FILEBROWSER_ADMIN_PASSWORD sets the
+  # password of the user "admin" (created on first start, and set back to this
+  # value on every start). Runs as root so it can write to the shared volume,
+  # which is created owned by root.
+  filebrowser:
+    image: gtstef/filebrowser:2.0.2-stable-slim
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      FILEBROWSER_ADMIN_PASSWORD: ${FILEBROWSER_ADMIN_PASSWORD}
+    volumes:
+      - lms-music:/srv
+      # Its database and settings.
+      - filebrowser-data:/home/filebrowser/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  lms-data:
+  lms-music:
+  filebrowser-data:

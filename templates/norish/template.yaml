@@ -1,0 +1,19 @@
+name: Norish
+description: "Norish is a self-hosted recipe app for households: import recipes, plan meals together and share a grocery list that updates live."
+version: "v0.26.1-beta"
+tags: ["paprika alternative", "plan to eat alternative", "recipe app", "meal planner", "shared grocery list", "mealie alternative"]
+links:
+  website: https://norish.dev
+  docs: https://docs.norish.dev
+  source: https://github.com/norish-recipes/norish
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  AUTH_URL: { value: "{{domains.norish.url}}" }
+  # Norish derives its encryption keys from this; it must stay the same.
+  MASTER_KEY: { generate: base64 }
+  OBSCURA_CDP_TOKEN: { generate: hex }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: norish, port: 3000 }

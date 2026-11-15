@@ -1,0 +1,81 @@
+# From Norish's official quick-start compose file (README and
+# docker/docker-compose.example.yml at v0.26.1-beta), with versions pinned and
+# the database given its own password.
+#
+# Sign-in: no OIDC, GitHub or Google provider is set, so Norish turns on its own
+# email and password sign-in (PASSWORD_AUTH_ENABLED, set here so it stays on).
+# The first person to sign up at the app's address becomes the server owner and
+# admin, and sign-up then closes; further people are invited from Settings.
+services:
+  norish:
+    image: norishapp/norish:v0.26.1-beta
+    restart: unless-stopped
+    depends_on:
+      norish-db:
+        condition: service_healthy
+      norish-valkey:
+        condition: service_healthy
+      norish-obscura:
+        condition: service_started
+    environment:
+      AUTH_URL: ${AUTH_URL}
+      DATABASE_URL: postgres://norish:${DB_PASSWORD}@norish-db:5432/norish
+      MASTER_KEY: ${MASTER_KEY}
+      VALKEY_URL: valkey://norish-valkey:6379
+      OBSCURA_ENDPOINT: ws://norish-obscura:9222
+      OBSCURA_CDP_TOKEN: ${OBSCURA_CDP_TOKEN}
+      UPLOADS_DIR: /app/uploads
+      PASSWORD_AUTH_ENABLED: "true"
+    volumes:
+      # Recipe images and other uploads.
+      - norish-data:/app/uploads
+    healthcheck:
+      # The official healthcheck, with Node from the image.
+      test:
+        [
+          "CMD-SHELL",
+          'node -e "require(''http'').get(''http://localhost:3000/api/v1/health/live'', r => process.exit(r.statusCode===200?0:1)).on(''error'', () => process.exit(1))"',
+        ]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 1m
+
+  # Renders recipe pages for imports from a web address.
+  norish-obscura:
+    image: norishapp/obscura:0.2.5-norish.1
+    restart: unless-stopped
+    environment:
+      OBSCURA_CDP_TOKEN: ${OBSCURA_CDP_TOKEN}
+
+  # Real-time updates and job queues.
+  norish-valkey:
+    image: valkey/valkey:9.0.7-alpine
+    restart: unless-stopped
+    volumes:
+      - norish-valkey-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  norish-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: norish
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: norish
+    volumes:
+      - norish-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U norish -d norish"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  norish-data:
+  norish-db-data:
+  norish-valkey-data:

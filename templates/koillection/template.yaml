@@ -1,0 +1,23 @@
+name: Koillection
+description: "Koillection is a self-hosted collection manager for books, records, games and more, with photos, custom fields, wishlists and loans."
+version: "1.8.6"
+tags: ["clz alternative", "collection manager", "collection tracker", "record collection catalogue", "wishlist", "book and game catalogue"]
+links:
+  website: https://koillection.github.io
+  docs: https://github.com/koillection/koillection/wiki
+  source: https://github.com/koillection/koillection
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_SECRET: { generate: hex }
+  JWT_PASSPHRASE: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  PHP_TZ:
+    ask:
+      label: Time zone
+      description: Used for dates in the app, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: koillection, port: 80 }

@@ -1,0 +1,18 @@
+name: Reitti
+description: "Reitti is a self-hosted location history app that turns your phone's GPS points into daily visits and trips, with statistics and family sharing."
+version: "5.11.0"
+tags: ["google timeline alternative", "location history", "location sharing", "owntracks server", "gps tracking", "google takeout import"]
+links:
+  website: https://www.dedicatedcode.com/projects/reitti/
+  docs: https://www.dedicatedcode.com/projects/reitti/latest/
+  source: https://github.com/dedicatedcode/reitti
+cloudgate: 0.1.0
+compose: app
+# Java (Spring Boot) app with PostGIS, Redis and a small map tile cache;
+# importing years of location history needs memory.
+size: medium
+inputs:
+  POSTGIS_PASSWORD: { generate: password }
+  ADVERTISE_URI: { value: "{{domains.reitti.url}}" }
+domains:
+  - { service: reitti, port: 8080 }

@@ -1,0 +1,18 @@
+name: LMS (Lightweight Music Server)
+description: "LMS (Lightweight Music Server) is a self-hosted music streaming server for the music you own, in your browser and Subsonic phone apps."
+version: "3.82.0"
+tags: ["spotify alternative", "self-hosted music server", "subsonic server", "music streaming server", "lightweight music server", "apple music alternative"]
+links:
+  website: https://github.com/epoupon/lms
+  docs: https://github.com/epoupon/lms/blob/master/INSTALL.md
+  source: https://github.com/epoupon/lms
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password of FileBrowser Quantum's user "admin", used to upload
+  # music at the second address.
+  FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: lms, port: 5082 }
+  - { service: filebrowser, port: 80 }
