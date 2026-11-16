@@ -1,0 +1,20 @@
+name: rotki
+description: "Self-hosted rotki is a private crypto portfolio tracker that reads your exchanges and wallets and runs profit and loss reports, encrypted on your server."
+version: "v1.44.3"
+tags: [crypto portfolio tracker, crypto tax software, koinly alternative, coinledger alternative, defi tracker, self-hosted portfolio tracker]
+links:
+  website: https://rotki.com
+  docs: https://docs.rotki.com
+  source: https://github.com/rotki/rotki
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # The password the sign-in prompt in front of rotki asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+  # Turns on rotki's own session sign-in for its API; keep it stable.
+  ROTKI_SESSION_KEY: { generate: hex }
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

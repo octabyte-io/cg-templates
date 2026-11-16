@@ -1,0 +1,17 @@
+name: RSS-Bridge
+description: "Self-hosted RSS-Bridge makes RSS feeds for websites, YouTube channels and social accounts that have none, ready for any feed reader."
+version: "2026-09-30"
+tags: [rss feed generator, rss for any website, atom feeds, social media to rss, feed reader]
+links:
+  website: https://rss-bridge.org
+  docs: https://rss-bridge.github.io/rss-bridge/
+  source: https://github.com/RSS-Bridge/rss-bridge
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The access token: without it the instance and its feeds answer "token
+  # required", so strangers can't use your server to scrape other sites.
+  RSS_BRIDGE_TOKEN: { generate: hex }
+domains:
+  - { service: rss-bridge, port: 80 }

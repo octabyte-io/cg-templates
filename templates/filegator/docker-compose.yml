@@ -1,0 +1,40 @@
+services:
+  # FileGator, from the project's own image (Apache and PHP on port 8080). It
+  # keeps the files people upload in "repository" and its users, sessions and
+  # logs in "private".
+  filegator:
+    image: filegator/filegator:v7.16.9
+    restart: unless-stopped
+    depends_on:
+      filegator-seed-admin:
+        condition: service_completed_successfully
+    environment:
+      FILEGATOR_CSRF_KEY: ${FILEGATOR_CSRF_KEY}
+    volumes:
+      - filegator-repository:/var/www/filegator/repository
+      - filegator-private:/var/www/filegator/private
+      # The image's configuration.php with a random csrf_key per install.
+      - ../files/configuration.php.txt:/var/www/filegator/configuration.php:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Runs before each start. On the first start it writes the user list with the
+  # admin password Cloudgate generated, so the image's public default password
+  # (admin123) is never used. Once the list exists it changes nothing.
+  filegator-seed-admin:
+    image: filegator/filegator:v7.16.9
+    restart: "no"
+    entrypoint: ["php", "/seed-admin.php"]
+    environment:
+      FILEGATOR_ADMIN_PASSWORD: ${FILEGATOR_ADMIN_PASSWORD}
+    volumes:
+      - filegator-private:/var/www/filegator/private
+      - ../files/seed-admin.php.txt:/seed-admin.php:ro
+
+volumes:
+  filegator-repository:
+  filegator-private:

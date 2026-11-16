@@ -1,0 +1,49 @@
+name: Synaplan
+description: "Synaplan is a self-hosted AI assistant on your own files that answers in team chat, on your website, WhatsApp and email, and shows what each answer costs."
+version: "5.8.2"
+tags: [self-hosted ai chat, ai knowledge base, chat with your documents, chatgpt alternative, open source ai platform]
+links:
+  website: https://www.synaplan.com
+  docs: https://docs.synaplan.com
+  source: https://github.com/metadist/synaplan
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  APP_URL: { value: "{{domains.synaplan.url}}" }
+  APP_SECRET: { generate: hex }
+  TOKEN_SECRET: { generate: hex }
+  MARIADB_PASSWORD: { generate: password }
+  MARIADB_ROOT_PASSWORD: { generate: password }
+  REALTIME_API_KEY: { generate: hex }
+  REALTIME_TOKEN_SECRET: { generate: hex }
+  REALTIME_ADMIN_PASSWORD: { generate: password }
+  REALTIME_ADMIN_SECRET: { generate: hex }
+  # The first administrator is created on the first start with this email and a
+  # generated 32-character password (read it on the Service's variables page).
+  BOOTSTRAP_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Synaplan with this email and the generated admin password.
+      format: email
+  BOOTSTRAP_ADMIN_PASSWORD: { generate: password }
+  GROQ_API_KEY:
+    ask:
+      label: Groq API key (optional)
+      description: Groq is Synaplan's default AI provider and has a free tier at console.groq.com. Chat needs at least one provider key; you can also add one later in the app.
+      secret: true
+      required: false
+  OPENAI_API_KEY:
+    ask:
+      label: OpenAI API key (optional)
+      description: Lets Synaplan use OpenAI models. Usage is billed by OpenAI. You can also add it later in the app.
+      secret: true
+      required: false
+  ANTHROPIC_API_KEY:
+    ask:
+      label: Anthropic API key (optional)
+      description: Lets Synaplan use Claude models. Usage is billed by Anthropic. You can also add it later in the app.
+      secret: true
+      required: false
+domains:
+  - { service: synaplan, port: 80 }
