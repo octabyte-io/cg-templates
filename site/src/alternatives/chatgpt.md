@@ -21,6 +21,9 @@ apps:
   huggingchat:
     fit: "Hugging Face's Chat UI, the open-source app behind HuggingChat, is the simplest ChatGPT-style chat here: pick a model for each chat from open models such as Llama, Qwen and DeepSeek through Hugging Face's router, or any OpenAI-compatible API, including OpenAI's and a local Ollama. Models can use tools such as web search through MCP servers. It has no memory, custom GPTs, document knowledge bases or admin console, and Cloudgate puts one shared login in front of it, so everyone uses the same password until you set up OpenID Connect sign-in."
     import: no
+  eneo:
+    fit: "Built for organisations rather than single users: a ChatGPT-style chat for each person, shared assistants per team in spaces with roles, knowledge from uploaded documents, websites, SharePoint, OneDrive and Confluence, sign-in through your identity provider and an audit log of AI use. It was made by Swedish municipalities for the public sector, so some labels and docs are in Swedish, and like the others it needs an AI provider you connect. It cannot import ChatGPT chats."
+    import: no
   synaplan:
     fit: "A team AI chat that shows which model answered and what each answer cost, lets you ask again with another model, and answers from files you upload. The same assistant can also answer on your website, WhatsApp and email, and actions such as sending mail wait for a person's approval. It needs an API key from an AI provider, cannot import ChatGPT chats, and is heavier than a plain chat window, with 8 GB of memory recommended."
     import: no
@@ -40,9 +43,11 @@ moving: |
   Khoj cannot import ChatGPT chats. Sign in to its admin page, add an AI provider key and a chat model, then upload your files or sync them from the desktop app, Obsidian or Emacs. Rebuild the custom GPTs you rely on as Khoj agents with the same instructions and knowledge files.
 
   Synaplan cannot import ChatGPT chats. As admin, paste an API key from a provider such as OpenAI, Anthropic or Groq under its AI settings, upload the files your team asks about, and rebuild the custom GPTs you use as assistants with the same instructions and knowledge folders. Then add your colleagues and share folders and assistants with their groups.
+
+  Eneo cannot import ChatGPT chats. Sign in with the admin email you gave during setup and the password Cloudgate created for it, then add your AI provider and the models staff may use under Admin, Models. Turn on sign-in through your identity provider, create a space for each team with the documents or SharePoint libraries it works from, and rebuild the custom GPTs your teams use as assistants in those spaces.
 faq:
-  - q: "Should I choose Open WebUI, LibreChat, AnythingLLM, Onyx, LobeHub, Khoj, HuggingChat or Synaplan?"
-    a: "Choose Open WebUI for one general ChatGPT-style chat for the whole team. Choose LibreChat if you want an MIT-licensed chat with many hosted providers side by side and shared agents. Choose AnythingLLM if most questions are about documents you upload, or if you also want a chat on your website that answers visitors from them. Choose Onyx if you want answers from the apps your company already uses, such as Slack, Google Drive and Confluence, and have a large server to run it. Choose LobeHub for the most polished personal app with agents and many models, if each person managing their own account and API key is fine. Choose Khoj for a personal research assistant over your own documents and notes rather than a team chat. Choose HuggingChat, Hugging Face's Chat UI, for the simplest chat built around open models, for one person or a small group that can do without accounts and admin tools. Choose Synaplan if you want to see what each answer costs, or want the same assistant to answer customers on your website, WhatsApp and email as well as your team."
+  - q: "Should I choose Open WebUI, LibreChat, AnythingLLM, Onyx, LobeHub, Khoj, HuggingChat, Synaplan or Eneo?"
+    a: "Choose Open WebUI for one general ChatGPT-style chat for the whole team. Choose LibreChat if you want an MIT-licensed chat with many hosted providers side by side and shared agents. Choose AnythingLLM if most questions are about documents you upload, or if you also want a chat on your website that answers visitors from them. Choose Onyx if you want answers from the apps your company already uses, such as Slack, Google Drive and Confluence, and have a large server to run it. Choose LobeHub for the most polished personal app with agents and many models, if each person managing their own account and API key is fine. Choose Khoj for a personal research assistant over your own documents and notes rather than a team chat. Choose HuggingChat, Hugging Face's Chat UI, for the simplest chat built around open models, for one person or a small group that can do without accounts and admin tools. Choose Synaplan if you want to see what each answer costs, or want the same assistant to answer customers on your website, WhatsApp and email as well as your team. Choose Eneo for a public body or larger organisation that wants assistants per team, answers from SharePoint and Confluence, and an audit log of AI use."
   - q: "Does Open WebUI include an AI model?"
     a: "No. Open WebUI is the chat interface. You connect it to an AI provider with an API key, such as OpenAI or Anthropic, or to a model server you run, such as Ollama or vLLM. The provider bills you for what you use."
   - q: "Is LibreChat open source?"
@@ -51,6 +56,8 @@ faq:
     a: "No. Its code is public and free to use, but since version 0.6.6 its licence requires keeping the Open WebUI name and logo once more than 50 people use it in 30 days, unless you buy an enterprise licence, so it is not OSI open source."
   - q: "Can I use ChatGPT's models in Open WebUI?"
     a: "Yes, through OpenAI's API with your own API key. API usage is billed by OpenAI separately from any ChatGPT plan."
+  - q: "Which ChatGPT alternative suits a council or public body?"
+    a: "Eneo. Swedish municipalities built it for the public sector, with spaces per team, roles, an audit log of AI use, and the AI model of your choice, including one you run yourself. It is open source under the AGPL-3.0 licence, with no paid edition."
 ---
 
 ChatGPT Business, called ChatGPT Team until 2025, is OpenAI's plan for companies to use ChatGPT together. Everyone gets ChatGPT with a shared workspace, admin controls, custom GPTs and connections to company apps, and OpenAI says it does not train on business data by default.

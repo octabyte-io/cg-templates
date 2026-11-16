@@ -1,0 +1,264 @@
+# Reloop 0.10.0, from upstream's install/templates/docker-compose.yml at tag v0.10.0.
+# Left out: the public Caddy proxy (Cloudgate's proxy does TLS; a small internal
+# one routes paths), "upload" (needs S3 storage), and "inbound" and "spam",
+# which receive mail on port 25 for the agent inbox. Cloudgate routes web
+# traffic only, so SMTP submission (465/587) and receiving mail are not
+# available; sending through the API, campaigns and workflows is.
+x-env: &env
+  NODE_ENV: production
+  SELF_HOSTED: "true"
+  APP_NAME: Reloop
+  BASE_URL: ${BASE_URL}
+  # Services check sessions with auth directly instead of through the public address.
+  AUTH_INTERNAL_BASE_URL: http://auth:8000
+  HOST_DOMAIN: ${HOST_DOMAIN}
+  # Click and open tracking use the app's own address; the proxy routes
+  # /redirect to "links" and /api/mail to "mail".
+  TRACKING_DOMAIN: ${HOST_DOMAIN}
+  TRACKING_BASE_URL: ${BASE_URL}
+  INBOUND_HOSTNAME: ${HOST_DOMAIN}
+  SMTP_HOSTNAME: ${HOST_DOMAIN}
+  DKIM_SELECTOR: reloop
+  POSTGRES_DB: reloop
+  POSTGRES_USER: reloop
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  PG_URL: postgresql://reloop:${POSTGRES_PASSWORD}@postgres:5432/reloop
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+  NATS_URL: nats://nats:4222
+  BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+  RELOOP_INTERNAL_SECRET: ${RELOOP_INTERNAL_SECRET}
+  TRACKING_SECRET: ${TRACKING_SECRET}
+  PREFERENCES_SECRET: ${PREFERENCES_SECRET}
+  WEBHOOK_ENCRYPTION_KEY: ${WEBHOOK_ENCRYPTION_KEY}
+  # First run: /dashboard/setup asks for this key once to create the
+  # administrator. Using it empties the key file in the auth-state volume.
+  SETUP_MODE: "true"
+  ADMIN_SETUP_KEY: ${ADMIN_SETUP_KEY}
+  ADMIN_SETUP_KEY_FILE: /run/reloop/admin-setup.key
+  RELOOP_ENV_FILE: /run/reloop/.env
+  # Basic auth for the queue dashboard at /api/workflow/jobs.
+  WORKBENCH_USER: admin
+  WORKBENCH_PASS: ${WORKBENCH_PASS}
+  DEFAULT_OTP: ""
+  DISABLE_SIGNUP: "false"
+  DISABLE_ORG_CREATION: "false"
+  # System email (sign-in codes, invitations) goes through this SMTP server.
+  SMTP_HOST: ${SMTP_HOST:-}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USER: ${SMTP_USER:-}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  SMTP_SECURE: ${SMTP_SECURE:-false}
+  RELOOP_API_KEY: ""
+  RELOOP_SENDER_DOMAIN: ""
+  KUMOMTA_MIN_FREE_SPACE: 5%
+  KUMOMTA_MIN_FREE_INODES: "0"
+  KUMOMTA_HTTP_URL: http://smtp:8000
+  KUMOMTA_CHECK_RECIPIENT_URL: http://domain:8011/api/domain
+  KUMOMTA_WEBHOOK_URL: http://domain:8011/api/domain
+  DNS_RESOLVERS: 8.8.8.8,8.8.4.4
+
+x-backend: &backend
+  restart: unless-stopped
+  depends_on:
+    migrate:
+      condition: service_completed_successfully
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+    nats:
+      condition: service_healthy
+
+services:
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - auth
+      - dashboard
+      - links
+
+  postgres:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: reloop
+      POSTGRES_USER: reloop
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reloop -d reloop"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--dir", "/data"]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  nats:
+    image: nats:2.10.29-alpine
+    restart: unless-stopped
+    command: ["-js", "-sd", "/data", "-m", "8222"]
+    volumes:
+      - nats-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  # Creates and updates the database tables at each start (upstream's
+  # "migrate" tool: drizzle-kit push), then exits.
+  migrate:
+    image: reloopsh/be-auth:0.10.0
+    restart: "no"
+    working_dir: /app/packages/db
+    entrypoint: ["/app/node_modules/.bin/drizzle-kit"]
+    command: ["push", "--force"]
+    environment: *env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  auth:
+    <<: *backend
+    image: reloopsh/be-auth:0.10.0
+    environment:
+      <<: *env
+      PORT: 8000
+    volumes:
+      - auth-state:/run/reloop
+
+  domain:
+    <<: *backend
+    image: reloopsh/be-domain:0.10.0
+    environment:
+      <<: *env
+      PORT: 8011
+
+  api-key:
+    <<: *backend
+    image: reloopsh/be-api-key:0.10.0
+    environment:
+      <<: *env
+      PORT: 8012
+
+  webhook:
+    <<: *backend
+    image: reloopsh/be-webhook:0.10.0
+    environment:
+      <<: *env
+      PORT: 8013
+
+  contacts:
+    <<: *backend
+    image: reloopsh/be-contacts:0.10.0
+    environment:
+      <<: *env
+      PORT: 8014
+
+  mail:
+    <<: *backend
+    image: reloopsh/be-mail:0.10.0
+    environment:
+      <<: *env
+      PORT: 8015
+
+  logs:
+    <<: *backend
+    image: reloopsh/be-logs:0.10.0
+    environment:
+      <<: *env
+      PORT: 8016
+
+  workflow:
+    <<: *backend
+    image: reloopsh/be-workflow:0.10.0
+    environment:
+      <<: *env
+      PORT: 8017
+
+  template:
+    <<: *backend
+    image: reloopsh/be-template:0.10.0
+    environment:
+      <<: *env
+      PORT: 8019
+
+  campaigns:
+    <<: *backend
+    image: reloopsh/be-campaigns:0.10.0
+    environment:
+      <<: *env
+      PORT: 8027
+
+  inbox:
+    <<: *backend
+    image: reloopsh/be-inbox:0.10.0
+    environment:
+      <<: *env
+      PORT: 8028
+
+  email:
+    <<: *backend
+    image: reloopsh/be-email:0.10.0
+    environment:
+      <<: *env
+      PORT: 8022
+
+  # KumoMTA: delivers outgoing mail straight to recipients' mail servers,
+  # which needs outbound port 25 open on the server.
+  smtp:
+    image: reloopsh/be-smtp:0.10.0
+    restart: unless-stopped
+    environment:
+      <<: *env
+      HOSTNAME: ${HOST_DOMAIN}
+    volumes:
+      - smtp-data:/var/spool/kumomta/data
+      - smtp-meta:/var/spool/kumomta/meta
+    depends_on:
+      nats:
+        condition: service_healthy
+
+  dashboard:
+    image: reloopsh/fe-dashboard:0.10.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      SMTP_HOSTNAME: ${HOST_DOMAIN}
+
+  links:
+    image: reloopsh/fe-links:0.10.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_URL: ${BASE_URL}
+      INTERNAL_API_URL: http://contacts:8014/api/contacts
+      INTERNAL_MAIL_API_URL: http://mail:8015/api/mail
+
+volumes:
+  postgres-data:
+  redis-data:
+  nats-data:
+  auth-state:
+  smtp-data:
+  smtp-meta:

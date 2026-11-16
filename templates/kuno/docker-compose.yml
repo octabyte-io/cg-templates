@@ -1,0 +1,26 @@
+services:
+  kuno:
+    # One image runs the Go API, the Next.js site and nginx in front of them on port 80.
+    image: ictrun/kuno:1.4.8
+    restart: unless-stopped
+    environment:
+      # The address the site's pages call for the API; it must be the public address.
+      NEXT_PUBLIC_API_URL: ${API_URL}
+      DB_PATH: /app/data/blog.db
+      UPLOAD_DIR: /app/data/uploads
+      GIN_MODE: release
+      NODE_ENV: production
+      RECOVERY_MODE: "false"
+      # Without it Kuno makes a new key on every restart and signs everyone out.
+      JWT_SECRET: ${JWT_SECRET}
+      # Derives the key that encrypts AI provider API keys saved in the admin panel.
+      BLOG_SECRET_PHRASE: ${SECRET_PHRASE}
+    volumes:
+      # SQLite database and uploaded media.
+      - kuno-data:/app/data
+      # nginx serves /uploads/ from here (as in the project's docker-compose.hub.yml).
+      - kuno-uploads:/app/backend/uploads
+
+volumes:
+  kuno-data:
+  kuno-uploads:

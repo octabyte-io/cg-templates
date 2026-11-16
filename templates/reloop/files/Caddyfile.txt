@@ -1,0 +1,75 @@
+# Reloop is a set of small services; this proxy sends each path to the right
+# one, as upstream's install/templates/Caddyfile does. Cloudgate's own proxy in
+# front handles the domain and TLS, so this one only listens on plain HTTP.
+# Click and open tracking use the same address (/redirect and /api/mail).
+{
+	admin off
+	auto_https off
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	encode zstd gzip
+
+	handle /dashboard* {
+		reverse_proxy dashboard:3000
+	}
+	handle /docs* {
+		redir https://reloop.sh{uri} 302
+	}
+	handle /preferences* {
+		reverse_proxy links:3005
+	}
+	handle /redirect* {
+		reverse_proxy links:3005
+	}
+
+	handle /api/auth* {
+		reverse_proxy auth:8000
+	}
+	handle /api/domain* {
+		reverse_proxy domain:8011
+	}
+	handle /api/api-key* {
+		reverse_proxy api-key:8012
+	}
+	handle /api/webhook* {
+		reverse_proxy webhook:8013
+	}
+	handle /api/contacts* {
+		reverse_proxy contacts:8014
+	}
+	handle /api/mail* {
+		reverse_proxy mail:8015
+	}
+	handle /api/logs* {
+		reverse_proxy logs:8016
+	}
+	handle /api/workflow* {
+		reverse_proxy workflow:8017
+	}
+	handle /api/template* {
+		reverse_proxy template:8019
+	}
+	handle /api/campaigns* {
+		reverse_proxy campaigns:8027
+	}
+	handle /api/inbox* {
+		reverse_proxy inbox:8028
+	}
+	handle /api/email* {
+		reverse_proxy email:8022
+	}
+
+	# File uploads need S3 storage and are left out of this template.
+	@removed path /api/upload* /api/credits* /api/tool* /api/admin*
+	handle @removed {
+		respond 404
+	}
+
+	handle {
+		redir /* /dashboard 302
+	}
+}

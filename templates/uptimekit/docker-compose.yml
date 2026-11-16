@@ -1,0 +1,124 @@
+# From UptimeKit's official docker-compose.clickhouse.yml (v5.2.2): the dashboard, PostgreSQL,
+# ClickHouse for check results, and Apprise for notifications. The worker that runs the checks
+# comes from the official worker install guide (apps/docs/installation/worker.mdx). Upstream has
+# you create the worker in the dashboard and paste its API key into the worker's settings; here
+# uptimekit-worker-init registers one worker with a generated key instead, stored the way the
+# dashboard stores it (the key's SHA-256 hash in worker_api_key), so checks run from the start.
+services:
+  uptimekit:
+    image: ghcr.io/uptimekit/dash:5.2.2
+    restart: unless-stopped
+    depends_on:
+      uptimekit-db:
+        condition: service_healthy
+      uptimekit-clickhouse:
+        condition: service_healthy
+      uptimekit-apprise:
+        condition: service_started
+    environment:
+      # The address people open; sign-in, links in emails and status page links use it.
+      APP_URL: ${APP_URL}
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: postgresql://uptimekit:${DB_PASSWORD}@uptimekit-db:5432/uptimekit
+      TIMESERIES_BACKEND: clickhouse
+      CLICKHOUSE_URL: http://uptimekit-clickhouse:8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      APPRISE_URL: http://uptimekit-apprise:8000
+    healthcheck:
+      # As upstream: the image is Alpine (busybox wget) and Next.js listens on the container's address.
+      test: ["CMD-SHELL", "IP=$$(hostname -i | awk '{print $$1}'); wget -qO- \"http://$$IP:3000/api/health\" >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  uptimekit-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: uptimekit
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: uptimekit
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/<version>.
+      - uptimekit-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uptimekit -d uptimekit"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  uptimekit-clickhouse:
+    image: clickhouse/clickhouse-server:26.9.29.5
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_DB: uptimekit
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - uptimekit-clickhouse-data:/var/lib/clickhouse
+      - ../files/clickhouse/network.xml:/etc/clickhouse-server/config.d/network.xml:ro
+      - ../files/clickhouse/logs.xml:/etc/clickhouse-server/config.d/logs.xml:ro
+    # No ulimits: upstream raises the open-file limit to 262144, which some Docker hosts
+    # refuse; ClickHouse runs with Docker's default limit for a workload this size.
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  uptimekit-apprise:
+    image: caronc/apprise:2.0.1
+    restart: unless-stopped
+    environment:
+      APPRISE_WORKER_COUNT: 1
+
+  # Registers the built-in worker once the dashboard has created its tables, then exits.
+  uptimekit-worker-init:
+    image: postgres:18.7-alpine
+    restart: "no"
+    depends_on:
+      uptimekit:
+        condition: service_healthy
+    environment:
+      PGHOST: uptimekit-db
+      PGUSER: uptimekit
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: uptimekit
+      WORKER_API_KEY: uk_${WORKER_KEY}
+    command:
+      - sh
+      - -c
+      - |
+        psql -v ON_ERROR_STOP=1 -v key="$$WORKER_API_KEY" <<'SQL'
+        INSERT INTO worker (id, name, location, active)
+          VALUES ('cloudgate-worker', 'This server', 'global', true)
+          ON CONFLICT (id) DO NOTHING;
+        INSERT INTO worker_api_key (id, key_hash, key_hint, worker_id)
+          SELECT 'cloudgate-worker-key', encode(sha256(convert_to(:'key', 'UTF8')), 'hex'),
+                 substr(:'key', 1, 11) || '...', 'cloudgate-worker'
+          WHERE EXISTS (SELECT 1 FROM worker WHERE id = 'cloudgate-worker')
+          ON CONFLICT DO NOTHING;
+        SQL
+
+  uptimekit-worker:
+    image: ghcr.io/uptimekit/worker:5.2.2
+    restart: unless-stopped
+    depends_on:
+      uptimekit-worker-init:
+        condition: service_completed_successfully
+    environment:
+      WORKER_API_KEY: uk_${WORKER_KEY}
+      DASHBOARD_URL: http://uptimekit:3000
+      WORKER_EVENT_SPOOL_PATH: /var/lib/uptimekit/events.json
+    volumes:
+      # Keeps check results that haven't reached the dashboard yet across restarts.
+      - uptimekit-worker-events:/var/lib/uptimekit
+
+volumes:
+  uptimekit-db-data:
+  uptimekit-clickhouse-data:
+  uptimekit-worker-events:

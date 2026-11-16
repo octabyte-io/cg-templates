@@ -1,0 +1,4 @@
+<clickhouse>
+    <!-- Docker networks are often IPv4 only; listening on :: would fail to start there. -->
+    <listen_host>0.0.0.0</listen_host>
+</clickhouse>

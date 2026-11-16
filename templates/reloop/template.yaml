@@ -1,0 +1,59 @@
+name: Reloop
+description: "Reloop is a self-hosted email platform: send app emails through an API and campaigns to your contacts, with templates, automations and delivery logs."
+version: "0.10.0"
+tags: [resend alternative, postmark alternative, transactional email, email api, email campaigns, self-hosted email api]
+links:
+  website: https://reloop.sh
+  docs: https://reloop.sh/docs
+  source: https://github.com/reloop-labs/reloop
+cloudgate: 0.1.0
+compose: app
+# Upstream's installer needs 4 GB at least and recommends 8 GB: about 15
+# containers, most of them Node services.
+size: large
+inputs:
+  BASE_URL: { value: "{{domains.proxy.url}}" }
+  HOST_DOMAIN: { value: "{{domains.proxy.host}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  BETTER_AUTH_SECRET: { generate: hex }
+  RELOOP_INTERNAL_SECRET: { generate: hex }
+  TRACKING_SECRET: { generate: hex }
+  PREFERENCES_SECRET: { generate: hex }
+  # Encrypts webhook signing secrets; Reloop needs 64 hex characters.
+  WEBHOOK_ENCRYPTION_KEY: { generate: hex }
+  # Typed once at /dashboard/setup to create the administrator account.
+  ADMIN_SETUP_KEY: { generate: password }
+  # Password for the queue dashboard at /api/workflow/jobs (username: admin).
+  WORKBENCH_PASS: { generate: password }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Sends Reloop's own email (sign-in codes, invitations), for example email-smtp.us-east-1.amazonaws.com. Leave empty until you have one.
+      required: false
+  SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services; 465 needs "Use implicit TLS".
+      default: "587"
+      format: number
+      required: false
+  SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  SMTP_SECURE:
+    ask:
+      label: Use implicit TLS
+      description: "true for port 465, false for 587."
+      default: "false"
+      required: false
+domains:
+  - { service: proxy, port: 80 }
+files:
+  - { path: Caddyfile.txt }

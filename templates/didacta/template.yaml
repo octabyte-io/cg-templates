@@ -1,0 +1,37 @@
+name: Didacta
+description: "Didacta is a self-hosted course platform: sell courses and memberships through your own Stripe, with quizzes, certificates and a member community."
+version: "0.1.0-beta.24"
+tags: [teachable alternative, thinkific alternative, skool alternative, self-hosted lms, online course platform, course memberships, learning management system]
+links:
+  website: https://didacta.io
+  docs: https://docs.didacta.io
+  source: https://github.com/va360labs/didacta-io
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  WEB_PUBLIC_URL: { value: "{{domains.didacta.url}}" }
+  WEB_PUBLIC_HOST: { value: "{{domains.didacta.host}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  # Signs sign-in sessions. Changing it signs everyone out.
+  AUTH_SECRET: { generate: hex }
+  # The one-time token for the first-run page: open <address>/setup?token=<this value>
+  # to create the first account. Shown afterwards on the app's variables page.
+  DIDACTA_SETUP_TOKEN: { generate: hex }
+  # Encrypts the AI provider keys saved in the app. Didacta needs exactly 64 hex characters.
+  AI_CONFIG_ENCRYPTION_KEY: { generate: hex }
+  DEFAULT_AI_CHAT_PROVIDER:
+    ask:
+      label: AI provider (optional)
+      description: For the AI features. One of openai, anthropic, gemini, mistral, groq, openrouter or ollama. You can also add a provider later in the app.
+      default: openai
+      required: false
+      pattern: "(openai|anthropic|gemini|mistral|groq|openrouter|ollama)?"
+  DEFAULT_AI_CHAT_API_KEY:
+    ask:
+      label: AI provider API key (optional)
+      description: A paid key from the AI provider above. Leave it empty to run Didacta without AI features.
+      required: false
+      secret: true
+domains:
+  - { service: didacta, port: 3000 }
