@@ -1,0 +1,20 @@
+name: DumbPad
+description: "DumbPad is a simple self-hosted notepad: write Markdown notes in your browser, they save as you type, and one PIN keeps them private."
+version: "1.0.5"
+tags: [self-hosted notepad, simplenote alternative, google keep alternative, markdown notes, online notepad, notes app]
+links:
+  website: https://github.com/DumbWareio/DumbPad
+  docs: https://github.com/DumbWareio/DumbPad#readme
+  source: https://github.com/DumbWareio/DumbPad
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  BASE_URL: { value: "{{domains.dumbpad.url}}" }
+  DUMBPAD_PIN:
+    ask:
+      label: PIN
+      description: The 4 to 10 digit PIN everyone types to open your notes. Your notes are on a public web address, so keep it secret.
+      pattern: "[0-9]{4,10}"
+domains:
+  - { service: dumbpad, port: 3000 }

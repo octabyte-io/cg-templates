@@ -1,7 +1,7 @@
 ---
 tagline: Publish a blog and paid newsletter on a site that you own.
 category: websites
-alternativeTo: [substack, medium, mailchimp, squarespace]
+alternativeTo: [substack, medium, ghost-pro, mailchimp, squarespace]
 ease: some-setup
 easeNote: Setup asks for the login of an email sending service, which Ghost uses for sign-in links and invites; sending newsletters also needs a Mailgun account.
 license: MIT

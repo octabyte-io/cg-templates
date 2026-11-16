@@ -1,0 +1,17 @@
+name: Uptime Kotlin
+description: "Uptime Kotlin is a self-hosted uptime monitor for websites, mail servers and databases, with incident reports, alerts and public status pages."
+version: "1.6.3"
+tags: [uptime monitoring, uptimerobot alternative, database monitoring, status page, website monitoring, incident reports]
+links:
+  website: https://demo.uptime-kotlin.com
+  docs: https://github.com/TheoMeunier/uptime-kotlin#readme
+  source: https://github.com/TheoMeunier/uptime-kotlin
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  APP_URL: { value: "{{domains.uptime-kotlin.url}}" }
+  ENCRYPTION_MASTER_KEY: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: uptime-kotlin, port: 8080 }
