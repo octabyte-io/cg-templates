@@ -1,0 +1,22 @@
+name: Ontime
+description: "Self-hosted Ontime runs your event rundown, stage timers and crew cuesheets on any screen."
+version: "4.15.1"
+tags: [stagetimer alternative, run of show software, stage timer, event rundown, countdown timer, cue sheet, rundown studio alternative]
+links:
+  website: https://www.getontime.no
+  docs: https://docs.getontime.no
+  source: https://github.com/cpvalente/ontime
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Ontime's own login: every page asks for this password before it opens,
+  # so the editor and the stage views aren't open to anyone with the address.
+  SESSION_PASSWORD: { generate: password }
+  TZ:
+    ask:
+      label: Time zone
+      description: Where your event takes place, for example Europe/London. Ontime's clocks and scheduled start times use it.
+      default: Etc/UTC
+domains:
+  - { service: ontime, port: 4001 }

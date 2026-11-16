@@ -1,0 +1,31 @@
+services:
+  movary:
+    image: leepeuker/movary:0.83.0
+    restart: unless-stopped
+    # An empty TMDB_API_KEY would hide the key set later in the web UI, so it
+    # is removed when no key was given at setup; then the image starts as usual.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        if [ -z "$$TMDB_API_KEY" ]; then unset TMDB_API_KEY; fi;
+        exec /usr/local/bin/entrypoint.sh /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+    environment:
+      APPLICATION_SECRET: ${APPLICATION_SECRET}
+      APPLICATION_URL: ${APPLICATION_URL}
+      TMDB_API_KEY: ${TMDB_API_KEY:-}
+      TIMEZONE: ${TIMEZONE:-UTC}
+      DATABASE_MODE: sqlite
+    volumes:
+      - movary-storage:/app/storage
+      # The image's nginx site, listening on IPv4 only (see the file).
+      - ../files/nginx-default.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "--fail", "http://127.0.0.1:8080/fpm-ping"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  movary-storage:

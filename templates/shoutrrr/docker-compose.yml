@@ -1,0 +1,40 @@
+# From the official docker-compose.production.yaml (v1.5.8). One container runs the
+# FrankenPHP/Octane web server, the queue worker and the scheduler, on SQLite with
+# database-backed cache, queue and sessions. Migrations run on start.
+services:
+  shoutrrr:
+    image: ghcr.io/coollabsio/shoutrrr:1.5.8
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: base64:${APP_KEY}
+      APP_URL: ${APP_URL}
+      OCTANE_SERVER: frankenphp
+      # Cloudgate's HTTPS proxy sits in front; trust its X-Forwarded-* headers so
+      # redirects and OAuth callback URLs use the public https address.
+      TRUSTED_PROXIES: "*"
+      SESSION_SECURE_COOKIE: "true"
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/html/database/sqlite/database.sqlite
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+      QUEUE_WORKER_ENABLED: "true"
+      QUEUE_WORKER_COUNT: "1"
+      SCHEDULER_ENABLED: "true"
+      INERTIA_SSR_ENABLED: "false"
+    volumes:
+      - shoutrrr-storage:/var/www/html/storage
+      - shoutrrr-sqlite:/var/www/html/database/sqlite
+    stop_grace_period: 60s
+    healthcheck:
+      test: ["CMD", "healthcheck-octane"]
+      start_period: 30s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  shoutrrr-storage:
+  shoutrrr-sqlite:

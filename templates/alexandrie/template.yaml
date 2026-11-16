@@ -1,0 +1,47 @@
+name: Alexandrie
+description: "Alexandrie is a self-hosted Markdown knowledge base with maths, diagrams, team workspaces, per-page permissions and an offline app."
+version: "v8.14.4"
+tags: [obsidian alternative, markdown knowledge base, self-hosted wiki, notion alternative, markdown notes with latex, offline notes app, team knowledge base]
+links:
+  website: https://alexandrie-hub.fr
+  docs: https://github.com/Smaug6739/Alexandrie/blob/main/docs/README.md
+  source: https://github.com/Smaug6739/Alexandrie
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The app's address: the web app and its API share it (see files/Caddyfile).
+  APP_URL: { value: "{{domains.caddy.url}}" }
+  # The S3 store's address, which images and files in notes load from.
+  S3_URL: { value: "{{domains.alexandrie-s3.url}}" }
+  # Signs the sign-in tokens. Changing it signs everyone out.
+  JWT_SECRET: { generate: hex }
+  MYSQL_PASSWORD: { generate: password }
+  MYSQL_ROOT_PASSWORD: { generate: password }
+  S3_ACCESS_KEY: { generate: password }
+  S3_SECRET_KEY: { generate: password }
+  # Sign-ups are open so you can create your account. Afterwards set this to
+  # true on the variables page to close them.
+  DISABLE_SIGNUP: { value: "false" }
+  SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Only used to send password-reset emails. You can add it later on the app's variables page.
+      required: false
+  SMTP_MAIL:
+    ask:
+      label: Email server username
+      description: The email address Alexandrie sends from and signs in to the email server with.
+      required: false
+  SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+# Two addresses: the app (web app and API, behind Caddy) and the S3 store that
+# serves uploaded files, as in Alexandrie's official setup.
+domains:
+  - { service: caddy, port: 80 }
+  - { service: alexandrie-s3, port: 9000 }
+files:
+  - { path: Caddyfile }

@@ -1,0 +1,29 @@
+name: Glean
+description: "Glean is a self-hosted, open-source RSS reader with a Smart feed that ranks articles by what you like, plus a read-later list and bookmarks."
+version: "0.2.7"
+tags: [rss reader, self-hosted rss reader, feed reader, read later, feedly alternative, inoreader alternative, opml]
+links:
+  website: https://github.com/LeslieLeung/glean
+  docs: https://github.com/LeslieLeung/glean/blob/main/DEPLOY.md
+  source: https://github.com/LeslieLeung/glean
+cloudgate: 0.1.0
+compose: app
+# Six containers: the web app, the admin dashboard (two small nginx images), the Python API
+# and its background worker (one image each, a few hundred MB of memory), PostgreSQL and Redis.
+size: medium
+inputs:
+  POSTGRES_PASSWORD: { generate: password }
+  # Signs sign-in tokens.
+  SECRET_KEY: { generate: hex }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in to the admin dashboard with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  # The reader, where people sign up, follow feeds and read.
+  - { service: glean, port: 80 }
+  # The admin dashboard: users, feeds and system settings.
+  - { service: glean-admin, port: 80 }

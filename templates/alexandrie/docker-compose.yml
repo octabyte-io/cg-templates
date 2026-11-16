@@ -1,0 +1,113 @@
+# Alexandrie, from the official docker-compose.yml at v8.14.4
+# (github.com/Smaug6739/Alexandrie). Changes from it: the S3 store is Silo,
+# the pinned MinIO fork this catalogue's templates share, instead of RustFS;
+# and Caddy puts the web app and its API on one address so the sign-in cookies
+# work without a shared parent domain. Uploaded files are served from the S3
+# store's own address, as in the official setup.
+services:
+  caddy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - alexandrie-frontend
+      - alexandrie-backend
+
+  alexandrie-db:
+    image: mysql:8.0.46
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: alexandrie
+      MYSQL_USER: alexandrie
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - alexandrie-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -ualexandrie -p\"$$MYSQL_PASSWORD\" -e 'SELECT 1' alexandrie"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # Silo, the S3-compatible store (a MinIO fork) for uploaded files and backups.
+  # The backend makes its buckets on start and lets anyone read the files bucket,
+  # so images in notes load straight from this store's own address.
+  alexandrie-s3:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    restart: unless-stopped
+    command: server /data --console-address :9090
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+      MINIO_BROWSER: "off"
+    volumes:
+      - alexandrie-s3-data:/data
+    healthcheck:
+      test: ["CMD", "silo", "healthcheck", "ready"]
+      interval: 15s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+      start_interval: 5s
+
+  # The Go API (a distroless image, so no healthcheck tool). It runs its
+  # database migrations on start.
+  alexandrie-backend:
+    image: ghcr.io/smaug6739/alexandrie-backend:v8.14.4
+    restart: unless-stopped
+    environment:
+      BACKEND_PORT: "8201"
+      GIN_MODE: release
+      JWT_SECRET: ${JWT_SECRET}
+      # Empty: the cookies belong to the app's own address (see the Caddyfile).
+      COOKIE_DOMAIN: ""
+      FRONTEND_URL: ${APP_URL}
+      # Cloudgate serves the app over HTTPS, so cookies are marked secure.
+      ALLOW_UNSECURE: "false"
+      CONFIG_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
+      CONFIG_DISABLE_NATIVE_LOGIN: "false"
+      # Optional: comma-separated user ids that get admin rights.
+      ADMIN_ACCOUNTS: ${ADMIN_ACCOUNTS:-}
+      DATABASE_HOST: alexandrie-db
+      DATABASE_PORT: "3306"
+      DATABASE_NAME: alexandrie
+      DATABASE_USER: alexandrie
+      DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+      MINIO_ENDPOINT: alexandrie-s3:9000
+      MINIO_PUBLIC_URL: ${S3_URL}
+      MINIO_SECURE: "false"
+      MINIO_INSECURE_TLS: "false"
+      MINIO_ACCESSKEY: ${S3_ACCESS_KEY}
+      MINIO_SECRETKEY: ${S3_SECRET_KEY}
+      MINIO_BUCKET: alexandrie
+      # Optional: only used for password-reset emails.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_MAIL: ${SMTP_MAIL:-}
+      SMTP_MAIL_FROM: ${SMTP_MAIL:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+    depends_on:
+      alexandrie-db:
+        condition: service_healthy
+      alexandrie-s3:
+        condition: service_healthy
+
+  # The Nuxt web app. It reads the public addresses when it starts.
+  alexandrie-frontend:
+    image: ghcr.io/smaug6739/alexandrie-frontend:v8.14.4
+    restart: unless-stopped
+    environment:
+      PORT: "8200"
+      NUXT_PUBLIC_CONFIG_DISABLE_SIGNUP_PAGE: ${DISABLE_SIGNUP}
+      NUXT_PUBLIC_CONFIG_DISABLE_LANDING_PAGE: "false"
+      NUXT_PUBLIC_BASE_API: ${APP_URL}
+      NUXT_PUBLIC_BASE_CDN: ${S3_URL}
+      NUXT_PUBLIC_CDN_ENDPOINT: /alexandrie/
+      NUXT_PUBLIC_BASE_URL: ${APP_URL}
+    depends_on:
+      - alexandrie-backend
+
+volumes:
+  alexandrie-db-data:
+  alexandrie-s3-data:

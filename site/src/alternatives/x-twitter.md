@@ -6,17 +6,24 @@ apps:
   misskey:
     fit: "Short public posts with pictures, files and polls, plus emoji reactions, channels for topics, keyword timelines and a customisable deck view, on your own domain and linked to Mastodon and the rest of the fediverse. It has no official phone apps and does not work with Mastodon apps, so phones use the browser or unofficial apps. Like Mastodon, your X posts and followers do not move."
     import: no
+  bonfire:
+    fit: "Short or long posts with threaded replies and content warnings, linked to Mastodon and the rest of the fediverse, plus circles of people, feeds you filter and sort yourself, and rules on each post for who can see, reply to or quote it. It is younger than Mastodon, only some Mastodon apps work with it so far, and its team recommends a server with 8 GB of memory or more. Like Mastodon, your X posts and followers do not move."
+    import: no
 moving: |
   Nothing comes across from X: Mastodon cannot import posts or media, and followers on X do not move. Choose your server's domain first, because it is part of every handle and cannot change once people join. Write your server's rules, create accounts for your staff or members, or send invite links, and add your website to each profile; the link shows a checkmark once your website links back to the profile. Then post your new handle on X and on your website so followers can find you. Misskey works the same way: nothing comes across from X, and its address can't change after the first start, so choose it carefully. Enter the setup password Cloudgate shows to create the admin account, then choose open, invite-only or approved sign-ups in the Control Panel.
+
+  In Bonfire, nothing comes across from X either. The first person to sign up becomes the admin, so do that first, add an email service so others can confirm their accounts, then send invite links or open sign-ups. Set up circles for the groups of people you post to, and choose a default for who can see and reply to your posts.
 faq:
   - q: "What happens to my X posts and followers when I move?"
     a: "They stay on X. Mastodon cannot import posts or media, and followers on X do not move, so post your new handle on X and on your website and let people follow you again."
   - q: "Can people on other Mastodon servers follow my accounts?"
     a: "Yes. Your server is part of the fediverse, so anyone on another Mastodon server can follow, reply to and share your posts."
+  - q: "When is Bonfire a better choice than Mastodon?"
+    a: "When you want close control over each post: Bonfire lets you choose, post by post, who can see, reply to or quote it, and sort people into circles with their own feeds. Mastodon is the more established choice, with many apps and a lighter server."
   - q: "Should I choose Mastodon or Misskey?"
     a: "Mastodon for the widest support: official phone apps and the many apps built for Mastodon. Misskey if you want a more playful, customisable server with emoji reactions, channels and a deck view, and are happy using it in the browser or an unofficial app. Both talk to each other across the fediverse."
 ---
 
 X, formerly Twitter, is a social network for short public posts, where an algorithm decides much of what people see and ads appear in the timeline.
 
-Organisations, newsrooms and communities look for an alternative when they want accounts on their own domain, so people can see who really speaks for them, rules they set themselves, and a timeline without ads or an algorithm. A self-hosted Mastodon server gives them that while still connecting to the wider fediverse; in return, the audience is smaller and you take on moderation.
+Organisations, newsrooms and communities look for an alternative when they want accounts on their own domain, so people can see who really speaks for them, rules they set themselves, and a timeline without ads or an algorithm. A self-hosted Mastodon server gives them that while still connecting to the wider fediverse; in return, the audience is smaller and you take on moderation. Bonfire suits communities that want finer control over who sees and answers each post, on a bigger server.

@@ -1,0 +1,26 @@
+name: SnapOtter
+description: "Self-hosted SnapOtter converts, compresses and edits images, PDFs, video, audio and office files on your own server, with local AI tools and batch pipelines."
+version: "2.3.0"
+tags: [file converter, pdf tools, image compressor, cloudconvert alternative, smallpdf alternative, tinypng alternative, background remover]
+links:
+  website: https://snapotter.com
+  docs: https://docs.snapotter.com
+  source: https://github.com/snapotter-hq/SnapOtter
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  EXTERNAL_URL: { value: "{{domains.snapotter.url}}" }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The first admin account. Cloudgate creates a strong password for it, shown afterwards on the app's variables page; SnapOtter asks you to change it at first sign-in.
+      default: admin
+      pattern: "[A-Za-z][A-Za-z0-9_.-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  COOKIE_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  POSTGRES_APP_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+domains:
+  - { service: snapotter, port: 1349 }

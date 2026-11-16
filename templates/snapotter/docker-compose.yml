@@ -1,0 +1,85 @@
+# Based on SnapOtter's official CPU compose file (docker/docker-compose.yml at
+# v2.3.0). The GPU variant (docker-compose-gpu.yml, NVIDIA CUDA) is left out:
+# every tool, the local AI ones included, runs on the CPU in this image.
+services:
+  snapotter:
+    image: snapotter/snapotter:2.3.0
+    restart: unless-stopped
+    depends_on:
+      snapotter-db:
+        condition: service_healthy
+      snapotter-redis:
+        condition: service_healthy
+    environment:
+      AUTH_ENABLED: "true"
+      # The first admin. SnapOtter asks for a new password at first sign-in.
+      DEFAULT_USERNAME: ${ADMIN_USERNAME}
+      DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
+      EXTERNAL_URL: ${EXTERNAL_URL}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      # Cloudgate's proxy reaches the app from a private network address.
+      TRUST_PROXY: loopback,linklocal,uniquelocal
+      # 0 means no limit (the published image's own defaults).
+      MAX_UPLOAD_SIZE_MB: "0"
+      MAX_BATCH_SIZE: "0"
+      # Requests use a role that can only read and write rows; the owner role
+      # connects only at boot, to migrate and to grant. The app creates the
+      # runtime role itself.
+      DATABASE_URL: postgres://snapotter_app:${POSTGRES_APP_PASSWORD}@snapotter-db:5432/snapotter
+      DATABASE_MIGRATION_URL: postgres://snapotter:${POSTGRES_PASSWORD}@snapotter-db:5432/snapotter
+      REDIS_URL: redis://:${REDIS_PASSWORD}@snapotter-redis:6379
+    volumes:
+      - snapotter-data:/data              # AI models, user files
+      - snapotter-workspace:/tmp/workspace  # temporary processing files
+    # Hardening from the official compose file.
+    pids_limit: 512
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETUID, SETGID, DAC_OVERRIDE, FOWNER, KILL]
+    security_opt: [no-new-privileges:true]
+    shm_size: 2gb
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "--max-time", "5", "http://localhost:1349/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 180s
+      retries: 3
+
+  snapotter-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: snapotter
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: snapotter
+    volumes:
+      - snapotter-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U snapotter -d snapotter"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  snapotter-redis:
+    image: redis:8.8.4-alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - exec redis-server --maxmemory-policy noeviction --maxmemory 512mb --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - snapotter-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  snapotter-data:
+  snapotter-workspace:
+  snapotter-db-data:
+  snapotter-redis-data:

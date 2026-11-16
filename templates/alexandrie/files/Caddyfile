@@ -1,0 +1,11 @@
+# One address for Alexandrie: requests to /api go to the backend, everything
+# else to the Nuxt web app. Sharing one origin keeps the backend's sign-in
+# cookies on the address the web app runs on, with no cross-site setup.
+:80 {
+	handle /api/* {
+		reverse_proxy alexandrie-backend:8201
+	}
+	handle {
+		reverse_proxy alexandrie-frontend:8200
+	}
+}

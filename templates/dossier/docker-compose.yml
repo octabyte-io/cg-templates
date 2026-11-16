@@ -1,0 +1,58 @@
+# From Dossier's compose.production.yml (v1.14.0), without the published
+# port and the optional Ollama service.
+services:
+  dossier:
+    image: ghcr.io/aientech/dossier:v1.14.0
+    restart: unless-stopped
+    depends_on:
+      dossier-db:
+        condition: service_healthy
+    # Dossier reads DOSSIER_PASSWORD only as an argon2id hash made by its own
+    # hash-password tool. This makes that hash from the generated sign-in
+    # password, keeps it in the data volume and makes it again only when the
+    # password changes, so a restart doesn't sign you out. Then it runs the
+    # image's own start script (migrations, seed, server).
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -eu
+        sum=$$(printf '%s:%s' "$$DOSSIER_SECRET" "$$SIGN_IN_PASSWORD" | sha256sum | cut -d' ' -f1)
+        if [ ! -s /data/.cloudgate-password-hash ] || [ "$$(cat /data/.cloudgate-password-sum 2>/dev/null || true)" != "$$sum" ]; then
+          printf '%s\n' "$$SIGN_IN_PASSWORD" | hash-password > /data/.cloudgate-password-hash
+          printf '%s' "$$sum" > /data/.cloudgate-password-sum
+        fi
+        DOSSIER_PASSWORD=$$(cat /data/.cloudgate-password-hash)
+        export DOSSIER_PASSWORD
+        unset SIGN_IN_PASSWORD
+        exec ./start.sh
+    environment:
+      DATABASE_URL: postgresql://dossier:${POSTGRES_PASSWORD}@dossier-db:5432/dossier
+      SIGN_IN_PASSWORD: ${SIGN_IN_PASSWORD}
+      DOSSIER_SECRET: ${DOSSIER_SECRET}
+      DOSSIER_PUBLIC_URL: ${PUBLIC_URL}
+      TZ: ${TIMEZONE:-UTC}
+    volumes:
+      - dossier-data:/data
+    # Room for Chromium, which prints the PDFs.
+    mem_limit: 1g
+
+  dossier-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dossier
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: dossier
+    volumes:
+      # Postgres 18+ keeps data in a versioned subdirectory, so mount the parent.
+      - dossier-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dossier -d dossier"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  dossier-data:
+  dossier-db-data:
