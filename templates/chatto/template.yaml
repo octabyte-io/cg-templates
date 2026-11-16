@@ -1,0 +1,22 @@
+name: Chatto
+description: "Self-hosted Chatto: open-source team and community chat with rooms, threads, direct messages and search, with your messages kept private on your own server."
+version: "0.5.0"
+tags: [team chat, slack alternative, discord alternative, self-hosted chat, community chat, private team messaging]
+links:
+  website: https://chatto.run
+  docs: https://docs.chatto.run
+  source: https://github.com/chattocorp/chatto
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  CHATTO_URL: { value: "{{domains.chatto.url}}" }
+  NATS_TOKEN: { generate: hex }
+  COOKIE_SIGNING_SECRET: { generate: hex }
+  COOKIE_ENCRYPTION_SECRET: { generate: hex }
+  CORE_SECRET_KEY: { generate: hex }
+  ASSETS_SIGNING_SECRET: { generate: hex }
+domains:
+  - { service: chatto, port: 4000 }
+files:
+  - { path: nats-server.conf }

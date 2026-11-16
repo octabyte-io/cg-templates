@@ -1,0 +1,60 @@
+# From Windshift's Docker deployment guide (windshift.sh/self-hosting/02-deployment/01-docker,
+# release v0.9.4): the official scratch image with PostgreSQL, the database form the
+# environment-variable reference recommends for production. Ports are removed (Cloudgate
+# routes the web address and terminates HTTPS, hence USE_PROXY); the Traefik service and the
+# optional extras (SSH TUI, coding-agent runner, metrics token) are left out.
+services:
+  windshift:
+    image: ghcr.io/windshiftapp/windshift:v0.9.4
+    restart: unless-stopped
+    depends_on:
+      windshift-db:
+        condition: service_healthy
+    tmpfs:
+      - /tmp:exec,size=64M
+    environment:
+      BASE_URL: ${BASE_URL}
+      # Signs sessions and encrypts stored SSO, SCM and LLM credentials; keep it stable.
+      SSO_SECRET: ${SSO_SECRET}
+      WEBAUTHN_RP_ID: ${WEBAUTHN_RP_ID}
+      USE_PROXY: "true"
+      SESSION_IP_BINDING: log
+      # The guide's 2048 MiB budget assumes the app alone; leave room for PostgreSQL.
+      WINDSHIFT_MEMORY_LIMIT_MB: "1024"
+      DB_TYPE: postgres
+      POSTGRES_HOST: windshift-db
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: windshift
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: windshift
+      POSTGRES_SSLMODE: disable
+      ATTACHMENT_PATH: /data/attachments
+      PLUGIN_DIR: /data/plugins
+      AI_PROMPTS_DIR: /data/prompts
+    volumes:
+      - windshift-data:/data
+    healthcheck:
+      test: ["CMD", "/windshift", "healthcheck"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  windshift-db:
+    image: postgres:18.7-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: windshift
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: windshift
+    volumes:
+      - windshift-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U windshift -d windshift"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  windshift-data:
+  windshift-db-data:
