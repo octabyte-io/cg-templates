@@ -1,0 +1,21 @@
+name: WulfVault
+description: "WulfVault is a self-hosted app for sending large files by link, with passwords, expiry dates and a record of who downloaded each file."
+version: "7.5.1"
+tags: [file sharing, wetransfer alternative, send large files, download tracking, file request link, sharefile alternative, self-hosted file transfer]
+links:
+  website: https://github.com/Frimurare/WulfVault
+  docs: https://github.com/Frimurare/WulfVault/wiki
+  source: https://github.com/Frimurare/WulfVault
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SERVER_URL: { value: "{{domains.wulfvault.url}}" }
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in with as WulfVault's first administrator.
+      format: email
+domains:
+  - { service: wulfvault, port: 8080 }

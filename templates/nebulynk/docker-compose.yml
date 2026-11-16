@@ -1,0 +1,150 @@
+# From Nebulynk's docker-compose.coolify.yml at v0.8.1 (its all-in-one
+# production setup), without published ports. Cloudgate gives four web
+# addresses: the app, its API, the file storage (browsers open signed file
+# links there) and LiveKit's signalling.
+#
+# Left out: LiveKit Egress (meeting recordings) and the transcription worker
+# (it only transcribes those recordings). Meetings and calls need TCP 7881 and
+# UDP 7882 open to the internet, which a Cloudgate app does not get, so they
+# don't connect; chat, files and search work without them.
+services:
+  nebulynk:
+    image: ghcr.io/sapientorius/nebulynk-frontend:0.8.1
+    restart: unless-stopped
+    depends_on:
+      nebulynk-api:
+        condition: service_healthy
+    environment:
+      API_URL: ${API_URL}
+      LIVEKIT_URL: ${LIVEKIT_PUBLIC_URL}
+      AUTH_CSRF_COOKIE_NAME: nebulynk_csrf_token
+
+  nebulynk-api:
+    image: ghcr.io/sapientorius/nebulynk-backend:0.8.1
+    restart: unless-stopped
+    stop_grace_period: 75s
+    depends_on:
+      nebulynk-db:
+        condition: service_healthy
+      nebulynk-redis:
+        condition: service_healthy
+      nebulynk-garage:
+        condition: service_started
+      nebulynk-livekit:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3030/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 60s
+    environment:
+      NODE_ENV: production
+      BACKEND_PORT: "3030"
+      JWT_SECRET: ${JWT_SECRET}
+      AI_SECRET_KEY: ${AI_SECRET_KEY}
+      AUTH_2FA_SECRET_KEY: ${AUTH_2FA_SECRET_KEY}
+      LOG_LEVEL: info
+      AUTH_CSRF_COOKIE_NAME: nebulynk_csrf_token
+      RATE_LIMIT_DRIVER: redis
+      PASSKEY_RP_ID: ${PASSKEY_RP_ID}
+      FRONTEND_URL: ${FRONTEND_URL}
+      TRUST_PROXY: "true"
+      POSTGRES_HOST: nebulynk-db
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: nebulynk
+      POSTGRES_USER: nebulynk
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: nebulynk-redis
+      REDIS_PORT: "6379"
+      STORAGE_S3_ENDPOINT: http://nebulynk-garage:3900
+      STORAGE_S3_PUBLIC_ENDPOINT: ${STORAGE_S3_PUBLIC_ENDPOINT}
+      STORAGE_S3_ACCESS_KEY: ${STORAGE_S3_ACCESS_KEY}
+      STORAGE_S3_SECRET_KEY: ${STORAGE_S3_SECRET_KEY}
+      STORAGE_S3_BUCKET: nebulynk-files
+      STORAGE_S3_REGION: us-east-1
+      MEETING_RECORDINGS_PREFIX: meeting-recordings
+      MEETING_RECORDINGS_BUCKET: nebulynk-files
+      MEETING_RECORDINGS_S3_ENDPOINT: http://nebulynk-garage:3900
+      MEETING_RECORDINGS_EGRESS_S3_ENDPOINT: http://nebulynk-garage:3900
+      MEETING_RECORDINGS_S3_REGION: us-east-1
+      LIVEKIT_HOST: http://nebulynk-livekit:7880
+      LIVEKIT_PUBLIC_URL: ${LIVEKIT_PUBLIC_URL}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
+
+  nebulynk-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nebulynk
+      POSTGRES_USER: nebulynk
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - nebulynk-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nebulynk -d nebulynk"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  nebulynk-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - nebulynk-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Runs once at each start: hands the storage volumes to Garage's user.
+  nebulynk-garage-init:
+    image: alpine:3.21.5
+    restart: "no"
+    user: "0:0"
+    command: ["sh", "-ec", "chown -R 65532:65532 /var/lib/garage/meta /var/lib/garage/data"]
+    volumes:
+      - nebulynk-garage-meta:/var/lib/garage/meta
+      - nebulynk-garage-data:/var/lib/garage/data
+
+  # S3-compatible storage for files; it creates the bucket and key on first start.
+  nebulynk-garage:
+    image: dxflrs/garage:v2.3.0
+    restart: unless-stopped
+    user: "65532:65532"
+    depends_on:
+      nebulynk-garage-init:
+        condition: service_completed_successfully
+    command: ["/garage", "server", "--single-node", "--default-bucket"]
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_DEFAULT_ACCESS_KEY: ${STORAGE_S3_ACCESS_KEY}
+      GARAGE_DEFAULT_SECRET_KEY: ${STORAGE_S3_SECRET_KEY}
+      GARAGE_DEFAULT_BUCKET: nebulynk-files
+    volumes:
+      - ../files/garage.toml:/etc/garage.toml:ro
+      - nebulynk-garage-meta:/var/lib/garage/meta
+      - nebulynk-garage-data:/var/lib/garage/data
+
+  # LiveKit (voice and video). Signalling works through its web address;
+  # audio and video need ports Cloudgate doesn't open (see the top).
+  nebulynk-livekit:
+    image: livekit/livekit-server:v1.13.4
+    restart: unless-stopped
+    user: "65532:65532"
+    depends_on:
+      nebulynk-redis:
+        condition: service_healthy
+    command: ["--config", "/livekit.yaml"]
+    environment:
+      LIVEKIT_KEYS: "${LIVEKIT_API_KEY}: ${LIVEKIT_API_SECRET}"
+    volumes:
+      - ../files/livekit.yaml:/livekit.yaml:ro
+
+volumes:
+  nebulynk-db-data:
+  nebulynk-redis-data:
+  nebulynk-garage-meta:
+  nebulynk-garage-data:
