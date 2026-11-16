@@ -1,0 +1,43 @@
+# From AzuraCast's official docker-compose.sample.yml (release 0.24.0): one
+# all-in-one container that runs the web app, its MariaDB and Redis, the
+# AutoDJ (Liquidsoap) and the Icecast server for each station.
+#
+# No raw ports are published. Listeners tune in through the web address:
+# AzuraCast's own nginx serves every station's stream under /listen/ ("Use
+# Web Proxy for Radio" is on by default). Live DJ input (port 8005 and up),
+# direct Icecast ports and SFTP (2022) are therefore not reachable from
+# outside. The official sample's "updater" service needs the Docker socket
+# and is left out; update by changing the image version. The sample's
+# "ulimits: nofile 65536" is left out too: Docker already gives containers a
+# higher open-file limit by default, and setting it fails on hosts with a
+# lower hard limit.
+services:
+  azuracast:
+    image: ghcr.io/azuracast/azuracast:0.24.0
+    restart: unless-stopped
+    environment:
+      APPLICATION_ENV: production
+      # The built-in database: only reachable inside the container.
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - azuracast-stations:/var/azuracast/stations
+      - azuracast-backups:/var/azuracast/backups
+      - azuracast-db:/var/lib/mysql
+      - azuracast-uploads:/var/azuracast/storage/uploads
+      - azuracast-shoutcast2:/var/azuracast/storage/shoutcast2
+      - azuracast-stereo-tool:/var/azuracast/storage/stereo_tool
+      - azuracast-rsas:/var/azuracast/storage/rsas
+      - azuracast-geoip:/var/azuracast/storage/geoip
+      - azuracast-sftpgo:/var/azuracast/storage/sftpgo
+
+volumes:
+  azuracast-stations:
+  azuracast-backups:
+  azuracast-db:
+  azuracast-uploads:
+  azuracast-shoutcast2:
+  azuracast-stereo-tool:
+  azuracast-rsas:
+  azuracast-geoip:
+  azuracast-sftpgo:

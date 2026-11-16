@@ -1,0 +1,20 @@
+name: Hermes Agent
+description: "Hermes Agent is a self-hosted AI agent that remembers your work, learns skills and runs tasks from Telegram or Slack, using your own AI model key."
+version: "0.23.1"
+tags: [self-hosted ai agent, manus alternative, openclaw alternative, chatgpt agent alternative, personal ai assistant, telegram ai bot, open source ai agent]
+links:
+  website: https://hermes-agent.nousresearch.com
+  docs: https://hermes-agent.nousresearch.com/docs/
+  source: https://github.com/NousResearch/hermes-agent
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  # The dashboard's sign-in password; the username is "admin".
+  HERMES_DASHBOARD_PASSWORD: { generate: password }
+  # Signs dashboard sign-in sessions so they survive restarts.
+  HERMES_DASHBOARD_SECRET: { generate: hex }
+  # The dashboard's public web address.
+  HERMES_DASHBOARD_PUBLIC_URL: { value: "{{domains.hermes.url}}" }
+domains:
+  - { service: hermes, port: 9119 }
