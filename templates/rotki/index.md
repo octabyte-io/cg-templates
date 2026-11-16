@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted crypto portfolio tracking and profit and loss reports.
+tagline: Crypto portfolio tracking and profit and loss reports.
 category: finance
 alternativeTo: [koinly, cointracker, cointracking]
 ease: some-setup

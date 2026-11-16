@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted production planning and demand forecasts for factories.
+tagline: Production planning and demand forecasts for factories.
 category: operations
 alternativeTo: [katana, mrpeasy]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted mind maps your team can build, share and embed.
+tagline: Mind maps your team can build, share and embed.
 category: design
 alternativeTo: [mindmeister, xmind, mindmanager]
 ease: easy

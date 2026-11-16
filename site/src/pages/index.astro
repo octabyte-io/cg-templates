@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import AppTile from '../components/AppTile.astro';
 import ProductTile from '../components/ProductTile.astro';
+import { productSymbols } from '../lib/icons';
 import Card from '../components/Card.astro';
 import FilterBar from '../components/FilterBar.astro';
 import Check from '../components/Check.astro';
@@ -222,8 +223,9 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     </div>
     <FilterBar categories={categories} total={total} />
     <div class="gridwrap pad">
+      <Fragment set:html={productSymbols(templates.flatMap((template) => template.alternativeTo.slice(0, 1)))} />
       <div class="grid" id="grid">
-        {templates.map((template) => <Card template={template} />)}
+        {templates.map((template) => <Card template={template} sharedMarks />)}
         <div class="empty" id="empty" hidden>
           <p class="msg" id="emptyMsg"></p>
           <p class="hint">Try a tool you pay for, like Zapier, Notion or Slack. If the app you need is missing, you can add it.</p>
@@ -336,7 +338,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     const before = new Set(cards.filter((c) => !c.hidden));
     const q = input.value.trim().toLowerCase();
     const filtered = Boolean(cat || q);
-    const matches = cards.filter((c) => (!cat || c.dataset.cat === cat) && (!q || (c.dataset.q ?? '').includes(q)));
+    const matches = cards.filter((c) => (!cat || c.dataset.cat === cat) && (!q || q.split(/\s+/).every((word) => (c.dataset.q ?? '').includes(word))));
     const visible = filtered ? matches : matches.slice(0, shown);
     cards.forEach((c) => (c.hidden = !visible.includes(c)));
     tabs.forEach((t) => t.setAttribute('aria-pressed', String((t.dataset.tab ?? '') === cat)));

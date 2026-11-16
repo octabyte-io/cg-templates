@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Odoo Community for CRM, sales, stock and invoices.
+tagline: CRM, sales, stock and invoicing in one business app.
 category: finance
 alternativeTo: [netsuite, sap-business-one, zoho-one, quickbooks]
 ease: some-setup

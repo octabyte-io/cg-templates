@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Find My Device server to locate, ring or lock your phone.
+tagline: Locate, ring or lock your lost phone from your browser.
 category: security
 alternativeTo: [google-find-my-device]
 ease: some-setup

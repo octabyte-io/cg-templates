@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted, open-source time tracking for freelancers and teams.
+tagline: Time tracking for freelancers and teams, with billable rates.
 category: customers-sales
 alternativeTo: [toggl, clockify, harvest]
 ease: some-setup

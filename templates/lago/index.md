@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted usage-based billing for SaaS, API and AI products.
+tagline: Usage-based billing for SaaS, API and AI products.
 category: finance
 alternativeTo: [stripe-billing, chargebee]
 ease: some-setup

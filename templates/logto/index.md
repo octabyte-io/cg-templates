@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted sign-in, single sign-on and user roles for your own apps.
+tagline: Sign-in, single sign-on and user roles for your own apps.
 category: security
 alternativeTo: [auth0, okta]
 ease: some-setup

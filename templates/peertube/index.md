@@ -1,5 +1,5 @@
 ---
-tagline: "Self-hosted video platform: your own ad-free YouTube, with channels."
+tagline: Your own ad-free video platform, with channels.
 category: media
 alternativeTo: [youtube, vimeo, wistia]
 ease: some-setup

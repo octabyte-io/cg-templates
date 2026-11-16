@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted notes, checklists and task boards in plain files.
+tagline: Notes, checklists and task boards in plain files.
 category: docs-wikis
 alternativeTo: [google-keep, todoist, obsidian]
 ease: easy

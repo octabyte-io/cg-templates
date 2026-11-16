@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted newsletters, email automations and app emails together.
+tagline: Newsletters, email automations and app emails together.
 category: customers-sales
 alternativeTo: [mailchimp, brevo, mailerlite, customer-io]
 ease: some-setup

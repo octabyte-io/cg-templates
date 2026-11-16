@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted inventory of what you own, where it is and who has it.
+tagline: Inventory of what you own, where it is and who has it.
 category: inventory-assets
 alternativeTo: [sortly]
 ease: easy

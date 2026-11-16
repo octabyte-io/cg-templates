@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted issue tracking with Gantt charts, wikis and time logs.
+tagline: Issue tracking with Gantt charts, wikis and time logs.
 category: project-management
 alternativeTo: [jira, zoho-projects]
 ease: easy

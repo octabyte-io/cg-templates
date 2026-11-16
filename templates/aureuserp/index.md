@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted ERP for sales, stock, accounting and HR in one place.
+tagline: ERP for sales, stock, accounting and HR in one place.
 category: finance
 alternativeTo: [netsuite, zoho-one, sap-business-one]
 ease: some-setup

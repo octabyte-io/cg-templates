@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Gantt charts, agile boards and time tracking for projects.
+tagline: Gantt charts, agile boards and time tracking for projects.
 category: project-management
 alternativeTo: [microsoft-project, jira, asana, monday]
 ease: some-setup

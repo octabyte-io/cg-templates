@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted plant manager for house plants and gardens, shared.
+tagline: Plant manager for house plants and gardens, shared.
 category: home
 alternativeTo: [planta]
 ease: some-setup

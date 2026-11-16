@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Tryton ERP for your books, invoices, orders and stock.
+tagline: An ERP for your books, invoices, orders and stock.
 category: finance
 alternativeTo: [netsuite, business-central, sap-business-one, quickbooks]
 ease: some-setup

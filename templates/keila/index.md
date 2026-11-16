@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted newsletters with a friendly editor and sign-up forms.
+tagline: Newsletters with a friendly editor and sign-up forms.
 category: customers-sales
 alternativeTo: [mailchimp, brevo, mailerlite]
 ease: some-setup

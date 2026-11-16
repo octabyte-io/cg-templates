@@ -1,5 +1,5 @@
 ---
-tagline: "Self-hosted personal finance: net worth, spending and budgets."
+tagline: "Personal finance: net worth, spending and budgets."
 category: finance
 alternativeTo: [monarch, quicken, ynab]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Firefox Send for encrypted links that expire.
+tagline: Share files by encrypted links that expire, like Firefox Send.
 category: files-photos
 alternativeTo: [wetransfer, smash]
 ease: easy

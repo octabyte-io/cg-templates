@@ -1,5 +1,5 @@
 ---
-tagline: Open-source LMS for courses, online exams and staff training.
+tagline: An LMS for courses, online exams and staff training.
 category: education
 alternativeTo: [canvas, blackboard, talentlms, docebo]
 ease: some-setup

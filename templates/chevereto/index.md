@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted image hosting to upload pictures and share them by link.
+tagline: Image hosting to upload pictures and share them by link.
 category: files-photos
 alternativeTo: [imgur, flickr]
 ease: easy

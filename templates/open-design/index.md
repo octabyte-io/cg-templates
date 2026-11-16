@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI design studio for web pages, prototypes and decks.
+tagline: AI design studio for web pages, prototypes and decks.
 category: design
 alternativeTo: [claude-design, v0]
 ease: some-setup

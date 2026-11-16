@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted quotes, invoices and online payments for small firms.
+tagline: Quotes, invoices and online payments for small firms.
 category: finance
 alternativeTo: [freshbooks, wave]
 ease: some-setup

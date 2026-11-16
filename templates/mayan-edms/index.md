@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted document management with approvals, versions and OCR.
+tagline: Document management with approvals, versions and OCR.
 category: documents
 alternativeTo: [docuware, m-files, laserfiche]
 ease: some-setup

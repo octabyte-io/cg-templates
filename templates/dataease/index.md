@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted dashboards and wall screens, built by drag and drop.
+tagline: Dashboards and wall screens, built by drag and drop.
 category: analytics
 alternativeTo: [tableau, power-bi]
 ease: some-setup

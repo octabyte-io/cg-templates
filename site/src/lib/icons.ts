@@ -25,6 +25,31 @@ export function productSvg(product: Product, size: number): string | null {
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="fill:${fill}" aria-hidden="true"><path d="${found.path}"/></svg>`;
 }
 
+/**
+ * The same mark drawn from a shared `<symbol>` (see `productSymbols`), for pages that list hundreds
+ * of cards: each mark's path is written once instead of once per card.
+ */
+export function productSvgUse(product: Product, size: number): string | null {
+  const found = icon(product.icon);
+  if (!found) return null;
+  const fill =
+    product.id === 'mailchimp' ? '#1a1a1a' : DARK.has(found.hex.toUpperCase()) ? 'var(--fg)' : `#${found.hex}`;
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="fill:${fill}" aria-hidden="true"><use href="#pm-${product.icon}"/></svg>`;
+}
+
+/** One hidden SVG holding a `<symbol>` for each product's mark, for `productSvgUse`. */
+export function productSymbols(products: Product[]): string {
+  const seen = new Set<string>();
+  const symbols: string[] = [];
+  for (const product of products) {
+    const found = icon(product.icon);
+    if (!found || seen.has(product.icon!)) continue;
+    seen.add(product.icon!);
+    symbols.push(`<symbol id="pm-${product.icon}" viewBox="0 0 24 24"><path d="${found.path}"/></symbol>`);
+  }
+  return symbols.length ? `<svg width="0" height="0" style="position:absolute" aria-hidden="true">${symbols.join('')}</svg>` : '';
+}
+
 /** Products whose mark sits on its own brand-yellow tile. */
 export function isYellow(product: Product): boolean {
   return product.id === 'mailchimp';

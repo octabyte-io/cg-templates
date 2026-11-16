@@ -26,7 +26,8 @@ const { categories, total } = Astro.props;
         aria-label="Search apps by name, job or the tool they replace"
       /></label
     >
-    <div class="seg" role="toolbar" aria-label="Filter by category">
+    <div class="segwrap">
+    <div class="seg" id="seg" role="toolbar" aria-label="Filter by category">
       <button type="button" data-tab="" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button>
       {
         [...categories].sort((a, b) => b.count - a.count).map((category) => (
@@ -37,5 +38,63 @@ const { categories, total } = Astro.props;
         ))
       }
     </div>
+    <button type="button" class="segmore" aria-expanded="false" aria-controls="seg" data-segmore hidden>
+      <span data-segmore-label>More categories</span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m4 6 4 4 4-4"></path></svg>
+    </button>
+    </div>
   </div>
 </div>
+
+<script>
+  // Categories show as one row, biggest first, with a button that opens the rest. The chips that do
+  // not fit the row are hidden (so Tab skips them) until it is opened. Without JavaScript every
+  // chip shows, wrapped.
+  const seg = document.getElementById('seg');
+  const more = document.querySelector<HTMLButtonElement>('[data-segmore]');
+  const label = document.querySelector<HTMLElement>('[data-segmore-label]');
+  if (seg && more && label) {
+    let chips = [...seg.querySelectorAll<HTMLButtonElement>('button')];
+    let open = false;
+    const layout = () => {
+      chips.forEach((chip) => (chip.hidden = false));
+      more.hidden = false;
+      if (open) {
+        seg.classList.remove('one');
+        label.textContent = 'Fewer categories';
+        more.setAttribute('aria-expanded', 'true');
+        return;
+      }
+      seg.classList.add('one');
+      const top = chips[0].offsetTop;
+      let hidden = chips.filter((chip) => chip.offsetTop > top);
+      // The chosen category always shows: if it would fall past the row, it moves up next to "All".
+      const pressed = chips.find((chip) => chip.getAttribute('aria-pressed') === 'true');
+      if (pressed && hidden.includes(pressed)) {
+        chips[0].after(pressed);
+        chips = [...seg.querySelectorAll<HTMLButtonElement>('button')];
+        hidden = chips.filter((chip) => chip.offsetTop > top);
+      }
+      hidden.forEach((chip) => (chip.hidden = true));
+      more.hidden = hidden.length === 0;
+      label.textContent = `More categories (${hidden.length})`;
+      more.setAttribute('aria-expanded', 'false');
+    };
+    more.addEventListener('click', () => {
+      open = !open;
+      layout();
+    });
+    // Choosing a category (or ?category= in the address) closes the list, with the choice in the row.
+    new MutationObserver(() => {
+      open = false;
+      layout();
+    }).observe(seg, { subtree: true, attributes: true, attributeFilter: ['aria-pressed'] });
+    let width = window.innerWidth;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth === width) return;
+      width = window.innerWidth;
+      layout();
+    });
+    layout();
+  }
+</script>

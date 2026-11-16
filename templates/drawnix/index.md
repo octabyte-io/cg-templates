@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Drawnix, a free board for mind maps and flowcharts.
+tagline: A free whiteboard for mind maps, flowcharts and sketches.
 category: design
 alternativeTo: [xmind, whimsical, miro]
 ease: easy

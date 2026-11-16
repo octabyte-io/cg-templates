@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted archives management with a public catalogue.
+tagline: Archives management with a public catalogue.
 category: research
 alternativeTo: [axiell-collections, archivera]
 ease: some-setup

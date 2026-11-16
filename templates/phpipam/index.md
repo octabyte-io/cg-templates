@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted IP address management for your subnets and VLANs.
+tagline: IP address management for your subnets and VLANs.
 category: developer-tools
 alternativeTo: [solarwinds-ipam, infoblox]
 ease: some-setup

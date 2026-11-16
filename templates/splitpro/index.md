@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Splitwise alternative for housemates, couples and trips.
+tagline: Split bills with housemates, couples and friends, like Splitwise.
 category: finance
 alternativeTo: [splitwise, tricount]
 ease: some-setup

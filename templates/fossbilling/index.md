@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted billing, client area and support for hosting businesses.
+tagline: Billing, client area and support for hosting businesses.
 category: finance
 alternativeTo: [whmcs, blesta]
 ease: some-setup

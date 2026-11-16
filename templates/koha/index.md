@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Koha library system for your catalogue and loans.
+tagline: A library system for your catalogue, loans and members.
 category: research
 alternativeTo: [follett-destiny]
 ease: some-setup

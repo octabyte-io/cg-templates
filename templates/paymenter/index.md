@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted billing and client portal for hosting businesses.
+tagline: Billing and client portal for hosting businesses.
 category: finance
 alternativeTo: [whmcs, blesta]
 ease: some-setup

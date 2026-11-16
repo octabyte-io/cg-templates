@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted survey software for detailed questionnaires.
+tagline: Survey software for detailed questionnaires.
 category: customers-sales
 alternativeTo: [surveymonkey, qualtrics, google-forms, typeform]
 ease: some-setup

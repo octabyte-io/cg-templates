@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted document filing that reads, tags and finds your papers.
+tagline: Document filing that reads, tags and finds your papers.
 category: documents
 alternativeTo: [docuware, evernote]
 ease: easy

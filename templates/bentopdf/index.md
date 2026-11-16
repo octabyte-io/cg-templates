@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted PDF tools that work in your browser. Files never upload.
+tagline: PDF tools that run in your browser, so files never upload.
 category: documents
 alternativeTo: [ilovepdf, smallpdf, adobe-acrobat]
 ease: easy

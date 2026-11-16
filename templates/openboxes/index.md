@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted warehouse inventory with lots and expiry dates.
+tagline: Warehouse inventory with lots and expiry dates.
 category: inventory-assets
 alternativeTo: [fishbowl, cin7]
 ease: easy

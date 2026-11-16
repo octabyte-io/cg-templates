@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted short links on your domain, with detailed visit stats.
+tagline: Short links on your domain, with detailed visit stats.
 category: customers-sales
 alternativeTo: [bitly, rebrandly]
 ease: some-setup

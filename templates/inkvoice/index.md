@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted invoicing with online payments and phone apps.
+tagline: Invoicing with online payments and phone apps.
 category: finance
 alternativeTo: [freshbooks, wave, zoho-invoice]
 ease: some-setup

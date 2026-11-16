@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted time tracking that turns your hours into invoices.
+tagline: Time tracking that turns your hours into invoices.
 category: customers-sales
 alternativeTo: [harvest, toggl, clockify]
 ease: some-setup

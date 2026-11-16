@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted PDF editor to merge, convert, sign and OCR your files.
+tagline: PDF editor to merge, convert, sign and OCR your files.
 category: documents
 alternativeTo: [adobe-acrobat, smallpdf, ilovepdf]
 ease: easy

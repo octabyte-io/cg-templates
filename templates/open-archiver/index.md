@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted email archiving with search across every mailbox.
+tagline: Email archiving with search across every mailbox.
 category: documents
 alternativeTo: [mailstore]
 ease: some-setup

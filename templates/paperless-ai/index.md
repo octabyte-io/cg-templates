@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI that files and searches your Paperless-ngx documents.
+tagline: AI that files and searches your Paperless-ngx documents.
 category: ai
 ease: some-setup
 easeNote: Create your account in the setup wizard straight away, then connect your Paperless-ngx with an API token and add an AI provider key.

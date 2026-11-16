@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted file tools for images, PDFs, video, audio and documents.
+tagline: File tools for images, PDFs, video, audio and documents.
 category: documents
 alternativeTo: [cloudconvert, smallpdf, tinypng, iloveimg]
 ease: easy

@@ -76,6 +76,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* phones and tablets: the main links move into a menu under the header */
 .mbtn{display:none;align-items:center;justify-content:center;width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--fg);cursor:pointer;border-radius:var(--r-md);touch-action:manipulation}
 .mbtn svg{width:20px;height:20px}
+/* theme toggle: shows the moon in light and the sun in dark, the theme a click switches to */
+.tbtn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border:1px solid var(--line-strong);background:var(--card);color:var(--muted);border-radius:var(--r-md);cursor:pointer;transition:border-color .15s,color .15s,transform .16s var(--ease-out);touch-action:manipulation}
+.tbtn:hover{border-color:var(--cross);color:var(--fg)}
+.tbtn:active{transform:scale(.96)}
+.tbtn svg{width:17px;height:17px}
+.tbtn .sun{display:none}
+:root[data-theme="dark"] .tbtn .sun{display:block}:root[data-theme="dark"] .tbtn .moon{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tbtn .sun{display:block}:root:not([data-theme="light"]) .tbtn .moon{display:none}}
 .mbtn .x,.mbtn[aria-expanded="true"] .bars{display:none}.mbtn[aria-expanded="true"] .x{display:block}
 .mnav{border-top:1px solid var(--line);padding-block:8px 16px;display:grid;background:var(--bg)}
 .mnav a{display:flex;align-items:center;min-height:48px;text-decoration:none;font-size:1rem;border-bottom:1px solid var(--line)}
@@ -187,10 +195,14 @@ p{margin:0}
 .fbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh));z-index:15;background:var(--bg);border-block:1px solid var(--line)}
 .fbar .in{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-block:14px}
 /* category chips: one quiet row of pills; the count says how much is behind each */
-.seg{display:flex;flex-wrap:nowrap;gap:6px;min-width:0;padding:4px;margin:-4px;overflow-x:auto;scrollbar-width:none;
-  /* one row that scrolls sideways at every width, so the sticky bar stays short; the fade says there are more */
-  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
-.seg::-webkit-scrollbar{display:none}
+.segwrap{display:flex;align-items:flex-start;gap:6px;min-width:0}
+/* category chips wrap; with JavaScript they show as one row (biggest first) and "More categories" opens the rest */
+.seg{display:flex;flex-wrap:wrap;gap:6px;min-width:0;flex:1}
+.segmore{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:32px;padding:0 12px;border:1px dashed var(--line-strong);background:transparent;border-radius:var(--r-pill);color:var(--fg);cursor:pointer;font-size:.8125rem;font-weight:500;white-space:nowrap;touch-action:manipulation;transition:border-color .15s,background .15s}
+.segmore:hover{border-color:var(--cross);background:var(--card)}
+.segmore[hidden]{display:none}
+.segmore svg{width:14px;height:14px;transition:transform .2s var(--ease-out)}
+.segmore[aria-expanded="true"] svg{transform:rotate(180deg)}
 .seg button{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--card);min-height:32px;padding:0 12px;border-radius:var(--r-pill);color:var(--muted);cursor:pointer;font-size:.8125rem;white-space:nowrap;transition:color .15s,background .15s,border-color .15s,transform .16s var(--ease-out);touch-action:manipulation}
 .seg button:active{transform:scale(.97)}
 .seg button:hover{color:var(--fg);border-color:var(--line-strong)}
@@ -411,10 +423,16 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .bento>.tile{padding:24px 16px 28px}
   .tl{gap:4px}.tl .h{font-size:.625rem}
   .seg button{padding:0 14px;min-height:44px}
+  .segmore{min-height:44px}
+  /* on a phone the button sits under the chips, so the row has the full width */
+  .segwrap{flex-direction:column;align-items:stretch}.segmore{align-self:flex-start}
+  /* an opened category list on a phone scrolls away with the page instead of covering it */
+  .fbar:has(.segmore[aria-expanded="true"]){position:static}
   .feat{grid-template-columns:1fr}
   .vs,.how{grid-template-columns:1fr}.vs>div+div,.how>div+div{border-left:0;border-top:1px solid var(--line)}
   .rel{grid-template-columns:1fr}
   .kbtn{min-width:0;width:44px;height:44px;padding:0;justify-content:center}.kbtn span,.kbtn kbd{display:none}
+  .tbtn{width:44px;height:44px}
   .top .getcg{display:none}
   /* long labels wrap instead of running off a narrow screen (large text sizes) */
   .btn{max-width:100%}

@@ -1,5 +1,5 @@
 ---
-tagline: Open-source digital signage for the TV screens in your business.
+tagline: Digital signage for the TV screens in your business.
 category: media
 alternativeTo: [yodeck, screencloud, optisigns]
 ease: some-setup

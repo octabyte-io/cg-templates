@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted online office for Word, Excel and PowerPoint files.
+tagline: Online office for Word, Excel and PowerPoint files.
 category: documents
 alternativeTo: [microsoft-365, google-workspace, google-docs]
 ease: some-setup

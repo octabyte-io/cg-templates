@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted equipment rental software with online booking.
+tagline: Equipment rental software with online booking.
 category: online-stores
 alternativeTo: [booqable, rentman]
 ease: some-setup

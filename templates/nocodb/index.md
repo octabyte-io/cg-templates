@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted no-code database with grid, kanban and calendar views.
+tagline: No-code database with grid, kanban and calendar views.
 category: docs-wikis
 alternativeTo: [airtable]
 ease: easy

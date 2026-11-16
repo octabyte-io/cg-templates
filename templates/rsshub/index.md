@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted RSS feeds for websites and accounts that have none.
+tagline: RSS feeds for websites and accounts that have none.
 category: reading
 alternativeTo: [rss-app]
 ease: some-setup

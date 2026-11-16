@@ -9,8 +9,19 @@ import Ease from './Ease.astro';
 interface Props {
   template: Template;
   hidden?: boolean;
+  /** The page renders `productSymbols` once, so the card's mark can point at it. */
+  sharedMarks?: boolean;
 }
-const { template, hidden } = Astro.props;
+const { template, hidden, sharedMarks = false } = Astro.props;
+// The filter's search text, each word once: the description repeats much of the tagline and tags.
+const q = [
+  ...new Set(
+    [template.name, template.description, template.tagline, template.category.name, ...template.tags, ...template.alternativeTo.map((p) => p.name)]
+      .join(' ')
+      .toLowerCase()
+      .split(/\s+/),
+  ),
+].join(' ');
 const first = template.alternativeTo[0];
 ---
 
@@ -19,16 +30,7 @@ const first = template.alternativeTo[0];
   href={href(`templates/${template.id}/`)}
   data-card
   data-cat={template.category.id}
-  data-q={[
-    template.name,
-    template.description,
-    template.tagline,
-    template.category.name,
-    ...template.tags,
-    ...template.alternativeTo.map((p) => p.name),
-  ]
-    .join(' ')
-    .toLowerCase()}
+  data-q={q}
   hidden={hidden}
 >
   <div class="ct">
@@ -40,7 +42,7 @@ const first = template.alternativeTo[0];
     {
       first ? (
         <span class="rp">
-          Replaces <ProductMark product={first} />
+          Replaces <ProductMark product={first} shared={sharedMarks} />
           <b>{first.name}</b>
           {template.alternativeTo.length > 1 && (
             <span class="plus">

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted ERP for your books, stock, orders and production.
+tagline: ERP for your books, stock, orders and production.
 category: finance
 alternativeTo: [netsuite, sap-business-one, quickbooks]
 ease: some-setup

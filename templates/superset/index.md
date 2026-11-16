@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted dashboards and a SQL editor on your own databases.
+tagline: Dashboards and a SQL editor on your own databases.
 category: analytics
 alternativeTo: [tableau, power-bi, looker]
 ease: some-setup

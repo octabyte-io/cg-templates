@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted employee onboarding, from preboarding to Slack reminders.
+tagline: Employee onboarding, from preboarding to Slack reminders.
 category: hr
 alternativeTo: [enboarder, sapling, bamboohr]
 ease: some-setup

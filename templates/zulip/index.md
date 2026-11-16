@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted team chat where every conversation has its own topic.
+tagline: Team chat where every conversation has its own topic.
 category: team-chat
 alternativeTo: [slack, microsoft-teams]
 ease: easy

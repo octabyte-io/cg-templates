@@ -1,5 +1,5 @@
 ---
-tagline: "Self-hosted Bonfire: a fediverse network, private post by post."
+tagline: Your own fediverse network, with privacy set post by post.
 category: social
 alternativeTo: [x-twitter, facebook]
 ease: some-setup

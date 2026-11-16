@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted document assembly, an open-source HotDocs alternative.
+tagline: Guided interviews that fill in letters, forms and contracts.
 category: documents
 alternativeTo: [gavel, hotdocs]
 ease: some-setup

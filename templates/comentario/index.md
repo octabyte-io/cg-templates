@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted comments for many websites, with moderation rules.
+tagline: Comments for many websites, with moderation rules.
 category: websites
 alternativeTo: [disqus]
 ease: some-setup

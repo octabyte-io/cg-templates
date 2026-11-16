@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted mind maps your team edits together, shared by link.
+tagline: Mind maps your team edits together, shared by link.
 category: design
 alternativeTo: [mindmeister, coggle]
 ease: easy

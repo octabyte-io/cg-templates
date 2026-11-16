@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted internet radio with an AutoDJ that plays around the clock.
+tagline: Internet radio with an AutoDJ that plays around the clock.
 category: music-audio
 alternativeTo: [radio-co, live365, radioking]
 ease: some-setup

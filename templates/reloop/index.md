@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted email API and campaigns, an alternative to Resend.
+tagline: An email API and campaigns, an alternative to Resend.
 category: email-calendars
 alternativeTo: [resend, postmark, sendgrid, mailchimp]
 ease: some-setup

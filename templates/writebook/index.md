@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted books, manuals and handbooks online, public or private.
+tagline: Books, manuals and handbooks online, public or private.
 category: docs-wikis
 alternativeTo: [gitbook]
 ease: easy

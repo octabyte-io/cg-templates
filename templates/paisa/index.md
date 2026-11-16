@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted personal finance manager for spending and investments.
+tagline: Personal finance manager for spending and investments.
 category: finance
 alternativeTo: [quicken, empower, ynab]
 ease: some-setup

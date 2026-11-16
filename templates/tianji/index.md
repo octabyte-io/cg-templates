@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted website stats, uptime alerts and server health in one.
+tagline: Website stats, uptime alerts and server health in one.
 category: analytics
 alternativeTo: [google-analytics, uptimerobot, pingdom]
 ease: easy

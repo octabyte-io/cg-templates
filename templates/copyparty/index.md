@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted file server to send, collect and share large files.
+tagline: File server to send, collect and share large files.
 category: files-photos
 alternativeTo: [wetransfer, dropbox, google-drive, dropbox-transfer]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted invoicing for freelancers, with estimates and payments.
+tagline: Invoicing for freelancers, with estimates and payments.
 category: finance
 alternativeTo: [freshbooks]
 ease: some-setup

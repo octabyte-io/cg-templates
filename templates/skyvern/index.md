@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI that fills in forms and gathers data on websites.
+tagline: AI that fills in forms and gathers data on websites.
 category: ai
 alternativeTo: [browse-ai]
 ease: some-setup

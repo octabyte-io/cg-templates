@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted password sharing by links that delete themselves.
+tagline: Password sharing by links that delete themselves.
 category: security
 alternativeTo: [privnote]
 ease: easy

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted time tracking with tags and dashboards you build.
+tagline: Time tracking with tags and dashboards you build.
 category: customers-sales
 alternativeTo: [toggl, clockify]
 ease: easy

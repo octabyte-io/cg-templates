@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted RSS feeds for websites and channels that don't have one.
+tagline: RSS feeds for websites and channels that don't have one.
 category: reading
 alternativeTo: [rss-app, fetchrss]
 ease: easy

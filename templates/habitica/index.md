@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Habitica, the habit tracker that plays like a game.
+tagline: A habit tracker and to-do list that plays like a game.
 category: home
 ease: easy
 easeNote: Open the app's address and sign up; the first account becomes the admin, then you can limit sign-ups to people you invite.

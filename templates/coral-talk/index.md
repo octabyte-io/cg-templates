@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted comments for news sites, with real moderation tools.
+tagline: Comments for news sites, with real moderation tools.
 category: websites
 alternativeTo: [disqus]
 ease: some-setup

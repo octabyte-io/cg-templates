@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted flow editor that wires devices, APIs and apps together.
+tagline: Flow editor that wires devices, APIs and apps together.
 category: automation
 alternativeTo: [zapier, ifttt, make]
 ease: some-setup

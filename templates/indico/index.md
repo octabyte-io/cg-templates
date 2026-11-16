@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted conference and meeting management, made at CERN.
+tagline: Conference and meeting management, made at CERN.
 category: events
 alternativeTo: [oxford-abstracts, cvent, conftool]
 ease: some-setup

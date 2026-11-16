@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted HR and payroll, from hiring to salary slips.
+tagline: HR and payroll, from hiring to salary slips.
 category: hr
 alternativeTo: [bamboohr, gusto, personio, zoho-people]
 ease: some-setup

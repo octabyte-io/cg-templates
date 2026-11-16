@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Backdrop CMS for small organisations and Drupal 7 sites.
+tagline: A simple CMS for small organisations and former Drupal 7 sites.
 category: websites
 alternativeTo: [squarespace, wix]
 ease: easy

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted CalDAV server for calendars and contacts on every phone.
+tagline: CalDAV server for calendars and contacts on every phone.
 category: docs-wikis
 alternativeTo: [google-calendar, icloud-calendar]
 ease: some-setup

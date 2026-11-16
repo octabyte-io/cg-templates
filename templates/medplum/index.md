@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted FHIR backend for teams building their own health apps.
+tagline: FHIR backend for teams building their own health apps.
 category: health
 alternativeTo: [healthie, aidbox]
 ease: some-setup

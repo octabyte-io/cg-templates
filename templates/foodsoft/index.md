@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted food co-op software for shared orders and accounts.
+tagline: Food co-op software for shared orders and accounts.
 category: operations
 ease: some-setup
 easeNote: Sign in with your admin email and the password Cloudgate shows, set your co-op's name and currency, then add members, suppliers and their products before opening the first order.

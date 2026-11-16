@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted desk booking on your own floor plan, with no per-user fee.
+tagline: Desk booking on your own floor plan, with no per-user fee.
 category: hr
 alternativeTo: [robin, deskbird]
 ease: easy

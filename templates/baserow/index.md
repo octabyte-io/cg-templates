@@ -1,5 +1,5 @@
 ---
-tagline: Open-source Airtable alternative, as easy to use as a spreadsheet.
+tagline: A no-code database as easy to use as a spreadsheet, like Airtable.
 category: docs-wikis
 alternativeTo: [airtable]
 ease: easy

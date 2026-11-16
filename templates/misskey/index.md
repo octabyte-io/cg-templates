@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Misskey, your own social network in the fediverse.
+tagline: Your own social network in the fediverse.
 category: social
 alternativeTo: [x-twitter, circle]
 ease: some-setup

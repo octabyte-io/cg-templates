@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted online tools for PDFs, images, video, text and data.
+tagline: Online tools for PDFs, images, video, text and data.
 category: documents
 alternativeTo: [ilovepdf, smallpdf]
 ease: easy

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted dashboards on your PostgreSQL or ClickHouse data.
+tagline: Dashboards on your PostgreSQL or ClickHouse data.
 category: analytics
 alternativeTo: [tableau, power-bi, looker]
 ease: some-setup

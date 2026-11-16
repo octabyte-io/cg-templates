@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI that titles and tags your Paperless-ngx documents.
+tagline: AI that titles and tags your Paperless-ngx documents.
 category: ai
 ease: some-setup
 easeNote: Enter your Paperless-ngx address and API token and your AI provider's key, then tag documents in Paperless-ngx for it to process.

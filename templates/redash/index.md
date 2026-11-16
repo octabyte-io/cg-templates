@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted SQL queries, charts, dashboards and alerts.
+tagline: SQL queries, charts, dashboards and alerts.
 category: analytics
 alternativeTo: [looker, power-bi]
 ease: some-setup

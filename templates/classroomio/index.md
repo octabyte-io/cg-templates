@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted LMS for staff training, compliance and customer courses.
+tagline: LMS for staff training, compliance and customer courses.
 category: education
 alternativeTo: [talentlms, skilljar]
 ease: some-setup

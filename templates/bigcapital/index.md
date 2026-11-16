@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted accounting with invoices, inventory and reports.
+tagline: Accounting with invoices, inventory and reports.
 category: finance
 alternativeTo: [quickbooks, xero, zoho-books, freshbooks]
 ease: some-setup

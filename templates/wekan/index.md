@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted kanban boards with swimlanes, calendars and rules.
+tagline: Kanban boards with swimlanes, calendars and rules.
 category: project-management
 alternativeTo: [trello]
 ease: easy

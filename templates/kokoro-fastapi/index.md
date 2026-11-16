@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Kokoro text to speech with natural voices, no GPU needed.
+tagline: Text to speech with natural voices, no GPU needed.
 category: ai
 alternativeTo: [elevenlabs, openai-tts]
 ease: easy

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted go links that give your team's links short s/ names.
+tagline: Go links that give your team's links short s/ names.
 category: customers-sales
 alternativeTo: [golinks, bitly]
 ease: easy

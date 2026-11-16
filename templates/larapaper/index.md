@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted server for TRMNL displays.
+tagline: Run the server behind your TRMNL e-ink displays.
 category: home
 ease: some-setup
 easeNote: Create your account in the browser, then point your TRMNL or compatible e-ink device at your LaraPaper address during its Wi-Fi setup and pick its screens.

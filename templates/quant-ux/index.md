@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Quant-UX, prototype and usability testing in one tool.
+tagline: Prototype designs and test them with real users, in one tool.
 category: design
 alternativeTo: [maze, figma, axure]
 ease: easy

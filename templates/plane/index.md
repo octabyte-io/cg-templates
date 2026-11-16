@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted project tracking with sprints, boards and timelines.
+tagline: Project tracking with sprints, boards and timelines.
 category: project-management
 alternativeTo: [jira, linear, asana, monday]
 ease: easy

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Drupal for large, structured and multilingual websites.
+tagline: A CMS for large, structured and multilingual websites.
 category: websites
 alternativeTo: [acquia, pantheon, wix, squarespace]
 ease: some-setup

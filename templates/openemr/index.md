@@ -1,5 +1,5 @@
 ---
-tagline: Open-source EHR for patient records, scheduling and billing.
+tagline: Patient records, scheduling and billing for medical practices.
 category: customers-sales
 alternativeTo: [tebra, drchrono, simplepractice, healthie]
 ease: some-setup

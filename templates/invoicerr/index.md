@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted quotes, invoices and receipts, with quotes signed online.
+tagline: Quotes, invoices and receipts, with quotes signed online.
 category: finance
 alternativeTo: [freshbooks, zoho-invoice]
 ease: some-setup

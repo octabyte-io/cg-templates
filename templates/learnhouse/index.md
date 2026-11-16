@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted online courses with assignments and certificates.
+tagline: Online courses with assignments and certificates.
 category: education
 alternativeTo: [teachable, thinkific]
 ease: easy

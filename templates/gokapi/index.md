@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted file sharing with links that expire on their own.
+tagline: File sharing with links that expire on their own.
 category: files-photos
 alternativeTo: [wetransfer, dropbox-transfer, smash]
 ease: easy
