@@ -1,0 +1,15 @@
+name: OpenTodo
+description: "OpenTodo is a self-hosted to-do list like Todoist: plan your day, block out time, work offline on every device and share projects with family or a team."
+version: "1.5.0"
+tags: [self-hosted to-do list, todoist alternative, ticktick alternative, open source task manager, offline to-do app, shared to-do list, time blocking app]
+links:
+  website: https://open-todo.app
+  docs: https://open-todo.app/docs/
+  source: https://github.com/OpenTodoApp/OpenTodo
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  OPENTODO_BASE_URL: { value: "{{domains.opentodo.url}}" }
+domains:
+  - { service: opentodo, port: 8080 }

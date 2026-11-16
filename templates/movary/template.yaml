@@ -1,0 +1,30 @@
+name: Movary
+description: "Movary is a self-hosted movie tracker and film diary: log what you watch, rate and review it, see statistics and import from Letterboxd or Trakt."
+version: "0.83.0"
+tags: [movie tracker, letterboxd alternative, trakt alternative, film diary, movie watch history, movie ratings]
+links:
+  website: https://movary.org
+  docs: https://docs.movary.org
+  source: https://github.com/leepeuker/movary
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APPLICATION_URL: { value: "{{domains.movary.url}}" }
+  APPLICATION_SECRET: { generate: hex }
+  TMDB_API_KEY:
+    ask:
+      label: TMDB API key
+      description: Movary looks up movie details and posters on The Movie Database (TMDB). Get a free key at themoviedb.org/settings/api, or leave it empty and add it later under Settings, Server.
+      secret: true
+      required: false
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for watch dates, as a PHP time zone name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: movary, port: 8080 }
+files:
+  - { path: nginx-default.conf }

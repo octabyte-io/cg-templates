@@ -1,0 +1,39 @@
+# APITable's all-in-one image: web app, API server, real-time server and their
+# MySQL, Redis, RabbitMQ and MinIO in one container, started by pm2. The
+# multi-container setup in the project's repo pins some of its images only to
+# "latest", so this template uses the all-in-one image, which has version tags.
+services:
+  apitable:
+    image: apitable/all-in-one:v1.14.0-beta_2031
+    restart: unless-stopped
+    # The image's own start command, after one fix: its init-appdata.sh closes a
+    # quote one line late, so the database migration gets a broken table prefix
+    # and stops with an SQL syntax error. The sed puts the quote back in place.
+    command:
+      - bash
+      - -c
+      - >-
+        sed -i -e 's/apitable_} \\$$/apitable_}" \\/' -e 's/mysql}"$$/mysql}/' /usr/local/bin/init-appdata.sh
+        && init-dataenv.sh && add-host.sh && pm2-runtime start ecosystem.config.js
+    environment:
+      TZ: UTC
+      TIMEZONE: UTC
+      # Internal services; they only listen inside this container.
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      MINIO_SECRET_KEY: ${STORAGE_SECRET}
+      AWS_ACCESS_SECRET: ${STORAGE_SECRET}
+    volumes:
+      - apitable-data:/apitable
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://localhost:80/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      start_period: 600s
+      retries: 20
+
+volumes:
+  apitable-data:

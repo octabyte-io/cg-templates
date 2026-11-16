@@ -1,0 +1,19 @@
+name: Windshift
+description: "Self-hosted Windshift: a Jira-style tracker with sprints, roadmaps, a service desk, test runs and time tracking, plus a Jira importer."
+version: "0.9.4"
+tags: [jira alternative, self-hosted jira, jira service management alternative, issue tracker, scrum board, test management, service desk]
+links:
+  website: https://windshift.sh
+  docs: https://windshift.sh/self-hosting
+  source: https://github.com/Windshiftapp/core
+cloudgate: 0.1.0
+compose: app
+# The official compose gives Windshift a 2 GB budget; with PostgreSQL alongside, 2 GB is the floor.
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.windshift.url}}" }
+  WEBAUTHN_RP_ID: { value: "{{domains.windshift.host}}" }
+  SSO_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+domains:
+  - { service: windshift, port: 8080 }

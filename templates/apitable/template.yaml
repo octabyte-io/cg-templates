@@ -1,0 +1,18 @@
+name: APITable
+description: "Self-hosted APITable: an open-source Airtable alternative with linked tables, forms, automations, dashboards and grid, kanban, Gantt and calendar views."
+version: "1.14.0-beta"
+tags: [airtable alternative, no-code database, spreadsheet database, gantt chart, kanban board, database api]
+links:
+  website: https://apitable.com
+  docs: https://github.com/apitable/apitable#installation
+  source: https://github.com/apitable/apitable
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  DB_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  RABBITMQ_PASSWORD: { generate: password }
+  STORAGE_SECRET: { generate: password }
+domains:
+  - { service: apitable, port: 80 }
