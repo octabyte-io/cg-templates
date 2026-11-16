@@ -85,7 +85,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
 >
   <Crumbs trail={trail} />
   <section class="apphead pad">
-    <AppTile template={a} box={80} size={46} />
+    <AppTile template={a} box={80} size={46} loading="eager" />
     <div class="body">
       <h1 class="h1">{a.name}</h1>
       <p class="lede">{a.tagline}</p>

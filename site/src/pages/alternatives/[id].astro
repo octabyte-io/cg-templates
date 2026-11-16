@@ -115,6 +115,9 @@ const descCloser = [
 ].find((line) => `${descLead} ${line}`.length <= 160);
 const description = descCloser ? `${descLead} ${descCloser}` : descLead;
 
+// The import column only helps when some app can import; a column of "No" says nothing.
+const showImport = !!copy && apps.some((app) => (copy.apps[app.id]?.import ?? 'no') !== 'no');
+
 const thumb = (app: Template) => {
   const shot = app.screenshots[0];
   if (!shot) return undefined;
@@ -143,14 +146,31 @@ const thumb = (app: Template) => {
     <div class="body">
       <h1 class="h1">{KindWord} {plural} to {product.name}</h1>
       <p class="lede">{lede}</p>
-      <div class="chips">
-        <span class="chip"><b>{count}</b> {plural}</span>
-        <span class="chip"><b>Free</b> {count === 1 ? 'app' : 'apps'}</span>
-        <span class="chip">Our pick: <b>{pick.name}</b></span>
-      </div>
+      {
+        count === 1 ? (
+          // One app: its facts go in the header, with no comparison table or "pick" over a choice of one.
+          <div class="chips">
+            <span class="chip"><b>Free</b> app</span>
+            <span class="chip">Code: <b>{kinds.get(pick.id)!.label}</b></span>
+            {copy && (
+              <span class="chip">
+                Import from {product.name}: <b>{IMPORT_LABEL[copy.apps[pick.id]?.import ?? 'no']}</b>
+              </span>
+            )}
+            <span class="chip"><Ease ease={pick.ease} /></span>
+          </div>
+        ) : (
+          <div class="chips">
+            <span class="chip"><b>{count}</b> {plural}</span>
+            <span class="chip"><b>Free</b> apps</span>
+            <span class="chip">Our pick: <b>{pick.name}</b></span>
+          </div>
+        )
+      }
     </div>
   </section>
   <section class="sec pad">
+    {count > 1 && (
     <div class="blk first">
       <h2 class="h2">At a glance</h2>
       <div class="tablewrap">
@@ -160,7 +180,7 @@ const thumb = (app: Template) => {
               <th scope="col">App</th>
               <th scope="col">Good for</th>
               <th scope="col">Code</th>
-              {copy && <th scope="col">Import from {product.name}</th>}
+              {showImport && <th scope="col">Import from {product.name}</th>}
               <th scope="col">Ease of use</th>
             </tr>
           </thead>
@@ -181,7 +201,7 @@ const thumb = (app: Template) => {
                     <span class="lab">Code</span>
                     {kinds.get(app.id)!.label}
                   </td>
-                  {copy && (
+                  {showImport && (
                     <td class="c-imp">
                       <span class="lab">Import from {product.name}</span>
                       {IMPORT_LABEL[copy.apps[app.id]?.import ?? 'no']}
@@ -197,6 +217,7 @@ const thumb = (app: Template) => {
         </table>
       </div>
     </div>
+    )}
 
     {
       copy && (

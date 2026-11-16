@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
+import { inflateSync } from 'node:zlib';
 import { z } from 'astro/zod';
 import { marked } from 'marked';
 import { parse as parseYaml } from 'yaml';
@@ -158,7 +159,7 @@ export interface Template {
   switching?: { gain: string[]; different: string[] };
   faq: { q: string; a: string }[];
   screenshots: Screenshot[];
-  /** `ink`: an SVG drawn only in black or near-black, which needs a light tile in the dark theme. */
+  /** `ink`: a logo drawn only in black or near-black on a transparent background, which needs a light tile in the dark theme. */
   logo: { file: string; ext: 'svg' | 'png'; path: string; ink: boolean };
   /** The overview: `index.md`'s body as Markdown and as HTML. */
   bodyMarkdown: string;
@@ -183,17 +184,95 @@ function splitFrontmatter(source: string): { data: unknown; body: string } {
  * draws in black). Such a logo vanishes on the dark theme's dark tiles.
  */
 function isInkOnly(svg: string): boolean {
-  const colours = [...svg.matchAll(/(?:fill|stroke)\s*[=:]\s*["']?\s*(#[0-9a-f]{3,8}|[a-z]+)/gi)]
+  const colours = [...svg.matchAll(/(?:fill|stroke)\s*[=:]\s*["']?\s*(#[0-9a-f]{3,8}|rgb\([^)]*\)|[a-z]+)/gi)]
     .map((m) => m[1].toLowerCase())
-    .filter((c) => c !== 'none' && c !== 'transparent');
+    // "freeze" and "remove" are animation values of `fill`, not colours. A url() gradient counts as colour.
+    .filter((c) => !['none', 'transparent', 'freeze', 'remove'].includes(c));
   const dark = (c: string) => {
-    if (c === 'black') return true;
-    if (!c.startsWith('#')) return false;
-    const hex = c.length === 4 ? [...c.slice(1)].map((x) => x + x).join('') : c.slice(1, 7);
-    const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    // currentColor in a logo shown as an image is black.
+    if (c === 'black' || c === 'currentcolor') return true;
+    let rgb: number[];
+    if (c.startsWith('rgb(')) rgb = c.slice(4, -1).split(',').map((x) => parseFloat(x));
+    else if (c.startsWith('#')) {
+      const hex = c.length === 4 ? [...c.slice(1)].map((x) => x + x).join('') : c.slice(1, 7);
+      rgb = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    } else return false;
+    const [r, g, b] = rgb;
     return 0.2126 * r + 0.7152 * g + 0.0722 * b < 60;
   };
   return colours.every(dark);
+}
+
+/**
+ * True when a PNG logo is dark ink on a transparent background: its opaque pixels average near black.
+ * Reads 8-bit, non-interlaced PNGs (every logo in the catalogue today); anything else counts as not ink.
+ */
+function isInkOnlyPng(png: Buffer): boolean {
+  if (png.length < 33 || png.readUInt32BE(12) !== 0x49484452) return false;
+  const width = png.readUInt32BE(16);
+  const [depth, type, , , interlace] = [24, 25, 26, 27, 28].map((i) => png[i]);
+  const channels = ({ 0: 1, 2: 3, 3: 1, 4: 2, 6: 4 } as Record<number, number>)[type];
+  if (depth !== 8 || interlace !== 0 || !channels) return false;
+  const idat: Buffer[] = [];
+  let palette: Buffer | undefined;
+  let trns: Buffer | undefined;
+  for (let at = 8; at + 8 <= png.length; ) {
+    const len = png.readUInt32BE(at);
+    const kind = png.toString('ascii', at + 4, at + 8);
+    const data = png.subarray(at + 8, at + 8 + len);
+    if (kind === 'IDAT') idat.push(data);
+    else if (kind === 'PLTE') palette = data;
+    else if (kind === 'tRNS') trns = data;
+    at += 12 + len;
+  }
+  let raw: Buffer;
+  try {
+    raw = inflateSync(Buffer.concat(idat));
+  } catch {
+    return false;
+  }
+  const stride = width * channels;
+  const rows = Math.floor(raw.length / (stride + 1));
+  let prev = Buffer.alloc(stride);
+  let sum = 0;
+  let count = 0;
+  let clear = 0;
+  for (let y = 0; y < rows; y++) {
+    const filter = raw[y * (stride + 1)];
+    const line = Buffer.from(raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1)));
+    for (let i = 0; i < stride; i++) {
+      const a = i >= channels ? line[i - channels] : 0;
+      const b = prev[i];
+      const c = i >= channels ? prev[i - channels] : 0;
+      const p = a + b - c;
+      const pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+      const add = filter === 1 ? a : filter === 2 ? b : filter === 3 ? (a + b) >> 1 : filter === 4 ? (pa <= pb && pa <= pc ? a : pb <= pc ? b : c) : 0;
+      line[i] = (line[i] + add) & 255;
+    }
+    for (let x = 0; x < width; x++) {
+      const px = line.subarray(x * channels, (x + 1) * channels);
+      let r: number, g: number, bl: number, alpha: number;
+      if (type === 3) {
+        if (!palette) return false;
+        [r, g, bl] = [palette[px[0] * 3], palette[px[0] * 3 + 1], palette[px[0] * 3 + 2]];
+        alpha = trns && px[0] < trns.length ? trns[px[0]] : 255;
+      } else if (type === 0 || type === 4) {
+        r = g = bl = px[0];
+        alpha = type === 4 ? px[1] : 255;
+      } else {
+        [r, g, bl] = [px[0], px[1], px[2]];
+        alpha = type === 6 ? px[3] : 255;
+      }
+      if (alpha < 128) clear++;
+      else {
+        sum += 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+        count++;
+      }
+    }
+    prev = line;
+  }
+  // A logo with no transparency brings its own background, so it shows on any tile.
+  return clear > 0 && count > 0 && sum / count < 60;
 }
 
 function lastCommit(folder: string): Date | undefined {
@@ -292,7 +371,10 @@ function readTemplate(id: string): Template {
       file: path.join(folder, `logo.${logoExt}`),
       ext: logoExt,
       path: `logos/${id}.${logoExt}`,
-      ink: logoExt === 'svg' && isInkOnly(read(path.join(folder, 'logo.svg')) ?? ''),
+      ink:
+        logoExt === 'svg'
+          ? isInkOnly(read(path.join(folder, 'logo.svg')) ?? '')
+          : isInkOnlyPng(readFileSync(path.join(folder, 'logo.png'))),
     },
     bodyMarkdown: body.trim(),
     bodyHtml: body.trim() ? (marked.parse(body, { async: false }) as string) : '',
