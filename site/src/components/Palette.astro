@@ -31,6 +31,7 @@ const addUrl = href('contribute/');
       /><kbd>Esc</kbd>
     </div>
     <div class="plist" id="plist" role="listbox" aria-label="Results"></div>
+    <p class="visually-hidden" id="pstat" role="status" aria-live="polite"></p>
     <div class="pft">
       <span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span>
     </div>
@@ -151,6 +152,9 @@ const addUrl = href('contribute/');
       }
     }
     plist.innerHTML = html;
+    // Screen readers hear how many results there are, or that there are none.
+    const status = document.getElementById('pstat');
+    if (status) status.textContent = pq.value.trim() ? (opts.length ? `${opts.length} ${opts.length === 1 ? 'result' : 'results'}` : 'No apps match') : '';
     sel = Math.min(sel, Math.max(0, opts.length - 1));
     mark();
   }

@@ -14,12 +14,12 @@ const svg = productSvg(product, isYellow(product) ? size - 3 : size);
 {
   svg ? (
     isYellow(product) ? (
-      <span class="tiny y" style={`width:${size + 2}px;height:${size + 2}px`} set:html={svg} />
+      <span class="tiny y" aria-hidden="true" style={`width:${size + 2}px;height:${size + 2}px`} set:html={svg} />
     ) : (
-      <span class="lgo" set:html={svg} />
+      <span class="lgo" aria-hidden="true" set:html={svg} />
     )
   ) : (
-    <span class="tiny" style={`width:${size}px;height:${size}px`}>
+    <span class="tiny" aria-hidden="true" style={`width:${size}px;height:${size}px`}>
       {product.name.charAt(0).toUpperCase()}
     </span>
   )

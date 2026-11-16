@@ -9,7 +9,7 @@
   --paper:light-dark(#eceff3,#05070c); --dot:light-dark(#d3d8e0,#111725); --bg:light-dark(#fbfcfd,#090c14); --card:light-dark(#ffffff,#0e131e); --sunk:light-dark(#f3f5f8,#0b1019);
   --fg:light-dark(#0e1320,#e8ecf4); --muted:light-dark(#525a6a,#9ba4b6); --faint:light-dark(#666e80,#828ba0);
   --line:light-dark(#e1e5eb,#192030); --line-strong:light-dark(#c7cdd7,#273046); --cross:light-dark(#949cab,#465169);
-  --accent:light-dark(#0751cf,#2d68ee); --accent-hi:light-dark(#2b6deb,#4f86ff); --accent-lo:light-dark(#043c9e,#1b49bd); --accent-ink:light-dark(#0751cf,#88afff); --on-accent:#ffffff;
+  --accent:light-dark(#0751cf,#2d68ee); --accent-hi:light-dark(#2b6deb,#4f86ff); --accent-lo:light-dark(#043c9e,#1b49bd); --accent-ink:light-dark(#0751cf,#88afff); --on-accent:#ffffff; --btn-top:light-dark(#2b6deb,#356ef0);
   --tint:light-dark(#eaf1fd,#0f1b36); --grid:light-dark(rgba(7,81,207,.075),rgba(90,140,255,.07)); --grid-strong:light-dark(rgba(7,81,207,.14),rgba(90,140,255,.13));
   --ok:light-dark(#17834a,#5fd394); --ok-bg:light-dark(#e6f4ec,#0f2419); --warn:light-dark(#a26300,#f0bf63); --warn-bg:light-dark(#fbf1dc,#2a1f0c);
   --hdr:light-dark(rgba(251,252,253,.74),rgba(9,12,20,.72)); --scrim:light-dark(rgba(14,19,32,.38),rgba(2,4,10,.62));
@@ -90,9 +90,9 @@ kbd{font:500 .6875rem/1 var(--mono);border:1px solid var(--line-strong);border-b
 .btn kbd{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);color:#fff}
 
 /* buttons: bevelled primary, outlined chevron secondary */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 16px;border-radius:var(--r-sm);font-size:.875rem;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;border:1px solid var(--accent-lo);background:linear-gradient(var(--accent-hi),var(--accent) 50%);color:var(--on-accent);
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 16px;border-radius:var(--r-sm);font-size:.875rem;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;border:1px solid var(--accent-lo);background:linear-gradient(var(--btn-top),var(--accent) 50%);color:var(--on-accent);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -2px 0 rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.14);transition:filter .15s,transform .16s var(--ease-out),box-shadow .16s var(--ease-out);touch-action:manipulation}
-.btn:hover{filter:brightness(1.08)}
+.btn:hover{filter:brightness(.94)}
 .btn:active{transform:translateY(1px) scale(.98);box-shadow:inset 0 2px 1px rgba(0,0,0,.22);transition-duration:.06s}
 .btn.lg{min-height:46px;padding:0 22px;font-size:.9375rem;border-radius:var(--r-md)}
 .btn.sm{min-height:30px;padding:0 11px;font-size:.8125rem;border-radius:var(--r-sm)}
@@ -187,7 +187,10 @@ p{margin:0}
 .fbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh));z-index:15;background:var(--bg);border-block:1px solid var(--line)}
 .fbar .in{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-block:14px}
 /* category chips: one quiet row of pills; the count says how much is behind each */
-.seg{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.seg{display:flex;flex-wrap:nowrap;gap:6px;min-width:0;padding:4px;margin:-4px;overflow-x:auto;scrollbar-width:none;
+  /* one row that scrolls sideways at every width, so the sticky bar stays short; the fade says there are more */
+  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+.seg::-webkit-scrollbar{display:none}
 .seg button{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--card);min-height:32px;padding:0 12px;border-radius:var(--r-pill);color:var(--muted);cursor:pointer;font-size:.8125rem;white-space:nowrap;transition:color .15s,background .15s,border-color .15s,transform .16s var(--ease-out);touch-action:manipulation}
 .seg button:active{transform:scale(.97)}
 .seg button:hover{color:var(--fg);border-color:var(--line-strong)}
@@ -253,11 +256,11 @@ p{margin:0}
 .crumb [aria-current]{color:var(--fg)}
 .crumb a{text-decoration:none}.crumb a:hover{color:var(--fg)}
 .apphead{padding-block:28px 40px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start}
-.apphead .body{display:grid;gap:14px;min-width:0}
-.apphead.one{grid-template-columns:1fr}
+.apphead .body{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
+.apphead.one{grid-template-columns:minmax(0,1fr)}
 .apphead .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;align-items:center;gap:7px;min-height:30px;padding:0 11px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--card);font-size:.8125rem;color:var(--muted)}
+.chip{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px 7px;min-height:30px;padding:4px 11px;max-width:100%;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--card);font-size:.8125rem;color:var(--muted)}
 .chip b{color:var(--fg);font-weight:500}
 .split{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px}
 .split>*{min-width:0}
@@ -355,7 +358,9 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 @keyframes fade-out{to{opacity:0}}
 @keyframes pop{from{opacity:0;transform:translateY(calc(var(--rise) * -.75)) scale(.97)}to{opacity:1;transform:none}}
 @keyframes pop-out{to{opacity:0;transform:translateY(calc(var(--rise) * -.5)) scale(.98)}}
-.pin{display:flex;align-items:center;gap:10px;padding:0 14px;height:56px;border-bottom:1px solid var(--line)}
+.pin{display:flex;align-items:center;gap:10px;padding:0 14px;height:56px;border-bottom:1px solid var(--line);transition:border-color .15s}
+/* the input has no outline of its own, so the row's rule turns accent while it has focus */
+.pin:focus-within{border-bottom-color:var(--accent-hi);box-shadow:inset 0 -1px 0 var(--accent-hi)}
 .pin svg{width:18px;height:18px;color:var(--faint);flex:none}
 .pin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:1rem var(--sans);color:var(--fg)}
 .pin input::placeholder{color:var(--faint)}
@@ -405,10 +410,6 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .bento{grid-template-columns:1fr}.bento .t-b,.bento .t-c{grid-column:1/-1}
   .bento>.tile{padding:24px 16px 28px}
   .tl{gap:4px}.tl .h{font-size:.625rem}
-  .seg{padding:2px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
-  .seg::-webkit-scrollbar{display:none}
-  /* the chips scroll sideways: the fade says there are more */
-  .seg{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
   .seg button{padding:0 14px;min-height:44px}
   .feat{grid-template-columns:1fr}
   .vs,.how{grid-template-columns:1fr}.vs>div+div,.how>div+div{border-left:0;border-top:1px solid var(--line)}
@@ -427,7 +428,7 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .hero{padding-block:52px 36px;gap:22px}
   .lede{font-size:1.0625rem}
   .hero .acts .btn{flex:1}
-  .apphead{grid-template-columns:1fr;gap:18px}
+  .apphead{grid-template-columns:minmax(0,1fr);gap:18px}
   .apphead .acts{display:none}
   .brand .bar{margin-inline:1px}
   .swrow{grid-auto-columns:80%}
@@ -460,8 +461,15 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 .code .c{color:var(--faint)}
 .notfound{padding-block:88px 96px;display:grid;gap:20px;justify-items:start}
 .notfound .acts{display:flex;gap:10px;flex-wrap:wrap}
-@media (max-width:56.25em){.idx{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:40em){.idx{grid-template-columns:1fr}}
+/* tools with one alternative: a compact A to Z list */
+.sec.browse>.muted{margin:-8px 0 20px}
+.azlist{list-style:none;margin:0;padding:0;columns:3;column-gap:32px}
+.azlist li{break-inside:avoid;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;padding-block:6px;border-bottom:1px solid var(--line);font-size:.875rem}
+.azlist a{font-weight:500;text-decoration:none;color:var(--fg)}
+.azlist a:hover{color:var(--accent-ink)}
+.azlist span{color:var(--muted)}
+@media (max-width:56.25em){.idx{grid-template-columns:repeat(2,minmax(0,1fr))}.azlist{columns:2}}
+@media (max-width:40em){.idx{grid-template-columns:1fr}.azlist{columns:1}.azlist li{min-height:44px;align-items:center}}
 /* The built site uses lists where the prototype used divs */
 ol.how{list-style:none;margin:0;padding:0}
 .how>li{padding:20px 22px;display:grid;gap:6px;align-content:start}

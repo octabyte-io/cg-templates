@@ -7,6 +7,10 @@ import { breadcrumbSchema, graph, pageListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
 
 const pages = alternativesPages().sort((a, b) => b.apps.length - a.apps.length || a.product.name.localeCompare(b.product.name));
+// Tools with several apps get a card to compare; tools with one app get a compact A to Z list, so
+// the page stays scannable instead of a wall of "1 app" cards.
+const compared = pages.filter((page) => page.apps.length > 1);
+const single = pages.filter((page) => page.apps.length === 1).sort((a, b) => a.product.name.localeCompare(b.product.name));
 const trail = [
   { name: 'Home', path: '' },
   { name: 'Alternatives', path: 'alternatives/' },
@@ -37,10 +41,11 @@ const trail = [
       <p class="lede">Find the free app that does the job of a tool you pay for today, and run it on your own server.</p>
     </div>
   </section>
-  <section class="sec browse pad">
+  <section class="sec browse pad" aria-labelledby="compared-title">
+    <h2 class="h2" id="compared-title">Tools with several alternatives</h2>
     <div class="idx">
       {
-        pages.map((page) => (
+        compared.map((page) => (
           <a href={href(`alternatives/${page.product.id}/`)}>
             <b>
               <ProductTile product={page.product} box={32} size={18} />
@@ -55,4 +60,20 @@ const trail = [
       }
     </div>
   </section>
+  {
+    single.length > 0 && (
+      <section class="sec browse pad" aria-labelledby="single-title">
+        <h2 class="h2" id="single-title">More tools, A to Z</h2>
+        <p class="muted measure">Each of these has one app in the catalogue that does the same job.</p>
+        <ul class="azlist">
+          {single.map((page) => (
+            <li>
+              <a href={href(`alternatives/${page.product.id}/`)}>{page.product.name} alternative</a>
+              <span>{page.apps[0].name}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 </Base>

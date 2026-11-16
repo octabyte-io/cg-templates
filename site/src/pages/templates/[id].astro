@@ -85,7 +85,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
 >
   <Crumbs trail={trail} />
   <section class="apphead pad">
-    <AppTile template={a} box={80} size={46} />
+    <AppTile template={a} box={80} size={46} loading="eager" />
     <div class="body">
       <h1 class="h1">{a.name}</h1>
       <p class="lede">{a.tagline}</p>
@@ -145,7 +145,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
           <div class="blk">
             <h2 class="h2">Replaces {listNames(replacedNames)}</h2>
             <p class="muted measure">
-              {a.name} does the same job as {listNames(replacedNames)}.
+              {a.name} does the same job as {a.alternativeTo.map((p, index) => (<>{index > 0 && (index === a.alternativeTo.length - 1 ? ' and ' : ', ')}{altPages.has(p.id) ? <a href={href(`alternatives/${p.id}/`)}>{p.name}</a> : p.name}</>))}.
               {a.switching ? ' Here is what changes when you switch.' : ' It runs on a server of your own, so the cost stays the same however many people use it, and your data stays with you.'}
             </p>
             {a.switching && (

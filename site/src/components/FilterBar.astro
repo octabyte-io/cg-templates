@@ -29,7 +29,7 @@ const { categories, total } = Astro.props;
     <div class="seg" role="toolbar" aria-label="Filter by category">
       <button type="button" data-tab="" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button>
       {
-        categories.map((category) => (
+        [...categories].sort((a, b) => b.count - a.count).map((category) => (
           <button type="button" data-tab={category.id} data-label={category.name} aria-pressed="false">
             {category.name}
             <span class="n">{category.count}</span>

@@ -16,7 +16,7 @@ function body(): string {
     '',
     `> ${SITE_DESCRIPTION}`,
     '',
-    `${SITE_NAME} is a directory of ${templates.length} free, open-source apps that Cloudgate, a deployment platform, sets up on a server for you. You do not need a server or technical skills to start. Each app page says what the app does, which paid tools it replaces, how easy it is to set up, and what happens when you click Deploy: ${steps
+    `${SITE_NAME} is a directory of ${templates.length} free apps, ${templates.filter((t) => licenceKind(t.license).openSource).length} of them open source, that Cloudgate, a deployment platform, sets up on a server for you. You do not need a server or technical skills to start. Each app page says what the app does, which paid tools it replaces, how easy it is to set up, and what happens when you click Deploy: ${steps
       .map((step, index) => `${index + 1}. ${step.name}`)
       .join('; ')}.`,
     '',

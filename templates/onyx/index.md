@@ -1,7 +1,7 @@
 ---
 tagline: AI search and chat that answers from your company's own apps.
 category: ai
-alternativeTo: [glean, chatgpt]
+alternativeTo: [glean, chatgpt, microsoft-365-copilot]
 ease: some-setup
 easeNote: The first person to sign up becomes the admin, connects an AI provider with their own API key, turns on invite-only sign-up and adds connectors, which means giving Onyx access in each app such as Slack or Google Drive.
 license: MIT
