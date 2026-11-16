@@ -427,6 +427,11 @@ export function alternativesPages(): { product: Product; apps: Template[]; copy?
   return [...altCache];
 }
 
+/** How many apps in the catalogue are open source, for counts that would otherwise call every app open source. */
+export function openSourceCount(): number {
+  return getTemplates().filter((t) => licenceKind(t.license).openSource).length;
+}
+
 /** How an app's code is shared: the words a visitor understands, from its SPDX licence id. */
 export function licenceKind(license: string): { label: string; openSource: boolean } {
   // A mixed licence with a closed-source part (Netdata's NCUL1 dashboard) is only partly open source.

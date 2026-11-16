@@ -90,7 +90,19 @@ const trail = [
   { name: 'Alternatives', path: 'alternatives/' },
   { name: product.name, path: `alternatives/${product.id}/` },
 ];
-const title = `${count} ${kindWord} ${plural} to ${product.name}`;
+// The title leads with the search people make ("self-hosted Skool alternative"), names the app when
+// there is only one, and falls back to shorter wordings so it fits the roughly 60 characters a
+// results page shows, " | Cloudgate" included.
+const titles =
+  count === 1
+    ? [
+        `${KindWord} ${product.name} alternative: ${pick.name}`,
+        `${product.name} alternative: ${pick.name}`,
+        `${KindWord} ${product.name} alternative`,
+        `${product.name} alternative`,
+      ]
+    : [`${count} ${kindWord} ${plural} to ${product.name}`, `${KindWord} ${product.name} alternatives`, `${product.name} alternatives`];
+const title = titles.find((t) => t.length <= 48) ?? titles[titles.length - 1];
 // Answer first (which apps), then what the page helps with; it stops at a sentence, never mid-word.
 const descLead = `Free, self-hosted ${plural} to ${product.name} for ${product.job}: ${listNames(
   apps.slice(0, 4).map((app) => app.name),

@@ -8,16 +8,16 @@ import Check from '../components/Check.astro';
 import Chev from '../components/Chev.astro';
 import Faq from '../components/Faq.astro';
 import Blueprint from '../components/Blueprint.astro';
-import { alternativesPages, getTemplate, getTemplates, listNames, popularSwaps, usedCategories } from '../lib/catalogue';
+import { getTemplate, getTemplates, listNames, openSourceCount, popularSwaps, usedCategories } from '../lib/catalogue';
 import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
 import { costAnswer } from '../lib/copy';
 import { cloudgate, href, SITE_DESCRIPTION } from '../lib/site';
 
 const templates = getTemplates();
 const total = templates.length;
+const openCount = openSourceCount();
 const categories = usedCategories();
 const swaps = popularSwaps();
-const topAlternatives = alternativesPages().sort((a, b) => b.apps.length - a.apps.length)[0];
 // The home page shows a first screenful; the rest are a click away, and all of them are on /templates/.
 const PAGE = 8;
 
@@ -41,7 +41,7 @@ const exampleSwaps = swaps.slice(0, 3);
 const faq = [
   {
     q: 'What is Cloudgate Templates?',
-    a: `Cloudgate Templates is a free directory of ${total} open-source apps${
+    a: `Cloudgate Templates is a free directory of ${total} self-hosted apps (${openCount === total ? 'all' : openCount} of them open source)${
       exampleSwaps.length
         ? `, such as ${listNames(exampleSwaps.map((swap) => `${swap.app.name} instead of ${swap.product.name}`))}`
         : ''
@@ -183,11 +183,9 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
             <h2 class="h2" id="swaps-title">Popular swaps</h2>
             <p class="lede">The tools people most often replace first, and what they move to.</p>
           </div>
-          {topAlternatives && (
-            <a class="btn ghost" href={href(`alternatives/${topAlternatives.product.id}/`)}>
-              All {topAlternatives.product.name} alternatives <Chev />
-            </a>
-          )}
+          <a class="btn ghost" href={href('alternatives/')}>
+            All alternatives <Chev />
+          </a>
         </div>
         <div class="pad">
           <div class="swrow">

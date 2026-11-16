@@ -4,7 +4,7 @@ import Card from '../../components/Card.astro';
 import FilterBar from '../../components/FilterBar.astro';
 import Chev from '../../components/Chev.astro';
 import Crumbs from '../../components/Crumbs.astro';
-import { alternativesPages, getTemplates, isSample, lastUpdated, usedCategories } from '../../lib/catalogue';
+import { alternativesPages, getTemplates, isSample, lastUpdated, openSourceCount, usedCategories } from '../../lib/catalogue';
 import { breadcrumbSchema, graph, itemListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
 
@@ -19,7 +19,9 @@ const trail = [
   { name: 'All apps', path: 'templates/' },
 ];
 const title = 'All open-source apps you can self-host';
-const description = `All ${total} free, open-source apps you can run on your own server with Cloudgate. Filter by what you need done, or by a tool you pay for today.`;
+const open = openSourceCount();
+// Not every app is open source (a few are fair-code or source-available), so the count says how many are.
+const description = `All ${total} free apps you can run on your own server with Cloudgate, ${open === total ? 'all' : open} of them open source. Filter by what you need done or by a tool you pay for today.`;
 ---
 
 <Base
@@ -36,7 +38,7 @@ const description = `All ${total} free, open-source apps you can run on your own
     <div class="body">
       <h1 class="h1">All {total} self-hosted apps</h1>
       <p class="lede">
-        Every app here is free and open source. Each one does the job of a tool many businesses pay for, and runs on a
+        Every app here is free to use, and {open === total ? 'all' : open} of them are open source. Each one does the job of a tool many businesses pay for, and runs on a
         server you choose. Open an app to see what it does and how to set it up with Cloudgate.
       </p>
       <div class="chips">

@@ -47,7 +47,7 @@ const steps = [
   {
     name: 'Choose an app',
     text: replaced
-      ? `Search for the tool you pay for today. Search for ${replaced.name} and you find ${appName}, which does the same job. Every app here is open source and free to use.`
+      ? `Search for the tool you pay for today. Search for ${replaced.name} and you find ${appName}, which does the same job. Every app here is free to use, and most are open source.`
       : 'Search for the tool you pay for today and you find the open-source apps that do the same job. Every app here is free to use.',
   },
   {
@@ -112,7 +112,7 @@ const howTo = {
 
 <Base
   title="How to deploy an open-source app, step by step"
-  description="What happens when you click Deploy on an open-source app: create a Cloudgate account, get a server or connect your own, and open your app at its own web address."
+  description="What happens when you click Deploy on an open-source app: create a Cloudgate account, get a server or connect your own, and open the app at its own web address."
   path="how-it-works/"
   noindex={isSample}
   jsonLd={graph(breadcrumbSchema(trail), howTo, faqSchema(faq))}
@@ -131,7 +131,7 @@ const howTo = {
         <a class="btn lg ghost" href="#steps">See the steps <Chev /></a>
       </div>
       <div class="facts-strip">
-        <span><b>5</b> steps</span><span><b>Nothing</b> to install</span><span>The apps are <b>free</b></span>
+        <span><b>{steps.length - 1}</b> steps to a running app</span><span><b>Nothing</b> to install</span><span>The apps are <b>free</b></span>
       </div>
     </div>
   </section>

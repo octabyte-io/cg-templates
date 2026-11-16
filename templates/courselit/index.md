@@ -1,7 +1,7 @@
 ---
 tagline: Sell online courses and downloads from your own website.
 category: education
-alternativeTo: [teachable, thinkific, podia, kajabi]
+alternativeTo: [teachable, thinkific, podia, kajabi, skool]
 ease: some-setup
 easeNote: You sign in with a code sent to the admin email, connect your Stripe, Razorpay or Lemon Squeezy account, and set up CourseLit's file service before you upload videos or files.
 license: AGPL-3.0-only
