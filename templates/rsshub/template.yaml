@@ -1,0 +1,16 @@
+name: RSSHub
+description: "RSSHub is a self-hosted feed generator that makes RSS feeds for websites and social accounts without one, for any feed reader."
+version: "2026-11-15"
+tags: [self-hosted rsshub, rss feed generator, rss feed for any website, create rss feed, rss.app alternative, rsshub routes]
+links:
+  website: https://rsshub.app
+  docs: https://docs.rsshub.app
+  source: https://github.com/DIYgod/RSSHub
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  # Every feed address needs ?key=<this value>; only the home page is open.
+  ACCESS_KEY: { generate: hex }
+domains:
+  - { service: rsshub, port: 1200 }

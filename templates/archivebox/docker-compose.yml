@@ -1,0 +1,35 @@
+# Based on the official docker-compose.yml at the v0.9.77 tag:
+# https://github.com/ArchiveBox/ArchiveBox/blob/v0.9.77/docker-compose.yml
+# Full-text search (ripgrep by default, Sonic built in) and scheduled archiving
+# run inside this one container; the official file needs no other services.
+services:
+  archivebox:
+    image: archivebox/archivebox:0.9.77
+    restart: unless-stopped
+    environment:
+      # The address people use to reach ArchiveBox. Setting it skips the
+      # first-run setup wizard and makes links and CSRF checks use it.
+      BASE_URL: ${BASE_URL}
+      # One address only (no wildcard subdomains): the admin UI works, and
+      # archived pages replay without running their JavaScript.
+      SERVER_SECURITY_MODE: safe-onedomain-nojsreplay
+      # The first admin, created on first start. Its password is in the
+      # app's settings in Cloudgate.
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PUBLIC_INDEX: "False"
+      PUBLIC_SNAPSHOTS: "False"
+      PUBLIC_ADD_VIEW: "False"
+      ARCHIVEDOTORG_ENABLED: "True"
+    # Chrome, which archives pages, runs better with a larger shared memory pool.
+    shm_size: 1gb
+    pids_limit: 2048
+    volumes:
+      # The archive itself: the index database, snapshots and settings.
+      - archivebox-data:/data
+      # Lets one-off commands reuse the main server's runners.
+      - archivebox-tmp:/tmp/archivebox
+
+volumes:
+  archivebox-data:
+  archivebox-tmp:

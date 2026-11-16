@@ -1,0 +1,13 @@
+name: Slash
+description: "Slash is a self-hosted go links app: give your team's links short s/ names, with tags, private or shared visibility, collections and visit counts."
+version: "0.5.3"
+tags: [go links, golinks alternative, link shortener, team shortcuts, self-hosted bookmarks, bitly alternative]
+links:
+  website: https://github.com/yourselfhosted/slash
+  docs: https://github.com/yourselfhosted/slash/tree/main/docs
+  source: https://github.com/yourselfhosted/slash
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: slash, port: 5231 }

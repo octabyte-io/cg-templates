@@ -1,0 +1,54 @@
+services:
+  chiefonboarding:
+    # One image runs the web app (gunicorn on port 8000) and its task scheduler
+    # (django-q) under supervisord, and migrates the database at each start.
+    image: chiefonboarding/chiefonboarding:v2.5.2
+    restart: unless-stopped
+    depends_on:
+      chiefonboarding-db:
+        condition: service_healthy
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: postgres://chiefonboarding:${POSTGRES_PASSWORD}@chiefonboarding-db:5432/chiefonboarding
+      ALLOWED_HOSTS: ${APP_HOST}
+      BASE_URL: ${BASE_URL}
+      # Optional email; with EMAIL_HOST empty, nothing is sent.
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-onboarding@example.com}
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+      EMAIL_USE_TLS: "true"
+      # Optional S3-compatible storage for uploaded files. Uploads go through the
+      # app rather than straight from the browser, so the bucket needs no CORS rule.
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:-}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-https://s3.eu-west-1.amazonaws.com}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-eu-west-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_USE_PRESIGNED_UPLOADS: "false"
+    healthcheck:
+      # /health answers "ok" for any host name.
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 90s
+
+  chiefonboarding-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: chiefonboarding
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: chiefonboarding
+    volumes:
+      - chiefonboarding-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chiefonboarding"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  chiefonboarding-db-data:

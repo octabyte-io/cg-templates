@@ -1,0 +1,15 @@
+name: AzuraCast
+description: "AzuraCast is self-hosted internet radio: upload your music, schedule playlists and let the AutoDJ stream your station 24/7, like Radio.co or Live365."
+version: "0.24.0"
+tags: [internet radio, radio co alternative, live365 alternative, autodj, web radio software, radio station software, radioking alternative]
+links:
+  website: https://www.azuracast.com
+  docs: https://www.azuracast.com/docs/
+  source: https://github.com/AzuraCast/AzuraCast
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  MYSQL_PASSWORD: { generate: password }
+domains:
+  - { service: azuracast, port: 80 }

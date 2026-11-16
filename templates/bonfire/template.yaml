@@ -1,0 +1,47 @@
+name: Bonfire
+description: "Self-hosted Bonfire is a federated social network where you choose who can see, reply to or quote each post, linked to Mastodon and the fediverse."
+version: "1.0.7"
+tags: [bonfire social, self-hosted social network, twitter alternative, x alternative, mastodon alternative, fediverse, private social network]
+links:
+  website: https://bonfirenetworks.org
+  docs: https://docs.bonfirenetworks.org
+  source: https://github.com/bonfire-networks/bonfire-app
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  HOSTNAME: { value: "{{domains.bonfire.host}}" }
+  SECRET_KEY_BASE: { generate: hex }
+  SIGNING_SALT: { generate: hex }
+  ENCRYPTION_SALT: { generate: hex }
+  RELEASE_COOKIE: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  MEILI_MASTER_KEY: { generate: hex }
+  MAIL_SERVER:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional, but needed before anyone other than the first admin can sign up, because Bonfire emails a confirmation link to each new account. For example smtp.resend.com. You can add it later on the app's variables page.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      description: Bonfire connects with SSL/TLS, so use the SSL port of your email service, usually 465.
+      default: "465"
+      format: number
+  MAIL_USER:
+    ask:
+      label: Email server username
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password
+      required: false
+      secret: true
+  MAIL_FROM:
+    ask:
+      label: Sender address
+      description: The address Bonfire's emails come from, such as bonfire@yourdomain.com.
+      required: false
+      format: email
+domains:
+  - { service: bonfire, port: 4000 }

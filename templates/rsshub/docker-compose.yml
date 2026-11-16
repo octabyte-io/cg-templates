@@ -1,0 +1,41 @@
+services:
+  rsshub:
+    # RSSHub publishes a dated image for each daily release; there are no
+    # semver tags. The headless-browser service of the official compose
+    # (browserless) is left out: only a few routes need it.
+    image: diygod/rsshub:2026-11-15
+    restart: unless-stopped
+    depends_on:
+      rsshub-redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      # Listen on IPv4 (0.0.0.0) instead of "::": on hosts whose containers
+      # have no IPv6, listening on "::" fails and the app never answers.
+      DISABLE_IPV6: "true"
+      CACHE_TYPE: redis
+      REDIS_URL: redis://rsshub-redis:6379/
+      # Keeps the instance private: feeds answer only with ?key=<ACCESS_KEY>.
+      ACCESS_KEY: ${ACCESS_KEY}
+    healthcheck:
+      # /healthz sits behind the access key like every route but the home page.
+      test: ["CMD-SHELL", "curl -fs \"http://127.0.0.1:1200/healthz?key=$$ACCESS_KEY\" >/dev/null"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+
+  rsshub-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - rsshub-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  rsshub-redis-data:

@@ -1,0 +1,50 @@
+# Based on Self-hosted LiveSync's official Docker setup (docker/docker-compose.yml
+# in github.com/vrtmrz/obsidian-livesync, main branch): one CouchDB that the
+# Obsidian plugin syncs with. The project's one-shot couchdb-init container is
+# replaced by files/livesync.ini (the same settings, read at start) and the
+# database step in the start command below. The Caddy, Tailscale and
+# Cloudflare profiles are left out; Cloudgate's own proxy gives CouchDB its
+# HTTPS address.
+services:
+  couchdb:
+    image: couchdb:3.5.3
+    restart: unless-stopped
+    # Copies the LiveSync settings into CouchDB's defaults, creates the
+    # "obsidiannotes" database once CouchDB answers (after the first start it
+    # already exists and the request changes nothing), then starts CouchDB
+    # through the image's own entrypoint.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        cp /livesync/livesync.ini /opt/couchdb/etc/default.d/20-livesync.ini
+        (
+          until curl -fsS -o /dev/null --user "$$COUCHDB_USER:$$COUCHDB_PASSWORD" http://127.0.0.1:5984/_up; do sleep 2; done
+          curl -sS -o /dev/null -X PUT --user "$$COUCHDB_USER:$$COUCHDB_PASSWORD" http://127.0.0.1:5984/obsidiannotes
+        ) &
+        exec tini -- /docker-entrypoint.sh /opt/couchdb/bin/couchdb
+    environment:
+      COUCHDB_USER: ${COUCHDB_USER}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+      COUCHDB_SECRET: ${COUCHDB_SECRET}
+    volumes:
+      - ../files/livesync.ini:/livesync/livesync.ini:ro
+      # The synced notes.
+      - couchdb-data:/opt/couchdb/data
+      # The admin user, the server's id and changes made in CouchDB's admin pages.
+      - couchdb-config:/opt/couchdb/etc/local.d
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - >-
+          curl -fsS --max-time 4 --user "$${COUCHDB_USER}:$${COUCHDB_PASSWORD}"
+          http://127.0.0.1:5984/_session | grep -q "_admin"
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 20s
+
+volumes:
+  couchdb-data:
+  couchdb-config:

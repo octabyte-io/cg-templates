@@ -1,0 +1,22 @@
+name: SolidPing
+description: "SolidPing is self-hosted uptime monitoring for websites, APIs and servers, with incidents, on-call alerts and status pages. Imports UptimeRobot monitors."
+version: "0.50.2"
+tags: [uptime monitoring, uptimerobot alternative, status page, website monitoring, on-call alerts, better stack alternative, self-hosted uptime monitor]
+links:
+  website: https://www.solidping.io
+  docs: https://solidping.io/docs/
+  source: https://github.com/fclairamb/solidping
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SP_BASE_URL: { value: "{{domains.solidping.url}}" }
+  SP_AUTH_JWT_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  SP_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The sign-in address of the first admin account. Its first password is solidpass, and SolidPing asks for a new one at the first sign-in.
+      format: email
+domains:
+  - { service: solidping, port: 4000 }

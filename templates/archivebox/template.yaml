@@ -1,0 +1,16 @@
+name: ArchiveBox
+description: "ArchiveBox is a self-hosted web archive that saves pages you choose as HTML, screenshots, PDFs and WARC files, like a private Wayback Machine."
+version: "0.9.77"
+tags: [web archiving, self-hosted wayback machine, save web pages, pinboard alternative, archive-it alternative, bookmark archiver]
+links:
+  website: https://archivebox.io
+  docs: https://github.com/ArchiveBox/ArchiveBox/wiki
+  source: https://github.com/ArchiveBox/ArchiveBox
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  BASE_URL: { value: "{{domains.archivebox.url}}" }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: archivebox, port: 5797 }

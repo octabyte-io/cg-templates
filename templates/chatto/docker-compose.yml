@@ -1,0 +1,47 @@
+# From Chatto's official Docker Compose example (examples/dockercompose/ at
+# v0.5.0): Chatto plus a separate NATS JetStream server, which is where Chatto
+# keeps all of its data (it uses no other database). Caddy is left out
+# (Cloudgate serves the web address) and so is LiveKit, the optional voice and
+# video call server, which needs public UDP ports.
+services:
+  chatto:
+    image: ghcr.io/chattocorp/chatto:0.5.0
+    restart: unless-stopped
+    depends_on:
+      chatto-nats:
+        condition: service_healthy
+    environment:
+      CHATTO_NATS_EMBEDDED_ENABLED: "false"
+      CHATTO_NATS_CLIENT_URL: nats://chatto-nats:4222
+      CHATTO_NATS_CLIENT_AUTH_METHOD: token
+      CHATTO_NATS_CLIENT_TOKEN: ${NATS_TOKEN}
+      CHATTO_WEBSERVER_URL: ${CHATTO_URL}
+      CHATTO_WEBSERVER_PORT: "4000"
+      CHATTO_WEBSERVER_COOKIE_SIGNING_SECRET: ${COOKIE_SIGNING_SECRET}
+      CHATTO_WEBSERVER_COOKIE_ENCRYPTION_SECRET: ${COOKIE_ENCRYPTION_SECRET}
+      CHATTO_CORE_SECRET_KEY: ${CORE_SECRET_KEY}
+      CHATTO_CORE_ASSETS_SIGNING_SECRET: ${ASSETS_SIGNING_SECRET}
+      CHATTO_LOG_LEVEL: info
+      CHATTO_LOG_FORMAT: json
+      CHATTO_OPERATOR_API_ENABLED: "true"
+      CHATTO_OPERATOR_API_SOCKET_PATH: /tmp/chatto/operator.sock
+      # Calls need a separate LiveKit server; email needs an SMTP server.
+      # Both are off until the owner sets them up.
+      CHATTO_LIVEKIT_ENABLED: "false"
+      CHATTO_SMTP_ENABLED: "false"
+
+  chatto-nats:
+    image: nats:2.14.10-alpine
+    restart: unless-stopped
+    command: ["--config", "/etc/nats/nats-server.conf", "--auth=${NATS_TOKEN}"]
+    volumes:
+      - ../files/nats-server.conf:/etc/nats/nats-server.conf:ro
+      - chatto-nats-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null 'http://127.0.0.1:8222/healthz?js-enabled-only=true'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  chatto-nats-data:

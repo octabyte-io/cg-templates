@@ -1,0 +1,27 @@
+name: Self-hosted LiveSync
+description: "Self-hosted LiveSync syncs your Obsidian notes across computers and phones through your own self-hosted server, encrypted, instead of paid Obsidian Sync."
+# The server is plain CouchDB, so version is the CouchDB image tag. The Obsidian
+# plugin itself (Self-hosted LiveSync, 1.0.50 when this was written) is
+# installed and updated inside Obsidian.
+version: "3.5.3"
+tags: [obsidian sync alternative, obsidian livesync, self-hosted obsidian sync, note sync, end-to-end encrypted notes, couchdb]
+links:
+  website: https://github.com/vrtmrz/obsidian-livesync
+  docs: https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
+  source: https://github.com/vrtmrz/obsidian-livesync
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  COUCHDB_USER:
+    ask:
+      label: Username
+      description: The name you enter in the Obsidian plugin to connect. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  COUCHDB_PASSWORD: { generate: password }
+  COUCHDB_SECRET: { generate: hex }
+domains:
+  - { service: couchdb, port: 5984 }
+files:
+  - { path: livesync.ini }

@@ -1,0 +1,21 @@
+name: Paperclip
+description: "Self-hosted Paperclip manages a team of AI agents such as Claude Code and Codex, with goals, tasks, budgets and approvals, using your own AI key."
+version: "2026.1106.0"
+tags: [ai agent orchestration, relevance ai alternative, devin alternative, self-hosted ai agents, multi-agent, claude code, codex]
+links:
+  website: https://paperclip.ing
+  docs: https://docs.paperclip.ing
+  source: https://github.com/paperclipai/paperclip
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  # The app's own address: used for sign-in, invite links and the hostname check.
+  PAPERCLIP_PUBLIC_URL: { value: "{{domains.paperclip.url}}" }
+  # Signs sign-in sessions.
+  BETTER_AUTH_SECRET: { generate: hex }
+  # Signs approval-gated agent tool actions; independent of the session secret.
+  PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: paperclip, port: 3100 }
