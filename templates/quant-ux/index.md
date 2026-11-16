@@ -33,7 +33,7 @@ switching:
     - No panel of paid testers, so you recruit your own
     - Drawing tools are simpler than Figma's, and Figma imports bring screens across, not every interaction
     - This version has no live co-editing, so plan for one person to edit a prototype at a time
-    - The self-hosted version can trail the hosted quant-ux.com, and AI features need your own OpenAI key
+    - Cloudgate installs community-built images of version 3.0.1 (July 2025), which trail the hosted quant-ux.com, and AI features need your own OpenAI key
 faq:
   - q: Is Quant-UX free?
     a: Yes, Quant-UX is free and open source under the GPL-3.0 licence, with no paid edition. Self-hosted, you pay only for your server. The optional AI assistant needs an OpenAI API key, which OpenAI charges for.
@@ -67,4 +67,4 @@ You lay out screens from ready-made parts, link them together and add simple log
 
 A bakery planning an order app, for example, could mock up the menu, basket and checkout, send the link to twenty regular customers and see which buttons they missed before paying anyone to build it.
 
-You can import screens from Figma or from images. Cloudgate installs Quant-UX on a server Cloudgate provides or one you connect, and gives it a secure web address. There is no default login: you sign up with your email and a password, then turn off open sign-up once your team has joined.
+You can import screens from Figma or from images. Cloudgate installs Quant-UX 3.0.1, from the community-built images the project's README recommends for self-hosting, on a server Cloudgate provides or one you connect, and gives it a secure web address. There is no default login: you sign up with your email and a password, then turn off open sign-up once your team has joined.

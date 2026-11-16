@@ -1,5 +1,5 @@
 name: GOWA
-description: "Self-hosted GOWA is a free, unofficial WhatsApp API for your apps and AI agents: send and receive messages with webhooks. WhatsApp can ban the number."
+description: "Self-hosted GOWA is a free, unofficial WhatsApp API in one small program, with webhooks, scheduled sends and an MCP server. WhatsApp can ban the number."
 version: "v9.9.0"
 tags:
   - self-hosted whatsapp api

@@ -13,7 +13,7 @@ moving: |
   There is no Zoho Creator importer. Recreate each form as a Corteza record type with the same fields, then export each form’s records from Zoho Creator as CSV and import them into the matching record list. Lay out pages for lists, charts and calendars, rebuild workflows and approvals in Corteza’s workflow editor, and set up roles before inviting users. Moving one app at a time keeps the change manageable. With Saltcorn, the steps are the same: create a table from each CSV export, link the tables, rebuild forms and reports as views and pages, and recreate workflows as triggers and actions. With Steedos, create an object for each form, export the records to Excel and load them through an import template, then rebuild reports as list views and workflows as workflow rules and approval processes.
 faq:
   - q: "Does Corteza, Saltcorn or Steedos have a phone app?"
-    a: "No. All three run in a web browser, including a phone’s browser, with no native iPhone or Android app like Zoho Creator in these templates."
+    a: "No. All three run in a web browser, including a phone’s browser, and none has a native iPhone or Android app like Zoho Creator’s."
   - q: "How many apps can I build in Corteza, Saltcorn or Steedos?"
     a: "As many as you like. None has a limit on apps or users when you host it yourself."
 ---
