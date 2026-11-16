@@ -1,0 +1,11 @@
+# OpenLivery's own gateway, as in the project's docker/Caddyfile: one address
+# for the whole app. "/api/*" goes to the backend and everything else to the
+# web front end. Cloudgate serves the address over https in front of this.
+:80 {
+	handle /api/* {
+		reverse_proxy openlivery-api:8000
+	}
+	handle {
+		reverse_proxy openlivery-web:3000
+	}
+}

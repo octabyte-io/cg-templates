@@ -1,0 +1,22 @@
+services:
+  fmd-server:
+    # The default (Debian-based) image from the FMD team's registry.
+    image: registry.gitlab.com/fmd-foss/fmd-server:0.17.1
+    restart: unless-stopped
+    environment:
+      # Settings from config.yml can be given as FMD_<SETTING> (upper case).
+      # The FMD Android app must send this token to register a device, which
+      # keeps the server private to people who know it.
+      FMD_REGISTRATIONTOKEN: ${REGISTRATION_TOKEN}
+      # The default metrics address is [::1]:9100, which fails to start on a
+      # Docker network without IPv6. Keep metrics on loopback, over IPv4.
+      FMD_METRICSADDRPORT: "127.0.0.1:9100"
+    volumes:
+      # The only path FMD Server writes to: its database (owned by UID 1000 in the image).
+      - fmd-server-db:/var/lib/fmd-server/db
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges]
+
+volumes:
+  fmd-server-db:

@@ -1,0 +1,23 @@
+name: Inkvoice
+description: "Inkvoice is self-hosted invoicing for freelancers and small teams: quotes, invoices, card payments, reminders and expenses, with phone apps."
+version: "0.3.7"
+tags: [invoicing, invoice software, online payments, recurring invoices, xrechnung, freshbooks alternative, wave alternative]
+links:
+  website: https://inkvoice.app
+  docs: https://docs.inkvoice.app
+  source: https://github.com/pigontech/inkvoice
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  APP_URL: { value: "{{domains.inkvoice.url}}" }
+  JWT_SECRET: { generate: hex }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASS: { generate: password }
+domains:
+  - { service: inkvoice, port: 3000 }

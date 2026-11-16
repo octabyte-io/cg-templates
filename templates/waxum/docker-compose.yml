@@ -1,0 +1,25 @@
+services:
+  waxum:
+    image: fdciabdul/waxum:0.16.2
+    restart: unless-stopped
+    environment:
+      # The console (/) and every API call need this token: sign in to the
+      # console with it, or send it as "Authorization: Bearer <token>".
+      SUPERADMIN_TOKEN: ${SUPERADMIN_TOKEN}
+      # Signs the JWTs the console issues; a fixed value keeps them valid
+      # across restarts.
+      JWT_SECRET: ${JWT_SECRET}
+      # The app's public address, used by Swagger UI's "Try it out".
+      PUBLIC_BASE_URL: ${WAXUM_URL}
+      PORT: "3451"
+      # WhatsApp sessions (the linked-device login) and the SQLite database
+      # (waxum.db, the default store) both live in this folder.
+      WHATSAPP_STORAGE_PATH: /app/whatsapp_sessions
+      RUST_LOG: waxum=info,tower_http=info
+      # NATS JetStream (event fan-out) from the upstream compose file is
+      # optional and left out: webhooks deliver the same events.
+    volumes:
+      - waxum-data:/app/whatsapp_sessions
+
+volumes:
+  waxum-data:

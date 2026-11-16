@@ -1,0 +1,3 @@
+IMAP_SERVER: imap.example.com
+IMAP_USERNAME: newsletters@example.com
+IMAP_PASSWORD: example-password

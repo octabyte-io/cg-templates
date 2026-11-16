@@ -1,0 +1,108 @@
+# OpenLivery, from the project's docker-compose.yml at v0.4.0, with the
+# prebuilt images it publishes to GHCR.
+services:
+  # Cloudgate's web address points here. Like the project's own gateway, it
+  # sends "/api/*" to the backend and everything else to the web front end, so
+  # the browser talks to one address (see files/Caddyfile.txt).
+  openlivery:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      openlivery-web:
+        condition: service_healthy
+      openlivery-api:
+        condition: service_healthy
+
+  # REST API. It applies its database migrations each time it starts.
+  openlivery-api:
+    image: ghcr.io/sarrazola/openlivery-api:v0.4.0
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://openlivery:${DB_PASSWORD}@openlivery-db:5432/openlivery
+      SECRET_KEY: ${SECRET_KEY}
+      # Encrypts the saved AI provider keys and WhatsApp sessions. It must
+      # never change once the app holds data.
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      WHATSAPP_BRIDGE_TOKEN: ${WHATSAPP_BRIDGE_TOKEN}
+      FRONTEND_URL: ${APP_URL}
+      ACCESS_TOKEN_MINUTES: "10080"
+      # Cloudgate serves the app over https only.
+      COOKIE_SECURE: "true"
+      COOKIE_SAMESITE: lax
+      BACKEND_URL: http://openlivery-api:8000
+      WHATSAPP_BRIDGE_URL: http://openlivery-whatsapp:3101
+      STORAGE_DIR: /app/backend/storage
+    volumes:
+      - openlivery-storage:/app/backend/storage
+    depends_on:
+      openlivery-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # Agency dashboard, client portals, playground and the web chat widget.
+  openlivery-web:
+    image: ghcr.io/sarrazola/openlivery-web:v0.4.0
+    restart: unless-stopped
+    environment:
+      # Used server-side to look up client portals served on their own domain.
+      BACKEND_INTERNAL_URL: http://openlivery-api:8000
+    depends_on:
+      openlivery-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  # WhatsApp Web bridge (whatsmeow) for numbers linked by QR code. Its session
+  # keys live in their own schema in the same database.
+  openlivery-whatsapp:
+    image: ghcr.io/sarrazola/openlivery-whatsapp:v0.4.0
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: http://openlivery-api:8000
+      WHATSAPP_BRIDGE_HOST: 0.0.0.0
+      WHATSAPP_BRIDGE_PORT: "3101"
+      WHATSAPP_BRIDGE_TOKEN: ${WHATSAPP_BRIDGE_TOKEN}
+      WHATSAPP_LOG_LEVEL: silent
+      WHATSAPP_STORE_URL: postgres://openlivery:${DB_PASSWORD}@openlivery-db:5432/openlivery?sslmode=disable&search_path=whatsmeow
+    depends_on:
+      openlivery-api:
+        condition: service_healthy
+      openlivery-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/bridge", "-healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  openlivery-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: openlivery
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: openlivery
+    volumes:
+      - openlivery-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U openlivery -d openlivery"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  openlivery-storage:
+  openlivery-db-data:

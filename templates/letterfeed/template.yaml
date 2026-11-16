@@ -1,0 +1,35 @@
+name: LetterFeed
+description: "LetterFeed is a self-hosted newsletter to RSS tool that turns the newsletters in your email mailbox into feeds for any feed reader."
+version: "0.5.3"
+tags: [newsletter to rss, email to rss, newsletters in feed reader, kill the newsletter alternative, feedly alternative, rss feeds]
+links:
+  website: https://github.com/LeonMusCoden/LetterFeed
+  docs: https://github.com/LeonMusCoden/LetterFeed#readme
+  source: https://github.com/LeonMusCoden/LetterFeed
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.letterfeed.url}}" }
+  SECRET_KEY: { generate: hex }
+  # You sign in with the username admin and this password.
+  ADMIN_PASSWORD: { generate: password }
+  IMAP_SERVER:
+    ask:
+      label: Mailbox server (IMAP)
+      description: >-
+        The IMAP server of the mailbox your newsletters arrive in, such as imap.gmail.com
+        or imap.fastmail.com. It must accept IMAP over SSL on port 993.
+  IMAP_USERNAME:
+    ask:
+      label: Mailbox username
+      description: Usually the mailbox's full email address.
+  IMAP_PASSWORD:
+    ask:
+      label: Mailbox password
+      description: >-
+        The mailbox's password. Many providers, such as Gmail, need an app password
+        here instead of your normal one.
+      secret: true
+domains:
+  - { service: letterfeed, port: 3000 }

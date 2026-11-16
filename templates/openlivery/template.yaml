@@ -1,0 +1,21 @@
+name: OpenLivery
+description: "Self-hosted OpenLivery is a white-label platform for agencies to build and run AI chat agents for their clients on WhatsApp and website chat."
+version: "0.4.0"
+tags: [stammer ai alternative, white label ai agent platform, whatsapp ai chatbot, ai chatbot for agencies, white label chatbot, website ai chat]
+links:
+  website: https://github.com/sarrazola/openlivery
+  docs: https://github.com/sarrazola/openlivery/tree/main/docs/en
+  source: https://github.com/sarrazola/openlivery
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.openlivery.url}}" }
+  DB_PASSWORD: { generate: password }
+  SECRET_KEY: { generate: hex }
+  ENCRYPTION_KEY: { generate: hex }
+  WHATSAPP_BRIDGE_TOKEN: { generate: hex }
+domains:
+  - { service: openlivery, port: 80 }
+files:
+  - { path: Caddyfile.txt }

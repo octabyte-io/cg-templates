@@ -1,0 +1,27 @@
+services:
+  inkvoice:
+    image: ghcr.io/pigontech/inkvoice:0.3.7
+    restart: unless-stopped
+    environment:
+      # The first start creates this account (role Owner) when no users exist;
+      # changing these later does not change an existing account.
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASS: ${ADMIN_PASS}
+      # Signs sessions; Inkvoice refuses to start without one of 32+ characters.
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_PATH: /app/data/invoice.db
+      PORT: "3000"
+      HOST: 0.0.0.0
+      # Used in password-reset emails and in payment links of emails the
+      # scheduler sends (recurring invoices), which have no request to read it from.
+      PUBLIC_BASE_URL: ${APP_URL}
+      ALLOWED_ORIGINS: ${APP_URL}
+      # Cloudgate serves the app over HTTPS, so the session cookie is Secure.
+      COOKIE_SECURE: "true"
+    volumes:
+      - inkvoice-data:/app/data
+    # Bun sizes its heap to the memory it can see; the project keeps this cap.
+    mem_limit: 512m
+
+volumes:
+  inkvoice-data:

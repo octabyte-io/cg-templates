@@ -24,12 +24,17 @@ apps:
   stump:
     fit: "A comic-first library that reads e-books too: EPUB with themes, search, bookmarks and highlights, plus PDF and comic files in the browser, Kobo and KOReader sync, and sending books by email to an e-reader such as a Kindle once you add email settings. It is beta software before its 1.0 release, has no store, and Kindle-store books can't be imported because they are copy-protected."
     import: no
+  legejo:
+    fit: "An EPUB-first library that repairs each book on upload and keeps your place, highlights and notes in step between its browser reader, Kobo e-readers and KOReader, with shelves you can share, Send to Kindle by email and an installable web app that reads offline. It runs on very little memory, but it reads only CBZ comics with no webtoon mode, plays no audiobooks itself, and like the others it can't open Kindle-store books."
+    import: no
 moving: |
   Gather the e-books you have as DRM-free files, such as EPUB, PDF and MOBI books from shops that sell them without copy protection, free public-domain books, and your own documents, and upload them in Calibre-Web's browser page. If you already keep your books in the Calibre desktop app, you can copy that whole library to the server instead. Books bought in the Kindle store stay in your Amazon account. To keep reading on a Kindle, add your email server's settings to Calibre-Web, allow its sending address in your Amazon account's Send to Kindle settings, and use the send button on each book. Calibre-Web Automated works like Calibre-Web: upload books in its browser page and it converts and tidies each one as it comes in, then add your email settings to send them to a Kindle. Kavita works the same way for DRM-free files: put each series or author in its own folder, upload them through the file manager address the template adds, and create a library; it can send books to a Kindle by email once you add your email settings. BookOrbit works the same way: upload your DRM-free books in its browser page or point a library at a folder of them, and it can also email books to your Kindle once its email settings are filled in. For comics and manga in Komga, upload your files at the File Browser address Cloudgate gives it, one folder per series, then add a library in Komga and scan it. Stump is similar: create the owner account on your first visit, add a library, upload your books from the browser, and add an email sender in its settings to send books to a Kindle.
 
   With calibre, sign in with the user name calibre and the password Cloudgate created, finish its welcome wizard with the default library location, then drag your DRM-free books into the window or use the web desktop's upload panel. To read on a Kindle, convert books to EPUB in calibre if needed, download them and send them with Amazon's Send to Kindle.
 
   Grimmory works the same way for DRM-free files: upload your books or drop them into its BookDrop folder, review the details it finds, and use the send button on a book's page to email it to your Kindle once its email settings are filled in.
+
+  Legejo keeps its own copy of each book, so upload your DRM-free EPUBs and PDFs in its browser page rather than pointing it at a folder; it checks and repairs each EPUB as it arrives. Then connect your Kobo or KOReader for sync, and add your email settings to send books to a Kindle.
 faq:
   - q: "Should I choose Calibre-Web, Kavita, Komga or Stump?"
     a: "Calibre-Web if your library is mostly e-books, especially if you already use the Calibre desktop app or still read on a Kindle, because it can send books to one by email. Kavita or Komga if you read a lot of comics, manga or webtoons, which both group into series with a reader made for them. Kavita can also email books to a Kindle; Komga works with the Mihon app on Android and syncs EPUB books with a Kobo. Stump, still in beta, reads both comics and e-books and syncs with Kobo and KOReader."
@@ -43,6 +48,8 @@ faq:
     a: "No, Calibre-Web has no store. You buy DRM-free e-books from shops that sell them without copy protection, or download free public-domain books, and upload the files to your library."
   - q: "Should I choose BookOrbit or Grimmory?"
     a: "Both keep e-books, comics and audiobooks in one library and sync your place with a Kobo or KOReader. BookOrbit has an iPhone app and reading goals; Grimmory has rule-based Magic Shelves and continues BookLore's code as a young community project. Try the one whose reader you prefer."
+  - q: "When is Legejo the better choice?"
+    a: "When most of your library is EPUB and you read on a Kobo or with KOReader: Legejo syncs highlights both ways with a Kobo, runs a KOReader sync server and reads offline as an installable web app, on a very small server. It also has vocabulary tools for language learners. For comics or audiobooks, Kavita, Komga, BookOrbit or Grimmory fit better."
 ---
 
 Kindle is Amazon's e-book platform: a store, the Kindle e-readers, and Kindle apps that keep the books you buy in your Amazon library and sync your place between devices.

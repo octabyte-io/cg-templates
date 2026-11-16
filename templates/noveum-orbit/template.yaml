@@ -1,0 +1,27 @@
+name: Orbit
+description: "Self-hosted Orbit by Noveum is a free, keyboard-first task manager with issues, sprints, projects and docs, in the style of Linear, with no paid tier."
+version: "2026.09.24"
+tags: [linear alternative, jira alternative, self-hosted task manager, issue tracker, sprint planning, open source project management]
+links:
+  website: https://orbit.noveum.ai
+  docs: https://noveum.github.io/orbit/
+  source: https://github.com/Noveum/orbit
+cloudgate: 0.1.0
+compose: app
+# Eight containers: the web app, a realtime service, a scheduler, a small
+# gateway, PostgreSQL, Redis, MinIO file storage and its bucket set-up.
+size: medium
+inputs:
+  ORBIT_APP_URL: { value: "{{domains.orbit.url}}" }
+  # Browsers upload and download files straight from the bundled storage, so it
+  # needs its own web address (Orbit's catalog docs ask for a separate domain).
+  ORBIT_STORAGE_URL: { value: "{{domains.orbit-storage.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  MINIO_PASSWORD: { generate: password }
+  BETTER_AUTH_SECRET: { generate: hex }
+  CRON_SECRET: { generate: hex }
+# The gateway sends /api/ws to the realtime service and everything else to the
+# web app, so it is the service that gets the app's web address.
+domains:
+  - { service: orbit, port: 3000 }
+  - { service: orbit-storage, port: 9000 }
