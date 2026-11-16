@@ -1,0 +1,16 @@
+name: Instatic
+description: "Self-hosted Instatic: design websites on a visual canvas, manage posts, collections and forms, and publish plain HTML. An MIT Webflow alternative."
+version: "0.0.21"
+tags: [webflow alternative, website builder, visual website builder, cms, static site, wix alternative, self-hosted website]
+links:
+  website: https://instatic.com
+  docs: https://github.com/corebunch/instatic/tree/main/docs
+  source: https://github.com/corebunch/instatic
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PUBLIC_ORIGIN: { value: "{{domains.instatic.url}}" }
+  INSTATIC_SECRET_KEY: { generate: base64 }
+domains:
+  - { service: instatic, port: 3001 }

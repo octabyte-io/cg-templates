@@ -1,0 +1,17 @@
+services:
+  ontime:
+    image: getontime/ontime:v4.15.1
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      # Asks for this password before any page opens. Cloudgate creates it;
+      # it is shown on the app's variables page.
+      SESSION_PASSWORD: ${SESSION_PASSWORD}
+    # The official file also publishes UDP 8888/9999 for OSC control from
+    # lighting and video desks on the same network; Cloudgate routes only the
+    # web address, so OSC isn't available. The HTTP and WebSocket APIs are.
+    volumes:
+      - ontime-data:/data
+
+volumes:
+  ontime-data:

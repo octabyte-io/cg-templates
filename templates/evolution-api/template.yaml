@@ -1,0 +1,17 @@
+name: Evolution API
+description: "Self-hosted Evolution API: an unofficial WhatsApp API with a web manager, webhooks and Chatwoot, n8n and Typebot links. WhatsApp can ban numbers."
+version: "2.3.7"
+tags: [whatsapp business api alternative, evolution api, whatsapp api, whatsapp chatbot, whatsapp n8n, chatwoot whatsapp, twilio whatsapp alternative]
+links:
+  website: https://evolutionfoundation.com.br
+  docs: https://docs.evolutionfoundation.com.br
+  source: https://github.com/evolution-foundation/evolution-api
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SERVER_URL: { value: "{{domains.evolution-api.url}}" }
+  AUTHENTICATION_API_KEY: { generate: hex }
+  DB_PASSWORD: { generate: password }
+domains:
+  - { service: evolution-api, port: 8080 }
