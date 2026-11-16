@@ -1,0 +1,21 @@
+# Without Google sign-in OpenRAG has no login of its own, so this small proxy
+# asks for a username and password before anyone reaches it. Cloudgate's own
+# proxy in front handles the domain and TLS. BASIC_AUTH_HASH is the bcrypt hash
+# of ADMIN_PASSWORD, made when the container starts (see docker-compose.yml).
+{
+	admin off
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	# Chat answers stream, so pass them on as they arrive.
+	reverse_proxy openrag-frontend:3000 {
+		flush_interval -1
+	}
+}

@@ -1,0 +1,41 @@
+# From CheckCle's docker-compose.yml (github.com/operacle/checkcle, tag v1.6.0)
+# and its install guide (docs.checkcle.io). One container: the PocketBase
+# backend and web console on port 8090 plus the Go service that runs the
+# checks. Everything, including the SQLite database, is kept in /mnt/pb_data.
+services:
+  checkcle:
+    image: operacle/checkcle:v1.6.0
+    restart: unless-stopped
+    # The image ships a ready-made database whose only admin is
+    # admin@example.com / Admin123456. On the first start (no database in the
+    # volume yet) copy it in the way the image's own entrypoint does, then set
+    # the admin password to the one Cloudgate generated, and hand over to the
+    # image's entrypoint. Later starts leave the password alone, so a password
+    # changed in CheckCle's settings stays.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        if [ ! -f /mnt/pb_data/data.db ]; then
+          cp -a /app/pb_data/. /mnt/pb_data/
+          /app/pocketbase superuser update admin@example.com "$$ADMIN_PASSWORD" --dir /mnt/pb_data || exit 1
+        fi
+        exec /app/entrypoint.sh
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - checkcle-data:/mnt/pb_data
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+    healthcheck:
+      # Alpine image with curl.
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8090/api/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  checkcle-data:

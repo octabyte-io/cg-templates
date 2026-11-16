@@ -1,0 +1,18 @@
+services:
+  openhabittracker:
+    image: jinjinov/openhabittracker:1.2.5
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      # The admin account is created from these on the first start only.
+      AppSettings__UserName: ${ADMIN_USERNAME}
+      AppSettings__Email: ${ADMIN_EMAIL}
+      AppSettings__Password: ${ADMIN_PASSWORD}
+      # Signs the tokens the phone and desktop apps use to sync.
+      AppSettings__JwtSecret: ${JWT_SECRET}
+      TZ: ${TZ}
+    volumes:
+      - openhabittracker-data:/app/.OpenHabitTracker
+
+volumes:
+  openhabittracker-data:

@@ -431,7 +431,7 @@ export function alternativesPages(): { product: Product; apps: Template[]; copy?
 export function licenceKind(license: string): { label: string; openSource: boolean } {
   // A mixed licence with a closed-source part (Netdata's NCUL1 dashboard) is only partly open source.
   if (/\bNCUL/i.test(license)) return { label: 'Partly open source', openSource: false };
-  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub|NPL|WPL|Proprietary|FIT2CLOUD|erxes|Evolution-API|Reloop)/i.test(license)) {
+  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub|NPL|WPL|Proprietary|FIT2CLOUD|erxes|Evolution-API|Reloop|Countly)/i.test(license)) {
     return { label: license.startsWith('SUL') ? 'Fair-code' : 'Source-available', openSource: false };
   }
   return { label: 'Open source', openSource: true };

@@ -1,0 +1,22 @@
+name: Storyden
+description: "Storyden is a self-hosted forum and community knowledge base in one: threads, wiki-style library pages and shared links on your own domain, in place of Circle."
+version: "1.26.17"
+tags:
+  - self-hosted forum
+  - forum with wiki
+  - community knowledge base
+  - circle alternative
+  - xenforo alternative
+  - open source forum software
+  - community platform
+links:
+  website: https://www.storyden.org
+  docs: https://www.storyden.org/docs
+  source: https://github.com/Southclaws/storyden
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.storyden.url}}" }
+domains:
+  - { service: storyden, port: 8000 }

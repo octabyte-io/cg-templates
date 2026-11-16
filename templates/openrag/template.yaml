@@ -1,0 +1,53 @@
+name: OpenRAG
+description: "Self-hosted OpenRAG answers your team's questions from its own documents, with the AI provider you choose. Built on Langflow, OpenSearch and Docling."
+version: "0.8.1"
+tags:
+  - notebooklm alternative
+  - glean alternative
+  - chat with documents
+  - rag
+  - ai document search
+  - langflow
+  - private ai assistant
+links:
+  website: https://www.openr.ag
+  docs: https://docs.openr.ag
+  source: https://github.com/langflow-ai/openrag
+cloudgate: 0.1.0
+compose: app
+# Six containers: a password proxy, the web app, the API, Langflow, OpenSearch
+# (1 GB heap) and Docling, which reads uploaded files. The project recommends
+# 8 GB of memory.
+size: xlarge
+inputs:
+  # The password the sign-in prompt in front of OpenRAG asks for (username: admin).
+  ADMIN_PASSWORD: { generate: password }
+  APP_URL: { value: "{{domains.proxy.url}}" }
+  LANGFLOW_PUBLIC_URL: { value: "{{domains.langflow.url}}" }
+  # OpenSearch wants a symbol in its admin password; the compose file adds one.
+  OPENSEARCH_SECRET: { generate: password }
+  # Sign-in for the Langflow editor, user "admin".
+  LANGFLOW_SUPERUSER_PASSWORD: { generate: password }
+  LANGFLOW_SECRET_KEY: { generate: base64 }
+  SESSION_SECRET: { generate: hex }
+  # Encrypts the API keys OpenRAG stores. Keep it: it can't be changed later.
+  OPENRAG_ENCRYPTION_KEY: { generate: base64 }
+  GOOGLE_OAUTH_CLIENT_ID:
+    ask:
+      label: Google OAuth client ID
+      description: Optional. OpenRAG is always behind a password prompt (user admin and the generated password); with Google sign-in on top, people also sign in with Google and each sees only their own documents. Register https://<your OpenRAG address>/auth/callback as the redirect URI.
+      required: false
+  GOOGLE_OAUTH_CLIENT_SECRET:
+    ask:
+      label: Google OAuth client secret
+      description: The secret for the client ID above. Leave empty if you left that empty.
+      secret: true
+      required: false
+domains:
+  # The OpenRAG web app (chat, knowledge, settings), behind a password prompt.
+  - { service: proxy, port: 80 }
+  # The Langflow editor, where the chat and ingestion flows can be changed.
+  # It has its own login (user admin, LANGFLOW_SUPERUSER_PASSWORD).
+  - { service: langflow, port: 7860 }
+files:
+  - { path: Caddyfile.txt }

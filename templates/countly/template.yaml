@@ -1,0 +1,25 @@
+name: Countly Lite
+description: "Countly Lite, self-hosted: usage stats, events, crash reports, push notifications and remote config for your phone, web and desktop apps."
+version: "25.03.59"
+tags:
+  - firebase analytics alternative
+  - mobile app analytics
+  - self-hosted product analytics
+  - crash reporting
+  - push notifications
+  - mixpanel alternative
+  - countly
+links:
+  website: https://countly.com/lite
+  docs: https://support.countly.com/hc/en-us
+  source: https://github.com/Countly/countly-server
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  MONGO_PASSWORD: { generate: password }
+  SESSION_SECRET: { generate: hex }
+domains:
+  - { service: countly, port: 80 }
+files:
+  - { path: countly-nginx.conf }

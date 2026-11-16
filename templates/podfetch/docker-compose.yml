@@ -1,0 +1,25 @@
+services:
+  podfetch:
+    image: samuel19982/podfetch:v5.3.0
+    restart: unless-stopped
+    environment:
+      # Check every subscribed podcast for new episodes once an hour (minutes).
+      POLLING_INTERVAL: "60"
+      # The built-in SQLite database, kept in the db volume below.
+      DATABASE_URL: sqlite:///app/db/podcast.db
+      # Sign-in: the admin account below is created on first start, so the
+      # app is never open to anyone who finds its address. More people are
+      # added from User administration with invite links.
+      BASIC_AUTH: "true"
+      USERNAME: ${ADMIN_USERNAME}
+      PASSWORD: ${ADMIN_PASSWORD}
+      # Let podcast apps such as AntennaPod sync subscriptions with PodFetch
+      # (gPodder API, signed in with a PodFetch username and password).
+      GPODDER_INTEGRATION_ENABLED: "true"
+    volumes:
+      - podfetch-podcasts:/app/podcasts
+      - podfetch-db:/app/db
+
+volumes:
+  podfetch-podcasts:
+  podfetch-db:

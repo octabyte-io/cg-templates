@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Runs once at each start, before the web and worker containers.
+# PieFed's own install asks for `flask init-db` in an interactive shell; this does
+# the same without one: it applies database migrations, and on the very first
+# start only (no site row yet) sets up the instance and the admin account.
+# `flask init-db` empties the database, so it never runs a second time.
+set -euo pipefail
+
+# The volume for uploaded media starts out owned by root; PieFed runs as "python".
+mkdir -p /app/app/static/media
+chown -R python:python /app/app/static/media
+
+as_python() { setpriv --reuid=python --regid=python --init-groups "$@"; }
+
+cd /app
+export FLASK_APP=pyfedi.py
+as_python /venv/bin/flask db upgrade
+# The community search list comes from lemmyverse.net; PieFed works without it.
+as_python /venv/bin/flask populate_community_search || echo "Could not load the community list now; PieFed works without it."
+
+sites=$(PGPASSWORD="$POSTGRES_PASSWORD" psql -h piefed-db -U piefed -d piefed -tAc "SELECT count(*) FROM site")
+if [ "$sites" != "0" ]; then
+  echo "PieFed is already set up."
+  exit 0
+fi
+
+echo "First start: setting up PieFed and its admin account."
+as_python /venv/bin/flask init-db --interactive no
+
+as_python /venv/bin/python - <<'PY'
+import os
+from pyfedi import app
+from app import db
+from app.models import User, Role
+from app.activitypub.signature import RsaKeys
+from app.auth.util import random_token
+from app.utils import gibberish, utcnow
+from random import randint
+
+with app.app_context():
+    name = os.environ["ADMIN_USERNAME"]
+    url = app.config["SERVER_URL"]
+    private_key, public_key = RsaKeys.generate_keypair()
+    user = User(user_name=name, title=name, email=os.environ.get("ADMIN_EMAIL", ""),
+                verification_token=random_token(16), instance_id=1, email_unread_sent=False,
+                private_key=private_key, public_key=public_key,
+                alt_user_name=gibberish(randint(8, 20)))
+    user.set_password(os.environ["ADMIN_PASSWORD"])
+    user.roles.append(Role.query.filter_by(name="Admin").first())
+    user.verified = True
+    user.last_seen = utcnow()
+    user.ap_profile_id = f"{url}/u/{name.lower()}"
+    user.ap_public_url = f"{url}/u/{name}"
+    user.ap_inbox_url = f"{url}/u/{name.lower()}/inbox"
+    db.session.add(user)
+    db.session.commit()
+    print(f"Admin account {name} created.")
+PY
