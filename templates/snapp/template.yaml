@@ -1,0 +1,24 @@
+name: Snapp
+description: "Snapp is a self-hosted URL shortener: short links on your own domain with custom endings, secrets, expiry dates, use limits, QR codes and click stats."
+version: "0.9-rc-033"
+tags: [url shortener, self-hosted url shortener, bitly alternative, link shortener, password protected short links, qr code links]
+links:
+  website: https://github.com/urania-dev/snapp
+  docs: https://github.com/urania-dev/snapp/blob/0.9-rc/README.md
+  source: https://github.com/urania-dev/snapp
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SNAPP_URL: { value: "{{domains.snapp.url}}" }
+  TOKEN_SECRET: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  # Snapp creates its first admin (username "admin") from these on first start.
+  ADMIN_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email address of Snapp's first admin account (username "admin").
+      format: email
+domains:
+  - { service: snapp, port: 3000 }

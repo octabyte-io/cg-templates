@@ -1,0 +1,35 @@
+name: Nebulynk
+description: "Nebulynk is self-hosted team chat like Slack: channels, direct messages, files and search in your browser. Source-available, free for small teams."
+version: "0.8.1"
+tags: [team chat, slack alternative, self-hosted chat, self-hosted slack alternative, source-available team chat, business chat]
+links:
+  website: https://nebulynk.net
+  docs: https://github.com/sapientorius/Nebulynk/blob/v0.8.1/docs/SELF_HOSTING.md
+  source: https://github.com/sapientorius/Nebulynk
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  FRONTEND_URL: { value: "{{domains.nebulynk.url}}" }
+  PASSKEY_RP_ID: { value: "{{domains.nebulynk.host}}" }
+  API_URL: { value: "{{domains.nebulynk-api.url}}" }
+  STORAGE_S3_PUBLIC_ENDPOINT: { value: "{{domains.nebulynk-garage.url}}" }
+  LIVEKIT_PUBLIC_URL: { value: "{{domains.nebulynk-livekit.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  # Signs sessions; AI_SECRET_KEY encrypts saved AI provider keys. Never change them.
+  JWT_SECRET: { generate: base64 }
+  AI_SECRET_KEY: { generate: base64 }
+  AUTH_2FA_SECRET_KEY: { generate: base64 }
+  GARAGE_RPC_SECRET: { generate: hex }
+  STORAGE_S3_ACCESS_KEY: { generate: password }
+  STORAGE_S3_SECRET_KEY: { generate: password }
+  LIVEKIT_API_KEY: { generate: password }
+  LIVEKIT_API_SECRET: { generate: password }
+domains:
+  - { service: nebulynk, port: 8080 }
+  - { service: nebulynk-api, port: 3030 }
+  - { service: nebulynk-garage, port: 3900 }
+  - { service: nebulynk-livekit, port: 7880 }
+files:
+  - { path: garage.toml }
+  - { path: livekit.yaml }
