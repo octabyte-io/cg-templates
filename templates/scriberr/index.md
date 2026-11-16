@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted audio transcription that keeps recordings private.
+tagline: Audio transcription that keeps recordings private.
 category: ai
 alternativeTo: [otter, rev]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted app analytics, crash reports and push in one place.
+tagline: App analytics, crash reports and push in one place.
 category: analytics
 alternativeTo: [firebase-analytics, mixpanel, amplitude]
 ease: some-setup

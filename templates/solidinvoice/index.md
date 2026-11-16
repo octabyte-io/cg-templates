@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted invoices clients pay online, with automatic reminders.
+tagline: Invoices clients pay online, with automatic reminders.
 category: finance
 alternativeTo: [freshbooks, wave]
 ease: some-setup

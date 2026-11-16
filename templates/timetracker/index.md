@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted time tracking with invoices, expenses and mileage.
+tagline: Time tracking with invoices, expenses and mileage.
 category: customers-sales
 alternativeTo: [harvest, toggl, clockify]
 ease: some-setup

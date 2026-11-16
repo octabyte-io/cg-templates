@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted CRM, quotes, invoices and stock in one business app.
+tagline: CRM, quotes, invoices and stock in one business app.
 category: finance
 alternativeTo: [quickbooks, zoho-books, xero, freshbooks]
 ease: some-setup

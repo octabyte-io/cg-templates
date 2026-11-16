@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted time tracking on a timeline, with tags and PDF reports.
+tagline: Time tracking on a timeline, with tags and PDF reports.
 category: customers-sales
 alternativeTo: [toggl, clockify]
 ease: easy

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { productSymbols } from '../../lib/icons';
 import Card from '../../components/Card.astro';
 import FilterBar from '../../components/FilterBar.astro';
 import Chev from '../../components/Chev.astro';
@@ -53,8 +54,9 @@ const description = `All ${total} free apps you can run on your own server with 
     <h2 class="visually-hidden" id="list-title">App list</h2>
     <FilterBar categories={categories} total={total} />
     <div class="gridwrap pad">
+      <Fragment set:html={productSymbols(templates.flatMap((template) => template.alternativeTo.slice(0, 1)))} />
       <div class="grid" id="grid">
-        {templates.map((template) => <Card template={template} />)}
+        {templates.map((template) => <Card template={template} sharedMarks />)}
         <div class="empty" id="empty" hidden>
           <p class="msg" id="emptyMsg"></p>
           <p class="hint">Try a tool you pay for, like Zapier, Notion or Slack. If the app you need is missing, you can add it.</p>
@@ -156,7 +158,7 @@ const description = `All ${total} free apps you can run on your own server with 
   function render() {
     const raw = input.value.trim();
     const q = raw.toLowerCase();
-    const matches = cards.filter((c) => (!cat || c.dataset.cat === cat) && (!q || (c.dataset.q ?? '').includes(q)));
+    const matches = cards.filter((c) => (!cat || c.dataset.cat === cat) && (!q || q.split(/\s+/).every((word) => (c.dataset.q ?? '').includes(word))));
     cards.forEach((c) => (c.hidden = !matches.includes(c)));
     tabs.forEach((t) => t.setAttribute('aria-pressed', String((t.dataset.tab ?? '') === cat)));
     const catName = tabs.find((t) => t.dataset.tab === cat)?.dataset.label;

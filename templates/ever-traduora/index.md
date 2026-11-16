@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Traduora keeps your app's translations in one place.
+tagline: Keep your app's translations in one place, with your translators.
 category: documents
 alternativeTo: [lokalise, crowdin, phrase, transifex]
 ease: some-setup

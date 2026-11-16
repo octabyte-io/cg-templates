@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted email sending for your app and newsletters, on Amazon SES.
+tagline: Email sending for your app and newsletters, on Amazon SES.
 category: customers-sales
 alternativeTo: [resend, sendgrid, postmark, mailchimp]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI presentations from a prompt or your own documents.
+tagline: AI presentations from a prompt or your own documents.
 category: ai
 alternativeTo: [gamma, beautiful-ai]
 ease: some-setup

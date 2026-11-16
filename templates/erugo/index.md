@@ -1,5 +1,5 @@
 ---
-tagline: "Self-hosted file sharing: send large files by link, under your logo."
+tagline: Send large files by link, under your own logo.
 category: files-photos
 alternativeTo: [wetransfer, smash, dropbox-transfer]
 ease: easy

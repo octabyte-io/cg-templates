@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted shared email, calendars and contacts for your office.
+tagline: Shared email, calendars and contacts for your office.
 category: email-calendars
 alternativeTo: [microsoft-exchange, microsoft-365, zoho-workplace, google-workspace]
 ease: some-setup

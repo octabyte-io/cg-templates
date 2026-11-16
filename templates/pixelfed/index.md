@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted photo sharing like Instagram, with no ads or algorithm.
+tagline: Photo sharing like Instagram, with no ads or algorithm.
 category: social
 alternativeTo: [instagram, flickr]
 ease: some-setup

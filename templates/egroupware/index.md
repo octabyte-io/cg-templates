@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted groupware for shared calendars, contacts and tasks.
+tagline: Groupware for shared calendars, contacts and tasks.
 category: email-calendars
 alternativeTo: [microsoft-exchange, microsoft-365, google-workspace, zoho-workplace]
 ease: some-setup

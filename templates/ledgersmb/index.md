@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted double-entry accounting with orders, stock and invoices.
+tagline: Double-entry accounting with orders, stock and invoices.
 category: finance
 alternativeTo: [quickbooks, xero, zoho-books]
 ease: some-setup

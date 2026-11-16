@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted network monitoring for switches, routers and servers.
+tagline: Network monitoring for switches, routers and servers.
 category: monitoring
 alternativeTo: [prtg, auvik]
 ease: some-setup

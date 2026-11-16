@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted file sync and sharing, with shared Spaces for each team.
+tagline: File sync and sharing, with shared Spaces for each team.
 category: files-photos
 alternativeTo: [dropbox, box, google-drive]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted file sharing with team workspaces and client links.
+tagline: File sharing with team workspaces and client links.
 category: files-photos
 alternativeTo: [box, dropbox]
 ease: easy

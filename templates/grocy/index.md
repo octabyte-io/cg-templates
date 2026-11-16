@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted groceries, pantry stock, shopping lists and chores.
+tagline: Groceries, pantry stock, shopping lists and chores.
 category: home
 alternativeTo: [ourgroceries, sortly]
 ease: some-setup

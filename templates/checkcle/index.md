@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted uptime, server and SSL monitoring with status pages.
+tagline: Uptime, server and SSL monitoring with status pages.
 category: monitoring
 alternativeTo: [uptimerobot, pingdom, better-stack, statuspage]
 ease: easy

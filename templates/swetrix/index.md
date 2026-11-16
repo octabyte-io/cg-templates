@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted, cookieless web analytics with speed and error tracking.
+tagline: Cookieless web analytics with speed and error tracking.
 category: analytics
 alternativeTo: [google-analytics, mixpanel]
 ease: easy

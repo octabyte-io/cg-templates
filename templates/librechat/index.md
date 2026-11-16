@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI chat for your team, with every major AI model.
+tagline: AI chat for your team, with every major AI model.
 category: ai
 alternativeTo: [chatgpt, claude]
 ease: some-setup

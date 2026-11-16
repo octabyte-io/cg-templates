@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted health data, from clinic forms to dashboards and maps.
+tagline: Health data, from clinic forms to dashboards and maps.
 category: health
 alternativeTo: [commcare]
 ease: some-setup

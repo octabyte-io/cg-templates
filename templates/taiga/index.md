@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Taiga for Scrum sprints, backlogs and Kanban boards.
+tagline: Scrum sprints, backlogs and Kanban boards for agile teams.
 category: project-management
 alternativeTo: [jira, pivotal-tracker]
 ease: easy

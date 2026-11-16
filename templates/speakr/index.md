@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted meeting transcripts, AI summaries and action items.
+tagline: Meeting transcripts, AI summaries and action items.
 category: ai
 alternativeTo: [otter, fireflies, fathom-notetaker]
 ease: some-setup

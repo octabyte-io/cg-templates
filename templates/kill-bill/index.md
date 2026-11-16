@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted subscription billing, invoices and payments.
+tagline: Subscription billing, invoices and payments.
 category: finance
 alternativeTo: [chargebee, recurly]
 ease: some-setup

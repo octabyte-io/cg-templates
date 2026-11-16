@@ -1,5 +1,5 @@
 ---
-tagline: Open-source core banking for microfinance, credit unions and SACCOs.
+tagline: Core banking for microfinance, credit unions and SACCOs.
 category: finance
 alternativeTo: [mambu]
 ease: some-setup

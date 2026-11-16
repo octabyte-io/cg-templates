@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted forum software for your community, with live chat.
+tagline: Forum software for your community, with live chat.
 category: communities
 alternativeTo: [circle]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted APITable, an Airtable-style database with Gantt views.
+tagline: An Airtable-style database with Gantt views.
 category: docs-wikis
 alternativeTo: [airtable]
 ease: easy

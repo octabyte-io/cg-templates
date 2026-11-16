@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted webmail that reads all your email accounts in one inbox.
+tagline: Webmail that reads all your email accounts in one inbox.
 category: email-calendars
 alternativeTo: [mailbird]
 ease: some-setup

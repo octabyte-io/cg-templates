@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted surveys and feedback forms with unlimited responses.
+tagline: Surveys and feedback forms with unlimited responses.
 category: customers-sales
 alternativeTo: [typeform, google-forms, surveymonkey, qualtrics]
 ease: easy

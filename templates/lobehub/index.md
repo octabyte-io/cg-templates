@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI chat and agents for many models, formerly LobeChat.
+tagline: AI chat and agents for many models, formerly LobeChat.
 category: ai
 alternativeTo: [chatgpt, claude]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted calendar and contacts sync, managed from one admin page.
+tagline: Calendar and contacts sync, managed from one admin page.
 category: email-calendars
 alternativeTo: [google-calendar, icloud-calendar]
 ease: some-setup

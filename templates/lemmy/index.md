@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted, Reddit-style communities with voting and threads.
+tagline: Reddit-style communities with voting and threaded comments.
 category: communities
 alternativeTo: [reddit, circle]
 ease: some-setup

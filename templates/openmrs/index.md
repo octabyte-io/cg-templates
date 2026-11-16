@@ -1,5 +1,5 @@
 ---
-tagline: Open-source EMR for clinics, hospitals and health programmes.
+tagline: Medical records for clinics, hospitals and health programmes.
 category: health
 alternativeTo: [epic]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Pascal Editor, open-source 3D floor plans in the browser.
+tagline: Design 3D floor plans in your browser.
 category: design
 alternativeTo: [planner-5d, sketchup, roomsketcher]
 ease: easy

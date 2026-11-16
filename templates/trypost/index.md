@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted social media queues that you or your AI assistant fill.
+tagline: Social media queues that you or your AI assistant fill.
 category: customers-sales
 alternativeTo: [buffer, hootsuite]
 ease: some-setup

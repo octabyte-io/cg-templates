@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Teable, a spreadsheet-style database with no row limits.
+tagline: A spreadsheet-style database with no row limits.
 category: docs-wikis
 alternativeTo: [airtable, smartsheet]
 ease: easy

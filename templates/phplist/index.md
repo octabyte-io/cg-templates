@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted newsletters and mailing lists with no fee per subscriber.
+tagline: Newsletters and mailing lists with no fee per subscriber.
 category: customers-sales
 alternativeTo: [mailchimp, brevo, mailerlite]
 ease: some-setup

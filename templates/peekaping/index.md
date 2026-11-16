@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted uptime monitoring and status pages, with an API.
+tagline: Uptime monitoring and status pages, with an API.
 category: monitoring
 alternativeTo: [uptimerobot, pingdom]
 ease: easy

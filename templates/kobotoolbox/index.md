@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted field surveys that work offline, on phones and the web.
+tagline: Field surveys that work offline, on phones and the web.
 category: research
 alternativeTo: [surveycto, arcgis-survey123, google-forms]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted notes, tasks and a daily diary, saved as plain files.
+tagline: Notes, tasks and a daily diary, saved as plain files.
 category: docs-wikis
 alternativeTo: [obsidian, notion, evernote, onenote]
 ease: easy

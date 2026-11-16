@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted conversational forms, quizzes and surveys, no limits.
+tagline: Conversational forms, quizzes and surveys, no limits.
 category: customers-sales
 alternativeTo: [typeform, google-forms, jotform]
 ease: easy

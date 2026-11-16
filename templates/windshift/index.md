@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Jira alternative with a service desk and test runs.
+tagline: Issue tracking with a service desk and test runs, like Jira.
 category: project-management
 alternativeTo: [jira, jira-service-management]
 ease: easy

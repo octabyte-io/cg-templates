@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted forms and surveys with logic and unlimited answers.
+tagline: Forms and surveys with logic and unlimited answers.
 category: customers-sales
 alternativeTo: [typeform, tally, google-forms, jotform]
 ease: easy

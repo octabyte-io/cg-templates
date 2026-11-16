@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted one-time links for sending passwords and small files.
+tagline: One-time links for sending passwords and small files.
 category: security
 alternativeTo: [onetimesecret]
 ease: easy

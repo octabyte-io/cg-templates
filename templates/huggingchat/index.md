@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted HuggingChat for open AI models, on your own server.
+tagline: A ChatGPT-style chat for open AI models.
 category: ai
 alternativeTo: [chatgpt]
 ease: some-setup

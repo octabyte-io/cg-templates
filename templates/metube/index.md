@@ -1,5 +1,5 @@
 ---
-tagline: "Self-hosted video downloader: save your own videos to your server"
+tagline: Download videos to your own server from a simple web page.
 category: media
 alternativeTo: [4k-video-downloader]
 ease: easy

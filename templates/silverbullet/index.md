@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Markdown notes, journal and wiki in your browser.
+tagline: Markdown notes, journal and wiki in your browser.
 category: docs-wikis
 alternativeTo: [obsidian, notion]
 ease: easy

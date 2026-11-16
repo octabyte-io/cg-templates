@@ -1,5 +1,5 @@
 ---
-tagline: "Self-hosted video platform: a private YouTube for your organisation."
+tagline: A private YouTube for your organisation.
 category: media
 alternativeTo: [vimeo, youtube]
 ease: easy

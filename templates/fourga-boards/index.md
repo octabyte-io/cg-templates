@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Trello-style kanban boards that update in real time.
+tagline: Trello-style kanban boards that update in real time.
 category: project-management
 alternativeTo: [trello]
 ease: easy

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Penpot, open-source design and prototyping like Figma.
+tagline: Design and prototype together in your browser, like Figma.
 category: design
 alternativeTo: [figma, adobe-xd]
 ease: easy

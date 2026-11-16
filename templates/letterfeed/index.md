@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted newsletter to RSS, for reading newsletters in any reader.
+tagline: Turn email newsletters into RSS feeds for any reader.
 category: reading
 alternativeTo: [feedly, inoreader]
 ease: some-setup

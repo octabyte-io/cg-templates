@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Markdown notes you can share or publish on the web.
+tagline: Markdown notes you can share or publish on the web.
 category: docs-wikis
 alternativeTo: [obsidian]
 ease: easy

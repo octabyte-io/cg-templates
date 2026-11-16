@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted team chat with channels, files and search, like Slack.
+tagline: Team chat with channels, files and search, like Slack.
 category: team-chat
 alternativeTo: [slack]
 ease: easy

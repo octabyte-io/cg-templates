@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Linear-style issue tracking, with AI agents as teammates.
+tagline: Linear-style issue tracking, with AI agents as teammates.
 category: project-management
 alternativeTo: [linear, jira, trello]
 ease: easy

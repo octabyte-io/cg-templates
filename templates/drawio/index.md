@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted draw.io for flowcharts, org charts and diagrams.
+tagline: Draw flowcharts, org charts and diagrams in your browser.
 category: design
 alternativeTo: [microsoft-visio, lucidchart]
 ease: easy

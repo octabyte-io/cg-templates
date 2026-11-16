@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted encrypted notes and files that delete after reading.
+tagline: Encrypted notes and files that delete after reading.
 category: security
 alternativeTo: [privnote, wetransfer]
 ease: easy

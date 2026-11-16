@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted visual website builder and CMS that publishes plain HTML
+tagline: A visual website builder and CMS that publishes plain HTML.
 category: websites
 alternativeTo: [webflow, wix, squarespace]
 ease: easy

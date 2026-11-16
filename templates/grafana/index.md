@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted dashboards and alerts for your servers, apps and data.
+tagline: Dashboards and alerts for your servers, apps and data.
 category: analytics
 alternativeTo: [datadog]
 ease: some-setup

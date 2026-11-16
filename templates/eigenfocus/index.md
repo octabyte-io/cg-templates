@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted project boards with a time tracker on every task.
+tagline: Project boards with a time tracker on every task.
 category: project-management
 alternativeTo: [trello]
 ease: easy

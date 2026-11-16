@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted e-signatures, an open-source DocuSign alternative.
+tagline: Send documents for e-signature, like DocuSign.
 category: documents
 alternativeTo: [docusign, dropbox-sign, adobe-acrobat-sign, pandadoc]
 ease: some-setup

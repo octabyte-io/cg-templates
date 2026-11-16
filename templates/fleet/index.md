@@ -1,5 +1,5 @@
 ---
-tagline: Open-source device management for every Mac, PC and Linux computer.
+tagline: Manage and secure every Mac, PC and Linux computer you own.
 category: inventory-assets
 alternativeTo: [jamf-pro, microsoft-intune]
 ease: some-setup

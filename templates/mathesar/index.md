@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Mathesar puts a spreadsheet view on your PostgreSQL data.
+tagline: A spreadsheet view on your PostgreSQL data, for your whole team.
 category: docs-wikis
 alternativeTo: [airtable]
 ease: easy

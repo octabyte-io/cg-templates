@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted uptime checks and a status page, set in one file.
+tagline: Uptime checks and a status page, set in one file.
 category: monitoring
 alternativeTo: [uptimerobot, statuspage, pingdom]
 ease: some-setup

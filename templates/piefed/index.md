@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Reddit-style forum with public and private communities.
+tagline: Reddit-style forum with public and private communities.
 category: communities
 alternativeTo: [reddit, circle]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted meeting software for agendas, motions and votes.
+tagline: Meeting software for agendas, motions and votes.
 category: nonprofits
 alternativeTo: [electionbuddy]
 ease: some-setup

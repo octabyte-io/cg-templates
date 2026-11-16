@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted LaTeX editor for writing papers together in your browser.
+tagline: LaTeX editor for writing papers together in your browser.
 category: docs-wikis
 alternativeTo: [overleaf]
 ease: easy

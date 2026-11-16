@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted encrypted notes that self-destruct by views or by timer.
+tagline: Encrypted notes that self-destruct by views or by timer.
 category: security
 alternativeTo: [privnote, onetimesecret]
 ease: easy

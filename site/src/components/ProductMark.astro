@@ -1,14 +1,16 @@
 ---
 import type { Product } from '../products';
-import { isYellow, productSvg } from '../lib/icons';
+import { isYellow, productSvg, productSvgUse } from '../lib/icons';
 
 /** A replaced product's small inline mark (the prototype's `paidLogo`). */
 interface Props {
   product: Product;
   size?: number;
+  /** Draw from the page's shared symbols (`productSymbols`) instead of inlining the path. */
+  shared?: boolean;
 }
-const { product, size = 13 } = Astro.props;
-const svg = productSvg(product, isYellow(product) ? size - 3 : size);
+const { product, size = 13, shared = false } = Astro.props;
+const svg = (shared ? productSvgUse : productSvg)(product, isYellow(product) ? size - 3 : size);
 ---
 
 {

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted TYPO3 for large, multilingual sites with many editors.
+tagline: A CMS for large, multilingual sites with many editors.
 category: websites
 alternativeTo: [sitecore, adobe-experience-manager]
 ease: some-setup

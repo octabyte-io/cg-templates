@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI visibility tracking for your brand and competitors.
+tagline: AI visibility tracking for your brand and competitors.
 category: analytics
 alternativeTo: [profound, peec-ai, otterly-ai]
 ease: some-setup

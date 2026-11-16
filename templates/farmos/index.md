@@ -1,5 +1,5 @@
 ---
-tagline: "Self-hosted farm records: map fields, log crops, animals and tasks."
+tagline: "Farm records: map fields, log crops, animals and tasks."
 category: operations
 alternativeTo: [farmbrite, tend]
 ease: some-setup

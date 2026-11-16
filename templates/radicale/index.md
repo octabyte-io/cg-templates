@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted calendars, tasks and contacts, synced to every phone.
+tagline: Calendars, tasks and contacts, synced to every phone.
 category: email-calendars
 alternativeTo: [google-calendar, icloud-calendar]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted ODK server for offline survey data collection on phones.
+tagline: Collect survey data offline on phones, with ODK Collect.
 category: research
 alternativeTo: [surveycto, odk-cloud, fulcrum]
 ease: some-setup

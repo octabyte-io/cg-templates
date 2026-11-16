@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted, cookie-free website stats on one plain page.
+tagline: Cookie-free website stats on one plain page.
 category: analytics
 alternativeTo: [google-analytics, fathom-analytics]
 ease: easy

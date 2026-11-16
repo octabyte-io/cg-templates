@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted app translation, edited right inside your own app.
+tagline: App translation, edited right inside your own app.
 category: documents
 alternativeTo: [lokalise, phrase, crowdin]
 ease: some-setup

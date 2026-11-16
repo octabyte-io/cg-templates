@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted remote desktop and support for your team's computers.
+tagline: Remote desktop and support for your team's computers.
 category: help-desk
 alternativeTo: [teamviewer, anydesk, screenconnect, splashtop]
 ease: some-setup

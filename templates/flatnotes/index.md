@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Markdown notes you find by search and tags, not folders.
+tagline: Markdown notes you find by search and tags, not folders.
 category: docs-wikis
 alternativeTo: [simplenote, apple-notes, obsidian]
 ease: easy

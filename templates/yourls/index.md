@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted short links with detailed click stats and plugins.
+tagline: Short links with detailed click stats and plugins.
 category: customers-sales
 alternativeTo: [bitly, rebrandly]
 ease: easy

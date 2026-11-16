@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted AI bookkeeping that reads your receipts and invoices.
+tagline: AI bookkeeping that reads your receipts and invoices.
 category: finance
 alternativeTo: [dext, expensify]
 ease: some-setup

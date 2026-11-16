@@ -1,5 +1,5 @@
 ---
-tagline: Open-source leave management for holiday requests and sick notes.
+tagline: Holiday requests, approvals and sick notes for your team.
 category: hr
 alternativeTo: [timetastic, absence-io]
 ease: some-setup

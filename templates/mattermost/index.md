@@ -1,5 +1,5 @@
 ---
-tagline: Open-source team chat like Slack, with your full history kept.
+tagline: Team chat like Slack, with your full history kept.
 category: team-chat
 alternativeTo: [slack, microsoft-teams]
 ease: easy

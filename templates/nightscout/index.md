@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted glucose following for family and carers, with alarms.
+tagline: Glucose following for family and carers, with alarms.
 category: health
 alternativeTo: [t1pal]
 ease: some-setup

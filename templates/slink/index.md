@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted image sharing with private links, like Imgur.
+tagline: Image sharing with private links, like Imgur.
 category: files-photos
 alternativeTo: [imgur, imgbb]
 ease: easy

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted Sharkey, a Misskey fork that works with Mastodon apps.
+tagline: A Misskey-based social network that works with Mastodon apps.
 category: social
 alternativeTo: [x-twitter, circle]
 ease: some-setup

@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted podcast hosting with your own feed, website and stats.
+tagline: Podcast hosting with your own feed, website and stats.
 category: media
 alternativeTo: [buzzsprout, transistor]
 ease: easy

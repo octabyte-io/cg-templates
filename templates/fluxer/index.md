@@ -1,5 +1,5 @@
 ---
-tagline: Self-hosted, Discord-style community chat with no paid tier.
+tagline: Discord-style community chat with no paid tier.
 category: team-chat
 alternativeTo: [discord]
 ease: some-setup
