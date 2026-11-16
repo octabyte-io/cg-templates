@@ -1,0 +1,17 @@
+name: Kuno
+description: "Kuno is a self-hosted multilingual blog: write posts in Markdown and publish each one in many languages, with built-in translation, SEO and visitor stats."
+version: "1.4.8"
+tags: [multilingual blog, self-hosted blog, ghost pro alternative, medium alternative, markdown blog, blog translation]
+links:
+  website: https://github.com/xuemian168/kuno
+  docs: https://github.com/xuemian168/kuno#readme
+  source: https://github.com/xuemian168/kuno
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  API_URL: { value: "{{domains.kuno.url}}/api" }
+  JWT_SECRET: { generate: hex }
+  SECRET_PHRASE: { generate: password }
+domains:
+  - { service: kuno, port: 80 }

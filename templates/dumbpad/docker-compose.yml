@@ -1,0 +1,21 @@
+services:
+  dumbpad:
+    image: dumbwareio/dumbpad:1.0.5
+    restart: unless-stopped
+    environment:
+      SITE_TITLE: DumbPad
+      # The PIN that protects every notepad (4 to 10 digits).
+      DUMBPAD_PIN: ${DUMBPAD_PIN}
+      # The app's own address, used for CORS and secure cookies.
+      BASE_URL: ${BASE_URL}
+    volumes:
+      - dumbpad-data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  dumbpad-data:

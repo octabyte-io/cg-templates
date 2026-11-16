@@ -1,0 +1,63 @@
+name: Eneo
+description: "Eneo is a self-hosted, open-source AI assistant platform: team assistants that answer from your documents, with the AI provider you choose."
+version: "2.3.2"
+tags: [microsoft copilot alternative, ai assistant platform, public sector ai, chatgpt alternative, chat with documents, self-hosted ai assistant]
+links:
+  website: https://eneo.ai
+  docs: https://docs.eneo.ai
+  source: https://github.com/eneo-ai/eneo
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.caddy.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  REDIS_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  API_KEY_HASH_SECRET: { generate: hex }
+  URL_SIGNING_KEY: { generate: hex }
+  # A Fernet key: 32 random bytes, base64. Encrypts saved credentials.
+  ENCRYPTION_KEY: { generate: base64 }
+  TOOL_RUNTIME_TOKEN: { generate: hex }
+  # Eneo creates this user on the first start, as the organisation's Owner.
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Eneo with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  TENANT_NAME:
+    ask:
+      label: Organisation name
+      description: The name of your organisation in Eneo.
+      default: My organisation
+  OPENAI_API_KEY:
+    ask:
+      label: OpenAI API key
+      description: Optional. Eneo needs at least one AI provider key before its assistants can answer. Each provider bills you for what you use.
+      required: false
+      secret: true
+  ANTHROPIC_API_KEY:
+    ask:
+      label: Anthropic API key
+      description: Optional. A key for Anthropic's Claude models.
+      required: false
+      secret: true
+  MISTRAL_API_KEY:
+    ask:
+      label: Mistral API key
+      description: Optional. A key for Mistral's models.
+      required: false
+      secret: true
+  GEMINI_API_KEY:
+    ask:
+      label: Google Gemini API key
+      description: Optional. A key for Google's Gemini models.
+      required: false
+      secret: true
+# Eneo's official setup puts a proxy in front: /api and the API docs go to the
+# backend and everything else to the web app, on one address.
+domains:
+  - { service: caddy, port: 80 }
+files:
+  - { path: Caddyfile }

@@ -1,0 +1,17 @@
+# Eneo's official setup puts Traefik in front of the web app and the API on
+# one address: /api, /scim, /docs, /openapi.json and /version go to the
+# backend and everything else to the web app. This does the same routing
+# without TLS (Cloudgate serves the secure address).
+{
+	admin off
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	@backend path /api /api/* /scim /scim/* /docs /docs/* /openapi.json /version /version/*
+	reverse_proxy @backend http://eneo-backend:8000
+
+	reverse_proxy http://eneo-frontend:3000
+}

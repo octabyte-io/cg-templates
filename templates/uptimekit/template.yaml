@@ -1,0 +1,22 @@
+name: UptimeKit
+description: "UptimeKit is a self-hosted Better Stack alternative: uptime checks, automatic incidents, team alerts and branded status pages customers can subscribe to."
+version: "5.2.2"
+tags: [uptime monitoring, status page, incident management, website monitoring, better stack alternative, statuspage alternative, self-hosted monitoring]
+links:
+  website: https://uptimekit.dev
+  docs: https://docs.uptimekit.dev
+  source: https://github.com/uptimekit/uptimekit
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.uptimekit.url}}" }
+  APP_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  CLICKHOUSE_PASSWORD: { generate: password }
+  WORKER_KEY: { generate: hex }
+domains:
+  - { service: uptimekit, port: 3000 }
+files:
+  - { path: clickhouse/network.xml }
+  - { path: clickhouse/logs.xml }

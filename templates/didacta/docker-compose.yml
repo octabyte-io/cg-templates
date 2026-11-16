@@ -1,0 +1,82 @@
+# From Didacta's own Dokploy blueprint (deploy/dokploy/ in va360labs/didacta-io).
+# One container runs the API (:4000) and the web app (:3000); the web app forwards
+# /api to the API, so only port 3000 gets the web address.
+services:
+  didacta:
+    image: ghcr.io/va360labs/didacta-community:0.1.0-beta.24
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DIDACTA_CORE_VERSION: 0.1.0-beta.24
+      WEB_PUBLIC_URL: ${WEB_PUBLIC_URL}
+      WEB_PUBLIC_ALLOWED_HOSTS: ${WEB_PUBLIC_HOST}
+      # The superuser connection runs migrations only; the app derives its own
+      # restricted connection (role didacta_app) from it. Don't set DATABASE_URL.
+      ADMIN_DATABASE_URL: postgresql://didacta:${POSTGRES_PASSWORD}@postgres:5432/didacta?schema=public
+      REDIS_URL: redis://redis:6379
+      AUTH_SECRET: ${AUTH_SECRET}
+      DIDACTA_SETUP_TOKEN: ${DIDACTA_SETUP_TOKEN}
+      AI_CONFIG_ENCRYPTION_KEY: ${AI_CONFIG_ENCRYPTION_KEY}
+      DEFAULT_AI_CHAT_PROVIDER: ${DEFAULT_AI_CHAT_PROVIDER:-}
+      DEFAULT_AI_CHAT_API_KEY: ${DEFAULT_AI_CHAT_API_KEY:-}
+      API_PORT: "4000"
+      WEB_PORT: "3000"
+      STORAGE_DRIVER: local
+      STORAGE_ROOT: /app/data/storage
+      # Email is off until these are filled in; the app starts and warns in its interface.
+      SMTP_HOST: ""
+      SMTP_PORT: "587"
+      SMTP_USER: ""
+      SMTP_PASS: ""
+      SMTP_SECURE: "false"
+      SMTP_FROM: ""
+      # TENANT_SETTINGS_ENC_KEY is left unset on purpose: the app creates it on first
+      # start and keeps it in the data volume.
+    volumes:
+      # Course uploads, certificates and the generated encryption keys: back this up.
+      - didacta-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:4000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      # The first start applies migrations and database security rules before serving.
+      start_period: 120s
+
+  postgres:
+    # pgvector is required: Didacta's first migration creates the "vector" extension.
+    image: pgvector/pgvector:0.8.7-pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: didacta
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: didacta
+    volumes:
+      - didacta-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U didacta -d didacta"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - didacta-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  didacta-data:
+  didacta-postgres-data:
+  didacta-redis-data:

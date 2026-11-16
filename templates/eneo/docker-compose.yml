@@ -1,0 +1,202 @@
+# From Eneo's official docs/deployment/docker-compose.yml (v2.3.2): the web
+# app, the API, the general and crawler workers, the isolated tool runtime,
+# PostgreSQL with pgvector and Redis. Traefik and Let's Encrypt are replaced by
+# Caddy, which only routes requests between the web app and the API (see
+# files/Caddyfile). The official file's separate networks are left out: here
+# every service shares the app's own network.
+x-eneo-backend-env: &backend-env
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_HOST: eneo-db
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: eneo
+  REDIS_HOST: eneo-redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  API_PREFIX: /api/v1
+  API_KEY_LENGTH: "64"
+  API_KEY_HEADER_NAME: X-API-Key
+  JWT_AUDIENCE: "*"
+  JWT_ISSUER: ENEO
+  JWT_EXPIRY_TIME: "1440"
+  JWT_ALGORITHM: HS256
+  JWT_SECRET: ${JWT_SECRET}
+  JWT_TOKEN_PREFIX: Bearer
+  API_KEY_HASH_SECRET: ${API_KEY_HASH_SECRET}
+  URL_SIGNING_KEY: ${URL_SIGNING_KEY}
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+  PUBLIC_ORIGIN: ${APP_URL}
+  TOOL_RUNTIME_URL: http://eneo-tool-runtime:3010
+  TOOL_RUNTIME_TOKEN: ${TOOL_RUNTIME_TOKEN}
+  FILE_REFERENCE_BASE_URL: http://eneo-backend:8000
+  # AI provider keys. At least one is needed before assistants can answer.
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  MISTRAL_API_KEY: ${MISTRAL_API_KEY:-}
+  GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+  # The organisation and its first user, created by eneo-db-init on the
+  # first start. The user gets the Owner role.
+  DEFAULT_TENANT_NAME: ${TENANT_NAME}
+  DEFAULT_TENANT_QUOTA_LIMIT: "10737418240"
+  DEFAULT_USER_NAME: admin
+  DEFAULT_USER_EMAIL: ${ADMIN_EMAIL}
+  DEFAULT_USER_PASSWORD: ${ADMIN_PASSWORD}
+  USING_ACCESS_MANAGEMENT: "true"
+  TESTING: "false"
+  DEV: "false"
+  LOGLEVEL: INFO
+
+services:
+  caddy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - eneo-frontend
+      - eneo-backend
+
+  eneo-frontend:
+    image: ghcr.io/eneo-ai/eneo-frontend:2.3.2
+    restart: unless-stopped
+    environment:
+      ENEO_BACKEND_URL: ${APP_URL}
+      ENEO_BACKEND_SERVER_URL: http://eneo-backend:8000
+      PUBLIC_ENEO_BACKEND_URL: ${APP_URL}
+      ORIGIN: ${APP_URL}
+      PUBLIC_ORIGIN: ${APP_URL}
+      # Must be the same secret as the backend's.
+      JWT_SECRET: ${JWT_SECRET}
+      SHOW_WEB_SEARCH: "true"
+      NODE_ENV: production
+      LOGLEVEL: INFO
+    depends_on:
+      - eneo-backend
+
+  eneo-backend:
+    image: ghcr.io/eneo-ai/eneo-backend:2.3.2
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+    volumes:
+      - eneo-backend-data:/app/data
+      - eneo-temp-files:/tmp
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/healthz', timeout=5)\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      eneo-db:
+        condition: service_healthy
+      eneo-redis:
+        condition: service_healthy
+      eneo-db-init:
+        condition: service_completed_successfully
+
+  # Uploads, integrations and other background jobs.
+  eneo-worker:
+    image: ghcr.io/eneo-ai/eneo-backend:2.3.2
+    init: true
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      RUN_AS_WORKER: "true"
+      WORKER_ROLE: general
+    volumes:
+      - eneo-backend-data:/app/data
+      - eneo-temp-files:/tmp
+    depends_on:
+      - eneo-backend
+
+  # Long-running website crawls. Keeps its own /tmp, as the official file does.
+  eneo-crawler:
+    image: ghcr.io/eneo-ai/eneo-backend:2.3.2
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 70s
+    environment:
+      <<: *backend-env
+      RUN_AS_WORKER: "true"
+      WORKER_ROLE: crawler
+    volumes:
+      - eneo-backend-data:/app/data
+    depends_on:
+      - eneo-backend
+
+  # Runs the database migrations and creates the organisation and its first
+  # user, then exits. Safe to run on every start.
+  eneo-db-init:
+    image: ghcr.io/eneo-ai/eneo-backend:2.3.2
+    restart: "no"
+    command: ["python", "init_db.py"]
+    environment:
+      <<: *backend-env
+    depends_on:
+      eneo-db:
+        condition: service_healthy
+      eneo-redis:
+        condition: service_healthy
+
+  # Runs the bundled tools (file analysis, document generation) in a locked-down
+  # container, as the official file does.
+  eneo-tool-runtime:
+    image: ghcr.io/eneo-ai/eneo-tool-runtime:2.3.2
+    restart: unless-stopped
+    environment:
+      TOOL_RUNTIME_TOKEN: ${TOOL_RUNTIME_TOKEN}
+      TOOL_RUNTIME_FILE_ORIGINS: http://eneo-backend:8000
+      MAX_QUEUE: "32"
+      MAX_QUEUE_PER_GROUP: "8"
+      TABULAR_CACHE_MB: "256"
+      MAX_CONCURRENCY: "16"
+      TABULAR_CONCURRENCY: "2"
+      TABULAR_CACHE_TTL_SECONDS: "1800"
+      TOOL_RUNTIME_REQUIRE_CONFINEMENT: "false"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=512m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 2g
+
+  eneo-db:
+    image: pgvector/pgvector:0.8.7-pg16
+    restart: unless-stopped
+    shm_size: 1gb
+    stop_grace_period: 2m
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: eneo
+    volumes:
+      - eneo-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  eneo-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: ["sh", "-c", "exec redis-server --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - eneo-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASSWORD\" redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  eneo-postgres-data:
+  eneo-redis-data:
+  eneo-backend-data:
+  eneo-temp-files:

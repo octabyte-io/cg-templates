@@ -286,6 +286,14 @@ export const PRODUCTS: Product[] = [
     pick: 'ghost',
   },
   {
+    id: 'ghost-pro',
+    name: 'Ghost(Pro)',
+    icon: 'ghost',
+    job: 'managed blog and newsletter hosting',
+    lede: 'Self-hosted Ghost is the open-source Ghost(Pro) alternative we recommend: the same publishing software, with its blog, newsletters and paid memberships, running on your own server. Ghost(Pro) is Ghost’s managed hosting, with plans priced by features and number of members; on your own server there is no member limit, though you need your own Mailgun account for newsletters.',
+    pick: 'ghost',
+  },
+  {
     id: 'wix',
     name: 'Wix',
     icon: 'wix',
@@ -765,6 +773,13 @@ export const PRODUCTS: Product[] = [
     job: 'team AI chat',
     lede: 'Open WebUI is a self-hosted ChatGPT Business alternative: one ChatGPT-style chat for your whole team, connected to the AI provider you choose. ChatGPT Business is priced per seat; Open WebUI has no seat price, so you pay for your server and the AI you use, and chat history stays with you.',
     pick: 'open-webui',
+  },
+  {
+    id: 'microsoft-365-copilot',
+    name: 'Microsoft 365 Copilot',
+    job: 'workplace AI assistants',
+    lede: 'Eneo is a free, open-source Microsoft 365 Copilot alternative that gives staff an AI assistant on your own server: personal chat, shared assistants that answer from your own documents, team spaces and an audit log of AI use, with the AI model you choose. Microsoft 365 Copilot is a paid add-on per user each month that works inside Word, Excel, Outlook and Teams; Eneo is a separate web app instead, and you pay an AI provider such as OpenAI for what staff use, unless you run your own model server.',
+    pick: 'eneo',
   },
   {
     id: 'claude',
@@ -1305,6 +1320,13 @@ export const PRODUCTS: Product[] = [
     job: 'running an online community',
     lede: 'NodeBB is a free, open-source Circle alternative for running an online community: a modern discussion forum on your own domain, with categories, real-time replies, member chat and fine-grained permissions. Circle is a monthly subscription that also takes a fee on payments; self-hosted NodeBB has no monthly or per-member fee, though it has no built-in courses, events or paid memberships.',
     pick: 'nodebb',
+  },
+  {
+    id: 'skool',
+    name: 'Skool',
+    job: 'paid communities with courses',
+    lede: 'Didacta is a free, self-hosted Skool alternative that puts a member community, courses and paid memberships in one app, with messaging, points and badges, and live classes through Zoom. Skool charges a monthly plan plus a fee on every sale; Didacta takes no fee of its own and is paid through your own Stripe account, though it is fair-code rather than open source, still in early beta and has no mobile app.',
+    pick: 'didacta',
   },
   {
     id: 'xenforo',
