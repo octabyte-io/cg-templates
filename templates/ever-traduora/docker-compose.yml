@@ -1,0 +1,47 @@
+services:
+  traduora:
+    image: everco/ever-traduora:v0.23.0
+    restart: unless-stopped
+    depends_on:
+      traduora-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      TR_PORT: 8080
+      TR_SECRET: ${TR_SECRET}
+      TR_VIRTUAL_HOST: ${APP_URL}
+      TR_DB_TYPE: mysql
+      TR_DB_HOST: traduora-db
+      TR_DB_PORT: 3306
+      TR_DB_USER: traduora
+      TR_DB_PASSWORD: ${DB_PASSWORD}
+      TR_DB_DATABASE: traduora
+      TR_DB_AUTOMIGRATE: "true"
+      # The admin below is created for you, so only people invited to a project can sign up.
+      TR_SIGNUPS_ENABLED: "false"
+      # Creates the first account on the first start; it is skipped once it exists.
+      TR_SEED_DATA: "true"
+      TR_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      TR_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TR_ADMIN_NAME: Admin
+
+  traduora-db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: traduora
+      MYSQL_USER: traduora
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    command: [--character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
+    volumes:
+      - traduora-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  traduora-db-data:

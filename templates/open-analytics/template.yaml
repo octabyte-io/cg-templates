@@ -1,0 +1,40 @@
+name: Open Analytics
+description: "Self-hosted Open Analytics: open-source, cookie-free web analytics that shows visitors live and ties Stripe revenue to the pages that earned it."
+version: "v0.8.0"
+tags: [web analytics, google analytics alternative, cookieless analytics, revenue analytics, stripe analytics, realtime analytics, privacy]
+links:
+  website: https://getopen.so
+  docs: https://github.com/OpenLabs-so/openanalytics/blob/v0.8.0/SELF-HOSTING.md
+  source: https://github.com/OpenLabs-so/openanalytics
+cloudgate: 0.1.0
+compose: app
+# Ten long-running containers, ClickHouse among them; the makers measured about 4 GB.
+size: large
+inputs:
+  # The four public addresses: the dashboard, the api it calls, the collector
+  # the tracking script sends to, and the live (realtime) stream.
+  APP_URL: { value: "{{domains.web.url}}" }
+  API_URL: { value: "{{domains.api.url}}" }
+  COLLECTOR_URL: { value: "{{domains.collector.url}}" }
+  REALTIME_URL: { value: "{{domains.realtime.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  # ClickHouse has one user per job (ingest, read, maintenance, migration).
+  CLICKHOUSE_INGEST_PASSWORD: { generate: password }
+  CLICKHOUSE_READ_PASSWORD: { generate: password }
+  CLICKHOUSE_MAINTENANCE_PASSWORD: { generate: password }
+  CLICKHOUSE_MIGRATION_PASSWORD: { generate: password }
+  VALKEY_QUEUE_PASSWORD: { generate: password }
+  VALKEY_REALTIME_PASSWORD: { generate: password }
+  AUTH_SECRET: { generate: hex }
+  TRIAL_IDENTITY_SECRET: { generate: hex }
+  CREDENTIAL_SOURCE_SECRET: { generate: hex }
+  # Turns a visitor's address into an anonymous id that changes daily.
+  ANONYMOUS_IDENTITY_SECRET: { generate: hex }
+# Four addresses, as the official setup has them: the dashboard first, then the
+# api, the collector (which also serves the oa.js tracking script) and the
+# realtime stream.
+domains:
+  - { service: web, port: 3000 }
+  - { service: api, port: 8082 }
+  - { service: collector, port: 8083 }
+  - { service: realtime, port: 8084 }
