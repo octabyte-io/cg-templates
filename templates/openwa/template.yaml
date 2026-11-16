@@ -1,0 +1,16 @@
+name: OpenWA
+description: "OpenWA is a free, self-hosted WhatsApp API gateway that sends and receives messages from your own apps. Unofficial: WhatsApp can ban the number."
+version: "0.30.3"
+tags: [whatsapp api, whatsapp business api alternative, whatsapp gateway, whatsapp webhooks, whatsapp automation, send whatsapp messages]
+links:
+  website: https://github.com/rmyndharis/OpenWA
+  docs: https://github.com/rmyndharis/OpenWA/blob/main/docs/README.md
+  source: https://github.com/rmyndharis/OpenWA
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  OPENWA_URL: { value: "{{domains.openwa.url}}" }
+  API_MASTER_KEY: { generate: hex }
+domains:
+  - { service: openwa, port: 2785 }

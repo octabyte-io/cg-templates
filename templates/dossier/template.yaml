@@ -1,0 +1,27 @@
+name: Dossier
+description: "Dossier is a self-hosted job search assistant: one career profile, a tailored resume and cover letter for each job, and every application tracked."
+version: "1.14.0"
+tags: [teal alternative, huntr alternative, job application tracker, ai resume builder, cover letter generator, job search tracker]
+links:
+  website: https://dossier.aien.me
+  docs: https://github.com/AienTech/dossier/wiki
+  source: https://github.com/AienTech/dossier
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The password you sign in with. Dossier itself only accepts a hash of it,
+  # which the app's container makes from this value when it starts.
+  SIGN_IN_PASSWORD: { generate: password }
+  # Signs sessions and encrypts the API keys saved in the app.
+  DOSSIER_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  PUBLIC_URL: { value: "{{domains.dossier.url}}" }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Nightly backups run at 03:00 in it, and letters are dated in it. An IANA name such as Europe/Berlin.
+      default: UTC
+      required: false
+domains:
+  - { service: dossier, port: 3000 }

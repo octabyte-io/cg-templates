@@ -1,0 +1,434 @@
+# From Fluxer's official Docker Compose bundle (fluxer_rexctl/internal/stack/files/ in
+# github.com/fluxerapp/fluxer), with the overlays its installer (rexctl) offers for a single
+# small server already applied:
+# - proxy: the edge Caddy serves plain HTTP behind Cloudgate's proxy, which handles TLS.
+# - filesystem-object-store: uploads live in a volume instead of a bundled SeaweedFS.
+# - kv-postgres: the key-value store lives in Postgres instead of a bundled Valkey.
+# - rust-server: the eight small Rust services run in one fluxer-server container, with
+#   per-service settings as FLUXER_SERVER_<SERVICE>__<KEY>, the way rexctl writes them.
+# - external-voice: voice and video calls are off. Fluxer's LiveKit needs TCP 7881 and UDP
+#   7882 open on the server itself, which a template cannot publish.
+# Images are pinned to the coordinated release fluxer-release@2026.1116.30644 (its manifest
+# lists the version of each Fluxer image). Memory and Postgres tuning follow rexctl's "small"
+# profile. Secrets rexctl makes that Cloudgate can't (the VAPID key pair for browser push and
+# the ActivityPub signing key) are made once by fluxer-keys and read through *_FILE settings.
+
+x-fluxer-env: &fluxer-env
+  FLUXER_ENV: production
+  FLUXER_SELF_HOSTED: "true"
+  FLUXER_BASE_DOMAIN: ${APP_HOST}
+  FLUXER_PUBLIC_SCHEME: https
+  FLUXER_PUBLIC_PORT: "443"
+  FLUXER_PUBLIC_ORIGIN: ${APP_URL}
+  FLUXER_TRUST_CLIENT_IP_HEADER: "true"
+  FLUXER_APP_ENDPOINT: ${APP_URL}
+  FLUXER_MEDIA_ENDPOINT: ${APP_URL}/media
+  FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: ${APP_URL}/media
+  FLUXER_ADMIN_ENDPOINT: ${APP_URL}/admin
+  FLUXER_MARKETING_ENDPOINT: ${APP_URL}
+  FLUXER_PASSKEY_RP_ID: ${APP_HOST}
+  FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: ${APP_URL}
+  FLUXER_EMAIL_FROM_EMAIL: noreply@${APP_HOST}
+  FLUXER_VAPID_EMAIL: admin@${APP_HOST}
+  FLUXER_VAPID_PUBLIC_KEY_FILE: /keys/vapid-public
+  FLUXER_VAPID_PRIVATE_KEY_FILE: /keys/vapid-private
+
+  FLUXER_DATABASE_BACKEND: postgres
+  FLUXER_POSTGRES_HOST: postgres
+  FLUXER_POSTGRES_PORT: "5432"
+  FLUXER_POSTGRES_DATABASE: fluxer
+  FLUXER_POSTGRES_USERNAME: fluxer
+  FLUXER_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  FLUXER_KV_MODE: postgres
+
+  FLUXER_NATS_URL: nats://nats:4222
+  FLUXER_NATS_JETSTREAM_URL: nats://nats:4222
+  FLUXER_SVC_NATS_URL: nats://nats:4222
+  FLUXER_SVC_SHARD_COUNT: "1"
+
+  FLUXER_SEARCH_ENGINE: meilisearch
+  FLUXER_SEARCH_URL: http://meilisearch:7700
+  FLUXER_SEARCH_API_KEY: ${MEILI_MASTER_KEY}
+
+  FLUXER_LIVEKIT_ENABLED: "false"
+  FLUXER_LIVEKIT_BUNDLED: "false"
+
+  FLUXER_SUDO_MODE_SECRET: ${FLUXER_SUDO_MODE_SECRET}
+  FLUXER_CONNECTION_INITIATION_SECRET: ${FLUXER_CONNECTION_INITIATION_SECRET}
+  FLUXER_PROFILE_PSEUDONYM_SECRET: ${FLUXER_PROFILE_PSEUDONYM_SECRET}
+  FLUXER_GATEWAY_RPC_AUTH_TOKEN: ${FLUXER_GATEWAY_RPC_AUTH_TOKEN}
+  FLUXER_MEDIA_PROXY_SECRET_KEY: ${FLUXER_MEDIA_PROXY_SECRET_KEY}
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: ${FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64}
+  FLUXER_ADMIN_SECRET_KEY_BASE: ${FLUXER_ADMIN_SECRET_KEY_BASE}
+  FLUXER_ADMIN_OAUTH_CLIENT_SECRET: ${FLUXER_ADMIN_OAUTH_CLIENT_SECRET}
+
+  FLUXER_INTERNAL_API_ENDPOINT: http://api:8080
+  FLUXER_INTERNAL_MEDIA_PROXY_ENDPOINT: http://media-proxy:8080
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: ${APP_URL}/media
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SPOOL_MAX_TOTAL_BYTES: "2147483648"
+
+# What the api and worker (Node.js) add for the filesystem object store.
+x-fluxer-storage: &fluxer-storage
+  FLUXER_STORAGE_BACKEND: filesystem
+  FLUXER_STORAGE_ROOT: /var/lib/fluxer/objects
+  FLUXER_STORAGE_UPLOADS_TTL: 1d
+  UV_THREADPOOL_SIZE: "16"
+
+services:
+  # The edge: one web address, each path sent to the service behind it.
+  fluxer:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+      - fluxer-edge-data:/data
+      - fluxer-edge-config:/config
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    depends_on:
+      api:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    command: >
+      postgres
+      -c max_connections=120
+      -c shared_buffers=192MB
+      -c effective_cache_size=768MB
+      -c work_mem=4MB
+      -c maintenance_work_mem=128MB
+      -c jit=off
+      -c wal_compression=zstd
+      -c shared_preload_libraries=pg_stat_statements
+    shm_size: 256mb
+    environment:
+      POSTGRES_DB: fluxer
+      POSTGRES_USER: fluxer
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - fluxer-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fluxer -d fluxer"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # The message bus between the services.
+  nats:
+    image: nats:2.14.10-alpine
+    restart: unless-stopped
+    environment:
+      GOMEMLIMIT: 200MiB
+    command:
+      - sh
+      - -c
+      - >
+        printf 'http_port: 8222\njetstream {\n  store_dir: /data\n  max_memory_store: 64MB\n  max_file_store: 10GB\n}\n' > /tmp/nats.conf
+        && exec nats-server -c /tmp/nats.conf
+    volumes:
+      - fluxer-nats-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # Message search.
+  meilisearch:
+    image: getmeili/meilisearch:v1.53.3
+    restart: unless-stopped
+    environment:
+      MEILI_ENV: production
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_UPGRADE_DB: "true"
+      MEILI_MAX_INDEXING_MEMORY: 128mb
+      MEILI_MAX_INDEXING_THREADS: "1"
+      MEILI_LOG_LEVEL: WARN
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+    volumes:
+      - fluxer-meilisearch-data:/meili_data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:7700/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # Makes the browser-push (VAPID) key pair and the ActivityPub signing key once, in the
+  # formats rexctl uses, and changes nothing after that.
+  fluxer-keys:
+    image: ghcr.io/fluxerapp/fluxer-api:2026.1116.21721
+    restart: "no"
+    user: "0:0"
+    entrypoint:
+      - node
+      - -e
+      - |
+        const fs = require("node:fs");
+        const crypto = require("node:crypto");
+        const dir = "/keys";
+        const write = (name, value) => {
+          fs.writeFileSync(dir + "/" + name + ".tmp", value, { mode: 0o444 });
+          fs.renameSync(dir + "/" + name + ".tmp", dir + "/" + name);
+        };
+        if (!fs.existsSync(dir + "/vapid-private")) {
+          const ecdh = crypto.createECDH("prime256v1");
+          ecdh.generateKeys();
+          const priv = Buffer.alloc(32);
+          const raw = ecdh.getPrivateKey();
+          raw.copy(priv, 32 - raw.length);
+          write("vapid-public", ecdh.getPublicKey().toString("base64url"));
+          write("vapid-private", priv.toString("base64url"));
+          console.log("Made the VAPID key pair");
+        }
+        if (!fs.existsSync(dir + "/activitypub")) {
+          const { privateKey } = crypto.generateKeyPairSync("rsa", { modulusLength: 2048 });
+          write("activitypub", privateKey.export({ type: "pkcs8", format: "der" }).toString("base64"));
+          console.log("Made the ActivityPub signing key");
+        }
+    volumes:
+      - fluxer-keys:/keys
+
+  # Makes the folders of the filesystem object store, as upstream's objects-init.
+  objects-init:
+    image: ghcr.io/fluxerapp/fluxer-media-proxy:2026.1116.21750
+    restart: "no"
+    user: "0:0"
+    environment:
+      FLUXER_STORAGE_ROOT: /var/lib/fluxer/objects
+    volumes:
+      - fluxer-objects-data:/var/lib/fluxer/objects
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >
+        set -e;
+        root="$$FLUXER_STORAGE_ROOT";
+        for dir in "$$root" "$$root/.staging" "$$root/.staging/tmp" "$$root/.staging/multipart" "$$root/.staging/trash" "$$root/.meta"; do
+          install -d -o 10001 -g 10001 -m 2770 "$$dir";
+        done;
+        if [ ! -e "$$root/.layout" ]; then
+          printf '{"v":1}' > "$$root/.layout.tmp";
+          chown 10001:10001 "$$root/.layout.tmp";
+          chmod 0660 "$$root/.layout.tmp";
+          mv "$$root/.layout.tmp" "$$root/.layout";
+        fi;
+        echo "objects ready"
+
+  # The HTTP API.
+  api:
+    image: ghcr.io/fluxerapp/fluxer-api:2026.1116.21721
+    restart: unless-stopped
+    group_add: ["10001"]
+    environment:
+      <<: [*fluxer-env, *fluxer-storage]
+      FLUXER_API_PORT: "8080"
+      FLUXER_SETUP_TOKEN: ${FLUXER_SETUP_TOKEN}
+      NODE_OPTIONS: --max-old-space-size=512
+      NODE_EXTRA_CA_CERTS: /etc/ssl/certs/ca-certificates.crt
+      FLUXER_POSTGRES_MAX_CONNECTIONS: "25"
+      FLUXER_API_PRESIGNED_ATTACHMENT_UPLOADS_ENABLED: "true"
+      FLUXER_API_EMBEDDED_WORKER: "false"
+    volumes:
+      - fluxer-objects-data:/var/lib/fluxer/objects
+      - fluxer-keys:/keys:ro
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /_health HTTP/1.0\\r\\nHost: 127.0.0.1\\r\\n\\r\\n\" >&3 && head -n 1 <&3 | grep -q \" 200 \"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+      fluxer-keys:
+        condition: service_completed_successfully
+      objects-init:
+        condition: service_completed_successfully
+      rust:
+        condition: service_healthy
+
+  # Background jobs and scheduled tasks.
+  worker:
+    image: ghcr.io/fluxerapp/fluxer-api:2026.1116.21721
+    restart: unless-stopped
+    group_add: ["10001"]
+    command: ["node", "dist/WorkerEntrypoint.js"]
+    environment:
+      <<: [*fluxer-env, *fluxer-storage]
+      NODE_OPTIONS: --max-old-space-size=448
+      NODE_EXTRA_CA_CERTS: /etc/ssl/certs/ca-certificates.crt
+      FLUXER_API_WORKER_MODE: all_lanes
+      FLUXER_API_WORKER_ENABLE_CRON_SCHEDULER: "true"
+      FLUXER_POSTGRES_MAX_CONNECTIONS: "25"
+    volumes:
+      - fluxer-objects-data:/var/lib/fluxer/objects
+      - fluxer-keys:/keys:ro
+    healthcheck:
+      test: ["CMD-SHELL", "find /tmp/fluxer-worker-heartbeat -newermt '-30 seconds' | grep -q ."]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+      fluxer-keys:
+        condition: service_completed_successfully
+      objects-init:
+        condition: service_completed_successfully
+      rust:
+        condition: service_healthy
+
+  # The live connection (WebSocket) that delivers messages, presence and typing.
+  gateway:
+    image: ghcr.io/fluxerapp/fluxer-gateway:2026.1116.21728
+    restart: unless-stopped
+    environment:
+      <<: *fluxer-env
+      FLUXER_GATEWAY_PORT: "8080"
+      FLUXER_GATEWAY_MEDIA_PROXY_ENDPOINT: ${APP_URL}/media
+      FLUXER_GATEWAY_STATIC_CDN_ENDPOINT: ${APP_URL}
+      FLUXER_ERLANG_COOKIE: ${FLUXER_ERLANG_COOKIE}
+    volumes:
+      - fluxer-keys:/keys:ro
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /_health/ready HTTP/1.0\\r\\nHost: 127.0.0.1\\r\\n\\r\\n\" >&3 && head -n 1 <&3 | grep -q \" 200 \"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+    depends_on:
+      nats:
+        condition: service_healthy
+      fluxer-keys:
+        condition: service_completed_successfully
+
+  # Uploads, attachments and image resizing.
+  media-proxy:
+    image: ghcr.io/fluxerapp/fluxer-media-proxy:2026.1116.21750
+    restart: unless-stopped
+    environment:
+      <<: *fluxer-env
+      FLUXER_MEDIA_PROXY_PORT: "8080"
+      TOKIO_WORKER_THREADS: "2"
+      FLUXER_MEDIA_PROXY_MODE: upload
+      FLUXER_MEDIA_PROXY_STORAGE_BACKEND: local
+      FLUXER_MEDIA_PROXY_STORAGE_ROOT: /var/lib/fluxer/objects
+      FLUXER_MEDIA_PROXY_CORS_ALLOWED_ORIGINS: ${APP_URL}
+      FLUXER_MEDIA_PROXY_TRANSFORM_CACHE_BYTES: "67108864"
+      FLUXER_MEDIA_PROXY_UPLOAD_RELAY_BUFFERED_RETRY_TOTAL_BYTES: "67108864"
+      FLUXER_S3_READ_SIGNED: "true"
+    volumes:
+      - fluxer-objects-data:/var/lib/fluxer/objects
+      - fluxer-media-tmp:/tmp
+      - fluxer-keys:/keys:ro
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/fluxer-media-proxy", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    depends_on:
+      nats:
+        condition: service_healthy
+      fluxer-keys:
+        condition: service_completed_successfully
+      objects-init:
+        condition: service_completed_successfully
+
+  # Static assets: emoji, default avatars, badges.
+  static-proxy:
+    image: ghcr.io/fluxerapp/fluxer-static:2026.1116.21812
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/avatars/0.png"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # The Rust services in one process: snowflakes (ids), users, messages, gifs, unfurl (link
+  # previews), push, app-proxy (serves the web app) and admin (the admin panel).
+  rust:
+    image: ghcr.io/fluxerapp/fluxer-server:2026.1116.24405
+    restart: unless-stopped
+    stop_grace_period: 30s
+    environment:
+      <<: *fluxer-env
+      TOKIO_WORKER_THREADS: "2"
+      MALLOC_ARENA_MAX: "2"
+      FLUXER_SERVER_SERVICES: snowflakes,users,messages,gifs,unfurl,push,app-proxy,admin
+      FLUXER_SVC_MODE: combined
+      FLUXER_SERVER_SNOWFLAKES__FLUXER_SVC_NAME: snowflakes
+      FLUXER_SERVER_SNOWFLAKES__FLUXER_SVC_PORT: "18090"
+      FLUXER_SERVER_SNOWFLAKES__FLUXER_SNOWFLAKES_WORKER_GUARD: "true"
+      FLUXER_SERVER_USERS__FLUXER_SVC_NAME: users
+      FLUXER_SERVER_USERS__FLUXER_SVC_PORT: "18091"
+      FLUXER_SERVER_USERS__FLUXER_POSTGRES_MAX_CONNECTIONS: "20"
+      FLUXER_SERVER_MESSAGES__FLUXER_SVC_NAME: messages
+      FLUXER_SERVER_MESSAGES__FLUXER_SVC_PORT: "18092"
+      FLUXER_SERVER_MESSAGES__FLUXER_POSTGRES_MAX_CONNECTIONS: "20"
+      FLUXER_SERVER_GIFS__FLUXER_SVC_NAME: gifs
+      FLUXER_SERVER_GIFS__FLUXER_SVC_PORT: "18093"
+      FLUXER_SERVER_GIFS__FLUXER_GIFS_SHARD_CACHE_MAX_BYTES: "67108864"
+      FLUXER_SERVER_UNFURL__FLUXER_SVC_NAME: unfurl
+      FLUXER_SERVER_UNFURL__FLUXER_SVC_PORT: "18094"
+      FLUXER_SERVER_UNFURL__FLUXER_MEDIA_PROXY_ENDPOINT: http://media-proxy:8080
+      FLUXER_SERVER_UNFURL__FLUXER_ACTIVITYPUB_SIGNING_KEY_BASE64_FILE: /keys/activitypub
+      FLUXER_SERVER_APP_PROXY__FLUXER_SVC_MODE: ""
+      FLUXER_SERVER_APP_PROXY__FLUXER_APP_PROXY_HOST: 0.0.0.0
+      FLUXER_SERVER_APP_PROXY__FLUXER_APP_PROXY_PORT: "8080"
+      FLUXER_SERVER_APP_PROXY__FLUXER_MEDIA_ENDPOINT: ""
+      FLUXER_SERVER_APP_PROXY__DISCOVERY_UPSTREAM_URL: http://fluxer:8088/.well-known/fluxer
+      FLUXER_SERVER_APP_PROXY__DISCOVERY_REFRESH_INTERVAL_MS: "5000"
+      FLUXER_SERVER_APP_PROXY__FLUXER_S3_BUCKET_UPLOADS: fluxer-uploads
+      FLUXER_SERVER_PUSH__FLUXER_SVC_MODE: ""
+      FLUXER_SERVER_ADMIN__FLUXER_SVC_MODE: ""
+      FLUXER_SERVER_ADMIN__FLUXER_ADMIN_HOST: 0.0.0.0
+      FLUXER_SERVER_ADMIN__FLUXER_ADMIN_PORT: "18083"
+      FLUXER_SERVER_ADMIN__FLUXER_ADMIN_BASE_PATH: /admin
+      FLUXER_SERVER_ADMIN__FLUXER_API_ENDPOINT: http://api:8080
+      FLUXER_SERVER_ADMIN__FLUXER_STATIC_CDN_ENDPOINT: ${APP_URL}
+      FLUXER_SERVER_ADMIN__FLUXER_STORAGE_BACKEND: filesystem
+    volumes:
+      - fluxer-keys:/keys:ro
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/fluxer-server", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      fluxer-keys:
+        condition: service_completed_successfully
+
+volumes:
+  fluxer-edge-data:
+  fluxer-edge-config:
+  fluxer-postgres-data:
+  fluxer-nats-data:
+  fluxer-meilisearch-data:
+  fluxer-objects-data:
+  fluxer-media-tmp:
+  fluxer-keys:
