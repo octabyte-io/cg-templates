@@ -1,0 +1,161 @@
+# From the project's docker-compose.yml at release v0.8.1, trimmed to the
+# settings a single server needs. OpenSearch Dashboards (an optional admin
+# tool) is left out. Docling, which OpenRAG's docs start on the host, runs here
+# as the Docling project's own container, at the docling-serve version OpenRAG
+# 0.8.1 pins (1.26.0).
+#
+# Without Google sign-in OpenRAG runs in "no-auth mode" with no login, so a
+# small proxy in front asks for the username "admin" and the generated
+# password first. The AI model and its API key are chosen on the first visit
+# (onboarding).
+services:
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - openrag-frontend
+
+  openrag-frontend:
+    image: langflowai/openrag-frontend:0.8.1
+    restart: unless-stopped
+    environment:
+      OPENRAG_BACKEND_HOST: openrag-backend
+    depends_on:
+      - openrag-backend
+
+  openrag-backend:
+    image: langflowai/openrag-backend:0.8.1
+    restart: unless-stopped
+    environment:
+      OPENSEARCH_HOST: opensearch
+      OPENSEARCH_PORT: "9200"
+      OPENSEARCH_USERNAME: admin
+      OPENSEARCH_PASSWORD: "${OPENSEARCH_SECRET}-Os1"
+      OPENSEARCH_NODE_COUNT_CHECK_ENABLED: "false"
+      OPENSEARCH_INDEX_NAME: documents
+      LANGFLOW_URL: http://langflow:7860
+      LANGFLOW_PUBLIC_URL: ${LANGFLOW_PUBLIC_URL}
+      LANGFLOW_SUPERUSER: admin
+      LANGFLOW_SUPERUSER_PASSWORD: ${LANGFLOW_SUPERUSER_PASSWORD}
+      LANGFLOW_AUTO_LOGIN: "False"
+      # The built-in flows, as in the project's .env.example.
+      LANGFLOW_CHAT_FLOW_ID: 1098eea1-6649-4e1d-aed1-b77249fb8dd0
+      LANGFLOW_INGEST_FLOW_ID: 5488df7c-b93f-4f87-a446-b67028bc0813
+      LANGFLOW_URL_INGEST_FLOW_ID: 72c3d17c-2dac-4a73-b48a-6518473d7830
+      NUDGES_FLOW_ID: ebc01d31-1976-46ce-a385-b0240327226c
+      OPENRAG_BACKEND_INTERNAL_URL: http://openrag-backend:8000
+      DOCLING_SERVE_URL: http://docling:5001
+      SESSION_SECRET: ${SESSION_SECRET}
+      OPENRAG_ENCRYPTION_KEY: ${OPENRAG_ENCRYPTION_KEY}
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
+      WEBHOOK_BASE_URL: ${APP_URL}
+      CORS_ALLOWED_ORIGINS: ${APP_URL}
+      ENVIRONMENT: production
+    volumes:
+      - openrag-documents:/app/openrag-documents
+      - openrag-keys:/app/keys
+      - openrag-flows:/app/flows
+      - openrag-config:/app/config
+      - openrag-data:/app/data
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      langflow:
+        condition: service_started
+      docling:
+        condition: service_started
+
+  langflow:
+    image: langflowai/openrag-langflow:0.8.1
+    restart: unless-stopped
+    environment:
+      LANGFLOW_CONFIG_DIR: /app/langflow-data
+      LANGFLOW_DATABASE_URL: sqlite:////app/langflow-data/langflow.db?timeout=60
+      LANGFLOW_SECRET_KEY: ${LANGFLOW_SECRET_KEY}
+      LANGFLOW_SUPERUSER: admin
+      LANGFLOW_SUPERUSER_PASSWORD: ${LANGFLOW_SUPERUSER_PASSWORD}
+      LANGFLOW_AUTO_LOGIN: "False"
+      LANGFLOW_NEW_USER_IS_ACTIVE: "False"
+      LANGFLOW_ENABLE_SUPERUSER_CLI: "False"
+      LANGFLOW_ALLOW_CUSTOM_COMPONENTS: "false"
+      LANGFLOW_WORKERS: "1"
+      LANGFLOW_LOG_LEVEL: INFO
+      HIDE_GETTING_STARTED_PROGRESS: "true"
+      LANGFLOW_SSRF_ALLOWED_HOSTS: localhost,127.0.0.1,docling,openrag-backend,opensearch
+      # Placeholders the flows read from the environment; OpenRAG fills the
+      # real values in on each run (as in the official file).
+      OPENRAG_LLM_TOKEN: None
+      JWT: None
+      OWNER: None
+      OWNER_NAME: None
+      OWNER_EMAIL: None
+      CONNECTOR_TYPE: system
+      CONNECTOR_TYPE_URL: url
+      DOCUMENT_ID: None
+      SOURCE_URL: None
+      ALLOWED_USERS: "[]"
+      ALLOWED_GROUPS: "[]"
+      ALLOWED_PRINCIPALS: "[]"
+      OPENRAG-QUERY-FILTER: '"{}"'
+      OPENRAG_INGEST_URL: OPENRAG_INGEST_URL
+      OPENRAG_INGEST_TOKEN: OPENRAG_INGEST_TOKEN
+      OPENRAG_INGEST_RUN_ID: OPENRAG_INGEST_RUN_ID
+      OPENRAG_INGEST_BATCH_SIZE: "100"
+      DOCLING_TASK_ID: None
+      FILENAME: None
+      MIMETYPE: None
+      FILESIZE: "0"
+      OPENSEARCH_PASSWORD: "${OPENSEARCH_SECRET}-Os1"
+      OPENSEARCH_HOST: opensearch
+      OPENSEARCH_PORT: "9200"
+      OPENSEARCH_URL: https://opensearch:9200
+      OPENSEARCH_INDEX_NAME: documents
+      DOCLING_SERVE_URL: http://docling:5001
+      DOCLING_SERVE_VERIFY_SSL: "true"
+      SELECTED_EMBEDDING_MODEL: text-embedding-3-small
+      LANGFLOW_VARIABLES_TO_GET_FROM_ENVIRONMENT: JWT,OPENRAG-QUERY-FILTER,OPENSEARCH_PASSWORD,OPENSEARCH_URL,DOCLING_SERVE_URL,DOCLING_SERVE_VERIFY_SSL,DOCLING_TASK_ID,OWNER,OWNER_NAME,OWNER_EMAIL,CONNECTOR_TYPE,DOCUMENT_ID,SOURCE_URL,ALLOWED_USERS,ALLOWED_GROUPS,ALLOWED_PRINCIPALS,FILENAME,MIMETYPE,FILESIZE,SELECTED_EMBEDDING_MODEL,OPENAI_API_KEY,OPENRAG_LLM_TOKEN,OPENRAG_LLM_BASE_URL,ANTHROPIC_API_KEY,WATSONX_APIKEY,WATSONX_URL,WATSONX_PROJECT_ID,OLLAMA_BASE_URL,OPENSEARCH_INDEX_NAME,OPENRAG_INGEST_URL,OPENRAG_INGEST_TOKEN,OPENRAG_INGEST_RUN_ID,OPENRAG_INGEST_BATCH_SIZE
+    volumes:
+      - langflow-data:/app/langflow-data
+
+  opensearch:
+    image: langflowai/openrag-opensearch:0.8.1
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: "${OPENSEARCH_SECRET}-Os1"
+      OPENSEARCH_JAVA_OPTS: "-Xms1g -Xmx1g"
+      OPENRAG_BACKEND_INTERNAL_URL: http://openrag-backend:8000
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    stop_grace_period: 2m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -ku admin:$$OPENSEARCH_INITIAL_ADMIN_PASSWORD 'https://localhost:9200/_cluster/health' -s | grep -qE '\"status\":\"(green|yellow)\"'"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+  docling:
+    image: quay.io/docling-project/docling-serve-cpu:v1.26.0
+    restart: unless-stopped
+    environment:
+      DOCLING_SERVE_ENG_LOC_NUM_WORKERS: "1"
+
+volumes:
+  openrag-documents:
+  openrag-keys:
+  openrag-flows:
+  openrag-config:
+  openrag-data:
+  langflow-data:
+  opensearch-data:

@@ -1,0 +1,34 @@
+name: ShopNex
+description: "Self-hosted ShopNex: a Shopify-style online store with products, orders, discounts, Stripe checkout and a themed storefront, and no fee on your sales."
+version: "v0.15.0"
+tags:
+  - shopify alternative
+  - online store
+  - self-hosted ecommerce
+  - open source ecommerce
+  - online shop software
+  - stripe checkout
+links:
+  website: https://shopnex.ai
+  docs: https://shopnex.ai/docs
+  source: https://github.com/shopnex-ai/shopnex
+cloudgate: 0.1.0
+compose: app
+# ShopNex's self-hosting guide asks for a server with at least 2 GB of memory.
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.shopnex.url}}" }
+  STRIPE_APP_URL: { value: "{{domains.stripe.url}}" }
+  SHOPNEX_SECRET: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  SHOP_NAME:
+    ask:
+      label: Shop name
+      description: The name your shop starts with. You can change it later in the admin.
+      default: My Shop
+      required: false
+domains:
+  # The shop: the storefront at /, the admin at /admin and the hosted checkout.
+  - { service: shopnex, port: 3000 }
+  # The Stripe app, which the admin opens when you connect your Stripe account.
+  - { service: stripe, port: 4600 }

@@ -1,0 +1,23 @@
+name: CheckCle
+description: "Self-hosted CheckCle checks your websites and servers, warns before SSL certificates expire and publishes a status page for your customers."
+version: "v1.6.0"
+tags:
+  - uptimerobot alternative
+  - uptime monitoring
+  - server monitoring
+  - ssl certificate monitoring
+  - status page
+  - pingdom alternative
+links:
+  website: https://checkcle.io
+  docs: https://docs.checkcle.io
+  source: https://github.com/operacle/checkcle
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Replaces the image's built-in default password (Admin123456) for the
+  # admin@example.com account on the first start.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: checkcle, port: 8090 }

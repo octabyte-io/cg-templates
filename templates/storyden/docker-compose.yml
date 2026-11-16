@@ -1,0 +1,16 @@
+services:
+  storyden:
+    # The full-stack image: the website and its API in one container.
+    image: ghcr.io/southclaws/storyden:1.26.17
+    restart: unless-stopped
+    environment:
+      # Both point at the app's own address: the full-stack image serves the
+      # website and the API from the same place.
+      PUBLIC_WEB_ADDRESS: ${APP_URL}
+      PUBLIC_API_ADDRESS: ${APP_URL}
+    volumes:
+      # The built-in SQLite database and uploaded files live here.
+      - storyden-data:/storyden/data
+
+volumes:
+  storyden-data:
