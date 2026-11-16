@@ -37,7 +37,7 @@ faq:
     a: "No. linkding searches the title, description, notes, tags and address of each bookmark, not the text of the saved page. It can ask the Internet Archive to keep a copy of each page instead."
   - q: "Which Pinboard alternative keeps an offline copy of each page?"
     a: "Shiori. It keeps a readable copy of each page you save, and optionally a full offline archive, on your own server, and its search covers the saved text as well as titles. Grimoire saves the readable text of each page but not a full copy."
-  - q: "Which Pinboard alternative keeps full archived copies of every page?"
+  - q: "Which alternative replaces Pinboard's archival account?"
     a: "ArchiveBox. It saves each page as a web page copy, screenshot, PDF, text and WARC file on your server and searches the saved text, like Pinboard's archival account. It is an archive rather than a bookmark manager, so you can pair it with linkding for everyday bookmarking."
   - q: "Is there a linkding app for my phone?"
     a: "There is no official app, but linkding works in a phone's browser and can be added to the home screen. Community apps also connect to it, such as Pinkt on Android, which works with Pinboard too."

@@ -23,7 +23,7 @@ faq:
   - q: "Can several people use one Agent Zero?"
     a: "Not as separate accounts. It has a single login, so it suits one person, or a small team that shares it."
   - q: "Should I choose Agent Zero, OpenClaw or Hermes Agent?"
-    a: "Choose Agent Zero for Manus-style tasks you watch in its own workspace, such as research, code and documents. Choose OpenClaw for an always-on assistant you message from WhatsApp, Telegram, Slack and other chat apps, with companion phone and desktop apps. Choose Hermes Agent for an assistant in your chat apps that remembers your work, writes and improves its own skills and runs scheduled jobs."
+    a: "Choose Agent Zero for Manus-style tasks you watch in its own workspace, such as research, code and documents. Choose OpenClaw for an always-on assistant you message from WhatsApp, Telegram, Slack and other chat apps, with companion phone apps. Choose Hermes Agent for an assistant in your chat apps that remembers your work, writes and improves its own skills and runs scheduled jobs."
   - q: "Is Hermes Agent safe to run?"
     a: "Yes, with tight access. It checks each risky command first, blocking dangerous ones and asking about uncertain ones, and turns away people who message it until you approve them. On Cloudgate it runs in its own container with extra limits and its dashboard always needs a sign-in."
   - q: "Is OpenClaw safe to run?"
