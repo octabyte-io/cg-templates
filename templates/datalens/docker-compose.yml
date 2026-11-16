@@ -1,0 +1,329 @@
+# From DataLens's official docker-compose.yaml at release v2.9.0
+# (github.com/datalens-tech/datalens). Changes:
+# - Services are named datalens-*, with the web interface as "datalens"; the
+#   addresses between them follow those names.
+# - Upstream's init.sh makes two RSA key pairs with openssl (one signs sign-in
+#   tokens, one guards Temporal). Here datalens-keys makes them once on the first
+#   start and keeps them in the datalens-keys volume; each service that needs a
+#   key reads it from there before starting the image's own entrypoint, instead
+#   of using the sample keys written into upstream's file.
+# - Every other secret is made at setup instead of upstream's sample defaults.
+# - Sign-up is closed: the admin adds people from the admin panel, so a stranger
+#   who finds the address can't create an account and read the dashboards.
+# - The Postgres image is pinned to 16-1.3.0, the versioned tag upstream's main
+#   branch uses with these same app versions (the v2.9.0 file says only "16").
+# - Left out: ports, container names, pull_policy and the IPv6 network switch.
+
+services:
+  # The web interface (and its server side).
+  datalens:
+    image: ghcr.io/datalens-tech/datalens-ui:0.3831.0
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export AUTH_TOKEN_PUBLIC_KEY="$$(cat /keys/auth-public.pem)"
+        exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+    environment:
+      APP_MODE: full
+      APP_ENV: production
+      APP_INSTALLATION: opensource
+      AUTH_POLICY: disabled
+      US_ENDPOINT: http://datalens-us:8080
+      AUTH_ENDPOINT: http://datalens-auth:8080
+      BI_API_ENDPOINT: http://datalens-control-api:8080
+      BI_DATA_ENDPOINT: http://datalens-data-api:8080
+      META_MANAGER_ENDPOINT: http://datalens-meta-manager:8080
+      US_MASTER_TOKEN: ${US_MASTER_TOKEN}
+      RELEASE_VERSION: "2.9.0"
+      HC: "0"
+      YANDEX_MAP_ENABLED: "0"
+      EXPORT_WORKBOOK_ENABLED: "true"
+      AUTH_ENABLED: "true"
+      AUTH_MASTER_TOKEN: ${AUTH_MASTER_TOKEN}
+      AUTH_SIGNUP_DISABLED: "true"
+    depends_on:
+      datalens-keys:
+        condition: service_completed_successfully
+      datalens-us:
+        condition: service_started
+    volumes:
+      - datalens-keys:/keys:ro
+
+  # Runs at each start: makes the two RSA key pairs on the first start (as
+  # upstream's init.sh does with openssl, 4096 bits) and leaves them alone after.
+  # Each key is kept on one line with \n between lines, the form upstream's
+  # services read.
+  datalens-keys:
+    image: ghcr.io/datalens-tech/datalens-auth:0.27.0
+    user: "0:0"
+    restart: "no"
+    entrypoint: ["node", "-e"]
+    command:
+      - |
+        const fs = require("fs");
+        const crypto = require("crypto");
+        const oneLine = (pem) => pem.trim().split("\n").join("\\n");
+        for (const name of ["auth", "temporal"]) {
+          const dir = "/keys/";
+          if (fs.existsSync(dir + name + "-private.pem") && fs.existsSync(dir + name + "-public.pem")) continue;
+          const pair = crypto.generateKeyPairSync("rsa", {
+            modulusLength: 4096,
+            publicKeyEncoding: { type: "spki", format: "pem" },
+            privateKeyEncoding: { type: "pkcs8", format: "pem" },
+          });
+          fs.writeFileSync(dir + name + "-public.pem", oneLine(pair.publicKey), { mode: 0o644 });
+          fs.writeFileSync(dir + name + "-private.pem", oneLine(pair.privateKey), { mode: 0o644 });
+          console.log("made the " + name + " key pair");
+        }
+    volumes:
+      - datalens-keys:/keys
+
+  # Postgres with DataLens's own start scripts: makes the databases for each
+  # service and, on the first start, a demo workbook.
+  datalens-postgres:
+    image: ghcr.io/datalens-tech/datalens-postgres:16-1.3.0
+    restart: unless-stopped
+    environment:
+      HC: "0"
+      CONTROL_API_CRYPTO_KEY: ${CONTROL_API_CRYPTO_KEY}
+      US_ENDPOINT: http://datalens-us:8080
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_MAX_CONNECTIONS: "512"
+      POSTGRES_USER: pg-user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB_COMPENG: pg-compeng-db
+      POSTGRES_DB_AUTH: pg-auth-db
+      POSTGRES_DB_US: pg-us-db
+      POSTGRES_DB_DEMO: pg-demo-db
+      POSTGRES_DB_META_MANAGER: pg-meta-manager-db
+      POSTGRES_DB_TEMPORAL: pg-temporal-db
+      POSTGRES_DB_TEMPORAL_VISIBILITY: pg-temporal-visibility-db
+      INIT_DEMO_DATA: "1"
+      INIT_DB_DEMO: "1"
+      INIT_DB_AUTH: "1"
+      INIT_DB_META_MANAGER: "1"
+      INIT_DB_TEMPORAL: "1"
+      INIT_EXTERNAL_POSTGRES: "0"
+    volumes:
+      - datalens-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "pg-us-db", "-U", "pg-user"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 3s
+
+  # Temporal: runs the export and import jobs for the meta manager.
+  datalens-temporal:
+    image: ghcr.io/datalens-tech/datalens-temporal:1.27.2
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export TEMPORAL_AUTH_PUBLIC_KEY="$$(cat /keys/temporal-public.pem)"
+        export TEMPORAL_AUTH_PRIVATE_KEY="$$(cat /keys/temporal-private.pem)"
+        exec /etc/temporal/init-temporal.sh
+    environment:
+      POSTGRES_HOST: datalens-postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: pg-user
+      POSTGRES_DB: pg-temporal-db
+      POSTGRES_DB_VISIBILITY: pg-temporal-visibility-db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_TLS_ENABLED: "false"
+      POSTGRES_TLS_DISABLE_HOST_VERIFICATION: "true"
+      POSTGRES_TLS_CA_FILE: ""
+      TEMPORAL_AUTH_ENABLED: "true"
+      NAMESPACES: meta-manager
+    depends_on:
+      datalens-keys:
+        condition: service_completed_successfully
+      datalens-postgres:
+        condition: service_healthy
+    volumes:
+      - datalens-keys:/keys:ro
+    # The image's own check, given the key it signs its test token with.
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - TEMPORAL_AUTH_PRIVATE_KEY="$$(cat /keys/temporal-private.pem)" /etc/temporal/healthcheck.sh
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 3s
+
+  # The API that manages connections and datasets.
+  datalens-control-api:
+    image: ghcr.io/datalens-tech/datalens-control-api:0.2457.0
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export AUTH__JWT_KEY="$$(cat /keys/auth-public.pem)"
+        exec /etc/service/dl_api/run
+    environment:
+      BI_API_UWSGI_WORKERS_COUNT: "4"
+      RQE_FORCE_OFF: "1"
+      RQE_SECRET_KEY: ""
+      DL_CRY_ACTUAL_KEY_ID: KEY
+      DL_CRY_KEY_VAL_ID_KEY: ${CONTROL_API_CRYPTO_KEY}
+      US_HOST: http://datalens-us:8080
+      US_MASTER_TOKEN: ${US_MASTER_TOKEN}
+      CONNECTOR_AVAILABILITY_VISIBLE: clickhouse,postgres,chyt,ydb,mysql,greenplum,mssql,oracle,trino,appmetrica_api,metrika_api
+      AUTH__TYPE: NATIVE
+      AUTH__JWT_ALGORITHM: PS256
+    depends_on:
+      datalens-keys:
+        condition: service_completed_successfully
+    volumes:
+      - datalens-keys:/keys:ro
+
+  # The API that runs chart queries against your data.
+  datalens-data-api:
+    image: ghcr.io/datalens-tech/datalens-data-api:0.2457.0
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export AUTH__JWT_KEY="$$(cat /keys/auth-public.pem)"
+        exec /etc/service/dl_api/run
+    environment:
+      GUNICORN_WORKERS_COUNT: "5"
+      RQE_FORCE_OFF: "1"
+      CACHES_ON: "0"
+      MUTATIONS_CACHES_ON: "0"
+      RQE_SECRET_KEY: ""
+      DL_CRY_ACTUAL_KEY_ID: KEY
+      DL_CRY_KEY_VAL_ID_KEY: ${CONTROL_API_CRYPTO_KEY}
+      BI_COMPENG_PG_ON: "1"
+      BI_COMPENG_PG_URL: postgres://pg-user:${POSTGRES_PASSWORD}@datalens-postgres:5432/pg-compeng-db
+      US_HOST: http://datalens-us:8080
+      US_MASTER_TOKEN: ${US_MASTER_TOKEN}
+      AUTH__TYPE: NATIVE
+      AUTH__JWT_ALGORITHM: PS256
+    depends_on:
+      datalens-keys:
+        condition: service_completed_successfully
+      datalens-postgres:
+        condition: service_healthy
+    volumes:
+      - datalens-keys:/keys:ro
+
+  # United storage: keeps workbooks, charts and dashboards.
+  datalens-us:
+    image: ghcr.io/datalens-tech/datalens-us:1.39.0
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export AUTH_TOKEN_PUBLIC_KEY="$$(cat /keys/auth-public.pem)"
+        exec /opt/app/scripts/preflight.sh
+    environment:
+      APP_INSTALLATION: opensource
+      APP_ENV: prod
+      APP_PORT: "8080"
+      AUTH_ENDPOINT: http://datalens-auth:8080
+      MASTER_TOKEN: ${US_MASTER_TOKEN}
+      AUTH_MASTER_TOKEN: ${AUTH_MASTER_TOKEN}
+      POSTGRES_DSN_LIST: postgres://pg-user:${POSTGRES_PASSWORD}@datalens-postgres:5432/pg-us-db
+      US_SURPRESS_DB_STATUS_LOGS: "true"
+      SKIP_INSTALL_DB_EXTENSIONS: "1"
+      USE_DEMO_DATA: "0"
+      HC: "0"
+      AUTH_ENABLED: "true"
+    depends_on:
+      datalens-keys:
+        condition: service_completed_successfully
+      datalens-postgres:
+        condition: service_healthy
+    volumes:
+      - datalens-keys:/keys:ro
+
+  # The same UI image in API mode, used by the meta manager.
+  datalens-ui-api:
+    image: ghcr.io/datalens-tech/datalens-ui:0.3831.0
+    restart: unless-stopped
+    environment:
+      APP_MODE: api
+      APP_ENV: production
+      APP_INSTALLATION: opensource
+      US_ENDPOINT: http://datalens-us:8080
+      BI_API_ENDPOINT: http://datalens-control-api:8080
+    depends_on:
+      datalens-us:
+        condition: service_started
+
+  # Exports and imports workbooks, through Temporal.
+  datalens-meta-manager:
+    image: ghcr.io/datalens-tech/datalens-meta-manager:0.52.0
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export TEMPORAL_AUTH_PRIVATE_KEY="$$(cat /keys/temporal-private.pem)"
+        export AUTH_TOKEN_PUBLIC_KEY="$$(cat /keys/auth-public.pem)"
+        exec /opt/app/scripts/preflight.sh
+    environment:
+      APP_INSTALLATION: opensource
+      APP_ENV: prod
+      APP_PORT: "8080"
+      US_MASTER_TOKEN: ${US_MASTER_TOKEN}
+      EXPORT_DATA_VERIFICATION_KEY: ${EXPORT_DATA_VERIFICATION_KEY}
+      POSTGRES_DSN_LIST: postgres://pg-user:${POSTGRES_PASSWORD}@datalens-postgres:5432/pg-meta-manager-db
+      US_ENDPOINT: http://datalens-us:8080
+      UI_API_ENDPOINT: http://datalens-ui-api:8080
+      TEMPORAL_ENDPOINT: datalens-temporal:7233
+      TEMPORAL_AUTH_ENABLED: "true"
+      AUTH_ENABLED: "true"
+    depends_on:
+      datalens-keys:
+        condition: service_completed_successfully
+      datalens-temporal:
+        condition: service_healthy
+      datalens-ui-api:
+        condition: service_started
+    volumes:
+      - datalens-keys:/keys:ro
+
+  # Accounts and sign-in. Creates the "admin" user with ADMIN_PASSWORD.
+  datalens-auth:
+    image: ghcr.io/datalens-tech/datalens-auth:0.27.0
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export TOKEN_PRIVATE_KEY="$$(cat /keys/auth-private.pem)"
+        export TOKEN_PUBLIC_KEY="$$(cat /keys/auth-public.pem)"
+        exec /opt/app/scripts/preflight.sh
+    environment:
+      APP_INSTALLATION: opensource
+      APP_ENV: prod
+      MASTER_TOKEN: ${AUTH_MASTER_TOKEN}
+      US_MASTER_TOKEN: ${US_MASTER_TOKEN}
+      POSTGRES_DSN_LIST: postgres://pg-user:${POSTGRES_PASSWORD}@datalens-postgres:5432/pg-auth-db
+      US_SURPRESS_DB_STATUS_LOGS: "true"
+      SKIP_INSTALL_DB_EXTENSIONS: "1"
+      AUTH_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      AUTH_SIGNUP_DISABLED: "true"
+      UI_APP_ENDPOINT: ${APP_URL}
+      DISABLE_WILDCARD_COOKIE: "true"
+    depends_on:
+      datalens-keys:
+        condition: service_completed_successfully
+      datalens-postgres:
+        condition: service_healthy
+    volumes:
+      - datalens-keys:/keys:ro
+
+volumes:
+  datalens-keys:
+  datalens-postgres-data:

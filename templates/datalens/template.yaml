@@ -1,0 +1,21 @@
+name: DataLens
+description: "Self-hosted DataLens is an open-source BI tool: connect PostgreSQL, ClickHouse or MySQL and share charts and dashboards with your team."
+version: "2.9.0"
+tags: [business intelligence, bi tool, dashboards, data visualization, clickhouse dashboards, tableau alternative, power bi alternative]
+links:
+  website: https://datalens.tech
+  docs: https://datalens.tech/docs/en/
+  source: https://github.com/datalens-tech/datalens
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.datalens.url}}" }
+  ADMIN_PASSWORD: { generate: password }
+  POSTGRES_PASSWORD: { generate: password }
+  US_MASTER_TOKEN: { generate: hex }
+  AUTH_MASTER_TOKEN: { generate: hex }
+  EXPORT_DATA_VERIFICATION_KEY: { generate: hex }
+  CONTROL_API_CRYPTO_KEY: { generate: base64 }
+domains:
+  - { service: datalens, port: 8080 }

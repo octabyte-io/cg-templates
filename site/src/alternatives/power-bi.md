@@ -9,17 +9,24 @@ apps:
   dataease:
     fit: "Builds dashboards and full-screen data screens by drag and drop from databases, Excel or CSV files or an API, with no SQL needed, and shares them by public link with an optional password and expiry. The free edition has one admin account, with no per-person logins, row-level permissions or scheduled reports, which are in its paid edition, and it has nothing like Power Query and DAX. Much of its documentation is in Chinese."
     import: no
+  datalens:
+    fit: "Builds charts and interactive dashboards by drag and drop from datasets you define once with calculated fields, on PostgreSQL, ClickHouse, MySQL, SQL Server, Oracle and other SQL databases, and shares them with any number of viewers at no licence cost. It reads no Excel files, has nothing as deep as Power Query and DAX, no alerts or scheduled reports and no desktop app."
+    import: no
 moving: |
   Power BI reports cannot be imported, so plan to rebuild the ones people use most. First put the data your reports use into a SQL database Superset can read, such as PostgreSQL, which Cloudgate's setup reads as installed (other databases and warehouses need their driver added first), and move the transformations you did in Power Query into database views or Superset datasets. Then add the datasets, define shared metrics, rebuild the key charts and arrange them into dashboards with filters. Set up roles, and row-level security where people should see only their own figures, before sharing.
 
   With Redash, connect your database, or a Google Sheet as a data source, write the queries behind your key reports, and build dashboards from their charts. Use groups so each team can query only the data sources it should, and set alerts on the numbers people check every day.
 
   For DataEase, sign in as admin, switch the language to English in the account menu, and add your databases, or upload the Excel files your Power BI reports used. Turn the tables into datasets, adding joins and calculated fields where Power Query did the work, then rebuild each report by dragging charts onto a dashboard and share it by public link.
+
+  For DataLens, put the data your reports use into a database it reads, such as PostgreSQL, ClickHouse or SQL Server, then sign in as admin and connect it. Build a dataset for each source, with calculated fields where DAX measures did the work, rebuild the charts in its wizard and arrange them into dashboards with selectors. New colleagues start as viewers, so make the people who build reports editors.
 faq:
   - q: "Should I choose Apache Superset or Redash?"
     a: "Choose Superset for more chart types, cross-filters and row-level security. Choose Redash for quick SQL-to-dashboard work with alerts, or if some of your data sits in Google Sheets, Excel or CSV files, which Redash can query directly."
   - q: "Should I choose Apache Superset or DataEase?"
     a: "Choose Apache Superset if each person needs their own login and permissions, and someone on your team knows SQL. Choose DataEase if one person builds dashboards from databases or Excel files by drag and drop and shares them by link."
+  - q: "Should I choose Apache Superset or DataLens?"
+    a: "Choose Apache Superset for more chart types, a full SQL editor and row-level security. Choose DataLens if people should build charts by drag and drop from shared datasets with calculated fields, or your data is in ClickHouse, Greenplum or YDB."
   - q: "Can Apache Superset open Power BI files?"
     a: "No. Superset cannot import .pbix files. You rebuild the dashboards on data in a SQL database."
   - q: "Can Superset read Excel files?"
