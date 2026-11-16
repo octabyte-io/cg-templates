@@ -1,7 +1,13 @@
 name: Bluesky PDS
 description: "Self-hosted Bluesky PDS: keep your Bluesky accounts, posts and images on your own server and keep using the Bluesky app, with your own domain as handle."
 version: "0.4.5051"
-tags: [bluesky, atproto, personal data server, self-hosted social media, decentralized social network]
+tags:
+  - bluesky pds
+  - self-host bluesky
+  - bluesky personal data server
+  - atproto pds
+  - bluesky custom domain handle
+  - decentralized social network
 links:
   website: https://atproto.com
   docs: https://github.com/bluesky-social/pds#readme

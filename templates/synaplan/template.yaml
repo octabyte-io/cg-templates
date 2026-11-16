@@ -1,7 +1,14 @@
 name: Synaplan
 description: "Synaplan is a self-hosted AI assistant on your own files that answers in team chat, on your website, WhatsApp and email, and shows what each answer costs."
 version: "5.8.2"
-tags: [self-hosted ai chat, ai knowledge base, chat with your documents, chatgpt alternative, open source ai platform]
+tags:
+  - chatgpt alternative
+  - chatbase alternative
+  - ai chatbot for website
+  - ai assistant for whatsapp
+  - chat with your documents
+  - open source ai platform
+  - self-hosted ai chat
 links:
   website: https://www.synaplan.com
   docs: https://docs.synaplan.com

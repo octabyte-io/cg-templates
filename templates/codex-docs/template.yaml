@@ -1,7 +1,14 @@
 name: CodeX Docs
 description: "CodeX Docs is a self-hosted docs app: write product docs, team guides and handbooks in a block editor and publish them as a clean, nested docs site."
 version: "2.3.3"
-tags: [documentation, knowledge base, team wiki, editor.js, gitbook alternative]
+tags:
+  - gitbook alternative
+  - self-hosted documentation
+  - documentation site
+  - editor.js
+  - team handbook
+  - knowledge base
+  - notion alternative
 links:
   website: https://docs.codex.so
   docs: https://docs.codex.so/getting-started

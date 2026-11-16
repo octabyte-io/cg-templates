@@ -1,7 +1,13 @@
 name: FileGator
 description: "FileGator is a self-hosted web file manager: your team uploads, zips and downloads files in the browser, each person with their own folder and permissions."
 version: "7.16.9"
-tags: [web file manager, file sharing, file upload, file browser, multi-user file manager]
+tags:
+  - web file manager
+  - file sharing
+  - team folders
+  - google drive alternative
+  - dropbox alternative
+  - file upload
 links:
   website: https://filegator.io
   docs: https://docs.filegator.io

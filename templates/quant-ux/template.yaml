@@ -1,7 +1,13 @@
 name: Quant-UX
 description: "Self-hosted Quant-UX builds clickable prototypes, tests them with real users by link and shows heatmaps and task results, like Maze."
 version: "3.0.1"
-tags: [prototyping, usability testing, ui design, wireframes, figma alternative]
+tags:
+  - maze alternative
+  - usability testing
+  - prototyping
+  - click heatmaps
+  - user testing
+  - figma alternative
 links:
   website: https://www.quant-ux.com
   docs: https://github.com/KlausSchaefers/quant-ux#readme

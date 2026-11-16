@@ -1,7 +1,14 @@
 name: rotki
 description: "Self-hosted rotki is a private crypto portfolio tracker that reads your exchanges and wallets and runs profit and loss reports, encrypted on your server."
 version: "v1.44.3"
-tags: [crypto portfolio tracker, crypto tax software, koinly alternative, coinledger alternative, defi tracker, self-hosted portfolio tracker]
+tags:
+  - koinly alternative
+  - cointracker alternative
+  - cointracking alternative
+  - crypto portfolio tracker
+  - crypto tax software
+  - self-hosted portfolio tracker
+  - crypto profit and loss
 links:
   website: https://rotki.com
   docs: https://docs.rotki.com

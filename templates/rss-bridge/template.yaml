@@ -1,7 +1,14 @@
 name: RSS-Bridge
 description: "Self-hosted RSS-Bridge makes RSS feeds for websites, YouTube channels and social accounts that have none, ready for any feed reader."
 version: "2026-09-30"
-tags: [rss feed generator, rss for any website, atom feeds, social media to rss, feed reader]
+tags:
+  - rss feed generator
+  - rss for any website
+  - rss.app alternative
+  - fetchrss alternative
+  - youtube rss feed
+  - social media to rss
+  - telegram channel rss
 links:
   website: https://rss-bridge.org
   docs: https://rss-bridge.github.io/rss-bridge/
