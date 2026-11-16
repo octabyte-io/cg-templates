@@ -25,8 +25,9 @@ services:
       test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:3000/healthz"]
       interval: 10s
       timeout: 5s
-      retries: 30
-      start_period: 3m
+      retries: 60
+      # First start runs several hundred DB migrations; slow runners need the room.
+      start_period: 12m
     depends_on:
       sharkey-db:
         condition: service_healthy
