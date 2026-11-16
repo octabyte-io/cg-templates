@@ -1,0 +1,24 @@
+# rotki should not face the internet on its own, so this small proxy asks for a
+# username and password before anyone reaches it. Cloudgate's own proxy in
+# front handles the domain and TLS. BASIC_AUTH_HASH is the bcrypt hash of
+# ADMIN_PASSWORD, made when the container starts (see docker-compose.yml).
+{
+	admin off
+	servers {
+		# Keep the X-Forwarded-Proto: https that Cloudgate's proxy sends, so
+		# rotki marks its session cookie Secure.
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	basic_auth {
+		admin {$BASIC_AUTH_HASH}
+	}
+
+	# Caddy passes the original Host header on, which rotki checks against the
+	# browser's Origin before it saves anything. Live updates use a WebSocket.
+	reverse_proxy rotki:80 {
+		flush_interval -1
+	}
+}

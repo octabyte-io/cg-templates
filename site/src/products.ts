@@ -1423,7 +1423,7 @@ export const PRODUCTS: Product[] = [
     id: 'rss-app',
     name: 'RSS.app',
     job: 'making RSS feeds from websites',
-    lede: 'RSSHub is the free, open-source RSS.app alternative we recommend: it turns websites, social accounts and apps that offer no feed into RSS, Atom or JSON feeds for any feed reader, with no limit on feeds. RSS.app prices its plans by the number of feeds; self-hosted RSSHub has no plans at all, though it works only for sites someone has written a route for and has no point-and-click builder.',
+    lede: 'RSSHub is the free, open-source RSS.app alternative we recommend: it turns websites, social accounts and apps that offer no feed into RSS, Atom or JSON feeds for any feed reader, with no limit on feeds. RSS.app prices its plans by the number of feeds; self-hosted RSSHub has no plans at all, though it works only for sites someone has written a route for and has no point-and-click builder. RSS-Bridge is the other choice when a page has no RSSHub route: its generic bridge makes a feed from the parts of a page you name.',
     pick: 'rsshub',
   },
   {
@@ -3922,6 +3922,49 @@ export const PRODUCTS: Product[] = [
     job: 'cataloguing your collection',
     lede: 'Koillection is a free, open-source CLZ alternative for cataloguing a collection of any kind, from books and records to cards and figures, with photos, your own fields, wishlists and loans. CLZ sells a separate subscription app for each type of collection, with barcode scanning and automatic details; self-hosted Koillection is one free app for everything, but you type the details in yourself.',
     pick: 'koillection',
+  },
+  {
+    id: 'fetchrss',
+    name: 'FetchRSS',
+    job: 'making RSS feeds for sites that have none',
+    lede: 'RSS-Bridge is a free, open-source FetchRSS alternative for turning web pages, YouTube channels and social accounts without a feed into RSS, with hundreds of ready-made bridges and a generic one for any page. FetchRSS limits its free plan to 5 feeds updated once a day and charges a monthly fee for more; self-hosted RSS-Bridge has no feed limit, though you name the parts of a page to pick up instead of clicking them.',
+    pick: 'rss-bridge',
+  },
+  {
+    id: 'koinly',
+    name: 'Koinly',
+    job: 'crypto tax reports',
+    lede: 'rotki is a free, open-source Koinly alternative for tracking your crypto across exchanges and wallets and producing profit and loss reports, with your data kept in an encrypted database on your own server. Koinly is a cloud tax service that holds your full transaction history and has more ready-made country tax reports; rotki’s free edition reports on up to 1,000 events and does not file taxes for you.',
+    pick: 'rotki',
+  },
+  {
+    id: 'cointracker',
+    name: 'CoinTracker',
+    job: 'crypto portfolio tracking and tax reports',
+    lede: 'rotki is a free, open-source CoinTracker alternative for following crypto balances across exchanges and blockchain addresses and working out profit and loss, without uploading your history to a cloud service. CoinTracker is a hosted tracker with web and phone apps; rotki keeps everything in an encrypted database on your server, has no phone app, and its free edition covers up to 1,000 events.',
+    pick: 'rotki',
+  },
+  {
+    id: 'cointracking',
+    name: 'CoinTracking',
+    job: 'crypto portfolio tracking and tax reports',
+    lede: 'rotki is a free, open-source CoinTracking alternative for tracking crypto balances and trades and producing profit and loss reports, with your data in an encrypted database on your own server. CoinTracking is a long-running hosted platform with a very wide range of reports; rotki focuses on core accounting, can import CoinTracking’s trade CSV, and its free edition covers up to 1,000 events.',
+    pick: 'rotki',
+  },
+  {
+    id: 'maze',
+    name: 'Maze',
+    icon: 'maze',
+    job: 'testing prototypes with users',
+    lede: 'Quant-UX is a free, open-source Maze alternative for testing app and website prototypes with real people: share a link, and it records each session and shows heatmaps, user journeys, task success and drop-off. Maze is a paid hosted service that tests prototypes made in tools such as Figma and can recruit testers for you; self-hosted Quant-UX has its own prototype editor and keeps results on your server, but you find the testers yourself.',
+    pick: 'quant-ux',
+  },
+  {
+    id: 'axure',
+    name: 'Axure RP',
+    job: 'interactive prototyping',
+    lede: 'Quant-UX is a free, open-source Axure RP alternative for building interactive prototypes with logic, data and form validation in the browser, then testing them with real people and reading the heatmaps. Axure RP is a paid app built for logic-heavy prototypes with conditions and variables; self-hosted Quant-UX has no licence fee, runs in the browser with user testing built in, and imports no Axure files.',
+    pick: 'quant-ux',
   },
 ];
 

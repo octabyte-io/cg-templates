@@ -1,0 +1,32 @@
+<?php
+
+// Runs once before FileGator starts. FileGator's own first start copies
+// users.json.blank, whose admin password is the public "admin123". Instead,
+// this writes users.json from that file with the admin password Cloudgate
+// generated (FILEGATOR_ADMIN_PASSWORD). It does nothing once users.json
+// exists, so a password changed in the app is kept.
+
+$dir = '/var/www/filegator/private';
+$file = $dir . '/users.json';
+
+if (file_exists($file)) {
+    echo "users.json exists, leaving it as it is\n";
+    exit(0);
+}
+
+$password = getenv('FILEGATOR_ADMIN_PASSWORD');
+if (! $password) {
+    fwrite(STDERR, "FILEGATOR_ADMIN_PASSWORD is empty\n");
+    exit(1);
+}
+
+$users = json_decode(file_get_contents($dir . '/users.json.blank'), true);
+foreach ($users as &$user) {
+    if ($user['username'] === 'admin') {
+        $user['password'] = password_hash($password, PASSWORD_BCRYPT);
+    }
+}
+unset($user);
+
+file_put_contents($file, json_encode($users), LOCK_EX);
+echo "users.json created with the generated admin password\n";

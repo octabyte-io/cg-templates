@@ -1,0 +1,15 @@
+# Steedos ships as one all-in-one image: the app, MongoDB (as a replica set),
+# Redis, Node-RED and nginx run inside it under supervisord. This follows the
+# official quick start (docs.steedos.com, "5分钟快速上手 (Docker)") and keeps
+# everything, including the database, in one named volume.
+services:
+  steedos:
+    image: steedos/steedos-community:3.0.14
+    restart: unless-stopped
+    environment:
+      ROOT_URL: ${ROOT_URL}
+    volumes:
+      - steedos-storage:/steedos-storage
+
+volumes:
+  steedos-storage:
