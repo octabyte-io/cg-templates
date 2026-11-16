@@ -358,6 +358,13 @@ export const PRODUCTS: Product[] = [
     pick: 'nextcloud',
   },
   {
+    id: 'total-commander',
+    name: 'Total Commander',
+    job: 'two-panel file management',
+    lede: 'Cloud Commander is a free, open-source Total Commander alternative for files kept on a server: the same two panels and function-key shortcuts, F5 to copy and F6 to move, in any web browser. Total Commander is Windows software you buy after a 30-day trial; Cloud Commander has no licence fee, but it manages the files stored on your server, not the files on your own PC.',
+    pick: 'cloud-commander',
+  },
+  {
     id: 'dropbox',
     name: 'Dropbox',
     icon: 'dropbox',
@@ -938,6 +945,13 @@ export const PRODUCTS: Product[] = [
     job: 'short, branded links',
     lede: 'Kutt is a free, open-source Bitly alternative for short links on your own domain, with click stats and a QR code for each link. Bitly’s free plan allows only a few links a month and no custom domain; self-hosted Kutt has no link or domain limits, though its analytics are simpler.',
     pick: 'kutt',
+  },
+  {
+    id: 'golinks',
+    name: 'GoLinks',
+    job: 'team go links',
+    lede: 'Slash is a free, open-source GoLinks alternative for go links: your team gives the links it uses every day short names such as s/handbook, with tags, collections, visit counts and a browser extension, on your own server. GoLinks charges per user each month for collections, tags and private links; Slash includes them for free, though its free edition stops at 5 accounts and 5 shared collections, and its links start with s/ rather than go/.',
+    pick: 'slash',
   },
   {
     id: 'rebrandly',

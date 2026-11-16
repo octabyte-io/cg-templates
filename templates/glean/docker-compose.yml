@@ -1,0 +1,108 @@
+# Based on Glean's official docker-compose.lite.yml (tag v0.2.7): the web app, the admin
+# dashboard, the API and its worker (one image), PostgreSQL and Redis.
+# The full docker-compose.yml adds Milvus for the "Phase 3" smart recommendations, but its
+# object store image (minio/minio:RELEASE.2023-03-20T20-16-18Z) is no longer published, so
+# this template uses the lite setup the makers document for deployments without Milvus.
+# The web and admin images are nginx and proxy /api to "backend:8000", hence the alias.
+
+x-glean-env: &glean-env
+  DATABASE_URL: postgresql+asyncpg://glean:${POSTGRES_PASSWORD}@glean-db:5432/glean
+  REDIS_URL: redis://glean-redis:6379/0
+  SECRET_KEY: ${SECRET_KEY}
+  LOG_LEVEL: INFO
+
+services:
+  # The reader (nginx serving the web app and proxying /api to the backend).
+  glean:
+    image: ghcr.io/leslieleung/glean-web:0.2.7
+    restart: unless-stopped
+    depends_on:
+      glean-backend:
+        condition: service_healthy
+
+  # The admin dashboard (nginx serving the admin app and proxying /api to the backend).
+  glean-admin:
+    image: ghcr.io/leslieleung/glean-admin:0.2.7
+    restart: unless-stopped
+    depends_on:
+      glean-backend:
+        condition: service_healthy
+
+  # The API. It runs the database migrations and creates the admin account on start.
+  glean-backend:
+    image: ghcr.io/leslieleung/glean-backend:0.2.7
+    restart: unless-stopped
+    command: ["uv", "run", "--no-sync", "uvicorn", "glean_api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    depends_on:
+      glean-db:
+        condition: service_healthy
+      glean-redis:
+        condition: service_healthy
+    environment:
+      <<: *glean-env
+      DEBUG: "false"
+      RUN_MIGRATIONS: "true"
+      # Creates the admin dashboard account on the first start (skipped once it exists).
+      CREATE_ADMIN: "true"
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_ROLE: super_admin
+      LOG_FILE: /app/logs/glean-api.log
+    volumes:
+      - glean-logs:/app/logs
+    networks:
+      default:
+        aliases:
+          - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # Fetches feeds in the background (every 15 minutes) and runs clean-up jobs.
+  glean-worker:
+    image: ghcr.io/leslieleung/glean-backend:0.2.7
+    restart: unless-stopped
+    command: ["uv", "run", "--no-sync", "arq", "glean_worker.main.WorkerSettings"]
+    depends_on:
+      glean-backend:
+        condition: service_healthy
+    environment:
+      <<: *glean-env
+      LOG_FILE: /app/logs/glean-worker.log
+    volumes:
+      - glean-logs:/app/logs
+
+  glean-db:
+    image: postgres:16.16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: glean
+      POSTGRES_USER: glean
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - glean-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U glean -d glean"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  glean-redis:
+    image: redis:8.2.3-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - glean-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  glean-logs:
+  glean-db-data:
+  glean-redis-data:

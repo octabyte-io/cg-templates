@@ -1,0 +1,42 @@
+services:
+  # Cloud Commander serving only the files in its own volume (/files), behind a
+  # username and password. Its web console and terminal give a shell on the
+  # server, so both are switched off, and so is the settings dialog (F10),
+  # which could otherwise switch them, or the password, back on.
+  cloudcmd:
+    image: coderaiser/cloudcmd:19.23.2-alpine
+    restart: unless-stopped
+    command:
+      - --no-console
+      - --no-terminal
+      - --no-config-dialog
+      - --no-config-auth
+      - --no-config-port
+      - --no-open
+      - --root=/files
+    environment:
+      # The same settings as environment variables. They win over the image's
+      # own defaults (it turns the terminal on) and over any saved config file.
+      CLOUDCMD_CONSOLE: "false"
+      CLOUDCMD_TERMINAL: "false"
+      CLOUDCMD_CONFIG_DIALOG: "false"
+      CLOUDCMD_CONFIG_AUTH: "false"
+      CLOUDCMD_ROOT: /files
+      CLOUDCMD_VIM: "false"
+      # Sign-in: user "admin" with the generated password.
+      CLOUDCMD_AUTH: "true"
+      CLOUDCMD_USERNAME: admin
+      CLOUDCMD_PASSWORD: ${CLOUDCMD_PASSWORD}
+    volumes:
+      # The files people upload, edit and organise.
+      - cloud-commander-files:/files
+    healthcheck:
+      # Any HTTP answer counts: every page asks for the password (401).
+      test: ["CMD", "curl", "-s", "-o", "/dev/null", "http://127.0.0.1:8000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  cloud-commander-files:
