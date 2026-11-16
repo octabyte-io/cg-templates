@@ -17,10 +17,10 @@ moving: |
 
   With Enclosed, open your address, type the note, attach files if needed, pick an expiry and whether it should be deleted after reading, and send the link; for anything sensitive, add a password and send it another way, such as by phone. With Onetime Secret, paste the text, add a passphrase if you like, choose how long the link lasts, and keep the receipt link so you can see when it has been read. Anyone who can reach either address can create notes; Enclosed can require sign-in to create them, and Onetime Secret limits how many each visitor can make.
 
-  cryptgeon needs no setup or sign-in either: open your address, type the note or drop in files, choose views or minutes, and send the link. Notes up to 4 MB fit by default on Cloudgate. Anyone who can reach the address can create notes, and unread notes are lost when the app restarts, so send each link shortly before the reader needs it.
+  cryptgeon needs no setup or sign-in either: open your address, type the note or drop in files, choose views or minutes, and send the link. Notes and files up to about 3 MB in total fit as Cloudgate sets it up. Anyone who can reach the address can create notes, and unread notes are lost when the app restarts, so send each link shortly before the reader needs it.
 faq:
   - q: "Can I see whether my link was opened?"
-    a: "Yes, with Password Pusher or Onetime Secret. In Password Pusher, when you are signed in, each link has an audit log that lists every view with its time, IP address and browser, plus any failed attempts. Onetime Secret gives you a receipt link that shows whether the secret has been read. Enclosed has no read receipt."
+    a: "Yes, with Password Pusher or Onetime Secret. In Password Pusher, when you are signed in, each link has an audit log that lists every view with its time, IP address and browser, plus any failed attempts. Onetime Secret gives you a receipt link that shows whether the secret has been read. Enclosed and cryptgeon have no read receipt."
   - q: "Can Password Pusher send files as well as passwords?"
     a: "Yes. The free edition sends passwords, text, files, web addresses and QR codes, each through a link that expires after a set number of views or days."
   - q: "Is the secret encrypted?"

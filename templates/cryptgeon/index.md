@@ -36,9 +36,9 @@ switching:
     - Anyone who can reach your address can create notes; there is no sign-in
 faq:
   - q: Is cryptgeon free?
-    a: Yes. Cryptgeon is free, open-source software under the MIT licence, with no paid edition and no limit on notes, so you pay only for your server.
+    a: Yes. cryptgeon is free, open-source software under the MIT licence, with no paid edition and no limit on notes, so you pay only for your server.
   - q: Is cryptgeon a good alternative to Privnote?
-    a: Yes. Cryptgeon was inspired by Privnote and works the same way, a note behind a link that destroys itself, but it runs on your own web address, encrypts the note in your browser, can send files and lets a note last for several views or a number of minutes.
+    a: Yes. cryptgeon was inspired by Privnote and works the same way, a note behind a link that destroys itself, but it runs on your own web address, encrypts the note in your browser, can send files and lets a note last for several views or a number of minutes.
   - q: Can the cryptgeon server read my notes?
     a: No. The note is encrypted in the sender's browser, and the key sits in the part of the link after the "#", which browsers never send to the server. Anyone with the whole link can open it, so for anything sensitive set your own password and send it another way.
   - q: How long does a cryptgeon note last?
@@ -48,19 +48,19 @@ faq:
   - q: Can I send files with cryptgeon?
     a: Yes. You can send one or several files in a note, up to about 3 MB in total as Cloudgate sets it up, which suits key files, scans and short documents rather than large transfers.
   - q: What size server does cryptgeon need?
-    a: The smallest one. Cryptgeon is a very light app plus a small in-memory store, so it runs on the smallest server Cloudgate offers.
+    a: The smallest one. cryptgeon is a very light app plus a small in-memory store, so it runs on the smallest server Cloudgate offers.
 screenshots:
   - src: screenshots/new-note.webp
-    alt: "Cryptgeon's new note form holding a dental practice's staff Wi-Fi password, a booking system link and a receptionist login, with advanced switched on, views set to 2, a greyed-out minutes field, an empty custom password field and a create button showing max 2.96 MiB"
+    alt: "The cryptgeon new note form holding a dental practice's staff Wi-Fi password, a booking system link and a receptionist login, with advanced switched on, views set to 2, a greyed-out minutes field, an empty custom password field and a create button showing max 2.96 MiB"
     caption: "Write the note and choose how many views it allows before it is destroyed."
   - src: screenshots/share-link.webp
-    alt: "Cryptgeon after creating a note: a share link at secrets.example.com with a copy button, a QR code of the link, a notice that notes are kept in memory and the oldest are removed if it fills up, and a new note button"
+    alt: "cryptgeon after creating a note: a share link at secrets.example.com with a copy button, a QR code of the link, a notice that notes are kept in memory and the oldest are removed if it fills up, and a new note button"
     caption: "Copy the link or let someone scan the QR code."
   - src: screenshots/opened-note.webp
     alt: "The recipient's view of a cryptgeon note: a red warning that the note cannot be seen again, the decrypted Wi-Fi and booking system login, a copy to clipboard button and a list of links found inside the note"
     caption: "The recipient reads the note once, with any web addresses listed underneath."
   - src: screenshots/send-files.webp
-    alt: "Cryptgeon in file mode with access-codes.txt and supplier-contract.pdf selected, set to expire after 120 minutes, with custom password switched on and a hidden password typed in"
+    alt: "cryptgeon in file mode with access-codes.txt and supplier-contract.pdf selected, set to expire after 120 minutes, with custom password switched on and a hidden password typed in"
     caption: "Send several files at once on a timer, locked with your own password."
 ---
 
@@ -68,6 +68,6 @@ Self-hosted cryptgeon is a free, open-source way to send passwords, notes and fi
 
 You write a note or pick a few files and press create. By default the note opens once; you can allow up to 100 views, or let it run on a timer of up to six hours instead. A dental practice, for example, can give a locum dentist the booking system login as a note that opens twice, once on the phone and once at the reception desk, and know it is gone after that.
 
-Nobody needs an account, and the recipient only needs the link. The interface comes in 11 languages with a light and a dark theme, and works in any browser, phones included. Technical staff can send notes from a command-line tool or a Raycast extension. Cryptgeon hands secrets over; it does not keep them, and unread notes are lost if the server restarts.
+Nobody needs an account, and the recipient only needs the link. The interface comes in 11 languages with a light and a dark theme, and works in any browser, phones included. Technical staff can send notes from a command-line tool or a Raycast extension. cryptgeon hands secrets over; it does not keep them, and unread notes are lost if the server restarts.
 
 Cloudgate installs cryptgeon on a server Cloudgate provides or one you connect and gives it the secure web address its encryption needs.
