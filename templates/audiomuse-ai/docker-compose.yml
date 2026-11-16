@@ -1,0 +1,75 @@
+# From the project's deployment/docker-compose.yaml (v3.7.1): a web app, a
+# queue worker that runs the analysis and clustering, and PostgreSQL 15 (the
+# version the project says to use). The music server (Jellyfin, Navidrome,
+# Emby, Plex, Lyrion or LMS) is connected afterwards in the app's Setup Wizard.
+services:
+  audiomuse-ai-flask:
+    image: ghcr.io/neptunehub/audiomuse-ai:3.7.1
+    restart: unless-stopped
+    depends_on:
+      audiomuse-ai-db:
+        condition: service_healthy
+    environment:
+      SERVICE_TYPE: flask
+      TZ: ${TIMEZONE:-Etc/UTC}
+      POSTGRES_USER: audiomuse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: audiomusedb
+      POSTGRES_HOST: audiomuse-ai-db
+      POSTGRES_PORT: "5432"
+      TEMP_DIR: /app/temp_audio
+      # Seeds the first admin account on the first start, so the app is never
+      # open to whoever reaches its address first.
+      AUDIOMUSE_USER: ${ADMIN_USER}
+      AUDIOMUSE_PASSWORD: ${ADMIN_PASSWORD}
+      # Keeps sign-ins valid across restarts.
+      JWT_SECRET: ${JWT_SECRET}
+      # Used by the AudioMuse-AI plugins for Jellyfin and Navidrome.
+      API_TOKEN: ${API_TOKEN}
+    volumes:
+      - audiomuse-temp-flask:/app/temp_audio
+      - audiomuse-plugins-flask:/app/plugin/installed
+
+  audiomuse-ai-worker:
+    image: ghcr.io/neptunehub/audiomuse-ai:3.7.1
+    restart: unless-stopped
+    depends_on:
+      audiomuse-ai-db:
+        condition: service_healthy
+    environment:
+      SERVICE_TYPE: worker
+      TZ: ${TIMEZONE:-Etc/UTC}
+      POSTGRES_USER: audiomuse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: audiomusedb
+      POSTGRES_HOST: audiomuse-ai-db
+      POSTGRES_PORT: "5432"
+      TEMP_DIR: /app/temp_audio
+      JWT_SECRET: ${JWT_SECRET}
+      API_TOKEN: ${API_TOKEN}
+    volumes:
+      - audiomuse-temp-worker:/app/temp_audio
+      - audiomuse-plugins-worker:/app/plugin/installed
+
+  audiomuse-ai-db:
+    image: postgres:15.20-alpine
+    restart: unless-stopped
+    environment:
+      TZ: ${TIMEZONE:-Etc/UTC}
+      POSTGRES_USER: audiomuse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: audiomusedb
+    volumes:
+      - audiomuse-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U audiomuse -d audiomusedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  audiomuse-db-data:
+  audiomuse-temp-flask:
+  audiomuse-temp-worker:
+  audiomuse-plugins-flask:
+  audiomuse-plugins-worker:

@@ -1,0 +1,24 @@
+name: Ever Traduora
+description: "Self-hosted Ever Traduora: a simple, open-source place for your team to translate an app's text, with file import, export and an API."
+version: "0.23.0"
+tags: [translation management, localization, lokalise alternative, crowdin alternative, open source translation tool, i18n]
+links:
+  website: https://traduora.co
+  docs: https://docs.traduora.co
+  source: https://github.com/ever-co/ever-traduora
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.traduora.url}}" }
+  TR_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: traduora, port: 8080 }

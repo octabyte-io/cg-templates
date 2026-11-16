@@ -1,0 +1,30 @@
+name: AudioMuse-AI
+description: "Self-hosted AudioMuse-AI analyses how your songs sound and builds playlists for Navidrome, Jellyfin, Emby, Plex or Lyrion."
+version: "3.7.1"
+tags: [spotify alternative, smart playlists, music recommendations, navidrome, jellyfin music, sonic analysis, music discovery]
+links:
+  website: https://neptunehub.github.io/AudioMuse-AI/
+  docs: https://github.com/NeptuneHub/AudioMuse-AI/tree/main/docs
+  source: https://github.com/NeptuneHub/AudioMuse-AI
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_USER:
+    ask:
+      label: Admin username
+      description: The name you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      default: admin
+      pattern: "[a-z][a-z0-9_-]{2,31}"
+  ADMIN_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  API_TOKEN: { generate: hex }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for scheduled tasks and logs, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: audiomuse-ai-flask, port: 8000 }
