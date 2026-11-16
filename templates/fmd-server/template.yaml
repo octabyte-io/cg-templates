@@ -1,0 +1,17 @@
+name: FMD Server
+description: "FMD Server is a self-hosted Find My Device server for Android: see a lost phone on a map, make it ring, lock it or wipe it with the free FMD app."
+version: "0.17.1"
+tags: [find my device, google find my device alternative, find hub alternative, lost phone tracker, find my phone without google, android anti theft]
+links:
+  website: https://fmd-foss.org
+  docs: https://fmd-foss.org/docs/fmd-server/installation/overview
+  source: https://gitlab.com/fmd-foss/fmd-server
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # Phones must give this token when they first connect to the server, so
+  # strangers can't open accounts on it. It is shown on the app's variables page.
+  REGISTRATION_TOKEN: { generate: password }
+domains:
+  - { service: fmd-server, port: 8080 }

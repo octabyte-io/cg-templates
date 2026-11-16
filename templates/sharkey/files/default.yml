@@ -1,0 +1,38 @@
+# Sharkey's configuration, from .config/docker_example.yml (TransFem-org/Sharkey,
+# tag 2025.4.7). The web address, the database login and the setup password
+# come from the environment set in docker-compose.yml (MISSKEY_URL,
+# DATABASE_USER, DATABASE_PASSWORD, MK_CONFIG_SETUPPASSWORD).
+
+# Asked for before the first visitor can create the admin account (also set as
+# MK_CONFIG_SETUPPASSWORD, which Sharkey reads over this file).
+setupPassword: "{{SETUP_PASSWORD}}"
+
+port: 3000
+
+db:
+  host: sharkey-db
+  port: 5432
+  db: sharkey
+
+dbReplications: false
+
+redis:
+  host: sharkey-redis
+  port: 6379
+
+fulltextSearch:
+  provider: sqlLike
+
+id: 'aidx'
+
+proxyBypassHosts:
+  - api.deepl.com
+  - api-free.deepl.com
+  - www.recaptcha.net
+  - hcaptcha.com
+  - challenges.cloudflare.com
+
+proxyRemoteFiles: true
+signToActivityPubGet: true
+attachLdSignatureForRelays: true
+websocketCompression: false

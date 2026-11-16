@@ -1,0 +1,52 @@
+name: tela
+description: "tela is a self-hosted Markdown team wiki, an open-source Confluence alternative that AI assistants like Claude and ChatGPT can read and write."
+version: "0.11.3"
+tags: [team wiki, confluence alternative, notion alternative, markdown wiki, knowledge base, wiki for ai assistants, mcp server]
+links:
+  website: https://telawiki.com
+  docs: https://telawiki.com/tela/docs
+  source: https://github.com/zcag/tela
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  TELA_PUBLIC_BASE_URL: { value: "{{domains.proxy.url}}" }
+  TELA_SHARE_SECRET: { generate: hex }
+  TELA_API_KEY_SECRET: { generate: hex }
+  TELA_PG_PASSWORD: { generate: password }
+  TELA_ADMIN_PASSWORD: { generate: password }
+  TELA_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: Your email address. You sign in to tela as "admin" with the generated admin password, and password resets go here.
+      format: email
+  TELA_SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Lets tela send sign-up confirmations, invitations and password resets, for example smtp.resend.com. Leave empty to run without email.
+      required: false
+  TELA_SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      format: number
+      required: false
+  TELA_SMTP_USERNAME:
+    ask:
+      label: Email server username
+      required: false
+  TELA_SMTP_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  TELA_SMTP_FROM:
+    ask:
+      label: Sender email
+      description: The address emails are sent from, such as wiki@yourdomain.com.
+      format: email
+      required: false
+domains:
+  # tela's own Caddy edge: /api, /ws and /dav go to the backend, the rest to the web app.
+  - { service: proxy, port: 80 }

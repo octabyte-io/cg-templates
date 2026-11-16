@@ -1,0 +1,66 @@
+# Based on Sharkey's official compose_example.yml and .config/docker_example.yml
+# (TransFem-org/Sharkey, tag 2025.4.7), using the published image instead of a
+# local build, without the published port. Plain PostgreSQL 17 instead of the
+# example's PGroonga 17 image: the config keeps the example's sqlLike search,
+# which doesn't use PGroonga.
+services:
+  sharkey:
+    image: registry.activitypub.software/transfem-org/sharkey:2025.4.7
+    restart: unless-stopped
+    # The image's default: run database migrations, then start the server.
+    environment:
+      MISSKEY_URL: ${SHARKEY_URL}
+      DATABASE_USER: sharkey
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      # Sharkey reads MK_CONFIG_* variables over default.yml; this is the
+      # password asked for before the admin account can be created.
+      MK_CONFIG_SETUPPASSWORD: ${SETUP_PASSWORD}
+    volumes:
+      # The image owns /sharkey/files for its user (uid 991), so a new named
+      # volume starts with the right owner.
+      - sharkey-files:/sharkey/files
+      - ../files/default.yml:/sharkey/.config/default.yml:ro
+    healthcheck:
+      # Alpine image: busybox wget, no curl. Use 127.0.0.1: Sharkey listens on IPv4 only and "localhost" can resolve to ::1.
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1:3000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+      # First start runs several hundred DB migrations; slow runners need the room.
+      start_period: 12m
+    depends_on:
+      sharkey-db:
+        condition: service_healthy
+      sharkey-redis:
+        condition: service_healthy
+
+  sharkey-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sharkey
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: sharkey
+    volumes:
+      - sharkey-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sharkey -d sharkey"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  sharkey-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - sharkey-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sharkey-files:
+  sharkey-db-data:
+  sharkey-redis-data:

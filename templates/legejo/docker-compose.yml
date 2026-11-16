@@ -1,0 +1,27 @@
+services:
+  legejo:
+    image: slurvdjur/legejo:1.48.0
+    restart: unless-stopped
+    environment:
+      # The address people reach Legejo at: Kobo sync, links in mail and
+      # federation need it.
+      LEGEJO_PUBLIC_URL: ${PUBLIC_URL}
+      # The admin account made at the first start (only while there are no users).
+      LEGEJO_ADMIN_USER: admin
+      LEGEJO_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Count failed logins per visitor: the last address in this header is the
+      # one the proxy in front of Legejo added.
+      LEGEJO_CLIENT_IP_HEADER: X-Forwarded-For
+    volumes:
+      # Books, covers and the SQLite database.
+      - legejo-data:/data
+    healthcheck:
+      # The image's own healthcheck command.
+      test: ["CMD", "legejo", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+volumes:
+  legejo-data:

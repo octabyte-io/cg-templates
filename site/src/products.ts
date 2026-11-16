@@ -3946,6 +3946,20 @@ export const PRODUCTS: Product[] = [
     pick: 'koillection',
   },
   {
+    id: 'google-find-my-device',
+    name: 'Google Find My Device',
+    job: 'finding a lost Android phone',
+    lede: 'FMD Server is a free, open-source alternative to Google Find My Device, now called Find Hub: with the FMD app on your Android phone, you can see where it is, make it ring, lock it or wipe it from a web page on your own server. Google’s service comes built in and can find phones that are offline, which FMD can’t; FMD works without Google services and encrypts locations so only you can read them.',
+    pick: 'fmd-server',
+  },
+  {
+    id: 'stammer-ai',
+    name: 'Stammer.ai',
+    job: 'running white-label AI agents for clients',
+    lede: 'OpenLivery is a free, open-source Stammer.ai alternative for agencies: build AI chat agents for each client, put them on WhatsApp and website chat, and give every client a portal under your own brand. Stammer.ai is a hosted service that keeps white-labelling for its paid Pro plan; self-hosted OpenLivery includes it at no cost, though this version has no voice agents and you pay your own AI provider.',
+    pick: 'openlivery',
+  },
+  {
     id: 'fetchrss',
     name: 'FetchRSS',
     job: 'making RSS feeds for sites that have none',

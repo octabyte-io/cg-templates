@@ -1,0 +1,90 @@
+# From tela's official deploy/docker-compose.yml (v0.11.3), using the published
+# GHCR images its Render blueprint uses instead of local builds. The optional
+# AI profiles (ollama, litellm) are left out; AI features stay off until
+# configured. All wiki data lives in Postgres.
+services:
+  proxy:
+    image: ghcr.io/zcag/tela-proxy:0.11.3
+    restart: unless-stopped
+    # TELA_SITE_ADDRESS stays unset so Caddy serves plain :80 behind
+    # Cloudgate's HTTPS (an empty value breaks its config).
+    volumes:
+      - tela-caddy-data:/data
+      - tela-caddy-config:/config
+    depends_on:
+      - backend
+      - frontend
+
+  backend:
+    image: ghcr.io/zcag/tela-backend:0.11.3
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      gotenberg:
+        condition: service_started
+      deck:
+        condition: service_started
+    environment:
+      TELA_PUBLIC_BASE_URL: ${TELA_PUBLIC_BASE_URL}
+      TELA_SHARE_SECRET: ${TELA_SHARE_SECRET}
+      TELA_API_KEY_SECRET: ${TELA_API_KEY_SECRET}
+      TELA_DATABASE_URL: postgres://tela:${TELA_PG_PASSWORD}@postgres:5432/tela?sslmode=disable
+      TELA_GOTENBERG_URL: http://gotenberg:3000
+      TELA_PDF_RENDER_BASE_URL: http://proxy
+      TELA_DECK_URL: http://deck:3344
+      # The admin is created at first boot, so nobody can claim it through
+      # the /setup wizard before the owner does.
+      TELA_ADMIN_USERNAME: admin
+      TELA_ADMIN_PASSWORD: ${TELA_ADMIN_PASSWORD}
+      TELA_ADMIN_EMAIL: ${TELA_ADMIN_EMAIL}
+      # Without email, new sign-ups can't confirm their address, so sign-up
+      # starts closed; the admin can open it in the admin settings.
+      TELA_REGISTRATION_OPEN: "false"
+      TELA_SMTP_HOST: ${TELA_SMTP_HOST}
+      TELA_SMTP_PORT: ${TELA_SMTP_PORT}
+      TELA_SMTP_USERNAME: ${TELA_SMTP_USERNAME}
+      TELA_SMTP_PASSWORD: ${TELA_SMTP_PASSWORD}
+      TELA_SMTP_FROM: ${TELA_SMTP_FROM}
+
+  frontend:
+    image: ghcr.io/zcag/tela-frontend:0.11.3
+    restart: unless-stopped
+
+  deck:
+    image: ghcr.io/zcag/tela-deck:0.11.3
+    restart: unless-stopped
+    volumes:
+      - tela-deckcache:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3344/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  gotenberg:
+    image: gotenberg/gotenberg:8.40.0
+    restart: unless-stopped
+
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tela
+      POSTGRES_PASSWORD: ${TELA_PG_PASSWORD}
+      POSTGRES_DB: tela
+    volumes:
+      - tela-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tela -d tela"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  tela-pgdata:
+  tela-deckcache:
+  tela-caddy-data:
+  tela-caddy-config:

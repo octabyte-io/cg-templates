@@ -1,0 +1,17 @@
+name: Waxum
+description: "Self-hosted Waxum: an open-source WhatsApp API to send and receive messages from your apps by webhook. Unofficial; WhatsApp can ban numbers."
+version: "0.16.2"
+tags: [whatsapp api, whatsapp rest api, whatsapp gateway, whatsapp business api alternative, whatsapp webhook, whatsapp cloud api]
+links:
+  website: https://waxum.imtaqin.id
+  docs: https://waxum.imtaqin.id/docs/api/sessions/
+  source: https://github.com/imtaqin/waxum
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  WAXUM_URL: { value: "{{domains.waxum.url}}" }
+  SUPERADMIN_TOKEN: { generate: hex }
+  JWT_SECRET: { generate: hex }
+domains:
+  - { service: waxum, port: 3451 }

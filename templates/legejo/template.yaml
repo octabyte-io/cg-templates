@@ -1,0 +1,18 @@
+name: Legejo
+description: "Legejo is a self-hosted e-book library: upload your EPUBs, read them in the browser and sync your place and highlights with a Kobo or KOReader."
+version: "1.48.0"
+tags: [self-hosted ebook library, kindle alternative, kobo sync server, koreader sync server, epub reader, opds server]
+links:
+  website: https://legejo.se
+  docs: https://github.com/jularboolean/legejo/blob/main/docs/configuration.md
+  source: https://github.com/jularboolean/legejo
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PUBLIC_URL: { value: "{{domains.legejo.url}}" }
+  # Creates the admin account "admin" on the first start, so nobody else can
+  # claim it by opening the site first. Shown afterwards on the app's variables page.
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: legejo, port: 3000 }

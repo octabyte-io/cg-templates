@@ -1,0 +1,25 @@
+name: Sharkey
+description: "Sharkey is a self-hosted social network and Misskey fork: post notes, react with emoji, use Mastodon apps and import your old posts from X."
+version: "2025.4.7"
+tags: [sharkey, misskey fork, self-hosted social network, fediverse server, twitter alternative, mastodon alternative, sharkey vs misskey]
+links:
+  website: https://joinsharkey.org/
+  docs: https://docs.joinsharkey.org/docs/install/fresh/
+  source: https://activitypub.software/TransFem-org/Sharkey
+cloudgate: 0.1.0
+compose: app
+# Sharkey's Node server, PostgreSQL and Redis. Its docs ask for more than
+# 2 GB of memory and recommend 4 GB for a busy server.
+size: medium
+inputs:
+  # The server's address in every username (@you@this-host). It must not
+  # change once the server has started.
+  SHARKEY_URL: { value: "{{domains.sharkey.url}}" }
+  DB_PASSWORD: { generate: password }
+  # Sharkey asks for this password before the first visitor can create the
+  # admin account (setupPassword); read it on the stack's variables page.
+  SETUP_PASSWORD: { generate: password }
+domains:
+  - { service: sharkey, port: 3000 }
+files:
+  - { path: default.yml }
