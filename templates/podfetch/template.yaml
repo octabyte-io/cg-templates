@@ -1,0 +1,22 @@
+name: PodFetch
+description: "PodFetch is a self-hosted podcast manager that downloads every new episode to your server, plays it in the browser and syncs with AntennaPod."
+version: "5.3.0"
+tags:
+  - self-hosted podcast manager
+  - pocket casts alternative
+  - podcast downloader
+  - podcast server
+  - gpodder sync server
+  - antennapod sync
+links:
+  website: https://github.com/SamTV12345/PodFetch
+  docs: https://samtv12345.github.io/PodFetch/
+  source: https://github.com/SamTV12345/PodFetch
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ADMIN_USERNAME: { value: "admin" }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: podfetch, port: 8000 }

@@ -3537,7 +3537,7 @@ export const PRODUCTS: Product[] = [
     name: 'Pocket Casts',
     icon: 'pocketcasts',
     job: 'listening to podcasts on every device',
-    lede: 'PinePods is a free, open-source Pocket Casts alternative that syncs your podcast subscriptions, queue and listening progress between its web, desktop and phone apps from your own server. Pocket Casts keeps that sync in its own cloud, with the desktop and web apps part of its paid Plus plan; self-hosted PinePods includes every app with no subscription, but has no curated discovery or recommendations.',
+    lede: 'PinePods is a free, open-source Pocket Casts alternative that syncs your podcast subscriptions, queue and listening progress between its web, desktop and phone apps from your own server. Pocket Casts keeps that sync in its own cloud, with extras such as cloud storage for your own files and watch apps in its paid Plus plan; self-hosted PinePods keeps every listener’s podcasts on your server with no subscription, but has no curated discovery or recommendations.',
     pick: 'pinepods',
   },
   {
@@ -3965,6 +3965,14 @@ export const PRODUCTS: Product[] = [
     job: 'interactive prototyping',
     lede: 'Quant-UX is a free, open-source Axure RP alternative for building interactive prototypes with logic, data and form validation in the browser, then testing them with real people and reading the heatmaps. Axure RP is a paid app built for logic-heavy prototypes with conditions and variables; self-hosted Quant-UX has no licence fee, runs in the browser with user testing built in, and imports no Axure files.',
     pick: 'quant-ux',
+  },
+  {
+    id: 'firebase-analytics',
+    name: 'Firebase Analytics',
+    icon: 'firebase',
+    job: 'mobile app analytics',
+    lede: 'Countly Lite is a free, self-hosted Firebase Analytics alternative for phone apps: sessions, users, custom events and screen views, with crash reports, push notifications and remote config in the same app. Firebase Analytics is free but runs on Google’s servers, with crash reporting, messaging and remote config as separate Firebase products; Countly keeps your app data on your own server, though its free edition has no funnels or retention, and it is source-available rather than open source.',
+    pick: 'countly',
   },
 ];
 

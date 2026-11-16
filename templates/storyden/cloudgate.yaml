@@ -1,0 +1,5 @@
+# cloudgate.yaml: the parts Cloudgate creates for this app.
+# Leave this file as it is if the app is described by docker-compose.yml.
+version: 1
+services:
+  app: { kind: compose, managed: console }

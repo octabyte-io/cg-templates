@@ -1,0 +1,73 @@
+# Based on ShopNex's official deploy/docker-compose.yml (v0.15.0): the shop, its Stripe app and PostgreSQL.
+# The optional CJ Dropshipping and Shippo apps are left out.
+services:
+  shopnex:
+    image: ghcr.io/shopnex-ai/shopnex:v0.15.0
+    restart: unless-stopped
+    depends_on:
+      shopnex-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://shopnex:${POSTGRES_PASSWORD}@shopnex-db:5432/shopnex
+      # DOMAIN stays empty: Cloudgate serves HTTPS, so Caddy inside the image listens on plain HTTP on port 3000.
+      DOMAIN: ""
+      APP_URL: ${APP_URL}
+      SHOPNEX_SECRET: ${SHOPNEX_SECRET}
+      TENANCY_MODE: single
+      OPEN_SIGNUP: "false"
+      DEFAULT_SHOP_NAME: ${SHOP_NAME:-My Shop}
+      # Find the bundled apps (here the Stripe app) by their service names on this network.
+      SHOPNEX_BUNDLED_APPS: docker
+    volumes:
+      - shopnex-data:/data
+
+  # The Stripe app needs its own private key (snxk_ + an Ed25519 key). This makes one on the
+  # first start and keeps it in a volume; a new key would make it a new app, so it is never replaced.
+  stripe-key:
+    image: ghcr.io/shopnex-ai/shopnex-stripe:v0.15.0
+    restart: "no"
+    user: "0"
+    entrypoint: ["node", "-e"]
+    command:
+      - >-
+        const fs = require('fs'); const f = '/keys/stripe-app-key';
+        if (fs.existsSync(f) && fs.statSync(f).size > 0) process.exit(0);
+        crypto.subtle.generateKey('Ed25519', true, ['sign']).then(async (k) => {
+        const key = 'snxk_' + Buffer.from(await crypto.subtle.exportKey('pkcs8', k.privateKey)).toString('base64url');
+        fs.writeFileSync(f, key, { mode: 0o400 }); fs.chownSync(f, 1000, 1000); });
+    volumes:
+      - shopnex-stripe-key:/keys
+
+  stripe:
+    image: ghcr.io/shopnex-ai/shopnex-stripe:v0.15.0
+    restart: unless-stopped
+    depends_on:
+      stripe-key:
+        condition: service_completed_successfully
+    entrypoint: ["sh", "-c"]
+    command: ['STRIPE_APP_KEY="$$(cat /keys/stripe-app-key)" exec node server.mjs']
+    environment:
+      STRIPE_APP_URL: ${STRIPE_APP_URL}
+      SHOPNEX_INTERNAL_URL: http://shopnex:3000
+    volumes:
+      - shopnex-stripe-key:/keys:ro
+
+  shopnex-db:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: shopnex
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: shopnex
+    volumes:
+      - shopnex-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shopnex"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  shopnex-data:
+  shopnex-stripe-key:
+  shopnex-db-data:

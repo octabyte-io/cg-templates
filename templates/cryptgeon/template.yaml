@@ -1,0 +1,20 @@
+name: cryptgeon
+description: "Self-hosted cryptgeon sends passwords and files as encrypted Privnote-style links, destroyed after a set number of views or minutes."
+version: "2.9.3"
+tags:
+  - privnote alternative
+  - self-destructing notes
+  - encrypted note sharing
+  - one-time secret links
+  - send passwords securely
+  - share files securely
+  - onetimesecret alternative
+links:
+  website: https://cryptgeon.org
+  docs: https://github.com/cupcakearmy/cryptgeon#readme
+  source: https://github.com/cupcakearmy/cryptgeon
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+domains:
+  - { service: cryptgeon, port: 8000 }

@@ -1,0 +1,122 @@
+# Based on PieFed's official compose.yaml (https://codeberg.org/rimu/pyfedi).
+# PieFed publishes no prebuilt image (its compose builds from source), so this
+# uses dockurr/piefed, a community image built from PieFed's own Dockerfile and
+# tagged with PieFed's release versions.
+x-piefed-env: &piefed-env
+  SECRET_KEY: ${SECRET_KEY}
+  # The instance's public domain; federation uses it, and it can't change later.
+  SERVER_NAME: ${SERVER_NAME}
+  DATABASE_URL: postgresql+psycopg2://piefed:${POSTGRES_PASSWORD}@piefed-db/piefed
+  CACHE_TYPE: RedisCache
+  CACHE_REDIS_DB: "1"
+  CACHE_REDIS_URL: redis://piefed-redis:6379/0
+  CELERY_BROKER_URL: redis://piefed-redis:6379/1
+  FULL_AP_CONTEXT: "0"
+  ENABLE_ALPHA_API: "true"
+  GUNICORN_WORKERS: "2"
+  CELERY_CONCURRENCY: "2"
+
+services:
+  piefed:
+    image: dockurr/piefed:1.9.0
+    restart: unless-stopped
+    depends_on:
+      piefed-init:
+        condition: service_completed_successfully
+      piefed-redis:
+        condition: service_healthy
+    # PieFed's own entrypoint also runs migrations and downloads a community
+    # list from lemmyverse.net, and won't start if that site is unreachable;
+    # piefed-init does both (the download may fail without stopping anything),
+    # so this starts the scheduler and the web server only.
+    entrypoint:
+      - /usr/bin/tini
+      - --
+      - bash
+      - -c
+      - supercronic -quiet -no-reap /app/docker.cron & exec gunicorn --config gunicorn.conf.py --preload pyfedi:app
+    environment:
+      <<: *piefed-env
+    volumes:
+      - piefed-media:/app/app/static/media
+    healthcheck:
+      # PieFed answers only for its own domain, so the check sends that Host header.
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null -H \"Host: $$SERVER_NAME\" http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Federation and background jobs.
+  piefed-celery:
+    image: dockurr/piefed:1.9.0
+    restart: unless-stopped
+    entrypoint: ["/usr/bin/tini", "--", "/app/entrypoint_celery.sh"]
+    depends_on:
+      piefed-init:
+        condition: service_completed_successfully
+      piefed-redis:
+        condition: service_healthy
+    environment:
+      <<: *piefed-env
+    volumes:
+      - piefed-media:/app/app/static/media
+    healthcheck:
+      test: ["CMD", "celery", "-A", "celery_worker_docker.celery", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Runs once at each start: database migrations, and on the first start the
+  # instance setup and admin account (see files/piefed-init.sh.txt).
+  piefed-init:
+    image: dockurr/piefed:1.9.0
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["bash", "/init/piefed-init.sh"]
+    depends_on:
+      piefed-db:
+        condition: service_healthy
+      piefed-redis:
+        condition: service_healthy
+    environment:
+      <<: *piefed-env
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - piefed-media:/app/app/static/media
+      - ../files/piefed-init.sh.txt:/init/piefed-init.sh:ro
+
+  piefed-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: piefed
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: piefed
+    volumes:
+      - piefed-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U piefed -d piefed"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  piefed-redis:
+    image: redis:7.4.12-alpine
+    restart: unless-stopped
+    volumes:
+      - piefed-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  piefed-media:
+  piefed-db-data:
+  piefed-redis-data:

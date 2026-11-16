@@ -1,0 +1,38 @@
+name: PieFed
+description: "PieFed is a self-hosted, Reddit-style forum with topic communities, votes, threaded comments and private groups, connected to Lemmy and the fediverse."
+version: "1.9.0"
+tags:
+  - reddit alternative
+  - federated forum
+  - lemmy alternative
+  - link aggregator
+  - fediverse
+  - community forum
+  - private community
+links:
+  website: https://join.piefed.social
+  docs: https://codeberg.org/rimu/pyfedi/src/branch/main/INSTALL-docker.md
+  source: https://codeberg.org/rimu/pyfedi
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  SERVER_NAME: { value: "{{domains.piefed.host}}" }
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The admin account Cloudgate creates for you. Cloudgate makes a strong password for it, shown afterwards on the app's variables page.
+      default: siteadmin
+      pattern: "[a-zA-Z][a-zA-Z0-9_]{2,29}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The admin account's email address.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: piefed, port: 5000 }
+files:
+  - { path: piefed-init.sh.txt }

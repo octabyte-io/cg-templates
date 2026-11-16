@@ -1,0 +1,37 @@
+name: OpenHabitTracker
+description: "OpenHabitTracker is a self-hosted habit tracker with tasks and notes: see which habits are overdue, plan your day and get reminders on every device."
+version: "1.2.5"
+tags:
+  - habit tracker
+  - self-hosted habit tracker
+  - open source habit tracker
+  - habitify alternative
+  - streaks alternative
+  - habit tracker with tasks and notes
+links:
+  website: https://openhabittracker.net
+  docs: https://github.com/Jinjinov/OpenHabitTracker#readme
+  source: https://github.com/Jinjinov/OpenHabitTracker
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with, in the browser and in the phone and desktop apps.
+      default: admin
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: Saved on the admin account.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  TZ:
+    ask:
+      label: Time zone
+      description: Your time zone for dates and reminders, such as Europe/Berlin, America/New_York or UTC.
+      default: UTC
+domains:
+  - { service: openhabittracker, port: 8080 }
