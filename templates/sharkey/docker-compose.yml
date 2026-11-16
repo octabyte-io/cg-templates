@@ -21,8 +21,8 @@ services:
       - sharkey-files:/sharkey/files
       - ../files/default.yml:/sharkey/.config/default.yml:ro
     healthcheck:
-      # Alpine image: busybox wget, no curl.
-      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:3000/healthz"]
+      # Alpine image: busybox wget, no curl. Use 127.0.0.1: Sharkey listens on IPv4 only and "localhost" can resolve to ::1.
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1:3000/healthz"]
       interval: 10s
       timeout: 5s
       retries: 60
