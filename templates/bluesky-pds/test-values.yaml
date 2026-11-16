@@ -1,0 +1,3 @@
+# Run without email, like a fresh install where the optional email fields are left empty.
+PDS_EMAIL_SMTP_URL: ""
+PDS_EMAIL_FROM_ADDRESS: ""

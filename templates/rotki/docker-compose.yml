@@ -1,0 +1,44 @@
+services:
+  # rotki's docs say never to put its port on the internet on its own: the
+  # account list and account creation stay open before sign-in, and nothing
+  # limits password guessing. They recommend a proxy that asks for a password
+  # first. This one asks for the username "admin" and the generated password.
+  proxy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Caddy needs a bcrypt hash of the password; make it at each start.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$ADMIN_PASSWORD")" && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ../files/Caddyfile.txt:/etc/caddy/Caddyfile:ro
+    depends_on:
+      rotki:
+        condition: service_healthy
+
+  rotki:
+    # The official image (hub.docker.com/r/rotki/rotki): the web app and its
+    # backends behind one port, 80. It ships its own health check (the image
+    # has no shell or curl), so none is added here.
+    image: rotki/rotki:v1.44.3
+    restart: unless-stopped
+    # rotki asks its backends to stop and gives them 10 seconds to finish
+    # writing; leave a margin.
+    stop_grace_period: 20s
+    environment:
+      # Turns on rotki's session sign-in: the API refuses requests without
+      # a signed-in session.
+      ROTKI_SESSION_KEY: ${ROTKI_SESSION_KEY}
+      # Mark the session cookie Secure when the visit came over HTTPS.
+      ROTKI_SESSION_COOKIE_SECURE: forwarded
+    volumes:
+      # Accounts (each encrypted with its own password) and the global database.
+      - rotki-data:/data
+      - rotki-logs:/logs
+
+volumes:
+  rotki-data:
+  rotki-logs:

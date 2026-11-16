@@ -1,0 +1,47 @@
+name: Quant-UX
+description: "Self-hosted Quant-UX builds clickable prototypes, tests them with real users by link and shows heatmaps and task results, like Maze."
+version: "3.0.1"
+tags:
+  - maze alternative
+  - usability testing
+  - prototyping
+  - click heatmaps
+  - user testing
+  - figma alternative
+links:
+  website: https://www.quant-ux.com
+  docs: https://github.com/KlausSchaefers/quant-ux#readme
+  source: https://github.com/KlausSchaefers/quant-ux
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.quant-ux.url}}" }
+  JWT_SECRET: { generate: hex }
+  ALLOW_SIGNUP:
+    ask:
+      label: Allow anyone to sign up
+      description: "true lets anyone who opens the address create an account; set false once your team has signed up."
+      default: "true"
+      required: false
+  MAIL_HOST:
+    ask:
+      label: Email server (SMTP) address
+      description: Optional, but needed for password resets and invitations. Your email provider gives you this, such as smtp.mailgun.org.
+      required: false
+  MAIL_PORT:
+    ask:
+      label: Email server port
+      default: "587"
+      format: number
+      required: false
+  MAIL_USER:
+    ask:
+      label: Email server username
+      required: false
+  MAIL_PASSWORD:
+    ask:
+      label: Email server password
+      required: false
+domains:
+  - { service: quant-ux, port: 8082 }

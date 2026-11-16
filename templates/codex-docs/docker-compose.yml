@@ -1,0 +1,25 @@
+# Based on the official docker-compose.yml (codex-team/codex.docs, v2.3.3).
+# Uses the app's built-in local database (stored in a volume), so no MongoDB
+# is needed. Settings are read from files/docs-config.yaml; secrets come from
+# APP_CONFIG_* variables, which the app's config loader merges on top.
+services:
+  codex-docs:
+    image: ghcr.io/codex-team/codex.docs:v2.3.3
+    restart: unless-stopped
+    environment:
+      APP_CONFIG_auth_password: ${ADMIN_PASSWORD}
+      APP_CONFIG_auth_secret: ${AUTH_SECRET}
+    volumes:
+      - ../files/docs-config.yaml:/usr/src/app/docs-config.yaml:ro
+      - codex-docs-db:/usr/src/app/db
+      - codex-docs-uploads:/usr/src/app/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  codex-docs-db:
+  codex-docs-uploads:

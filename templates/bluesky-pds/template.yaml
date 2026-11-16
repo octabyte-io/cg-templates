@@ -1,0 +1,37 @@
+name: Bluesky PDS
+description: "Self-hosted Bluesky PDS: keep your Bluesky accounts, posts and images on your own server and keep using the Bluesky app, with your own domain as handle."
+version: "0.4.5051"
+tags:
+  - bluesky pds
+  - self-host bluesky
+  - bluesky personal data server
+  - atproto pds
+  - bluesky custom domain handle
+  - decentralized social network
+links:
+  website: https://atproto.com
+  docs: https://github.com/bluesky-social/pds#readme
+  source: https://github.com/bluesky-social/pds
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PDS_HOSTNAME: { value: "{{domains.pds.host}}" }
+  PDS_JWT_SECRET: { generate: hex }
+  PDS_ADMIN_PASSWORD: { generate: password }
+  # 64 hex characters: a valid secp256k1 private key (the chance of an invalid one is negligible).
+  PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX: { generate: hex }
+  PDS_EMAIL_SMTP_URL:
+    ask:
+      label: Email server URL (SMTP)
+      description: "Optional. Lets your PDS confirm email addresses and send password resets, for example smtps://resend:YOUR_API_KEY@smtp.resend.com:465/. Percent-encode special characters in the username and password. Leave empty to run without email."
+      secret: true
+      required: false
+  PDS_EMAIL_FROM_ADDRESS:
+    ask:
+      label: Email sender address
+      description: Optional. The address emails come from, such as admin@your-domain.com. Fill in both email fields or neither; the PDS will not start with only one.
+      format: email
+      required: false
+domains:
+  - { service: pds, port: 3000 }

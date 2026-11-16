@@ -1,0 +1,39 @@
+services:
+  gowa:
+    image: aldinokemal2104/go-whatsapp-web-multidevice:v9.9.0
+    restart: unless-stopped
+    command: ["rest"]
+    environment:
+      APP_PORT: "3000"
+      APP_HOST: 0.0.0.0
+      APP_DEBUG: "false"
+      # The device name shown under Linked devices in WhatsApp.
+      APP_OS: GOWA
+      # Security: the dashboard, the REST API and /mcp all ask for this
+      # username and password (HTTP Basic Auth). GOWA refuses to start
+      # without it on a public bind.
+      APP_BASIC_AUTH: ${GOWA_USERNAME}:${GOWA_PASSWORD}
+      # The public address, so the dashboard can send and change things
+      # through Cloudgate's proxy.
+      APP_TRUSTED_ORIGINS: ${GOWA_URL}
+      APP_TRUSTED_PROXIES: 0.0.0.0/0
+      # The web dashboard (gowa-ui) is downloaded from its GitHub release on
+      # start and served at "/".
+      APP_UI_ENABLED: "true"
+      MCP_ENABLED: "true"
+      # Where GOWA posts incoming messages and events (comma-separated URLs);
+      # set WHATSAPP_WEBHOOK on the app's variables page. Calls are signed
+      # (X-Hub-Signature-256) with a key that stays the same across restarts.
+      WHATSAPP_WEBHOOK: ${WHATSAPP_WEBHOOK:-}
+      WHATSAPP_WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+      WHATSAPP_ACCOUNT_VALIDATION: "true"
+      WHATSAPP_CHAT_STORAGE: "true"
+    volumes:
+      # The linked-device login and chat history (SQLite).
+      - gowa-storages:/app/storages
+      # QR codes, sent and received media.
+      - gowa-statics:/app/statics
+
+volumes:
+  gowa-storages:
+  gowa-statics:

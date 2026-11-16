@@ -1,0 +1,28 @@
+name: FileGator
+description: "FileGator is a self-hosted web file manager: your team uploads, zips and downloads files in the browser, each person with their own folder and permissions."
+version: "7.16.9"
+tags:
+  - web file manager
+  - file sharing
+  - team folders
+  - google drive alternative
+  - dropbox alternative
+  - file upload
+links:
+  website: https://filegator.io
+  docs: https://docs.filegator.io
+  source: https://github.com/filegator/filegator
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The first password of the user "admin", written once on the first start.
+  # Change it in the app afterwards; Cloudgate does not set it again.
+  FILEGATOR_ADMIN_PASSWORD: { generate: password }
+  # FileGator's CSRF key, which its sample config says to randomize.
+  FILEGATOR_CSRF_KEY: { generate: hex }
+domains:
+  - { service: filegator, port: 8080 }
+files:
+  - { path: configuration.php.txt }
+  - { path: seed-admin.php.txt }

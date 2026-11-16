@@ -1,0 +1,49 @@
+# From the official bluesky-social/pds compose.yaml and installer.sh (pds.env), without
+# Caddy, watchtower and host networking: Cloudgate routes the web address and handles HTTPS.
+# The settings are the ones installer.sh writes to pds.env.
+services:
+  pds:
+    image: ghcr.io/bluesky-social/pds:0.4.5051
+    restart: unless-stopped
+    # The image's own start command. Only when the host is "localhost" (a local test run,
+    # never a real install) it turns on PDS_DEV_MODE, because the PDS refuses a plain-http
+    # address otherwise; a real install always has an https address.
+    command:
+      - sh
+      - -c
+      - '[ "$$PDS_HOSTNAME" = localhost ] && export PDS_DEV_MODE=true; exec node --enable-source-maps index.ts'
+    environment:
+      # The web address's host. Accounts' identities point at it, so don't change it
+      # once accounts exist.
+      PDS_HOSTNAME: ${PDS_HOSTNAME}
+      PDS_JWT_SECRET: ${PDS_JWT_SECRET}
+      PDS_ADMIN_PASSWORD: ${PDS_ADMIN_PASSWORD}
+      # A secp256k1 private key as 64 hex characters (32 random bytes).
+      PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX: ${PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX}
+      PDS_DATA_DIRECTORY: /pds
+      PDS_BLOBSTORE_DISK_LOCATION: /pds/blocks
+      PDS_BLOB_UPLOAD_LIMIT: "314572800"
+      PDS_DID_PLC_URL: https://plc.directory
+      PDS_BSKY_APP_VIEW_URL: https://api.bsky.app
+      PDS_BSKY_APP_VIEW_DID: did:web:api.bsky.app
+      PDS_REPORT_SERVICE_URL: https://mod.bsky.app
+      PDS_REPORT_SERVICE_DID: did:plc:ar7c4by46qjdydhdevvrndac
+      PDS_CRAWLERS: https://bsky.network
+      LOG_ENABLED: "true"
+      PDS_RATE_LIMITS_ENABLED: "true"
+      # New accounts need an invite code that the admin creates.
+      PDS_INVITE_REQUIRED: "true"
+      # Optional email (both or neither): lets the PDS confirm emails and reset passwords.
+      PDS_EMAIL_SMTP_URL: ${PDS_EMAIL_SMTP_URL:-}
+      PDS_EMAIL_FROM_ADDRESS: ${PDS_EMAIL_FROM_ADDRESS:-}
+    volumes:
+      - pds-data:/pds
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/xrpc/_health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  pds-data:
