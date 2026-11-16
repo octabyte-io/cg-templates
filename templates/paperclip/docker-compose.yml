@@ -1,0 +1,67 @@
+# From the official docker/docker-compose.yml (paperclipai/paperclip v2026.1106.0):
+# the Paperclip server and PostgreSQL 17, using the published image instead of
+# a local build. Host ports are left out.
+services:
+  paperclip:
+    image: ghcr.io/paperclipai/paperclip:2026.1106.0
+    restart: unless-stopped
+    depends_on:
+      paperclip-db:
+        condition: service_healthy
+    # Agents run shell commands and coding CLIs inside this container, so it
+    # is sandboxed: no raw sockets or network administration, no privilege
+    # gain through setuid binaries, a ceiling on processes (from the official
+    # compose file) and no Docker socket. The image makes tini PID 1 itself.
+    cap_drop:
+      - NET_RAW
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 2048
+    # Includes the 30-second window agent runs get to settle on shutdown.
+    stop_grace_period: 90s
+    environment:
+      DATABASE_URL: postgres://paperclip:${DB_PASSWORD}@paperclip-db:5432/paperclip
+      HOST: 0.0.0.0
+      PORT: "3100"
+      SERVE_UI: "true"
+      PAPERCLIP_HOME: /paperclip
+      # Sign-in required. "private" exposure lets the first person who signs
+      # up claim the instance from the browser ("Claim this instance");
+      # "public" would require a command run inside the container instead.
+      PAPERCLIP_DEPLOYMENT_MODE: authenticated
+      PAPERCLIP_DEPLOYMENT_EXPOSURE: private
+      # The instance is reachable from the internet, so keep sign-in rate
+      # limiting on (private exposure turns it off by default).
+      PAPERCLIP_AUTH_RATE_LIMIT_ENABLED: "true"
+      PAPERCLIP_PUBLIC_URL: ${PAPERCLIP_PUBLIC_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: ${PAPERCLIP_TOOL_ACTION_SIGNING_SECRET}
+    volumes:
+      # Uploads, the local secrets key, agent workspaces and database backups.
+      - paperclip-data:/paperclip
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3100/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+
+  paperclip-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: paperclip
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: paperclip
+    volumes:
+      - paperclip-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paperclip -d paperclip"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  paperclip-data:
+  paperclip-db-data:

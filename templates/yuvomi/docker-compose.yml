@@ -1,0 +1,39 @@
+# From the project's docs/docker-compose.portainer.yml (v2.91.0), trimmed to
+# the settings Cloudgate fills in; every optional integration (email, weather,
+# calendars, single sign-on) can be set up later in the app's own settings.
+services:
+  yuvomi:
+    image: ghcr.io/ulsklyc/yuvomi:2.91.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DB_PATH: /data/yuvomi.db
+      BACKUP_DIR: /backups
+      MODULES_DIR: /app/modules
+      BASE_URL: ${BASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
+      # Cloudgate serves the app over HTTPS through one reverse proxy.
+      SESSION_SECURE: "true"
+      TRUST_PROXY: "1"
+      TZ: UTC
+      # Nightly backups into the backups volume, keeping the last 7.
+      BACKUP_ENABLED: "true"
+      BACKUP_SCHEDULE: "0 2 * * *"
+      BACKUP_KEEP: "7"
+    volumes:
+      - yuvomi-data:/data
+      - yuvomi-backups:/backups
+      - yuvomi-modules:/app/modules
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  yuvomi-data:
+  yuvomi-backups:
+  yuvomi-modules:

@@ -1,0 +1,101 @@
+# From deploy/standalone/compose.yaml in every-app/open-seo v0.1.27, the setup its
+# Docker self-hosting docs describe. OpenSEO is Cloudflare Workers code run by celld
+# (runtime), which keeps its database and files in RustFS (storage). init runs once at
+# each start: it makes secrets on the first run, loads the app, applies database
+# migrations and writes the Nginx config. Nginx (openseo) serves the app.
+x-app: &app
+  image: ghcr.io/every-app/open-seo-standalone:v0.1.27
+x-storage: &storage
+  CELLD_BUCKET: openseo
+  S3_ENDPOINT: http://storage:9000
+  AWS_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY}
+  AWS_SECRET_ACCESS_KEY: ${STORAGE_SECRET_KEY}
+
+services:
+  openseo:
+    image: nginx:1.28.3-alpine
+    restart: unless-stopped
+    # Written by init from the image; nocopy keeps nginx's own default.conf out.
+    volumes:
+      - type: volume
+        source: openseo-web-config
+        target: /etc/nginx/conf.d
+        read_only: true
+        volume: { nocopy: true }
+    depends_on:
+      init: { condition: service_completed_successfully }
+      crawl-gateway: { condition: service_started }
+
+  storage:
+    image: rustfs/rustfs:1.0.3
+    restart: unless-stopped
+    environment:
+      RUSTFS_ACCESS_KEY: ${STORAGE_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${STORAGE_SECRET_KEY}
+    volumes:
+      - openseo-storage:/data
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:9000/health]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  runtime:
+    <<: *app
+    restart: unless-stopped
+    environment:
+      <<: *storage
+      CELLD_MAX_RSS_MB: "1536"
+      CELLD_MAX_RESIDENT_CELLS: "64"
+      CELLD_V8_HEAP_LIMIT_MB: "256"
+      CELLD_MAX_REQUEST_BODY_BYTES: "33554432"
+      RUST_LOG: warn,cell_console=info
+    mem_limit: 2g
+    stop_grace_period: 60s
+    volumes:
+      - openseo-runtime:/data
+      - openseo-config:/config:ro
+    depends_on:
+      storage: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, curl, -fsS, http://localhost:8080/api/health]
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 5
+
+  # Exits after each start by design. The API keys are read here, so changing one
+  # takes effect at the next start.
+  init:
+    <<: *app
+    restart: "no"
+    command: [sh, /opt/standalone/init.sh]
+    network_mode: service:runtime
+    environment:
+      <<: *storage
+      AUTH_MODE: password
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      DATAFORSEO_API_KEY: ${DATAFORSEO_API_KEY:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+    volumes:
+      - openseo-config:/config
+      - openseo-web-config:/web-config
+    depends_on:
+      runtime: { condition: service_started }
+
+  # Fetches pages for site audits and refuses private network addresses.
+  crawl-gateway:
+    <<: *app
+    restart: unless-stopped
+    command: [node, /opt/standalone/crawl-gateway.mjs]
+    volumes:
+      - openseo-config:/config:ro
+    depends_on:
+      init: { condition: service_completed_successfully }
+
+volumes:
+  openseo-storage:
+  openseo-runtime:
+  openseo-config:
+  openseo-web-config:

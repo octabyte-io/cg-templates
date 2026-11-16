@@ -1,0 +1,17 @@
+name: Pascal Editor
+description: "Self-hosted Pascal Editor lets you draw floor plans and 3D building models in the browser, with rooms, roofs and furniture, and export to IFC or GLB."
+version: "1.1.4"
+tags: [3d floor plan editor, planner 5d alternative, sketchup alternative, floor plan software, open source architecture software, home design software]
+links:
+  website: https://www.pascal.app
+  docs: https://editor.pascal.app/docs
+  source: https://github.com/pascalorg/editor
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  PASCAL_PUBLIC_URL: { value: "{{domains.editor.url}}" }
+  PASCAL_ADMIN_PASSWORD: { generate: password }
+  PASCAL_SCENE_API_TOKEN: { generate: hex }
+domains:
+  - { service: editor, port: 3000 }

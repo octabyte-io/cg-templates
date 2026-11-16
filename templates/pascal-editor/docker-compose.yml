@@ -1,0 +1,31 @@
+services:
+  editor:
+    # The official self-hosted image (github.com/pascalorg/editor, SETUP.md
+    # "Self-hosting"), tagged with the @pascal-app/* package version. One
+    # container: the Next.js editor, with saved projects in SQLite under /data.
+    image: ghcr.io/pascalorg/pascal-editor:1.1.4
+    restart: unless-stopped
+    environment:
+      # The one password that unlocks the editor at /login. Everyone who signs
+      # in shares the same workspace and projects.
+      PASCAL_ADMIN_PASSWORD: ${PASCAL_ADMIN_PASSWORD}
+      # The address people use to reach the editor, read per request.
+      PASCAL_PUBLIC_URL: ${PASCAL_PUBLIC_URL}
+      # Bearer token for AI agents and scripts calling /api/scenes and
+      # /api/artifacts; the settings page shows it under "Connect an agent".
+      PASCAL_SCENE_API_TOKEN: ${PASCAL_SCENE_API_TOKEN}
+    volumes:
+      # Projects (pascal.db) and uploaded files; without it they are lost when
+      # the container is recreated.
+      - pascal-data:/data
+    healthcheck:
+      # The image's own healthcheck: busybox wget on Alpine; /api/health
+      # answers without a session.
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+volumes:
+  pascal-data:

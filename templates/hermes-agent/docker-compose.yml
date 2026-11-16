@@ -1,0 +1,45 @@
+# From the official Docker guide (NousResearch/hermes-agent v0.23.1,
+# website/docs/user-guide/docker.md, "Docker Compose example" and "Running
+# the dashboard"): one container runs the messaging gateway, with the web
+# dashboard supervised next to it. The host ports and the repository's
+# network_mode: host setup are left out; Cloudgate's proxy reaches the
+# dashboard on the container network.
+services:
+  hermes:
+    image: nousresearch/hermes-agent:v0.23.1
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    environment:
+      # Starts the supervised web dashboard on port 9119 (bound to 0.0.0.0
+      # inside the container), which then requires a sign-in provider.
+      HERMES_DASHBOARD: "1"
+      HERMES_DASHBOARD_PORT: "9119"
+      HERMES_DASHBOARD_PUBLIC_URL: ${HERMES_DASHBOARD_PUBLIC_URL}
+      # The dashboard's username/password sign-in. The secret keeps
+      # sign-ins valid across restarts.
+      HERMES_DASHBOARD_BASIC_AUTH_USERNAME: admin
+      HERMES_DASHBOARD_BASIC_AUTH_PASSWORD: ${HERMES_DASHBOARD_PASSWORD}
+      HERMES_DASHBOARD_BASIC_AUTH_SECRET: ${HERMES_DASHBOARD_SECRET}
+      TZ: UTC
+    # Hermes runs shell commands and tools for the agent, so the container
+    # gets the same limits as the OpenClaw template: no raw sockets, no
+    # network administration, and no gaining privileges through setuid
+    # binaries. The image's own init still drops to its unprivileged
+    # hermes user for every process.
+    cap_drop:
+      - NET_RAW
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - hermes-data:/opt/data
+    healthcheck:
+      # The dashboard's status endpoint answers without sign-in.
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:9119/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+volumes:
+  hermes-data:
