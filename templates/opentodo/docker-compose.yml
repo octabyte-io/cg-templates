@@ -1,0 +1,24 @@
+services:
+  opentodo:
+    image: ghcr.io/opentodoapp/opentodo:1.5.0
+    restart: unless-stopped
+    environment:
+      # The exact address people open: cookies, passkeys and the origin check
+      # are bound to it, and emailed links are built from it.
+      OPENTODO_BASE_URL: ${OPENTODO_BASE_URL}
+      # The first account created is the owner. Later people join through
+      # invitation links from Settings -> People.
+      OPENTODO_ALLOW_SIGNUP: "false"
+      OPENTODO_LOG_LEVEL: info
+    volumes:
+      - opentodo-data:/data
+    healthcheck:
+      # The image is distroless; the binary has its own health probe.
+      test: ["CMD", "/opentodo", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  opentodo-data:

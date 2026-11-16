@@ -1,0 +1,25 @@
+name: Louez
+description: "Louez is self-hosted equipment rental software: an online storefront where customers book dates, plus reservations, stock, customers and contracts."
+version: "2.3.1"
+tags: [equipment rental software, rental booking system, booqable alternative, rentman alternative, rental shop software, online reservations]
+links:
+  website: https://louez.io
+  docs: https://github.com/Synapsr/Louez#-self-host-in-one-command
+  source: https://github.com/Synapsr/Louez
+cloudgate: 0.1.0
+compose: app
+# Upstream plans for at least 2 GB with its optional background-removal worker; without
+# it the app, MySQL and the file store fit in about 1 GB, so medium leaves headroom.
+size: medium
+inputs:
+  APP_URL: { value: "{{domains.louez.url}}" }
+  APP_DOMAIN: { value: "{{domains.louez.host}}" }
+  AUTH_SECRET: { generate: base64 }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+  MINIO_PASSWORD: { generate: password }
+# One address: the storefront is at the root and the dashboard under /dashboard. Uploaded
+# images are served by the app under /files, so the file store needs no address.
+domains:
+  - { service: louez, port: 3000 }
+files: []
