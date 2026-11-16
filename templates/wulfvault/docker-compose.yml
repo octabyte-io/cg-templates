@@ -1,0 +1,27 @@
+services:
+  wulfvault:
+    image: frimurare/wulfvault:7.5.1
+    restart: unless-stopped
+    # On first start (no users yet) WulfVault creates its super admin from
+    # ADMIN_EMAIL and ADMIN_PASSWORD. The SQLite database lives in /data and
+    # the shared files in /uploads.
+    environment:
+      SERVER_URL: ${SERVER_URL}
+      PORT: "8080"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      MAX_FILE_SIZE_MB: "5000"
+      DEFAULT_QUOTA_MB: "10000"
+    volumes:
+      - wulfvault-data:/data
+      - wulfvault-uploads:/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  wulfvault-data:
+  wulfvault-uploads:

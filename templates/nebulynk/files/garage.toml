@@ -1,0 +1,14 @@
+# From Nebulynk's garage.toml at v0.8.1, with this template's service name and
+# IPv4 listen addresses (not every Docker network has IPv6).
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "nebulynk-garage:3901"
+
+[s3_api]
+s3_region = "us-east-1"
+api_bind_addr = "0.0.0.0:3900"
+root_domain = ".s3.garage.localhost"

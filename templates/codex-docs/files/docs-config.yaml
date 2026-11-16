@@ -1,0 +1,21 @@
+# CodeX Docs settings (https://docs.codex.so/configuration).
+# The admin password and the sign-in secret come from the environment
+# (APP_CONFIG_auth_password and APP_CONFIG_auth_secret in docker-compose.yml).
+port: 3000
+host: "0.0.0.0"
+uploads:
+  driver: "local"
+  local:
+    path: "./uploads"
+frontend:
+  title: "CodeX Docs"
+  description: "Docs powered by Editor.js"
+  startPage: ""
+  carbon:
+    serve: ""
+    placement: ""
+  menu: []
+database:
+  driver: local
+  local:
+    path: ./db

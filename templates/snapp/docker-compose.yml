@@ -1,0 +1,48 @@
+# Snapp 0.9-rc, from the quick start in its README, with the PostgreSQL database
+# it supports instead of the built-in SQLite file (which lives inside the image's
+# schema folder and can't be kept in a volume cleanly).
+services:
+  snapp:
+    image: uraniadev/snapp:0.9-rc-033
+    restart: unless-stopped
+    depends_on:
+      snapp-db:
+        condition: service_healthy
+    environment:
+      DATABASE_PROVIDER: postgres
+      DATABASE_URL: postgres://snapp:${DB_PASSWORD}@snapp-db:5432/snapp
+      TOKEN_SECRET: ${TOKEN_SECRET}
+      ORIGIN: ${SNAPP_URL}
+      PUBLIC_URL: ${SNAPP_URL}
+      # The first admin ("root" role), created on first start if none exists.
+      ADMIN_USERNAME: admin
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Only the admin adds users at first; sign-up and MFA can be turned on in the settings.
+      ENABLE_SIGNUP: "false"
+      ENABLED_MFA: "false"
+      APPNAME: Snapp
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  snapp-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: snapp
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: snapp
+    volumes:
+      - snapp-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U snapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  snapp-db-data:

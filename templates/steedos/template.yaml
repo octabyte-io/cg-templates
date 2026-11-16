@@ -1,0 +1,22 @@
+name: Steedos
+description: "Self-hosted Steedos is an open-source low-code platform for building business apps with custom objects, approval processes and Salesforce-style permissions."
+version: "3.0.14"
+tags:
+  - low-code platform
+  - salesforce platform alternative
+  - open source low code
+  - power apps alternative
+  - zoho creator alternative
+  - approval workflow
+  - build your own crm
+links:
+  website: https://www.steedos.com
+  docs: https://docs.steedos.com/
+  source: https://github.com/steedos/steedos-platform
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  ROOT_URL: { value: "{{domains.steedos.url}}" }
+domains:
+  - { service: steedos, port: 80 }

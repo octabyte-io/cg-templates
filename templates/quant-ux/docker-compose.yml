@@ -1,0 +1,59 @@
+# Quant-UX: a web front end (serves the editor and forwards /rest to the
+# back end), a Java back end and MongoDB. Based on the project's
+# docker/docker-compose.yml, using the community images its README points to
+# (bmcgonag/quant-ux-docker), because the upstream images are published as
+# "latest" only. The optional live-collaboration websocket server is left out.
+services:
+  quant-ux:
+    image: bmcgonag/qux-fe:3.0.1
+    restart: unless-stopped
+    depends_on:
+      - quant-ux-backend
+    environment:
+      QUX_PROXY_URL: http://quant-ux-backend:8080
+      QUX_AUTH: qux
+      QUX_USER_ALLOW_SIGNUP: ${ALLOW_SIGNUP:-true}
+      QUX_USER_ALLOWED_DOMAINS: "*"
+      TZ: Etc/UTC
+
+  quant-ux-backend:
+    image: bmcgonag/qux-be:3.0.1
+    restart: unless-stopped
+    depends_on:
+      quant-ux-db:
+        condition: service_healthy
+    environment:
+      QUX_HTTP_HOST: ${APP_URL}
+      QUX_HTTP_PORT: 8080
+      QUX_MONGO_DB_NAME: quantux
+      QUX_MONGO_TABLE_PREFIX: quantux
+      QUX_MONGO_CONNECTION_STRING: mongodb://quant-ux-db:27017
+      QUX_MAIL_HOST: ${MAIL_HOST:-}
+      QUX_MAIL_PORT: ${MAIL_PORT:-587}
+      QUX_MAIL_USER: ${MAIL_USER:-}
+      QUX_MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      QUX_JWT_PASSWORD: ${JWT_SECRET}
+      QUX_IMAGE_FOLDER_USER: /app-data/qux-images
+      QUX_IMAGE_FOLDER_APPS: /app-data/qux-image-apps
+      QUX_AUTH_SERVICE: qux
+      QUX_USER_ALLOW_SIGNUP: ${ALLOW_SIGNUP:-true}
+      QUX_USER_ALLOWED_DOMAINS: "*"
+      QUX_DEBUG: "false"
+      TZ: Etc/UTC
+    volumes:
+      - quant-ux-images:/app-data
+
+  quant-ux-db:
+    image: mongo:7.0.48
+    restart: unless-stopped
+    volumes:
+      - quant-ux-db-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  quant-ux-images:
+  quant-ux-db-data:

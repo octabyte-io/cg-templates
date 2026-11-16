@@ -1,0 +1,22 @@
+name: Yuvomi
+description: "Yuvomi is a self-hosted family planner: shared calendar, chores with rewards, meal plans, shopping lists and household budget in one private app."
+version: "2.91.0"
+tags: [family planner, family organiser, family calendar, meal planner, shared shopping list, cozi alternative, skylight calendar alternative]
+links:
+  website: https://yuvomi.cloud
+  docs: https://github.com/ulsklyc/yuvomi/blob/main/docs/installation.md
+  source: https://github.com/ulsklyc/yuvomi
+cloudgate: 0.1.0
+compose: app
+size: xsmall
+inputs:
+  # The app's public address: invitation and password-reset links use it.
+  BASE_URL: { value: "{{domains.yuvomi.url}}" }
+  # Signs every sign-in; changing it signs everyone out once.
+  SESSION_SECRET: { generate: hex }
+  # Encrypts the database at rest. It can never change once the database
+  # exists, so it is made once here and kept with the app's settings, not
+  # only on the data volume.
+  DB_ENCRYPTION_KEY: { generate: hex }
+domains:
+  - { service: yuvomi, port: 3000 }

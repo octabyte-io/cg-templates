@@ -1,0 +1,25 @@
+services:
+  rss-bridge:
+    image: rssbridge/rss-bridge:2026-09-30
+    restart: unless-stopped
+    # The image's nginx also listens on IPv6 ([::]:80) and refuses to start on a
+    # host with IPv6 turned off; drop that line, then run the image's own start script.
+    entrypoint:
+      - /bin/bash
+      - -c
+      - sed -i '/listen \[::\]:80/d' /etc/nginx/sites-available/default && exec /app/docker-entrypoint.sh
+    environment:
+      # RSS-Bridge reads any setting from config.ini.php as RSSBRIDGE_<section>_<key>.
+      # Token authentication: the front page asks for the token once, then every
+      # feed address it builds carries ?token=..., so feed readers need nothing else.
+      RSSBRIDGE_authentication_token: ${RSS_BRIDGE_TOKEN}
+      # All bridges stay enabled, as upstream ships them.
+      RSSBRIDGE_system_enabled_bridges: "*"
+      RSSBRIDGE_system_timezone: UTC
+    volumes:
+      # Optional custom bridges (*Bridge.php), config.ini.php or whitelist.txt,
+      # copied into the app at start.
+      - rss-bridge-config:/config
+
+volumes:
+  rss-bridge-config:

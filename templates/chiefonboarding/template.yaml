@@ -1,0 +1,71 @@
+name: ChiefOnboarding
+description: "ChiefOnboarding is self-hosted employee onboarding software: plan each new hire's first weeks with preboarding, to-dos and Slack reminders."
+version: "2.5.2"
+tags: [employee onboarding, onboarding software, enboarder alternative, sapling alternative, preboarding, slack onboarding bot, new hire checklist]
+links:
+  website: https://chiefonboarding.com
+  docs: https://docs.chiefonboarding.com
+  source: https://github.com/chiefonboarding/chiefonboarding
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  BASE_URL: { value: "{{domains.chiefonboarding.url}}" }
+  APP_HOST: { value: "{{domains.chiefonboarding.host}}" }
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  DEFAULT_FROM_EMAIL:
+    ask:
+      label: Sender email
+      description: The address onboarding emails come from, for example onboarding@yourcompany.com. Needed only if you fill in an email server below.
+      format: email
+      required: false
+  EMAIL_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional. Lets ChiefOnboarding email new hires and send password resets, for example smtp.resend.com. Leave empty to skip email.
+      required: false
+  EMAIL_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services (STARTTLS).
+      default: "587"
+      format: number
+      required: false
+  EMAIL_HOST_USER:
+    ask:
+      label: Email server username
+      required: false
+  EMAIL_HOST_PASSWORD:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  AWS_STORAGE_BUCKET_NAME:
+    ask:
+      label: File storage bucket
+      description: Optional. ChiefOnboarding keeps uploaded files (images, attachments) in S3-compatible storage such as AWS S3, Backblaze B2 or Wasabi. Leave empty to run without uploads.
+      required: false
+  AWS_S3_ENDPOINT_URL:
+    ask:
+      label: File storage endpoint
+      description: The S3 endpoint of your storage provider.
+      default: https://s3.eu-west-1.amazonaws.com
+      format: url
+      required: false
+  AWS_DEFAULT_REGION:
+    ask:
+      label: File storage region
+      default: eu-west-1
+      required: false
+  AWS_ACCESS_KEY_ID:
+    ask:
+      label: File storage access key
+      required: false
+  AWS_SECRET_ACCESS_KEY:
+    ask:
+      label: File storage secret key
+      secret: true
+      required: false
+domains:
+  - { service: chiefonboarding, port: 8000 }

@@ -1,0 +1,25 @@
+name: CodeX Docs
+description: "CodeX Docs is a self-hosted docs app: write product docs, team guides and handbooks in a block editor and publish them as a clean, nested docs site."
+version: "2.3.3"
+tags:
+  - gitbook alternative
+  - self-hosted documentation
+  - documentation site
+  - editor.js
+  - team handbook
+  - knowledge base
+  - notion alternative
+links:
+  website: https://docs.codex.so
+  docs: https://docs.codex.so/getting-started
+  source: https://github.com/codex-team/codex.docs
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  ADMIN_PASSWORD: { generate: password }
+  AUTH_SECRET: { generate: hex }
+domains:
+  - { service: codex-docs, port: 3000 }
+files:
+  - { path: docs-config.yaml }
