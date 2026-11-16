@@ -1,0 +1,15 @@
+services:
+  slash:
+    image: yourselfhosted/slash:0.5.3
+    restart: unless-stopped
+    environment:
+      SLASH_MODE: prod
+      SLASH_PORT: "5231"
+      # Slash sends anonymous usage metrics to its makers by default; turn that off.
+      SLASH_METRIC: "false"
+    volumes:
+      # The SQLite database (slash_prod.db) lives here.
+      - slash-data:/var/opt/slash
+
+volumes:
+  slash-data:

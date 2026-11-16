@@ -1,0 +1,408 @@
+# Open Analytics, from the official infra/selfhost/docker-compose.coolify.yml at
+# v0.8.0 (github.com/OpenLabs-so/openanalytics), the makers' file for platforms
+# that own the proxy: no Caddy, no ports, no pinned network, keys made inside the
+# stack. Dropped from it: the Coolify-only Traefik labels, ClickHouse's raised
+# open-files limit (servers that refuse it would not start; the other ClickHouse
+# templates run without it), and the optional MinIO (object storage for imports
+# and exports) from the main file. keygen and geoip run in Node instead of
+# installing tools at start, and a failed geo download no longer stops the stack.
+#
+# Each service gets only the secrets it is allowed to hold: a service handed a
+# secret on its forbidden list stops at boot, so there is no shared env block.
+
+x-node-healthcheck: &node-healthcheck
+  test:
+    [
+      "CMD",
+      "node",
+      "-e",
+      "fetch('http://127.0.0.1:'+process.env.PORT+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+    ]
+  interval: 15s
+  timeout: 5s
+  retries: 10
+  start_period: 30s
+
+services:
+  # --- stores ---------------------------------------------------------------
+
+  postgres:
+    image: postgres:17.12-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: openanalytics
+      POSTGRES_DB: openanalytics
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # The makers' ClickHouse image: upstream's server with their config and the
+  # entrypoint that creates the four users baked in.
+  clickhouse:
+    image: ghcr.io/openlabs-so/openanalytics/clickhouse:v0.8.0
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_INGEST_PASSWORD: ${CLICKHOUSE_INGEST_PASSWORD}
+      CLICKHOUSE_READ_PASSWORD: ${CLICKHOUSE_READ_PASSWORD}
+      CLICKHOUSE_MAINTENANCE_PASSWORD: ${CLICKHOUSE_MAINTENANCE_PASSWORD}
+      CLICKHOUSE_MIGRATION_PASSWORD: ${CLICKHOUSE_MIGRATION_PASSWORD}
+    volumes:
+      - ch-data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  # The durable event queue: append-only, no eviction.
+  valkey-queue:
+    image: ghcr.io/openlabs-so/openanalytics/valkey:v0.8.0
+    restart: unless-stopped
+    environment:
+      VALKEY_PASSWORD: ${VALKEY_QUEUE_PASSWORD}
+      OA_VALKEY_CONF: /usr/local/etc/valkey/valkey-queue.conf
+    volumes:
+      - valkey-queue-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", 'REDISCLI_AUTH="$$VALKEY_PASSWORD" valkey-cli ping | grep -q PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # Kept above maxmemory in the image's valkey-queue.conf (the makers' value).
+    mem_limit: 1536m
+
+  # Presence, rate-limit counters and short-lived caches; losable by design.
+  valkey-realtime:
+    image: ghcr.io/openlabs-so/openanalytics/valkey:v0.8.0
+    restart: unless-stopped
+    environment:
+      VALKEY_PASSWORD: ${VALKEY_REALTIME_PASSWORD}
+      OA_VALKEY_CONF: /usr/local/etc/valkey/valkey-realtime.conf
+    volumes:
+      - valkey-realtime-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", 'REDISCLI_AUTH="$$VALKEY_PASSWORD" valkey-cli ping | grep -q PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    mem_limit: 768m
+
+  # --- one-shot: the two signing key pairs and the credential keyring --------
+  # The makers' keygen step, written in Node (the image already has it) instead
+  # of installing openssl at start. Made once and never rewritten: the api holds
+  # the private halves, the gateway and the realtime stream only the public half
+  # each needs. Runs as root only to hand the files to uid 1000 (`node`).
+  keygen:
+    image: ghcr.io/openlabs-so/openanalytics/migrate:v0.8.0
+    restart: "no"
+    user: "0:0"
+    entrypoint:
+      - node
+      - -e
+      - |
+        const fs = require('fs');
+        const crypto = require('crypto');
+        for (const d of ['/keys/api', '/keys/gateway', '/keys/realtime', '/keyring']) fs.mkdirSync(d, { recursive: true });
+        for (const [pair, dest] of [['query', 'gateway'], ['realtime', 'realtime']]) {
+          const priv = '/keys/api/' + pair + '.private.pem';
+          const pub = '/keys/' + dest + '/' + pair + '.public.pem';
+          if (!fs.existsSync(priv)) {
+            const { privateKey } = crypto.generateKeyPairSync('ed25519');
+            fs.writeFileSync(priv, privateKey.export({ type: 'pkcs8', format: 'pem' }));
+            console.log(pair + ': private half generated');
+          } else console.log(pair + ': private half exists, left alone');
+          if (!fs.existsSync(pub)) {
+            fs.writeFileSync(pub, crypto.createPublicKey(fs.readFileSync(priv)).export({ type: 'spki', format: 'pem' }));
+            console.log(pair + ': public half derived for ' + dest);
+          }
+        }
+        const ring = '/keyring/credential-keyring.json';
+        if (!fs.existsSync(ring)) {
+          fs.writeFileSync(ring, JSON.stringify({ active: 'k1', keys: { k1: crypto.randomBytes(32).toString('base64') } }));
+          console.log('credential keyring: generated');
+        } else console.log('credential keyring: exists, left alone');
+        const files = ['/keys/api/query.private.pem', '/keys/api/realtime.private.pem', ring];
+        const pubs = ['/keys/gateway/query.public.pem', '/keys/realtime/realtime.public.pem'];
+        for (const f of ['/keys/api', '/keys/gateway', '/keys/realtime', '/keyring', ...files, ...pubs]) fs.chownSync(f, 1000, 1000);
+        for (const d of ['/keys/api', '/keys/gateway', '/keys/realtime', '/keyring']) fs.chmodSync(d, 0o700);
+        for (const f of files) fs.chmodSync(f, 0o400);
+        for (const f of pubs) fs.chmodSync(f, 0o444);
+    volumes:
+      - keys-api:/keys/api
+      - keys-gateway:/keys/gateway
+      - keys-realtime:/keys/realtime
+      - keyring:/keyring
+
+  # --- one-shot: the visitor-country database --------------------------------
+  # Downloads the free DB-IP City Lite database (CC BY 4.0) on the first start
+  # and never again. Unlike the makers' step, a failed download does not stop
+  # the install: the collector then runs without countries (their documented
+  # fallback) and the next restart tries again. To refresh the database,
+  # delete dbip-city-lite.mmdb from the geoip volume and restart.
+  geoip:
+    image: ghcr.io/openlabs-so/openanalytics/migrate:v0.8.0
+    restart: "no"
+    user: "0:0"
+    entrypoint:
+      - node
+      - -e
+      - |
+        const fs = require('fs');
+        const zlib = require('zlib');
+        const { Readable } = require('stream');
+        const { pipeline } = require('stream/promises');
+        const out = '/geoip/dbip-city-lite.mmdb';
+        const tmp = '/geoip/.download.mmdb';
+        (async () => {
+          if (fs.existsSync(out)) return console.log('geoip: database present, left alone');
+          const now = new Date();
+          const prev = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
+          const months = [now, prev].map((d) => d.toISOString().slice(0, 7));
+          for (const month of months) {
+            try {
+              console.log('geoip: trying ' + month);
+              const res = await fetch('https://download.db-ip.com/free/dbip-city-lite-' + month + '.mmdb.gz');
+              if (!res.ok) throw new Error('HTTP ' + res.status);
+              await pipeline(Readable.fromWeb(res.body), zlib.createGunzip(), fs.createWriteStream(tmp));
+              const size = fs.statSync(tmp).size;
+              const fd = fs.openSync(tmp, 'r');
+              const tail = Buffer.alloc(Math.min(200000, size));
+              fs.readSync(fd, tail, 0, tail.length, size - tail.length);
+              fs.closeSync(fd);
+              if (!tail.includes('MaxMind.com')) throw new Error('not a MaxMind-format database');
+              fs.renameSync(tmp, out);
+              fs.chownSync(out, 1000, 1000);
+              fs.chmodSync(out, 0o444);
+              return console.log('geoip: wrote dbip-city-lite.mmdb (' + month + '). IP Geolocation by DB-IP, https://db-ip.com, CC BY 4.0.');
+            } catch (e) {
+              console.error('geoip: ' + month + ' failed: ' + (e.cause || e.message));
+              fs.rmSync(tmp, { force: true });
+            }
+          }
+          console.error('geoip: no database downloaded; visitor countries stay empty until a restart fetches one');
+        })();
+    volumes:
+      - geoip:/geoip
+
+  # --- one-shot: schemas -----------------------------------------------------
+  # Postgres, then ClickHouse; every app service waits for this to exit 0.
+  # Re-runs apply only what is pending, so it is also the upgrade path.
+  migrate:
+    image: ghcr.io/openlabs-so/openanalytics/migrate:v0.8.0
+    restart: "no"
+    entrypoint:
+      - sh
+      - -c
+      - |
+        node packages/postgres/dist/cli.js && node packages/clickhouse/dist/cli.js || exit 1
+        node packages/clickhouse/dist/cli.js backfill-15m --if-needed || echo 'oa-migrate: history fill backfill-15m failed; the stack starts anyway and the next start retries it' >&2
+        node packages/clickhouse/dist/cli.js backfill-15m --sessions --if-needed || echo 'oa-migrate: history fill backfill-15m --sessions failed; the stack starts anyway and the next start retries it' >&2
+        node apps/worker/dist/revenue/seed-15m-reroll.js --if-needed || echo 'oa-migrate: history fill seed-15m-reroll failed; the stack starts anyway and the next start retries it' >&2
+    environment:
+      ENVIRONMENT: production
+      POSTGRES_MIGRATION_URL: postgres://openanalytics:${POSTGRES_PASSWORD}@postgres:5432/openanalytics
+      CLICKHOUSE_URL: http://clickhouse:8123
+      # Must be `analytics`: the ClickHouse image grants on analytics.<table>.
+      CLICKHOUSE_DATABASE: analytics
+      CLICKHOUSE_MIGRATION_USER: oa_migration
+      CLICKHOUSE_MIGRATION_PASSWORD: ${CLICKHOUSE_MIGRATION_PASSWORD}
+    depends_on:
+      postgres: { condition: service_healthy }
+      clickhouse: { condition: service_healthy }
+
+  # --- services --------------------------------------------------------------
+
+  # The only process allowed to read ClickHouse; verifies queries the api signs.
+  gateway:
+    image: ghcr.io/openlabs-so/openanalytics/query-gateway:v0.8.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      ENVIRONMENT: production
+      LOG_LEVEL: info
+      PORT: 8081
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_DB: analytics
+      CLICKHOUSE_READ_USER: oa_read
+      CLICKHOUSE_READ_PASSWORD: ${CLICKHOUSE_READ_PASSWORD}
+      REALTIME_CACHE_REDIS_URL: redis://:${VALKEY_REALTIME_PASSWORD}@valkey-realtime:6379
+      QUERY_SIGNING_KEY_ID: oa-selfhost-1
+      QUERY_SIGNING_PUBLIC_KEY_FILE: /keys/query.public.pem
+    volumes:
+      - keys-gateway:/keys:ro
+    healthcheck: *node-healthcheck
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      keygen: { condition: service_completed_successfully }
+      valkey-realtime: { condition: service_healthy }
+    mem_limit: 512m
+
+  # Control plane: accounts, sites, keys, sharing, the MCP server.
+  api:
+    image: ghcr.io/openlabs-so/openanalytics/api:v0.8.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      ENVIRONMENT: production
+      LOG_LEVEL: info
+      PORT: 8082
+      DATABASE_URL: postgres://openanalytics:${POSTGRES_PASSWORD}@postgres:5432/openanalytics
+      REALTIME_CACHE_REDIS_URL: redis://:${VALKEY_REALTIME_PASSWORD}@valkey-realtime:6379
+      QUERY_GATEWAY_URL: http://gateway:8081
+      AUTH_BASE_URL: ${API_URL}
+      APP_BASE_URL: ${APP_URL}
+      COLLECTOR_BASE_URL: ${COLLECTOR_URL}
+      AUTH_TRUSTED_ORIGINS: ${APP_URL}
+      PRODUCT_NAME: Open Analytics
+      AUTH_SECRET: ${AUTH_SECRET}
+      TRIAL_IDENTITY_SECRET: ${TRIAL_IDENTITY_SECRET}
+      CREDENTIAL_SOURCE_SECRET: ${CREDENTIAL_SOURCE_SECRET}
+      OA_CREDENTIAL_KEYRING_FILE: /keyring/credential-keyring.json
+      QUERY_SIGNING_KEY_ID: oa-selfhost-1
+      # Password sign-in, which the first-run "create the first account" screen needs.
+      AUTH_PASSWORD_SIGNIN: enabled
+      QUERY_SIGNING_PRIVATE_KEY_FILE: /keys/query.private.pem
+      REALTIME_TOKEN_SIGNING_KEY_FILE: /keys/realtime.private.pem
+    volumes:
+      - keys-api:/keys:ro
+      - keyring:/keyring:ro
+    healthcheck: *node-healthcheck
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      keygen: { condition: service_completed_successfully }
+      gateway: { condition: service_healthy }
+      valkey-realtime: { condition: service_healthy }
+    mem_limit: 512m
+
+  # Ingest: receives page views and events, and serves the oa.js tracking script.
+  collector:
+    image: ghcr.io/openlabs-so/openanalytics/collector:v0.8.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      ENVIRONMENT: production
+      LOG_LEVEL: info
+      PORT: 8083
+      DATABASE_URL: postgres://openanalytics:${POSTGRES_PASSWORD}@postgres:5432/openanalytics
+      EVENT_STREAM_REDIS_URL: redis://:${VALKEY_QUEUE_PASSWORD}@valkey-queue:6379
+      REALTIME_CACHE_REDIS_URL: redis://:${VALKEY_REALTIME_PASSWORD}@valkey-realtime:6379
+      ANONYMOUS_IDENTITY_SECRET: ${ANONYMOUS_IDENTITY_SECRET}
+      ANONYMOUS_IDENTITY_KEY_VERSION: 1
+    # The makers' start command, with the country database switched on only
+    # when the geoip step managed to download it (the collector refuses to
+    # start on a path that names no file).
+    command:
+      - sh
+      - -c
+      - |
+        if [ -f /geoip/dbip-city-lite.mmdb ]; then export GEOIP_DB_PATH=/geoip/dbip-city-lite.mmdb; fi
+        exec node "$$APP_MAIN"
+    volumes:
+      - geoip:/geoip
+    healthcheck: *node-healthcheck
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      keygen: { condition: service_completed_successfully }
+      geoip: { condition: service_completed_successfully }
+      valkey-queue: { condition: service_healthy }
+      valkey-realtime: { condition: service_healthy }
+    mem_limit: 512m
+
+  # The live stream behind the realtime dashboard.
+  realtime:
+    image: ghcr.io/openlabs-so/openanalytics/realtime:v0.8.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      ENVIRONMENT: production
+      LOG_LEVEL: info
+      PORT: 8084
+      REALTIME_CACHE_REDIS_URL: redis://:${VALKEY_REALTIME_PASSWORD}@valkey-realtime:6379
+      REALTIME_TOKEN_VERIFY_KEY_FILE: /keys/realtime.public.pem
+    volumes:
+      - keys-realtime:/keys:ro
+    healthcheck: *node-healthcheck
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      keygen: { condition: service_completed_successfully }
+      valkey-realtime: { condition: service_healthy }
+    mem_limit: 512m
+
+  # Drains the queue into ClickHouse; sessions, rollups, exports, mail, deletions.
+  worker:
+    image: ghcr.io/openlabs-so/openanalytics/worker:v0.8.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      ENVIRONMENT: production
+      LOG_LEVEL: info
+      PORT: 8085
+      DATABASE_URL: postgres://openanalytics:${POSTGRES_PASSWORD}@postgres:5432/openanalytics
+      EVENT_STREAM_REDIS_URL: redis://:${VALKEY_QUEUE_PASSWORD}@valkey-queue:6379
+      REALTIME_CACHE_REDIS_URL: redis://:${VALKEY_REALTIME_PASSWORD}@valkey-realtime:6379
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_DB: analytics
+      CLICKHOUSE_INGEST_USER: oa_ingest
+      CLICKHOUSE_INGEST_PASSWORD: ${CLICKHOUSE_INGEST_PASSWORD}
+      CLICKHOUSE_MAINTENANCE_USER: oa_maintenance
+      CLICKHOUSE_MAINTENANCE_PASSWORD: ${CLICKHOUSE_MAINTENANCE_PASSWORD}
+      ANONYMOUS_IDENTITY_SECRET: ${ANONYMOUS_IDENTITY_SECRET}
+      ANONYMOUS_IDENTITY_KEY_VERSION: 1
+      OA_CREDENTIAL_KEYRING_FILE: /keyring/credential-keyring.json
+      PRODUCT_NAME: Open Analytics
+      # Only a from-address: nothing is sent until a mail relay is set up in
+      # the dashboard under Account, then Deployment (the makers' placeholder).
+      EMAIL_FROM: "Open Analytics <analytics@analytics.example>"
+    volumes:
+      - keyring:/keyring:ro
+    healthcheck: *node-healthcheck
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      keygen: { condition: service_completed_successfully }
+      valkey-queue: { condition: service_healthy }
+      valkey-realtime: { condition: service_healthy }
+    mem_limit: 768m
+
+  # The dashboard. Its entrypoint writes the three public addresses into the
+  # browser bundle at start.
+  web:
+    image: ghcr.io/openlabs-so/openanalytics/web:v0.8.0
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: ${API_URL}
+      NEXT_PUBLIC_REALTIME_URL: ${REALTIME_URL}
+      NEXT_PUBLIC_COLLECTOR_URL: ${COLLECTOR_URL}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    depends_on:
+      api: { condition: service_healthy }
+    mem_limit: 512m
+
+volumes:
+  pg-data:
+  ch-data:
+  valkey-queue-data:
+  valkey-realtime-data:
+  keys-api:
+  keys-gateway:
+  keys-realtime:
+  keyring:
+  geoip:

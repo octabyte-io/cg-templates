@@ -1,0 +1,28 @@
+services:
+  larapaper:
+    # The official image (docker/prod/docker-compose.yml in the LaraPaper repo).
+    # It runs nginx, PHP, the queue worker and the scheduler, applies database
+    # migrations on start and has its own healthcheck.
+    image: ghcr.io/usetrmnl/larapaper:0.47.0
+    restart: unless-stopped
+    environment:
+      APP_URL: ${APP_URL}
+      # Laravel's application key: 32 random bytes, written as base64:<key>.
+      APP_KEY: base64:${APP_KEY}
+      # Cloudgate serves LaraPaper over HTTPS through its proxy.
+      FORCE_HTTPS: "true"
+      PHP_OPCACHE_ENABLE: "1"
+      # serversideup/php setting: listen on IPv4 only. Cloudgate's proxy reaches the app
+      # over IPv4, and nginx won't start on hosts where Docker has IPv6 turned off.
+      NGINX_LISTEN_IP_PROTOCOL: ipv4
+      TRMNL_PROXY_REFRESH_MINUTES: "15"
+      # SQLite, kept in the database volume below.
+      DB_DATABASE: database/storage/database.sqlite
+    volumes:
+      - larapaper-database:/var/www/html/database/storage
+      # The screen images LaraPaper renders for your displays.
+      - larapaper-images:/var/www/html/storage/app/public/images/generated
+
+volumes:
+  larapaper-database:
+  larapaper-images:

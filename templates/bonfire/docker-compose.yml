@@ -1,0 +1,94 @@
+services:
+  bonfire:
+    image: bonfirenetworks/bonfire:1.0.7-social-amd64
+    restart: unless-stopped
+    depends_on:
+      bonfire-db:
+        condition: service_healthy
+      bonfire-search:
+        condition: service_healthy
+    # Bonfire reads an email setting that is set but empty as a real value, so
+    # the empty optional ones are removed before it starts. With no email
+    # server, Bonfire runs without sending email.
+    command:
+      - sh
+      - -c
+      - >-
+        for v in MAIL_SERVER MAIL_USER MAIL_PASSWORD MAIL_FROM; do
+        [ -n "$$(printenv "$$v")" ] || unset "$$v"; done;
+        exec ./bin/bonfire start
+    environment:
+      HOSTNAME: ${HOSTNAME}
+      SERVER_PORT: "4000"
+      PUBLIC_PORT: "443"
+      MIX_ENV: prod
+      LANG: en_US.UTF-8
+      REPLACE_OS_VARS: "true"
+      LIVEVIEW_ENABLED: "true"
+      # Bandit listens on IPv4; the Cowboy setting binds IPv6 only, which
+      # fails where Docker has no IPv6.
+      PLUG_SERVER: bandit
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      SIGNING_SALT: ${SIGNING_SALT}
+      ENCRYPTION_SALT: ${ENCRYPTION_SALT}
+      RELEASE_COOKIE: ${RELEASE_COOKIE}
+      POSTGRES_HOST: bonfire-db
+      POSTGRES_USER: postgres
+      POSTGRES_DB: bonfire_db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SEARCH_ADAPTER: meili
+      SEARCH_MEILI_INSTANCE: http://bonfire-search:7700
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      # BONFIRE_CONSOLE_TOKEN is left unset on purpose: without it Bonfire's
+      # in-browser admin shell (/admin/console) stays switched off.
+      MAIL_BACKEND: smtp
+      MAIL_SERVER: ${MAIL_SERVER:-}
+      MAIL_PORT: ${MAIL_PORT:-465}
+      MAIL_USER: ${MAIL_USER:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+    volumes:
+      - bonfire-uploads:/opt/app/data/uploads
+    stop_grace_period: 42s
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:4000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+  bonfire-db:
+    image: postgis/postgis:17-3.5-alpine
+    restart: unless-stopped
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: bonfire_db
+    volumes:
+      - bonfire-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bonfire_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  bonfire-search:
+    image: getmeili/meilisearch:v1.11.3
+    restart: unless-stopped
+    environment:
+      MEILI_ENV: production
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - bonfire-search-data:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:7700/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  bonfire-uploads:
+  bonfire-db-data:
+  bonfire-search-data:
