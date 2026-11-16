@@ -1,0 +1,30 @@
+name: Fluxer
+description: "Self-hosted Fluxer is open-source, Discord-style community chat with channels, roles, direct messages and bots on your own server. Text chat only."
+version: "2026.1116.30644"
+tags: [discord alternative, community chat, open source discord, group chat, chat server, gaming community]
+links:
+  website: https://fluxer.com
+  docs: https://docs.fluxer.com/operator/
+  source: https://github.com/fluxerapp/fluxer
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  APP_URL: { value: "{{domains.fluxer.url}}" }
+  APP_HOST: { value: "{{domains.fluxer.host}}" }
+  FLUXER_SETUP_TOKEN: { generate: hex }
+  POSTGRES_PASSWORD: { generate: hex }
+  MEILI_MASTER_KEY: { generate: hex }
+  FLUXER_SUDO_MODE_SECRET: { generate: hex }
+  FLUXER_CONNECTION_INITIATION_SECRET: { generate: hex }
+  FLUXER_PROFILE_PSEUDONYM_SECRET: { generate: hex }
+  FLUXER_GATEWAY_RPC_AUTH_TOKEN: { generate: hex }
+  FLUXER_ERLANG_COOKIE: { generate: hex }
+  FLUXER_MEDIA_PROXY_SECRET_KEY: { generate: hex }
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: { generate: base64 }
+  FLUXER_ADMIN_SECRET_KEY_BASE: { generate: hex }
+  FLUXER_ADMIN_OAUTH_CLIENT_SECRET: { generate: hex }
+domains:
+  - { service: fluxer, port: 80 }
+files:
+  - { path: Caddyfile }

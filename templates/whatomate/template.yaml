@@ -1,0 +1,31 @@
+name: Whatomate
+description: "Whatomate is a self-hosted WhatsApp team inbox on Meta's official API, with bulk campaigns, message templates, chatbots and saved replies."
+version: "0.1.1-beta-0.17"
+tags: [wati alternative, whatsapp team inbox, whatsapp business api, whatsapp chatbot, whatsapp bulk messaging, respond.io alternative, whatsapp crm]
+links:
+  website: https://shridarpatil.github.io/whatomate/
+  docs: https://shridarpatil.github.io/whatomate/
+  source: https://github.com/shridarpatil/whatomate
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.whatomate.url}}" }
+  POSTGRES_PASSWORD: { generate: password }
+  JWT_SECRET: { generate: hex }
+  ENCRYPTION_KEY: { generate: hex }
+  WEBHOOK_VERIFY_TOKEN: { generate: hex }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: Used for business hours in call menus, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: whatomate, port: 8080 }
