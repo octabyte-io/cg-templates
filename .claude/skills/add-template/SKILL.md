@@ -6,8 +6,8 @@ description: Add one or more apps to the cg-templates catalogue end to end, in p
 # Add templates
 
 Turns a list of app names into one pull request that adds every app that works. For each app
-there are four jobs: **research**, **page content** (via SearchFit), **alternatives page**, and the
-**Cloudgate template** (proved with `check` and `try`). Then one **site-wide SEO/AEO audit**, then
+there are five jobs: **research**, **page content** (via SearchFit), **alternatives page**, a
+**compare page** (`<app> vs <rival>`), and the **Cloudgate template** (proved with `check` and `try`). Then one **site-wide SEO/AEO audit**, then
 **one PR**. The user merges it.
 
 Speed matters: the user wants this fast, so the work runs as parallel subagents, and nothing waits
@@ -47,6 +47,8 @@ t=0   for every template, at once:
       when every research agent has finished:
         ONE Alternatives agent for all templates (references/alternatives-agent.md)
         -> site/src/products.ts, site/src/alternatives/*.md, $W/alternatives.json
+      when the Alternatives agent has finished, for every template, at once:
+        Compare agent  (references/compare-agent.md)   -> site/src/compare/<id>-vs-<rival>.md
 then  orchestrator: merge seo.json into template.yaml, drop failed templates, `pnpm build`
 then  ONE Audit agent (references/audit-agent.md) -> fixes on the new pages, site-wide report
 then  orchestrator: final build, commit, push, one PR (references/pr-body.md)
@@ -78,6 +80,7 @@ Parallel agents share one working tree, so each file has exactly one writer:
 | Research | `templates/<id>/screenshots/`, `$W/research.md` |
 | Content | `templates/<id>/index.md`, `$W/seo.json` (description + tags for `template.yaml`) |
 | Alternatives | `site/src/products.ts`, `site/src/alternatives/*.md`, `$W/alternatives.json` |
+| Compare | `site/src/compare/<id>-vs-<rival>.md` (one file, its own template's) |
 | Audit | the new templates' `index.md`, `site/src/alternatives/*.md` it was asked to fix, shared copy only with care (see its brief) |
 | Orchestrator | merging `seo.json` into `template.yaml`, removing failed templates, git |
 
@@ -125,7 +128,7 @@ When all agents (except the audit) are done:
    decision wins; drop the line if it's empty), and drop `switching` if `alternativeTo` went.
 2. **Drop every failed or not-possible template completely**, so the PR holds only what works: delete
    `templates/<id>/`, remove its entry from every `site/src/alternatives/<product>.md` `apps:` map,
-   and remove any product (from `products.ts`) and alternatives file that the Alternatives agent
+   delete its `site/src/compare/<id>-vs-*.md`, and remove any product (from `products.ts`) and alternatives file that the Alternatives agent
    created only for it, and restore any file in its `files_edited` from the copy it saved. `$W/alternatives.json` lists exactly what it touched for each template, so
    this is mechanical. If a failed template was a product's `pick`, re-point the `pick` (and the
    lede that names it) to an app that stays, or remove the page if no app stays.
