@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { usedCategories } from '../../lib/catalogue';
+import { comparisons } from '../../lib/compare';
+import { breadcrumbSchema, graph, pageListSchema } from '../../lib/schema';
+import { href } from '../../lib/site';
+
+const all = comparisons();
+// Grouped by the app's category, in the fixed category order, so a reader finds their kind of tool.
+const groups = usedCategories()
+  .map((category) => ({ category, items: all.filter((c) => c.app.category.id === category.id) }))
+  .filter((group) => group.items.length > 0);
+const newest = all.map((c) => (c.updated ?? c.checked).getTime());
+const trail = [
+  { name: 'Home', path: '' },
+  { name: 'Compare', path: 'compare/' },
+];
+---
+
+<Base
+  title="Open-source apps compared with paid tools"
+  description="Free, self-hosted apps compared side by side with the paid tools they replace: features, pricing, hosting, your data and how to switch."
+  path="compare/"
+  pageType="CollectionPage"
+  dateModified={newest.length ? new Date(Math.max(...newest)) : undefined}
+  jsonLd={graph(
+    breadcrumbSchema(trail),
+    pageListSchema(
+      'Open-source apps compared with paid tools',
+      all.map((c) => ({ name: `${c.app.name} vs ${c.rival.name}`, path: `compare/${c.slug}/` })),
+    ),
+  )}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead one pad">
+    <div class="body">
+      <h1 class="h1">Open-source apps compared with the tools you pay for</h1>
+      <p class="lede">
+        Each comparison puts a free app from the catalogue next to the tool people usually pay for: what each one does, what it
+        costs, where your data lives, and how to move across.
+      </p>
+    </div>
+  </section>
+  {
+    groups.map(({ category, items }) => (
+      <section class="sec browse pad" aria-labelledby={`c-${category.id}`}>
+        <h2 class="h2" id={`c-${category.id}`}>
+          <a class="plain" href={href(`categories/${category.id}/`)}>{category.name}</a>
+        </h2>
+        <ul class="azlist">
+          {items.map((c) => (
+            <li>
+              <a href={href(`compare/${c.slug}/`)}>
+                {c.app.name} vs {c.rival.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>

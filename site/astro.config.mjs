@@ -35,6 +35,9 @@ function lastmod(url) {
   const path = new URL(url).pathname.slice(base.replace(/\/?$/, '/').length).replace(/\/$/, '');
   const app = path.match(/^templates\/([^/]+)$/);
   if (app) return lastCommit(`${templatesDir}/${app[1]}`);
+  const compare = path.match(/^compare\/([^/]+)$/);
+  if (compare) return lastCommit(`src/compare/${compare[1]}.md`);
+  if (path === 'compare') return lastCommit('src/compare');
   if (path === '' || /^(templates|categories|alternatives)(\/|$)/.test(path)) return lastCommit(templatesDir);
   return lastCommit(`src/pages/${path}.astro`);
 }

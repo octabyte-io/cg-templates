@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { alternativesPages, getTemplates, IMPORT_LABEL, licenceKind, GITHUB_REPO, isSample, listNames } from '../lib/catalogue';
 import { alternativesLede, appMarkdown, appUrl, SAMPLE_NOTE } from '../lib/machine';
+import { comparisonMarkdown, comparisons } from '../lib/compare';
 import { absolute, cloudgate, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 /** Every app page and every alternatives page, as one Markdown file. */
@@ -50,6 +51,11 @@ function body(): string {
         '',
       );
     }
+  }
+  const compared = comparisons();
+  if (compared.length) {
+    out.push('## Comparisons', '');
+    for (const c of compared) out.push(comparisonMarkdown(c, absolute(`compare/${c.slug}/`), appUrl(c.app), 3), '');
   }
   return out.join('\n').replace(/\n{3,}/g, '\n\n');
 }

@@ -19,6 +19,7 @@ import type { Product } from '../../products';
 import { breadcrumbSchema, faqSchema, graph, itemListSchema } from '../../lib/schema';
 import { deployUrl, href } from '../../lib/site';
 import { costAnswer } from '../../lib/copy';
+import { comparisonOf } from '../../lib/compare';
 
 export function getStaticPaths() {
   return alternativesPages().map((page) => ({ params: { id: page.product.id }, props: page }));
@@ -280,6 +281,11 @@ const thumb = (app: Template) => {
                     <a class="btn sm ghost" href={href(`templates/${app.id}/`)}>
                       About {app.name} <Chev />
                     </a>
+                    {comparisonOf(app.id, product.id) && (
+                      <a class="btn sm ghost" href={href(`compare/${app.id}-vs-${product.id}/`)}>
+                        {app.name} vs {product.name} <Chev />
+                      </a>
+                    )}
                   </div>
                 </div>
                 {shot && (
