@@ -49,6 +49,9 @@ t=0   for every template, at once:
         -> site/src/products.ts, site/src/alternatives/*.md, $W/alternatives.json
       when the Alternatives agent has finished, for every template, at once:
         Compare agent  (references/compare-agent.md)   -> site/src/compare/<id>-vs-<rival>.md
+      when every Compare agent has finished:
+        ONE Related-pages agent (references/related-pages-agent.md)
+        -> edits to older site/src/compare/*.md the new templates affect
 then  orchestrator: merge seo.json into template.yaml, drop failed templates, `pnpm build`
 then  ONE Audit agent (references/audit-agent.md) -> fixes on the new pages, site-wide report
 then  orchestrator: final build, commit, push, one PR (references/pr-body.md)
@@ -81,6 +84,7 @@ Parallel agents share one working tree, so each file has exactly one writer:
 | Content | `templates/<id>/index.md`, `$W/seo.json` (description + tags for `template.yaml`) |
 | Alternatives | `site/src/products.ts`, `site/src/alternatives/*.md`, `$W/alternatives.json` |
 | Compare | `site/src/compare/<id>-vs-<rival>.md` (one file, its own template's) |
+| Related pages | older `site/src/compare/*.md` named by `related.mjs`, and `site/astro.config.mjs` `redirects` if one is renamed |
 | Audit | the new templates' `index.md`, `site/src/alternatives/*.md` it was asked to fix, shared copy only with care (see its brief) |
 | Orchestrator | merging `seo.json` into `template.yaml`, removing failed templates, git |
 
@@ -128,7 +132,8 @@ When all agents (except the audit) are done:
    decision wins; drop the line if it's empty), and drop `switching` if `alternativeTo` went.
 2. **Drop every failed or not-possible template completely**, so the PR holds only what works: delete
    `templates/<id>/`, remove its entry from every `site/src/alternatives/<product>.md` `apps:` map,
-   delete its `site/src/compare/<id>-vs-*.md`, and remove any product (from `products.ts`) and alternatives file that the Alternatives agent
+   delete its `site/src/compare/<id>-vs-*.md` and undo the Related-pages agent's edits made for it
+   (it lists them per template), and remove any product (from `products.ts`) and alternatives file that the Alternatives agent
    created only for it, and restore any file in its `files_edited` from the copy it saved. `$W/alternatives.json` lists exactly what it touched for each template, so
    this is mechanical. If a failed template was a product's `pick`, re-point the `pick` (and the
    lede that names it) to an app that stays, or remove the page if no app stays.

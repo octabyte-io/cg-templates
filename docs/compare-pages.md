@@ -61,7 +61,9 @@ The app's page and the rival's alternatives page link to it.
 - Only when neither fits (a tool's real rival is an open-source app with no template, such as
   Jellystat and Tautulli), name it in the file itself with `vs: <slug>`, `vsName` and `vsUrl`. It gets
   a letter tile and no alternatives page.
-- One page per template is the goal. Two templates that are each other's rival share one page.
+- One page per template is the goal. Two templates that are each other's rival share one page, unless
+  one of them lists products in `alternativeTo`: then it also gets its own page against the first
+  (Mastodon is the rival on GoToSocial vs Mastodon and has its own Mastodon vs X page).
 
 ## Research: facts only
 
@@ -119,5 +121,37 @@ Field by field:
   the site always says it: the app is free; to run it you need Cloudgate and a server, which hosted
   Cloudgate can provide.
 - `sources`: the rival's pricing page and at least one more page each for the rival and the app.
+
+## When a template is added: update the pages it affects
+
+A new template can make older compare pages out of date. Find them with
+
+```bash
+node .claude/skills/compare-pages/scripts/related.mjs <new-id> [<new-id> ...]
+```
+
+from the repository root. It sorts the existing pages into four groups:
+
+- **A. The rival is now a template.** A page that named its rival with `vsName` (Jellystat vs
+  Tautulli) should point at the new template instead. Set `vs` to the template id and drop `vsName`
+  (keep `vsUrl` only if it is the rival's own site). The rival then gets its logo, its app page link
+  and a Deploy button. If the template id differs from the old `vs`, the file and its URL change:
+  rename the file and add the old URL to `redirects` in `site/astro.config.mjs`, so links and search
+  results still land. Re-read the page: "Tautulli is not in the catalogue" or "you install it
+  yourself" must go, and moving between the two may now be one click on Cloudgate.
+- **B. Same rival product.** Pages comparing another app with a product the new app also replaces.
+  Change one only where the new app makes it wrong or incomplete: it calls its app "the only
+  self-hosted" option, says no open-source tool has a feature the new app has, or lists the
+  alternatives and leaves the new one out. Don't add the new app to every page; the rival's
+  alternatives page lists them all and every compare page already links there.
+- **C. Pages that name the new app.** Link the first mention to its app page with a relative link,
+  `[Lightdash](../../templates/lightdash/)`, and correct anything the text says about it ("has no
+  template", "not covered here", an old fact).
+- **D. Same category.** Counted only. Their "More comparisons" list, the `/compare/` index, the
+  alternatives pages' buttons, `llms.txt` and the sitemap update themselves from the files, so they
+  need no edit.
+
+Edits follow the same rules as new pages: facts you checked, `sources` added for any new fact, and
+`checked` moved to this month only if you re-checked the page's facts, not for a link.
 
 Run `pnpm build` in `site/` to check every page before you commit.
