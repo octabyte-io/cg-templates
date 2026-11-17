@@ -1,0 +1,26 @@
+name: Lightdash
+description: "Self-hosted Lightdash: open-source BI on your dbt project and data warehouse. Explore metrics, build charts and dashboards, a Looker alternative."
+version: "3.278.1"
+tags: [business intelligence, looker alternative, dbt, metrics layer, dashboards, data warehouse]
+links:
+  website: https://www.lightdash.com
+  docs: https://docs.lightdash.com
+  source: https://github.com/lightdash/lightdash
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  SITE_URL: { value: "{{domains.lightdash.url}}" }
+  # Encrypts stored warehouse credentials; it must never change after setup.
+  LIGHTDASH_SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  # Exports are downloaded from the bundled S3 storage at its own address;
+  # Lightdash signs each download link for this address.
+  STORAGE_URL: { value: "{{domains.lightdash-storage.url}}" }
+  STORAGE_ACCESS_KEY: { generate: password }
+  STORAGE_SECRET_KEY: { generate: password }
+domains:
+  - { service: lightdash, port: 8080 }
+  - { service: lightdash-storage, port: 9000 }
+files:
+  - { path: init-minio.sh.txt }
