@@ -1,0 +1,21 @@
+name: OpenCms
+description: "Self-hosted OpenCms: an open-source Java CMS to run many websites in several languages, with editing right on the page and a publish step."
+version: "22.0"
+tags: [sitecore alternative, adobe experience manager alternative, java cms, open source cms, multisite cms, multilingual website, magnolia alternative]
+links:
+  website: https://www.opencms.org
+  docs: https://documentation.opencms.org
+  source: https://github.com/alkacon/opencms-core
+cloudgate: 0.1.0
+compose: app
+# OpenCms runs on Java in Jetty; the official image starts it with a 2 GB heap
+# (-Xmx2g), plus MariaDB alongside it.
+size: large
+inputs:
+  SERVER_URL: { value: "{{domains.opencms.url}}" }
+  DB_ROOT_PASSWORD: { generate: password }
+  ADMIN_PASSWORD: { generate: password }
+domains:
+  - { service: opencms, port: 8080 }
+files:
+  - { path: disable-demo-accounts.txt }

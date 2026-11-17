@@ -1,0 +1,18 @@
+<?php
+
+// Cockpit's config/config.php, mounted read-only by docker-compose.yml.
+// The two asset settings are the ones the official image ships with.
+return [
+    // Signs API tokens, password-reset links and sessions. Cockpit's built-in
+    // default is the same on every install, so each install gets its own.
+    'sec-key' => getenv('COCKPIT_SEC_KEY'),
+
+    // The public https address, so links to uploaded files in API answers are right
+    // behind Cloudgate's proxy.
+    'site_url' => getenv('COCKPIT_SITE_URL'),
+
+    'assets' => [
+        'vips' => true,
+        'ffmpeg' => true,
+    ],
+];

@@ -1,0 +1,72 @@
+services:
+  enonic-xp:
+    image: enonic/xp:8.1.3-ubuntu
+    restart: unless-stopped
+    depends_on:
+      enonic-xp-apps:
+        condition: service_completed_successfully
+    # XP reads the password of its built-in "su" admin only as a hash
+    # (xp.suPassword = {sha512}...). This hashes the generated password, hands
+    # it to XP and starts the image's own entrypoint as usual.
+    entrypoint:
+      - bash
+      - -c
+      - >-
+        export XP_OPTS="-Dxp.suPassword={sha512}$$(printf %s "$$SU_PASSWORD" | sha512sum | cut -d' ' -f1) $$XP_OPTS"
+        && exec /usr/local/bin/docker-entrypoint.sh server.sh
+    environment:
+      SU_PASSWORD: ${SU_PASSWORD}
+      # Exit on OutOfMemoryError so the restart policy brings XP back up (Enonic's Docker docs).
+      XP_OPTS: -XX:+ExitOnOutOfMemoryError
+    # The directories Enonic's Docker docs say to keep.
+    volumes:
+      - enonic-xp-blob:/enonic-xp/home/repo/blob
+      - enonic-xp-index:/enonic-xp/home/repo/index
+      - enonic-xp-deploy:/enonic-xp/home/deploy
+      - enonic-xp-snapshots:/enonic-xp/home/snapshots
+      - enonic-xp-data:/enonic-xp/home/data
+      - enonic-xp-work:/enonic-xp/home/work
+    healthcheck:
+      # The image has no curl or wget; bash's /dev/tcp checks the web port.
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 5m
+
+  # Runs once at each start: puts Content Studio, Enonic's editing app, in
+  # XP's deploy folder, where XP installs it when it starts. Replaces an older
+  # copy when the template moves to a newer version. If Enonic's repository
+  # can't be reached, XP still starts (Content Studio can then be installed
+  # from the Applications app) and the next start tries again.
+  enonic-xp-apps:
+    image: curlimages/curl:8.17.0
+    restart: "no"
+    user: "0"
+    environment:
+      CS_VERSION: 6.1.0
+      CS_SHA1: f43b866229c03276e53f0053c21953f92ec47df0
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        jar="/deploy/contentstudio-$$CS_VERSION.jar";
+        url="https://repo.enonic.com/public/com/enonic/app/contentstudio/$$CS_VERSION/contentstudio-$$CS_VERSION.jar";
+        if [ ! -f "$$jar" ]; then
+        if curl -fsSL --retry 3 -o /deploy/contentstudio.tmp "$$url" && echo "$$CS_SHA1  /deploy/contentstudio.tmp" | sha1sum -c -; then
+        rm -f /deploy/contentstudio-*.jar; mv /deploy/contentstudio.tmp "$$jar";
+        else
+        rm -f /deploy/contentstudio.tmp; echo "Could not download Content Studio $$CS_VERSION; XP starts without it.";
+        fi;
+        fi;
+        chown -R 1337:0 /deploy
+    volumes:
+      - enonic-xp-deploy:/deploy
+
+volumes:
+  enonic-xp-blob:
+  enonic-xp-index:
+  enonic-xp-deploy:
+  enonic-xp-snapshots:
+  enonic-xp-data:
+  enonic-xp-work:

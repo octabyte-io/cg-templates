@@ -1,0 +1,55 @@
+services:
+  opencms:
+    # The Jakarta EE variant, which Alkacon recommends for new installations.
+    image: alkacon/opencms-docker:22.0
+    restart: unless-stopped
+    init: true
+    depends_on:
+      opencms-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: opencms-db
+      DB_USER: root
+      DB_PASSWD: ${DB_ROOT_PASSWORD}
+      DB_NAME: opencms
+      # Password of the "Admin" account, set during the first-run setup.
+      ADMIN_PASSWD: ${ADMIN_PASSWORD}
+      SERVER_URL: ${SERVER_URL}
+      # The workplace (editing interface) and the Mercury demo website.
+      OPENCMS_COMPONENTS: workplace,demo
+      TIME_ZONE: Etc/UTC
+    volumes:
+      # OpenCms' configuration, caches and search indexes.
+      - opencms-webapps:/container/webapps
+      # Disables the Mercury demo's sign-in accounts, which all have a known
+      # password, during the first-run setup.
+      - ../files/disable-demo-accounts.txt:/root/autosetup/50-disable-demo-accounts.sh:ro
+    healthcheck:
+      # The first start installs every module into the database before the web
+      # server starts, which takes several minutes.
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/system/login/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20m
+
+  opencms-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    init: true
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      MARIADB_DISABLE_UPGRADE_BACKUP: 1
+    volumes:
+      - opencms-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  opencms-webapps:
+  opencms-db-data:

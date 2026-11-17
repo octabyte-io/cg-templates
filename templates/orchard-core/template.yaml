@@ -1,0 +1,46 @@
+name: Orchard Core
+description: "Self-hosted Orchard Core is an open-source .NET CMS for websites, blogs and headless GraphQL content, with workflows and multilingual, multi-site support."
+version: "3.0.1"
+tags: [sitecore alternative, dotnet cms, headless cms, open source cms, contentful alternative, multi-site cms, asp.net core cms]
+links:
+  website: https://orchardcore.net
+  docs: https://docs.orchardcore.net
+  source: https://github.com/OrchardCMS/OrchardCore
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  SITE_NAME:
+    ask:
+      label: Site name
+      description: The name of your website, shown in its title and header. You can change it later in the admin.
+      default: My Site
+  RECIPE:
+    ask:
+      label: Starting recipe
+      description: "What the site starts as: Blog, Agency (a company website), ComingSoon, Headless (content API only), Blank, or SaaS (manage several sites). It can't be changed later."
+      default: Blog
+      pattern: "Blog|Agency|ComingSoon|Headless|Blank|SaaS"
+  ADMIN_USERNAME:
+    ask:
+      label: Admin username
+      description: The name you sign in with at /admin. Cloudgate creates a strong password for it, shown afterwards on the app's variables page as ADMIN_PASSWORD.
+      default: admin
+      pattern: "[A-Za-z0-9._-]{2,32}"
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The admin account's email address, used for password resets.
+      format: email
+  # Orchard Core refuses a password without an uppercase letter, a lowercase letter, a digit
+  # and a symbol, so the generated part gets a fixed prefix.
+  ADMIN_PASSWORD_RANDOM: { generate: password }
+  ADMIN_PASSWORD: { value: "Oc-1{{ADMIN_PASSWORD_RANDOM}}" }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The site's time zone for dates and publishing, as an IANA name such as Europe/Berlin.
+      default: Etc/UTC
+      required: false
+domains:
+  - { service: orchard-core, port: 80 }

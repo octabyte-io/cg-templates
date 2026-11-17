@@ -1,0 +1,35 @@
+# Orchard Core publishes no compose file; this runs its official image
+# (orchardproject/orchardcore-cms-linux, built from the repo's Dockerfile) as the Docker docs
+# describe: one container listening on port 80. It uses the built-in SQLite database, kept with
+# the media library, settings and keys in App_Data on the named volume below, so there is no
+# separate database to run or back up.
+services:
+  orchard-core:
+    image: orchardproject/orchardcore-cms-linux:3.0.1
+    restart: unless-stopped
+    environment:
+      # Cloudgate's proxy adds HTTPS in front; trust its X-Forwarded-* headers so the links and
+      # sign-in cookies Orchard Core makes use the site's https:// address.
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      # Auto Setup (the OrchardCore.AutoSetup feature, enabled in this image) installs the site on
+      # its first request with these values, instead of showing the setup wizard to whoever opens
+      # the address first. It does nothing once the site is installed.
+      OrchardCore__OrchardCore_AutoSetup__AutoSetupPath: ""
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__ShellName: Default
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__SiteName: ${SITE_NAME}
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__SiteTimeZone: ${TIMEZONE:-Etc/UTC}
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__RecipeName: ${RECIPE}
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__AdminUsername: ${ADMIN_USERNAME}
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__AdminEmail: ${ADMIN_EMAIL}
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__AdminPassword: ${ADMIN_PASSWORD}
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__DatabaseProvider: Sqlite
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__DatabaseConnectionString: ""
+      OrchardCore__OrchardCore_AutoSetup__Tenants__0__DatabaseTablePrefix: ""
+      # Not read by Orchard Core: ADMIN_PASSWORD is built from it in template.yaml, and every
+      # input has to appear in this file.
+      ADMIN_PASSWORD_RANDOM: ${ADMIN_PASSWORD_RANDOM}
+    volumes:
+      - orchard-core-data:/app/App_Data
+
+volumes:
+  orchard-core-data:
