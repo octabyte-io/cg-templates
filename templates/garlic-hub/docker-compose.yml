@@ -1,0 +1,21 @@
+# From Garlic-Hub's official docker-compose.yaml and its Docker Hub install guide
+# (github.com/garlic-signage/garlic-hub, release v1.2.0), using the maintainer's pre-built image.
+services:
+  garlic-hub:
+    # Apache + PHP on port 80 with a built-in SQLite database. On every start its entrypoint creates
+    # the folders and crypto keys it is missing and runs the database migrations. Until the first
+    # admin is saved, every page redirects to /create-initial, where that admin is created.
+    image: sagiadinos/garlic-hub:1.2.0
+    restart: unless-stopped
+    environment:
+      # Signs the media download links handed to players. The entrypoint would otherwise write a
+      # new random one into the container on every re-creation; a real variable wins over that file.
+      APP_SECRET: ${APP_SECRET}
+    volumes:
+      # The database, keys, sessions, logs and all uploaded media and templates. The official
+      # compose also mounts /var/www/public/var, which 1.2.0 only reads once to move old data out
+      # of, so a new install leaves it out.
+      - garlic-hub-var:/var/www/var
+
+volumes:
+  garlic-hub-var:

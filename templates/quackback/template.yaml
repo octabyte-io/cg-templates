@@ -1,0 +1,54 @@
+name: Quackback
+description: "Self-hosted Quackback collects feature requests and votes, shares a roadmap and announces what shipped."
+version: "0.15.0"
+tags: [customer feedback, feature requests, product roadmap, changelog, canny alternative, uservoice alternative]
+links:
+  website: https://quackback.io
+  docs: https://github.com/QuackbackIO/quackback/blob/v0.15.0/deploy/self-hosted/README.md
+  source: https://github.com/QuackbackIO/quackback
+cloudgate: 0.1.0
+compose: app
+# A Bun app plus PostgreSQL and file storage; 2 GB leaves room for the
+# migrations of the first start and for video uploads.
+size: medium
+inputs:
+  # The feedback portal's address: sign-in links, emails and OAuth callbacks use it.
+  BASE_URL: { value: "{{domains.quackback.url}}" }
+  # Signs sessions and encrypts stored credentials; at least 32 characters.
+  SECRET_KEY: { generate: hex }
+  POSTGRES_PASSWORD: { generate: password }
+  STORAGE_ACCESS_KEY: { generate: password }
+  STORAGE_SECRET_KEY: { generate: password }
+  EMAIL_SMTP_HOST:
+    ask:
+      label: Email server (SMTP host)
+      description: Optional, but recommended. Quackback emails invitations, password resets and status updates on feedback through an email sending service, for example smtp.resend.com. Without it those emails are only written to the app's log.
+      required: false
+  EMAIL_SMTP_PORT:
+    ask:
+      label: Email server port
+      description: 587 works with most email services.
+      default: "587"
+      required: false
+  EMAIL_SMTP_USER:
+    ask:
+      label: Email server username
+      required: false
+  EMAIL_SMTP_PASS:
+    ask:
+      label: Email server password
+      secret: true
+      required: false
+  EMAIL_FROM:
+    ask:
+      label: Sender address
+      description: The address emails come from, for example "Feedback <feedback@example.com>".
+      required: false
+  OPENAI_API_KEY:
+    ask:
+      label: OpenAI API key
+      description: Optional. Turns on AI summaries, duplicate detection and feedback extraction.
+      secret: true
+      required: false
+domains:
+  - { service: quackback, port: 3000 }
