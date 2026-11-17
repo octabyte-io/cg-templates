@@ -27,11 +27,11 @@ export function cloudgate(path = ''): string {
   return path ? `${CLOUDGATE_URL}/${path.replace(/^\//, '')}` : `${CLOUDGATE_URL}/`;
 }
 
-/** Hosted Cloudgate, run by Octabyte: where a visitor without Cloudgate signs up and deploys. */
 /** A shared ChatGPT conversation about Cloudgate. Linked from the header and footer only, with rel=nofollow,
  * and kept out of the sitemap, structured data and llms.txt on purpose. */
 export const ASK_GPT_URL = 'https://chatgpt.com/share/6afca8d4-272c-83ee-a74b-ce8bbac37470';
 
+/** Hosted Cloudgate, run by Octabyte: where a visitor without Cloudgate signs up and deploys. */
 export const HOSTED_URL = 'https://cloudgate.octabyte.app';
 
 /** Where questions about Cloudgate go. PUBLIC_CONTACT_URL overrides it. */
