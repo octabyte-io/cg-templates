@@ -1,0 +1,15 @@
+name: Enonic XP
+description: "Self-hosted Enonic XP is a headless CMS with a drag-and-drop page editor that feeds your websites and apps from your own server."
+version: "8.1.3"
+tags: [headless cms, contentful alternative, storyblok alternative, visual page editor, multilingual cms, enonic content studio]
+links:
+  website: https://enonic.com
+  docs: https://developer.enonic.com/docs/xp/stable
+  source: https://github.com/enonic/xp
+cloudgate: 0.1.0
+compose: app
+size: large
+inputs:
+  SU_PASSWORD: { generate: password }
+domains:
+  - { service: enonic-xp, port: 8080 }

@@ -1,0 +1,17 @@
+#!/bin/bash
+# Runs before OpenCms' first-run setup (the image runs every /root/autosetup/*.sh).
+# The Mercury demo creates the sign-in accounts Author, Editor, Gallator, Demo and
+# Templator, all with the password "password", and Templator is a developer.
+# This adds commands to the setup script that disable them once the demo is
+# installed. The Admin can turn one back on, with a new password, under
+# Accounts in the workplace.
+SETUP="${OPENCMS_HOME}/WEB-INF/setupdata/cmssetup.txt"
+case ",${OPENCMS_COMPONENTS}," in *,demo,*) ;; *) exit 0 ;; esac
+[ -f "$SETUP" ] || exit 0
+if grep -q '^setUserEnabled ' "$SETUP"; then exit 0; fi
+commands=""
+for user in Author Editor Gallator Demo Templator; do
+  commands="${commands}\nsetUserEnabled \"${user}\" \"false\""
+done
+sed -i "s/^importModulesFromSetupBean\$/importModulesFromSetupBean${commands}/" "$SETUP"
+echo "Demo accounts will be disabled after the demo is installed."

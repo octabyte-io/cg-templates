@@ -1,0 +1,51 @@
+services:
+  # Volto, Plone 6's default React user interface. It is the only service with
+  # a web address: it renders the pages and passes the browser's API calls
+  # (https://<domain>/++api++/...) on to the backend over the internal network,
+  # as in the official nginx-volto-plone and traefik-volto-plone examples
+  # (6.docs.plone.org/install/containers/examples).
+  plone-frontend:
+    image: plone/plone-frontend:19.7.1
+    restart: unless-stopped
+    depends_on:
+      plone-backend:
+        condition: service_healthy
+    environment:
+      # The site's public address: links and the browser's API calls use it.
+      RAZZLE_API_PATH: ${PUBLIC_URL}
+      # Where the frontend reaches the backend's Plone site, "Plone".
+      RAZZLE_INTERNAL_API_PATH: http://plone-backend:8080/Plone
+
+  # The Plone backend (Zope, plone.restapi) with its ZODB database (Data.fs)
+  # and uploaded files (blobstorage) in the data volume. No separate database.
+  plone-backend:
+    image: plone/plone-backend:6.2.3
+    restart: unless-stopped
+    # Before the image's own entrypoint starts Plone, write Zope's "inituser"
+    # file with the generated admin password. Zope reads it at startup while the
+    # root user folder holds at most one user, so the image's default admin/admin
+    # is never active. The image then creates the Plone site "Plone" (SITE) on the
+    # first start and skips that step once it exists.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        printf 'admin:%s\n' "$$ADMIN_PASSWORD" > /app/inituser
+        exec /app/docker-entrypoint.sh start
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SITE: Plone
+      TYPE: volto
+      TIMEZONE: ${TIMEZONE:-UTC}
+    volumes:
+      - plone-data:/data
+    healthcheck:
+      # The image's own check, with room for the first start, which creates the site.
+      test: ["CMD-SHELL", "wget -q http://127.0.0.1:8080/ok -O - | grep OK || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 300s
+
+volumes:
+  plone-data:

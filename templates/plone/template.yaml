@@ -1,0 +1,24 @@
+name: Plone
+description: "Self-hosted Plone, the open-source CMS for websites and intranets with many editors, approval workflows and detailed permissions, instead of Sitecore or AEM."
+version: "6.2.3"
+tags: [sitecore alternative, aem alternative, plone cms, enterprise cms, open source intranet, sharepoint alternative, university website cms]
+links:
+  website: https://plone.org
+  docs: https://6.docs.plone.org
+  source: https://github.com/plone/Products.CMFPlone
+cloudgate: 0.1.0
+compose: app
+size: medium
+inputs:
+  # The password of the "admin" user. It replaces the image's default
+  # admin/admin before Plone starts for the first time.
+  ADMIN_PASSWORD: { generate: password }
+  PUBLIC_URL: { value: "{{domains.plone-frontend.url}}" }
+  TIMEZONE:
+    ask:
+      label: Time zone
+      description: The site's time zone for dates and events, as an IANA name such as Europe/Berlin. You can change it later in Plone's site setup.
+      default: UTC
+      required: false
+domains:
+  - { service: plone-frontend, port: 3000 }

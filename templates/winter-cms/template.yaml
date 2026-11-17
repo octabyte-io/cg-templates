@@ -1,0 +1,19 @@
+name: Winter CMS
+description: "Self-hosted Winter CMS is a free, open-source Laravel CMS for agency-built websites, the community fork of October CMS with no licence fees."
+version: "1.2.14"
+tags: [winter cms, october cms alternative, craft cms alternative, laravel cms, open source cms, self-hosted cms]
+links:
+  website: https://wintercms.com
+  docs: https://wintercms.com/docs
+  source: https://github.com/wintercms/winter
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_URL: { value: "{{domains.winter.url}}" }
+  APP_KEY: { generate: base64 }
+  ADMIN_PASSWORD: { generate: password }
+  DB_PASSWORD: { generate: password }
+  DB_ROOT_PASSWORD: { generate: password }
+domains:
+  - { service: winter, port: 8000 }

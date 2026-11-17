@@ -1,0 +1,84 @@
+# Based on CrafterCMS's official authoring compose file (craftercms/docker,
+# authoring/docker-compose.yml), with the published ports removed, the 4.7.1
+# community images pinned, OpenSearch's memory lock turned off (so it needs no
+# host ulimits) and the default secrets in crafter-setenv.sh replaced with
+# values Cloudgate generates. The delivery stack is left out: this template is
+# the authoring side, where people edit, preview and publish content.
+
+x-crafter-env: &crafter-env
+  ES_HOST: crafter-search
+  ES_PORT: "9200"
+  STUDIO_MANAGEMENT_TOKEN: ${MANAGEMENT_TOKEN}
+  ENGINE_MANAGEMENT_TOKEN: ${MANAGEMENT_TOKEN}
+  DEPLOYER_MANAGEMENT_TOKEN: ${MANAGEMENT_TOKEN}
+  CRAFTER_ENCRYPTION_KEY: ${CRAFTER_ENCRYPTION_KEY}
+  CRAFTER_ENCRYPTION_SALT: ${CRAFTER_ENCRYPTION_SALT}
+  CRAFTER_SYSTEM_ENCRYPTION_KEY: ${CRAFTER_SYSTEM_ENCRYPTION_KEY}
+  CRAFTER_SYSTEM_ENCRYPTION_SALT: ${CRAFTER_SYSTEM_ENCRYPTION_SALT}
+  CRAFTER_PREVIEW_TOKEN_KEY: ${CRAFTER_PREVIEW_TOKEN_KEY}
+  CRAFTER_PREVIEW_TOKEN_SALT: ${CRAFTER_PREVIEW_TOKEN_SALT}
+
+services:
+  # Crafter Studio (the authoring UI, at /studio) and Crafter Engine (the preview).
+  crafter-studio:
+    image: craftercms/authoring_tomcat:4.7.1
+    restart: unless-stopped
+    depends_on:
+      crafter-search:
+        condition: service_healthy
+      crafter-deployer:
+        condition: service_started
+    environment:
+      <<: *crafter-env
+      DEPLOYER_HOST: crafter-deployer
+      DEPLOYER_PORT: "9191"
+      STUDIO_TOKEN_SIGN_PASSWORD: ${STUDIO_TOKEN_SIGN_PASSWORD}
+      STUDIO_TOKEN_ENCRYPT_PASSWORD: ${STUDIO_TOKEN_ENCRYPT_PASSWORD}
+    volumes:
+      - crafter-data:/opt/crafter/data
+      - crafter-logs:/opt/crafter/logs
+      - crafter-temp:/opt/crafter/temp
+      # The search indexes, where Studio's backup and restore expect them.
+      - crafter-search-data:/opt/crafter/data/indexes
+
+  # Crafter Deployer: indexes the sites' content in OpenSearch and publishes it.
+  crafter-deployer:
+    image: craftercms/deployer:4.7.1
+    restart: unless-stopped
+    depends_on:
+      crafter-search:
+        condition: service_healthy
+    environment:
+      <<: *crafter-env
+      TOMCAT_HOST: crafter-studio
+      TOMCAT_HTTP_PORT: "8080"
+    volumes:
+      - crafter-data:/opt/crafter/data
+      - crafter-logs:/opt/crafter/logs
+      - crafter-temp:/opt/crafter/temp
+
+  crafter-search:
+    image: opensearchproject/opensearch:3.6.0
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: "false"
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      OPENSEARCH_JAVA_OPTS: "-Xss1024K -Xms1G -Xmx1G"
+    volumes:
+      - crafter-search-data:/usr/share/opensearch/data
+      - crafter-search-logs:/usr/share/opensearch/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health?wait_for_status=yellow\\&timeout=5s >/dev/null"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  crafter-data:
+  crafter-logs:
+  crafter-temp:
+  crafter-search-data:
+  crafter-search-logs:

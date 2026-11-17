@@ -1,0 +1,54 @@
+services:
+  winter:
+    # The Winter project's own image (github.com/wintercms/docker): Winter on FrankenPHP, port 8000.
+    image: wintercms/winter:1.2.14
+    restart: unless-stopped
+    depends_on:
+      winter-db:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL}
+      # Laravel's application key: 32 random bytes, written as base64:<key>.
+      APP_KEY: base64:${APP_KEY}
+      APP_DEBUG: "false"
+      # Builds every link from APP_URL, so pages and assets use https behind Cloudgate's proxy.
+      LINK_POLICY: force
+      DB_CONNECTION: mysql
+      DB_HOST: winter-db
+      DB_PORT: 3306
+      DB_DATABASE: winter
+      DB_USERNAME: winter
+      DB_PASSWORD: ${DB_PASSWORD}
+      # Creates and updates the tables on every start; the first run adds the "admin" account.
+      RUN_MIGRATIONS: "true"
+      # The password of the "admin" account. Sign in at https://<domain>/backend.
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      # Uploads, media, cache and logs; added plugins; themes (starts with the demo theme).
+      - winter-storage:/winter/storage
+      - winter-plugins:/winter/plugins
+      - winter-themes:/winter/themes
+
+  winter-db:
+    image: mariadb:11.8.9
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: winter
+      MARIADB_USER: winter
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - winter-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  winter-storage:
+  winter-plugins:
+  winter-themes:
+  winter-db-data:

@@ -1,0 +1,20 @@
+services:
+  cockpit:
+    # The free, MIT-licensed Cockpit Core edition (the pro-* tags are the paid edition).
+    # It stores content in SQLite under storage/, so no database container is needed.
+    image: cockpithq/cockpit:core-2.14.1
+    restart: unless-stopped
+    environment:
+      COCKPIT_SEC_KEY: ${COCKPIT_SEC_KEY}
+      COCKPIT_SITE_URL: ${COCKPIT_SITE_URL}
+    volumes:
+      # Content (SQLite), uploads, cache and logs.
+      - cockpit-storage:/var/www/html/storage
+      # Extra spaces (separate Cockpit instances), if you create any.
+      - cockpit-spaces:/var/www/html/.spaces
+      - ../files/config.php.txt:/var/www/html/config/config.php:ro
+    # The image's own healthcheck asks FrankenPHP's admin endpoint (port 2019).
+
+volumes:
+  cockpit-storage:
+  cockpit-spaces:

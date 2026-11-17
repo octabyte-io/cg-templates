@@ -1,0 +1,21 @@
+services:
+  ech0:
+    image: sn0wl1n/ech0:v5.9.9
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      # Only the first-start default of "Server URL"; it stays editable in
+      # Ech0's settings afterwards.
+      ECH0_SETTING_SERVER_URL: ${SERVER_URL}
+    volumes:
+      # The SQLite database, uploaded files and logs.
+      - ech0-data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:6277/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  ech0-data:

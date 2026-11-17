@@ -516,8 +516,8 @@ export function openSourceCount(): number {
 
 /** How an app's code is shared: the words a visitor understands, from its SPDX licence id. */
 export function licenceKind(license: string): { label: string; openSource: boolean } {
-  // A mixed licence with a closed-source part (Netdata's NCUL1 dashboard) is only partly open source.
-  if (/\bNCUL/i.test(license)) return { label: 'Partly open source', openSource: false };
+  // A mixed licence with a closed-source or source-available part (Netdata's NCUL1 dashboard, Enonic's Content Studio) is only partly open source.
+  if (/\b(NCUL|Enonic)/i.test(license)) return { label: 'Partly open source', openSource: false };
   if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub|NPL|WPL|Proprietary|FIT2CLOUD|erxes|Evolution-API|Reloop|Countly)/i.test(license)) {
     return { label: license.startsWith('SUL') ? 'Fair-code' : 'Source-available', openSource: false };
   }

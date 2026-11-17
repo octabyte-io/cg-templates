@@ -1,0 +1,31 @@
+name: CrafterCMS
+description: "Self-hosted CrafterCMS: edit pages in place, approve and schedule changes, and deliver content to websites and apps over REST and GraphQL."
+version: "4.7.1"
+tags: [headless cms, git based cms, visual page editor, adobe experience manager alternative, contentful alternative, sitecore alternative, open source cms]
+links:
+  website: https://craftercms.com
+  docs: https://docs.craftercms.org
+  source: https://github.com/craftercms/craftercms
+cloudgate: 0.1.0
+compose: app
+# Studio's Tomcat may grow to 4 GB, OpenSearch takes 1 GB and the Deployer 1 GB;
+# CrafterCMS asks for at least 8 GB for its Docker setup.
+size: xlarge
+inputs:
+  # Shared by Studio, Engine and the Deployer to call each other's management APIs.
+  MANAGEMENT_TOKEN: { generate: hex }
+  # Encrypt values in the sites' configuration files.
+  CRAFTER_ENCRYPTION_KEY: { generate: password }
+  CRAFTER_ENCRYPTION_SALT: { generate: password }
+  # Studio encrypts values in its own database with these.
+  CRAFTER_SYSTEM_ENCRYPTION_KEY: { generate: password }
+  CRAFTER_SYSTEM_ENCRYPTION_SALT: { generate: password }
+  # Studio and Engine share these for the preview tokens.
+  CRAFTER_PREVIEW_TOKEN_KEY: { generate: password }
+  CRAFTER_PREVIEW_TOKEN_SALT: { generate: password }
+  # Studio's API access tokens: signing needs at least 512 bits (hex is 64 characters).
+  STUDIO_TOKEN_SIGN_PASSWORD: { generate: hex }
+  STUDIO_TOKEN_ENCRYPT_PASSWORD: { generate: password }
+domains:
+  # Crafter Studio (at /studio) and the Engine preview of each site (at /).
+  - { service: crafter-studio, port: 8080 }

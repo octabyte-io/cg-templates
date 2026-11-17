@@ -1,0 +1,18 @@
+name: Cockpit
+description: "Self-hosted Cockpit CMS is a lightweight, open-source headless CMS: manage content and images, then serve them to any website or app over REST and GraphQL."
+version: "2.14.1"
+tags: [headless cms, contentful alternative, lightweight headless cms, open source cms, graphql cms, self-hosted cms]
+links:
+  website: https://getcockpit.com
+  docs: https://getcockpit.com/documentation
+  source: https://github.com/Cockpit-HQ/Cockpit
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  COCKPIT_SEC_KEY: { generate: hex }
+  COCKPIT_SITE_URL: { value: "{{domains.cockpit.url}}" }
+domains:
+  - { service: cockpit, port: 80 }
+files:
+  - { path: config.php.txt }
