@@ -71,7 +71,7 @@ sources:
 
 Fireshare is free and open source under the GPL-3.0 licence, with no paid edition. Your cost is the server and the disk your clips fill.
 
-Streamable has a free plan with limits: each upload can be up to 250 MB and 10 minutes long, and free-plan videos are deleted after 90 days. Paid plans lift those limits. Streamable lists its paid plans on its pricing page; check current prices there.
+As of November 2026, Streamable has a free plan with limits: each upload can be up to 250 MB and 10 minutes long, and free-plan videos are deleted after 90 days. Paid plans lift those limits. Streamable lists its paid plans on its pricing page; check current prices there.
 
 ### Upload limits and how long clips stay
 

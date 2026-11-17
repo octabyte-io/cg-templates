@@ -213,7 +213,8 @@ export function comparisonTitle(c: Comparison): string {
 
 /** Other compare pages to read next: the same rival first, then the same category. */
 export function relatedComparisons(c: Comparison, limit = 4): Comparison[] {
-  return comparisons()
+  const tags = new Set(c.app.tags);
+  const scored = comparisons()
     .filter((other) => other.slug !== c.slug)
     .map((other) => ({
       other,
@@ -221,11 +222,21 @@ export function relatedComparisons(c: Comparison, limit = 4): Comparison[] {
         (other.rival.id === c.rival.id ? 4 : 0) +
         (other.app.id === c.app.id ? 3 : 0) +
         (other.app.category.id === c.app.category.id ? 1 : 0),
+      // Ties go to the closest app by tags, not the first by name, so every page gets linked from
+      // its neighbours rather than only pages early in the alphabet.
+      shared: other.app.tags.filter((tag) => tags.has(tag)).length,
     }))
     .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score || a.other.app.name.localeCompare(b.other.app.name))
-    .slice(0, limit)
+    .sort((a, b) => b.score - a.score || b.shared - a.shared || a.other.app.name.localeCompare(b.other.app.name))
     .map(({ other }) => other);
+  // The next page in the same category, in A to Z order and wrapping round, always takes a place, so
+  // every compare page is linked from at least one other one, however few neighbours it scores with.
+  const ring = comparisons()
+    .filter((other) => other.app.category.id === c.app.category.id)
+    .sort((a, b) => a.slug.localeCompare(b.slug));
+  const next = ring.length > 1 ? ring[(ring.findIndex((other) => other.slug === c.slug) + 1) % ring.length] : undefined;
+  const picked = scored.filter((other) => other.slug !== next?.slug).slice(0, next ? limit - 1 : limit);
+  return next ? [...picked, next] : picked;
 }
 
 export function monthYear(date: Date): string {
