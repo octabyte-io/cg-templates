@@ -1,0 +1,286 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppTile from '../../components/AppTile.astro';
+import Chev from '../../components/Chev.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Ease from '../../components/Ease.astro';
+import Faq from '../../components/Faq.astro';
+import ProductTile from '../../components/ProductTile.astro';
+import { alternativesPages, licenceKind } from '../../lib/catalogue';
+import {
+  comparisonHeadings,
+  comparisons,
+  comparisonTitle,
+  monthYear,
+  relatedComparisons,
+  type Comparison,
+} from '../../lib/compare';
+import { breadcrumbSchema, comparisonSchema, faqSchema, graph } from '../../lib/schema';
+import { deployUrl, href } from '../../lib/site';
+
+export function getStaticPaths() {
+  return comparisons().map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+
+interface Props {
+  c: Comparison;
+}
+
+const { c } = Astro.props;
+const a = c.app;
+const b = c.rival;
+const t = comparisonHeadings(c);
+const licence = licenceKind(a.license);
+const checked = monthYear(c.checked);
+const related = relatedComparisons(c);
+// The rival's alternatives page, when it is a product with one: "see every <Rival> alternative".
+const altPage = b.product ? alternativesPages().find((page) => page.product.id === b.product!.id) : undefined;
+
+const trail = [
+  { name: 'Home', path: '' },
+  { name: 'Compare', path: 'compare/' },
+  { name: `${a.name} vs ${b.name}`, path: `compare/${c.slug}/` },
+];
+const jsonLd = graph(breadcrumbSchema(trail), comparisonSchema(c), faqSchema(c.faq));
+---
+
+<Base
+  title={comparisonTitle(c)}
+  description={c.description}
+  path={`compare/${c.slug}/`}
+  jsonLd={jsonLd}
+  ogImage={`og/${a.id}.png`}
+  ogType="article"
+  markdown={`compare/${c.slug}.md`}
+  dateModified={c.updated ?? c.checked}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead one pad">
+    <div class="body">
+      <div class="pair" aria-hidden="true">
+        <AppTile template={a} box={64} size={36} loading="eager" />
+        <span class="vsw">vs</span>
+        {b.template ? <AppTile template={b.template} box={64} size={36} loading="eager" /> : <ProductTile product={b.product!} box={64} size={36} />}
+      </div>
+      <h1 class="h1">{a.name} vs {b.name}</h1>
+      <p class="lede">{c.lede}</p>
+      <div class="chips">
+        <span class="chip">{a.name}: <b>Free</b>, {licence.label.toLowerCase()}</span>
+        <span class="chip"><Ease ease={a.ease} /></span>
+        <span class="chip">Facts checked <b><time datetime={c.checked.toISOString().slice(0, 7)}>{checked}</time></b></span>
+      </div>
+      <div class="acts">
+        <a class="btn lg" href={deployUrl(a.id)}>Deploy {a.name}</a>
+        <a class="btn lg ghost" href={href(`templates/${a.id}/`)}>About {a.name} <Chev /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec pad">
+    <div class="blk first">
+      <h2 class="h2">{t.glance}</h2>
+      <div class="tablewrap">
+        <table class="glance">
+          <thead>
+            <tr>
+              <th scope="col"><span class="sr">What is compared</span></th>
+              <th scope="col">
+                <span class="who"><AppTile template={a} box={24} size={14} />{a.name}</span>
+              </th>
+              <th scope="col">
+                <span class="who">
+                  {b.template ? <AppTile template={b.template} box={24} size={14} /> : <ProductTile product={b.product!} box={24} size={14} />}
+                  {b.name}
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              c.glance.map((row) => (
+                <tr>
+                  <th scope="row">{row.label}</th>
+                  <td>
+                    <span class="lab">{a.name}</span>
+                    {row.app}
+                  </td>
+                  <td>
+                    <span class="lab">{b.name}</span>
+                    {row.vs}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h2 class="h2">{t.differ}</h2>
+      <div class="prose" set:html={c.bodyHtml} />
+    </div>
+
+    <div class="blk">
+      <h2 class="h2">{t.choose}</h2>
+      <div class="vs">
+        <div>
+          <h3 class="t">{t.chooseApp}</h3>
+          <ul>{c.chooseApp.map((line) => <li>{line}</li>)}</ul>
+        </div>
+        <div>
+          <h3 class="t">{t.chooseVs}</h3>
+          <ul>{c.chooseVs.map((line) => <li>{line}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h2 class="h2">{t.moving}</h2>
+      <div class="prose" set:html={c.movingHtml} />
+      <div class="acts">
+        <a class="btn" href={deployUrl(a.id)}>Deploy {a.name}</a>
+        {
+          altPage && altPage.apps.length > 1 && (
+            <a class="btn ghost" href={href(`alternatives/${altPage.product.id}/`)}>
+              All {altPage.apps.length} {b.name} alternatives <Chev />
+            </a>
+          )
+        }
+        {b.template && (
+          <a class="btn ghost" href={href(`templates/${b.template.id}/`)}>
+            About {b.name} <Chev />
+          </a>
+        )}
+      </div>
+    </div>
+
+    <div class="blk">
+      <h2 class="h2">{t.faq}</h2>
+      <Faq items={c.faq} />
+    </div>
+
+    <div class={related.length ? 'blk' : 'blk last'}>
+      <h2 class="h2">{t.sources}</h2>
+      <p class="muted measure">
+        Facts checked in {checked} against these pages. Prices and plans change, so check {b.name}’s own pricing page before you decide.
+      </p>
+      <ul class="src">
+        {
+          c.sources.map((s) => (
+            <li>
+              <a href={s.url} rel="noopener">{s.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {
+      related.length > 0 && (
+        <div class="blk last">
+          <h2 class="h2">More comparisons</h2>
+          <ul class="more">
+            {related.map((r) => (
+              <li>
+                <a href={href(`compare/${r.slug}/`)}>
+                  {r.app.name} vs {r.rival.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .pair {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .vsw {
+    font: italic 400 1.125rem var(--serif);
+    color: var(--faint);
+  }
+  .measure {
+    max-width: 64ch;
+  }
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .glance th[scope='row'] {
+    font-weight: 500;
+    color: var(--ink);
+    background: none;
+    font-size: 0.875rem;
+    width: 22%;
+    vertical-align: top;
+  }
+  .glance td {
+    color: var(--muted);
+    vertical-align: top;
+    width: 39%;
+  }
+  .glance .lab {
+    display: none;
+  }
+  .vs h3.t {
+    margin: 0;
+  }
+  .acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .src,
+  .more {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    font-size: 0.875rem;
+  }
+  .src a,
+  .more a {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 40em) {
+    .glance thead {
+      display: none;
+    }
+    .glance tr {
+      display: grid;
+      gap: 6px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .glance tr:last-child {
+      border-bottom: 0;
+    }
+    .glance th[scope='row'],
+    .glance td {
+      padding: 0;
+      border: 0;
+      width: auto;
+    }
+    .glance .lab {
+      display: inline;
+      color: var(--faint);
+      margin-right: 8px;
+    }
+    .glance .lab::after {
+      content: ':';
+    }
+  }
+</style>

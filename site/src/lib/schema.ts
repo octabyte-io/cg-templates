@@ -189,3 +189,37 @@ export function graph(...nodes: Json[]): string {
     '\\u003c',
   );
 }
+
+/**
+ * A compare page's main entity: the two apps it compares, as an `ItemList`. The catalogue app points
+ * at its own page's `SoftwareApplication` node; the rival states only its name and website.
+ */
+export function comparisonSchema(c: {
+  app: Template;
+  rival: { name: string; url?: string; template?: Template };
+}): Json {
+  const node = (t: Template) => ({
+    '@type': 'SoftwareApplication',
+    '@id': `${absolute(`templates/${t.id}/`)}#app`,
+    name: t.name,
+    url: absolute(`templates/${t.id}/`),
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Linux, Docker',
+    license: t.license,
+  });
+  return {
+    '@type': 'ItemList',
+    name: `${c.app.name} vs ${c.rival.name}`,
+    numberOfItems: 2,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, item: node(c.app) },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        item: c.rival.template
+          ? node(c.rival.template)
+          : { '@type': 'SoftwareApplication', name: c.rival.name, ...(c.rival.url ? { url: c.rival.url, sameAs: [c.rival.url] } : {}) },
+      },
+    ],
+  };
+}

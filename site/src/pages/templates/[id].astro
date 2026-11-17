@@ -11,6 +11,7 @@ import ProductMark from '../../components/ProductMark.astro';
 import Screens from '../../components/Screens.astro';
 import { alternativesPages, getTemplates, licenceKind, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
 import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
+import { comparisonsFor } from '../../lib/compare';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
 import { cloudgate, deployUrl, formatDate, href } from '../../lib/site';
 
@@ -35,6 +36,11 @@ const mainAltMany = mainAlt ? (altPages.get(mainAlt.id)?.apps.length ?? 0) > 1 :
 const easeNote =
   a.easeNote ?? (a.ease === 'easy' ? 'Ready to use right after setup.' : 'Takes a few extra minutes to configure after it starts.');
 const deploy = deployUrl(a.id);
+// Head-to-head pages this app is on, as the app or as the rival.
+const compared = comparisonsFor(a.id).map((c) => ({
+  path: `compare/${c.slug}/`,
+  label: c.app.id === a.id ? `${a.name} vs ${c.rival.name}` : `${c.app.name} vs ${a.name}`,
+}));
 
 const trail = [
   { name: 'Home', path: '' },
@@ -168,11 +174,35 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
                 </div>
               </div>
             )}
-            {mainAlt && (
-              <a href={href(`alternatives/${mainAlt.id}/`)} class="btn ghost start">
-                {mainAltMany ? `Compare all ${mainAlt.name} alternatives` : `Moving from ${mainAlt.name} to ${a.name}`} <Chev />
-              </a>
+            {(mainAlt || compared.length > 0) && (
+              <div class="cmpl">
+                {compared.map((c) => (
+                  <a href={href(c.path)} class="btn ghost">
+                    {c.label} <Chev />
+                  </a>
+                ))}
+                {mainAlt && (
+                  <a href={href(`alternatives/${mainAlt.id}/`)} class="btn ghost">
+                    {mainAltMany ? `Compare all ${mainAlt.name} alternatives` : `Moving from ${mainAlt.name} to ${a.name}`} <Chev />
+                  </a>
+                )}
+              </div>
             )}
+          </div>
+        )
+      }
+
+      {
+        a.alternativeTo.length === 0 && compared.length > 0 && (
+          <div class="blk">
+            <h2 class="h2">Compare {a.name}</h2>
+            <div class="cmpl">
+              {compared.map((c) => (
+                <a href={href(c.path)} class="btn ghost">
+                  {c.label} <Chev />
+                </a>
+              ))}
+            </div>
           </div>
         )
       }
@@ -273,8 +303,10 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
   .measure {
     max-width: 64ch;
   }
-  .start {
-    justify-self: start;
+  .cmpl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .enote {
     padding: 0 18px 12px;
