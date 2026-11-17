@@ -4013,7 +4013,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 'bynder',
     name: 'Bynder',
-    job: 'digital asset management for brands',
+    job: 'brand digital asset management',
     lede: 'Phraseanet is a free, open-source Bynder alternative for keeping your photos, videos, audio and documents in one searchable library, with detailed metadata, rights by collection and user, and review and approval with colleagues or outside people. Bynder is a hosted brand asset platform sold on custom quotes, with brand guidelines, templates and many marketing integrations; self-hosted Phraseanet has no licence fee and keeps your files on your own server, but it has none of those brand tools and an older interface.',
     pick: 'phraseanet',
   },
