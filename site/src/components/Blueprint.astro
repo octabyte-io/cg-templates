@@ -564,8 +564,37 @@ const first = apps[0];
       }
     };
 
-    /** The first drawing: each part settles in, the lines draw between them, the screen rises last. */
+    /**
+     * The first drawing: each part settles in, the lines draw between them, the screen rises last.
+     * It is timed, but the screen is the point of it: if the reader is still scrolling once the
+     * screen is in view, every step still to come runs at once, so the screen never appears after
+     * they have scrolled past it. A reader who stops to watch sees the whole drawing.
+     */
+    const steps: { f: () => void; done: boolean }[] = [];
+    const run = (s: { f: () => void; done: boolean }) => {
+      if (s.done) return;
+      s.done = true;
+      s.f();
+    };
+    const step = (t: number, f: () => void) => {
+      const s = { f, done: false };
+      steps.push(s);
+      at(t, () => run(s));
+    };
+    let started = false;
+    let screenIn = false;
+    let from = 0; // where the page was scrolled to when the drawing started
+    const settle = () => {
+      removeEventListener('scroll', hurry);
+      steps.forEach(run);
+    };
+    const hurry = () => {
+      if (started && screenIn && Math.abs(scrollY - from) > 80) settle();
+    };
     const draw = () => {
+      started = true;
+      from = scrollY;
+      addEventListener('scroll', hurry, { passive: true });
       const parts = qa('.bp-part');
       parts.forEach((p) => (p.style.opacity = '0'));
       root.classList.add('drawn');
@@ -574,7 +603,7 @@ const first = apps[0];
       setup.textContent = 'Setting up';
       const [n1, c1, n2, c2, n3, leader, browser, note] = parts;
       const node = (el: HTMLElement, t: number) =>
-        at(t, () => {
+        step(t, () => {
           el.style.opacity = '';
           anim(el, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: EASE });
           el.querySelectorAll('.cn').forEach((k, i) =>
@@ -583,45 +612,48 @@ const first = apps[0];
           fadeIn(el.querySelector('.nd-line'), 400, 120);
         });
       const line = (el: HTMLElement, t: number) =>
-        at(t, () => {
+        step(t, () => {
           el.style.opacity = '';
           anim(el.querySelector('.ln'), [{ transform: vertical ? 'scaleY(0)' : 'scaleX(0)' }, { transform: 'none' }], { duration: 420, easing: INOUT, fill: 'backwards' });
           fadeIn(el.querySelector('.tag'), 260, 220);
         });
       node(n1, 0);
-      line(c1, 500);
-      node(n2, 900);
-      [1300, 1700, 2100].forEach((t, i) =>
-        at(t, () => {
+      line(c1, 400);
+      node(n2, 700);
+      [1000, 1250, 1500].forEach((t, i) =>
+        step(t, () => {
           dots[i].classList.add('on');
           anim(dots[i], [{ transform: 'scale(.4)' }, { transform: 'none' }], { duration: 260, easing: EASE });
         }),
       );
-      at(2200, () => {
+      step(1550, () => {
         setup.textContent = setupText;
         fadeIn(setup, 260);
       });
-      line(c2, 2300);
-      node(n3, 2700);
-      at(2900, () => ping(q('[data-bp-live]')));
-      at(3200, () => {
+      line(c2, 1600);
+      node(n3, 1900);
+      step(2100, () => ping(q('[data-bp-live]')));
+      step(2300, () => {
         leader.style.opacity = '';
         anim(leader, [{ transform: 'scaleY(0)' }, { transform: 'none' }], { duration: 300, easing: INOUT, fill: 'backwards' });
       });
-      at(3420, () => {
+      step(2500, () => {
+        removeEventListener('scroll', hurry);
         browser.style.opacity = '';
         note.style.opacity = '';
         anim(browser, [{ opacity: 0, transform: 'translateY(20px) scale(.985)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: EASE, fill: 'backwards' });
         fadeIn(note, 400, 400);
+        // then the other apps, once each, and it stops on the last
+        apps.slice(1).forEach((_, k) => at(3000 + k * 3500, () => show(k + 1)));
       });
-      // then the other apps, once each, and it stops on the last
-      apps.slice(1).forEach((_, k) => at(6500 + k * 3500, () => show(k + 1)));
     };
 
     q('.bp-pick').hidden = false;
     buttons.forEach((b, i) =>
       b.addEventListener('click', () => {
         stop();
+        removeEventListener('scroll', hurry);
+        steps.forEach((s) => (s.done = true));
         qa('.bp-part').forEach((p) => (p.style.opacity = ''));
         root.classList.add('drawn');
         dots.forEach((d) => d.classList.add('on'));
@@ -631,19 +663,29 @@ const first = apps[0];
     );
 
     if (!reduce && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver(
+      // The drawing starts when the three parts are in view, after the stage's own entrance
+      // (site.css) has mostly settled if the page has only just loaded.
+      const start = new IntersectionObserver(
         (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            io.disconnect();
-            // after the stage's own entrance (site.css) has mostly settled
-            setTimeout(() => {
-              if (!root.classList.contains('drawn')) draw();
-            }, 450);
-          }
+          if (!entries.some((e) => e.isIntersecting)) return;
+          start.disconnect();
+          setTimeout(() => {
+            if (!root.classList.contains('drawn')) draw();
+          }, Math.max(0, 900 - performance.now()));
         },
-        { threshold: 0.35 },
+        { threshold: 0.5 },
       );
-      io.observe(root);
+      start.observe(q('.bp-row'));
+      // Whether half the screen is in view; arriving there from below also starts the drawing.
+      const screen = new IntersectionObserver(
+        (entries) => {
+          screenIn = entries[entries.length - 1].isIntersecting;
+          if (screenIn && !root.classList.contains('drawn')) draw();
+          hurry();
+        },
+        { threshold: 0.5 },
+      );
+      screen.observe(q('.browser'));
     } else {
       root.classList.add('drawn');
     }
