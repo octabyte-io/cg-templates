@@ -14,7 +14,7 @@ import CloudgateMark from '../components/CloudgateMark.astro';
 import Palette from '../components/Palette.astro';
 import { alternativesPages, GITHUB_REPO, isSample, usedCategories } from '../lib/catalogue';
 import { withPage, type PageType } from '../lib/schema';
-import { absolute, cloudgate, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, ASK_GPT_URL, cloudgate, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
 interface Props {
   /**
@@ -166,6 +166,7 @@ const footCategories = usedCategories().slice(0, 4);
             <a href={href('how-it-works/')} aria-current={path === 'how-it-works/' ? 'page' : undefined}>How it works</a>
             <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why Cloudgate</a>
             <a href={href('alternatives/')} aria-current={path === 'alternatives/' ? 'page' : path.startsWith('alternatives/') ? 'true' : undefined}>Alternatives</a>
+            <a href={ASK_GPT_URL} target="_blank" rel="noopener noreferrer nofollow">Ask GPT<span class="visually-hidden"> (opens in a new tab)</span></a>
           </nav>
           <span class="sp"></span>
           <button class="kbtn" type="button" data-open-palette aria-label="Search apps" aria-keyshortcuts="/ Control+K Meta+K"
@@ -187,6 +188,7 @@ const footCategories = usedCategories().slice(0, 4);
           <a href={href('how-it-works/')} aria-current={path === 'how-it-works/' ? 'page' : undefined}>How it works</a>
           <a href={href('why-cloudgate/')} aria-current={path === 'why-cloudgate/' ? 'page' : undefined}>Why Cloudgate</a>
           <a href={href('alternatives/')} aria-current={path === 'alternatives/' ? 'page' : path.startsWith('alternatives/') ? 'true' : undefined}>Alternatives</a>
+          <a href={ASK_GPT_URL} target="_blank" rel="noopener noreferrer nofollow">Ask GPT<span class="visually-hidden"> (opens in a new tab)</span></a>
           <a class="btn lg" href={cloudgate()}>Get Cloudgate</a>
         </nav>
       </header>
@@ -246,6 +248,7 @@ const footCategories = usedCategories().slice(0, 4);
               <li><a href={cloudgate('self-hosted')}>Self-host Cloudgate</a></li>
               <li><a href={cloudgate('docs')}>Docs</a></li>
               <li><a href={GITHUB_REPO}>Templates on GitHub</a></li>
+              <li><a href={ASK_GPT_URL} target="_blank" rel="noopener noreferrer nofollow">Ask GPT<span class="visually-hidden"> (opens in a new tab)</span></a></li>
             </ul>
           </div>
         </div>
@@ -299,7 +302,7 @@ const footCategories = usedCategories().slice(0, 4);
             button.focus();
           }
         });
-        matchMedia('(min-width: 56.3125em)').addEventListener('change', (e) => e.matches && set(false));
+        matchMedia('(min-width: 60.0625em)').addEventListener('change', (e) => e.matches && set(false));
       }
     </script>
   </body>

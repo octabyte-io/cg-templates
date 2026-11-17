@@ -71,7 +71,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .brand .bar{width:1px;height:16px;background:var(--line-strong);margin-inline:3px}
 .brand .sub{font-weight:400;color:var(--muted)}
 .nav{display:flex;gap:22px;font-size:.875rem;color:var(--muted)}
-.nav a{text-decoration:none;transition:color .15s}.nav a:hover,.nav a[aria-current]{color:var(--fg)}
+.nav a{text-decoration:none;white-space:nowrap;transition:color .15s}.nav a:hover,.nav a[aria-current]{color:var(--fg)}
 .top .sp{flex:1}
 /* phones and tablets: the main links move into a menu under the header */
 .mbtn{display:none;align-items:center;justify-content:center;width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--fg);cursor:pointer;border-radius:var(--r-md);touch-action:manipulation}
@@ -89,7 +89,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mnav a{display:flex;align-items:center;min-height:48px;text-decoration:none;font-size:1rem;border-bottom:1px solid var(--line)}
 .mnav a[aria-current]{font-weight:600}
 .mnav .btn{margin-top:14px;border-bottom:1px solid var(--accent-lo);justify-content:center}
-@media (min-width:56.3125em){.mnav{display:none!important}}
+@media (min-width:60.0625em){.mnav{display:none!important}}
 .kbtn{display:flex;align-items:center;gap:10px;border:1px solid var(--line-strong);background:var(--card);border-radius:var(--r-md);min-height:34px;padding:0 6px 0 11px;color:var(--faint);font-size:.875rem;cursor:pointer;min-width:220px;transition:border-color .15s,transform .16s var(--ease-out)}
 .kbtn:hover{border-color:var(--cross)}
 .kbtn:active{transform:scale(.98)}
@@ -397,9 +397,11 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 /* responsive */
 @media (max-width:1359px){.frame,.foot .frame2{overflow-x:clip}}
 @media (max-width:68.75em){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.swrow{grid-auto-columns:calc((100% - 24px) / 3)}.split{grid-template-columns:minmax(0,1fr) 300px;gap:32px}.kbtn{min-width:0}}
+/* the header nav needs about 960px; below that it moves into the menu, and up to 1100px search is an icon */
+@media (max-width:60em){.nav{display:none}.mbtn{display:flex}}
+@media (min-width:60.0625em) and (max-width:68.75em){.top .in{gap:16px}.nav{gap:16px}
+  .kbtn{flex:none;min-width:0;width:34px;padding:0;justify-content:center}.kbtn span,.kbtn kbd{display:none}}
 @media (max-width:56.25em){
-  .nav{display:none}
-  .mbtn{display:flex}
   .split{grid-template-columns:1fr;gap:0}
   .split>aside{order:-1}
   .sidecard{position:static;margin:0 0 8px;max-width:30rem}
