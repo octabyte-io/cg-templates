@@ -4010,6 +4010,35 @@ export const PRODUCTS: Product[] = [
     lede: 'Countly Lite is a free, self-hosted Firebase Analytics alternative for phone apps: sessions, users, custom events and screen views, with crash reports, push notifications and remote config in the same app. Firebase Analytics is free but runs on Google’s servers, with crash reporting, messaging and remote config as separate Firebase products; Countly keeps your app data on your own server, though its free edition has no funnels or retention, and it is source-available rather than open source.',
     pick: 'countly',
   },
+  {
+    id: 'bynder',
+    name: 'Bynder',
+    job: 'digital asset management for brands',
+    lede: 'Phraseanet is a free, open-source Bynder alternative for keeping your photos, videos, audio and documents in one searchable library, with detailed metadata, rights by collection and user, and review and approval with colleagues or outside people. Bynder is a hosted brand asset platform sold on custom quotes, with brand guidelines, templates and many marketing integrations; self-hosted Phraseanet has no licence fee and keeps your files on your own server, but it has none of those brand tools and an older interface.',
+    pick: 'phraseanet',
+  },
+  {
+    id: 'canto',
+    name: 'Canto',
+    job: 'digital asset management',
+    lede: 'Phraseanet is a free, open-source Canto alternative for cataloguing, searching and sharing a large library of photos, videos, audio and documents, with metadata fields, a thesaurus and faceted search. Canto is a hosted DAM priced by quote, with AI tagging, portals and many integrations; self-hosted Phraseanet has no price per user or for storage, but it has no AI tagging and takes more work to set up and run.',
+    pick: 'phraseanet',
+  },
+  {
+    id: 'brandfolder',
+    name: 'Brandfolder',
+    icon: 'brandfolder',
+    job: 'brand asset management',
+    lede: 'Phraseanet is a free, open-source Brandfolder alternative for storing, describing and sharing your media library, with previews made for you, rights by collection and user, and feeds, file requests and approval for people outside the team. Brandfolder, from Smartsheet, is a hosted brand asset platform sold by quote, with brand guidelines, embeds and asset analytics; self-hosted Phraseanet has no licence fee, but fewer marketing features and an older interface.',
+    pick: 'phraseanet',
+  },
+  {
+    id: 'acquia-dam',
+    name: 'Acquia DAM',
+    job: 'enterprise digital asset management',
+    lede: 'Phraseanet is a free, open-source Acquia DAM alternative for keeping your media library on your own server: photos, videos, audio and documents with detailed metadata, faceted search, rights and approval, plus plugins for Drupal and WordPress. Acquia DAM, formerly Widen, is a hosted enterprise DAM sold by quote; Phraseanet has no licence fee, but you run and update a large server yourself, its interface is older, and its makers are succeeding it with Phrasea, a full rewrite.',
+    pick: 'phraseanet',
+  },
 ];
 
 export const productById = new Map(PRODUCTS.map((product) => [product.id, product]));
