@@ -1,5 +1,5 @@
 name: Quackback
-description: "Self-hosted Quackback collects customer feedback on public boards, lets users vote, and shares your roadmap and changelog."
+description: "Self-hosted Quackback collects feature requests and votes, shares a roadmap and announces what shipped."
 version: "0.15.0"
 tags: [customer feedback, feature requests, product roadmap, changelog, canny alternative, uservoice alternative]
 links:

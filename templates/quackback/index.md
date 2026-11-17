@@ -1,7 +1,7 @@
 ---
 tagline: Collect feature requests, share a roadmap, announce what shipped.
 category: customers-sales
-alternativeTo: [canny, uservoice, productboard]
+alternativeTo: [canny, uservoice]
 ease: easy
 easeNote: Open your new address straight after setup, because the first person there creates the owner account.
 license: AGPL-3.0-only
@@ -64,7 +64,7 @@ screenshots:
     caption: "The changelog: announce what shipped, and the people who asked for it are told."
 ---
 
-Self-hosted Quackback is an open-source customer feedback tool where customers post and vote on feature requests, you plan them on a public roadmap, and a changelog tells everyone who asked when their idea ships. It is a free alternative to Canny, UserVoice and the customer-facing side of Productboard.
+Self-hosted Quackback is an open-source customer feedback tool where customers post and vote on feature requests, you plan them on a public roadmap, and a changelog tells everyone who asked when their idea ships. It is a free alternative to Canny and UserVoice.
 
 Each request carries its votes, comments and status, so the team sees what is most wanted and customers see what is coming. A three-person company selling invoicing software to plumbers, for example, could gather every "can it send payment reminders?" request on one board, link it to the Linear issue the developer works on, and publish a changelog entry the day it ships, which notifies every customer who voted.
 

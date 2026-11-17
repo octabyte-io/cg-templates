@@ -1,3 +1,0 @@
-version: 1
-services:
-  app: { kind: compose, managed: console }

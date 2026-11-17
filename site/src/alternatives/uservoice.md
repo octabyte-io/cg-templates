@@ -3,8 +3,13 @@ apps:
   fider:
     fit: "Covers the feedback portal at the heart of UserVoice: people post ideas, vote and comment, and you set a status on each one and show a roadmap, with moderation, your own branding and sign-in by email, Google, GitHub or your own OAuth provider. UserVoice is a much larger enterprise product with analytics and integrations that Fider does not have; Fider offers webhooks and an API instead."
     import: no
+  quackback:
+    fit: "Covers the idea portal, voting, statuses and roadmap, plus a changelog that notifies voters, several boards and links to Linear, GitHub, Jira and other trackers. It does not have UserVoice's enterprise analytics, and it is a younger project that needs a bigger server than Fider."
+    import: partly
 moving: |
   Fider has no UserVoice importer. Set up an email service first, because Fider signs everyone in with an emailed link, then add your logo, tags and sign-in options. Move the open ideas that matter, starting with the most-voted, by posting them yourself or with a short script against Fider's REST API; votes and comments do not carry over. Recreate the statuses your team uses as Fider's open, planned, started, completed and declined, then replace the links to your UserVoice portal with the new board's address.
+
+  Quackback takes a CSV of your ideas, with their statuses, tags and vote counts, through its import template; individual voters and comments need its API import script.
 faq:
   - q: "Is Fider a full UserVoice replacement?"
     a: "No. Fider replaces the idea board, voting, comments, statuses and roadmap. It does not have UserVoice's analytics, admin tools for large product teams or enterprise integrations."
