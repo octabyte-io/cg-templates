@@ -9,11 +9,11 @@ faq:
   - q: "Is Acquia DAM the same as Widen?"
     a: "Yes. Widen's DAM is now sold as Acquia DAM. It is a different product from Acquia's Drupal hosting."
   - q: "Can I import my Acquia DAM library into Phraseanet?"
-    a: "No, there is no importer. Download your assets and upload them to Phraseanet; it reads the IPTC and XMP metadata embedded in each file, so titles, captions and keywords stored there come across."
+    a: "No, there is no importer, so treat it as a project. Download your assets and upload them to Phraseanet, which reads the IPTC and XMP metadata embedded in each file; metadata kept only in Acquia DAM can be loaded with a script that uses Phraseanet's REST API."
   - q: "Does Phraseanet work with Drupal?"
     a: "Yes. Phraseanet has plugins for Drupal, WordPress and Adobe Creative Suite, and a REST API and webhooks for other tools."
-  - q: "Is Phraseanet still maintained?"
-    a: "Yes. Phraseanet still gets releases; version 4.1.26 came out on 31 October 2026. Its maker, Alchemy, is succeeding it with Phrasea, an entirely rewritten product, and has not announced an end-of-support date. Moving to Phrasea later is a migration project, not a simple upgrade."
+  - q: "Is Phraseanet a safe long-term choice now that Phrasea exists?"
+    a: "It is still released, most recently version 4.1.26 on 31 October 2026, and Alchemy has not announced an end-of-support date. But Alchemy is succeeding it with Phrasea, an entirely rewritten product, so plan for a migration project in a few years rather than a simple upgrade."
 ---
 
 Acquia DAM, formerly Widen, is Acquia's hosted enterprise digital asset management (DAM) platform, where organisations store, describe and share their photos, videos and documents. It is sold by quote.

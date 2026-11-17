@@ -4,12 +4,12 @@ apps:
     fit: "Designs, schedules and manages what plays on your screens from your own server: drag-and-drop layouts, live weather and news, menu boards, scheduling by date and time of day, and proof of play reports. Windows and Linux players are free, but Android, webOS, Tizen and ChromeOS screens each need a paid Xibo player licence, and it takes longer to learn than Yodeck."
     import: no
   garlic-hub:
-    fit: "A lighter way to run playlists and screen zones from your own server, with free players for Linux, Windows, macOS, Android and Raspberry Pi and support for other SMIL players such as IAdea, so there is no fee per screen. It has far less than Yodeck: no layout designer, no live data widgets or menu boards, and no reports of what played."
+    fit: "Like Yodeck, it plays on Raspberry Pi screens, but with no fee per screen: you run playlists, screen zones and schedules from your own server, and each screen uses the free garlic-player for Linux, Windows, macOS, Android and Raspberry Pi, or another SMIL player such as IAdea. It has far less than Yodeck: no layout designer, no live data widgets or menu boards, and no reports of what played."
     import: no
 moving: |
   Nothing moves from Yodeck, so rebuild your content in Xibo: upload your images and videos, recreate each screen's layout, or start from a template, and set up playlists and schedules. Then install the Xibo player on each screen's device, enter your Xibo web address and key, and authorise the screen on the Displays page. Yodeck's players are set up for Yodeck, so plan a device Xibo supports for each screen: a Windows or Linux computer with the free player, or a device with a paid Xibo player.
 
-  With Garlic-Hub, upload your media, build playlists and screen zones, then point each screen's player at your Garlic-Hub address followed by /smil-index. The screen appears in the player list on its own the first time it connects.
+  With Garlic-Hub, upload your media and build playlists and screen zones. Then install garlic-player on each screen's device, such as a Raspberry Pi, and enter your Garlic-Hub address followed by /smil-index as its content address. The screen appears in the player list the first time it connects, ready for a playlist.
 faq:
   - q: "Can I use my Yodeck player devices with Xibo?"
     a: "Not as they are. Yodeck's players are set up for Yodeck, while Xibo's players run on Windows, Linux, Android, LG webOS, Samsung Tizen and ChromeOS, so each screen needs one of those devices."

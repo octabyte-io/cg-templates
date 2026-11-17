@@ -1,5 +1,5 @@
 name: Garlic-Hub
-description: "Garlic-Hub is self-hosted, open-source digital signage: build playlists, screen zones and schedules, and play them on free players or SMIL screens."
+description: "Garlic-Hub is free, self-hosted digital signage with no fee per screen: build playlists, zones and schedules, in place of Yodeck, ScreenCloud or OptiSigns."
 version: "1.2.0"
 tags: [digital signage, open source digital signage, free digital signage software, raspberry pi digital signage, smil digital signage, yodeck alternative]
 links:

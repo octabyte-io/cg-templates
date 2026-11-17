@@ -4029,7 +4029,7 @@ export const PRODUCTS: Product[] = [
     name: 'Brandfolder',
     icon: 'brandfolder',
     job: 'brand asset management',
-    lede: 'Phraseanet is a free, open-source Brandfolder alternative for storing, describing and sharing your media library, with previews made for you, rights by collection and user, and feeds, file requests and approval for people outside the team. Brandfolder, from Smartsheet, is a hosted brand asset platform sold by quote, with brand guidelines, embeds and asset analytics; self-hosted Phraseanet has no licence fee, but fewer marketing features and an older interface.',
+    lede: 'Phraseanet is a free, open-source Brandfolder alternative for storing, describing and sharing your media library, with previews made for you, rights by collection and user, and feeds, file orders and approval for people outside the team. Brandfolder, from Smartsheet, is a hosted brand asset platform sold by quote, with brand guidelines, embeds and asset analytics; self-hosted Phraseanet has no licence fee, but fewer marketing features and an older interface.',
     pick: 'phraseanet',
   },
   {

@@ -10,8 +10,8 @@ faq:
     a: "Yes, by downloading them from Canto and uploading them to Phraseanet. There is no importer, but Phraseanet reads the IPTC and XMP metadata embedded in each file, so titles, captions and keywords stored there come across."
   - q: "Does Phraseanet tag images automatically like Canto?"
     a: "No. Phraseanet has no AI tagging. You describe files with metadata fields and a thesaurus, so everyone uses the same keywords, and it reads the metadata already embedded in each file."
-  - q: "Is Phraseanet still maintained?"
-    a: "Yes. Phraseanet still gets releases; version 4.1.26 came out on 31 October 2026. Its maker, Alchemy, is succeeding it with Phrasea, an entirely rewritten product, and has not announced an end-of-support date. Moving to Phrasea later is a migration project, not a simple upgrade."
+  - q: "Can Phraseanet handle video and audio as well as photos?"
+    a: "Yes. It keeps photos, videos, audio and office documents in the same library, and makes thumbnails, previews and other sizes for each of them, so people can preview a clip or a document before they download it."
 ---
 
 Canto is a hosted digital asset management (DAM) platform where teams store, find and share photos, videos and documents, with AI tagging, portals and many integrations. It is priced by quote.

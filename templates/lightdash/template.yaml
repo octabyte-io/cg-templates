@@ -1,5 +1,5 @@
 name: Lightdash
-description: "Self-hosted Lightdash: business intelligence on your dbt project and data warehouse. Define metrics once in YAML, then anyone builds charts and dashboards."
+description: "Self-hosted Lightdash is business intelligence for dbt teams and a Looker alternative: define metrics once in YAML, then anyone builds charts and dashboards."
 version: "3.278.1"
 tags: [looker alternative, dbt, semantic layer, business intelligence, dashboards, data warehouse, open source bi]
 links:
