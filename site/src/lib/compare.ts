@@ -20,6 +20,7 @@ const compareRules = z.strictObject({
   app: plain('the template id this page is about'),
   vs: plain('the rival: a product id from src/products.ts or another template id'),
   vsUrl: z.url({ error: 'must be the rival’s official website' }).optional(),
+  vsName: plain('the rival’s name, only for a rival that is neither a product nor a template').optional(),
   title: plain('the page title, under 49 characters, " | Cloudgate" is added')
     .max(48, 'is too long: keep it to 48 characters, " | Cloudgate" is added')
     .optional(),
@@ -124,7 +125,12 @@ function readComparison(name: string): Comparison {
   if (!app) problems.push(`app: "${d.app}" is not a template in templates/`);
   const product = productById.get(d.vs);
   const other = product ? undefined : getTemplate(d.vs);
-  if (!product && !other) problems.push(`vs: "${d.vs}" is neither a product in src/products.ts nor a template`);
+  if (!product && !other && !d.vsName) {
+    problems.push(`vs: "${d.vs}" is neither a product in src/products.ts nor a template; for another tool, give vsName and vsUrl`);
+  }
+  if ((product || other) && d.vsName) problems.push('vsName: only for a rival that is neither a product nor a template');
+  if (!product && !other && d.vsName && !d.vsUrl) problems.push(`vsUrl: is required: ${d.vsName}’s official website`);
+  if (!/^[a-z0-9-]+$/.test(d.vs)) problems.push('vs: use lowercase letters, digits and hyphens');
   if (d.vs === d.app) problems.push('vs: cannot be the app itself');
   if (product && !d.vsUrl) problems.push(`vsUrl: is required: ${product.name}’s official website`);
   const slug = `${d.app}-vs-${d.vs}`;
@@ -133,9 +139,13 @@ function readComparison(name: string): Comparison {
   if (/^#{1,2}\s/m.test(body)) problems.push('the body’s headings must be ### or smaller; the page supplies the ## headings');
   if (problems.length || !app) throw fail(problems);
 
+  // A rival outside the catalogue and products.ts (an open-source tool with no template, say) is drawn
+  // as a letter tile and has no alternatives page.
   const rival: Rival = product
     ? { id: product.id, name: product.name, url: d.vsUrl, product }
-    : { id: other!.id, name: other!.name, url: d.vsUrl ?? other!.links.website ?? other!.links.source, template: other };
+    : other
+      ? { id: other.id, name: other.name, url: d.vsUrl ?? other.links.website ?? other.links.source, template: other }
+      : { id: d.vs, name: d.vsName!, url: d.vsUrl, product: { id: d.vs, name: d.vsName!, job: '' } };
   const html = (md: string) => marked.parse(md, { async: false }) as string;
   const [year, month] = d.checked.split('-').map(Number);
   return {
