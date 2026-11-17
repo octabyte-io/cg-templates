@@ -27,7 +27,7 @@ const { categories, total } = Astro.props;
       /></label
     >
     <div class="segwrap">
-    <div class="seg" id="seg" role="toolbar" aria-label="Filter by category">
+    <div class="seg one" id="seg" role="toolbar" aria-label="Filter by category">
       <button type="button" data-tab="" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button>
       {
         [...categories].sort((a, b) => b.count - a.count).map((category) => (
@@ -38,18 +38,20 @@ const { categories, total } = Astro.props;
         ))
       }
     </div>
-    <button type="button" class="segmore" aria-expanded="false" aria-controls="seg" data-segmore hidden>
+    <button type="button" class="segmore" aria-expanded="false" aria-controls="seg" data-segmore>
       <span data-segmore-label>More categories</span>
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m4 6 4 4 4-4"></path></svg>
     </button>
     </div>
   </div>
 </div>
+<noscript><style>.seg.one{max-height:none;padding:0;margin:0;overflow:visible}.segmore{display:none}</style></noscript>
 
 <script>
   // Categories show as one row, biggest first, with a button that opens the rest. The chips that do
-  // not fit the row are hidden (so Tab skips them) until it is opened. Without JavaScript every
-  // chip shows, wrapped.
+  // not fit the row are hidden (so Tab skips them) until it is opened. The bar is drawn as one row
+  // with the button from the start (.seg.one clips the rest), so nothing moves when this runs.
+  // Without JavaScript every chip shows, wrapped.
   const seg = document.getElementById('seg');
   const more = document.querySelector<HTMLButtonElement>('[data-segmore]');
   const label = document.querySelector<HTMLElement>('[data-segmore-label]');

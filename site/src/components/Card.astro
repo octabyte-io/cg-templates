@@ -11,8 +11,10 @@ interface Props {
   hidden?: boolean;
   /** The page renders `productSymbols` once, so the card's mark can point at it. */
   sharedMarks?: boolean;
+  /** For the first row or two of a list, which are on screen at load. */
+  eager?: boolean;
 }
-const { template, hidden, sharedMarks = false } = Astro.props;
+const { template, hidden, sharedMarks = false, eager = false } = Astro.props;
 // The filter's search text, each word once: the description repeats much of the tagline and tags.
 const q = [
   ...new Set(
@@ -34,7 +36,7 @@ const first = template.alternativeTo[0];
   hidden={hidden}
 >
   <div class="ct">
-    <AppTile template={template} box={48} size={28} />
+    <AppTile template={template} box={48} size={28} loading={eager ? 'eager' : 'lazy'} />
     <div class="ctt"><span class="nm">{template.name}</span><span class="cc">{template.category.name}</span></div>
   </div>
   <p class="ds">{template.tagline}</p>

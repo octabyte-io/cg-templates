@@ -38,7 +38,7 @@ const trail = [
   <section class="apphead one pad">
     <div class="body">
       <h1 class="h1">Open-source alternatives to the tools you pay for</h1>
-      <p class="lede">Find the free app that does the job of a tool you pay for today, and run it on your own server.</p>
+      <p class="lede">Find the free app that does the job of a tool you pay for today, and run it on your own server. To weigh one app against one tool in depth, see the <a href={href('compare/')}>head-to-head comparisons</a>.</p>
     </div>
   </section>
   <section class="sec browse pad" aria-labelledby="compared-title">
@@ -77,3 +77,10 @@ const trail = [
     )
   }
 </Base>
+
+<style>
+  .lede a {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+  }
+</style>
