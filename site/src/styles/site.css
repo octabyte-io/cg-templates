@@ -77,10 +77,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mbtn{display:none;align-items:center;justify-content:center;width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--fg);cursor:pointer;border-radius:var(--r-md);touch-action:manipulation}
 .mbtn svg{width:20px;height:20px}
 /* theme toggle: shows the moon in light and the sun in dark, the theme a click switches to */
-.tbtn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border:1px solid var(--line-strong);background:var(--card);color:var(--muted);border-radius:var(--r-md);cursor:pointer;transition:border-color .15s,color .15s,transform .16s var(--ease-out);touch-action:manipulation}
-.tbtn:hover{border-color:var(--cross);color:var(--fg)}
-.tbtn:active{transform:scale(.96)}
-.tbtn svg{width:17px;height:17px}
+.tbtn{display:inline-flex;align-items:center;gap:8px;width:max-content;min-height:34px;margin-top:6px;padding:0 12px 0 10px;border:1px solid var(--footer-line);background:none;color:inherit;font:inherit;font-size:.875rem;border-radius:var(--r-md);cursor:pointer;transition:border-color .15s,background-color .15s,transform .16s var(--ease-out);touch-action:manipulation}
+.tbtn:hover{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.08)}
+.tbtn:active{transform:scale(.97)}
+.tbtn svg{width:16px;height:16px;flex:none}
 .tbtn .sun{display:none}
 :root[data-theme="dark"] .tbtn .sun{display:block}:root[data-theme="dark"] .tbtn .moon{display:none}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tbtn .sun{display:block}:root:not([data-theme="light"]) .tbtn .moon{display:none}}
@@ -412,7 +412,8 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
     padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-shadow:0 -10px 30px -18px rgba(0,0,0,.35)}
   .mbar .t{display:grid;min-width:0;flex:1;font-size:.8125rem;color:var(--muted);line-height:1.35}
   .mbar .t b{color:var(--fg);font-size:.9375rem;font-weight:600}
-  .mspace{height:84px}
+  /* the fixed deploy bar would cover the end of the footer, so the footer grows by its height */
+  body:has(.mbar) .foot{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   html:has(.mbar){scroll-padding-bottom:100px}
   .mbar .t{white-space:nowrap;overflow:hidden}
   .mbar .t>*{overflow:hidden;text-overflow:ellipsis}
@@ -432,7 +433,7 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .vs,.how{grid-template-columns:1fr}.vs>div+div,.how>div+div{border-left:0;border-top:1px solid var(--line)}
   .rel{grid-template-columns:1fr}
   .kbtn{min-width:0;width:44px;height:44px;padding:0;justify-content:center}.kbtn span,.kbtn kbd{display:none}
-  .tbtn{width:44px;height:44px}
+  .tbtn{min-height:44px}
   .top .getcg{display:none}
   /* long labels wrap instead of running off a narrow screen (large text sizes) */
   .btn{max-width:100%}

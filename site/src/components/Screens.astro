@@ -265,6 +265,28 @@ const srcset = (shot: (typeof shots)[number]) =>
       color: var(--muted);
     }
   }
+  /* On a phone the tabs get a row of their own under the app's name and wrap onto more lines
+     when they need to, so every tab shows and nothing scrolls sideways. */
+  @media (max-width: 40em) {
+    .scr .wbar {
+      flex-wrap: wrap;
+      height: auto;
+      padding: 10px 12px;
+      row-gap: 8px;
+    }
+    .stabs {
+      flex: 1 1 100%;
+      flex-wrap: wrap;
+      margin-left: 0;
+      overflow: visible;
+    }
+    .stabs button {
+      flex: 1 1 auto;
+      min-height: 40px;
+      padding: 6px 12px;
+      white-space: normal;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .stabs button:active {
       transform: none;
