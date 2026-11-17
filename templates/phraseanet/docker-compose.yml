@@ -1,0 +1,324 @@
+# From Phraseanet's official docker-compose.yml, docker-compose.datastores.yml and .env (tag 4.1.26),
+# with the default profiles: app, setup, gateway-classic, db, elasticsearch, rabbitmq, redis,
+# redis-session and worker. Left out: mailhog and db-backup (docker-compose.tools.yml), the published
+# port and the build sections; host folders became named volumes. Cloudgate serves HTTPS and passes
+# plain HTTP to the gateway (nginx), which hands PHP requests to the phraseanet (PHP-FPM) service.
+x-phraseanet-env: &phraseanet-env
+  PHRASEANET_PROJECT_NAME: Phraseanet
+  ENV_SET_PHRASEANET_PROJECT_NAME: "1"
+  PHRASEANET_INSTALL: "1"
+  PHRASEANET_SETUP: "1"
+  PHRASEANET_UPGRADE: "0"
+  PHRASEANET_MAINTENANCE: "0"
+  PHRASEANET_SCHEME: https
+  PHRASEANET_HOSTNAME: ${PHRASEANET_HOSTNAME}
+  # 443 keeps the port out of the app's own URL.
+  PHRASEANET_APP_PORT: "443"
+  PHRASEANET_TRUSTED_PROXIES: ""
+  PHRASEANET_DEBUG_ALLOWED_IP: ""
+  # The admin account the installer creates; its login is this email.
+  PHRASEANET_ADMIN_ACCOUNT_ID: ""
+  PHRASEANET_ADMIN_ACCOUNT_EMAIL: ${PHRASEANET_ADMIN_EMAIL}
+  PHRASEANET_ADMIN_ACCOUNT_PASSWORD: ${PHRASEANET_ADMIN_PASSWORD}
+  PHRASEANET_DB_HOST: db
+  PHRASEANET_DB_PORT: "3306"
+  PHRASEANET_DB_USER: root
+  PHRASEANET_DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  INSTALL_DB_TEMPLATE: DublinCore
+  INSTALL_APPBOX: ab_master
+  INSTALL_DATABOX: db_databox1
+  PHRASEANET_AVAILABLE_LANGUAGE: de,en,fr,nl
+  PHRASEANET_DEFAULT_LANGUAGE: en
+  PHRASEANET_RABBITMQ_HOST: rabbitmq
+  PHRASEANET_RABBITMQ_PORT: "5672"
+  PHRASEANET_RABBITMQ_SSL: "false"
+  PHRASEANET_RABBITMQ_VHOST: /
+  PHRASEANET_RABBITMQ_HEARTBEAT: "30"
+  PHRASEANET_RABBITMQ_USER: alchemy
+  PHRASEANET_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+  # The official stack sends mail to its mailhog test inbox; set up a real SMTP server in the
+  # admin settings instead.
+  PHRASEANET_SMTP_ENABLED: "false"
+  PHRASEANET_EMITTER_EMAIL: ${PHRASEANET_ADMIN_EMAIL}
+  PHRASEANET_MAIL_OBJECT_PREFIX: phraseanet
+  PHRASEANET_DOWNLOAD_ASYNC: "false"
+  PHRASEANET_DOWNLOAD_DIR: /var/alchemy/Phraseanet/datas/download
+  PHRASEANET_LAZARET_DIR: /var/alchemy/Phraseanet/datas/lazaret
+  PHRASEANET_CAPTION_DIR: /var/alchemy/Phraseanet/tmp/caption
+  PHRASEANET_WORKER_TMP: /var/alchemy/Phraseanet/tmp/worker
+  PHRASEANET_FFMPEG_TIMEOUT: "7200"
+  PHRASEANET_FFPROBE_TIMEOUT: "120"
+  PHRASEANET_GS_TIMEOUT: "120"
+  PHRASEANET_MP4BOX_TIMEOUT: "120"
+  PHRASEANET_SWFTOOLS_TIMEOUT: "120"
+  PHRASEANET_UNOCON_TIMEOUT: "120"
+  PHRASEANET_EXIFTOOL_TIMEOUT: "120"
+  PHRASEANET_API_ENABLED: "true"
+  PHRASEANET_API_SSL: "true"
+  PHRASEANET_API_AUTH_TOKEN_HEADER_ONLY: "false"
+  PHRASEANET_CACHE_TYPE: redis
+  PHRASEANET_CACHE_HOST: redis
+  PHRASEANET_CACHE_PORT: "6379"
+  PHRASEANET_SESSION_TYPE: redis
+  PHRASEANET_SESSION_HOST: redis-session
+  PHRASEANET_SESSION_PORT: "6379"
+  PHRASEANET_USER_SESSION_IDLE: "14400"
+  PHRASEANET_USER_SESSION_LIFETIME: "86400"
+  SESSION_SAVE_HANDLER: redis
+  SESSION_SAVE_PATH: tcp://redis-session:6379
+  PHRASEANET_ELASTICSEARCH_HOST: elasticsearch
+  PHRASEANET_ELASTICSEARCH_PORT: "9200"
+  PHRASEANET_ELASTICSEARCH_INDEX: "null"
+  PHRASEANET_ELASTICSEARCH_SHARD: "3"
+  PHRASEANET_ELASTICSEARCH_REPLICAS: "0"
+  PHRASEANET_ELASTICSEARCH_MINSCORE: "2"
+  PHRASEANET_ELASTICSEARCH_HIGHLIGHT: "true"
+  PHRASEANET_ELASTICSEARCH_MAXRESULTWINDOW: "500000"
+  PHRASEANET_ELASTICSEARCH_POPULATEORDER: RECORD_ID
+  PHRASEANET_ELASTICSEARCH_ACTIVETAB: "null"
+  PHRASEANET_ELASTICSEARCH_FACET_BASE: "10"
+  PHRASEANET_ELASTICSEARCH_FACET_COLLECTION: "10"
+  PHRASEANET_ELASTICSEARCH_FACET_DOCTYPE: "10"
+  PHRASEANET_ELASTICSEARCH_FACET_ORIENTATION: "10"
+  MAX_BODY_SIZE: 1G
+  MAX_INPUT_VARS: "12000"
+  MAX_EXECUTION_TIME: "120"
+  MAX_INPUT_TIME: "60"
+  REQUEST_TERMINATE_TIMEOUT: 300s
+  OPCACHE_ENABLED: "1"
+  PHP_SESSION_UPLOAD_PROGRESS_ENABLED: "Off"
+  SESSION_CACHE_LIMITER: "off"
+  PHP_LOG_LEVEL: warning
+  PHP_CLI_MEMORY_LIMIT: 2048M
+  PHP_UPLOAD_TMP_DIR: /var/alchemy/Phraseanet/tmp/php_upload_tmp
+  COOKIE_SECURE: "false"
+  FPM_MEMORY_LIMIT: 2048M
+  FPM_PM_TYPE: dynamic
+  FPM_MAXCHILDREN: "9"
+  FPM_STARTSERVERS: "3"
+  FPM_MINSPARESERVER: "2"
+  FPM_MAXSPARESERVER: "4"
+  FPM_MAX_REQUESTS: "1000"
+  IMAGEMAGICK_POLICY_VERSION: "7"
+  IMAGEMAGICK_POLICY_WIDTH: 48KP
+  IMAGEMAGICK_POLICY_HEIGHT: 48KP
+  IMAGEMAGICK_POLICY_MAP: 2048MiB
+  IMAGEMAGICK_POLICY_MEMORY: 2048MiB
+  IMAGEMAGICK_POLICY_AREA: 4096MB
+  IMAGEMAGICK_POLICY_DISK: 6GiB
+  IMAGEMAGICK_POLICY_TEMPORARY_PATH: /tmp
+  NEWRELIC_ENABLED: "false"
+  XDEBUG_ENABLED: "0"
+  LANG: C.UTF-8
+  LC_MESSAGES: C.UTF-8
+  LC_COLLATE: C.UTF-8
+  LC_IDENTIFICATION: C.UTF-8
+  LC_MEASUREMENT: C.UTF-8
+  LC_CTYPE: C.UTF-8
+  LC_TIME: C.UTF-8
+  LC_NAME: C.UTF-8
+
+services:
+  # Runs at each start: installs Phraseanet on the first run (database, search index, admin
+  # account, collections), writes its configuration from the settings above, then exits.
+  setup:
+    image: alchemyfr/phraseanet-setup:4.1.26
+    restart: on-failure
+    environment:
+      <<: *phraseanet-env
+    volumes:
+      - phraseanet-config:/var/alchemy/Phraseanet/config
+      - phraseanet-logs:/var/alchemy/Phraseanet/logs
+      - phraseanet-datas:/var/alchemy/Phraseanet/datas
+      - phraseanet-thumbnails:/var/alchemy/Phraseanet/www/thumbnails
+      - phraseanet-custom:/var/alchemy/Phraseanet/www/custom
+      - phraseanet-plugins:/var/alchemy/Phraseanet/www/plugins
+      - phraseanet-cache:/var/alchemy/Phraseanet/cache
+      - phraseanet-tmp:/var/alchemy/Phraseanet/tmp
+      - phraseanet-backup:/var/alchemy/Phraseanet/backup
+    depends_on:
+      db:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redis-session:
+        condition: service_healthy
+
+  phraseanet:
+    image: alchemyfr/phraseanet-fpm:4.1.26
+    restart: unless-stopped
+    environment:
+      <<: *phraseanet-env
+    volumes:
+      - phraseanet-config:/var/alchemy/Phraseanet/config
+      - phraseanet-logs:/var/alchemy/Phraseanet/logs
+      - phraseanet-datas:/var/alchemy/Phraseanet/datas
+      - phraseanet-thumbnails:/var/alchemy/Phraseanet/www/thumbnails
+      - phraseanet-custom:/var/alchemy/Phraseanet/www/custom
+      - phraseanet-plugins:/var/alchemy/Phraseanet/www/plugins
+      - phraseanet-cache:/var/alchemy/Phraseanet/cache
+      - phraseanet-tmp:/var/alchemy/Phraseanet/tmp
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  # Runs every background queue (ingest, thumbnails and previews, metadata, exports, indexing)
+  # in one container, as the official "worker" profile does.
+  worker:
+    image: alchemyfr/phraseanet-worker:4.1.26
+    restart: unless-stopped
+    environment:
+      <<: *phraseanet-env
+      PHRASEANET_EXPLODE_WORKER: "1"
+      PHRASEANET_WORKER_assetsIngest: "1"
+      PHRASEANET_WORKER_createRecord: "1"
+      PHRASEANET_WORKER_deleteRecord: "1"
+      PHRASEANET_WORKER_editRecord: "1"
+      PHRASEANET_WORKER_exportMail: "1"
+      PHRASEANET_WORKER_downloadAsync: "1"
+      PHRASEANET_WORKER_exposeUpload: "1"
+      PHRASEANET_WORKER_ftp: "1"
+      PHRASEANET_WORKER_mainQueue: "1"
+      PHRASEANET_WORKER_populateIndex: "1"
+      PHRASEANET_WORKER_pullAssets: "1"
+      PHRASEANET_WORKER_recordsActions: "1"
+      PHRASEANET_WORKER_subdefCreation: "1"
+      PHRASEANET_WORKER_subtitle: "1"
+      PHRASEANET_WORKER_validationReminder: "1"
+      PHRASEANET_WORKER_webhook: "1"
+      PHRASEANET_WORKER_writeMetadatas: "1"
+      PHRASEANET_WORKER_shareBasket: "1"
+    volumes:
+      - phraseanet-config:/var/alchemy/Phraseanet/config
+      - phraseanet-logs:/var/alchemy/Phraseanet/logs
+      - phraseanet-datas:/var/alchemy/Phraseanet/datas
+      - phraseanet-thumbnails:/var/alchemy/Phraseanet/www/thumbnails
+      - phraseanet-custom:/var/alchemy/Phraseanet/www/custom
+      - phraseanet-cache:/var/alchemy/Phraseanet/cache
+      - phraseanet-tmp:/var/alchemy/Phraseanet/tmp
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+      phraseanet:
+        condition: service_started
+
+  # nginx: serves files and passes PHP requests to the phraseanet service (phraseanet:9000).
+  gateway:
+    image: alchemyfr/phraseanet-nginx:4.1.26
+    restart: unless-stopped
+    environment:
+      MAX_BODY_SIZE: 1G
+      GATEWAY_SEND_TIMEOUT: "120"
+      GATEWAY_PROXY_TIMEOUT: "120"
+      GATEWAY_FASTCGI_TIMEOUT: "300"
+      # Cloudgate ends HTTPS in front of nginx; tell PHP the request was HTTPS.
+      GATEWAY_FASTCGI_HTTPS: "on"
+      HTTP_REQUEST_LIMITS: "false"
+      PHRASEANET_TRUSTED_PROXIES: ""
+    volumes:
+      - phraseanet-datas:/var/alchemy/Phraseanet/datas
+      - phraseanet-thumbnails:/var/alchemy/Phraseanet/www/thumbnails
+      - phraseanet-custom:/var/alchemy/Phraseanet/www/custom
+      - phraseanet-plugins:/var/alchemy/Phraseanet/www/plugins
+    depends_on:
+      phraseanet:
+        condition: service_started
+
+  # MariaDB 10.11 with Phraseanet's settings and its databases (ab_master, db_databox1) created.
+  db:
+    image: alchemyfr/phraseanet-db:4.1.26
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_MAX_ALLOWED_PACKET: 16M
+      MYSQL_MAX_CONNECTION: "200"
+      MYSQL_SLOW_QUERY_LOG: "0"
+      MYSQL_LONG_QUERY_TIME: "10"
+      MYSQL_QUERY_CACHE_LIMIT: 128k
+      MYSQL_QUERY_CACHE_SIZE: 64M
+      MYSQL_KEY_BUFFER_SIZE: 128M
+      MYSQL_CONNECT_TIMEOUT: "60"
+      MYSQL_WAIT_TIMEOUT: "600"
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - phraseanet-db-data:/var/lib/mysql
+    healthcheck:
+      # Over TCP, so it passes only once the real server (not the init one) is up.
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:4.1.0-management
+    restart: unless-stopped
+    hostname: rabbit_phraseanet
+    environment:
+      RABBITMQ_DEFAULT_USER: alchemy
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - phraseanet-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 10
+
+  redis:
+    image: redis:8.0.1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-session:
+    image: redis:8.0.1
+    restart: unless-stopped
+    volumes:
+      - phraseanet-redis-session-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Elasticsearch 2.4 with the ICU plugin, as Phraseanet 4.1 requires. Version 2.x has no
+  # bootstrap checks, so it needs no vm.max_map_count change on the host.
+  elasticsearch:
+    image: alchemyfr/phraseanet-elasticsearch:4.1.26
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - phraseanet-elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 10
+
+volumes:
+  phraseanet-config:
+  phraseanet-logs:
+  phraseanet-datas:
+  phraseanet-thumbnails:
+  phraseanet-custom:
+  phraseanet-plugins:
+  phraseanet-cache:
+  phraseanet-tmp:
+  phraseanet-backup:
+  phraseanet-db-data:
+  phraseanet-rabbitmq-data:
+  phraseanet-redis-session-data:
+  phraseanet-elasticsearch-data:

@@ -1,0 +1,24 @@
+name: Phraseanet
+description: "Open-source digital asset management: store, tag, search and share your photos, videos and documents from one web library."
+version: "4.1.26"
+tags: [digital asset management, dam, media library, bynder alternative, brandfolder alternative]
+links:
+  website: https://www.phrasea.com/phraseanet
+  docs: https://docs.phraseanet.com
+  source: https://github.com/alchemy-fr/Phraseanet
+cloudgate: 0.1.0
+compose: app
+size: xlarge
+inputs:
+  PHRASEANET_HOSTNAME: { value: "{{domains.gateway.host}}" }
+  PHRASEANET_ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: You sign in to Phraseanet with this email as the admin.
+      format: email
+  PHRASEANET_ADMIN_PASSWORD: { generate: password }
+  MYSQL_ROOT_PASSWORD: { generate: password }
+  RABBITMQ_PASSWORD: { generate: password }
+domains:
+  - { service: gateway, port: 80 }
+files: []

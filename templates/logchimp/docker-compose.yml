@@ -1,0 +1,107 @@
+# Based on LogChimp's official Community compose file (docker/community/docker-compose.yml,
+# tag v0.9.4) and its Docker self-hosting docs: the API, the web app (theme), a one-time
+# database migrator, PostgreSQL and Valkey. Images are pinned instead of "latest", ports are
+# removed (Cloudgate routes both addresses), and PostgreSQL moves from 12 to 17, which
+# LogChimp's own CI tests against.
+
+x-logchimp-db: &logchimp-db
+  LOGCHIMP_DB_HOST: logchimp-db
+  LOGCHIMP_DB_PORT: 5432
+  LOGCHIMP_DB_DATABASE: logchimp
+  LOGCHIMP_DB_USER: logchimp
+  LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD}
+  LOGCHIMP_DB_SSL: "false"
+
+services:
+  # The web app people open: boards, roadmaps and the dashboard. A static build served
+  # by Caddy; at start it writes the addresses below into the page.
+  logchimp:
+    image: ghcr.io/logchimp/logchimp/theme:0.9.4
+    restart: unless-stopped
+    depends_on:
+      - logchimp-api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      VITE_WEBAPP_URL: ${LOGCHIMP_WEB_URL}
+      VITE_API_URL: ${LOGCHIMP_API_URL}
+      VITE_IS_SELF_HOSTED: "true"
+
+  # The API, which the web app calls from the visitor's browser.
+  logchimp-api:
+    image: ghcr.io/logchimp/logchimp/api:0.9.4
+    restart: unless-stopped
+    depends_on:
+      logchimp-db:
+        condition: service_healthy
+      logchimp-cache:
+        condition: service_healthy
+      logchimp-migrator:
+        condition: service_completed_successfully
+    environment:
+      <<: *logchimp-db
+      NODE_ENV: production
+      PORT: 8000
+      LOGCHIMP_API_HOST: 0.0.0.0
+      LOGCHIMP_IS_SELF_HOSTED: "true"
+      LOGCHIMP_SECRET_KEY: ${LOGCHIMP_SECRET_KEY}
+      LOGCHIMP_MACHINE_SIGNATURE: ${LOGCHIMP_MACHINE_SIGNATURE}
+      LOGCHIMP_WEB_URL: ${LOGCHIMP_WEB_URL}
+      LOGCHIMP_VALKEY_URL: logchimp-cache:6379
+      # Email is optional: without it LogChimp runs, but sends no verification or
+      # password-reset emails.
+      LOGCHIMP_MAIL_HOST: ${LOGCHIMP_MAIL_HOST:-}
+      LOGCHIMP_MAIL_PORT: ${LOGCHIMP_MAIL_PORT:-587}
+      LOGCHIMP_MAIL_USER: ${LOGCHIMP_MAIL_USER:-}
+      LOGCHIMP_MAIL_PASSWORD: ${LOGCHIMP_MAIL_PASSWORD:-}
+    healthcheck:
+      # The image is Alpine-based, so busybox wget is there; GET /api answers once it's up.
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8000/api >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  # Runs once at each start: applies database migrations and seeds the built-in roles.
+  logchimp-migrator:
+    image: ghcr.io/logchimp/logchimp/api:0.9.4
+    restart: "no"
+    command: ["./scripts/migrate.sh"]
+    depends_on:
+      logchimp-db:
+        condition: service_healthy
+    environment:
+      <<: *logchimp-db
+      NODE_ENV: production
+
+  logchimp-db:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: logchimp
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: logchimp
+    volumes:
+      - logchimp-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U logchimp -d logchimp"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Cache for sessions and settings.
+  logchimp-cache:
+    image: valkey/valkey:8.1.11-alpine
+    restart: unless-stopped
+    command: ["valkey-server", "--save", "60", "1", "--loglevel", "warning", "--dir", "/data"]
+    volumes:
+      - logchimp-cache-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  logchimp-db-data:
+  logchimp-cache-data:
