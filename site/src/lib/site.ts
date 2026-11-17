@@ -30,7 +30,7 @@ export function cloudgate(path = ''): string {
 /** Hosted Cloudgate, run by Octabyte: where a visitor without Cloudgate signs up and deploys. */
 /** A shared ChatGPT conversation about Cloudgate. Linked from the header and footer only, with rel=nofollow,
  * and kept out of the sitemap, structured data and llms.txt on purpose. */
-export const ASK_GPT_URL = 'https://chatgpt.com/share/6afc9d07-afa8-83e8-8724-7af560fdb904';
+export const ASK_GPT_URL = 'https://chatgpt.com/share/6afca8d4-272c-83ee-a74b-ce8bbac37470';
 
 export const HOSTED_URL = 'https://cloudgate.octabyte.app';
 
