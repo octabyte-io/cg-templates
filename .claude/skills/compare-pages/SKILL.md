@@ -1,6 +1,6 @@
 ---
 name: compare-pages
-description: Write researched, SearchFit-optimized "<app> vs <rival>" compare pages (site/src/compare/*.md) for a list of templates, in parallel subagents, and land them on main. Use when asked to write, add, batch or refresh compare pages, or "X vs Y" pages, for templates in the catalogue.
+description: Write researched, SearchFit-optimized "<app> vs <rival>" compare pages (site/src/compare/*.md) for a list of templates in parallel subagents, update the older compare pages a new template affects, and land them on main. Use when asked to write, add, batch, refresh or update compare pages, or "X vs Y" pages, for templates in the catalogue.
 ---
 
 # Compare pages
@@ -17,7 +17,8 @@ build, commit, open the PR and merge. Don't write pages inline, because that ser
    (`plane-vs-jira.md`, `gotosocial-vs-mastodon.md`).
 2. For each template id, pick the rival (`docs/compare-pages.md`, "Choosing the rival"): the first
    id in `alternativeTo` in `templates/<id>/index.md`. Skip ids that already have a page
-   (`ls site/src/compare/<id>-vs-*.md`) or that appear as the rival of a template-vs-template page.
+   (`ls site/src/compare/<id>-vs-*.md`). An id that is only the rival on another template's page still
+   gets its own page when it lists products in `alternativeTo`.
 3. Group the ids into **agent lots of 5**, keeping templates that share a rival in the same lot,
    so one agent researches that rival's pricing once.
 
@@ -37,7 +38,15 @@ Launch up to **7 agents at a time** in the background (general-purpose), each wi
 
 When a wave finishes, start the next. Agents share one working tree but write different files.
 
-## 3. Check, build, land
+## 3. Pages the new templates affect
+
+When the ids are templates new to the catalogue (not a backfill of old ones), older pages may now be
+out of date. Run `node .claude/skills/compare-pages/scripts/related.mjs <ids>` and give its groups A
+to C to **one** agent, after the page writers finish, so no two agents edit the same old page. It
+follows "When a template is added" in `docs/compare-pages.md`, edits only the pages it names, and
+reports each page it changed and why, or "no change needed". Group D needs nothing.
+
+## 4. Check, build, land
 
 After each wave of about 35 pages:
 
@@ -45,11 +54,12 @@ After each wave of about 35 pages:
    words or em dashes, `chooseVs` is honest, no SearchFit links.
 2. `cd site && pnpm build`. The build names any file and field that breaks a rule; fix it or send it
    back to its agent. It takes several minutes for the whole catalogue, so run it once per wave.
-3. Commit only `site/src/compare/` files, as the project's git identity (see the project rules:
+3. Commit only `site/src/compare/` files (and `site/astro.config.mjs` when a page was renamed), as the project's git identity (see the project rules:
    author and committer `AxeemHaider <axeemhaider@gmail.com>`, no co-author or Claude lines).
 4. Rebase on `origin/main`, push the session's branch, open a PR titled
    "Compare pages: <first app> to <last app> (<n> pages)" listing every page, assign it to
    `AxeemHaider`, wait for the Check workflow, and merge it when green. Then start the next wave from an
    up-to-date `main` on the same branch.
 
-Pages only add files, so batches running in other sessions never conflict with yours.
+New pages only add files, so batches running in other sessions never conflict with yours. Edits to
+older pages can: rebase on `origin/main` just before you push.
