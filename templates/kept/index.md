@@ -42,12 +42,12 @@ faq:
   - q: How is Kept different from HomeBox?
     a: Kept does more than HomeBox, though both record what you own and where it is. Kept adds a 3D map, lending, low-stock and warranty reminders, vehicles, offline use on a phone and optional AI, but needs more memory than HomeBox. Kept imports a HomeBox backup with its photos, receipts and tags, and old HomeBox labels still scan.
   - q: Do I need an AI API key to use Kept?
-    a: No. Everything works without AI except filling in details from photos, reading receipts, the assistant and search by meaning. If you want them, you connect your own provider, such as OpenAI, Anthropic, Google, Groq or a local Ollama server, and its costs are yours.
+    a: No. Everything in Kept works without AI except filling in details from photos, reading receipts, the assistant and search by meaning. If you want them, you connect your own provider, such as OpenAI, Anthropic, Google, Groq or a local Ollama server, and its costs are yours.
   - q: Is there a Kept phone app?
     a: No app-store app, but Kept installs from your phone's browser and opens from its own icon. It keeps a copy of your inventory on the phone, so you can capture, scan labels and search offline and sync later.
   - q: How do I sign in to Kept the first time?
     a: There is no default password. On its first start Kept writes a one-time setup code to the app's logs; open your Kept address, enter the code and create your account, which becomes the admin. Leave open sign-up off and invite the people who should join.
-  - q: Can I import my items from a spreadsheet?
+  - q: Can Kept import my items from a spreadsheet?
     a: Yes. Kept imports a CSV file with one thing per row, including quantity, place, serial number, barcode, price and tags, and shows what the import will do before it writes anything. It also imports from HomeBox and from another Kept.
 screenshots:
   - src: screenshots/home.webp

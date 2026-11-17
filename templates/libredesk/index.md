@@ -44,7 +44,7 @@ faq:
   - q: How do I connect my support email to Libredesk?
     a: Go to Admin, then Inboxes, and add an email inbox. You can sign in with Google or Microsoft, or enter your mailbox's IMAP and SMTP settings; for Gmail an app password is the quickest way. Libredesk checks for new mail every five minutes by default.
   - q: Does Libredesk have AI?
-    a: Yes, as an optional beta. Once you connect a provider such as OpenAI, Anthropic or a local Ollama model, it can draft replies, summarize conversations and suggest tags, and an AI assistant can answer live chat from your help center and hand over to a person.
+    a: Yes, Libredesk has AI as an optional beta. Once you connect a provider such as OpenAI, Anthropic or a local Ollama model, it can draft replies, summarize conversations and suggest tags, and an AI assistant can answer live chat from your help center and hand over to a person.
   - q: Should I choose Libredesk or FreeScout?
     a: Choose Libredesk if you want live chat, WhatsApp, SLAs and reports in the free app and a modern look. Choose FreeScout if you only need email and want an older project that copies Help Scout closely, with extras sold as add-ons.
 screenshots:

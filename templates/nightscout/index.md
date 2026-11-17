@@ -38,7 +38,7 @@ faq:
   - q: Is Nightscout free?
     a: Yes, Nightscout is free and open source under the AGPL licence, and every feature is in the free app. You pay only for your server, instead of a monthly fee to a hosted Nightscout service such as T1Pal.
   - q: How do I sign in to Nightscout the first time?
-    a: You sign in with the API secret, a long password Cloudgate creates during setup and shows on the app's variables page. The site shows nothing to anyone until they sign in with that secret or an access link you made for them.
+    a: You sign in to Nightscout with the API secret, a long password Cloudgate creates during setup and shows on the app's variables page. The site shows nothing to anyone until they sign in with that secret or an access link you made for them.
   - q: How do I get my CGM readings into Nightscout?
     a: An uploader app on the phone that reads the sensor sends them, such as xDrip+, xDrip4iOS, Loop, AndroidAPS or Juggluco, using your site's address and API secret. Nightscout can also be set to fetch readings from Dexcom Share, LibreLinkUp or Medtronic CareLink.
   - q: Can family follow Nightscout on their phones?

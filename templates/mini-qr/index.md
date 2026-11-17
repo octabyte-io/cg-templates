@@ -35,7 +35,7 @@ faq:
   - q: Is Mini QR free?
     a: Yes. Mini QR is free, open-source software under the GPL-3.0 licence, with no paid plan and no limit on the number of codes. You pay only for the small server it runs on.
   - q: Is Mini QR a good alternative to QR Code Generator PRO?
-    a: Yes, for printed codes that point to a fixed link or hold Wi-Fi or contact details, with your logo, colours and a frame. It does not make dynamic codes or count scans, which are the main things QR Code Generator PRO and QR TIGER charge for.
+    a: Yes. Mini QR is a good alternative to QR Code Generator PRO for printed codes that point to a fixed link or hold Wi-Fi or contact details, with your logo, colours and a frame. Mini QR does not make dynamic codes or count scans, which are the main things QR Code Generator PRO and QR TIGER charge for.
   - q: Do QR codes made with Mini QR expire?
     a: No. Mini QR makes static codes, which hold the link or text inside the code itself, so they work for as long as that link works, with no service in between.
   - q: Can I put my logo on a QR code?
@@ -44,8 +44,8 @@ faq:
     a: Yes. Upload a CSV file with one link or text per row, and Mini QR downloads a styled QR code for each row, with the frame text included if you use one.
   - q: Can I track scans or change the link after printing?
     a: No. Mini QR has no scan statistics and no editable dynamic codes. If you need those, you could point the code at a short link from a link shortener you control.
-  - q: Do I need an account?
-    a: No. There are no accounts and no admin, and the codes are made in your browser. Anyone with the web address can use it, so share the address only with the people who need it.
+  - q: Do I need an account to use Mini QR?
+    a: No. Mini QR has no accounts and no admin, and the codes are made in your browser. Anyone with the web address can use it, so share the address only with the people who need it.
 screenshots:
   - src: screenshots/qr-code-export.webp
     alt: "The Mini QR preview card on a blue-to-teal background, showing a rounded grey-green QR code with a yellow sun logo in the middle and buttons to copy the code, save or load its settings, and export it as PNG or SVG"

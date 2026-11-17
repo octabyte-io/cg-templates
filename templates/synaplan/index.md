@@ -45,9 +45,9 @@ faq:
   - q: Can Synaplan answer customers on WhatsApp and email?
     a: Yes, Synaplan replies on the channel the question came in on. Email works with any mailbox it can read over IMAP or Microsoft 365, and WhatsApp goes through Meta's official WhatsApp Business API, which needs a Meta business account.
   - q: How do I sign in to Synaplan the first time?
-    a: You sign in with the admin email you give Cloudgate at setup and the password Cloudgate created, shown on the app's variables page. There is no default password. Then add your colleagues from the admin area.
+    a: You sign in to Synaplan with the admin email you give Cloudgate at setup and the password Cloudgate created, shown on the app's variables page. There is no default password. Then add your colleagues from the admin area.
   - q: Is my data private with Synaplan?
-    a: Your chats, files and search index are stored on your own server. When someone asks a question, the question and the matching passages from your files go to the AI provider you chose, so check its data terms, or run your own model server to keep everything in-house.
+    a: Synaplan stores your chats, files and search index on your own server. When someone asks a question, the question and the matching passages from your files go to the AI provider you chose, so check its data terms, or run your own model server to keep everything in-house.
   - q: What server size do I need for Synaplan?
     a: A server with 8 GB of memory, which is what Synaplan's makers recommend and what Cloudgate asks for, with the AI models running at a cloud provider. Disk space grows with the files you upload. Running your own AI models needs a much larger server.
 screenshots:

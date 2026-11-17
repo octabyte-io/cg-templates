@@ -39,14 +39,14 @@ faq:
     a: Yes. webtrees is free, open-source software under the GPL licence, with no paid edition or locked features, so you pay only for your server.
   - q: Is webtrees a good alternative to Ancestry or MyHeritage?
     a: Yes, for keeping and sharing your family tree. webtrees holds your people, families, sources, photos and stories, lets relatives work on the tree with you and gives you charts and PDF reports. It does not include the historical record collections, record hints or DNA tests those services sell.
-  - q: Can I import my family tree from Ancestry or MyHeritage?
+  - q: Can webtrees import my family tree from Ancestry or MyHeritage?
     a: Yes. Export your tree as a GEDCOM file from Ancestry or MyHeritage and import it in webtrees from the control panel. Photos are not inside a GEDCOM file, so add them afterwards.
-  - q: Can I keep living relatives private?
+  - q: Can I keep living relatives private in webtrees?
     a: Yes. webtrees can show only people who have died, hide people who died recently, and hide single facts from everyone but the people you choose. Visitors see living relatives as "Private" in charts and lists.
   - q: How is webtrees different from Gramps Web?
     a: webtrees is a family history website that you can open to the public or keep private, with detailed privacy settings, many chart types and PDF reports. Gramps Web is a private workspace for signed-in relatives that works with Gramps Desktop and keeps DNA match data.
   - q: How do I sign in to webtrees the first time?
-    a: Sign in with the username admin and the password Cloudgate generated for you, shown on the app's variables page in Cloudgate. Then create a family tree or import a GEDCOM file, and review the privacy settings before inviting relatives.
+    a: Sign in to webtrees with the username admin and the password Cloudgate generated for you, shown on the app's variables page in Cloudgate. Then create a family tree or import a GEDCOM file, and review the privacy settings before inviting relatives.
   - q: Is there a webtrees phone app?
     a: No, there is no official phone app, but webtrees works in the web browser on phones, tablets and computers.
 screenshots:

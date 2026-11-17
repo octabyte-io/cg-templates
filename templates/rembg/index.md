@@ -34,14 +34,14 @@ faq:
   - q: Is Rembg free?
     a: Yes, Rembg is free and open source under the MIT licence, with no fee per image and no paid edition. You pay only for your server. The AI models it uses have their own licences, and the default one is free for non-commercial use only.
   - q: Can I use Rembg for my business?
-    a: Yes, but pick a model whose licence allows it. The default model, BRIA RMBG-2.0, is licensed for non-commercial use only, and BRIA sells a separate licence for commercial use. The birefnet, isnet-general-use and u2net models in the model list have open licences (MIT or Apache-2.0) that allow business use.
+    a: Yes, but pick a Rembg model whose licence allows it. The default model, BRIA RMBG-2.0, is licensed for non-commercial use only, and BRIA sells a separate licence for commercial use. The birefnet, isnet-general-use and u2net models in the model list have open licences (MIT or Apache-2.0) that allow business use.
   - q: Is Rembg a good alternative to remove.bg?
-    a: Yes, if you want to cut out many images without paying per image and keep your photos on your own server. remove.bg needs no server and has a polished editor and apps, but its free use gives only low-resolution results and full-size images cost credits. With Rembg, the quality depends on the model you pick, and fine hair may need its edge refinement.
+    a: Yes, if you want to cut out many images without paying per image and keep your photos on your own server. remove.bg needs no server and has a polished editor and apps, but its free use gives only low-resolution results, full-size images cost credits, and its standalone website and self-service API close on 1 December 2026, moving to Canva and Leonardo.Ai. With Rembg, the quality depends on the model you pick, and fine hair may need its edge refinement.
   - q: How do I sign in to Rembg the first time?
     a: You don't, because Rembg has no accounts or sign-in. Open its web address and upload a photo. Anyone who has the address can use the page and the API, so share it only with people you trust.
   - q: Can Rembg remove the background from many photos at once?
     a: Yes, through its API. A script, a workflow tool or your shop's own software can send each photo to Rembg and save the result. The web page itself handles one photo at a time.
-  - q: Do my photos leave my server?
+  - q: Do my photos leave my server with Rembg?
     a: No, Rembg processes every image on your own server with models stored there. It can also use two paid cloud services, but they are turned off in this setup.
   - q: What server size does Rembg need?
     a: Rembg needs an extra-large server, because its default model is about 1 GB and, in Cloudgate's testing, used more than 6 GB of memory for a single photo while working on the processor. Cloudgate gives it an extra-large server. Smaller, faster models such as u2net are in the same list, with blockier edges.

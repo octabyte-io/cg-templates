@@ -9,7 +9,9 @@ faq:
   - q: "Can ChiefOnboarding replace all of Sapling?"
     a: "No, only the onboarding and offboarding part. Sapling is also an HR system with employee records; ChiefOnboarding has no records, time off or payroll, so pair it with an HR app such as OrangeHRM or keep your current one."
   - q: "Does ChiefOnboarding handle offboarding?"
-    a: "Yes. Offboarding sequences give leavers and colleagues their tasks, and integrations can remove the leaver's access to connected services."
+    a: "Yes. ChiefOnboarding's offboarding sequences give leavers and colleagues their tasks, and integrations can remove the leaver's access to connected services."
+  - q: "Does ChiefOnboarding work with Slack like Sapling?"
+    a: "Yes. ChiefOnboarding sends to-dos and reminders through Slack, email or text, much as Sapling runs its onboarding through Slack. It also creates accounts in Google Workspace, Azure AD and Asana through its integrations."
 ---
 
 Sapling, now sold as Kallidus Sapling, is a paid HR platform for growing companies, best known for onboarding and offboarding workflows that run through Slack and connect to other HR and IT tools, alongside its employee records.

@@ -40,7 +40,7 @@ faq:
   - q: Is MediaCMS a good alternative to Vimeo or YouTube?
     a: Yes, if you want your own private, ad-free video site. MediaCMS has public, unlisted and private videos, group access, embeds, playlists and a player with several qualities. It lacks the worldwide delivery network, viewer reach and marketing tools of Vimeo and YouTube.
   - q: How do I sign in to MediaCMS the first time?
-    a: Click "Sign in" and use the admin user name you typed during setup (admin unless you changed it) with the password Cloudgate created, which is shown on the app's variables page. The admin area for settings and users is at /admin on the same address.
+    a: In MediaCMS, click "Sign in" and use the admin user name you typed during setup (admin unless you changed it) with the password Cloudgate created, which is shown on the app's variables page. The admin area for settings and users is at /admin on the same address.
   - q: Can anyone sign up and upload videos?
     a: Yes, by default anyone who opens your MediaCMS address can create an account and upload. Once your own accounts exist, set the "Allow new sign-ups" option to false in Cloudgate to hide the Register button and close sign-up.
   - q: Which version of MediaCMS does Cloudgate install?
@@ -48,7 +48,7 @@ faq:
   - q: What server size do I need for MediaCMS?
     a: MediaCMS asks for at least 4 GB of memory and 2 to 4 CPU cores, so Cloudgate uses a large server. Plan about three times the size of the videos you expect to upload in disk space, because MediaCMS keeps the original and the converted copies.
   - q: Does MediaCMS send emails?
-    a: No, not out of the box. Email is not set up in this template, so sign-up confirmations, password resets and notifications are not sent; sign-up still works without them.
+    a: No, not out of the box. Email is not set up in this MediaCMS template, so sign-up confirmations, password resets and notifications are not sent; sign-up still works without them.
 screenshots:
   - src: screenshots/home.webp
     alt: "The MediaCMS home page with a left menu (Home, Featured, Recommended, Recent uploads, Tags, Categories, Members, Upload media, My media, History, Liked media), a search bar, and rows of Featured, Recommended and Latest video and photo thumbnails of waterfalls, mountains and caves with durations, uploaders and view counts"

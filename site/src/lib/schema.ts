@@ -129,6 +129,48 @@ export function pageListSchema(name: string, pages: { name: string; path: string
   };
 }
 
+/** Google's `applicationCategory` values, by catalogue category; anything unlisted is a business app. */
+const APPLICATION_CATEGORY: Record<string, string> = {
+  websites: 'BusinessApplication',
+  'online-stores': 'ShoppingApplication',
+  'team-chat': 'CommunicationApplication',
+  communities: 'SocialNetworkingApplication',
+  ai: 'BusinessApplication',
+  automation: 'BusinessApplication',
+  analytics: 'BusinessApplication',
+  'docs-wikis': 'ReferenceApplication',
+  documents: 'BusinessApplication',
+  'project-management': 'BusinessApplication',
+  design: 'DesignApplication',
+  media: 'MultimediaApplication',
+  reading: 'ReferenceApplication',
+  'music-audio': 'MultimediaApplication',
+  home: 'LifestyleApplication',
+  'files-photos': 'UtilitiesApplication',
+  passwords: 'SecurityApplication',
+  'customers-sales': 'BusinessApplication',
+  hr: 'BusinessApplication',
+  'help-desk': 'BusinessApplication',
+  finance: 'FinanceApplication',
+  events: 'BusinessApplication',
+  'point-of-sale': 'BusinessApplication',
+  'inventory-assets': 'BusinessApplication',
+  education: 'EducationalApplication',
+  nonprofits: 'BusinessApplication',
+  social: 'SocialNetworkingApplication',
+  security: 'SecurityApplication',
+  health: 'HealthApplication',
+  research: 'ReferenceApplication',
+  operations: 'BusinessApplication',
+  'email-calendars': 'CommunicationApplication',
+  monitoring: 'DeveloperApplication',
+  'developer-tools': 'DeveloperApplication',
+};
+
+export function applicationCategory(template: Template): string {
+  return APPLICATION_CATEGORY[template.category.id] ?? 'BusinessApplication';
+}
+
 export function softwareSchema(template: Template): Json {
   const sameAs = [template.links.website, template.links.source].filter(Boolean);
   return {
@@ -155,7 +197,7 @@ export function softwareSchema(template: Template): Json {
         }
       : {}),
     image: absolute(template.logo.path),
-    applicationCategory: 'DeveloperApplication',
+    applicationCategory: applicationCategory(template),
     operatingSystem: 'Linux, Docker',
     ...(template.version ? { softwareVersion: template.version } : {}),
     keywords: template.tags.join(', '),
@@ -203,7 +245,7 @@ export function comparisonSchema(c: {
     '@id': `${absolute(`templates/${t.id}/`)}#app`,
     name: t.name,
     url: absolute(`templates/${t.id}/`),
-    applicationCategory: 'DeveloperApplication',
+    applicationCategory: applicationCategory(t),
     operatingSystem: 'Linux, Docker',
     license: t.license,
   });

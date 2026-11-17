@@ -37,17 +37,17 @@ faq:
   - q: Do I need Immich to use ImmichFrame?
     a: Yes. ImmichFrame shows photos from an Immich server and has no photo library of its own. Immich is also in the Cloudgate catalogue, so you can set up both on Cloudgate.
   - q: Which screens can show ImmichFrame?
-    a: Any device with a web browser, such as a tablet, a computer, a Raspberry Pi or a smart TV. There are also apps for Apple TV, iPhone, iPad and Android, an Android TV screensaver, and a way to run it on Frameo photo frames.
+    a: ImmichFrame runs on any device with a web browser, such as a tablet, a computer, a Raspberry Pi or a smart TV. There are also apps for Apple TV, iPhone, iPad and Android, an Android TV screensaver, and a way to run it on Frameo photo frames.
   - q: How do I connect ImmichFrame to my Immich photos?
     a: In Immich, create an API key under Account settings > API keys, then enter it with your Immich web address when Cloudgate sets up ImmichFrame. To change them later, use ImmichFrame's admin page, which has a Test connection button.
   - q: How do I sign in to ImmichFrame the first time?
     a: Open your ImmichFrame address followed by /admin and sign in with the admin password Cloudgate generated, which is shown on the app's variables page. Your Immich account is already connected, so you go straight to choosing albums, people and the clock or weather.
-  - q: Can anyone with the address see my photos?
+  - q: Can anyone with the ImmichFrame address see my photos?
     a: No. Cloudgate switches on ImmichFrame's access secret, so a screen shows photos only after you enter it once. Open the frame's address with ?authsecret= and the secret on the end, or type it into the box the page shows, and the screen remembers it.
   - q: Does ImmichFrame keep copies of my photos?
-    a: No. It reads photos from your Immich server as it shows them and can keep a short-term cache, while videos are always streamed from Immich.
+    a: No. ImmichFrame reads photos from your Immich server as it shows them and can keep a short-term cache, while videos are always streamed from Immich.
   - q: Can ImmichFrame show the weather and my calendar?
-    a: Yes. Add a free OpenWeatherMap key and your location for the weather, and calendar links in .ics form, such as a Google Calendar private address, for upcoming events.
+    a: Yes. In ImmichFrame, add a free OpenWeatherMap key and your location for the weather, and calendar links in .ics form, such as a Google Calendar private address, for upcoming events.
 screenshots:
   - src: screenshots/photo-with-weather.webp
     alt: "ImmichFrame showing a landscape photo of a stream running through a grassy field towards a house and a swing set, with the place Silloth, England at the top, the weather 48°F and overcast clouds and the time 5:49 PM at the bottom left, and the photo date at the bottom right"

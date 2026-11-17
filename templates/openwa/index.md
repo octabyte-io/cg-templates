@@ -42,11 +42,11 @@ faq:
   - q: Is OpenWA a good alternative to the WhatsApp Business API?
     a: Yes for internal tools, alerts, order updates and small volumes, where no per-message fee and a quick QR setup matter most. For healthcare, finance, large-scale customer messaging or anything you cannot risk losing, OpenWA's own guide recommends Meta's official WhatsApp Cloud API instead.
   - q: How do I sign in to OpenWA and connect my WhatsApp number?
-    a: Sign in to the dashboard with the admin key Cloudgate shows for the app. Then add a session, start it and scan its QR code with WhatsApp on your phone, under Settings, Linked devices.
+    a: Sign in to the OpenWA dashboard with the admin key Cloudgate shows for the app. Then add a session, start it and scan its QR code with WhatsApp on your phone, under Settings, Linked devices.
   - q: Does OpenWA work with n8n, Chatwoot or AI assistants?
     a: Yes. OpenWA has n8n nodes, Chatwoot and Typebot plugins, and an optional connection for AI assistants such as Claude, which is read-only unless you allow sending. Any tool that can call a web address and receive webhooks can use it too.
   - q: What server size does OpenWA need?
-    a: About 2 GB of memory suits one or a few WhatsApp numbers, since each number runs its own copy of WhatsApp Web, using roughly 300 to 500 MB. Add memory as you add numbers. It runs on Intel, AMD and ARM servers.
+    a: About 2 GB of memory suits OpenWA with one or a few WhatsApp numbers, since each number runs its own copy of WhatsApp Web, using roughly 300 to 500 MB. Add memory as you add numbers. It runs on Intel, AMD and ARM servers.
 screenshots:
   - src: screenshots/sessions.webp
     alt: "The OpenWA Sessions page with cards for three WhatsApp sessions named orders, deliveries and front-desk, each marked New, showing phone, session ID and last active, with View, Proxy, Start and Delete buttons and a New Session button"

@@ -45,7 +45,7 @@ faq:
   - q: Is there a Kan phone app?
     a: No, Kan is a web app with no phone or desktop apps. It opens in a phone's web browser.
   - q: Can I attach files to cards in Kan?
-    a: No, not in this setup. File attachments and profile pictures need separate file storage, which this template does not set up.
+    a: No, not in this setup. In Kan, file attachments and profile pictures need separate file storage, which this template does not set up.
 screenshots:
   - src: screenshots/board.webp
     alt: "A Kan board called Roadmap with four lists, Under Review, Planned, In progress and Done, holding cards such as Hotkeys, Invite links, Checklists and Board templates, each with coloured labels like Feature, Bug and Self-host, and Visibility, Filter and New list buttons at the top"

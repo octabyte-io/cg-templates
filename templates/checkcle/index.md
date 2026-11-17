@@ -36,16 +36,16 @@ faq:
   - q: Is CheckCle free?
     a: Yes, CheckCle is free and open source under the MIT licence, with no paid edition and no limit on monitors, servers or status pages. You pay only for the server it runs on.
   - q: Is CheckCle a good alternative to UptimeRobot or Pingdom?
-    a: Yes, for checking websites and servers, warning you before SSL certificates expire and publishing a status page, with no price per monitor. It checks from your own server, and from other places only where you install its regional agent, and it has no real-user monitoring, on-call rotas or phone-call alerts.
+    a: Yes, CheckCle is a good UptimeRobot or Pingdom alternative for checking websites and servers, warning you before SSL certificates expire and publishing a status page, with no price per monitor. It checks from your own server, and from other places only where you install its regional agent, and it has no real-user monitoring, on-call rotas or phone-call alerts.
   - q: Should I choose CheckCle or Uptime Kuma?
     a: Choose CheckCle if you also want server health, a list of SSL certificates with early expiry warnings and checks from other regions in the same app. Choose Uptime Kuma if you only need website checks and want more check types and over 90 alert services.
   - q: How do I sign in to CheckCle the first time?
     a: "Sign in with the email admin@example.com and the admin password Cloudgate shows you after setup. The default password from CheckCle's own guide does not work on a Cloudgate install. Then change the email to your own and add your colleagues under User Management in Settings."
   - q: Will CheckCle warn me before an SSL certificate expires?
     a: Yes. For each domain you add, CheckCle shows the certificate's issuer, expiry date and days left, and alerts you when it gets close to expiring, by default 30 days and 7 days before. You can change both limits per domain.
-  - q: Do I need to install anything on my servers?
+  - q: Do I need to install anything on my servers for CheckCle?
     a: Only to see server stats; CheckCle's website, ping, port and DNS checks need nothing installed. To see a server's processor, memory, disk and network use, run the one-line install command CheckCle gives you on that server; agents exist for Linux, Docker and, in beta, Windows.
-  - q: Can I import my monitors from UptimeRobot?
+  - q: Can I import my monitors from UptimeRobot into CheckCle?
     a: No, CheckCle has no import from UptimeRobot, Pingdom or Better Stack. You add each website again by name, address and check interval, which takes a few seconds per monitor.
 screenshots:
   - src: screenshots/dashboard.webp

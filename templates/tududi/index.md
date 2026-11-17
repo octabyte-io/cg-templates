@@ -40,13 +40,13 @@ faq:
   - q: Is tududi a good alternative to Todoist?
     a: Yes, if you want projects, recurring tasks, quick entry with natural dates and shared projects on your own server. Todoist has polished phone apps and more integrations, while tududi runs in the browser and syncs with phone reminder apps through CalDAV.
   - q: How do I sign in to tududi the first time?
-    a: You sign in with the admin email you entered when installing and the strong password Cloudgate created for it, shown on the app's variables page. New sign-ups are off, so as admin you add the other people yourself.
+    a: You sign in to tududi with the admin email you entered when installing and the strong password Cloudgate created for it, shown on the app's variables page. New sign-ups are off, so as admin you add the other people yourself.
   - q: Does tududi have a phone app?
     a: No, there is no app in the app stores, but tududi installs on your phone's home screen from the browser, and you can still read your tasks when offline. Tasks also sync both ways with Apple Reminders and tasks.org.
   - q: Can I import my tasks from Todoist into tududi?
     a: Not directly, because tududi has no Todoist importer. It does import tasks from Excel or CSV files, matching your columns to task fields and letting you check every row before saving.
   - q: Can my family or team use tududi together?
-    a: Yes, you can share projects, put people in groups, assign tasks to anyone and see everyone's tasks on one board. Members can be added without an email address, for example a child who signs in with a link.
+    a: Yes, in tududi you can share projects, put people in groups, assign tasks to anyone and see everyone's tasks on one board. Members can be added without an email address, for example a child who signs in with a link.
   - q: What server size do I need for tududi?
     a: A small server is enough, because tududi is one light app plus a PostgreSQL database. Cloudgate sets up both for you.
 screenshots:

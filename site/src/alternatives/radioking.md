@@ -7,7 +7,11 @@ moving: |
   AzuraCast has no RadioKing importer, so you upload your music again. Create the admin account and your first station at your AzuraCast web address, upload your songs, rebuild your playlists and schedule, and add your jingles. Replace the RadioKing player on your website with AzuraCast's, update the stream link wherever your station is listed, and keep both running for a few days before you cancel.
 faq:
   - q: "Is AzuraCast as easy to use as RadioKing?"
-    a: "Mostly. You manage the station in the browser, uploading music and building playlists and schedules, but you also look after the server it runs on, which RadioKing does for you."
+    a: "Mostly. In AzuraCast you manage the station in the browser, uploading music and building playlists and schedules, but you also look after the server it runs on, which RadioKing does for you."
+  - q: "Can I broadcast live on AzuraCast like on RadioKing?"
+    a: "Not on Cloudgate. RadioKing lets presenters go live from DJ software such as Mixxx or VirtualDJ, or from a phone, but AzuraCast as set up on Cloudgate has no live DJ broadcasting. It plays your AutoDJ playlists and schedule around the clock."
+  - q: "How much does RadioKing cost?"
+    a: "As of November 2026, RadioKing's plans cost $19 a month for Discover, $34 for Start and $64 for Pro, each with a free trial. AzuraCast is free and open source; on your own server you pay for the server and the bandwidth your listeners use instead."
 ---
 
 RadioKing is a hosted web radio builder: you upload music, plan your programming and share a player, with statistics on your listeners, on a monthly plan.

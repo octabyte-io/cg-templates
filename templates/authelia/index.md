@@ -35,16 +35,16 @@ faq:
     a: Yes. Authelia is free, open-source software under the Apache-2.0 licence, with no paid edition and no fee per user. You pay only for your server.
   - q: Is Authelia a good alternative to Okta?
     a: Partly. Authelia gives your self-hosted apps one sign-in with two-step login through OpenID Connect, for free. Unlike Okta, it has no admin screen, no SAML and no ready-made connections to cloud apps, so authentik is the closer match if you need those.
-  - q: How do I sign in the first time?
-    a: Sign in as admin with the password Cloudgate generated, shown on the app's variables page. Authelia then asks you to register a second step and sends a one-time code to confirm it. Until you add an email service, that code is written to the file notification.txt in Authelia's /config folder on the server, so read it there.
-  - q: Is there an admin screen?
-    a: No. Everything is set in two text files in Authelia's /config folder on the server. configuration.yml holds the apps it signs in to, access rules and email settings, and users_database.yml holds the users. Edit them and restart Authelia; it reloads the users file by itself.
+  - q: How do I sign in to Authelia the first time?
+    a: Sign in to Authelia as admin with the password Cloudgate generated, shown on the app's variables page. Authelia then asks you to register a second step and sends a one-time code to confirm it. Until you add an email service, that code is written to the file notification.txt in Authelia's /config folder on the server, so read it there.
+  - q: Does Authelia have an admin screen?
+    a: No. Authelia has no admin screen; everything is set in two text files in its /config folder on the server. configuration.yml holds the apps it signs in to, access rules and email settings, and users_database.yml holds the users. Edit them and restart Authelia; it reloads the users file by itself.
   - q: How do I connect an app to Authelia?
     a: Add the app as an OpenID Connect client in configuration.yml, with a signing key and one entry per app, then enter Authelia's address and the client's ID and secret in the app's "Sign in with OpenID Connect" settings. Authelia's documentation has a step-by-step page for many apps.
   - q: Can Authelia put a login in front of apps that have no login of their own?
     a: Not with Cloudgate's setup alone. That needs a web proxy that asks Authelia before letting each visitor through, which Cloudgate's proxy does not do, so on Cloudgate Authelia signs people in to apps that support OpenID Connect.
   - q: Which two-step sign-in methods does Authelia support?
-    a: "Codes from authenticator apps such as Google Authenticator, security keys such as a YubiKey, passkeys, and Duo push notifications if you have a Duo account. People can also sign in with a passkey instead of a password."
+    a: "Authelia supports codes from authenticator apps such as Google Authenticator, security keys such as a YubiKey, passkeys, and Duo push notifications if you have a Duo account. People can also sign in with a passkey instead of a password."
   - q: Does Authelia support SAML?
     a: No. Authelia connects apps with OpenID Connect, the "Sign in with" standard many apps support. If you need SAML, authentik and Keycloak support it.
   - q: What is the difference between Authelia and authentik?

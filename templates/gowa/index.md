@@ -40,7 +40,7 @@ faq:
   - q: Is GOWA free?
     a: Yes. GOWA is free and open source under the MIT licence, with no paid edition, and every feature is included. You pay only for your server.
   - q: Is GOWA a good alternative to the WhatsApp Business API?
-    a: Yes for internal tools, small volumes and testing, where no per-message fee and a quick QR setup matter most. For customer messaging at scale, approved templates, a verified business name or anything you cannot risk losing, the official API is the safer choice.
+    a: Yes, GOWA suits internal tools, small volumes and testing, where no per-message fee and a quick QR setup matter most. For customer messaging at scale, approved templates, a verified business name or anything you cannot risk losing, the official API is the safer choice.
   - q: How do I connect my WhatsApp number to GOWA?
     a: "Open GOWA's web address, sign in with the username and password Cloudgate shows, add a device and press Pair. Then scan the QR code with WhatsApp on your phone, under Settings, Linked devices, or type the pairing code instead."
   - q: What is the difference between GOWA and WAHA?

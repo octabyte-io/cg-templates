@@ -38,7 +38,7 @@ faq:
   - q: Is DocuSeal free?
     a: Yes, DocuSeal is free and open source under the AGPL-3.0 licence, and you pay only for your server. Its makers sell a separate Pro edition with extras such as reminders, your own logo, bulk send and SSO; the free edition keeps a "Powered by DocuSeal" line on signing pages.
   - q: Is DocuSeal a good alternative to DocuSign?
-    a: Yes, for the everyday DocuSign job of sending a PDF to one or more people, getting it signed online and keeping a signed copy with an audit log. It has fewer integrations and, in the free edition, no automatic reminders, bulk send or SSO.
+    a: Yes, DocuSeal handles the everyday DocuSign job of sending a PDF to one or more people, getting it signed online and keeping a signed copy with an audit log. It has fewer integrations and, in the free edition, no automatic reminders, bulk send or SSO.
   - q: Are DocuSeal signatures legally binding?
     a: DocuSeal says its e-signatures meet the US ESIGN Act and UETA and count as basic electronic signatures under the EU's eIDAS rules. Each signed document comes with an audit log of who signed and when. For contracts with special legal requirements, check with a lawyer.
   - q: Why is DocuSeal not sending emails?
@@ -46,7 +46,7 @@ faq:
   - q: How do I sign in to DocuSeal the first time?
     a: The first person to open DocuSeal's web address sees a setup page and creates the admin account with a name, email and password. There is no default login, so do this right after setup.
   - q: Can I import my DocuSign templates into DocuSeal?
-    a: Partly. DocuSeal documents an import for DocuSign template exports, but we have not tested it on a self-hosted install, and only templates come across, not your past envelopes. Otherwise, upload your PDFs again and place the fields.
+    a: Partly. DocuSeal documents an import for DocuSign template exports, but its pricing page lists it as a Pro feature, not part of the free edition installed here, and only templates come across, not your past envelopes. Otherwise, upload your PDFs again and place the fields.
   - q: What server size do I need for DocuSeal?
     a: A small server is enough, because DocuSeal recommends 1 CPU and 1 GB of memory for typical documents. Cloudgate sets it up on a small server with its database, and you can move to a bigger one if you sign very large files.
 screenshots:

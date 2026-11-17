@@ -1,5 +1,5 @@
 name: Gancio
-description: "Gancio is a self-hosted community event calendar that anyone can add local events to and follow."
+description: "Gancio is a self-hosted community event calendar, an alternative to Facebook Events, where anyone can post local events and others follow them."
 version: "1.28.2"
 tags: [community calendar, facebook events alternative, meetup alternative, shared event agenda, local events calendar, fediverse events, embed events calendar]
 links:

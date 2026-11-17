@@ -56,7 +56,7 @@ faq:
   - q: "Is Outline open source?"
     a: "Outline's code is public under the Business Source License. It is free to run for your own team, but you may not sell it as a hosted wiki service to others. If you want an open-source wiki, Docmost is under the AGPL licence."
   - q: "What is the difference between Outline and Docmost?"
-    a: "Outline signs people in through an existing account such as Google Workspace or Microsoft, and has free templates and a free Confluence import. Docmost has its own email-and-password accounts, Confluence-style spaces with permissions and built-in diagrams, and is open source; its templates and single sign-on are paid."
+    a: "Outline signs people in through an existing account such as Google Workspace or Microsoft, and has free templates; its Confluence importer is paid. Docmost has its own email-and-password accounts, Confluence-style spaces with permissions and built-in diagrams, and is open source; its templates and single sign-on are paid."
   - q: "Which app feels most like Notion's editor?"
     a: "La Suite Docs, for a team: it has Notion-style blocks, slash commands and nested sub-pages, with live co-writing and sharing by link. For one person's notes and databases, SiYuan is closer still."
 ---

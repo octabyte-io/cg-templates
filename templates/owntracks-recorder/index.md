@@ -1,5 +1,6 @@
 ---
 tagline: The self-hosted server for the OwnTracks app, with a live map.
+title: "OwnTracks: self-hosted Google Maps Timeline"
 category: home
 alternativeTo: [google-maps-timeline, life360]
 ease: some-setup
@@ -36,11 +37,11 @@ faq:
   - q: How is OwnTracks Recorder different from Dawarich?
     a: OwnTracks Recorder is the small, official server for the OwnTracks app, with a live map of where each phone is now and its past tracks. Dawarich is a fuller location history app with a day-by-day timeline, trips, yearly stats and Google Timeline import, and it needs a bigger server. Dawarich also accepts OwnTracks data, so you can move to it later.
   - q: Is OwnTracks Recorder a good alternative to Life360?
-    a: Only for seeing where your family's phones are. Its live map shows each phone's latest position in a web browser, with the history kept on your own server. It has no place alerts, crash detection or SOS, and in this setup family members do not see each other inside the OwnTracks app.
+    a: Only for seeing where your family's phones are. OwnTracks Recorder's live map shows each phone's latest position in a web browser, with the history kept on your own server. It has no place alerts, crash detection or SOS, and in this setup family members do not see each other inside the OwnTracks app.
   - q: How do I connect my phone to OwnTracks Recorder?
     a: Install the OwnTracks app on your iPhone or Android phone, open its connection settings and choose HTTP mode. Enter your Recorder's address ending in /pub, turn on authentication, type your username and password, and give the phone a device name, such as anna-phone.
   - q: How do I sign in to OwnTracks Recorder the first time?
-    a: You sign in with the username you chose during setup (owntracks unless you changed it) and the password Cloudgate generated. There is no admin account; the same username and password open the web pages and connect each phone.
+    a: You sign in to OwnTracks Recorder with the username you chose during setup (owntracks unless you changed it) and the password Cloudgate generated. There is no admin account; the same username and password open the web pages and connect each phone.
   - q: Can I import my Google Timeline history into OwnTracks Recorder?
     a: No, OwnTracks Recorder only stores locations sent from the OwnTracks app from the day you connect it. If you want to bring your Google Timeline history, Dawarich can import a Google Takeout export.
   - q: What server size do I need for OwnTracks Recorder?

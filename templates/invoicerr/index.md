@@ -38,11 +38,11 @@ faq:
   - q: Is Invoicerr free?
     a: Yes, Invoicerr is free and open source under the AGPL-3.0 licence, with no paid edition, seat fee or invoice limit. You pay only for your server. Its maker also offers a separate commercial licence and asks businesses that sell or host Invoicerr as a service to contact him.
   - q: Is Invoicerr a good alternative to FreshBooks?
-    a: Yes, if you mainly need quotes, invoices and receipts. Invoicerr covers quotes signed online, recurring invoices, payments and e-invoices without a monthly fee or client limit, but it has no time tracking, card payments, bookkeeping or phone app.
+    a: Yes, Invoicerr can replace FreshBooks if you mainly need quotes, invoices and receipts. Invoicerr covers quotes signed online, recurring invoices, payments and e-invoices without a monthly fee or client limit, but it has no time tracking, card payments, bookkeeping or phone app.
   - q: How does Invoicerr compare with Zoho Invoice?
     a: Invoicerr has no user or invoice limits and adds no branding to your invoices, while Zoho Invoice, also free, is capped at two users and 500 invoices a year and adds "Powered by Zoho Invoice". Zoho Invoice has phone apps and online card payments that Invoicerr lacks; Invoicerr keeps your data on your own server.
   - q: How do clients sign a quote in Invoicerr?
-    a: Clients sign in their web browser, with no account. You click Send for signature, the client gets an email with a link and an 8-digit code, enters the code and clicks Sign, and the quote shows as Signed and ready to invoice.
+    a: Clients sign an Invoicerr quote in their web browser, with no account. You click Send for signature, the client gets an email with a link and an 8-digit code, enters the code and clicks Sign, and the quote shows as Signed and ready to invoice.
   - q: How do I sign in to Invoicerr the first time?
     a: There is no default password. The first person to open your Invoicerr address and sign up with an email and password gets the first account, so do it straight after install. After that, new people can join only with an invitation from an existing user.
   - q: Can Invoicerr create e-invoices such as Factur-X or XRechnung?

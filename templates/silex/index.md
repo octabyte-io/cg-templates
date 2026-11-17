@@ -42,11 +42,11 @@ faq:
     a: No, Silex expects you to learn basic web design ideas such as boxes, spacing and styles, so Wix is quicker for a beginner. You do not write code, and in return you get exact control over the design and a site you can take anywhere.
   - q: How do I sign in to Silex the first time?
     a: Open the editor's web address and sign in with the username admin and the password Cloudgate generated for you. Silex then shows its dashboard with a first website ready to edit.
-  - q: Where does my published website appear?
-    a: Your site appears at its own second web address when you click Publish in the editor. Visitors need no password, and until your first publish that address says nothing is published yet. Every website in this install publishes to that same address, so it shows whichever site was published last; in practice, use one install per published site.
+  - q: Where does my published Silex website appear?
+    a: Your site appears at its own second web address when you click Publish in the Silex editor. Visitors need no password, and until your first publish that address says nothing is published yet. Every website in this install publishes to that same address, so it shows whichever site was published last; in practice, use one install per published site.
   - q: Can I import my Webflow or Wix site into Silex?
     a: No, Silex has no importer for Webflow or Wix. You rebuild the pages in the editor and copy your text and images across.
-  - q: Can I add a contact form or an online shop?
+  - q: Can I add a contact form or an online shop to a Silex site?
     a: Partly. You can design a contact form, but the messages are sent to a form service you choose, such as Formspree, because Silex does not store them. Silex has no shop checkout.
 screenshots:
   - src: screenshots/editor.webp

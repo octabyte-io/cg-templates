@@ -34,12 +34,12 @@ faq:
     a: Yes. OpenBudgeteer is free, open-source software under the AGPL-3.0 licence, with no paid edition and no locked features. You pay only for the server it runs on.
   - q: Is OpenBudgeteer a good alternative to YNAB?
     a: Yes, if you want YNAB's method without the subscription and don't need bank sync. OpenBudgeteer uses the same idea of giving your money a job in buckets, and unspent or overspent amounts carry into the next month. YNAB does more for you, with bank connections in North America and phone apps, while OpenBudgeteer relies on bank files you import.
-  - q: What is bucket budgeting?
-    a: Bucket budgeting, also called envelope budgeting, means deciding in advance how much of the money you have goes to each purpose, such as groceries, insurance or savings, then taking each payment out of its bucket. You always know what is left to spend in each bucket, instead of only seeing afterwards where the money went.
+  - q: What is bucket budgeting in OpenBudgeteer?
+    a: Bucket budgeting, also called envelope budgeting, means deciding in advance how much of the money you have goes to each purpose, such as groceries, insurance or savings, then taking each payment out of its bucket. You always know what is left to spend in each bucket, instead of only seeing afterwards where the money went. OpenBudgeteer is built around this method.
   - q: Can I import my bank transactions or my YNAB budget?
     a: Partly. OpenBudgeteer imports CSV files from your online banking through a wizard where you match the columns, and it checks for duplicates. It has no importer for a YNAB budget, so you recreate your buckets and bring in past transactions as CSV files.
   - q: How do I sign in to OpenBudgeteer the first time?
-    a: Sign in with the username and password Cloudgate shows on the app's variables page. There is one login for the whole app and no setup wizard; you start by adding your bank account and its opening balance, then your buckets.
+    a: Sign in to OpenBudgeteer with the username and password Cloudgate shows on the app's variables page. There is one login for the whole app and no setup wizard; you start by adding your bank account and its opening balance, then your buckets.
   - q: Is there an OpenBudgeteer phone app?
     a: No. OpenBudgeteer is a web app with no phone or desktop app, but its pages are laid out to work on small screens, so you can use it in your phone's browser.
   - q: Is my financial data private with OpenBudgeteer?

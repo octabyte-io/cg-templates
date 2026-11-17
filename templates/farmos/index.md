@@ -40,7 +40,7 @@ faq:
   - q: Is farmOS a good alternative to Farmbrite?
     a: Yes, for farm records, maps, tasks and crop and livestock history. farmOS has no accounting, sales or online store like Farmbrite, so it suits farms that want detailed records on their own server and handle money in a separate tool.
   - q: How do I sign in to farmOS the first time?
-    a: You sign in with the username admin and the password Cloudgate created for you. The dashboard then asks whether you work with plants, animals and other things, and turns on the matching features.
+    a: You sign in to farmOS with the username admin and the password Cloudgate created for you. The dashboard then asks whether you work with plants, animals and other things, and turns on the matching features.
   - q: Does farmOS have a phone app?
     a: No, farmOS has no app in the phone app stores, but it works in the browser on a phone or tablet, including the map. On a secure web address, the map can show where you are standing.
   - q: Can I move my records from Farmbrite or a spreadsheet into farmOS?

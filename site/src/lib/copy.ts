@@ -41,18 +41,18 @@ export function appFaq(template: Template): { q: string; a: string }[] {
   const first = template.alternativeTo[0];
   const general = [
     {
-      q: 'Do I need technical skills?',
+      q: `Do I need technical skills to run ${template.name}?`,
       a: `No. Click Deploy, create your Cloudgate account and choose a server, and Cloudgate sets up ${template.name} and gives it a web address. You use it in your browser like any other online tool.`,
     },
-    { q: 'What does it cost?', a: costAnswer(template.name) },
+    { q: `What does ${template.name} cost?`, a: costAnswer(template.name) },
     {
-      q: 'Do I need my own server?',
+      q: `Do I need my own server for ${template.name}?`,
       a: `No. When you deploy ${template.name}, hosted Cloudgate can provide a server. If you already rent one, you can connect it instead.`,
     },
     ...(first
       ? [
           {
-            q: `Can I move my data from ${first.name}?`,
+            q: `Can I move my data from ${first.name} to ${template.name}?`,
             a: `Most people export from ${first.name} and import into ${template.name}.${
               template.links.docs ? ` The official guides at ${new URL(template.links.docs).hostname} walk through it.` : ''
             }`,

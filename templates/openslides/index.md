@@ -46,7 +46,7 @@ faq:
   - q: Can I import our member list into OpenSlides?
     a: Yes, OpenSlides imports participants and agenda items from CSV files, and invitation emails can send each person their sign-in details. It cannot import directly from ElectionBuddy, so bring your member list in as a CSV file.
   - q: Does OpenSlides work for online and hybrid meetings?
-    a: Yes, people in the room and at home use the same meeting, lists of speakers and votes in their browsers. A built-in video room and livestream are also possible, but they need a Jitsi video server and a stream address you provide.
+    a: Yes. In OpenSlides, people in the room and at home use the same meeting, lists of speakers and votes in their browsers. A built-in video room and livestream are also possible, but they need a Jitsi video server and a stream address you provide.
 screenshots: []
 ---
 

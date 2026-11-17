@@ -36,7 +36,7 @@ faq:
   - q: Is erxes open source?
     a: No, not in the strict sense. erxes uses the AGPL-3.0 licence with an added rule that it may not be hosted as a service that competes with erxes Inc., so it is source-available. Running it for your own business is allowed.
   - q: Is erxes a good alternative to HubSpot?
-    a: Partly. It covers the CRM side, with contacts, deals on a pipeline board, a shared inbox and tickets and no per-seat price. It has fewer integrations and add-ons than HubSpot, this template leaves out the website chat widget and automations, and you run and update it yourself.
+    a: Partly. erxes covers the CRM side, with contacts, deals on a pipeline board, a shared inbox and tickets and no per-seat price. It has fewer integrations and add-ons than HubSpot, this template leaves out the website chat widget and automations, and you run and update it yourself.
   - q: How do I sign in to erxes the first time?
     a: On a new installation, erxes opens a Create owner page. The first person there sets up the owner account with a name, email and password, then signs in and invites the rest of the team. Before uploading files, choose Local storage in the file settings, because erxes stores uploads on Amazon S3 by default.
   - q: Can I import my contacts into erxes?

@@ -1,5 +1,6 @@
 ---
 tagline: Simple website visitor stats, with no cookie banner needed.
+title: "Plausible: a Google Analytics alternative"
 category: analytics
 alternativeTo: [google-analytics]
 ease: easy

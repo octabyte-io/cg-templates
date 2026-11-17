@@ -38,11 +38,11 @@ faq:
   - q: Is Snapp a good alternative to Bitly?
     a: Yes, if you want short links on your own domain with click stats, QR codes and no monthly plan. Snapp adds secrets, expiry dates and use limits to any link, but its stats are simpler than Bitly's paid plans and it has no campaign reports or link-in-bio pages.
   - q: How do I sign in to Snapp the first time?
-    a: Sign in with the username admin and the password Cloudgate created for you, which you find on the app's variables page; the account uses the email you entered at setup. Public sign-up is off, so the admin adds other users from the Users page.
+    a: Sign in to Snapp with the username admin and the password Cloudgate created for you, which you find on the app's variables page; the account uses the email you entered at setup. Public sign-up is off, so the admin adds other users from the Users page.
   - q: Can I move my links from Bitly or another shortener into Snapp?
     a: Partly. Snapp imports a CSV or JSON list of links exported from another shortener and lets you match its columns, so your destinations and endings come across. The short links themselves keep their old domain, so links already printed with bit.ly still point to Bitly.
   - q: Can I password-protect or limit a short link in Snapp?
-    a: Yes, you can add a secret that visitors must enter before they are sent on, set an expiry date, or set a maximum number of uses. The link stops working when it expires or reaches its limit.
+    a: Yes. In Snapp you can add a secret that visitors must enter before they are sent on, set an expiry date, or set a maximum number of uses. The link stops working when it expires or reaches its limit.
   - q: Is Snapp finished?
     a: Not yet. Cloudgate installs Snapp 0.9, which the project calls a release candidate for version 1. Version 1 is a rewrite, and moving to it means exporting your links to CSV and importing them into a fresh install.
   - q: Does Snapp have a phone app?

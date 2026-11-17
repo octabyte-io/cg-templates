@@ -36,7 +36,7 @@ switching:
     - No import from Toast or Square; menu items and ingredients come in from a spreadsheet (CSV) file
 faq:
   - q: Is OrderRestro free?
-    a: Yes, OrderRestro is free and open source under the AGPL-3.0 licence, with no paid edition, no subscription and no fee per order or per till. You pay only for your server.
+    a: Yes. Nodedr OrderRestro is free and open source under the AGPL-3.0 licence, with no paid edition, no subscription and no fee per order or per till. You pay only for your server.
   - q: Is OrderRestro a good alternative to Toast?
     a: Yes, for a restaurant that wants billing, a kitchen display, tables, reservations, stock and payroll without a monthly fee. Unlike Toast, it has no card terminals or hardware of its own and no phone app in the app stores yet, and it is a young project, so try it with your own printers and payment setup before a busy service.
   - q: Can OrderRestro print to my receipt and kitchen printers?

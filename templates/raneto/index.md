@@ -36,10 +36,10 @@ faq:
   - q: Is Raneto a good alternative to Helpjuice?
     a: Yes, for a simple help centre or FAQ that your team writes and customers search. Raneto has categories, full-text search and a browser editor, but no AI search, reader analytics or approval workflows like Helpjuice.
   - q: How do I sign in to Raneto the first time?
-    a: Click Login and sign in with the username admin and the password Cloudgate created, shown on the app's variables page. The app's well-known default passwords are switched off, so only that login works.
+    a: In Raneto, click Login and sign in with the username admin and the password Cloudgate created, shown on the app's variables page. Raneto's well-known default passwords are switched off, so only that login works.
   - q: Who can read my Raneto site?
     a: Anyone with the address can read it, because Raneto is made for public help sites; only editing needs a sign-in. You can make reading private too, which takes one change in Raneto's settings file.
-  - q: Can several people edit pages?
+  - q: Can several people edit Raneto pages?
     a: Yes, but each extra login is added to Raneto's settings file rather than invited from the app, and every login can edit every page. It suits a small team that trusts each other.
   - q: Does Raneto need a database or a big server?
     a: No, Raneto keeps each page as a Markdown file and needs no database. It is one light app, so the smallest Cloudgate server is enough for a typical small business help site.

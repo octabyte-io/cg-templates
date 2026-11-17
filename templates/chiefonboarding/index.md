@@ -38,7 +38,7 @@ faq:
   - q: Is ChiefOnboarding free?
     a: Yes. ChiefOnboarding is free, open-source employee onboarding software under the AGPL-3.0 licence, and the self-hosted version has every feature with no limit on new hires. Its makers sell paid support and hosting, not extra features.
   - q: Is ChiefOnboarding a good alternative to Enboarder or Sapling?
-    a: Yes, for small and growing companies that want structured onboarding without a subscription. It covers preboarding, timed to-dos, company information, introductions, tasks for colleagues and Slack, email or text reminders; Enboarder and Sapling offer more polish, reporting and Microsoft Teams support.
+    a: Yes, ChiefOnboarding is a good Enboarder or Sapling alternative for small and growing companies that want structured onboarding without a subscription. It covers preboarding, timed to-dos, company information, introductions, tasks for colleagues and Slack, email or text reminders; Enboarder and Sapling offer more polish, reporting and Microsoft Teams support.
   - q: Do I need Slack to use ChiefOnboarding?
     a: No. New hires can use their own web portal instead, with the same features. If your team uses Slack, you create a Slack app for your workspace from the ready-made settings in ChiefOnboarding's documentation, which takes a few minutes and lets you pick the bot's name and picture.
   - q: How do I sign in to ChiefOnboarding the first time?
@@ -46,7 +46,7 @@ faq:
   - q: Does ChiefOnboarding replace BambooHR?
     a: No, only BambooHR's onboarding part. ChiefOnboarding has no employee records, leave or payroll, so it works next to an HR system; a BambooHR integration can bring your staff list across.
   - q: Can ChiefOnboarding send emails and text messages?
-    a: Yes, once you connect the services that send them. Emails go through an email service you already use, and text messages need a Twilio account and phone number, which Twilio charges for.
+    a: Yes, ChiefOnboarding sends emails and text messages once you connect the services that send them. Emails go through an email service you already use, and text messages need a Twilio account and phone number, which Twilio charges for.
   - q: Does ChiefOnboarding have a phone app?
     a: No, there is no ChiefOnboarding phone app. New hires can use the web portal in a phone's browser, or the Slack bot in Slack's own phone app.
 screenshots:

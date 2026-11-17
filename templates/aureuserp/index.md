@@ -42,10 +42,10 @@ faq:
   - q: Can AureusERP replace NetSuite or SAP Business One?
     a: For a small business, partly. AureusERP covers sales, purchasing, stock, manufacturing, point of sale and accounting with no licence fee, but it has a much smaller set of integrations, partners and industry features than NetSuite or SAP Business One.
   - q: Does AureusERP include accounting?
-    a: Yes. The Accounting module records invoices, bills, payments and journal entries, and has a balance sheet, profit and loss, trial balance, general ledger, partner ledger and aged receivables and payables reports.
+    a: Yes. The AureusERP Accounting module records invoices, bills, payments and journal entries, and has a balance sheet, profit and loss, trial balance, general ledger, partner ledger and aged receivables and payables reports.
   - q: How do I sign in to AureusERP the first time?
-    a: Open your app's address followed by /admin and sign in with the admin email you entered and the password Cloudgate generated, shown on the app's variables page in Cloudgate. Then open the Plugins screen and install the modules you need, such as Sales, Inventory or Accounting.
-  - q: Can I move my data from Odoo or another system?
+    a: Open your AureusERP address followed by /admin and sign in with the admin email you entered and the password Cloudgate generated, shown on the app's variables page in Cloudgate. Then open the Plugins screen and install the modules you need, such as Sales, Inventory or Accounting.
+  - q: Can I move my data from Odoo or another system to AureusERP?
     a: Not automatically. AureusERP has no importer for Odoo, NetSuite or QuickBooks data. CRM leads and opportunities can be imported from CSV files, and most lists can be exported to CSV or Excel.
   - q: Is there an AureusERP phone app?
     a: No, there is no phone or desktop app. AureusERP works in any web browser, including on a phone.

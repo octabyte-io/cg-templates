@@ -44,7 +44,7 @@ faq:
   - q: Is Cypht a good alternative to Mailbird or Gmail's "check mail from other accounts"?
     a: Yes, if what you want is one inbox for several accounts. Cypht does that in a browser on your own server, for free, while Gmail is retiring the feature that fetched mail from other accounts. It is plainer than Mailbird and has no desktop or phone apps.
   - q: How do I sign in to Cypht the first time?
-    a: Cloudgate creates the admin account for you, with the username you chose and a strong password shown on the app's variables page. Sign in, then add your email accounts under Settings, Servers.
+    a: Cloudgate creates the Cypht admin account for you, with the username you chose and a strong password shown on the app's variables page. Sign in, then add your email accounts under Settings, Servers.
   - q: Is there a Cypht phone app?
     a: No, Cypht has no phone or desktop apps. It opens in any web browser, including on a phone, but its screens are made for a computer.
   - q: Can several people use one Cypht?

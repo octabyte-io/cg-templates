@@ -9,7 +9,9 @@ faq:
   - q: "Can Guacamole publish single Windows apps like Parallels RAS?"
     a: "No. Guacamole opens whole desktops or terminals on machines you already run. It has no app publishing, load balancing or virtual desktop management."
   - q: "Does Guacamole work on phones and tablets?"
-    a: "Yes. It runs in the phone or tablet's browser, with an on-screen keyboard, touch mouse modes and pinch-to-zoom."
+    a: "Yes. Apache Guacamole runs in the phone or tablet's browser, with an on-screen keyboard, touch mouse modes and pinch-to-zoom."
+  - q: "Do users need to install anything for Guacamole, as with Parallels RAS?"
+    a: "No. Apache Guacamole runs entirely in the web browser. Parallels RAS has a browser client too, Parallels Web Client, as well as Parallels Client apps for Windows, Mac, Linux, iPhone, iPad and Android."
 ---
 
 Parallels RAS (Remote Application Server) publishes Windows apps and desktops from RDP hosts and virtual desktops to users on any device, including through an HTML5 client in the browser, with load balancing and central management.

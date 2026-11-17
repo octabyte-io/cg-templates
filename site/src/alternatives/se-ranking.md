@@ -15,7 +15,9 @@ faq:
   - q: "Should I choose SerpBear or OpenSEO?"
     a: "Choose SerpBear if you mainly track rankings; it is lighter and you pay a scraping service only for rank checks. Choose OpenSEO if you also use SE Ranking's site audits, backlink checks and competitor research, and are happy to pay DataForSEO for each lookup."
   - q: "Can I share SerpBear reports with clients?"
-    a: "Not as client reports. SerpBear has one login and no white-label reports; you can export keywords as CSV or pull the data into a reporting tool through its API."
+    a: "Not as client reports like SE Ranking's. SerpBear has one login and no white-label reports; you can export keywords as CSV or pull the data into a reporting tool through its API."
+  - q: "Does OpenSEO do site audits like SE Ranking?"
+    a: "Yes. OpenSEO audits sites of up to 10,000 pages and adds keyword research, competitor and backlink research, local rank grids and AI visibility, with each lookup billed by DataForSEO. SerpBear only tracks rankings."
 ---
 
 SE Ranking is an SEO platform that started as a rank tracker and now adds site audits, backlink checks, competitor research and client reports for agencies. Its plans are priced by how many keywords you track and how often they are checked.

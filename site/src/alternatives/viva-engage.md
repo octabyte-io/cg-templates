@@ -10,6 +10,8 @@ faq:
     a: "Yes. Viva Engage is the current name for Yammer, Microsoft's internal social network, now part of Microsoft Viva."
   - q: "Can HumHub sign people in with their Microsoft account?"
     a: "Not in the free Community Edition. LDAP and SAML single sign-on come with HumHub's paid Professional Edition; the free edition uses HumHub's own accounts."
+  - q: "Does HumHub work with Teams and Outlook like Viva Engage?"
+    a: "No. Viva Engage is built into Teams and Outlook as part of Microsoft 365, but HumHub does not connect to Microsoft 365, Teams or Outlook. HumHub runs as its own site with its own phone apps."
 ---
 
 Viva Engage, formerly Yammer, is Microsoft's internal social network: communities, a feed, posts, questions and announcements, built into Teams and Outlook as part of Microsoft 365.

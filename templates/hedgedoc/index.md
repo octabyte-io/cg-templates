@@ -36,14 +36,14 @@ faq:
     a: Yes, HedgeDoc is free and open source under the AGPL-3.0 licence. There is no paid edition and no price per user; you pay only for your server.
   - q: Is HedgeDoc a good alternative to HackMD?
     a: Yes. HedgeDoc started as the open-source edition of HackMD, so it works the same way, with real-time Markdown editing, a side-by-side preview, published notes and slides. HackMD's paid plans add team workspaces, comments and GitHub sync, which HedgeDoc does not have.
-  - q: Can people read a note without an account?
-    a: Yes. Each note's owner chooses whether guests without an account can read it through its link, or keeps it for signed-in people only or private. In this setup, creating and editing notes needs an account.
+  - q: Can people read a HedgeDoc note without an account?
+    a: Yes. Each HedgeDoc note's owner chooses whether guests without an account can read it through its link, or keeps it for signed-in people only or private. In this setup, creating and editing notes needs an account.
   - q: How do I sign in to HedgeDoc the first time?
     a: Open your HedgeDoc address, choose Sign in, then Register with your email and a password. Anyone who can reach the address can register the same way, so share it only with your team.
   - q: Can I move my notes from HackMD to HedgeDoc?
     a: Yes, one note at a time. Copy or download a note's Markdown from HackMD and paste it into a new HedgeDoc note. Both apps use Markdown, so headings, lists, tables and links come across; there is no bulk import.
   - q: Can I turn a HedgeDoc note into slides?
-    a: Yes. Separate the slides with a line of three dashes, then open the note in slide mode to present it in the browser.
+    a: Yes. In HedgeDoc, separate the slides with a line of three dashes, then open the note in slide mode to present it in the browser.
   - q: Is this HedgeDoc 2?
     a: No. Cloudgate installs HedgeDoc 1, the current stable version. HedgeDoc 2 is a rewrite that is still being built and tested.
 screenshots:

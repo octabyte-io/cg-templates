@@ -10,7 +10,7 @@ features:
   - title: See your time on a timeline
     text: Your records sit on a timeline you zoom from one day out to a week, month or year, and you drag a record to change its times.
   - title: Tag instead of setting up projects
-    text: Write tags such as #client or #meeting in a record's description, then search, rename and total your hours by tag.
+    text: 'Write tags such as #client or #meeting in a record''s description, then search, rename and total your hours by tag.'
   - title: Know where the hours went
     text: An overview next to the timeline adds up the hours for each tag in the period you are looking at.
   - title: Send reports to clients
@@ -38,8 +38,8 @@ faq:
   - q: Is TimeTagger a good alternative to Toggl Track or Clockify?
     a: Yes, if you track your own hours and send clients a report. TimeTagger has no hourly rates, invoices, team workspace or integrations, so a team that needs those is better served by solidtime or Kimai.
   - q: How do I sign in to TimeTagger the first time?
-    a: Sign in with the username you chose during setup (admin unless you changed it) and the password Cloudgate generated, which is shown on the app's variables page in Cloudgate. There is no sign-up page.
-  - q: Can I import my time from Toggl or Clockify?
+    a: Sign in to TimeTagger with the username you chose during setup (admin unless you changed it) and the password Cloudgate generated, which is shown on the app's variables page in Cloudgate. There is no sign-up page.
+  - q: Can TimeTagger import my time from Toggl or Clockify?
     a: Partly. TimeTagger imports any CSV or spreadsheet table with start and end times, so you can paste an export from Toggl or Clockify, but project names become tags and the columns may need tidying first. Trying it in TimeTagger's sandbox page first is a safe way to check.
   - q: Is there a TimeTagger app for iPhone and Android?
     a: No, not in the app stores, but you can install TimeTagger from your phone's browser with "Add to Home Screen" or "Install app". It works offline and syncs your records when you are back online.

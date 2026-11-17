@@ -42,7 +42,7 @@ faq:
   - q: Is Waxum a good alternative to the WhatsApp Business API?
     a: Yes for internal tools, notifications to people who expect them and testing, where no per-message fee and a quick QR setup matter most. For customer messaging at scale, approved templates or a verified business name, use the official API, which Waxum can also connect to.
   - q: How do I connect my WhatsApp number to Waxum?
-    a: Open the console and sign in with the admin token Cloudgate shows. Add a new session, open it and press Connect, then scan the QR code with WhatsApp on your phone, under Settings, Linked devices, or request a pair code and type it in instead.
+    a: Open the Waxum console and sign in with the admin token Cloudgate shows. Add a new session, open it and press Connect, then scan the QR code with WhatsApp on your phone, under Settings, Linked devices, or request a pair code and type it in instead.
   - q: What is the difference between Waxum, WAHA and WuzAPI?
     a: All three link a WhatsApp number unofficially and offer a web API with webhooks. Waxum and WuzAPI are single small programs that talk to WhatsApp without a web browser; Waxum adds a test console, scheduled messages, voice calls and an official Cloud API mode. WAHA has ready-made connections to n8n and Chatwoot, and WuzAPI is the simplest of the three.
   - q: What server size does Waxum need?

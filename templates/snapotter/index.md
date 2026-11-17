@@ -44,11 +44,11 @@ faq:
   - q: How do I sign in to SnapOtter the first time?
     a: Sign in with the admin username you chose during setup and the password Cloudgate shows you; SnapOtter then asks you to set a new password. As admin, you add accounts for your colleagues in the app's admin settings.
   - q: Do SnapOtter's AI tools send my files to an AI company?
-    a: No, background removal, upscaling, text recognition and transcription run on your own server with no AI service or API key. Each AI tool is a separate download you install from the settings, and it needs disk space and memory.
+    a: No. SnapOtter's background removal, upscaling, text recognition and transcription run on your own server with no AI service or API key. Each AI tool is a separate download you install from the settings, and it needs disk space and memory.
   - q: Is my data private with SnapOtter?
     a: Yes, your files are processed on your own server and are not sent to an outside website. SnapOtter sends anonymous usage statistics, never file names or contents, until an admin turns them off in the privacy settings.
   - q: What server size do I need for SnapOtter?
-    a: A large server; Cloudgate uses its xlarge size with 4 CPUs and 8 GB of memory, so the AI tools have room. The app is a large download, so the first install takes a while, and each AI tool you add takes several more gigabytes of disk.
+    a: SnapOtter needs a large server; Cloudgate uses its xlarge size with 4 CPUs and 8 GB of memory, so the AI tools have room. The app is a large download, so the first install takes a while, and each AI tool you add takes several more gigabytes of disk.
 screenshots:
   - src: screenshots/tool-catalogue.webp
     alt: "SnapOtter's tool list with a Search tools box and cards for Essentials (Resize, Crop, Rotate and Flip, Convert, Compress), Optimization (Optimize for Web, Remove Metadata, Edit Metadata, Bulk Rename, Image to PDF, Favicon Generator), Adjustments, Watermark and Overlay, Utilities, and Layout and Composition"

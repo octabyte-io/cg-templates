@@ -40,7 +40,7 @@ faq:
   - q: How do I sign in to Dolibarr the first time?
     a: Sign in with the username admin and the password Cloudgate generated, shown on the app's variables page in Cloudgate. Dolibarr is already installed, with your company name and country set; first set your main currency under Home > Setup > Company/Organization, because it stays on euros otherwise.
   - q: Which parts of Dolibarr are switched on?
-    a: Third parties (customers and suppliers), products, stock, quotes, orders, invoices, banks and scheduled jobs are on from the start. You can switch on projects, accounting, HR, point of sale and the other modules at any time under Setup > Modules/Applications.
+    a: In Dolibarr, third parties (customers and suppliers), products, stock, quotes, orders, invoices, banks and scheduled jobs are on from the start. You can switch on projects, accounting, HR, point of sale and the other modules at any time under Setup > Modules/Applications.
   - q: Can I import my data from QuickBooks or another tool?
     a: Partly. Dolibarr has no QuickBooks importer, but its import module reads CSV and Excel files, so you can export your customers, suppliers and products from your old software and import them.
   - q: Is there a Dolibarr phone app?

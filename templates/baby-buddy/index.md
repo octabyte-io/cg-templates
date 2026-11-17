@@ -35,14 +35,14 @@ faq:
   - q: Is Baby Buddy free?
     a: Yes, Baby Buddy is free and open source under the BSD-2-Clause licence. There is no paid plan or premium tier, so every feature is included and you pay only for your server.
   - q: Is Baby Buddy a good alternative to Huckleberry?
-    a: Yes, if you mainly want a shared log of feeds, sleep, diapers and growth without a subscription. Huckleberry adds nap-time predictions and sleep advice, and charges for syncing between caregivers; Baby Buddy has no predictions, but every caregiver can use it free and the data stays on your server.
+    a: Yes, if you mainly want a shared log of feeds, sleep, diapers and growth without a subscription. Huckleberry adds nap-time predictions and sleep advice on its paid plans; Baby Buddy has no predictions, but every caregiver can use it free and the data stays on your server.
   - q: Can my partner, a grandparent or a nanny use Baby Buddy too?
-    a: Yes, the admin can give each person their own account, and everyone sees the same log. A caregiver account suits a babysitter, who can add and edit feeds, sleep, diapers and notes but cannot delete entries or change settings.
+    a: Yes. The Baby Buddy admin can give each person their own account, and everyone sees the same log. A caregiver account suits a babysitter, who can add and edit feeds, sleep, diapers and notes but cannot delete entries or change settings.
   - q: How do I sign in to Baby Buddy the first time?
-    a: Sign in with the username admin and the password Cloudgate created for you, which is shown in Cloudgate. Then add your child from the Children menu and create accounts for the other people who help.
+    a: Sign in to Baby Buddy with the username admin and the password Cloudgate created for you, which is shown in Cloudgate. Then add your child from the Children menu and create accounts for the other people who help.
   - q: Is there a Baby Buddy app for iPhone or Android?
     a: Baby Buddy works in any phone's browser, and there is a Baby Buddy app for Android on Google Play. For iPhone, a separate community-made companion app and iOS Shortcuts are available; the Baby Buddy project itself does not make an iPhone app.
-  - q: Can I move my data from Huckleberry or another baby tracker app?
+  - q: Can I move my data from Huckleberry or another baby tracker app to Baby Buddy?
     a: Partly. Baby Buddy imports CSV and Excel files for each type of entry, such as feedings or diaper changes, but there is no ready-made importer, so an export from Huckleberry or another app has to be rearranged into Baby Buddy's columns first.
   - q: What server size do I need for Baby Buddy?
     a: A small server is enough. The Baby Buddy documentation says a server with 1 GB of memory is enough for a couple of parents and any number of children.

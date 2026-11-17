@@ -35,13 +35,13 @@ faq:
   - q: Is LinkStack free?
     a: Yes, LinkStack is free and open source under the AGPL-3.0 licence, with no paid edition. You pay only for your server.
   - q: Is LinkStack a good alternative to Linktree?
-    a: Yes, if you want a link-in-bio page you own without a monthly plan. LinkStack does the same main job, one page of buttons to everything, but its analytics are simple click counts and it has no built-in selling, scheduling or app integrations.
+    a: Yes, LinkStack is an alternative to Linktree if you want a link-in-bio page you own without a monthly plan. LinkStack does the same main job, one page of buttons to everything, but its analytics are simple click counts and it has no built-in selling, scheduling or app integrations.
   - q: How do I set up LinkStack the first time?
     a: The first visit to your LinkStack address opens a setup wizard, so do it right after setup. Choose SQLite as the database, create your admin account, and switch registration off in the wizard unless you want other people to sign up.
-  - q: Can I import my links from Linktree?
+  - q: Can LinkStack import my links from Linktree?
     a: No, LinkStack has no Linktree importer, so you add your links again by hand. It can export and import data between LinkStack installs.
   - q: Can other people have their own page on my LinkStack?
-    a: Yes, if you turn on registration, each person gets their own page at an address like /@theirname. The admin manages users and site settings from the admin panel.
+    a: Yes, if you turn on LinkStack registration, each person gets their own page at an address like /@theirname. The admin manages users and site settings from the admin panel.
   - q: How do I update LinkStack?
     a: LinkStack's admin panel tells you when a new version is out. On Cloudgate, take a backup, then change the app's version and deploy again, rather than using the panel's one-click updater, which changes files inside the app's storage instead of the version Cloudgate set up.
 screenshots:

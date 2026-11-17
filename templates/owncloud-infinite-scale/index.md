@@ -36,15 +36,15 @@ faq:
   - q: Is ownCloud Infinite Scale free?
     a: Yes, ownCloud Infinite Scale is free, open-source software under the Apache 2.0 licence, and ownCloud says it has no features held back for paying customers. You pay only for your server; ownCloud also sells enterprise subscriptions with support.
   - q: Is ownCloud Infinite Scale a good alternative to Dropbox?
-    a: Yes, for storing, syncing and sharing files as a team. It has desktop and phone sync apps, share links, versions and a trash bin, and team Spaces like Dropbox's team folders, with no fee per user. It does not import from Dropbox, so you move your files across yourself.
-  - q: How is Infinite Scale different from ownCloud Server and Nextcloud?
-    a: Infinite Scale is ownCloud's newer, rewritten file cloud; the older ownCloud Server (ownCloud 10) and Nextcloud, which split from it in 2016, are larger PHP apps with a database and many add-on apps. Infinite Scale is one program with no database that focuses on files and Spaces.
+    a: Yes. ownCloud Infinite Scale is a good alternative to Dropbox for storing, syncing and sharing files as a team. It has desktop and phone sync apps, share links, versions and a trash bin, and team Spaces like Dropbox's team folders, with no fee per user. It does not import from Dropbox, so you move your files across yourself.
+  - q: How is ownCloud Infinite Scale different from ownCloud Server and Nextcloud?
+    a: ownCloud Infinite Scale is ownCloud's newer, rewritten file cloud; the older ownCloud Server (ownCloud 10) and Nextcloud, which split from it in 2016, are larger PHP apps with a database and many add-on apps. Infinite Scale is one program with no database that focuses on files and Spaces.
   - q: Who makes ownCloud Infinite Scale, and what is OpenCloud?
     a: ownCloud makes Infinite Scale, and ownCloud has been part of the US company Kiteworks since 2023. OpenCloud is a separate file cloud that a group of former ownCloud developers started from Infinite Scale's code in 2025.
-  - q: Are there desktop and phone apps?
+  - q: Are there desktop and phone apps for ownCloud Infinite Scale?
     a: Yes. ownCloud's desktop app for Windows, macOS and Linux syncs folders to your computer, and its apps for Android and iPhone browse, upload and share files. They sign in with your Infinite Scale web address.
-  - q: Can I edit Word and Excel files in the browser?
-    a: Only with an office suite connected. Infinite Scale works with Collabora Online, ONLYOFFICE Docs or Microsoft Office Online Server for editing in the browser; Cloudgate installs Infinite Scale on its own, so you add the office suite separately.
+  - q: Can I edit Word and Excel files in ownCloud Infinite Scale?
+    a: Only with an office suite connected. ownCloud Infinite Scale works with Collabora Online, ONLYOFFICE Docs or Microsoft Office Online Server for editing in the browser; Cloudgate installs Infinite Scale on its own, so you add the office suite separately.
   - q: How do I sign in to ownCloud Infinite Scale the first time?
     a: Sign in with the username admin and the password Cloudgate generated, shown on the app's variables page in Cloudgate. Then add your colleagues as users in the admin settings and create a Space for each team.
 screenshots:

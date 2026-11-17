@@ -36,15 +36,15 @@ faq:
   - q: Is CryptPad free?
     a: Yes, CryptPad is free and open source under the AGPL-3.0 licence, and every feature is in the self-hosted version. You pay only for your server; its makers sell hosting and support, not extra features.
   - q: Is CryptPad a good alternative to Google Docs?
-    a: Yes, if privacy matters most. CryptPad offers the same kind of live co-editing in the browser, plus forms and kanban boards, with every document end-to-end encrypted. It has no email or video calls, and Office-file formatting can change slightly on import.
+    a: Yes, CryptPad is a good Google Docs alternative if privacy matters most. CryptPad offers the same kind of live co-editing as Google Docs in the browser, plus forms and kanban boards, with every document end-to-end encrypted. It has no email or video calls, and Office-file formatting can change slightly on import.
   - q: Can the server admin read my CryptPad documents?
     a: No, documents are encrypted in each person's browser and the server stores only scrambled data, so the admin cannot read them. You still trust whoever runs the server to serve CryptPad's unmodified code, which is one reason to host it yourself.
   - q: How do I sign in to CryptPad the first time?
     a: There is no default login. Open the admin setup link, CPAD_ADMIN_SETUP_URL, on the app's variables page in Cloudgate (it is also in the app's logs), then create the admin account and name your CryptPad. Everyone else then signs up from the home page.
   - q: What happens if someone forgets their CryptPad password?
-    a: Their documents are lost unless they kept a backup, because the admin cannot reset or recover passwords. That is the price of end-to-end encryption, so ask everyone to store their password in a password manager.
+    a: Their CryptPad documents are lost unless they kept a backup, because the admin cannot reset or recover passwords. That is the price of end-to-end encryption, so ask everyone to store their password in a password manager.
   - q: Can I import Word, Excel and PowerPoint files into CryptPad?
-    a: Yes, the Document, Spreadsheet and Presentation apps import and export .docx, .xlsx and .pptx files, and export PDF. Complex formatting can shift in the conversion, and OpenDocument files are still experimental.
+    a: Yes, the CryptPad Document, Spreadsheet and Presentation apps import and export .docx, .xlsx and .pptx files, and export PDF. Complex formatting can shift in the conversion, and OpenDocument files are still experimental.
   - q: What server size do I need for CryptPad?
     a: A medium server with 2 GB of memory, which is what CryptPad recommends and what Cloudgate asks for. The office editors download about 1 GB on the first start; plan the disk for your team's documents on top, since each person gets 50 MB until the admin changes it.
 screenshots:

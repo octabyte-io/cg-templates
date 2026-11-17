@@ -37,12 +37,12 @@ faq:
     a: Yes. Slink is free, open-source software under the AGPL-3.0 licence, with no paid edition or locked features. You pay only for your server and its storage.
   - q: Is Slink a good alternative to Imgur?
     a: Yes, if you want Imgur's upload-and-share workflow for your own images. Slink gives you direct links, embeds and collections, plus private-by-default shares with passwords and expiry dates, on your own web address. It has no public audience, so it does not replace Imgur as a place to go viral.
-  - q: How do I sign in the first time?
-    a: Sign in with the admin email you entered during setup and the password Cloudgate generated, shown on the app's variables page in Cloudgate. Cloudgate creates this admin account for you, so there is no default login; approve new people from the admin user list when they sign up.
+  - q: How do I sign in to Slink the first time?
+    a: Sign in to Slink with the admin email you entered during setup and the password Cloudgate generated, shown on the app's variables page in Cloudgate. Cloudgate creates this admin account for you, so there is no default login; approve new people from the admin user list when they sign up.
   - q: Can I move my images from Imgur to Slink?
     a: No, Slink has no import tool. Download the images you want to keep from Imgur and upload them to Slink; it accepts many files at once.
-  - q: Can I keep my shared images private?
-    a: Yes. Every share is private by default and visible only to people with the link. You can add a password, set an expiry date, or revoke a link at any time, and you choose which images appear on the public Explore page.
+  - q: Can I keep my shared images private in Slink?
+    a: Yes. Every Slink share is private by default and visible only to people with the link. You can add a password, set an expiry date, or revoke a link at any time, and you choose which images appear on the public Explore page.
   - q: Does Slink work with ShareX?
     a: Yes. Slink makes a ShareX configuration from your account, so screenshots you take with ShareX upload to your Slink server and their links are copied for you. Personal API keys let other tools upload too.
   - q: What server size do I need for Slink?

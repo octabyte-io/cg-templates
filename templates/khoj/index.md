@@ -36,9 +36,9 @@ faq:
   - q: Is Khoj free?
     a: Yes, Khoj is free and open source under the AGPL-3.0 licence, with no paid edition. Khoj Cloud, the hosted service, closed on 15 April 2026, so running it on your own server is now the way to use it. You pay only for your server and the AI provider you connect.
   - q: Is Khoj still maintained?
-    a: Yes, but slowly. The latest release is 2.0.0-beta.28 from 26 March 2026, every release in the 2.x line is labelled beta, and since then the project has had only occasional fixes. Its team now works mainly on other products.
+    a: Yes, but slowly. The latest Khoj release is 2.0.0-beta.28 from 26 March 2026, every release in the 2.x line is labelled beta, and since then the project has had only occasional fixes. Its team now works mainly on other products.
   - q: Is Khoj a good alternative to NotebookLM?
-    a: Yes, if you want an AI that answers from your own documents with references, on your own server and with the model you choose. Khoj adds custom agents, scheduled questions and syncing from Obsidian, Emacs or the desktop app. It has no audio overviews and no separate notebooks per project.
+    a: Yes, Khoj is an alternative to NotebookLM if you want an AI that answers from your own documents with references, on your own server and with the model you choose. Khoj adds custom agents, scheduled questions and syncing from Obsidian, Emacs or the desktop app. It has no audio overviews and no separate notebooks per project.
   - q: How do I sign in to Khoj the first time?
     a: Open your Khoj address followed by /server/admin and sign in with the email you entered at setup and the password Cloudgate generated, shown on the app's variables page. There, add an AI provider key and a chat model. Chat sign-in is by email link; without an email service, enter your email on the sign-in screen and copy your link from the admin panel under Users.
   - q: Can Khoj use local AI models such as Ollama?

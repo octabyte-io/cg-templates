@@ -10,6 +10,8 @@ faq:
     a: "Not out of the box. Whatomate has no shop integrations; it can send a contact to another system through custom action buttons, and campaigns use contact lists you upload."
   - q: "Do I still pay WhatsApp message charges with Whatomate?"
     a: "Yes. Meta charges for most messages a business sends, whichever tool you use. With Whatomate you pay Meta directly, with no plan fee on top."
+  - q: "Can I bring my Interakt contacts and chats to Whatomate?"
+    a: "Contacts, yes; chats, no. Whatomate has no Interakt importer, so past chats stay in Interakt. Export your customer list from Interakt as a CSV file and upload it in Whatomate when you send a campaign, then sync your approved templates from Meta."
 cost: "Whatomate is free and open source under the AGPL-3.0 licence, with no paid edition and no fee per user. Meta charges for most messages your business sends on WhatsApp, as it does on WATI, respond.io and Interakt; messages customers send you are free. AI replies need your own paid OpenAI, Anthropic or Google key if you turn them on. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 ---
 

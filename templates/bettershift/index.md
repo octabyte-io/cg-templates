@@ -40,12 +40,12 @@ faq:
   - q: Is BetterShift a good alternative to When I Work or Deputy?
     a: Yes, if what you need is a shared shift calendar. BetterShift lets you plan shifts, share them with staff and offer open shifts people sign up for, but it has no time clock, timesheets, payroll, time-off requests or team chat, which When I Work and Deputy include.
   - q: How do I sign in to BetterShift the first time?
-    a: The first person to create an account on the sign-in page becomes the admin. There is no default password. After that, colleagues can sign up themselves, or the admin can add them from the admin area.
-  - q: Can my staff see their shifts on their phone?
+    a: The first person to create an account on the BetterShift sign-in page becomes the admin. There is no default password. After that, colleagues can sign up themselves, or the admin can add them from the admin area.
+  - q: Can my staff see their BetterShift shifts on their phone?
     a: Yes, staff can open BetterShift in a phone's browser and add it to the home screen like an app, or subscribe to a calendar's live link so shifts appear in Google Calendar, Apple Calendar or Outlook. There is no app-store app.
   - q: Can staff pick up open shifts in BetterShift?
-    a: Yes, a shift can have open slots, and people the calendar is shared with can sign themselves up by default. Managers can also sign other people up.
-  - q: Can I import my schedule from When I Work or Deputy?
+    a: Yes. A BetterShift shift can have open slots, and people the calendar is shared with can sign themselves up by default. Managers can also sign other people up.
+  - q: Can I import my schedule from When I Work or Deputy into BetterShift?
     a: No, BetterShift has no importer for When I Work or Deputy. It can import ICS calendar files and subscribe to calendar links, but you will usually set up your shift types and schedule fresh.
   - q: What server size do I need for BetterShift?
     a: A small server is enough, because BetterShift is one light app with its own built-in database and no separate database server. Cloudgate starts it on a small size, and you can move to a bigger server later.

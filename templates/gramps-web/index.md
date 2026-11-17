@@ -37,10 +37,10 @@ faq:
     a: Yes. Gramps Web is free, open-source software under the AGPL licence, with no paid edition, so you pay only for your server.
   - q: Is Gramps Web a good alternative to Ancestry or MyHeritage?
     a: Yes, for keeping and sharing your family tree. Gramps Web holds your tree, photos, sources and DNA match data and lets relatives work on it with you. It does not include the historical record collections, record hints or DNA tests those sites sell, though a person's page can open a ready-made search on FamilySearch or Ancestry.
-  - q: Can I import my family tree from Ancestry or MyHeritage?
+  - q: Can I import my family tree from Ancestry or MyHeritage into Gramps Web?
     a: Yes. Export your tree as a GEDCOM file from Ancestry or MyHeritage and import it in Gramps Web, which shows how many people and families it found before adding them. Photos are not inside a GEDCOM file, so upload them afterwards.
-  - q: Can my relatives see and edit the family tree?
-    a: Yes. The owner invites relatives, or approves their sign-ups, and gives each a role, from viewing only to editing. Records marked private are hidden from anyone not allowed to see them.
+  - q: Can my relatives see and edit the family tree in Gramps Web?
+    a: Yes. In Gramps Web, the owner invites relatives, or approves their sign-ups, and gives each a role, from viewing only to editing. Records marked private are hidden from anyone not allowed to see them.
   - q: Does Gramps Web work with Gramps Desktop?
     a: Yes. Gramps Web uses the same family tree data as Gramps Desktop, and the free Gramps Web Sync add-on keeps the tree on your computer and the one on your server in step.
   - q: Is there a Gramps Web phone app?

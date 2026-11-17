@@ -38,17 +38,17 @@ faq:
   - q: Is Open Source Point of Sale free?
     a: Yes, Open Source Point of Sale is free and open source under the MIT licence, with an added rule that the opensourcepos.org footer stays visible on every page. There is no paid edition and no fee per register; you pay only for your server.
   - q: Is Open Source Point of Sale a good alternative to Square?
-    a: Yes, for a shop or café that wants a till with stock, receipts and reports and no monthly fee per device. Unlike Square, it does not process card payments, has no online store and has no phone app, so you keep a separate card terminal.
+    a: Yes. Open Source Point of Sale is a good alternative to Square for a shop or café that wants a till with stock, receipts and reports and no monthly fee per device. Unlike Square, it does not process card payments, has no online store and has no phone app, so you keep a separate card terminal.
   - q: Does Open Source Point of Sale take card payments?
-    a: No, it has no built-in card processing. You take the card on your own terminal and record the sale with its payment type, so your reports still show cash and card takings.
-  - q: How do I sign in the first time?
-    a: Sign in with the username admin and the password Cloudgate shows you. The template replaces the app's well-known default password before the app first starts. To change the password later, do it in the app, then add an account for each member of staff.
-  - q: Does it work with a barcode scanner and receipt printer?
-    a: Yes, it works with barcode scanners that type into the browser like a keyboard, and prints receipts on a receipt printer through the browser's print dialog. It can also generate and print barcodes for your items.
-  - q: Can I import my products from a spreadsheet?
-    a: Yes, you can import items from a CSV file on the Items page. There is no importer made for Square or Lightspeed, so export your item list from your old system as a spreadsheet first.
+    a: No. Open Source Point of Sale has no built-in card processing. You take the card on your own terminal and record the sale with its payment type, so your reports still show cash and card takings.
+  - q: How do I sign in to Open Source Point of Sale the first time?
+    a: Sign in to Open Source Point of Sale with the username admin and the password Cloudgate shows you. The template replaces the app's well-known default password before the app first starts. To change the password later, do it in the app, then add an account for each member of staff.
+  - q: Does Open Source Point of Sale work with a barcode scanner and receipt printer?
+    a: Yes. Open Source Point of Sale works with barcode scanners that type into the browser like a keyboard, and prints receipts on a receipt printer through the browser's print dialog. It can also generate and print barcodes for your items.
+  - q: Can I import my products into Open Source Point of Sale from a spreadsheet?
+    a: Yes. Open Source Point of Sale imports items from a CSV file on the Items page. There is no importer made for Square or Lightspeed, so export your item list from your old system as a spreadsheet first.
   - q: Can I remove the Open Source Point of Sale footer?
-    a: No, the licence says the footer with the version and a link to opensourcepos.org must stay visible on every page. You can add your own store name, address and logo to receipts and invoices.
+    a: No. The Open Source Point of Sale licence says the footer with the version and a link to opensourcepos.org must stay visible on every page. You can add your own store name, address and logo to receipts and invoices.
 screenshots:
   - src: screenshots/sales-register.webp
     alt: "The Open Source Point of Sale register for a café, with the top menu, a Find or Scan Item box, a cart holding coffee beans, a croissant and two flat whites, and a side panel with the customer Maya Okafor, a total of $17.30, payment type Cash and Add Payment, Suspend and Cancel buttons"

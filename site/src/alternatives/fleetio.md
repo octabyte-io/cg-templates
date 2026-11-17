@@ -10,6 +10,8 @@ faq:
     a: "No. LubeLogger is made for a household or a handful of vehicles. It has no driver apps, telematics, fuel-card feeds, work orders or vendor management, which larger fleets rely on in Fleetio."
   - q: "Does LubeLogger connect to GPS trackers or fuel cards?"
     a: "No. LubeLogger has no telematics or fuel-card connections; you enter odometer readings and fuel-ups yourself, by CSV import or through its API."
+  - q: "Can I import my Fleetio history into LubeLogger?"
+    a: "Partly. LubeLogger has no Fleetio importer, but it imports CSV files in its own columns, one record type at a time, so you can rearrange Fleetio exports to match or enter the last service of each type by hand."
 ---
 
 Fleetio is fleet management software for businesses: maintenance schedules and work orders, fuel tracking, driver apps for inspections, parts and vendor management, and connections to telematics and fuel cards. When we checked its pricing page in November 2026, plans cost $4 to $10 per vehicle a month, with no free plan.

@@ -37,9 +37,9 @@ faq:
   - q: Is Eigenfocus open source?
     a: No, Eigenfocus is source-available. Its code is public on GitHub under its own licence, which lets you install, use and change it inside your business but not share or sell it.
   - q: Can my team share the free edition of Eigenfocus?
-    a: Not really, because the free edition has no user accounts. Everyone who signs in with the shared password works as the same person, so there are no roles, assignments or private projects; those come with the paid editions.
+    a: Not really, because the free edition of Eigenfocus has no user accounts. Everyone who signs in with the shared password works as the same person, so there are no roles, assignments or private projects; those come with the paid editions.
   - q: Is Eigenfocus a good alternative to Trello?
-    a: Yes, for one person who wants Trello-style boards plus a time tracker on every task. It cannot import your Trello boards and has no phone apps or Power-Ups, and the free edition has one user.
+    a: Yes, Eigenfocus suits one person who wants Trello-style boards plus a time tracker on every task. It cannot import your Trello boards and has no phone apps or Power-Ups, and the free edition has one user.
   - q: How do I sign in to Eigenfocus the first time?
     a: Your browser asks for a username and password; enter admin and the password Cloudgate shows in the app's settings. Eigenfocus then asks for your time zone and language, and an optional survey and newsletter you can skip.
   - q: Can I import my Trello boards into Eigenfocus?

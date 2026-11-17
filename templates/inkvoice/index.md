@@ -40,15 +40,15 @@ faq:
   - q: Is Inkvoice a good alternative to FreshBooks?
     a: Yes, for invoicing and getting paid. Inkvoice covers quotes, invoices, recurring billing, card payments, reminders, expenses and time tracking with no monthly or per-person fee. It does no bookkeeping, so if you rely on FreshBooks' accounting you'd pass its CSV exports to your accountant instead.
   - q: How do I sign in to Inkvoice the first time?
-    a: Sign in with the admin username you chose when installing and the password Cloudgate generates, shown on the app's variables page. Then add your company details, currency and tax rates in Settings, and add other people as users with their own roles.
+    a: Sign in to Inkvoice with the admin username you chose when installing and the password Cloudgate generates, shown on the app's variables page. Then add your company details, currency and tax rates in Settings, and add other people as users with their own roles.
   - q: Can clients pay Inkvoice invoices by card?
     a: Yes, clients can pay online through your own Stripe or PayPal account, and the invoice is marked paid when the payment arrives. Inkvoice adds no transaction fee; Stripe or PayPal charge their usual fees.
-  - q: Can I move my data from FreshBooks or Wave?
+  - q: Can I move my data from FreshBooks or Wave to Inkvoice?
     a: Partly. Inkvoice imports customers, products and expenses from CSV files, letting you match each column, so you can bring over lists exported from FreshBooks or Wave. It doesn't import past invoices.
   - q: Is there an Inkvoice phone app?
     a: Yes, there are free Inkvoice apps for iPhone and Android that connect to your own server. You can create and resend invoices, record payments and log expenses with a photo of the receipt.
   - q: Does Inkvoice create XRechnung or ZUGFeRD e-invoices?
-    a: Yes, an optional e-invoicing module, off until you turn it on, creates XRechnung and ZUGFeRD / Factur-X e-invoices and can attach them to invoice emails. Sending over the PEPPOL network from your own server needs a paid account with the peppol.sh service.
+    a: Yes, an optional Inkvoice e-invoicing module, off until you turn it on, creates XRechnung and ZUGFeRD / Factur-X e-invoices and can attach them to invoice emails. Sending over the PEPPOL network from your own server needs a paid account with the peppol.sh service.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Inkvoice dashboard: a sidebar with Dashboard, Invoices, Quotes, Recurring, Customers, Products, Expenses, Reports, Settings, Users and Activity; cards for revenue of $29,982.72, $3,965.55 outstanding, 25 invoices and 5 clients; a monthly revenue bar chart for the last 12 months; and a list of recent paid invoices for sample customers such as Acme Corp, Nordic Design AB and Tokyo Digital Co"

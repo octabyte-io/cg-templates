@@ -10,6 +10,8 @@ faq:
     a: "Partly. rotki imports CoinTracking's trades CSV, but that export lacks much of the detail rotki uses, so connecting your exchanges and wallets directly gives a more complete history."
   - q: "Does rotki have as many reports as CoinTracking?"
     a: "No. CoinTracking offers a much wider range of reports and country tax forms. rotki covers the core: a dashboard of balances, decoded transaction history and profit and loss reports for any date range, exported as CSV."
+  - q: "Does rotki file my taxes like CoinTracking?"
+    a: "No. rotki does not file taxes; it builds profit and loss reports with FIFO, LIFO, HIFO or ACB cost basis, exported as CSV, for you or your accountant. CoinTracking has a much wider range of reports and country tax forms. rotki's free edition covers up to 1,000 events, with more on its paid Premium plans."
 ---
 
 CoinTracking is one of the longest-running crypto portfolio and tax platforms: it imports trades from exchanges and wallets and offers a very wide range of reports, from gains and losses to tax reports for many countries.

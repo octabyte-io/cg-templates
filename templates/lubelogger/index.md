@@ -42,7 +42,7 @@ faq:
   - q: Is LubeLogger a good alternative to Fuelly?
     a: Yes, if you want your fuel and service log on your own server. LubeLogger tracks fuel economy and service history like Fuelly does, and its CSV import reads Fuelly exports, but it has no native phone app.
   - q: Can LubeLogger replace Fleetio for a small business?
-    a: Yes, for a small fleet that only needs service records, fuel logs, costs and reminders. It is not a full fleet platform, so it has no driver apps, telematics, fuel cards, work orders or vendor management.
+    a: Yes, LubeLogger can replace Fleetio for a small fleet that only needs service records, fuel logs, costs and reminders. It is not a full fleet platform, so it has no driver apps, telematics, fuel cards, work orders or vendor management.
   - q: Is there a LubeLogger phone app?
     a: No, there is no iPhone or Android app. LubeLogger is a web app with a mobile layout, so you log a fill-up from your phone's browser.
   - q: Can more than one person use LubeLogger?

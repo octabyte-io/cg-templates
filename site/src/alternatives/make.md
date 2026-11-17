@@ -19,6 +19,8 @@ faq:
     a: "Yes. Both build automations on a visual canvas of connected blocks, with branches and loops. n8n can also run on your own server, where it has no limit on how often workflows run."
   - q: "Can I self-host Make?"
     a: "No. Make is only available as a hosted service. n8n, Activepieces, Automatisch and Node-RED are the self-hosted options in this list."
+  - q: "Can I import my Make scenarios into n8n?"
+    a: "No. Make scenarios cannot be imported into n8n or the other apps here, so they are rebuilt by hand. n8n's canvas works the most like Make's: routers become IF or Switch blocks and iterators become loops."
 ---
 
 Make, formerly Integromat, is a visual automation tool. You drag apps onto a canvas and join them into scenarios, with routers for branches and iterators for lists, which makes it more flexible than a simple trigger-and-action tool.

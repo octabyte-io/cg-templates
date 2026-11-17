@@ -36,10 +36,10 @@ faq:
   - q: Is Traggo a good alternative to Toggl Track or Clockify?
     a: Yes, for personal or small-team time tracking with your own reports. Traggo has no clients, hourly rates, invoices, team timesheets or phone apps, so if you bill clients, solidtime or Kimai is the better fit.
   - q: How does tag-based time tracking work in Traggo?
-    a: Every time span gets one or more tags written as a name and a value, such as project:website, client:acme or type:meeting. Dashboards then add up your time by those tags, so you can report by client, project or kind of work without setting anything up in advance.
+    a: In Traggo, every time span gets one or more tags written as a name and a value, such as project:website, client:acme or type:meeting. Dashboards then add up your time by those tags, so you can report by client, project or kind of work without setting anything up in advance.
   - q: How do I sign in to Traggo the first time?
-    a: Sign in with the admin username you chose during setup (admin unless you changed it) and the password Cloudgate generated, which is shown on the app's variables page in Cloudgate. There is no public sign-up; the admin adds other people's accounts in the app.
-  - q: Can I import from Toggl or Clockify, or export my time to CSV?
+    a: Sign in to Traggo with the admin username you chose during setup (admin unless you changed it) and the password Cloudgate generated, which is shown on the app's variables page in Cloudgate. There is no public sign-up; the admin adds other people's accounts in the app.
+  - q: Can Traggo import from Toggl or Clockify, or export my time to CSV?
     a: No, Traggo has no built-in import or export. Start fresh in Traggo, and keep your old Toggl or Clockify reports if you need them.
   - q: Is there a Traggo phone app?
     a: No, Traggo has no phone or desktop app, but its website works in a phone's browser.

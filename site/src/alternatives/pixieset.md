@@ -7,9 +7,11 @@ moving: |
   Lychee has no Pixieset importer, so download your originals from Pixieset and drag them into Lychee in the browser, one album per client or shoot. Choose a cover and layout, then protect each album with a password or share it with an account you create for the client, and decide whether downloads are allowed. Send clients the link yourself, because Lychee does not send branded invites. If clients order prints through Pixieset, keep a print lab or shop for that.
 faq:
   - q: "Can clients pick their favourite photos in Lychee?"
-    a: "Not in the free edition. Lychee has no proofing for clients; personal favourites come with the paid Supporter Edition."
-  - q: "Can I add a watermark to client photos?"
+    a: "Not in Lychee's free edition. Unlike Pixieset, Lychee has no proofing for clients; personal favourites come with the paid Supporter Edition."
+  - q: "Can I add a watermark to client photos in Lychee?"
     a: "Only with Lychee's paid Supporter Edition, which also adds user groups and upload quotas. The free edition has no watermarks."
+  - q: "Does Lychee have a print store like Pixieset?"
+    a: "No. Lychee has no print store or print fulfilment, so clients download their photos at full resolution and order prints elsewhere. Pixieset runs a print store that it fulfils for you."
 ---
 
 Pixieset is a hosted client-gallery service for photographers: proofing where clients mark favourites, downloads with PINs and watermarks, a print store it fulfils, and branded invites, with a free tier and paid upgrades.

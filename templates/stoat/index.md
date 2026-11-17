@@ -44,7 +44,7 @@ faq:
   - q: Can I move my Discord server to Stoat?
     a: No, Stoat has no built-in import from Discord. You set up your channels and roles again and invite your members to the new server.
   - q: Is there a Stoat phone app?
-    a: Yes, but the official phone apps mostly don't connect to your own server yet. Members use the web app in their phone's browser, which can be added to the home screen, and the desktop app can connect to your server.
+    a: Yes, but the official Stoat phone apps mostly don't connect to your own server yet. Members use the web app in their phone's browser, which can be added to the home screen, and the desktop app can connect to your server.
 screenshots:
   - src: screenshots/channel.webp
     alt: "A Stoat server for a fictional football club, with Club, Teams and Families channel categories on the left, a fixtures channel of match-day messages and emoji reactions in the middle, and the member list with coaches and parents on the right"

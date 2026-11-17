@@ -1,5 +1,5 @@
 name: Postiz
-description: "Self-hosted Postiz schedules social media posts to X, LinkedIn, Instagram and more from one calendar."
+description: "Postiz is a self-hosted alternative to Buffer and Hootsuite that schedules social media posts to X, LinkedIn, Instagram and more from one calendar."
 version: "2.26.0"
 tags: [social media scheduler, buffer alternative, hootsuite alternative, later alternative, open source social media scheduler, schedule social media posts, social media management]
 links:

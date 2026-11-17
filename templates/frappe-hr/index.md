@@ -44,7 +44,7 @@ faq:
   - q: Does Frappe HR need ERPNext?
     a: Yes, Frappe HR is an app that runs on top of ERPNext, and payroll and expense claims are booked into ERPNext's accounting. Cloudgate installs both together, so you also get ERPNext's accounting, stock and sales modules, and it asks for a large server with 4 GB of memory.
   - q: How do I sign in to Frappe HR the first time?
-    a: Sign in with the username Administrator and the password Cloudgate generated, shown on the app's variables page in Cloudgate. A setup wizard asks for your language, country, time zone, currency, company and financial year; HR is then under the HR workspace.
+    a: Sign in to Frappe HR with the username Administrator and the password Cloudgate generated, shown on the app's variables page in Cloudgate. A setup wizard asks for your language, country, time zone, currency, company and financial year; HR is then under the HR workspace.
   - q: Does Frappe HR have a mobile app?
     a: Yes, Frappe HR has a mobile web app that staff open in their phone's browser and add to the home screen, on Android or iPhone. They can check in, apply for leave, claim expenses and see salary slips. There is no app in the App Store or Google Play.
   - q: Can I import my employees from BambooHR or a spreadsheet?

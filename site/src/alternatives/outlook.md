@@ -9,7 +9,9 @@ faq:
   - q: "Can Roundcube open a Microsoft 365 mailbox?"
     a: "Not with this template. Microsoft 365 and Outlook.com require modern (OAuth) sign-in for other mail apps, which this template does not set up. Roundcube is for mailboxes at a web host or email provider."
   - q: "Does Roundcube have folders and rules like Outlook?"
-    a: "It has folders, flags, threads, an archive button and mark as junk. Server-side filters and vacation replies need a plugin that this template does not turn on."
+    a: "Roundcube has folders, flags, threads, an archive button and mark as junk. Server-side filters and vacation replies need a plugin that this template does not turn on."
+  - q: "Does Roundcube have a calendar like Outlook?"
+    a: "No. Roundcube is webmail: it has mail, folders and an address book, but no calendar, and no link to Teams or OneDrive as Outlook has. Keep a separate calendar app if you need one."
 ---
 
 Outlook is Microsoft's email app. In a browser it comes as Outlook on the web for Microsoft 365 and as Outlook.com for personal accounts, with mail, calendar and contacts tied to Teams and OneDrive.

@@ -20,11 +20,11 @@ moving: |
   DataLens also needs your data in a database it supports, such as PostgreSQL, ClickHouse, MySQL or SQL Server, since it reads no spreadsheets. Sign in as admin with the password Cloudgate created and open the demo workbook to see how connections, datasets and charts fit together. Then connect your database, describe each table once as a dataset with the calculated fields your workbooks used, and rebuild the charts in its wizard. Add colleagues in the admin panel; they start as viewers until you make them editors.
 faq:
   - q: "Can Metabase read Excel or CSV files?"
-    a: "Metabase can upload CSV files into a connected database, but it mainly reads data that already sits in a database or warehouse."
+    a: "Metabase can upload CSV files into a connected database, but it mainly reads data that already sits in a database or warehouse, while Tableau also reads spreadsheets and extracts directly."
   - q: "Should I choose Metabase, Apache Superset, DataEase or DataLens?"
     a: "Choose Metabase if people without SQL will build their own charts and everyone needs their own login. Choose Apache Superset if your team knows SQL and wants more chart types and a full SQL editor in an app with no paid edition. Choose DataEase if one person builds polished dashboards or wall screens from databases or Excel files and shares them by link. Choose DataLens if your data sits in PostgreSQL, ClickHouse or another SQL database it supports and you want drag-and-drop dashboards built on shared datasets, on a server with at least 4 GB of memory."
-  - q: "Is Metabase as powerful as Tableau?"
-    a: "For dashboards, filters and scheduled reports, yes for most teams. For highly designed visual analysis, Tableau has more chart types and design control."
+  - q: "Can Metabase do what Tableau does?"
+    a: "For dashboards, filters and scheduled reports, Metabase covers what most teams use Tableau for. For highly designed visual analysis, Tableau has more chart types and design control."
 ---
 
 Tableau, owned by Salesforce, is a data visualisation tool used to build detailed, interactive dashboards. It reads databases, spreadsheets and many other sources, and is popular with analysts who design visual reports.

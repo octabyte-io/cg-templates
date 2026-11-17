@@ -9,7 +9,9 @@ faq:
   - q: "Does RSS-Bridge have a visual picker like FetchRSS?"
     a: "No. FetchRSS lets you click the blocks on a page to build a feed; in RSS-Bridge you type CSS selectors or XPath for a page without a ready-made bridge. For YouTube, Reddit, Mastodon and hundreds of other sites, its ready-made bridges need only an account or channel name."
   - q: "How often do RSS-Bridge feeds update?"
-    a: "Whenever your reader asks, within each bridge's cache time, which keeps the source sites from blocking your server for asking too often. There is no once-a-day limit as on FetchRSS's free plan."
+    a: "RSS-Bridge feeds update whenever your reader asks, within each bridge's cache time, which keeps the source sites from blocking your server for asking too often. There is no once-a-day limit as on FetchRSS's free plan."
+  - q: "Can I move my FetchRSS feeds to RSS-Bridge?"
+    a: "Yes, by rebuilding each one. There is nothing to import from FetchRSS, so list the pages your feeds read, find a ready-made RSS-Bridge bridge for each site or use the CSS selector bridge, then swap each FetchRSS link in your feed reader for the new RSS-Bridge link."
 ---
 
 FetchRSS is a hosted service that makes RSS feeds from web pages that don't have one: you click the blocks on a page you want to follow, and it turns them into a feed.

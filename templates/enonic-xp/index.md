@@ -38,17 +38,17 @@ faq:
   - q: Is Enonic XP free?
     a: Yes, Enonic XP and its Content Studio editor are free to self-host for your own organisation, and you pay only for your server. The XP platform's code is published under the GPL-3.0 licence, while Content Studio is source-available under the Enonic License 2.0, and its AI features, content variants and a few other extras need a paid Enonic subscription.
   - q: Is Enonic XP a good alternative to Contentful or Storyblok?
-    a: Yes, if you have a developer and want your content on your own server. Like Contentful it delivers content to websites and apps through an API, and like Storyblok it has a visual page editor; its marketplace of ready-made add-ons is smaller than either.
+    a: Yes, Enonic XP suits you if you have a developer and want your content on your own server. Like Contentful it delivers content to websites and apps through an API, and like Storyblok it has a visual page editor; its marketplace of ready-made add-ons is smaller than either.
   - q: What does headless CMS mean, and do I need a developer?
     a: A headless CMS stores and manages your content while your website or app, built separately, fetches it through an API. You need a developer for Enonic XP, because content types, page parts and the website itself are built in code; after that, editors work without code.
   - q: How do I sign in to Enonic XP the first time?
-    a: Open your app's web address with /admin at the end and sign in with the user name su and the password Cloudgate shows for this app. su is the built-in administrator; create named accounts for your team in the Users tool.
+    a: Open your Enonic XP web address with /admin at the end and sign in with the user name su and the password Cloudgate shows for this app. su is the built-in administrator; create named accounts for your team in the Users tool.
   - q: Can I move my content from Contentful, Storyblok or Sanity?
     a: Not directly. Enonic XP has no importer for those services, so a developer recreates your content types in code and brings your entries and images across through Enonic's APIs.
   - q: Can Enonic XP run several websites and languages?
-    a: Yes. Each website or brand can be its own project, and a language layer copies content from a parent project until an editor translates each item. Automatic AI translation is a paid extra.
+    a: Yes. In Enonic XP, each website or brand can be its own project, and a language layer copies content from a parent project until an editor translates each item. Automatic AI translation is a paid extra.
   - q: What server size do I need for Enonic XP?
-    a: Enonic recommends at least 4 GB of memory and 2 CPU cores for a server running XP, because it includes its own search index. Cloudgate sets everything up in one app, and you can move to a bigger server as your content grows.
+    a: Enonic recommends at least 4 GB of memory and 2 CPU cores for a server running Enonic XP, because it includes its own search index. Cloudgate sets everything up in one app, and you can move to a bigger server as your content grows.
 screenshots:
   - src: screenshots/content-tree.webp
     alt: "Enonic Content Studio showing the content tree of a bakery website, with folders for news, breads, cakes and pastries, our shops, classes and events, catering and images, each marked Online or Offline, and an Autumn menu banner image previewed on the right"

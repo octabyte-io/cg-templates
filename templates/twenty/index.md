@@ -42,8 +42,8 @@ faq:
   - q: Can Twenty replace HubSpot?
     a: Partly. Twenty matches HubSpot's CRM and sales side, with contacts, companies, a deal pipeline, tasks, email and calendar sync and automations. It does not replace HubSpot's marketing tools such as forms, landing pages and ads.
   - q: How do I sign in to Twenty the first time?
-    a: The first person to sign up with an email and password creates the workspace and becomes its admin; there is no default account. A new workspace comes with example companies, people and deals, which you delete before adding your own, and others join by invitation.
-  - q: Can I import my data from Salesforce, HubSpot or Pipedrive?
+    a: The first person to sign up for Twenty with an email and password creates the workspace and becomes its admin; there is no default account. A new workspace comes with example companies, people and deals, which you delete before adding your own, and others join by invitation.
+  - q: Can Twenty import my data from Salesforce, HubSpot or Pipedrive?
     a: Partly. There is no one-click importer, but you can export each list from your old CRM as a CSV or Excel file and import it into Twenty with column matching and duplicate checks. Views, workflows and permissions have to be set up again.
   - q: Does Twenty have a mobile app?
     a: No, Twenty has no official phone app. The web app works in a phone's browser.

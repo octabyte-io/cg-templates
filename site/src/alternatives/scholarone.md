@@ -9,7 +9,9 @@ faq:
   - q: "Is OJS a good replacement for ScholarOne?"
     a: "Yes, for a journal that runs its own editorial office: OJS handles submission, peer review, copyediting and publishing. It is less suited to a publisher running many journals with an outsourced production team."
   - q: "Does OJS support anonymous peer review?"
-    a: "Yes. Each review can be anonymous or open, with review rounds, due dates and automatic reminders."
+    a: "Yes. In OJS each review can be anonymous or open, with review rounds, due dates and automatic reminders."
+  - q: "Can OJS publish the journal website as well as run peer review?"
+    a: "Yes. Besides submission and peer review, Open Journal Systems publishes the journal's website, with DOIs and indexing exports. ScholarOne Manuscripts covers submission and peer review, so journals using it publish elsewhere."
 ---
 
 ScholarOne Manuscripts, from Clarivate, is a web-based submission and peer review system used by many large publishers and societies, priced by quote.

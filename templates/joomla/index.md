@@ -40,11 +40,11 @@ faq:
   - q: Should I choose Joomla or WordPress?
     a: Choose Joomla if you need a site in several languages or detailed permissions for many editors and members, because both are built in. Choose WordPress if you want the widest choice of themes and plugins and the most people who can help; it has a larger ecosystem, and translations need a plugin.
   - q: How do I sign in to Joomla the first time?
-    a: Go to your site's address followed by /administrator and sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. A welcome tour then walks you through the back end, and you can change the password in your user profile.
+    a: Go to your Joomla site's address followed by /administrator and sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. A welcome tour then walks you through the back end, and you can change the password in your user profile.
   - q: Can I move my Wix or Squarespace site to Joomla?
     a: No, Joomla has no built-in importer for Wix or Squarespace. You rebuild the pages in Joomla and copy the text and images across, usually with a template that looks similar.
   - q: Is my data private with Joomla?
-    a: Yes. Your articles, user accounts and form entries are stored on your own server. Extensions you add may connect to their own services, so check what each one does.
+    a: Yes. Joomla stores your articles, user accounts and form entries on your own server. Extensions you add may connect to their own services, so check what each one does.
   - q: What server size do I need for Joomla?
     a: A small server with 1 GB of memory runs a typical Joomla website and its database. Choose a larger one for a busy site or one with many extensions.
 screenshots:

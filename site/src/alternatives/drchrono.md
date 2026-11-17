@@ -9,7 +9,9 @@ faq:
   - q: "Does OpenEMR have an iPad app like DrChrono?"
     a: "No. OpenEMR has no official phone or tablet app; staff use it in a web browser, which works on a tablet, and patients use the portal in theirs."
   - q: "Can patients book appointments online in OpenEMR?"
-    a: "Yes. The patient portal lets patients book appointments, message the practice, pay online and see their labs and medications."
+    a: "Yes. The OpenEMR patient portal lets patients book appointments, message the practice, pay online and see their labs and medications."
+  - q: "Can I import my DrChrono records into OpenEMR?"
+    a: "Not directly. OpenEMR has no DrChrono importer. Request a full export of your records from DrChrono and plan the move with an OpenEMR support vendor, after setting up your practice, providers, fees and insurers in OpenEMR."
 ---
 
 DrChrono is a cloud EHR and practice-management service known for its iPad and phone apps, with charting, scheduling and billing.

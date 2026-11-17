@@ -43,8 +43,8 @@ faq:
   - q: Does Seatsurfing work with Microsoft Teams and Outlook?
     a: Only with the paid Plus Plugin, which adds Microsoft Teams, Exchange room-calendar sync and SCIM user provisioning to a self-hosted Seatsurfing. Without it, bookings still sync one way to a personal CalDAV calendar and can be saved as calendar files.
   - q: Is there a Seatsurfing phone app?
-    a: No native app is documented, but the booking site works in a phone's browser and can be installed on the home screen like an app.
-  - q: Can I import my bookings from deskbird or Robin?
+    a: No. A native Seatsurfing app is not documented, but the booking site works in a phone's browser and can be installed on the home screen like an app.
+  - q: Can I import my bookings from deskbird or Robin into Seatsurfing?
     a: No, Seatsurfing has no importer for other booking tools. You upload your floor plans, place your spaces again and start bookings fresh; staff can sign in through your company login instead of being added by hand.
   - q: What server size do I need for Seatsurfing?
     a: A small server is enough for most offices, because Seatsurfing is one light app plus a PostgreSQL database. Cloudgate sets up both, and you can move to a bigger server later.

@@ -38,9 +38,9 @@ faq:
   - q: Is big-AGI a good alternative to ChatGPT Plus?
     a: Yes, if you are happy to use your own API keys. big-AGI gives you a ChatGPT-style chat with OpenAI's models and many others, image making, web search and voice, and you pay per use instead of a monthly fee. It has no ChatGPT memory, custom GPTs or phone apps.
   - q: What is Beam in big-AGI?
-    a: Beam sends one question to several AI models at once and shows their answers side by side. You can then merge the best parts into one reply, which helps to check facts and compare models.
+    a: Beam is the big-AGI feature that sends one question to several AI models at once and shows their answers side by side. You can then merge the best parts into one reply, which helps to check facts and compare models.
   - q: Where are my big-AGI chats stored?
-    a: Your chats, settings and API keys are stored in your own web browser, not on the server. The server only passes your messages to the AI provider. Clearing your browser data erases your chats, so make a backup from the app before you do.
+    a: big-AGI stores your chats, settings and API keys in your own web browser, not on the server. The server only passes your messages to the AI provider. Clearing your browser data erases your chats, so make a backup from the app before you do.
   - q: How do I sign in to big-AGI?
     a: Cloudgate puts a sign-in in front of big-AGI, because the app has no login of its own, so your browser asks for a username and password. Use the username admin and the password Cloudgate creates, shown on the app's variables page. Everyone you share it with uses the same sign-in, and each person's chats stay in their own browser.
   - q: Can I import my ChatGPT chats into big-AGI?

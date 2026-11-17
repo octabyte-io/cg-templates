@@ -1,5 +1,5 @@
 name: AnythingLLM
-description: "AnythingLLM is self-hosted AI chat over your own documents, for your team and your website."
+description: "Self-hosted AnythingLLM lets your team ask questions about your own documents, with the source shown for each answer, and adds a chatbot to your website."
 version: "1.19.0"
 tags: [chatbase alternative, chat with your documents, ai chatbot for website, chatgpt for documents, private ai chat, chat with pdf]
 links:

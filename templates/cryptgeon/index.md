@@ -40,13 +40,13 @@ faq:
   - q: Is cryptgeon a good alternative to Privnote?
     a: Yes. cryptgeon was inspired by Privnote and works the same way, a note behind a link that destroys itself, but it runs on your own web address, encrypts the note in your browser, can send files and lets a note last for several views or a number of minutes.
   - q: Can the cryptgeon server read my notes?
-    a: No. The note is encrypted in the sender's browser, and the key sits in the part of the link after the "#", which browsers never send to the server. Anyone with the whole link can open it, so for anything sensitive set your own password and send it another way.
+    a: No. A cryptgeon note is encrypted in the sender's browser, and the key sits in the part of the link after the "#", which browsers never send to the server. Anyone with the whole link can open it, so for anything sensitive set your own password and send it another way.
   - q: How long does a cryptgeon note last?
-    a: Until its last view or its time runs out, whichever you chose. By default a note is destroyed after one view; you can allow up to 100 views or switch to a timer of up to 360 minutes. Notes are kept in memory only, so a server restart also deletes unread notes.
-  - q: Will a chat or email link preview use up a view?
-    a: No. Opening the link only shows a "show note" button, and the note is fetched and counted only when someone presses it. A wrong password does count, though, and destroys a one-view note.
+    a: A cryptgeon note lasts until its last view or its time runs out, whichever you chose. By default a note is destroyed after one view; you can allow up to 100 views or switch to a timer of up to 360 minutes. Notes are kept in memory only, so a server restart also deletes unread notes.
+  - q: Will a chat or email link preview use up a cryptgeon view?
+    a: No. Opening a cryptgeon link only shows a "show note" button, and the note is fetched and counted only when someone presses it. A wrong password does count, though, and destroys a one-view note.
   - q: Can I send files with cryptgeon?
-    a: Yes. You can send one or several files in a note, up to about 3 MB in total as Cloudgate sets it up, which suits key files, scans and short documents rather than large transfers.
+    a: Yes. You can send one or several files in a cryptgeon note, up to about 3 MB in total as Cloudgate sets it up, which suits key files, scans and short documents rather than large transfers.
   - q: What size server does cryptgeon need?
     a: The smallest one. cryptgeon is a very light app plus a small in-memory store, so it runs on the smallest server Cloudgate offers.
 screenshots:

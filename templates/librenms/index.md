@@ -44,7 +44,7 @@ faq:
   - q: What do my devices need for LibreNMS?
     a: SNMP, the standard monitoring protocol most switches, routers, firewalls, printers and servers support. You switch it on in each device's settings and give LibreNMS the same community name or SNMPv3 login. Devices without SNMP can still be checked with ping.
   - q: How do I sign in to LibreNMS the first time?
-    a: With the admin username you chose during install. Cloudgate creates a strong password for it, shown on the app's variables page; there is no default password.
+    a: Sign in to LibreNMS with the admin username you chose during install. Cloudgate creates a strong password for it, shown on the app's variables page; there is no default password.
   - q: What server size does LibreNMS need?
     a: LibreNMS needs a server with at least 2 GB of memory, which Cloudgate plans for it. That is enough for a small network; the project's own examples run 20 devices on 2 GB, and large networks need more.
 screenshots:

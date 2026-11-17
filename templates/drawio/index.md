@@ -44,9 +44,9 @@ faq:
   - q: Can several people edit a diagram at the same time?
     a: No, draw.io does not support real-time collaborative editing. To work together, people pass the .drawio file to each other or keep it in a shared folder.
   - q: Do I need an account to use self-hosted draw.io?
-    a: No, there are no accounts, no sign-in and no admin. Anyone who has the web address can open the editor, so share it only with the people who should use it.
+    a: No, self-hosted draw.io has no accounts, no sign-in and no admin. Anyone who has the web address can open the editor, so share it only with the people who should use it.
   - q: Can I export a diagram as a PDF?
-    a: Yes, through your browser's print window, where you choose "Save as PDF". PNG, JPEG and SVG images export directly from the editor.
+    a: Yes, draw.io saves PDFs through your browser's print window, where you choose "Save as PDF". PNG, JPEG and SVG images export directly from the editor.
 screenshots:
   - src: screenshots/editor.webp
     alt: "The draw.io editor showing a flowchart titled Larkspur Bakery: custom cake orders, with green start and end ovals, blue step boxes, yellow decision diamonds such as Slot free? and Pickup or delivery?, a red Offer another date box and labelled arrows, the General shape library on the left and the Diagram panel on the right"

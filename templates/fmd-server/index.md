@@ -36,15 +36,15 @@ faq:
   - q: Is FMD Server free?
     a: Yes, FMD Server is free and open source under the GPL-3.0-or-later licence, with no paid edition. The FMD Android app is free too. You pay only for your server.
   - q: Is FMD Server a good alternative to Google Find My Device?
-    a: Yes, if your phones run Android and you can install an app on each one in advance. FMD shows where the phone is, makes it ring, locks or wipes it and can take a photo, without Google services and with your data on your own server. Google's Find My Device, now called Find Hub, comes built in and can find offline phones through other people's devices, which FMD can't.
-  - q: What do I need to install on each phone?
-    a: Each phone needs the free FMD app, from F-Droid or the FMD team's own F-Droid repository, plus a push app such as ntfy or Sunup so it can receive commands from your server. Grant FMD the permissions for the commands you plan to use, such as Device Admin for lock and wipe.
+    a: Yes, FMD Server fits if your phones run Android and you can install an app on each one in advance. FMD shows where the phone is, makes it ring, locks or wipes it and can take a photo, without Google services and with your data on your own server. Google's Find My Device, now called Find Hub, comes built in and can find offline phones through other people's devices, which FMD can't.
+  - q: What do I need to install on each phone for FMD Server?
+    a: To use FMD Server, each phone needs the free FMD app, from F-Droid or the FMD team's own F-Droid repository, plus a push app such as ntfy or Sunup so it can receive commands from your server. Grant FMD the permissions for the commands you plan to use, such as Device Admin for lock and wipe.
   - q: How do I sign in to FMD Server the first time?
     a: You create the account from the FMD app on the phone, not on the website. In the FMD app, choose FMD Server, enter your server's web address and the registration token Cloudgate shows you, and pick a strong password. Then sign in on the web page with the username the app gives you and that password.
   - q: Can the person running the server see where my phone is?
-    a: No, locations and photos are encrypted with your password on the phone before they reach the server, so whoever runs it can't read them or send commands to your phone. Choose a strong password, because the protection depends on it.
+    a: No, locations and photos are encrypted with your password on the phone before they reach FMD Server, so whoever runs it can't read them or send commands to your phone. Choose a strong password, because the protection depends on it.
   - q: Does FMD Server work with iPhones?
-    a: No, FMD only has an Android app, so it can't locate or control iPhones.
+    a: No, FMD Server only works with the FMD Android app, so it can't locate or control iPhones.
   - q: What server size do I need for FMD Server?
     a: The smallest server is enough. FMD Server is a single small program that keeps its data in one file, so Cloudgate gives it an extra-small server.
 screenshots:

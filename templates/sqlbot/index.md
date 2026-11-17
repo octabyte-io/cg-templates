@@ -36,15 +36,15 @@ faq:
   - q: Is SQLBot free?
     a: Yes, SQLBot is free to use, and its code is public under a modified GPLv3 licence that says you must keep the SQLBot logo and copyright notice. You pay for your server and your AI provider. A paid licence from its maker, FIT2CLOUD, adds custom branding, custom prompts, LDAP or OIDC sign-in and audit logs.
   - q: Is SQLBot open source?
-    a: Not in the usual sense. Its code is public under GPLv3 with an extra rule against removing or changing the logo and copyright notice, and it relies on a closed-source add-on for some features.
+    a: Not in the usual sense. SQLBot's code is public under GPLv3 with an extra rule against removing or changing the logo and copyright notice, and it relies on a closed-source add-on for some features.
   - q: How do I sign in to SQLBot the first time?
     a: Sign in with the username admin and SQLBot's published default password, SQLBot@123456, and change it at once from your profile menu, because anyone who finds the address could otherwise sign in. The new password needs 8 to 20 characters with upper and lower case letters, a digit and a symbol. If the menus are in Chinese, switch the language in the same menu.
   - q: Which databases can SQLBot connect to?
     a: SQLBot connects to MySQL, PostgreSQL, Microsoft SQL Server, Oracle, ClickHouse, Apache Doris, StarRocks, Apache Hive, Amazon Redshift and Elasticsearch, and you can upload Excel or CSV files.
   - q: Does SQLBot send my data to an AI company?
-    a: Partly. Your questions, table descriptions and the results it needs to explain go to the AI provider you set up; the database itself stays where it is. To keep everything in-house, connect a model you run yourself through an OpenAI-compatible server.
+    a: Partly. SQLBot sends your questions, table descriptions and the results it needs to explain to the AI provider you set up; the database itself stays where it is. To keep everything in-house, connect a model you run yourself through an OpenAI-compatible server.
   - q: Is SQLBot a good alternative to ThoughtSpot?
-    a: Yes, for a small team that mainly wants to ask its own database questions in plain language without a per-user subscription. ThoughtSpot is a much larger hosted analytics service with more reporting, sharing and governance features.
+    a: Yes, SQLBot suits a small team that mainly wants to ask its own database questions in plain language without a per-user subscription. ThoughtSpot is a much larger hosted analytics service with more reporting, sharing and governance features.
   - q: Can I import my ThoughtSpot setup into SQLBot?
     a: "No, there is no ThoughtSpot importer. SQLBot connects to the same databases directly, so you connect each one with a read-only account, describe its main tables and add a glossary of your business terms, then check answers against your existing reports."
   - q: What server size do I need for SQLBot?

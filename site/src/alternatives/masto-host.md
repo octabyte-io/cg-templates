@@ -7,9 +7,11 @@ moving: |
   Each member can move from your hosted server to the new one: they export their follows, lists, blocks, mutes and domain blocks as CSV files and import them on the new server, then use Mastodon's account move to take their followers with them. Old posts and media do not move. Set up the new server with its final domain and an email service first, create the accounts, and announce the move from the old server before members switch.
 faq:
   - q: "Can my members keep their followers when we move?"
-    a: "Yes. With Mastodon's account move, followers are redirected to the new account automatically, and follows and lists come across as CSV files. Old posts stay on the old server."
-  - q: "What does running Mastodon myself involve?"
-    a: "Updates, backups, an outside email service so members can confirm their address and reset passwords, and moderation of your server. Cloudgate installs Mastodon on your server and gives it a secure web address."
+    a: "Yes. When you move from Masto.host to self-hosted Mastodon, Mastodon's account move redirects followers to the new account automatically, and follows and lists come across as CSV files. Old posts stay on the old server."
+  - q: "What does running Mastodon myself, instead of on Masto.host, involve?"
+    a: "Self-hosted Mastodon needs updates, backups, an outside email service so members can confirm their address and reset passwords, and moderation of your server, which Masto.host looks after or helps with. Cloudgate installs Mastodon on your server and gives it a secure web address."
+  - q: "Can members keep using the Mastodon apps after leaving Masto.host?"
+    a: "Yes. Self-hosted Mastodon works with Mastodon's own iPhone and Android apps, many other apps and the web browser, just like a server on Masto.host. Members sign in with the new server's address."
 ---
 
 Masto.host and other managed Mastodon hosts run a Mastodon server for you: they install it, keep it updated, back it up and handle email, for a monthly fee.

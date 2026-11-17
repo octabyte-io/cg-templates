@@ -38,17 +38,17 @@ faq:
   - q: Is Spree Commerce free?
     a: Yes, Spree Commerce is free and open source under the BSD-3-Clause licence, with no fee on your sales. Its maker also sells a paid Enterprise Edition with extras such as approval workflows, many separate stores for clients and support contracts, but the products, orders, payments, wholesale, markets and marketplace features on this page are in the free edition.
   - q: Is Spree Commerce a good alternative to Shopify?
-    a: Yes, for a business with developer help that wants to own its store, sell wholesale or run a marketplace. Spree has no plan or sales fees and puts B2B and marketplace features in the free core, but Shopify is easier for a small shop on its own, because Spree's customer-facing shop is a separate storefront and there is no app store; WooCommerce is the simpler self-hosted choice for most small shops.
-  - q: Does this include the shop my customers see?
-    a: No, this installs Spree's admin dashboard and the API your shop talks to, not the shop front itself. Spree offers a free, open-source Next.js storefront, or a developer can build one or a mobile app; you connect it under Settings, Storefront & checkout.
-  - q: How do I sign in to Spree for the first time?
-    a: Go to your Spree address followed by /dashboard and sign in with the email you gave Cloudgate and the password Cloudgate created for it, which is shown on the app's variables page. Your store starts set up for the country you chose, with no products yet.
-  - q: Can I move my store from Shopify to Spree?
-    a: Partly. Spree's guide shows how to import the product and customer CSV files Shopify exports, including variants, images, categories and addresses, by matching Shopify's columns to Spree's. Orders do not move across this way.
+    a: Yes, for a business with developer help that wants to own its store, sell wholesale or run a marketplace. Spree Commerce has no plan or sales fees and puts B2B and marketplace features in the free core, but Shopify is easier for a small shop on its own, because Spree's customer-facing shop is a separate storefront and there is no app store; WooCommerce is the simpler self-hosted choice for most small shops.
+  - q: Does Spree Commerce include the shop my customers see?
+    a: No, this template installs the Spree Commerce admin dashboard and the API your shop talks to, not the shop front itself. Spree offers a free, open-source Next.js storefront, or a developer can build one or a mobile app; you connect it under Settings, Storefront & checkout.
+  - q: How do I sign in to Spree Commerce the first time?
+    a: Go to your Spree Commerce address followed by /dashboard and sign in with the email you gave Cloudgate and the password Cloudgate created for it, which is shown on the app's variables page. Your store starts set up for the country you chose, with no products yet.
+  - q: Can I move my store from Shopify to Spree Commerce?
+    a: Partly. The Spree Commerce guide shows how to import the product and customer CSV files Shopify exports, including variants, images, categories and addresses, by matching Shopify's columns to Spree's. Orders do not move across this way.
   - q: Can Spree Commerce run a B2B shop or a multi-vendor marketplace?
-    a: Yes, both are in the free edition. For B2B it has price lists with volume tiers, customer groups, company accounts and hidden prices for unapproved buyers; for marketplaces it has seller onboarding, commission rates and payouts through Stripe Connect.
+    a: Yes, both are in the free edition of Spree Commerce. For B2B it has price lists with volume tiers, customer groups, company accounts and hidden prices for unapproved buyers; for marketplaces it has seller onboarding, commission rates and payouts through Stripe Connect.
   - q: What server size do I need for Spree Commerce?
-    a: Spree says a store starts comfortably on 1 GB of memory. It runs as one app with a PostgreSQL database, which Cloudgate sets up for you.
+    a: Spree Commerce says a store starts comfortably on 1 GB of memory. It runs as one app with a PostgreSQL database, which Cloudgate sets up for you.
 screenshots:
   - src: screenshots/orders.webp
     alt: "The Spree Commerce admin dashboard on the Orders page: a sidebar with Home, Orders, Products, Inventory, Customers, Sellers, Loyalty, Promotions, Reports and Settings, and a table of seven orders with customer email, sales channel, payment status such as Paid or Unpaid, fulfilment status, item count and total"

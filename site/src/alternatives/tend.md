@@ -9,7 +9,9 @@ faq:
   - q: "Can farmOS plan my crops for the season?"
     a: "Partly. You plan by adding future seeding, transplanting and harvest logs, which show as upcoming tasks on the dashboard. farmOS has no crop library or planting calculator, so the plan is yours to enter."
   - q: "Can farmOS show where each crop has been?"
-    a: "Yes. Seeding and transplanting logs record where a planting goes, so each planting keeps its history from seed to harvest, which helps with rotation and traceability records."
+    a: "Yes. In farmOS, seeding and transplanting logs record where a planting goes, so each planting keeps its history from seed to harvest, which helps with rotation and traceability records."
+  - q: "Does farmOS have a phone app like Tend?"
+    a: "No. Tend has a phone app that works offline, but farmOS has no phone app. You use farmOS in a phone's web browser, which needs a connection to your server."
 ---
 
 Tend is cloud farm software for vegetable, flower, orchard and nursery growers. It plans crops from a crop library, organises tasks and labour, and tracks sales, inventory and traceability, with a phone app that works offline.

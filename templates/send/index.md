@@ -44,9 +44,9 @@ faq:
   - q: Are my files encrypted in Send?
     a: Yes, every file is encrypted in the sender's browser before upload, and the key is part of the link, never sent to the server. Only someone with the full link, and the password if you set one, can open the files.
   - q: How big a file can I send, and how long does the link last?
-    a: Up to 1 GB per upload, with up to 64 files in one link. A link lasts 5 minutes, 1 hour, 1 day or 7 days, or until it reaches its download limit of 1 to 100 downloads, whichever comes first.
+    a: Send takes up to 1 GB per upload, with up to 64 files in one link. A link lasts 5 minutes, 1 hour, 1 day or 7 days, or until it reaches its download limit of 1 to 100 downloads, whichever comes first.
   - q: What server size do I need for Send?
-    a: The smallest Cloudgate server is enough, because the encryption happens in people's browsers, not on the server. What matters is disk space for the files waiting to be downloaded.
+    a: The smallest Cloudgate server is enough for Send, because the encryption happens in people's browsers, not on the server. What matters is disk space for the files waiting to be downloaded.
 screenshots:
   - src: screenshots/upload.webp
     alt: "The Send upload page with three files queued, a shop-front plan PDF, a kitchen drawing and a zip of site photos, totalling 5.3 MB, with Expires after set to 5 downloads or 7 days, Protect with password ticked and a password typed, and a blue Upload button"

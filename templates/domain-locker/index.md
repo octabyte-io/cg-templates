@@ -36,7 +36,7 @@ faq:
   - q: Is Domain Locker free?
     a: Yes, self-hosted Domain Locker is free and open source under the MIT licence, with every feature and up to 500 domains. Its makers also sell a hosted version at domain-locker.com with paid plans; on your own server you pay only for hosting.
   - q: Is Domain Locker a good alternative to UptimeRobot?
-    a: Yes, if what you need is to stop domains and SSL certificates from expiring and to see when DNS or hosting changes. UptimeRobot checks websites far more often and from many places, so for minute-by-minute uptime alerts a dedicated uptime monitor is the better fit.
+    a: Yes, Domain Locker is a good fit if what you need is to stop domains and SSL certificates from expiring and to see when DNS or hosting changes. UptimeRobot checks websites far more often and from many places, so for minute-by-minute uptime alerts a dedicated uptime monitor is the better fit.
   - q: How do I sign in to Domain Locker the first time?
     a: Open the app's web address and enter the password Cloudgate creates, shown on the app's variables page in Cloudgate. There is no sign-up and no default login; everyone who uses this Domain Locker shares that one password.
   - q: How does Domain Locker warn me before a domain expires?

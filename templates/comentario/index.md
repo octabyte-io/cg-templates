@@ -44,7 +44,7 @@ faq:
   - q: I used Commento. Can I move to Comentario?
     a: Yes, Comentario started as a fork of Commento, which is no longer maintained, and it imports Commento and Commento++ exports. It has been rewritten since and adds a dashboard, roles, moderation rules and statistics.
   - q: How do I become the admin of my Comentario?
-    a: The first person to sign up with an email and password becomes the admin, called the superuser, so sign up as soon as Cloudgate has installed it. There is no default password.
+    a: The first person to sign up to Comentario with an email and password becomes the admin, called the superuser, so sign up as soon as Cloudgate has installed it. There is no default password.
   - q: How does Comentario stop spam?
     a: Comentario holds comments for approval using rules you choose, such as comments with links, from readers without an account or from new accounts. You can also connect Akismet, Perspective or APILayer to check each comment for spam and toxic language.
   - q: What server size do I need for Comentario?

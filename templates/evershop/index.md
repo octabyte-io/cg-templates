@@ -40,11 +40,11 @@ faq:
   - q: Which payment methods does EverShop support?
     a: EverShop has Stripe, PayPal and cash on delivery built in. You connect your own Stripe or PayPal account in the admin panel's payment settings, and the provider charges its usual fees.
   - q: How do I sign in to the EverShop admin?
-    a: Go to your store's web address followed by /admin and sign in with the email you gave Cloudgate during setup and the password Cloudgate created for it, which you'll find on the app's variables page.
+    a: Go to your EverShop store's web address followed by /admin and sign in with the email you gave Cloudgate during setup and the password Cloudgate created for it, which you'll find on the app's variables page.
   - q: Can I import my products into EverShop?
     a: Yes, EverShop imports products, categories, customers and addresses from CSV files, and checks every row before it saves anything. There is no direct Shopify importer, so export your data and arrange it in EverShop's downloadable CSV template.
   - q: Does EverShop have extensions and themes?
-    a: "Yes, but a small number: its marketplace lists free extensions for Amazon S3 or Azure storage, Google sign-in, product reviews, SendGrid or Resend email and live chat, plus one free theme. Anything beyond that is built by a developer in JavaScript."
+    a: "Yes, but a small number: the EverShop marketplace lists free extensions for Amazon S3 or Azure storage, Google sign-in, product reviews, SendGrid or Resend email and live chat, plus one free theme. Anything beyond that is built by a developer in JavaScript."
   - q: What server size do I need for EverShop?
     a: EverShop asks for at least 2 GB of memory and 2 CPU cores, and recommends 4 GB or more. It runs as one app with a PostgreSQL database, which Cloudgate sets up for you.
 screenshots:

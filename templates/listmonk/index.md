@@ -34,15 +34,15 @@ faq:
     a: Yes. listmonk is free, open-source software under the AGPL licence, with no limit on subscribers or emails. You pay only for hosting and your email sending service, which usually charges a small amount per thousand emails.
   - q: Is listmonk a good alternative to Mailchimp?
     a: Yes, for sending regular newsletters and campaigns to a large list at low cost. Mailchimp's price rises with the number of contacts, while listmonk costs the same however big your list grows. Mailchimp has more ready-made templates, landing pages and automations.
-  - q: Can I import my subscribers from Mailchimp?
+  - q: Can listmonk import my subscribers from Mailchimp?
     a: Yes. Export your audience from Mailchimp as a CSV file and import it into a listmonk list with their names and email addresses. Extra fields can come along as subscriber attributes.
   - q: How do I self-host listmonk?
     a: Pick listmonk in Cloudgate's template list, choose an admin username and press Set up. Cloudgate installs listmonk and its database on your server, creates your admin account and gives it a secure web address; you then add your email sending service under Settings.
   - q: Which email sending services work with listmonk?
     a: Any service that offers SMTP, such as Amazon SES, Postmark, Mailgun, Brevo or your own mail server. You can add several and listmonk spreads the sending between them.
-  - q: Is my data private?
-    a: Yes. Your subscriber lists, campaigns and statistics are stored in a database on your own server. The email sending service you choose sees only the emails it delivers.
-  - q: What server size do I need?
+  - q: Is my data private with listmonk?
+    a: Yes. listmonk stores your subscriber lists, campaigns and statistics in a database on your own server. The email sending service you choose sees only the emails it delivers.
+  - q: What server size do I need for listmonk?
     a: A small server (1 GB of memory) is enough for most businesses, as listmonk uses very little memory even with large lists.
 screenshots:
   - src: screenshots/dashboard.webp

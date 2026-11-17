@@ -16,6 +16,8 @@ faq:
     a: "Yes. Opportunities show on a kanban board by stage, with the amount, owner, close date and company on each card, and you drag a deal to move it to the next stage."
   - q: "Can I use Twenty, EspoCRM or Relaticle on my phone?"
     a: "In the phone's browser, yes, but none of them has an official phone app, unlike Pipedrive."
+  - q: "Do Twenty, EspoCRM and Relaticle have automations like Pipedrive?"
+    a: "Twenty does: its workflows create tasks, update records or send an email when a deal changes or on a schedule, at no extra cost. EspoCRM's workflows are part of a paid extension, and Relaticle has no workflow automation."
 ---
 
 Pipedrive is a sales CRM built around the deal pipeline. Each deal sits on a board by stage, and salespeople log calls, emails and meetings against it; it adds reports, automations, phone apps and a marketplace of integrations.

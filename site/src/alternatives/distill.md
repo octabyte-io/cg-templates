@@ -7,9 +7,11 @@ moving: |
   There is no import from Distill, but changedetection.io takes a list of addresses pasted in or uploaded as a text or Excel file. Copy the addresses of your Distill monitors, import them, and set the check schedule and alerts for each. If you used CSS or XPath selectors in Distill, add them in each watch's filters to follow the same part of the page. Set a password in Settings first, because changedetection.io has no login until you do.
 faq:
   - q: "Does changedetection.io need my browser to stay open?"
-    a: "No. It runs on your server and checks pages on schedule whether your computer is on or not."
+    a: "No. Unlike Distill's browser extension, changedetection.io runs on your server and checks pages on schedule whether your computer is on or not."
   - q: "Can I watch only one part of a page?"
-    a: "Yes. Filters take CSS and XPath selectors, JSONPath and jq, and text to trigger on or ignore, so you are alerted only when the part you care about changes."
+    a: "Yes. changedetection.io filters take CSS and XPath selectors, JSONPath and jq, and text to trigger on or ignore, so you are alerted only when the part you care about changes."
+  - q: "Can I move my Distill monitors to changedetection.io?"
+    a: "Yes, by their addresses. changedetection.io has no Distill importer, but it takes a list of addresses pasted in or uploaded as a text or Excel file. Then add any CSS or XPath selectors you used in Distill to each watch's filters."
 ---
 
 Distill.io, also called Distill Web Monitor, watches web pages for changes through a browser extension and its own cloud, and alerts you when they change.

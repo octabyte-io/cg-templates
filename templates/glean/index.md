@@ -42,7 +42,7 @@ faq:
   - q: Can I import my feeds from Feedly or Inoreader?
     a: Yes. Export your subscriptions from Feedly or Inoreader as an OPML file and import it with Import OPML on Glean's Manage Feeds page. Your feeds and folders come across; saved articles and boards do not.
   - q: Does Glean have AI features?
-    a: Partly. The Smart view ranks unread articles by what you liked without any AI service. The makers' AI-based ranking needs an extra vector database that this template leaves out, and AI summaries, auto-tagging and keyword extraction are on the project's roadmap but not in the current release.
+    a: Partly. Glean's Smart view ranks unread articles by what you liked without any AI service. The makers' AI-based ranking needs an extra vector database that this template leaves out, and AI summaries, auto-tagging and keyword extraction are on the project's roadmap but not in the current release.
   - q: Does Glean have a phone app?
     a: No, there is no phone app yet, and Glean does not sync with third-party reader apps. You read in the web app in your browser, or in the desktop app for Windows, macOS and Linux from the project's releases page.
   - q: How do I sign in to Glean the first time?

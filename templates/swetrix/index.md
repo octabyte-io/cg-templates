@@ -36,15 +36,15 @@ faq:
   - q: Is Swetrix free?
     a: Yes, Swetrix Community Edition is free and open source under the AGPL-3.0 licence, and you pay only for your server. Some features, such as revenue analytics, A/B experiments and email reports, are only in the paid Swetrix Cloud.
   - q: What does Swetrix Community Edition leave out compared with Swetrix Cloud?
-    a: Community Edition leaves out revenue analytics, A/B experiments, Ask AI, alerts and notifications, email reports, and organisations with team roles. It also gets new features later than Cloud. Visitor stats, custom events, sessions, user flows, funnels, page speed and error tracking are all included.
+    a: Swetrix Community Edition leaves out revenue analytics, A/B experiments, Ask AI, alerts and notifications, email reports, and organisations with team roles. It also gets new features later than Cloud. Visitor stats, custom events, sessions, user flows, funnels, page speed and error tracking are all included.
   - q: Is Swetrix a good alternative to Google Analytics?
-    a: Yes, if you want traffic stats, events and funnels without cookies, plus page-speed and error tracking that Google Analytics doesn't offer, all kept on your own server. Expect fewer reports than in Google Analytics, and no Google Ads link.
+    a: Yes, Swetrix suits you if you want traffic stats, events and funnels without cookies, plus page-speed and error tracking that Google Analytics doesn't offer, all kept on your own server. Expect fewer reports than in Google Analytics, and no Google Ads link.
   - q: How do I sign in to Swetrix the first time?
     a: There is no default login; the first person to sign up on your Swetrix address becomes the admin, and sign-up then closes. Swetrix only writes emails to its logs until you add an email service, so password resets and invitations are not sent until then.
   - q: Can I import my Google Analytics data into Swetrix?
     a: Not straight away. Swetrix can import Google Analytics 4 data, but on your own server it needs a Google sign-in app that you create in your Google account, and this template does not set that up.
   - q: Does self-hosted Swetrix record session replays?
-    a: Only after you connect your own S3-compatible file storage, which this template does not set up. Everything else, including funnels, page speed and error tracking, works without it.
+    a: Only after you connect Swetrix to your own S3-compatible file storage, which this template does not set up. Everything else, including funnels, page speed and error tracking, works without it.
   - q: What server size do I need for Swetrix?
     a: A medium server with 2 GB of memory, which is the minimum Swetrix recommends. Swetrix uses a dedicated analytics database that needs more memory as your traffic grows, so you can move to a bigger server later.
 screenshots:

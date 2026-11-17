@@ -1,5 +1,5 @@
 name: Rembg
-description: "Self-hosted Rembg removes the background from photos on your own server, through a simple web page or an API."
+description: "Rembg is a self-hosted alternative to remove.bg that removes the background from photos on your own server, through a simple web page or an API."
 version: "2.0.87"
 tags: [remove.bg alternative, background remover, remove image background, self-hosted background removal, background removal api, transparent png]
 links:

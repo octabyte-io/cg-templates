@@ -9,7 +9,9 @@ faq:
   - q: "Can Koillection scan barcodes like CLZ?"
     a: "No. Koillection has no barcode scanner or online database of details. You type in each item, or set up a scraper that fills an item's name, image and details from a web page."
   - q: "Can I share my collection with others?"
-    a: "Yes. Each collection and item can be public, visible to signed-in users, or private."
+    a: "Yes. In Koillection, each collection and item can be public, visible to signed-in users, or private."
+  - q: "Does Koillection have a phone app like CLZ?"
+    a: "No native app. Koillection runs in the browser, and you can add it to your phone's home screen. Unlike CLZ, it has no barcode scanning, so you type in items or set up a scraper for a site such as Discogs."
 ---
 
 CLZ, from Collectorz.com, makes cataloguing apps for collectors, one for each type of collection: books, movies, music, comics and games. They scan barcodes, fill in details from CLZ's online database and sync between devices, and each is sold as a subscription.

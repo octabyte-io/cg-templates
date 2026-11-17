@@ -42,7 +42,7 @@ faq:
   - q: How do I sign in to Coze Studio the first time?
     a: There is no default account. Open your Coze Studio web address, go to the sign-up page, enter an email address and a password and click Register. Then, in the admin area's Basic Config page, enter your email under Admin Emails and turn off sign-ups or limit them to listed email addresses; until you do, anyone who signs up can open the admin area.
   - q: Can I add a Coze Studio chatbot to my website?
-    a: Yes, the Chat SDK embeds an agent or app as a chat window on your own website, and the API lets your other systems start chats and run workflows with a personal access token.
+    a: Yes. The Coze Studio Chat SDK embeds an agent or app as a chat window on your own website, and the API lets your other systems start chats and run workflows with a personal access token.
   - q: How big a server does Coze Studio need?
     a: Coze Studio's makers give a minimum of 2 CPU cores and 4 GB of memory. It runs several supporting services, including a search engine and a vector database, so it needs more room than a simple web app.
 screenshots: []

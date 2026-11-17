@@ -41,12 +41,12 @@ faq:
     a: Yes, for Kanban boards Vikunja covers the basics, with cards, labels, due dates, assignees and attachments, and every board can also be seen as a list, a Gantt chart or a table. It has no Power-Up marketplace.
   - q: How do I sign in to Vikunja the first time?
     a: Vikunja has no default account, so you open its web address and click "Create account" to register. Sign-up is open to anyone who can reach that address, so once your team has its accounts, set the "Allow new sign-ups" setting to false.
-  - q: Can I import my tasks from Todoist, Trello or Microsoft To Do?
+  - q: Can Vikunja import my tasks from Todoist, Trello or Microsoft To Do?
     a: Yes, but each of those imports needs extra setup first, and the Todoist import also needs Vikunja to be reachable from the internet. Imports from TickTick, CSV files, WeKan and Planka work straight away.
   - q: Does Vikunja have a phone app?
     a: Vikunja's mobile app supports only the very basic features, so most people use the web app in their phone's browser. You can also see your tasks in a calendar or task app that supports CalDAV.
   - q: Does Vikunja send email reminders?
-    a: Yes, once you connect an email account for it to send from. Cloudgate does not set this up for you, and until you do, reminders and password resets are not emailed.
+    a: Yes, Vikunja emails reminders once you connect an email account for it to send from. Cloudgate does not set this up for you, and until you do, reminders and password resets are not emailed.
 screenshots:
   - src: screenshots/kanban.webp
     alt: "The Vikunja Kanban board for a bakery's \"Bakery website relaunch\" project, with To-Do, Doing and Done columns of task cards such as \"Test checkout on phones\" and \"Add allergen info to every product\", each with a due date, coloured labels, a priority tag and a progress bar"

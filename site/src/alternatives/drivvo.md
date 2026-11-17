@@ -10,6 +10,8 @@ faq:
     a: "Not directly. LubeLogger has no Drivvo importer; it imports CSV files in its own format, so you can rearrange a Drivvo export to match or type in the records that matter."
   - q: "Can several people log the same car in LubeLogger?"
     a: "Yes. LubeLogger has user accounts by invitation, and you choose who can work on each vehicle."
+  - q: "Does LubeLogger have a phone app like Drivvo?"
+    a: "No. LubeLogger has no iPhone or Android app; it is a web app you use in your phone's browser, while Drivvo has phone apps for logging at the pump."
 ---
 
 Drivvo is a car expense app for Android, iPhone and the web: you log fuel, services and other costs, and it charts what each vehicle costs. It is free for personal use, with a paid fleet plan for five or more vehicles.

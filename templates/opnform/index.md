@@ -36,7 +36,7 @@ faq:
   - q: Is OpnForm free?
     a: Yes, the self-hosted OpnForm is free and open source under the AGPL-3.0 licence, with unlimited forms and answers. The free edition is limited to 2 users and one workspace and shows a "Made with OpnForm" badge; more users, removing the badge, custom code and SAML or LDAP sign-in need a paid Enterprise licence.
   - q: Is OpnForm a good alternative to Typeform or Tally?
-    a: Yes, for one or two people who build the forms. It offers Typeform's one-question-at-a-time style and Tally-style classic forms, with logic, file uploads and integrations, and no answer limit. Typeform has more polish, templates and integrations, and Tally allows more teammates on its free plan.
+    a: Yes. OpnForm is a good alternative to Typeform or Tally for one or two people who build the forms. OpnForm offers Typeform's one-question-at-a-time style and Tally-style classic forms, with logic, file uploads and integrations, and no answer limit. Typeform has more polish, templates and integrations, and Tally allows more teammates on its free plan.
   - q: Can I import my Typeform, Tally or Google Forms forms into OpnForm?
     a: Yes, OpnForm can import the questions of a form from Typeform, Tally, Fillout or Google Forms. It does not bring past answers across, and logic mostly has to be set up again. Importing from Google Forms needs your own Google sign-in app connected first.
   - q: How do I sign in to OpnForm the first time?

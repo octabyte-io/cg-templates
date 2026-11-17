@@ -1,6 +1,6 @@
 ---
 tagline: Self-hosted digital signage with free players for every screen.
-category: media
+category: operations
 alternativeTo: [yodeck, screencloud, optisigns]
 ease: some-setup
 easeNote: Open your web address right after setup to create the admin account, then point each screen's player at that address followed by /smil-index.

@@ -19,7 +19,7 @@ features:
   - title: Block and moderate
     text: Block people or whole servers, subscribe to shared blocklists, handle reports and turn on two-step sign-in.
   - title: Move from Mastodon
-    text: Bring your followers over with an account move, and import your follows, lists, blocks and mutes from a Mastodon export.
+    text: Bring your followers over with an account move, and import your follows, blocks and mutes from a Mastodon export.
   - title: Runs on a small server
     text: A server for a handful of people uses about 250 to 350 MB of memory.
 faq:
@@ -30,9 +30,9 @@ faq:
   - q: How do I sign in to GoToSocial the first time?
     a: Cloudgate creates your admin account during setup. Open your GoToSocial web address, go to the settings page and sign in with the admin email you entered at setup and the password shown on the app's variables page in Cloudgate.
   - q: Does GoToSocial have a web interface?
-    a: Partly. In a browser you see your public profile, your public posts and the settings and admin pages, but there is no timeline page for reading and posting. For that you use a Mastodon-compatible app, such as Tusky on Android, Feditext on iPhone and Mac, or a browser app like Pinafore.
+    a: Partly. In a browser, GoToSocial shows your public profile, your public posts and the settings and admin pages, but there is no timeline page for reading and posting. For that you use a Mastodon-compatible app, such as Tusky on Android, Feditext on iPhone and Mac, or a browser app like Pinafore.
   - q: Can I move my Mastodon account to GoToSocial?
-    a: Yes, mostly. An account move brings your followers across, and you can import your follows, lists, blocks and mutes from Mastodon's export files. Your old posts stay behind unless you copy them with a separate community tool.
+    a: Yes, mostly. Moving your Mastodon account to GoToSocial brings your followers across, and you can import your follows, blocks and mutes from Mastodon's export files. Your old posts stay behind unless you copy them with a separate community tool.
   - q: Can other people sign up on my GoToSocial server?
     a: Not by default. Opening sign-ups needs a change to GoToSocial's settings and an email server for confirmation emails, and the admin then approves each new account.
   - q: What server size do I need for GoToSocial?

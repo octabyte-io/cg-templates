@@ -1,5 +1,5 @@
 name: Seafile
-description: "Self-hosted Seafile syncs and shares your team's files fast, with desktop apps and file history."
+description: "Seafile is a self-hosted alternative to Dropbox and Google Drive that syncs and shares your team's files fast, with desktop apps and file history."
 version: "13.0.29"
 tags: [dropbox alternative, file sync, file sharing, self-hosted cloud storage, google drive alternative, seafile vs nextcloud]
 links:

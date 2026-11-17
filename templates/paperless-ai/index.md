@@ -32,7 +32,7 @@ faq:
   - q: Doesn't Paperless-ngx already have AI features?
     a: Yes, Paperless-ngx 3 has optional AI suggestions and a document chat, off by default. Paperless-AI files every new document automatically without anyone opening it, fills in custom fields, keeps a history with undo, and adds a review screen and a place to test prompts.
   - q: Is Paperless-AI a good alternative to Nanonets or Docparser?
-    a: Partly. It does the "AI reads the document and fills in the details" part for your own Paperless-ngx archive, with no subscription, though a hosted AI provider bills per use. It does not extract tables or line items, export to spreadsheets, or send data to accounting systems like those services do.
+    a: Partly. Paperless-AI does the "AI reads the document and fills in the details" part for your own Paperless-ngx archive, with no subscription, though a hosted AI provider bills per use. It does not extract tables or line items, export to spreadsheets, or send data to accounting systems like those services do.
   - q: How do I sign in to Paperless-AI the first time?
     a: The first visit opens a setup wizard where you create your account, enter your Paperless-ngx address and API token, and choose an AI provider. Until the account exists, anyone who reaches the address can run the wizard, so finish it right after setup. The project recommends a separate Paperless-ngx user for Paperless-AI, allowed to view and change documents, tags, correspondents, document types and custom fields.
   - q: What server size does Paperless-AI need?

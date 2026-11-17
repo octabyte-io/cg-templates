@@ -39,8 +39,8 @@ faq:
     a: Yes, DailyTxT is free and open source under the MIT licence. There is no paid edition and no limit on entries or users; you pay only for your server.
   - q: Is DailyTxT a good alternative to Day One?
     a: Yes, if you want a private daily diary with photos that you keep on your own server. DailyTxT has no phone or desktop apps and no import from Day One, but it covers daily entries, photos, tags, search, places on a map and looking back on past years.
-  - q: Can anyone else read my diary, even the admin?
-    a: No, not through the app. Each person's entries and files are stored encrypted with a key unlocked by their own password, and the admin panel can manage accounts but cannot open anyone's entries.
+  - q: Can anyone else read my DailyTxT diary, even the admin?
+    a: No, not through DailyTxT. Each person's entries and files are stored encrypted with a key unlocked by their own password, and the admin panel can manage accounts but cannot open anyone's entries.
   - q: What happens if I forget my DailyTxT password?
     a: Your entries stay locked unless you created backup keys first. DailyTxT shows these keys only once when you create them, and any of them works in place of your password, so save them somewhere safe on the first day.
   - q: How do I sign in to DailyTxT the first time?

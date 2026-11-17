@@ -1,6 +1,6 @@
 ---
 tagline: Digital signage for the TV screens in your business.
-category: media
+category: operations
 alternativeTo: [yodeck, screencloud, optisigns]
 ease: some-setup
 easeNote: Sign in as xibo_admin with the password Cloudgate shows, then install the Xibo player on each screen and connect it to your web address.

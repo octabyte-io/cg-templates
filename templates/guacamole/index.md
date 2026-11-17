@@ -36,16 +36,16 @@ faq:
     a: Apache Guacamole is a free, open-source remote desktop gateway that lets you use your computers and servers from a web browser. It connects over RDP, VNC and SSH, so nothing needs to be installed on the device you connect from.
   - q: Is Apache Guacamole free?
     a: Yes, Apache Guacamole is free and open source under the Apache 2.0 licence, from the Apache Software Foundation, with no paid edition and no fee per user or computer. You pay only for the server.
-  - q: Is Guacamole a good alternative to Citrix?
-    a: Yes, for giving people browser access to existing desktops and servers through one web address. It does not publish single apps or manage pools of virtual desktops the way Citrix does, so it suits small teams better than large virtual desktop setups.
-  - q: Can Guacamole reach any computer?
-    a: No, only computers that already accept RDP, VNC or SSH and that your Guacamole server can reach, such as servers with a public address or office PCs on a VPN or the same network. Windows needs a Pro or Server edition to accept Remote Desktop connections.
-  - q: How do I sign in to Guacamole the first time?
-    a: Sign in with the admin username you chose during setup, guacadmin unless you changed it, and the password Cloudgate created, which is shown on the app's variables page. Change it under Settings, then add your connections.
-  - q: Does Guacamole work on a phone or tablet?
-    a: Yes, it runs in the phone or tablet's web browser, with an on-screen keyboard, a touchpad mode and pinch-to-zoom for remote desktops. There is no app to install.
-  - q: Is it safe to put Guacamole on the internet?
-    a: It can be, with care, because it is a door to your machines. Use a strong admin password, give each person only the connections they need, and consider turning on Guacamole's two-step sign-in, which is available as an extension.
+  - q: Is Apache Guacamole a good alternative to Citrix?
+    a: Yes, Apache Guacamole suits giving people browser access to existing desktops and servers through one web address. Guacamole does not publish single apps or manage pools of virtual desktops the way Citrix does, so it suits small teams better than large virtual desktop setups.
+  - q: Can Apache Guacamole reach any computer?
+    a: No, Apache Guacamole reaches only computers that already accept RDP, VNC or SSH and that your Guacamole server can reach, such as servers with a public address or office PCs on a VPN or the same network. Windows needs a Pro or Server edition to accept Remote Desktop connections.
+  - q: How do I sign in to Apache Guacamole the first time?
+    a: Sign in to Apache Guacamole with the admin username you chose during setup, guacadmin unless you changed it, and the password Cloudgate created, which is shown on the app's variables page. Change it under Settings, then add your connections.
+  - q: Does Apache Guacamole work on a phone or tablet?
+    a: Yes, Apache Guacamole runs in the phone or tablet's web browser, with an on-screen keyboard, a touchpad mode and pinch-to-zoom for remote desktops. There is no app to install.
+  - q: Is it safe to put Apache Guacamole on the internet?
+    a: Yes, with care, because Apache Guacamole is a door to your machines. Use a strong admin password, give each person only the connections they need, and consider turning on Guacamole's two-step sign-in, which is available as an extension.
 screenshots:
   - src: screenshots/home.webp
     alt: "The Apache Guacamole home screen, with thumbnails of recently used connections to a desktop and a terminal, a list of all connections with one marked as in use by one user, a filter box and the user menu with Home, Settings and Logout"

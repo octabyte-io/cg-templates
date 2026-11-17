@@ -42,7 +42,7 @@ faq:
   - q: Which social networks does TryPost post to?
     a: TryPost posts to Instagram, Facebook, LinkedIn, X, TikTok, YouTube, Threads, Pinterest, Bluesky, Mastodon, Google Business Profile, Telegram and Discord, through each network's official connection. On your own server, Bluesky and Mastodon need no setup; the others need a developer app or bot that you create once.
   - q: Can an AI assistant schedule my posts in TryPost?
-    a: Yes, you can connect Claude, ChatGPT, Cursor or another assistant that supports MCP and ask it in plain words to write, queue and schedule posts or read your statistics. It follows the same rules as people, including approvals.
+    a: Yes, TryPost lets you connect Claude, ChatGPT, Cursor or another assistant that supports MCP and ask it in plain words to write, queue and schedule posts or read your statistics. It follows the same rules as people, including approvals.
   - q: How do I sign in to TryPost the first time?
     a: Sign in with the admin email you entered when you installed TryPost and the password Cloudgate created for it, shown on the app's variables page in Cloudgate. Public sign-up is closed, so nobody else can create an account; you add teammates with an email invite from the Members settings, which needs email sending set up first.
   - q: What server size do I need for TryPost?

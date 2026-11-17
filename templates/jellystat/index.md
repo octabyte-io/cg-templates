@@ -32,7 +32,7 @@ faq:
   - q: Can Jellystat show plays from before I installed it?
     a: Yes, if Jellyfin's Playback Reporting plugin has been recording them. Jellystat can import that older history; otherwise it starts counting from the first sync.
   - q: Does Jellystat work on a phone?
-    a: Partly. It opens in a phone's browser, but the pages are laid out for a computer screen, and making them fit phones is still on the project's to-do list.
+    a: Partly. Jellystat opens in a phone's browser, but the pages are laid out for a computer screen, and making them fit phones is still on the project's to-do list.
   - q: What server size do I need for Jellystat?
     a: A small server is enough, because Jellystat is one light app plus a PostgreSQL database and never handles the video itself. Cloudgate sets up both.
 screenshots:

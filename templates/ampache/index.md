@@ -38,16 +38,16 @@ faq:
   - q: Is Ampache free?
     a: Yes. Ampache is free, open-source software under the AGPL-3.0 licence, with no paid edition and no paid features. You pay only for your server and its storage.
   - q: Is Ampache a good alternative to Spotify?
-    a: Yes, if you already own your music as files. Ampache streams your own songs to any browser or music app with no subscription or ads, but it has no music catalogue or recommendations, so it plays only what you upload.
+    a: Yes, Ampache is a good Spotify alternative if you already own your music as files. Ampache streams your own songs to any browser or music app with no subscription or ads, but it has no music catalogue or recommendations, so it plays only what you upload.
   - q: How do I sign in to Ampache the first time?
-    a: Sign in with the username admin and the password Cloudgate generated, which you find on the app's variables page. The admin account is created during setup, so there is no setup wizard to finish. You can then add accounts for everyone else.
+    a: Sign in to Ampache with the username admin and the password Cloudgate generated, which you find on the app's variables page. The admin account is created during setup, so there is no setup wizard to finish. You can then add accounts for everyone else.
   - q: How do I add my music to Ampache?
-    a: Upload it in the web app. Open Upload in Ampache's menu and add your music files; Ampache adds them to your library straight away, sorted by the tags inside the files.
+    a: Upload your music in the Ampache web app. Open Upload in Ampache's menu and add your music files; Ampache adds them to your library straight away, sorted by the tags inside the files.
   - q: Is there an Ampache app for iPhone or Android?
     a: Yes, several, made by other developers. Ampache works with Subsonic-compatible apps such as Symfonium and DSub, and with apps built for Ampache such as Amperfy on iPhone and Power Ampache on Android. Some are free and some are paid, and the web player also works in a phone's browser.
   - q: Should I choose Ampache or Navidrome?
     a: Choose Navidrome for a simple, light music server, and Ampache if you want more built in. Ampache adds uploads in the web app, podcasts, video, smart playlists you build in the browser and voting on what plays next, but it is heavier and its interface looks older.
-  - q: Can I import my playlists from Spotify?
+  - q: Can I import my playlists from Spotify into Ampache?
     a: No, not directly. Ampache imports playlist files such as .m3u, .pls and .xspf, for songs that are already in your library, so you can bring playlists from other music players, or rebuild Spotify ones in Ampache.
 screenshots:
   - src: screenshots/dashboard.webp

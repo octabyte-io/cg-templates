@@ -35,14 +35,14 @@ faq:
     a: Yes. SFTPGo is open-source software under the AGPL-3.0 licence, and you pay only for your server. Its makers also sell a paid Enterprise edition with extra features and support; this template installs the free open-source edition.
   - q: Is SFTPGo a good alternative to ShareFile?
     a: Yes, for exchanging files with clients. Each client gets their own sign-in and folder, and you can send download links with a password and expiry date or upload-only links. ShareFile adds e-signatures, Office editing, an Outlook plug-in and phone apps, which SFTPGo does not have.
-  - q: Can my partners connect with SFTP or FTP?
+  - q: Can my partners connect to SFTPGo with SFTP or FTP?
     a: No, not on Cloudgate. SFTP and FTP need a direct network connection that a web address can't carry, so this template turns them off. Partners use SFTPGo in their web browser over a secure HTTPS address instead.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to SFTPGo the first time?
     a: You sign in as admin with the password Cloudgate created, which is shown in Cloudgate, on the admin pages at your SFTPGo web address followed by /web/admin. Then create an account for each person; they sign in at the plain web address.
-  - q: Do the people I share files with need an account?
-    a: No. Anyone with a share link can download the files, or upload to an upload-only link, without signing in. You can protect the link with a password and an expiry date.
+  - q: Do the people I share files with need an SFTPGo account?
+    a: No. Anyone with an SFTPGo share link can download the files, or upload to an upload-only link, without signing in. You can protect the link with a password and an expiry date.
   - q: Can SFTPGo store files in Amazon S3 or Azure?
-    a: Yes. Each account's files can live on the server's disk, encrypted on disk, or in Amazon S3-compatible storage, Google Cloud Storage, Azure Blob Storage or another SFTP server.
+    a: Yes. Each SFTPGo account's files can live on the server's disk, encrypted on disk, or in Amazon S3-compatible storage, Google Cloud Storage, Azure Blob Storage or another SFTP server.
   - q: What server size do I need for SFTPGo?
     a: A small one. SFTPGo is a single program with a built-in database, so Cloudgate uses its smallest server size; plan the disk for the files you will store there, or keep them in cloud storage.
 screenshots:

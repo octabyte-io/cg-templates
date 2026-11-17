@@ -36,17 +36,17 @@ faq:
   - q: Is Kill Bill free?
     a: Yes, Kill Bill is free and open source under the Apache-2.0 licence, with no fee per invoice or share of revenue. Its makers sell a paid enterprise edition, Aviate, which adds usage-event metering, a prepaid-credit wallet, coupons, quotes and premium support.
   - q: Is Kill Bill a good alternative to Chargebee or Recurly?
-    a: Yes, if you have a developer and want subscription billing on your own server. Kill Bill covers plans, trials, add-ons, invoices, payments, payment retries and reminders for unpaid accounts, but it has no hosted checkout or customer portal, so your developer builds the sign-up side.
+    a: Yes, Kill Bill can replace Chargebee or Recurly if you have a developer and want subscription billing on your own server. Kill Bill covers plans, trials, add-ons, invoices, payments, payment retries and reminders for unpaid accounts, but it has no hosted checkout or customer portal, so your developer builds the sign-up side.
   - q: How is Kill Bill different from Lago?
     a: Kill Bill is built around subscriptions, while Lago is built around usage. Kill Bill's free edition includes payment reminders, retries and invoice emails, which are paid in Lago; Lago's free edition counts raw usage events, which is paid in Kill Bill.
   - q: Which payment providers does Kill Bill work with?
     a: Kill Bill takes payments through plugins for Stripe, Adyen, Braintree, Qualpay and Hyperswitch, installed from its admin screen. Your payment provider still charges its own card fees.
-  - q: Can I import my customers from Chargebee or Recurly?
+  - q: Can Kill Bill import my customers from Chargebee or Recurly?
     a: No, Kill Bill has no import tool for Chargebee or Recurly. A developer moves your plans, customers and subscriptions across with Kill Bill's API, which can keep each subscription's original start date and next billing date.
   - q: Do I need a developer to use Kill Bill?
     a: Yes. Your team can manage customers, invoices and payments in the Kaui admin screen, but customers are signed up and subscribed from your own website or app through Kill Bill's API, and plans are written as a catalog file. In this setup the API has no web address of its own, so your developer also arranges how your app reaches it.
   - q: How do I sign in to Kill Bill the first time?
-    a: Sign in to Kaui with the username admin and the password Cloudgate generates and shows you. Kaui then asks you to create a tenant, your billing account with its own API key, before you add your plans and customers.
+    a: Sign in to Kaui, the Kill Bill admin screen, with the username admin and the password Cloudgate generates and shows you. Kaui then asks you to create a tenant, your billing account with its own API key, before you add your plans and customers.
 screenshots:
   - src: screenshots/account.webp
     alt: "The Kaui admin screen for a customer named Harbor Lane Bakery, with a sidebar for account, subscriptions, invoices, payments, timeline, tags and audit, account details in US dollars, billing information showing a $0 balance, $0 credit, overdue status Good, billing day 15 and next invoice date 15 December 2026, and buttons to create a charge, add credit and generate an invoice"

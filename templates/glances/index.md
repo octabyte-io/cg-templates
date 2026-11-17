@@ -1,5 +1,6 @@
 ---
 tagline: See how hard your server is working right now, on one live web page.
+title: "Glances: live server monitoring on a web page"
 category: monitoring
 ease: easy
 easeNote: Open the web address, sign in as "glances" with the password Cloudgate generated, and the live dashboard is already there.

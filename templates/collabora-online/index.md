@@ -38,10 +38,10 @@ faq:
   - q: What is the difference between Collabora Online and ONLYOFFICE Docs?
     a: Both are self-hosted editors for Office files that work inside Nextcloud or Seafile. Collabora Online is built on LibreOffice, also opens OpenDocument and Visio files, runs on a medium server and edits in a phone's browser. ONLYOFFICE Docs has a look closer to Microsoft Office and no welcome screen, but needs a larger server and opens files read-only on phones in its free edition.
   - q: How do I connect Collabora Online to Nextcloud or Seafile?
-    a: In Nextcloud, install the Nextcloud Office app, open Administration settings, Nextcloud Office, choose "Use your own server" and paste this app's web address. In Seafile, an admin adds the same address to Seafile's settings file and restarts Seafile. Only the file app address you entered when installing can open documents here.
+    a: To connect Collabora Online to Nextcloud, install the Nextcloud Office app, open Administration settings, Nextcloud Office, choose "Use your own server" and paste this app's web address. In Seafile, an admin adds the same address to Seafile's settings file and restarts Seafile. Only the file app address you entered when installing can open documents here.
   - q: How do I sign in to Collabora Online the first time?
     a: There is no sign-in for editing. Collabora Online has no user accounts of its own; people open documents from your file app with their usual login. An admin console for watching open documents and server use signs in as admin with the password Cloudgate generates.
-  - q: Can I edit documents on my phone?
+  - q: Can I edit documents on my phone with Collabora Online?
     a: Yes, in a phone's browser. Open Nextcloud's web page on the phone and documents open in Collabora Online with the same editing tools as on a computer.
   - q: What server size do I need for Collabora Online?
     a: A medium server with 2 GB of memory. Cloudgate picks that size for you; Collabora Online uses about half a gigabyte while nobody is editing.

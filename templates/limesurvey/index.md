@@ -39,14 +39,14 @@ faq:
     a: The Community Edition is the free version you run on your own server, which is what Cloudgate installs. LimeSurvey Cloud is the makers' paid hosted service, with plans that limit admins, responses and storage.
   - q: Is LimeSurvey a good alternative to SurveyMonkey or Qualtrics?
     a: Yes, especially for research and public-sector surveys. LimeSurvey has skip logic, quotas, randomisation, participant lists, many languages and SPSS and R export at no licence cost. SurveyMonkey is easier to learn, and Qualtrics has far more dashboards and analysis tools.
-  - q: Can I import my surveys from SurveyMonkey or Qualtrics?
+  - q: Can LimeSurvey import my surveys from SurveyMonkey or Qualtrics?
     a: No. SurveyMonkey does not export a survey's structure, and LimeSurvey does not read Qualtrics files, so you rebuild the questions in LimeSurvey. LimeSurvey's own survey files import and export between LimeSurvey sites.
   - q: How do I sign in to LimeSurvey the first time?
-    a: Open your web address followed by /index.php/admin and sign in with the user name admin and the password Cloudgate created, shown on the app's variables page. There is no public sign-up; the admin adds other admin accounts, and people answering surveys need no account.
+    a: Open your LimeSurvey web address followed by /index.php/admin and sign in with the user name admin and the password Cloudgate created, shown on the app's variables page. There is no public sign-up; the admin adds other admin accounts, and people answering surveys need no account.
   - q: Can LimeSurvey send survey invitations by email?
-    a: Yes, once you add your email server's details under Configuration, Global settings, Email settings. Until then, invitations, reminders and password-reset emails are not sent, but public survey links still work.
+    a: Yes, LimeSurvey sends invitations once you add your email server's details under Configuration, Global settings, Email settings. Until then, invitations, reminders and password-reset emails are not sent, but public survey links still work.
   - q: What server size do I need for LimeSurvey?
-    a: A small server is enough for most surveys, so Cloudgate uses a small size. Choose a medium one if you run large surveys with many responses.
+    a: A small server is enough for most LimeSurvey surveys, so Cloudgate uses a small size. Choose a medium one if you run large surveys with many responses.
 screenshots:
   - src: screenshots/survey-editor.webp
     alt: "The LimeSurvey 7 survey editor for a customer feedback survey, with Editor, Share and Results tabs on top, the survey structure on the left, and in the centre the welcome screen with a Start survey button and a first question asking how the customer first heard of the shop, with four answer options"

@@ -39,8 +39,8 @@ faq:
     a: Yes, self-hosted Shoutrrr is free and open source under the Apache 2.0 licence, with every feature included and no fee per seat or channel. You pay for your server, and X charges for using its API if you post to X.
   - q: Is Shoutrrr a good alternative to Buffer?
     a: Yes, for the networks it supports. Shoutrrr has Buffer's weekly posting queue, a calendar, posts tailored per network, statistics and team workspaces, with no fee per channel. It posts to seven networks (X, Bluesky, LinkedIn, Facebook, Instagram, Threads and Discord), so check that yours are on the list.
-  - q: Do I need a developer account on each social network?
-    a: For X, LinkedIn, Facebook, Instagram and Threads, yes. You register your own app with each network and add its keys, and Meta requires App Review and Business Verification before you can post for accounts other than test users. X sells API access by usage, so you buy credits from X. Bluesky and Discord need no developer account.
+  - q: Do I need a developer account on each social network for Shoutrrr?
+    a: For X, LinkedIn, Facebook, Instagram and Threads, yes. For Shoutrrr you register your own app with each network and add its keys, and Meta requires App Review and Business Verification before you can post for accounts other than test users. X sells API access by usage, so you buy credits from X. Bluesky and Discord need no developer account.
   - q: How do I sign in to Shoutrrr the first time?
     a: There is no default login. The first person to open Shoutrrr's web address registers with a name, email and password and becomes the owner. After that, public sign-up is off and new people join by invitation.
   - q: How is Shoutrrr different from Postiz?

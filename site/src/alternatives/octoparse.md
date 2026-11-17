@@ -9,7 +9,9 @@ faq:
   - q: "Does Maxun need a desktop app like Octoparse?"
     a: "No. Maxun runs on your server and you use it in a web browser, so robots keep running on their schedule when your computer is off."
   - q: "Does Maxun have ready-made scraping templates?"
-    a: "No. You build each robot yourself in the recorder, or describe what you want in AI Mode with your own AI key."
+    a: "No. Unlike Octoparse, Maxun has no template gallery: you build each robot yourself in the recorder, or describe what you want in AI Mode with your own AI key."
+  - q: "Can Maxun solve CAPTCHAs and rotate IP addresses like Octoparse?"
+    a: "Not when self-hosted. In Maxun, CAPTCHA bypass and proxy rotation are only in the paid Maxun Cloud. Octoparse, as of November 2026, sells CAPTCHA solving and residential proxies as pay-as-you-go credits on any plan, and includes automatic IP rotation on cloud runs from its Standard plan."
 ---
 
 Octoparse is a no-code web scraping tool with a desktop app for Windows and Mac. You click the data you want on a page to build a task, use ready-made templates for popular websites, and run tasks on your computer or in Octoparse's cloud on paid plans.

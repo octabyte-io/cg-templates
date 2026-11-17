@@ -9,7 +9,9 @@ faq:
   - q: "Does rotki have a phone app like CoinTracker?"
     a: "No. rotki runs in your browser, on a computer or a phone, and as a desktop app for Windows, macOS and Linux, but it has no iPhone or Android app."
   - q: "Which cost basis methods does rotki support?"
-    a: "FIFO, which is the default, LIFO, HIFO and average cost basis (ACB). You also set a tax-free holding period, whether crypto-to-crypto trades are taxable and whether fees and gas count, then run the report for any date range."
+    a: "rotki supports FIFO, which is the default, LIFO, HIFO and average cost basis (ACB). You also set a tax-free holding period, whether crypto-to-crypto trades are taxable and whether fees and gas count, then run the report for any date range."
+  - q: "Can I import my CoinTracker history into rotki?"
+    a: "Not from CoinTracker itself. rotki has no CoinTracker importer, so you connect exchanges with read-only API keys and add your wallet addresses, and rotki pulls the history. For closed exchange accounts, use rotki's CSV import of their trade files, then compare a past year's report with CoinTracker's."
 ---
 
 CoinTracker is a hosted crypto portfolio tracker and tax tool: it connects to your exchanges and wallets, keeps your balances in sync, and produces tax reports, on the web and in phone apps.

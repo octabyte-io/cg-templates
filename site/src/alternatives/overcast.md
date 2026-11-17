@@ -7,9 +7,11 @@ moving: |
   Export your podcasts as an OPML file from your account on the Overcast website and import it into PinePods, choosing which shows to keep. Only the list of shows moves, not your listening history. Then install the PinePods app on your phone, iPhone or Android, and sign in with your server's address, user name and password.
 faq:
   - q: "Does PinePods work on Android?"
-    a: "Yes. PinePods has a free Android app with Android Auto, as well as an iPhone app with CarPlay, a web app and desktop apps."
+    a: "Yes. Overcast is only for iPhone, iPad and Apple Watch, but PinePods has a free Android app with Android Auto, as well as an iPhone app with CarPlay, a web app and desktop apps."
   - q: "Can I bring my Overcast subscriptions to PinePods?"
     a: "Yes. Export them as an OPML file from the Overcast website and import it into PinePods; your listening history stays behind."
+  - q: "Does PinePods have Smart Speed and Voice Boost like Overcast?"
+    a: "No. PinePods has variable playback speed, chapters and transcripts, but not Overcast's Smart Speed, which shortens silences in talk shows, or Voice Boost, which evens out the volume between shows."
 ---
 
 Overcast is a podcast app for iPhone, known for audio features such as Smart Speed and Voice Boost, with a paid tier that removes adverts.

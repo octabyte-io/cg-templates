@@ -40,7 +40,7 @@ faq:
   - q: Why does OpenSEO need DataForSEO?
     a: OpenSEO has no search data of its own; keyword, ranking, backlink, local and AI visibility data all come from DataForSEO. Self-hosted, you pay DataForSEO directly with no OpenSEO markup, and the app shows nothing until you add your DataForSEO API key.
   - q: Is OpenSEO a good alternative to Semrush or Ahrefs?
-    a: Yes, for the everyday SEO work of a small business or agency, such as keyword research, rank tracking, competitor research, backlinks and site audits. It has fewer reports than Semrush or Ahrefs, and its backlink data is smaller than Ahrefs' own index, so link-building specialists may want to keep Ahrefs.
+    a: Yes. OpenSEO is a good alternative to Semrush or Ahrefs for the everyday SEO work of a small business or agency, such as keyword research, rank tracking, competitor research, backlinks and site audits. OpenSEO has fewer reports than Semrush or Ahrefs, and its backlink data is smaller than Ahrefs' own index, so link-building specialists may want to keep Ahrefs.
   - q: How do I sign in to OpenSEO the first time?
     a: The first person to open OpenSEO's web address creates the admin account with an email and password, and sign-up closes after that. Teammates join through invitation links you copy from Team settings and send yourself.
   - q: Can I import my keywords from Semrush or Ahrefs?

@@ -42,11 +42,11 @@ faq:
   - q: How do I sign in to SilverBullet the first time?
     a: Open SilverBullet's web address right after setup and a short setup wizard asks you to create the admin account, with a username and password you choose, and then your first notebook. Whoever opens the address first becomes the admin, so do it straight away.
   - q: Can more than one person use SilverBullet?
-    a: Yes. The admin creates an account for each person and gives them read or write access to each notebook, and you can sign in with Google Workspace or another single sign-on service. There is no self-signup and no password reset email; the admin sets a new password.
+    a: Yes. The SilverBullet admin creates an account for each person and gives them read or write access to each notebook, and you can sign in with Google Workspace or another single sign-on service. There is no self-signup and no password reset email; the admin sets a new password.
   - q: Is there a SilverBullet phone app?
     a: No, there is no app in the app stores. You open SilverBullet in your phone's browser and add it to the home screen, where it gets its own icon, works offline and syncs when you are back online.
   - q: Do I need to know how to code to use SilverBullet?
-    a: No. Writing, linking pages, the journal and tasks need no code. Live tables, custom commands and scripts are written in a small scripting language, so those parts suit people who are comfortable with a little code.
+    a: No. In SilverBullet, writing, linking pages, the journal and tasks need no code. Live tables, custom commands and scripts are written in a small scripting language, so those parts suit people who are comfortable with a little code.
   - q: What server size does SilverBullet need?
     a: A small one. The SilverBullet project says a few hundred megabytes of memory is enough, and it needs no separate database because your notes are files in a folder.
 screenshots:

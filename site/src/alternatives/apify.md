@@ -7,9 +7,11 @@ moving: |
   Maxun cannot run Apify Actors, so rebuild each scraper as a Maxun robot, starting with the ones you run most. Register your account at Maxun's web address, choose Create Robot, and pick Extract to click the data you want, Scrape to turn pages into Markdown, or Crawl to cover a whole site. Set a schedule, then point your code at Maxun's API or a webhook instead of Apify's datasets. Keep Apify for any Actor you rely on that has no simple Maxun equivalent.
 faq:
   - q: "Does Maxun have a store of ready-made scrapers like Apify?"
-    a: "No. Maxun has no marketplace; every robot is one you build yourself in the recorder or with AI Mode."
+    a: "No. Unlike Apify's store of ready-made scrapers, Maxun has no marketplace; every robot is one you build yourself in Maxun's recorder or with AI Mode."
   - q: "Can developers use Maxun from code?"
-    a: "Yes. Maxun has a REST API with API keys, a Node SDK, a command-line tool and an MCP server for AI agents."
+    a: "Yes. Code that called Apify can call Maxun instead: Maxun has a REST API with API keys, a Node SDK, a command-line tool and an MCP server for AI agents."
+  - q: "Does Maxun handle anti-bot protection and proxies like Apify?"
+    a: "Not when you host it yourself. Apify runs scrapers on managed infrastructure, while self-hosted Maxun runs them on your server; Maxun's anti-bot protection and proxy rotation are only in its paid Maxun Cloud. Maxun is also early software, at version 0.1.0."
 ---
 
 Apify is a cloud platform for web scraping and automation. Developers write scrapers called Actors or pick ready-made ones from the Apify Store, and run them on Apify's infrastructure, paying for what they use.

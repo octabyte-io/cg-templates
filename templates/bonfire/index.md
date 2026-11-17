@@ -38,7 +38,7 @@ faq:
   - q: Is Bonfire free?
     a: Yes. Bonfire is free, open-source software under the AGPL-3.0 licence, made by a not-for-profit with no ads and no paid edition. You pay only for your server and, if you want one, an email service.
   - q: Is Bonfire a good alternative to X (Twitter)?
-    a: Yes, if you want a short-post social network that you run yourself, with no ads and per-post control over who sees and replies. The audience starts small, and your posts and followers on X do not move across.
+    a: Yes, Bonfire is a good X (Twitter) alternative if you want a short-post social network that you run yourself, with no ads and per-post control over who sees and replies. The audience starts small, and your posts and followers on X do not move across.
   - q: How is Bonfire different from Mastodon?
     a: Bonfire lets you set, post by post, who can see, reply to or quote it, sort people into circles with their own feeds, and build custom feeds. Mastodon is older, has official phone apps and works with many more apps. Both use the fediverse, so their members can follow each other.
   - q: How do I sign in to Bonfire the first time?

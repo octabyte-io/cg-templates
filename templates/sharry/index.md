@@ -39,12 +39,12 @@ faq:
     a: Yes, Sharry is free and open source under the GPL-3.0-or-later licence. There is no paid edition or plan; you pay only for your server and its disk.
   - q: Is Sharry a good alternative to WeTransfer?
     a: Yes, if you want to send files by link and also collect files back. You upload, set an expiry and an optional password, and send the link, much like WeTransfer. Each share holds up to 1.5 GB in this setup, and Sharry sends no e-mails for you.
-  - q: Can people send me files without an account?
-    a: Yes, through an alias page, which works like a Dropbox file request. You create an upload page with a hard-to-guess link, send it to a client, and they drop files onto it without signing up; the files appear in your list of shares.
+  - q: Can people send me files in Sharry without an account?
+    a: Yes, through a Sharry alias page, which works like a Dropbox file request. You create an upload page with a hard-to-guess link, send it to a client, and they drop files onto it without signing up; the files appear in your list of shares.
   - q: How do I sign in to Sharry the first time?
-    a: Sign in with the admin name you chose when installing and the password Cloudgate created, which is on the app's variables page. Nobody else can sign up on their own; you invite colleagues with an invitation key made under Administration.
-  - q: How big can the files be?
-    a: Each share can hold up to 1.5 GB in total in this setup, and a long upload resumes after a dropped connection. For bigger single transfers, split them across several shares.
+    a: Sign in to Sharry with the admin name you chose when installing and the password Cloudgate created, which is on the app's variables page. Nobody else can sign up on their own; you invite colleagues with an invitation key made under Administration.
+  - q: How big can Sharry files be?
+    a: Each Sharry share can hold up to 1.5 GB in total in this setup, and a long upload resumes after a dropped connection. For bigger single transfers, split them across several shares.
   - q: How long do files stay in Sharry?
     a: You choose for each share, up to a year. When the link expires, visitors can no longer open it, and Sharry deletes expired shares on its own a little later.
   - q: What server size do I need for Sharry?

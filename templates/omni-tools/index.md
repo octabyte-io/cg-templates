@@ -40,11 +40,11 @@ faq:
   - q: Are my files uploaded when I use OmniTools?
     a: No, OmniTools processes files in your own web browser, so they stay on your device and never reach the server. The server only hands out the web pages, and the tools contain no analytics or tracking scripts.
   - q: Does OmniTools work offline?
-    a: Not fully. A few tools, such as reading text from images, image compression and some PDF tools, download their engine from public websites the first time you use them, so the browser needs an internet connection. Your files still stay on your device.
+    a: Not fully. A few OmniTools tools, such as reading text from images, image compression and some PDF tools, download their engine from public websites the first time you use them, so the browser needs an internet connection. Your files still stay on your device.
   - q: Do I need an account to use OmniTools?
     a: No, OmniTools has no accounts, no sign-in and no admin. Anyone who has the web address can use the tools, which is useful for sharing with a team, but it means you should share the address only with people who should use it.
   - q: What server size do I need for OmniTools?
-    a: The smallest server is enough, because the server only serves the web pages. The work happens in each visitor's browser, so large video or PDF jobs depend on the speed and memory of the computer or phone being used.
+    a: The smallest server is enough for OmniTools, because the server only serves the web pages. The work happens in each visitor's browser, so large video or PDF jobs depend on the speed and memory of the computer or phone being used.
 screenshots:
   - src: screenshots/home.webp
     alt: "The OmniTools home page with the heading Get Things Done Quickly with OmniTools, a Search all tools box, shortcut buttons such as Prettify JSON, Compress PNG, Split PDF and Trim video, and cards for Image Tools, Pdf Tools, Text Tools and Video Tools, each with See all and Try buttons"

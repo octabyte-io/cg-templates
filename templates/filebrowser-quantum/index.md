@@ -36,15 +36,15 @@ faq:
   - q: Is FileBrowser Quantum free?
     a: Yes, FileBrowser Quantum is free and open source under the Apache 2.0 licence, with no paid edition. You pay only for the server and its disk.
   - q: Is FileBrowser Quantum a good alternative to Google Drive or Dropbox?
-    a: It is a good alternative if you mainly need to reach and share files from a browser. It has share links with expiry and passwords, previews and fast search, but no sync app and no real-time document editing; for those, a fuller suite such as Nextcloud fits better.
+    a: Yes, FileBrowser Quantum is a good alternative if you mainly need to reach and share files from a browser. It has share links with expiry and passwords, previews and fast search, but no sync app and no real-time document editing; for those, a fuller suite such as Nextcloud fits better.
   - q: Can I use FileBrowser Quantum instead of WeTransfer?
-    a: Yes, for sending and collecting files. A share link can expire after a set time, need a password or stop after a number of downloads, and an upload-only link lets people send you files, with no size limit beyond your server's disk.
+    a: Yes, FileBrowser Quantum works for sending and collecting files. A share link can expire after a set time, need a password or stop after a number of downloads, and an upload-only link lets people send you files, with no size limit beyond your server's disk.
   - q: How do I sign in to FileBrowser Quantum the first time?
-    a: Sign in with the username admin and the password Cloudgate created, which is shown on the app's variables page. FileBrowser sets that password again each time it restarts, so to change it, change the variable in Cloudgate rather than in the app.
+    a: Sign in to FileBrowser Quantum with the username admin and the password Cloudgate created, which is shown on the app's variables page. FileBrowser sets that password again each time it restarts, so to change it, change the variable in Cloudgate rather than in the app.
   - q: Is there a FileBrowser Quantum phone app?
-    a: No, there is no phone app, but the web page works in a phone's browser, so you can open, upload and share files from your phone.
-  - q: Can I move from the original FileBrowser?
-    a: Yes, the project publishes a guide for moving from the original FileBrowser to Quantum. Check each user's folders and permissions afterwards, because Quantum handles access differently.
+    a: No, FileBrowser Quantum has no phone app, but the web page works in a phone's browser, so you can open, upload and share files from your phone.
+  - q: Can I move from the original FileBrowser to FileBrowser Quantum?
+    a: Yes, the FileBrowser Quantum project publishes a guide for moving from the original FileBrowser. Check each user's folders and permissions afterwards, because Quantum handles access differently.
 screenshots:
   - src: screenshots/files.webp
     alt: "The FileBrowser Quantum file list in dark mode for a bakery's shared files, with folders for invoices, menus, shop photos, the staff rota and suppliers, a few files below them, a search bar at the top and a sidebar showing the signed-in admin and the storage used"

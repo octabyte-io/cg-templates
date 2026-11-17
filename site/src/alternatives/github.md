@@ -7,9 +7,11 @@ moving: |
   Use Gitea's built-in migration with a GitHub access token. It copies each repository's code and history, and can also bring its issues, pull requests, labels, milestones, releases and wiki. Then update each developer's remote address. Existing GitHub Actions workflows usually run in Gitea Actions with few changes, once you connect a runner.
 faq:
   - q: "Do GitHub Actions workflows work in Gitea?"
-    a: "Mostly. Gitea Actions uses the same workflow format and many of the same actions; it needs a runner, a machine that does the builds, connected to it."
+    a: "Mostly. Gitea Actions uses the same workflow format as GitHub Actions and many of the same actions; it needs a runner, a machine that does the builds, connected to it."
   - q: "Can we keep using GitHub for open-source projects?"
     a: "Yes. Many teams keep public projects on GitHub for its community and host private code on Gitea; Gitea can also mirror repositories."
+  - q: "Does GitHub have a self-hosted edition?"
+    a: "Yes. GitHub Enterprise Server is GitHub's self-hosted version, a virtual appliance you run on your own hardware or cloud and upgrade and back up yourself. Gitea is a free, lighter option that runs well on a small server."
 ---
 
 GitHub, owned by Microsoft, is the largest home for code: Git repositories, pull requests, issues, Actions for builds, packages and a huge open-source community.

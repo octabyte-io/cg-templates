@@ -8,8 +8,10 @@ moving: |
 faq:
   - q: "Can Mini QR track scans like QR TIGER?"
     a: "No. Mini QR has no scan statistics, dynamic codes or landing pages. It makes static codes, which work without any service in between."
-  - q: "Can I make many QR codes at once?"
+  - q: "Can I make many QR codes at once with Mini QR?"
     a: "Yes. Upload a CSV file with one link or text per row, and Mini QR downloads a styled code for each row, including the frame text if you use one."
+  - q: "Do Mini QR codes need a subscription to keep working?"
+    a: "No. Mini QR makes static codes that hold your link or text directly, with no service in between, so they work without any account or plan. QR TIGER's dynamic codes, whose destination you can change after printing, run through QR TIGER's own service."
 ---
 
 QR TIGER is a hosted QR code generator that focuses on dynamic codes: codes whose destination you can change after printing, with scan tracking and hosted landing pages such as digital business cards. Its paid plans are built around those dynamic codes.

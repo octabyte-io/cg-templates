@@ -30,7 +30,7 @@ faq:
   - q: Does Tube Archivist work with Jellyfin or Plex?
     a: Yes. The project has an official Jellyfin plugin and an official Plex plugin that add your archived videos and their details to those libraries. Tube Archivist also has its own player in the browser.
   - q: How do I sign in to Tube Archivist the first time?
-    a: Sign in with the admin username you chose during setup and the password Cloudgate created, which is shown on the app's variables page. There is no sign-up page; the admin adds other accounts.
+    a: Sign in to Tube Archivist with the admin username you chose during setup and the password Cloudgate created, which is shown on the app's variables page. There is no sign-up page; the admin adds other accounts.
   - q: What server size does Tube Archivist need?
     a: Tube Archivist's makers suggest about 2 GB of memory for a small setup and about 4 GB for a larger one, so Cloudgate asks for a 4 GB server. Plan the disk for every video you want to keep, and leave room to spare.
   - q: Can YouTube stop Tube Archivist from downloading?

@@ -40,7 +40,7 @@ faq:
   - q: Can I move my wiki from Fandom to MediaWiki?
     a: Yes, mostly. Fandom wikis run on MediaWiki, and a Fandom admin can download an XML dump of the wiki's pages from its Special:Statistics page and import it into your MediaWiki. The dump holds pages and their history but not images or user accounts, and some Fandom-only templates may need fixing.
   - q: How do I sign in to MediaWiki the first time?
-    a: Open your wiki's address, choose Log in, and sign in with the username Admin and the password Cloudgate generated, shown on the app's variables page in Cloudgate. The wiki name you entered at setup appears at the top of every page.
+    a: Open your MediaWiki address, choose Log in, and sign in with the username Admin and the password Cloudgate generated, shown on the app's variables page in Cloudgate. The wiki name you entered at setup appears at the top of every page.
   - q: Can I control who edits my MediaWiki?
     a: Yes, but not from a settings page. A new MediaWiki lets anyone create an account and edit; to make it read-only for visitors or private, the wiki's settings file is changed. MediaWiki is not designed to hide only some pages from some members.
   - q: Is MediaWiki a good alternative to Confluence?

@@ -38,13 +38,13 @@ faq:
   - q: Is BTCPay Server free?
     a: Yes, BTCPay Server is free and open source under the MIT licence, with no processing fee and no subscription. You pay only for your server and the normal Bitcoin network fee on each payment.
   - q: Is BTCPay Server a good alternative to BitPay?
-    a: Yes, if you want Bitcoin paid straight into your own wallet with no processing fee and no identity checks. Unlike BitPay, it does not convert payments into dollars or euros for you, and you run and secure the server yourself.
+    a: Yes, BTCPay Server is a good BitPay alternative if you want Bitcoin paid straight into your own wallet with no processing fee and no identity checks. Unlike BitPay, BTCPay Server does not convert payments into dollars or euros for you, and you run and secure the server yourself.
   - q: Can BTCPay Server take card payments?
     a: No, BTCPay Server takes Bitcoin only, not cards, bank transfers or Apple Pay. Keep your card processor for card payments and offer BTCPay Server as an extra way to pay.
   - q: How long does BTCPay Server take to set up?
-    a: The first sync of the Bitcoin network takes one to five days, depending on the server and its connection. BTCPay's docs ask for at least 2 GB of memory and 80 GB of disk, even with the space-saving setting this template uses.
+    a: BTCPay Server's first sync of the Bitcoin network takes one to five days, depending on the server and its connection. BTCPay's docs ask for at least 2 GB of memory and 80 GB of disk, even with the space-saving setting this template uses.
   - q: How do I sign in to BTCPay Server the first time?
-    a: The first person to register an account becomes the admin, and there is no default password. Register straight after setup, even while the sync is running, so no one else can claim the admin account.
+    a: The first person to register a BTCPay Server account becomes the admin, and there is no default password. Register straight after setup, even while the sync is running, so no one else can claim the admin account.
   - q: Can I use BTCPay Server with my online shop?
     a: Yes, BTCPay Server has plugins for WooCommerce, Shopify, Magento, PrestaShop, OpenCart, Wix, Odoo and other shop systems. Customers choose Bitcoin at checkout and pay a BTCPay invoice.
   - q: Who holds the money with BTCPay Server?

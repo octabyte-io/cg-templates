@@ -36,17 +36,17 @@ faq:
   - q: Is LetterFeed free?
     a: Yes, LetterFeed is free and open source under the MIT licence, with no paid edition. You pay only for your server.
   - q: What do I need before installing LetterFeed?
-    a: You need an email mailbox with IMAP access over SSL on port 993, and its server name, username and password. Your newsletters must already arrive in that mailbox, so subscribe to them with its address first.
+    a: LetterFeed needs an email mailbox with IMAP access over SSL on port 993, and its server name, username and password. Your newsletters must already arrive in that mailbox, so subscribe to them with its address first.
   - q: Does LetterFeed work with Gmail?
     a: Yes, LetterFeed works with Gmail and other mailboxes that offer IMAP, such as Fastmail. Gmail and similar providers need an app password instead of your normal password.
   - q: How is LetterFeed different from Kill the Newsletter?
     a: LetterFeed reads the mailbox you already have, while Kill the Newsletter gives you a new email address for each feed. With LetterFeed you keep subscribing with your own address and choose which senders become feeds.
   - q: Which feed readers work with LetterFeed?
-    a: Any feed reader that reads standard RSS or Atom feeds works, such as FreshRSS, Miniflux, Feedly or NetNewsWire. You copy each newsletter's feed link into your reader like any other feed.
+    a: Any feed reader that reads standard RSS or Atom feeds works with LetterFeed, such as FreshRSS, Miniflux, Feedly or NetNewsWire. You copy each newsletter's feed link into your reader like any other feed.
   - q: How do I sign in to LetterFeed the first time?
     a: Sign in with the username admin and the password Cloudgate generated, which it shows on the app's variables page. Your mailbox details are already filled in from the install and shown locked in LetterFeed's settings.
-  - q: Are my newsletter feeds private?
-    a: No, the feed links are open so feed readers can fetch them, and anyone who has a link can read that feed. The page where you manage newsletters and settings needs a sign-in.
+  - q: Are my LetterFeed newsletter feeds private?
+    a: No, LetterFeed's feed links are open so feed readers can fetch them, and anyone who has a link can read that feed. The page where you manage newsletters and settings needs a sign-in.
 screenshots:
   - src: screenshots/newsletters.webp
     alt: "The LetterFeed main page, titled Newsletters as RSS feeds, with Add Newsletter, Process Now and Settings buttons, and three newsletter cards that each show how many entries it has, its sender email addresses and its RSS feed link"

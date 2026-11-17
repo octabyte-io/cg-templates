@@ -8,9 +8,11 @@ moving: |
 cost: "Presenton is free and open source under the Apache-2.0 licence. It brings no AI of its own, so the AI provider you connect bills you for the text and images it generates, unless you run a local model. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 faq:
   - q: "Does Presenton have smart slides like Beautiful.ai?"
-    a: "No. Presenton builds slides from the template you pick, and you then move and resize elements yourself in its editor or ask its AI assistant to change a slide."
+    a: "No. Beautiful.ai's smart slides rearrange themselves as you add content, but Presenton builds slides from the template you pick, and you then move and resize elements yourself in its editor or ask its AI assistant to change a slide."
   - q: "Does Presenton have single sign-on?"
-    a: "Not in the free edition. Each person signs in with a local account that the admin adds; single sign-on, user provisioning and audit logs are in Presenton's paid Enterprise edition."
+    a: "Not in the free edition of Presenton. Each person signs in with a local account that the admin adds; single sign-on, user provisioning and audit logs are in Presenton's paid Enterprise edition."
+  - q: "Can Presenton export to PowerPoint like Beautiful.ai?"
+    a: "Yes. Presenton exports decks as editable PowerPoint or PDF files, and it can turn your own branded PowerPoint into a template, so new decks follow your brand as they did in Beautiful.ai."
 ---
 
 Beautiful.ai is a hosted presentation app built around smart slides, layouts that arrange themselves as you add content, with AI to draft decks, team themes and brand controls, and export to PowerPoint.

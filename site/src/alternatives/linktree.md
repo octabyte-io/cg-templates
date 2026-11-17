@@ -9,7 +9,9 @@ faq:
   - q: "Can I use my own domain with LinkStack?"
     a: "Yes. LinkStack runs at your own web address, and you can make your page its home page so visitors see it straight away."
   - q: "Does LinkStack show how many people click my links?"
-    a: "Yes, it counts clicks on each link and shows totals on your dashboard. It has no deeper analytics such as traffic sources."
+    a: "Yes, LinkStack counts clicks on each link and shows totals on your dashboard. It has no deeper analytics such as traffic sources."
+  - q: "Can I import my Linktree links into LinkStack?"
+    a: "No. LinkStack has no Linktree importer, so you add each link again as a ready-made button or a custom link. Then replace the Linktree link in your social profiles with your LinkStack address."
 ---
 
 Linktree is a link-in-bio service: one page with buttons to everything you share, for the single link that Instagram, TikTok and other profiles allow.

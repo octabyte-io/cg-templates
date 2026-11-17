@@ -42,11 +42,11 @@ faq:
   - q: Does Fleetbase have a driver app?
     a: Yes, the Navigator app for iPhone and Android, but you have to build it yourself with your server's address. We could not confirm a ready-made app in the app stores that connects to a self-hosted Fleetbase.
   - q: How do I sign in to Fleetbase the first time?
-    a: Open the console address and fill in the "Create your account" form with your name, email, phone, organisation name and a password. That creates the first admin account and your organisation; there is no default login.
+    a: Open the Fleetbase console address and fill in the "Create your account" form with your name, email, phone, organisation name and a password. That creates the first admin account and your organisation; there is no default login.
   - q: Does Fleetbase send my data anywhere?
     a: Only for routing and maps. The setup form ticks "Use Fleetbase hosted routing" by default, which registers your install with Fleetbase Cloud and sends route coordinates to Fleetbase's servers; you can untick it. Without it, routes come from the public OSRM server (router.project-osrm.org), which also receives the coordinates, until you set a routing service you run in Fleet-Ops' routing settings. Your orders, drivers and customers stay on your server.
   - q: Can I import my orders from Onfleet or Tookan?
-    a: Partly. The Fleet-Ops orders table has an Import button for spreadsheets, so you can load an export of your orders, but there is no dedicated Onfleet or Tookan importer.
+    a: Partly. The Fleetbase Fleet-Ops orders table has an Import button for spreadsheets, so you can load an export of your orders, but there is no dedicated Onfleet or Tookan importer.
   - q: What server size do I need for Fleetbase?
     a: Fleetbase needs at least 4 GB of memory and 2 CPU cores, so Cloudgate sets it up on a large server. Fleetbase recommends 8 to 16 GB for busier fleets.
 screenshots:

@@ -82,6 +82,8 @@ const indexRules = z.strictObject({
   easeNote: z.string().optional(),
   license: plain('the app’s license, as an SPDX id where one exists'),
   goodFor: z.string().optional(),
+  /** The page title, only when the generated one would repeat another app's search (two CMSs both "Sitecore alternative"). */
+  title: plain('the page title').max(48, 'is too long: keep it to 48 characters, " | Cloudgate" is added').optional(),
   features: z
     .array(z.strictObject({ title: plain('a short feature name'), text: plain('one sentence') }))
     .min(3, 'needs at least 3 features')
@@ -155,6 +157,8 @@ export interface Template {
   easeNote?: string;
   license: string;
   goodFor?: string;
+  /** `index.md`'s own page title, when set. */
+  title?: string;
   features: { title: string; text: string }[];
   switching?: { gain: string[]; different: string[] };
   faq: { q: string; a: string }[];
@@ -363,6 +367,7 @@ function readTemplate(id: string): Template {
     easeNote: p.easeNote,
     license: p.license,
     goodFor: p.goodFor,
+    title: p.title,
     features: p.features,
     switching: p.switching && (p.switching.gain.length || p.switching.different.length) ? p.switching : undefined,
     faq: p.faq,
@@ -509,6 +514,30 @@ export function alternativesPages(): { product: Product; apps: Template[]; copy?
   return [...altCache];
 }
 
+/**
+ * Other alternatives pages a reader of this one may want next: products whose apps share a category
+ * with this page's apps, then any app. Most single-app pages have no other way in from the site.
+ */
+export function relatedAlternatives(product: Product, limit = 6): { product: Product; apps: Template[] }[] {
+  const pages = alternativesPages();
+  const own = pages.find((page) => page.product.id === product.id);
+  if (!own) return [];
+  const categories = new Set(own.apps.map((app) => app.category.id));
+  const appIds = new Set(own.apps.map((app) => app.id));
+  return pages
+    .filter((page) => page.product.id !== product.id)
+    .map((page) => ({
+      page,
+      score:
+        page.apps.filter((app) => appIds.has(app.id)).length * 3 +
+        page.apps.filter((app) => categories.has(app.category.id)).length,
+    }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || a.page.product.name.localeCompare(b.page.product.name))
+    .slice(0, limit)
+    .map(({ page }) => ({ product: page.product, apps: page.apps }));
+}
+
 /** How many apps in the catalogue are open source, for counts that would otherwise call every app open source. */
 export function openSourceCount(): number {
   return getTemplates().filter((t) => licenceKind(t.license).openSource).length;
@@ -548,6 +577,7 @@ export function popularSwaps(): { product: Product; app: Template; why: string; 
 /** Templates in the same category, then those replacing the same products. */
 export function relatedTemplates(template: Template, limit = 4): Template[] {
   const replaces = new Set(template.alternativeTo.map((p) => p.id));
+  const tags = new Set(template.tags);
   return getTemplates()
     .filter((other) => other.id !== template.id)
     .map((other) => ({
@@ -555,9 +585,12 @@ export function relatedTemplates(template: Template, limit = 4): Template[] {
       score:
         (other.category.id === template.category.id ? 2 : 0) +
         other.alternativeTo.filter((p) => replaces.has(p.id)).length,
+      // Ties go to the app sharing the most tags, so a DAM's neighbours are photo libraries, not
+      // whatever file host sorts first by name.
+      shared: other.tags.filter((tag) => tags.has(tag)).length,
     }))
     .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score || a.other.name.localeCompare(b.other.name))
+    .sort((a, b) => b.score - a.score || b.shared - a.shared || a.other.name.localeCompare(b.other.name))
     .slice(0, limit)
     .map(({ other }) => other);
 }

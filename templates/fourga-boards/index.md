@@ -42,7 +42,7 @@ faq:
   - q: Can I import my Trello boards into 4ga Boards?
     a: Yes, one board at a time. Export the board from Trello as a JSON file, then choose Import from Trello when you create a board in 4ga Boards; lists, cards, labels, checklists and comments come across, but attachments do not.
   - q: How do I sign in to 4ga Boards the first time?
-    a: Sign in with the admin email you gave Cloudgate (or the username admin) and the password shown on the app's variables page in Cloudgate. Public sign-up starts switched off, so you add teammates in the settings or turn sign-up on there.
+    a: Sign in to 4ga Boards with the admin email you gave Cloudgate (or the username admin) and the password shown on the app's variables page in Cloudgate. Public sign-up starts switched off, so you add teammates in the settings or turn sign-up on there.
   - q: How is 4ga Boards related to Planka?
     a: 4ga Boards began as a fork of Planka, another self-hosted kanban app, and is developed separately by its own team. 4ga Boards is MIT licensed, while Planka uses its own licence.
   - q: Is there a 4ga Boards phone app?

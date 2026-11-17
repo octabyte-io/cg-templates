@@ -9,7 +9,9 @@ faq:
   - q: "Does Keeper.sh work with Google Calendar and Outlook?"
     a: "Yes, once you register a free sign-in app with Google or Microsoft and give Keeper.sh its ID and secret. iCloud, Fastmail and CalDAV calendars connect with an app password and need no extra step."
   - q: "Will my colleagues see my private appointments?"
-    a: "No, not by default. Copies show only the name of the calendar they came from; you choose per calendar whether titles, descriptions or places are passed on."
+    a: "No, not by default. Keeper.sh copies show only the name of the calendar they came from; you choose per calendar whether titles, descriptions or places are passed on."
+  - q: "Does Keeper.sh have booking links like OneCal?"
+    a: "No. OneCal offers scheduling links so people can book time with you or your team, but Keeper.sh only syncs calendars and has no booking pages. Pair it with a separate booking app if you need one."
 ---
 
 OneCal is a paid service that syncs your calendars, so a meeting in one blocks the time in the others and you are not double-booked across work, personal and client calendars.

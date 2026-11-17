@@ -14,6 +14,6 @@ faq:
     a: "Yes. Anyone you share a project with opens the 3D model in a web browser, filters and measures it and leaves comments, with no design software installed."
 ---
 
-Autodesk Construction Cloud is Autodesk's platform for building projects. It brings together document management (Autodesk Docs), design collaboration and model coordination, and tools for the construction site, with data kept in Autodesk's cloud.
+Autodesk Forma, formerly Autodesk Construction Cloud (ACC), is Autodesk's platform for building projects. It brings together document management (Forma Data Management, formerly Autodesk Docs), design collaboration and model coordination, and tools for the construction site, with data kept in Autodesk's cloud.
 
 Architecture and engineering teams look for an alternative for the model side of that work. It is a paid Autodesk subscription, it works best when everyone uses Autodesk's own design tools, and some firms want their project data on their own servers. Speckle is open source and works across tools from Autodesk, McNeel, Graphisoft, Trimble and others: designers publish from the software they already use, and the team views, compares and discusses the models in a browser, on a server you run, with no licence fee. It does not manage documents and drawings, so it covers part of the job rather than the whole platform.

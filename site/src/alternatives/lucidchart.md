@@ -10,7 +10,9 @@ faq:
   - q: "Can several people edit the same diagram in draw.io?"
     a: "Not at the same time. This version of draw.io has no real-time co-editing, so share the .drawio file and take turns."
   - q: "Does draw.io have templates?"
-    a: "Yes. It includes templates for flowcharts, business diagrams, networks, software, cloud architecture, wireframes and UML."
+    a: "Yes. draw.io includes templates for flowcharts, business diagrams, networks, software, cloud architecture, wireframes and UML."
+  - q: "Can draw.io import Lucidchart diagrams?"
+    a: "Yes. draw.io imports Lucidchart files, as well as Visio .vsdx and Gliffy files, so export your diagrams from Lucidchart and open them with draw.io's import. Check each diagram afterwards, since some shapes may look different."
 ---
 
 Lucidchart, from Lucid Software, is an online diagramming app for flowcharts, process maps, org charts and technical diagrams, with real-time collaboration and a shared workspace for teams.

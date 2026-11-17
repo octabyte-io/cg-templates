@@ -22,7 +22,7 @@ features:
     text: Pause damage while you're on holiday or ill, and export your task history and data at any time.
 faq:
   - q: Is self-hosted Habitica free?
-    a: Yes, the code is free and open source under the GPL-3.0 licence, and you pay only for your server. The community build gives every account the subscription perks, lets you buy gems with gold instead of money, and lets you create Group Plans without paying.
+    a: Yes, Habitica's code is free and open source under the GPL-3.0 licence, and you pay only for your server. The community build gives every account the subscription perks, lets you buy gems with gold instead of money, and lets you create Group Plans without paying.
   - q: Is this the official Habitica?
     a: No, Habitica's makers do not publish a self-hosted version. Cloudgate installs a community build of Habitica's own code, made by independent volunteers, so it is your own private copy and is not supported by Habitica.
   - q: Can I use my habitica.com account on my own Habitica?
@@ -30,7 +30,7 @@ faq:
   - q: How do I sign in to Habitica the first time?
     a: Open your Habitica's address and sign up with a username, email and password; the first account becomes the admin. Once your family or group has joined, switch on invite-only sign-up in Cloudgate so only people you invite can create an account.
   - q: Can a family use Habitica for chores?
-    a: Yes, a Group Plan gives the household one shared task board where you assign chores to one person, several people, or anyone. Everyone earns their own gold and experience for the chores they finish.
+    a: Yes, a Habitica Group Plan gives the household one shared task board where you assign chores to one person, several people, or anyone. Everyone earns their own gold and experience for the chores they finish.
   - q: Does Habitica have phone apps that work with my own server?
     a: Not that we can confirm. Habitica's Android and iPhone apps are built for habitica.com, so use your Habitica's website in your phone's browser instead.
   - q: Do I need an email server for Habitica?

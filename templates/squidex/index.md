@@ -39,14 +39,14 @@ faq:
     a: Yes, Squidex is free and open source under the MIT licence, and the self-hosted edition includes all of its features. The company behind it also sells hosted cloud plans, but you don't need them to run it yourself; you pay only for your server.
   - q: Is Squidex a good alternative to Contentful?
     a: Yes, if your team wants Contentful's way of working (content types, entries, assets and an API) on its own server without per-seat or usage fees. Contentful has a bigger marketplace of ready-made integrations, while Squidex relies more on its API, webhooks and your developer.
-  - q: What does headless CMS mean, and do I need a developer?
+  - q: What does headless CMS mean, and do I need a developer for Squidex?
     a: A headless CMS stores and manages your content but does not build the website itself; your site or app fetches the content through an API. Your team can write and publish in Squidex without code, but a developer needs to build or connect the website or app that shows it.
   - q: How do I sign in to Squidex the first time?
     a: The first person to open your Squidex address and sign up with an email and password becomes the administrator. Do this straight after setup. People who sign up later are locked until the admin unlocks them under Administration, Users.
   - q: Can I move my content from Contentful to Squidex?
     a: Partly. Squidex has no one-click Contentful importer, so you recreate your content types and then bring entries in with the Squidex command-line tool's CSV import or through the API.
   - q: Can Squidex manage content in several languages?
-    a: Yes, you add the languages you need, choose a fallback for each, and mark which fields are translatable. Editors then fill in each language for the same item, and the API returns the language your site asks for.
+    a: Yes, in Squidex you add the languages you need, choose a fallback for each, and mark which fields are translatable. Editors then fill in each language for the same item, and the API returns the language your site asks for.
   - q: What server size do I need for Squidex?
     a: A medium server with about 2 GB of memory is a sensible start, because Squidex runs together with its MongoDB database. Cloudgate sets up both, and you can move to a bigger server as your content and traffic grow.
 screenshots:

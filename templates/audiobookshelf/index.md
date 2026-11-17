@@ -39,9 +39,9 @@ faq:
   - q: Can I import my Audible library into Audiobookshelf?
     a: No, not directly. Audible titles are copy-protected, and Audiobookshelf plays DRM-free files only. It can use Audible to look up covers and details for books you add.
   - q: How do I sign in to Audiobookshelf the first time?
-    a: There is no default password. The first person to open the web address creates the root user with a username and password of their choice, so open it right after setup. Then create a library and add other users under Settings.
+    a: Audiobookshelf has no default password. The first person to open its web address creates the root user with a username and password of their choice, so open it right after setup. Then create a library and add other users under Settings.
   - q: Is there an Audiobookshelf app for iPhone and Android?
-    a: Yes, with limits. The Android app is on Google Play and labelled beta; the iPhone app is a beta through Apple's TestFlight, and as of November 2026 that beta is full. The web app works in any phone browser and can be added to the home screen.
+    a: Yes, with limits. The Audiobookshelf Android app is on Google Play and labelled beta; the iPhone app is a beta through Apple's TestFlight, and as of November 2026 that beta is full. The web app works in any phone browser and can be added to the home screen.
   - q: Can Audiobookshelf manage my podcasts?
     a: Yes. You search for podcasts or add them by RSS feed or an OPML file from another podcast app, and Audiobookshelf downloads new episodes to your server automatically.
   - q: What server size do I need for Audiobookshelf?

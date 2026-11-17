@@ -39,9 +39,9 @@ faq:
     a: Yes. Kuno is free, open-source software under the Apache 2.0 licence, with no paid edition. You pay only for your server, plus any paid translation or AI service you choose to connect.
   - q: Is Kuno a good alternative to Ghost(Pro)?
     a: Yes, if you want a simple blog in several languages on your own server with no monthly plan. Ghost(Pro) also sends newsletters and sells paid memberships, which Kuno doesn't do.
-  - q: Can I publish the same post in several languages?
-    a: Yes. Each post, category and your site title can have a version per language, readers pick their language from the menu, and every language gets its own web address that search engines can index.
-  - q: Do I need an AI subscription to translate posts?
+  - q: Can Kuno publish the same post in several languages?
+    a: Yes. In Kuno, each post, category and your site title can have a version per language, readers pick their language from the menu, and every language gets its own web address that search engines can index.
+  - q: Do I need an AI subscription to translate posts in Kuno?
     a: No. Kuno can draft translations with free translation services that need no account. DeepL, OpenAI, Gemini or Claude can be connected with your own API key if you prefer, and they bill you directly.
   - q: Can I move my blog to Kuno?
     a: Yes, from WordPress or Markdown files. Kuno imports a WordPress export file and Markdown files; there is no direct import from Ghost or Medium.

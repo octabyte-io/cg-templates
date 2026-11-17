@@ -40,10 +40,10 @@ faq:
   - q: Is KoboToolbox a good alternative to SurveyCTO or ArcGIS Survey123?
     a: Yes, for most field surveys. KoboToolbox uses the same XLSForm standard, works offline on Android and in the browser, and handles GPS, photos and many languages at no licence cost. SurveyCTO adds case management, built-in data-quality checks and paid support, and Survey123 ties into the ArcGIS mapping tools.
   - q: Does KoboToolbox work offline?
-    a: Yes. Once a form is downloaded to the KoboCollect app, interviewers need no internet to fill it in, and finished forms are sent when the phone reconnects. Web forms also work offline after they load once, and queue answers until the connection returns.
+    a: Yes. Once a KoboToolbox form is downloaded to the KoboCollect app, interviewers need no internet to fill it in, and finished forms are sent when the phone reconnects. Web forms also work offline after they load once, and queue answers until the connection returns.
   - q: Is there a KoboToolbox app for iPhone?
-    a: No. KoboCollect is for Android phones and tablets only. On an iPhone or iPad, people open the form in the browser, where it also works offline, and can add it to the home screen like an app.
-  - q: Can I move my forms from SurveyCTO, ODK or Survey123?
+    a: No. KoboCollect, the KoboToolbox app, is for Android phones and tablets only. On an iPhone or iPad, people open the form in the browser, where it also works offline, and can add it to the home screen like an app.
+  - q: Can I move my forms from SurveyCTO, ODK or Survey123 to KoboToolbox?
     a: Partly. Forms built as XLSForm spreadsheets, which SurveyCTO, ODK and Survey123 all use, can usually be uploaded to KoboToolbox with few changes. Past submissions do not move across; keep them as Excel or CSV exports.
   - q: How do I sign in to KoboToolbox the first time?
     a: "Open your KoboToolbox main address and sign in with the admin user name you chose at setup, admin unless you changed it, and the password Cloudgate created, shown on the app's variables page as KOBO_SUPERUSER_PASSWORD. The admin account cannot submit survey data, so interviewers need ordinary accounts: anyone can sign up on the main address until the admin closes sign-up at /admin/constance/config/. In KoboCollect, interviewers enter the data-collection address as the server, not the main address. No email server is set up, so sign-up and password-reset emails are not sent until you add email settings."

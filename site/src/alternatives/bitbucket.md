@@ -9,7 +9,9 @@ faq:
   - q: "Does Gitea work with Jira?"
     a: "Not as closely as Bitbucket. You can link to Jira issues from commits and pull requests, but there is no built-in Jira integration. Gitea has its own issues and project boards."
   - q: "Can Gitea run our Bitbucket Pipelines?"
-    a: "Not directly. Pipelines are rewritten as Gitea Actions workflows, which run on a runner you connect."
+    a: "Not directly. Bitbucket Pipelines are rewritten as Gitea Actions workflows, which use the GitHub Actions format and run on a runner you connect."
+  - q: "Can I move my Bitbucket repositories to Gitea?"
+    a: "Yes, with their full history. Gitea's migration copies any Git repository by its clone address, including branches and tags; for private Bitbucket repositories, use a Bitbucket app password. Bitbucket pull requests and Jira links do not carry over."
 ---
 
 Bitbucket is Atlassian's Git hosting service, popular with teams that use Jira, with pull requests, Pipelines for builds and deployments, and close links to Atlassian's tools.

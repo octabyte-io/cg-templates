@@ -9,7 +9,9 @@ faq:
   - q: "Can I move my Canvas courses to ILIAS?"
     a: "Partly. SCORM packages and QTI tests import, but there is no tool that moves whole courses, enrolments and grades from Canvas."
   - q: "Is ILIAS used by universities?"
-    a: "Yes. ILIAS was built at the University of Cologne in 1998 and is used by universities, schools, companies and public bodies, with a non-profit society looking after it."
+    a: "Yes. Like Canvas, ILIAS is used widely in higher education. It was built at the University of Cologne in 1998 and is used by universities, schools, companies and public bodies, with a non-profit society looking after it."
+  - q: "Can ILIAS use the LTI tools we use in Canvas?"
+    a: "Yes. ILIAS supports LTI, so LTI tools you use in Canvas can be connected to ILIAS. It also imports SCORM packages and QTI tests, and supports sign-in through LDAP, SAML or Shibboleth."
 ---
 
 Canvas LMS, from Instructure, is a learning management system used by many universities and schools for courses, assignments, grading and online tests. Its code is published, but most institutions buy it as a hosted service from Instructure.

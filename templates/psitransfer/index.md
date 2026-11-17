@@ -36,15 +36,15 @@ faq:
   - q: Is PsiTransfer free?
     a: Yes, PsiTransfer is free and open source under the BSD-2-Clause licence. There is no paid edition or plan; you pay only for your server and its disk.
   - q: Is PsiTransfer a good alternative to WeTransfer?
-    a: Yes, if you mainly need to send big files by link. You upload, choose when the link expires, add a password if you want, and send the link, much like WeTransfer. It has no branded pages and sends no e-mails for you.
-  - q: Does the person I send files to need an account?
+    a: Yes, if you mainly need to send big files by link. In PsiTransfer you upload, choose when the link expires, add a password if you want, and send the link, much like WeTransfer. It has no branded pages and sends no e-mails for you.
+  - q: Does the person I send files to with PsiTransfer need an account?
     a: No, PsiTransfer has no accounts at all. The recipient opens the link, types the password if you set one, and downloads the files or all of them as one ZIP.
   - q: How do I sign in to PsiTransfer the first time?
-    a: There is no account to create. Cloudgate makes an upload password, which you type on the upload page, and an admin password for the admin page; you find both on the app's variables page.
-  - q: How long do files stay, and is there a size limit?
-    a: Files stay from one hour up to four weeks, or until the first download, and every file is deleted after 30 days at the latest. There is no size limit apart from your server's free disk space.
+    a: PsiTransfer has no account to create. Cloudgate makes an upload password, which you type on the upload page, and an admin password for the admin page; you find both on the app's variables page.
+  - q: How long do PsiTransfer files stay, and is there a size limit?
+    a: PsiTransfer keeps files from one hour up to four weeks, or until the first download, and every file is deleted after 30 days at the latest. There is no size limit apart from your server's free disk space.
   - q: Are my files encrypted in PsiTransfer?
-    a: No, files are stored unencrypted on your own server. The secure web address protects them while they travel, and a download password hides the list of files from anyone who doesn't have it.
+    a: No. PsiTransfer stores files unencrypted on your own server. The secure web address protects them while they travel, and a download password hides the list of files from anyone who doesn't have it.
   - q: What server size do I need for PsiTransfer?
     a: The smallest Cloudgate server is enough, because PsiTransfer is one light app with no database. What matters is disk space for all the files waiting to be downloaded.
 screenshots:

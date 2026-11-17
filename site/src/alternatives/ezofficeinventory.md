@@ -10,9 +10,11 @@ moving: |
   There is no EZOfficeInventory importer, so move your records as CSV files. Export your items and members from EZOfficeInventory, set up matching categories, models, locations and custom fields in Snipe-IT, then import users first and assets second, mapping each column. Licences, accessories and consumables have their own imports. Add email settings so alerts and check-out acceptance emails go out. GLPI has no EZOfficeInventory importer: install the GLPI Agent on your computers so they appear on their own, add other equipment, and mark the items people may book as reservable.
 faq:
   - q: "Can people reserve equipment in Snipe-IT?"
-    a: "Not with a calendar. People can request an item and you check it out to them, but booking equipment for future dates needs a separate add-on. GLPI, also on this page, has reservations built in."
+    a: "Not with a calendar, as in EZOfficeInventory. In Snipe-IT, people can request an item and you check it out to them, but booking equipment for future dates needs a separate add-on. GLPI, also on this page, has reservations built in."
   - q: "Do Snipe-IT and GLPI limit how many items I track?"
     a: "No. Neither self-hosted app has a limit on assets, items or users."
+  - q: "Can I import my EZOfficeInventory items into Snipe-IT?"
+    a: "Yes, as CSV files. Snipe-IT has no EZOfficeInventory importer, so export your items and members from EZOfficeInventory, set up matching categories, models, locations and custom fields in Snipe-IT, then import users first and assets second. Licences, accessories and consumables have their own imports."
 ---
 
 EZOfficeInventory, by EZO, is hosted asset tracking software for equipment check-out, reservations, maintenance and audits.

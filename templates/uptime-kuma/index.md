@@ -38,10 +38,10 @@ faq:
     a: With Cloudgate, you pick Uptime Kuma from the catalogue and click install. Cloudgate runs it on your server, keeps its data on lasting storage and gives it a secure web address; the first person to open it creates the admin account.
   - q: Should Uptime Kuma run on the same server as my website?
     a: No, it is better on a different server. If both share a server and that server goes down, Uptime Kuma goes down too and cannot alert you.
-  - q: Can I import my monitors from UptimeRobot?
-    a: There is no automatic import from UptimeRobot or Pingdom. Adding a monitor takes a few seconds, since you paste the address and choose how often to check it.
+  - q: Can Uptime Kuma import my monitors from UptimeRobot?
+    a: No, Uptime Kuma has no automatic import from UptimeRobot or Pingdom. Adding a monitor takes a few seconds, since you paste the address and choose how often to check it.
   - q: Does Uptime Kuma have a phone app?
-    a: There is no official phone app, but the dashboard works in a phone's web browser. Most people get alerts on their phone through Telegram, Slack, Pushover or SMS instead.
+    a: No, Uptime Kuma has no official phone app, but the dashboard works in a phone's web browser. Most people get alerts on their phone through Telegram, Slack, Pushover or SMS instead.
   - q: What server size do I need for Uptime Kuma?
     a: Uptime Kuma is light. Cloudgate's smallest size, with 512 MB of memory, is enough to watch a typical small business's websites.
 screenshots:

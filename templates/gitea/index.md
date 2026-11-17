@@ -34,15 +34,15 @@ faq:
   - q: Is Gitea free?
     a: Yes. Gitea is free, open-source software under the MIT licence, and you pay only for hosting. Its company also sells a hosted and an enterprise edition, which you do not need to self-host it.
   - q: Is Gitea a good alternative to GitHub?
-    a: Yes, for teams that want private code hosting on their own server. It covers the everyday GitHub work of code, reviews, issues, wikis and automatic builds; it has fewer integrations and none of GitHub's public community.
+    a: Yes, Gitea suits teams that want private code hosting on their own server. It covers the everyday GitHub work of code, reviews, issues, wikis and automatic builds; it has fewer integrations and none of GitHub's public community.
   - q: How do I self-host Gitea?
     a: The easiest way is to set up this template on Cloudgate. Cloudgate installs Gitea with its database on your server and gives it a secure web address; the first person to register becomes the admin.
   - q: Can we move our projects from GitHub, GitLab or Bitbucket?
     a: Yes. Gitea's built-in migration copies a project's code and history, and from GitHub and GitLab also its issues, reviews, labels, milestones, releases and wiki.
-  - q: Do my developers need to change how they work?
-    a: Very little. They use the same Git tools and commands as with GitHub or Bitbucket, with a different web address. In this setup they connect over HTTPS, signing in with a password or an access token, not over SSH.
+  - q: Do my developers need to change how they work with Gitea?
+    a: Very little. With Gitea they use the same Git tools and commands as with GitHub or Bitbucket, with a different web address. In this setup they connect over HTTPS, signing in with a password or an access token, not over SSH.
   - q: Is our code private with Gitea?
-    a: Yes. Your code is stored on your own server, and a private project is visible only to the people and teams you choose.
+    a: Yes. Gitea stores your code on your own server, and a private project is visible only to the people and teams you choose.
   - q: How do I stop strangers from signing up?
     a: Register your own account first; it becomes the admin. Then set the "Turn off open sign-up" variable to true in Cloudgate and redeploy, and add new people from Gitea's site administration page.
 screenshots:

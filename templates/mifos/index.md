@@ -40,15 +40,15 @@ faq:
   - q: What is the difference between Mifos X and Apache Fineract?
     a: Apache Fineract is the core-banking engine that stores clients, loans, savings and accounts; the Mifos X web app is the screen your staff use to work with it. This template installs both together as one app.
   - q: Is Mifos X a good alternative to Mambu?
-    a: Yes, for microfinance institutions and credit unions that want to run their own core-banking system. It covers clients, loans, savings and accounting, but you configure and maintain it yourself instead of buying a managed service.
+    a: Yes. Mifos X is a good alternative to Mambu for microfinance institutions and credit unions that want to run their own core-banking system. Mifos X covers clients, loans, savings and accounting, but you configure and maintain it yourself instead of buying a managed service.
   - q: How do I sign in to Mifos X the first time?
-    a: Sign in with the username mifos and the password password, which the system creates on its first start. Change that password straight away, or create your own admin user and turn off the mifos account, because anyone who knows the address could try it.
-  - q: Can I import my existing clients and loans?
-    a: Partly, through the import screens that read spreadsheet templates for clients and accounts. There is no direct importer from Mambu or other systems, so you export your data and fill in the templates.
+    a: Sign in to Mifos X with the username mifos and the password password, which the system creates on its first start. Change that password straight away, or create your own admin user and turn off the mifos account, because anyone who knows the address could try it.
+  - q: Can I import my existing clients and loans into Mifos X?
+    a: Partly, through the Mifos X import screens that read spreadsheet templates for clients and accounts. There is no direct importer from Mambu or other systems, so you export your data and fill in the templates.
   - q: Does Mifos X have a mobile app?
     a: No, not in this template; staff use the web app in a browser. Mifos has separate Android apps for field officers and members, which are other projects and not installed here.
   - q: What server size do I need for Mifos X?
-    a: A large server with about 4 GB of memory, because the banking engine is a Java application with its own database. The first start takes several minutes while it creates its tables.
+    a: Mifos X needs a large server with about 4 GB of memory, because its banking engine is a Java application with its own database. The first start takes several minutes while it creates its tables.
 screenshots:
   - src: screenshots/clients.webp
     alt: "The Mifos X clients list with ten made-up clients, each with an account number, external ID, active status and Head Office, plus Import Client and Create Client buttons"

@@ -34,12 +34,12 @@ faq:
   - q: Is VoidAuth free?
     a: Yes, VoidAuth is free and open source under the AGPL-3.0 licence, with no paid edition and no limit on users. You pay only for your server.
   - q: Is VoidAuth a good alternative to Okta?
-    a: Yes, for a small team that wants one login and two-step sign-in for its self-hosted apps without a per-user fee. It is not a match for Okta's catalogue of business apps, because it has no SAML and no social logins.
+    a: Yes, VoidAuth suits a small team that wants one login and two-step sign-in for its self-hosted apps without a per-user fee. It is not a match for Okta's catalogue of business apps, because it has no SAML and no social logins.
   - q: Which apps can sign in with VoidAuth?
     a: Any app that supports OpenID Connect can sign in with VoidAuth, and the project publishes setup guides for many, including Immich, Jellyfin, Paperless-ngx, Portainer, Proxmox, Seafile, Vaultwarden and Wiki.js. Apps with no login support can sit behind Caddy, Traefik or nginx using VoidAuth's proxy login.
   - q: How do I sign in to VoidAuth the first time?
     a: Open the VoidAuth app's logs in Cloudgate and copy the password reset link for the admin account, auth_admin, which works for 24 hours. Set a password, then rename the account or invite yourself and add yourself to the auth_admins group. There is no default password.
-  - q: How do people get an account?
+  - q: How do people get a VoidAuth account?
     a: A VoidAuth admin creates an invitation on the Invitations page and sends the link, and the person chooses their own password. VoidAuth can email invitations and password resets once you add your email server's details; until then you copy the links by hand.
   - q: How is VoidAuth different from authentik?
     a: VoidAuth is smaller and simpler, with every feature free, while authentik does more, adding SAML, RADIUS, social logins and a paid Enterprise edition. Pick VoidAuth if your apps support OpenID Connect and you want a quick setup.

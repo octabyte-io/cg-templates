@@ -37,14 +37,14 @@ faq:
     a: Yes. PinePods is free, open-source software under the GPL-3.0 licence, and its iPhone and Android apps are free too. There is no paid tier; you pay only for the server it runs on.
   - q: Is PinePods a good alternative to Pocket Casts?
     a: Yes. PinePods does what most people use Pocket Casts for, syncing subscriptions, queue and progress across the web, desktop and phone apps, from a server you control instead of a Pocket Casts account. It lacks Pocket Casts' curated discovery, so you find new shows by searching.
-  - q: Can I move my podcasts from Pocket Casts or Overcast?
+  - q: Can I move my podcasts from Pocket Casts or Overcast to PinePods?
     a: Yes, your subscriptions. Export an OPML file from Pocket Casts or from your Overcast account on overcast.fm, then import it in PinePods' settings and choose which shows to add. Your listening history does not come across.
   - q: Does PinePods have an iPhone app?
     a: Yes. PinePods has free apps for iPhone, with CarPlay, and for Android, with Android Auto, plus desktop apps for Windows, macOS and Linux. Each app signs in with your server's web address, username and password.
-  - q: Can I keep using AntennaPod or another podcast app?
+  - q: Can I keep using AntennaPod or another podcast app with PinePods?
     a: Yes. PinePods has its own gPodder sync server, so AntennaPod, Kasts and other apps that support gPodder sync keep subscriptions, play position and played episodes in step with PinePods. Each app gets its own password that you can revoke.
-  - q: How do I sign in the first time?
-    a: Sign in with the admin username you chose during setup, admin by default, and the password Cloudgate creates, shown on the app's variables page in Cloudgate. There is no open sign-up page; the admin adds other listeners and can change the password in Settings.
+  - q: How do I sign in to PinePods the first time?
+    a: Sign in to PinePods with the admin username you chose during setup, admin by default, and the password Cloudgate creates, shown on the app's variables page in Cloudgate. There is no open sign-up page; the admin adds other listeners and can change the password in Settings.
   - q: What server size do I need for PinePods?
     a: A small server is enough, because PinePods uses little memory. Plan the disk for the episodes you download; streaming takes no extra space.
 screenshots:

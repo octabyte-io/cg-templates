@@ -42,9 +42,9 @@ faq:
   - q: How do my reports get into DMARC Report Viewer?
     a: DMARC Report Viewer reads them from a mailbox you choose, such as dmarc@yourcompany.com, and checks it for new reports every 30 minutes. Your domain's DMARC record must name that mailbox as its report address (the rua tag), and mail providers then send reports there about once a day.
   - q: How do I sign in to DMARC Report Viewer the first time?
-    a: The username is dmarc and the password is the one Cloudgate generates, shown among the app's settings in Cloudgate. Your browser asks for both when you open the web address; there are no other accounts to create.
+    a: The DMARC Report Viewer username is dmarc and the password is the one Cloudgate generates, shown among the app's settings in Cloudgate. Your browser asks for both when you open the web address; there are no other accounts to create.
   - q: Does DMARC Report Viewer work with Microsoft 365?
-    a: Not directly, because it signs in to the mailbox with a plain username and password, which Microsoft 365 does not allow. It works with mailboxes that offer IMAP with a password; for Microsoft 365, the project explains how to add a separate sign-in helper called DavMail.
+    a: Not directly, because DMARC Report Viewer signs in to the mailbox with a plain username and password, which Microsoft 365 does not allow. It works with mailboxes that offer IMAP with a password; for Microsoft 365, the project explains how to add a separate sign-in helper called DavMail.
   - q: What server size do I need for DMARC Report Viewer?
     a: The smallest server is enough, because DMARC Report Viewer is one small program with no database. It keeps the reports in memory and reads them again from the mailbox when it restarts.
 screenshots:

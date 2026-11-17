@@ -38,12 +38,12 @@ faq:
   - q: Is CodeX Docs a good alternative to GitBook?
     a: Yes, for a small public docs site or handbook. CodeX Docs gives you nested pages, an on-page contents list and readable addresses like GitBook, but it has no Git sync, user accounts, page history or full-text search.
   - q: How do I sign in to CodeX Docs the first time?
-    a: Open the /auth page of your docs address and enter the editing password Cloudgate created, shown on the app's variables page. There are no user accounts; once signed in, an Add page button appears.
+    a: Open the /auth page of your CodeX Docs address and enter the editing password Cloudgate created, shown on the app's variables page. There are no user accounts; once signed in, an Add page button appears.
   - q: Can several people edit CodeX Docs?
-    a: Yes, but everyone shares the same editing password, and each person who has it can change every page. There are no separate logins, roles or per-page permissions, so it suits a small team that trusts each other.
+    a: Yes, but everyone who edits CodeX Docs shares the same editing password, and each person who has it can change every page. There are no separate logins, roles or per-page permissions, so it suits a small team that trusts each other.
   - q: Who can read my CodeX Docs site?
     a: Anyone with the address can read every page, because CodeX Docs is made for published docs; only editing needs the password. It has no private pages, so keep confidential material in another tool.
-  - q: Can I import my docs from GitBook, Notion or Markdown files?
+  - q: Can I import my docs from GitBook, Notion or Markdown files into CodeX Docs?
     a: No, CodeX Docs has no importer. You create each page in its block editor and paste in your text, then upload images again.
 screenshots:
   - src: screenshots/docs-page.webp

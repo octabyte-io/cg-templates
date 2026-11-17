@@ -38,13 +38,13 @@ faq:
   - q: Is Agent Zero free?
     a: Yes, Agent Zero is free and open source under the MIT licence. You pay for your server and for the AI model you connect, unless you run a local model.
   - q: Is Agent Zero a good alternative to Manus or ChatGPT agent?
-    a: Yes, if you are happy to do some setup in return for control. Like them, Agent Zero browses, runs code and works with files to finish a task, but it runs on your server with the AI model you choose, and it is less polished than a hosted agent.
+    a: Yes, Agent Zero is a good Manus or ChatGPT agent alternative if you are happy to do some setup in return for control. Like them, Agent Zero browses, runs code and works with files to finish a task, but it runs on your server with the AI model you choose, and it is less polished than a hosted agent.
   - q: Is it safe to let Agent Zero run code?
-    a: Mostly, if you handle it with care. Agent Zero runs code and commands inside its own isolated workspace, not on the rest of your server. Anyone with the login can make it run commands, it can use any password or API key you give it, and AI models make mistakes, so keep the login private, store passwords in a project's secrets and check its work before it touches money, customer data or live systems.
+    a: Mostly, if you handle Agent Zero with care. Agent Zero runs code and commands inside its own isolated workspace, not on the rest of your server. Anyone with the login can make it run commands, it can use any password or API key you give it, and AI models make mistakes, so keep the login private, store passwords in a project's secrets and check its work before it touches money, customer data or live systems.
   - q: Do I need an AI API key to use Agent Zero?
     a: Yes, Agent Zero needs an AI model to work. Connect an API key from a provider such as OpenAI, Anthropic, Google or OpenRouter, sign in with a ChatGPT account to use its Codex models, or point it at a local model server such as Ollama.
   - q: How do I sign in to Agent Zero the first time?
-    a: Sign in with the user name admin and the password Cloudgate generated, which the Cloudgate console shows you. Your first message then opens the model setup, where you connect a provider and pick a main model and a smaller utility model.
+    a: Sign in to Agent Zero with the user name admin and the password Cloudgate generated, which the Cloudgate console shows you. Your first message then opens the model setup, where you connect a provider and pick a main model and a smaller utility model.
   - q: What server size do I need for Agent Zero?
     a: Agent Zero's own guide recommends at least 4 GB of memory, 2 processor cores and 50 GB of disk, with 2 GB as the bare minimum. The AI model itself runs at your provider unless you host a local one, which needs much more.
   - q: Can my whole team use Agent Zero?

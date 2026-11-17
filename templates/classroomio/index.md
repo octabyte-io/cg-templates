@@ -38,15 +38,15 @@ faq:
   - q: Is ClassroomIO free?
     a: Yes, self-hosted ClassroomIO is free and open source under the AGPL-3.0 licence, with no limit on courses or learners. You pay only for your server. Single sign-on and a few other extras need a paid licence key from ClassroomIO.
   - q: Is ClassroomIO a good alternative to TalentLMS?
-    a: Yes, for staff onboarding and compliance training it covers the essentials TalentLMS is used for, including courses, quizzes, compliance deadlines and certificates, with no fee per learner. It has no library of ready-made courses and does not play SCORM packages, so you write your own material.
+    a: Yes, for staff onboarding and compliance training ClassroomIO covers the essentials TalentLMS is used for, including courses, quizzes, compliance deadlines and certificates, with no fee per learner. It has no library of ready-made courses and does not play SCORM packages, so you write your own material.
   - q: Can I sell courses with ClassroomIO like on Thinkific or Teachable?
-    a: Partly. Each course can have a public landing page with a price and a link to your own payment page, such as Stripe or Lemon Squeezy. There is no built-in checkout, coupons or automatic enrolment after payment.
+    a: Partly. Each ClassroomIO course can have a public landing page with a price and a link to your own payment page, such as Stripe or Lemon Squeezy. There is no built-in checkout, coupons or automatic enrolment after payment.
   - q: How do I sign in to ClassroomIO the first time?
-    a: The first person to sign up with an email and password names the academy and becomes its admin. Do this straight after setup. After that, only people invited to your academy can sign up, so invite teachers and learners from the app.
+    a: The first person to sign up to ClassroomIO with an email and password names the academy and becomes its admin. Do this straight after setup. After that, only people invited to your academy can sign up, so invite teachers and learners from the app.
   - q: Can I import my courses from another LMS into ClassroomIO?
     a: No, ClassroomIO has no importer for TalentLMS, Thinkific, Teachable or other platforms, and it does not read SCORM files. You rebuild courses in its editor, or, with your own AI key, let it draft a course from a PDF; learners can be added by pasting a list of email addresses.
   - q: Does ClassroomIO send emails to learners?
-    a: Yes, once you add your email account's sending details. Invitations, password resets and course notifications need them; without them those emails are not sent.
+    a: Yes, ClassroomIO sends emails once you add your email account's sending details. Invitations, password resets and course notifications need them; without them those emails are not sent.
 screenshots:
   - src: screenshots/courses.webp
     alt: "The ClassroomIO Courses page for a fictional coaching academy, listing Coaching Conversations for Team Leads, Spreadsheet Skills for Office Teams as a live class, Customer Service Essentials and Food Safety and Hygiene as a compliance course, with the navigation sidebar on the left"

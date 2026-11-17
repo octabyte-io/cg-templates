@@ -9,7 +9,9 @@ faq:
   - q: "Can I move my records from ArchivEra to ArchivesSpace?"
     a: "Partly. ArchivesSpace imports EAD, EAC-CPF, MARCXML and CSV files, so records you can export in those formats come across, usually after some cleaning up."
   - q: "Does ArchivesSpace have a public catalogue?"
-    a: "Yes. Its public interface shows only the records you mark as published, with buttons for citing, requesting and downloading a PDF finding aid."
+    a: "Yes. The ArchivesSpace public interface shows only the records you mark as published, with buttons for citing, requesting and downloading a PDF finding aid."
+  - q: "Does ArchivesSpace store digital files?"
+    a: "No. ArchivesSpace describes your collections, from accessions to finding aids, but it does not store digital files. When you move from ArchivEra, keep scans and born-digital files in a separate storage system."
 ---
 
 ArchivEra, from Lucidea, is paid, hosted software for managing archives: describing collections, tracking accessions and publishing them online.

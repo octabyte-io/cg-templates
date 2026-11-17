@@ -35,13 +35,13 @@ faq:
     a: Yes. Cal.com does the same core job as Calendly, sharing a link where clients book free slots from your calendar, and adds team scheduling with no price per user when you host it yourself. Calendly is quicker to start with, since its calendar and video connections need no setup.
   - q: How do I self-host Cal.com?
     a: Pick Cal.com in Cloudgate's template list and press Set up. Cloudgate installs Cal.com with its database and cache on your server and gives it a secure web address; the first person to open it creates the admin account.
-  - q: Can I put my booking page on my website?
-    a: Yes. You can link to your booking page or embed it, inline or as a pop-up button, in any website, including WordPress, Wix and Squarespace.
+  - q: Can I put my Cal.com booking page on my website?
+    a: Yes. You can link to your Cal.com booking page or embed it, inline or as a pop-up button, in any website, including WordPress, Wix and Squarespace.
   - q: Does Cal.com send booking confirmations by email?
-    a: Yes, once you connect an email sending service. You can enter its details during setup, or add them later on the app's variables page; until then bookings still land in your connected calendar.
-  - q: Is my data private?
-    a: Yes. Your bookings and your clients' names and email addresses are stored in a database on your own server. Calendar and video services you connect receive only the meeting details they need.
-  - q: What server size do I need?
+    a: Yes, Cal.com sends confirmations once you connect an email sending service. You can enter its details during setup, or add them later on the app's variables page; until then bookings still land in your connected calendar.
+  - q: Is my data private with self-hosted Cal.com?
+    a: Yes. Self-hosted Cal.com stores your bookings and your clients' names and email addresses in a database on your own server. Calendar and video services you connect receive only the meeting details they need.
+  - q: What server size do I need for Cal.com?
     a: A medium server (2 GB of memory) is the smallest that runs Cal.com comfortably, since it needs more memory than most apps when it starts.
 screenshots:
   - src: screenshots/booking.webp

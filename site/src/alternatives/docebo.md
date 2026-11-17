@@ -7,9 +7,11 @@ moving: |
   There is no Docebo importer, but ILIAS plays SCORM 1.2 and SCORM 2004 packages and imports tests in the IMS QTI format, so content exported in those formats comes across. Sign in as the root admin, set up organisational units for your departments, connect your company sign-in through LDAP, SAML or OpenID Connect, then import your SCORM courses and rebuild the rest. Export learner records and certificates from Docebo before your contract ends, since they do not carry over.
 faq:
   - q: "Can ILIAS handle training for a whole company?"
-    a: "Yes. ILIAS is used by businesses and public bodies as well as universities, with organisational units, roles and permissions, study programmes and learning-progress reports for each department."
+    a: "Yes, as Docebo does. ILIAS is used by businesses and public bodies as well as universities, with organisational units, roles and permissions, study programmes and learning-progress reports for each department."
   - q: "Can I bring my Docebo courses into ILIAS?"
-    a: "Partly. SCORM packages and QTI tests import, but there is no tool that moves whole courses, enrolments and completion records across."
+    a: "Partly. SCORM packages and QTI tests from Docebo import into ILIAS, but there is no tool that moves whole courses, enrolments and completion records across."
+  - q: "Does ILIAS have AI features like Docebo?"
+    a: "No. ILIAS has none of Docebo's AI features or its content marketplace, and fewer ready-made integrations. It covers courses, SCORM and xAPI content, tests, certificates, badges and skills management on your own server."
 ---
 
 Docebo is an enterprise learning platform for employee, partner and customer training, sold by quote, with AI features, a content marketplace and many integrations.

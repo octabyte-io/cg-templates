@@ -10,9 +10,11 @@ moving: |
   Gather your photos in Immich, which is also in the Cloudgate catalogue: upload them from your phones and computers, or let Immich's phone app back them up. Make an album for each screen and invite family members to add to it in Immich, much as they would add photos to an Aura frame. Then set up ImmichFrame or Immich Kiosk with an Immich API key, choose the album, and open the frame's address on a tablet or TV that stays on.
 faq:
   - q: "Can family members add photos to the frame?"
-    a: "Yes, through Immich. Give them an Immich account or share the album with them, and new photos in the album appear on the frame."
+    a: "Yes, through Immich. Give them an Immich account or share the album with them, and new photos in the album appear on the ImmichFrame or Immich Kiosk screen."
   - q: "Do I need Immich?"
-    a: "Yes. Both apps read photos from an Immich server and keep no copies of their own. Immich is free and in the Cloudgate catalogue."
+    a: "Yes. ImmichFrame and Immich Kiosk both read photos from an Immich server and keep no copies of their own. Immich is free and in the Cloudgate catalogue."
+  - q: "Can ImmichFrame run on a TV or tablet instead of an Aura frame?"
+    a: "Yes. ImmichFrame has free apps for Apple TV, iPhone, iPad and Android, can run as an Android TV screensaver, and also works in any web browser. Immich Kiosk has no apps but plays photos full screen in any browser. An Aura frame is a finished device; both apps need your own Immich server and some setup."
 ---
 
 Aura makes Wi-Fi digital photo frames that family members fill from Aura's phone app, with the photos kept in Aura's cloud. The frames are polished and quick to set up.

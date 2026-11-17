@@ -7,9 +7,11 @@ moving: |
   There is no Limble importer. Export your assets, locations, parts and preventive maintenance tasks from Limble as spreadsheets, copy them into Atlas CMMS's CSV import templates, and import locations first so assets can be placed in them. Check the free edition's limits of 50 assets, 10 locations, 100 parts and 10 preventive maintenance schedules first. Then invite your technicians, who can use the Android or iOS app with your server's address.
 faq:
   - q: "Does Atlas CMMS do preventive maintenance?"
-    a: "Yes. Recurring schedules create work orders automatically, up to 10 schedules in the free edition. The calendar view and meter-based triggers need a paid licence key."
+    a: "Yes, like Limble. In Atlas CMMS, recurring schedules create work orders automatically, up to 10 schedules in the free edition. The calendar view and meter-based triggers need a paid licence key."
   - q: "Can Atlas CMMS keep track of spare parts?"
     a: "Yes. It keeps parts with quantities and costs, sets of parts and purchase orders, up to 100 parts in the free edition. Low-stock alerts are a paid feature."
+  - q: "Can I import my Limble data into Atlas CMMS?"
+    a: "Yes, through spreadsheets. Atlas CMMS has no Limble importer, but you can export assets, locations, parts and preventive maintenance tasks from Limble and copy them into Atlas CMMS's CSV import templates, importing locations first. Check the free edition's limits, such as 50 assets, before you import."
 cost: "Atlas CMMS is open source under the AGPL-3.0 licence, and its free edition costs nothing, but it is limited: 5 users in admin or technician roles (requesters and view-only users are not counted), 50 assets, 10 locations, 100 parts and 30 open work orders, and file attachments, time and cost tracking, SSO, custom roles, the request portal, API access and more need a paid licence key from its maker. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 ---
 

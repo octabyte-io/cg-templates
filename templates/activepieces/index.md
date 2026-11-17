@@ -41,10 +41,10 @@ faq:
     a: Activepieces is simpler and feels closer to Zapier, while n8n has more options for complex workflows but takes longer to learn. Activepieces is also MIT-licensed open source, whereas n8n uses a fair-code licence.
   - q: How do I self-host Activepieces?
     a: With Cloudgate, you pick Activepieces from the catalogue and click install. Cloudgate sets up Activepieces with its database and queue on your server, gives it a secure web address and generates its secret keys for you.
-  - q: Can I import my Zaps from Zapier?
+  - q: Can I import my Zaps from Zapier into Activepieces?
     a: No, there is no automatic import from Zapier or Make. Because Activepieces flows are built the same way as Zaps, rebuilding a simple one usually takes a few minutes.
   - q: Is my data private with self-hosted Activepieces?
-    a: Yes. Your flows, run history and saved app logins are kept in a database on your own server, and logins are encrypted. Data leaves your server only when a flow sends it to an app you connected.
+    a: Yes. Self-hosted Activepieces keeps your flows, run history and saved app logins in a database on your own server, and logins are encrypted. Data leaves your server only when a flow sends it to an app you connected.
   - q: What server size do I need for Activepieces?
     a: Activepieces needs a server with at least 2 GB of memory, because it runs a database and a job queue next to the app.
 screenshots:

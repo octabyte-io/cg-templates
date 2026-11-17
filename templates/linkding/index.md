@@ -10,7 +10,7 @@ features:
   - title: Sort links with tags
     text: Give each bookmark one or more tags and browse them all from a tag list next to your bookmarks.
   - title: Find it again quickly
-    text: Search titles, descriptions, notes and web addresses, or type a #tag to narrow the list.
+    text: 'Search titles, descriptions, notes and web addresses, or type a #tag to narrow the list.'
   - title: Save without typing
     text: linkding fills in each site's title, description and icon for you when you save a link.
   - title: Keep notes and a read-later list

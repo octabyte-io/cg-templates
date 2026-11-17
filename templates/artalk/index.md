@@ -40,7 +40,7 @@ faq:
   - q: Is Artalk a good alternative to Disqus?
     a: Yes, if you want comments without ads or tracking and with every comment on your own server. Artalk adds replies, voting, spam checks and a moderation dashboard to your site, but it has no network of discussions across websites like Disqus.
   - q: How do I add Artalk to my website?
-    a: You paste a short snippet into your website's pages, at the spot where comments should appear, such as under each blog post. It works on any site where you can edit the HTML or theme, including Hugo, Hexo, Astro and WordPress blogs.
+    a: You add Artalk by pasting a short snippet into your website's pages, at the spot where comments should appear, such as under each blog post. Artalk works on any site where you can edit the HTML or theme, including Hugo, Hexo, Astro and WordPress blogs.
   - q: How do I sign in to Artalk the first time?
     a: You sign in at your Artalk web address with the admin email you entered during setup and the password Cloudgate created, which the Cloudgate console shows you. To change that password later, change it in Cloudgate, because Artalk resets the admin account to those settings each time it starts.
   - q: Can I import my Disqus comments into Artalk?

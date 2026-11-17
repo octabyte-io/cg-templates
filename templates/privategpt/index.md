@@ -35,7 +35,7 @@ faq:
   - q: Does PrivateGPT send my documents to OpenAI or another AI company?
     a: No, not as Cloudgate installs it. PrivateGPT talks to an AI model server running next to it on your server, so your documents and questions stay there.
   - q: Is PrivateGPT a good alternative to NotebookLM?
-    a: Partly. Like NotebookLM, you upload documents and get answers with citations, but everything runs on your own server. It has no notebooks, audio overviews or user accounts, and the small model a normal server can run is far less capable than Google's.
+    a: Partly. In PrivateGPT, like NotebookLM, you upload documents and get answers with citations, but everything runs on your own server. It has no notebooks, audio overviews or user accounts, and the small model a normal server can run is far less capable than Google's.
   - q: How do I sign in to PrivateGPT the first time?
     a: PrivateGPT has no user accounts. Open its address, go to its connection settings, turn on basic authentication and enter the username admin and the password Cloudgate created for it.
   - q: What server size do I need for PrivateGPT?

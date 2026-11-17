@@ -7,9 +7,11 @@ moving: |
   There is no Adobe XD importer, and no Adobe XD export that Penpot reads as a design file. Export the artboards and assets you need from XD as SVG, which keeps them as editable shapes when you bring them into Penpot, and PNG for anything else. Rebuild your components and colour and text styles in a Penpot library first, then recreate the screens you still work on; keep old XD files as exported images for reference. Interactions in XD prototypes need to be set up again in Penpot.
 faq:
   - q: "Has Adobe XD been discontinued?"
-    a: "Not formally. In 2023 Adobe put XD in maintenance mode: it fixes bugs and security issues but adds no new features, and it is no longer sold on its own. It stays available in Creative Cloud All Apps."
+    a: "Not formally. In 2023 Adobe put XD in maintenance mode: it fixes bugs and security issues but adds no new features, and it is no longer sold on its own. It stays available in Creative Cloud All Apps. Penpot, an open-source alternative, is still adding features."
   - q: "Can Penpot import Adobe XD files?"
-    a: "No. Export your artboards from XD as SVG or PNG and bring them into Penpot; components and prototypes need rebuilding."
+    a: "No. Penpot cannot open Adobe XD files. Export your artboards from Adobe XD as SVG, which Penpot keeps as editable shapes, or PNG, then rebuild components and prototype interactions in Penpot."
+  - q: "Does Penpot work like Adobe XD?"
+    a: "Mostly, for interface design. Penpot covers what most teams used Adobe XD for: screens, components and clickable prototypes shared by link. Unlike Adobe XD, Penpot runs in the browser rather than as a desktop app, and it adds real-time collaboration, design tokens and an Inspect tab with CSS and SVG for developers."
 ---
 
 Adobe XD is Adobe's tool for designing and prototyping websites and apps. Designers drew screens on artboards, linked them into clickable prototypes and shared them with developers and clients for review.

@@ -6,10 +6,12 @@ apps:
 moving: |
   Donetick has no Tody importer, so add your chores again, room by room, starting with the ones you do every week. The first person to sign up at Donetick's web address gets an account and a household group; share its invite code so everyone else can sign up and join. Type each chore with how often it repeats, choose who it is assigned to and how it rotates, and add labels such as Kitchen or Bathroom to group them like Tody's rooms. Add Donetick to each phone's home screen from the browser.
 faq:
-  - q: "Can everyone in the house share the same chores?"
+  - q: "Can everyone in the house share the same chores in Donetick?"
     a: "Yes. Everyone joins one household group with an invite code, and Donetick can rotate each chore between people, by who has done the fewest, at random or in turn."
   - q: "Does Donetick show how dirty each room is like Tody?"
     a: "No. Donetick shows chores by when they are due, such as overdue, today and later. Use labels to group chores by room."
+  - q: "Does Donetick have phone apps like Tody?"
+    a: "Partly. Tody has apps for iPhone, iPad and Android, while Donetick works best in the browser added to the phone's home screen. Donetick's Android app is early and its iPhone app is still a test build."
 ---
 
 Tody is a cleaning schedule app for iPhone, iPad and Android. You list the cleaning tasks for each room, and it shows which areas need attention most, based on how often you want each one done. Sharing the plan with others in your home is part of its premium version.

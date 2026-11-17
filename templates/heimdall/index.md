@@ -39,7 +39,7 @@ faq:
   - q: How do I sign in to Heimdall the first time?
     a: You don't need to, because Heimdall opens straight onto the dashboard as a built-in admin user with no password. Anyone with the address can change it, so open Settings, then Users, edit admin and set a password before you share the address.
   - q: Can Heimdall show live information from my apps?
-    a: Yes, for apps that have an enhanced tile, such as Nextcloud. You enter the app's login details on the tile and it shows a few live figures, such as storage used; other tiles are plain links.
+    a: Yes, Heimdall can, for apps that have an enhanced tile, such as Nextcloud. You enter the app's login details on the tile and it shows a few live figures, such as storage used; other tiles are plain links.
   - q: Can I import my start.me pages or browser bookmarks into Heimdall?
     a: No, Heimdall only imports its own export file. You add each app or link as a tile, which takes a few seconds each because known apps fill in their own icon.
   - q: Heimdall or Homepage, which should I choose?

@@ -41,14 +41,14 @@ faq:
     a: Yes, if you want a resume builder with no paywall on downloads. Reactive Resume has 18 templates, ATS-safe designs, resume checks, cover letters and a job tracker, and exports PDF and Word. Resume.io offers more guided examples and sample wording.
   - q: How do I sign in to Reactive Resume the first time?
     a: Reactive Resume has no default login; open its web address and create an account with your email and a password. Anyone who reaches the address can sign up, so once your account exists, turn off new sign-ups in the app's settings in Cloudgate. Existing accounts keep working.
-  - q: Can I import my existing resume or LinkedIn profile?
+  - q: Can I import my existing resume or LinkedIn profile into Reactive Resume?
     a: Yes. Reactive Resume imports a LinkedIn data export, a JSON Resume file, its own JSON format and PDF files. Importing a Word file needs an AI provider. A resume made in another builder, such as Resume.io, can come across as a PDF.
   - q: Do I need AI to use Reactive Resume?
-    a: No, every feature except the AI assistant and Word import works without AI. To use them, connect your own provider, such as OpenAI, Anthropic, Google Gemini, OpenRouter or a local Ollama.
+    a: No. Every Reactive Resume feature except the AI assistant and Word import works without AI. To use them, connect your own provider, such as OpenAI, Anthropic, Google Gemini, OpenRouter or a local Ollama.
   - q: Is my data private with Reactive Resume?
-    a: Yes. Your resumes, letters and job applications are stored on your own server, and the app has no ads or tracking. If you turn on AI help, the text you send to it goes to the AI provider you chose.
+    a: Yes. Reactive Resume stores your resumes, letters and job applications on your own server, and has no ads or tracking. If you turn on AI help, the text you send to it goes to the AI provider you chose.
   - q: What server size do I need for Reactive Resume?
-    a: A medium server with 2 GB of memory is enough, so that is what Cloudgate asks for. It runs the app and its PostgreSQL database, and about 10 GB of disk is plenty to start.
+    a: A medium server with 2 GB of memory is enough for Reactive Resume, so that is what Cloudgate asks for. It runs the app and its PostgreSQL database, and about 10 GB of disk is plenty to start.
 screenshots:
   - src: screenshots/editor.webp
     alt: "The Reactive Resume editor: a form on the left with photo, full name, headline, email, phone, location, website, profile links and a list of sections, and a live preview of a two-column resume for a game developer on the right, with a Download PDF button at the top"

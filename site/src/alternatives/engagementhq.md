@@ -9,7 +9,9 @@ faq:
   - q: "Is Decidim a good EngagementHQ alternative for a council?"
     a: "Yes, if you can run it or pay someone to. Councils and public bodies use Decidim for consultations and participatory budgets, but it comes with no vendor support or onboarding."
   - q: "Does Decidim send newsletters and notifications?"
-    a: "Yes. It sends notifications and newsletters to participants by email, once you connect an email service."
+    a: "Yes. Decidim sends notifications and newsletters to participants by email, once you connect an email service."
+  - q: "Can I import my EngagementHQ projects into Decidim?"
+    a: "No. Decidim has no EngagementHQ importer, so export the reports and data from your past EngagementHQ projects for your records, then create a participatory process in Decidim for each new project, with surveys, proposals or meetings."
 ---
 
 EngagementHQ is a hosted community engagement platform from Granicus, which bought its maker, Bang the Table, in 2021. Councils and agencies use it for surveys, forums, mapping and project pages, sold by subscription.

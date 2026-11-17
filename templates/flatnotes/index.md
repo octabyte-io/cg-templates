@@ -12,13 +12,13 @@ features:
   - title: Find any note in a moment
     text: Press / anywhere to search every note, and narrow it down by title, tag, phrase or date changed.
   - title: Tag notes with a hashtag
-    text: Write #suppliers or #howto anywhere in a note, then search by that tag to see every note on the subject.
+    text: "Write #suppliers or #howto anywhere in a note, then search by that tag to see every note on the subject."
   - title: Link notes together
     text: Type [[Note name]] to link to another note, so a how-to can point straight to the checklist it relies on.
   - title: Add pictures to notes
     text: Insert, drag in or paste an image and it is saved with your notes.
   - title: Pin notes to the home page
-    text: The home page lists your recently changed notes, or a set you choose, such as everything tagged #pinned.
+    text: "The home page lists your recently changed notes, or a set you choose, such as everything tagged #pinned."
   - title: Keep your notes as plain files
     text: Every note is an ordinary Markdown file, so you can move them to another app at any time.
 switching:
@@ -38,7 +38,7 @@ faq:
   - q: Is flatnotes a good Simplenote alternative?
     a: Yes, if you want simple notes found by search and tags, kept on your own server. Like Simplenote it is minimal, with no notebooks, and it adds Markdown formatting, tables, images and links between notes. Simplenote has phone and desktop apps and shares notes with other people; flatnotes runs in a browser and has one account.
   - q: How do I sign in to flatnotes the first time?
-    a: Sign in with the username you chose when you installed it and the password Cloudgate generated, shown on the app's variables page in Cloudgate. There is no sign-up page; changing those variables changes the sign-in.
+    a: Sign in to flatnotes with the username you chose when you installed it and the password Cloudgate generated, shown on the app's variables page in Cloudgate. There is no sign-up page; changing those variables changes the sign-in.
   - q: Can more than one person use flatnotes?
     a: No, flatnotes has a single account. People who share that sign-in see and edit the same notes, but there are no separate accounts or per-note permissions.
   - q: Can I bring my notes from Obsidian or another app?

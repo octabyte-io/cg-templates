@@ -44,7 +44,7 @@ faq:
   - q: Can NEMO bill for instrument time?
     a: Partly. NEMO records every tool use, room visit, staff charge and supply against a project, with monthly reports and a billing data feed. Rates and invoices come from the NEMO-billing plugin or your own billing system.
   - q: Do I need special hardware to use NEMO?
-    a: No. Booking, usage tracking and maintenance work in any web browser. Interlocks that cut a tool's power and badge readers at the door are optional extras that need hardware.
+    a: No. NEMO's booking, usage tracking and maintenance work in any web browser. Interlocks that cut a tool's power and badge readers at the door are optional extras that need hardware.
   - q: Can I import my data from iLab or PPMS?
     a: "No. NEMO has no importer from iLab or PPMS, so you set up your tools, projects and users again in its admin back office, which most labs do at the start of a billing period. Keep your old system's exports for past billing."
   - q: What server size does NEMO need?

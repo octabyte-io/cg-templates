@@ -42,8 +42,8 @@ faq:
   - q: How do I sign in to Louez the first time?
     a: Open your Louez web address and create your account with an email and a password; the first account becomes the store owner. After that, sign-up closes and you invite your staff from the dashboard.
   - q: Can customers pay online with Louez?
-    a: Yes, if you connect a Stripe account. Without Stripe, your storefront still works, and customers send booking requests that you accept from the dashboard.
-  - q: Can I import my data from Booqable or Rentman?
+    a: Yes, if you connect a Stripe account to Louez. Without Stripe, your Louez storefront still works, and customers send booking requests that you accept from the dashboard.
+  - q: Can Louez import my data from Booqable or Rentman?
     a: No, Louez has no import from Booqable or Rentman. You add your products, prices and stock in Louez, and you can export your Louez data as CSV or JSON later.
   - q: What server size do I need for Louez?
     a: A medium server with about 2 GB of memory is enough for one rental shop. Cloudgate sets up Louez with its database and image storage, and you can move to a bigger server later.

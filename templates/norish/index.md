@@ -42,7 +42,7 @@ faq:
   - q: How do I sign in the first time?
     a: Open Norish's web address and sign up with your email and a password. The first person to sign up becomes the owner and admin, and sign-ups then close, so do this right after setup.
   - q: Does Norish need AI?
-    a: No. Most features work without AI, including website imports, meal planning and grocery lists. Importing from videos, photos or plain text needs an OpenAI-compatible provider you connect, such as OpenAI, OpenRouter or a local Ollama.
+    a: No. Most Norish features work without AI, including website imports, meal planning and grocery lists. Importing from videos, photos or plain text needs an OpenAI-compatible provider you connect, such as OpenAI, OpenRouter or a local Ollama.
   - q: Is there a Norish app for my phone?
     a: No, there is no app in the stores. Norish is built for phones in the browser and works offline, syncing your changes when you reconnect.
   - q: Is Norish stable?

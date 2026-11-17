@@ -38,17 +38,17 @@ faq:
   - q: Is AdventureLog free?
     a: Yes, AdventureLog is free and open source under the GPL-3.0 licence, and there is no paid edition or paid feature. You pay only for your server.
   - q: Is AdventureLog a good alternative to Wanderlog?
-    a: Yes, for planning trips and keeping a record of them. Each trip gets a day-by-day itinerary with places, lodging, flights and other transport, notes and checklists, which you can print as a PDF or add to your calendar. It does not read your booking emails, so you enter reservations by hand.
+    a: Yes, AdventureLog is a good Wanderlog alternative for planning trips and keeping a record of them. Each trip gets a day-by-day itinerary with places, lodging, flights and other transport, notes and checklists, which you can print as a PDF or add to your calendar. Unlike Wanderlog, AdventureLog does not read your booking emails, so you enter reservations by hand.
   - q: Does AdventureLog track where I go?
     a: No. AdventureLog does not track your location automatically the way Polarsteps does, and has no phone app, so you add places and visits yourself, in the website or your phone's browser.
-  - q: Can I import my trips from Wanderlog?
+  - q: Can I import my trips from Wanderlog into AdventureLog?
     a: No. AdventureLog has no importer for Wanderlog, Polarsteps or TripIt, so you rebuild the trips you still need by hand. It can export and import its own trips as ZIP files.
   - q: Is there an AdventureLog phone app?
     a: No, AdventureLog has no app in the App Store or Google Play. The website works in your phone's browser, and you can sign in on your phone by scanning a QR code from your account's security settings.
   - q: Can I plan a trip with friends or family in AdventureLog?
     a: Yes, you can invite other people on your AdventureLog to edit a trip with you, or share a place or a whole trip with a public link that anyone can open.
   - q: How do I sign in to AdventureLog the first time?
-    a: Sign in with the username admin and the password Cloudgate created for you, which you find on the app's variables page; the admin account uses the email you entered at setup. Sign-ups are open, so other people who open your address can create their own accounts.
+    a: Sign in to AdventureLog with the username admin and the password Cloudgate created for you, which you find on the app's variables page. The admin account uses the email you entered at setup. Sign-ups are open, so other people who open your address can create their own accounts.
   - q: What server size do I need for AdventureLog?
     a: AdventureLog needs about 2 GB of memory the first time it starts, while it loads its world map data, and about 1 GB after that, so Cloudgate asks for a medium server.
 screenshots:

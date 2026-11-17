@@ -41,12 +41,12 @@ faq:
   - q: Is La Suite Docs a good alternative to Notion?
     a: Yes, for writing and organising documents together. La Suite Docs has Notion's block editor with slash commands, nested pages, live editing, comments and sharing by link. It has none of Notion's databases, boards or calendars.
   - q: Is La Suite Docs a good alternative to Google Docs?
-    a: Yes, for writing documents together. Several people can edit at once, comment and mention each other, share by link and download the result as PDF or Word. It is a page editor rather than a full office suite, so there are no spreadsheets or slides apps.
+    a: Yes, La Suite Docs can replace Google Docs for writing documents together. Several people can edit at once, comment and mention each other, share by link and download the result as PDF or Word. It is a page editor rather than a full office suite, so there are no spreadsheets or slides apps.
   - q: Who makes La Suite Docs?
     a: La Suite Docs is made by DINUM, the French government's digital agency, together with ZenDiS in Germany, as part of La Suite numérique. It is open source under the MIT licence, so anyone can use it, including companies and charities.
   - q: How do I sign in to La Suite Docs the first time?
-    a: You sign in with the admin email you gave during setup and the password Cloudgate creates, which you find on the app's variables page. There is no public sign-up page, so you add each colleague's account in the sign-in admin page that Cloudgate installs alongside Docs.
-  - q: Can I import my documents from Notion or Word?
+    a: You sign in to La Suite Docs with the admin email you gave during setup and the password Cloudgate creates, which you find on the app's variables page. There is no public sign-up page, so you add each colleague's account in the sign-in admin page that Cloudgate installs alongside Docs.
+  - q: Can La Suite Docs import my documents from Notion or Word?
     a: Yes from Word, partly from Notion. La Suite Docs imports Word (.docx) and Markdown files. There is no Notion importer, but a page exported from Notion as Markdown can be imported as a document.
   - q: Does La Suite Docs send emails?
     a: Yes, La Suite Docs emails people when you share a document with them or mention them, once you add an email sending service. You can enter its details during setup or later; without one, Docs works but sends no emails.

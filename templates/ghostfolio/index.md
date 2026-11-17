@@ -39,7 +39,7 @@ faq:
   - q: Where does Ghostfolio get its prices?
     a: By default, self-hosted Ghostfolio gets prices from Yahoo Finance and crypto prices from CoinGecko, both free with no key. You can also enter prices yourself for anything they don't cover, or add a paid Ghostfolio Premium key for its professional data. If you hold investments in more than one currency, gather the exchange rates once in the admin panel's Market Data page.
   - q: Is Ghostfolio a good alternative to Sharesight?
-    a: Yes, if you want one private portfolio dashboard with no limit on holdings and no monthly fee. Unlike Sharesight, it does not connect to your broker automatically and has no tax reports, so you import or enter your trades yourself.
+    a: Yes, Ghostfolio suits you if you want one private portfolio dashboard with no limit on holdings and no monthly fee. Unlike Sharesight, it does not connect to your broker automatically and has no tax reports, so you import or enter your trades yourself.
   - q: Is Ghostfolio a good alternative to Empower (Personal Capital)?
     a: Yes, for tracking your investments and net worth without linking your bank and broker logins to a finance company. Ghostfolio does not sync your accounts automatically and has no retirement planner, though its FIRE calculator projects when your investments could cover your costs.
   - q: How do I sign in to Ghostfolio the first time?

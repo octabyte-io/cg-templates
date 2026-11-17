@@ -1,5 +1,6 @@
 ---
 tagline: A lightweight headless CMS with no separate database to run.
+title: "Cockpit: lightweight open-source headless CMS"
 category: websites
 alternativeTo: [contentful, sanity, storyblok]
 ease: some-setup

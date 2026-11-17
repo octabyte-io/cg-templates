@@ -44,7 +44,7 @@ faq:
   - q: How do I sign in to Langflow the first time?
     a: Open your Langflow web address and sign in with the admin username you chose during setup, admin unless you changed it, and the password Cloudgate generated, which is shown on the app's page in Cloudgate. There is no setup wizard.
   - q: Can other people sign up to my Langflow?
-    a: Yes, anyone can fill in the sign-up form, but new accounts stay inactive until the admin turns them on in the admin page. To remove the sign-up form, set "Allow new sign-ups" to false in Cloudgate; the admin can still create accounts.
+    a: Yes, anyone can fill in the Langflow sign-up form, but new accounts stay inactive until the admin turns them on in the admin page. To remove the sign-up form, set "Allow new sign-ups" to false in Cloudgate; the admin can still create accounts.
   - q: Which AI models can I use with Langflow?
     a: Langflow works with the major AI providers, including OpenAI, Anthropic, Azure, Mistral and Groq, and with local models through Ollama. Add your API keys under Settings, Global Variables, or in each component.
   - q: Do I need to know how to code to use Langflow?

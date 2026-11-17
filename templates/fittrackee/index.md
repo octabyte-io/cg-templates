@@ -36,7 +36,7 @@ faq:
   - q: Is FitTrackee free?
     a: Yes, FitTrackee is free and open source under the AGPL-3.0 licence, with no paid tier or locked features. You pay only for the server you run it on.
   - q: Is FitTrackee a good alternative to Strava?
-    a: Yes, if you want a private log of your runs, rides and hikes with maps, statistics and personal records, without a subscription. It has no segments, leaderboards, route planner or automatic watch sync, so it suits people who care more about keeping their own data than about competing with others.
+    a: Yes, FitTrackee suits you if you want a private log of your runs, rides and hikes with maps, statistics and personal records, without a subscription. It has no segments, leaderboards, route planner or automatic watch sync, so it suits people who care more about keeping their own data than about competing with others.
   - q: Can I import my workouts from Strava or Garmin Connect?
     a: Partly. FitTrackee has no built-in importer, but you can upload the GPX and FIT files you download from Strava or Garmin Connect, several at a time in a zip file. Community tools such as strava-to-fittrackee and garmin-to-fittrackee can copy your workouts across for you.
   - q: How do I sign in to FitTrackee the first time?
@@ -45,8 +45,8 @@ faq:
     a: Export a GPX or FIT file from your tracking app or watch and upload it in FitTrackee. Free Android apps such as OpenTracks, FitoTrack, OsmAnd and RunnerUp export these files, and the Amazfish smartwatch app can send workouts straight to FitTrackee.
   - q: Does FitTrackee have a phone app?
     a: No, there is no official FitTrackee phone app. The website works in your phone's browser, and you record workouts with any app or watch that exports GPX or FIT files.
-  - q: Who can see my workouts?
-    a: Only the people you choose. For each workout you decide whether it is private, visible to your followers or public, and you can set the map, photos and analysis separately. Your files stay on your own server.
+  - q: Who can see my workouts in FitTrackee?
+    a: Only the people you choose. For each FitTrackee workout you decide whether it is private, visible to your followers or public, and you can set the map, photos and analysis separately. Your files stay on your own server.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The FitTrackee dashboard, with totals of 6 workouts, 83.46 km, 1830.62 m of ascent and 10 hours 40 minutes, a bar chart of this month's distance, a November calendar with a cycling workout, personal records for cycling, hiking and mountain biking, and a feed of the latest workouts with route maps and photos"

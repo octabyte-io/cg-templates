@@ -36,15 +36,15 @@ faq:
   - q: Is UptimeKit free?
     a: Yes, UptimeKit is free and open source under the MIT licence, with no paid edition and no limit on monitors, status pages or users. You pay only for the server it runs on.
   - q: Is UptimeKit a good alternative to Better Stack?
-    a: Yes, for uptime checks, automatic incidents, alerts and public status pages with email subscribers. It has no on-call rotas, phone-call or SMS alerts or log management, and it checks from your own server unless you add more checking points elsewhere.
+    a: Yes, UptimeKit covers uptime checks, automatic incidents, alerts and public status pages with email subscribers. It has no on-call rotas, phone-call or SMS alerts or log management, and it checks from your own server unless you add more checking points elsewhere.
   - q: What is the difference between UptimeKit and Uptime Kuma?
     a: UptimeKit and Uptime Kuma are separate projects. UptimeKit puts more weight on incidents and status pages, with themes, email subscribers, several pages, team roles and checks from several regions; Uptime Kuma is a single, lighter app with many more alert services.
   - q: How do I sign in to UptimeKit the first time?
     a: The first person to sign up at your UptimeKit address becomes the admin; there is no default password. Sign-up then closes, and colleagues join by invitation.
-  - q: Can I import my monitors from Better Stack or UptimeRobot?
+  - q: Can UptimeKit import my monitors from Better Stack or UptimeRobot?
     a: No, UptimeKit has no import from Better Stack, UptimeRobot or Statuspage. You add each website or service again, which takes a few seconds per monitor.
-  - q: Can customers get status updates by email?
-    a: Yes, visitors can subscribe on your status page and get an email when an incident is created, updated or resolved. This needs an email service, SMTP or Resend, set up first; chat and push alerts to your team work without one.
+  - q: Can customers get UptimeKit status updates by email?
+    a: Yes, visitors can subscribe on your UptimeKit status page and get an email when an incident is created, updated or resolved. This needs an email service, SMTP or Resend, set up first; chat and push alerts to your team work without one.
   - q: Can UptimeKit check my website from more than one country?
     a: Yes, if you run extra UptimeKit checking points on servers in other places. Out of the box it checks from the server it is installed on, and each extra checking point adds its own region to the response-time charts.
 screenshots:

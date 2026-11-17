@@ -40,8 +40,8 @@ faq:
   - q: Is Part-DB a good alternative to PartsBox?
     a: Yes, for a workshop that wants its electronic parts inventory on its own server. When we checked in November 2026, PartsBox was free for one user and its team plans started at €49 a month, with €12 a month for each extra user. Part-DB has no fees and covers stock, storage locations, prices, datasheets, bills of materials, labels and KiCad, while PartsBox is more polished and adds ordering and production tools on its higher plans.
   - q: How do I sign in to Part-DB the first time?
-    a: Sign in with the user name admin and the password Cloudgate generates, shown on the app's variables page. There is no public sign-up; the admin creates accounts for everyone else.
-  - q: Can I move my parts from PartKeepr, PartsBox or a spreadsheet?
+    a: Sign in to Part-DB with the user name admin and the password Cloudgate generates, shown on the app's variables page. There is no public sign-up; the admin creates accounts for everyone else.
+  - q: Can I move my parts to Part-DB from PartKeepr, PartsBox or a spreadsheet?
     a: Yes from PartKeepr, partly from the others. Part-DB has a PartKeepr migration tool, still marked beta, that brings over parts, categories, footprints, storage locations, prices, attachments and projects. From PartsBox or a spreadsheet you export a CSV or Excel file and import it; there is no direct PartsBox importer.
   - q: Should I use Part-DB or InvenTree?
     a: Choose Part-DB if you mostly keep electronic components, and InvenTree if you also buy, sell and build products. Part-DB is built for electronic components, with footprints, datasheets, search by specifications and supplier lookups. InvenTree covers any kind of stock and adds purchase orders, sales orders and build orders.

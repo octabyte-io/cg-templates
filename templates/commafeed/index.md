@@ -43,7 +43,7 @@ faq:
   - q: How do I sign in to CommaFeed the first time?
     a: The first person to open CommaFeed's web address sees an Initial Setup page and creates the admin account, so do this right after setup. There is no default password.
   - q: Can several people use one CommaFeed?
-    a: Yes. The admin adds an account for each person, and each person has their own feeds and unread counts. Public sign-up is off, so strangers cannot create accounts.
+    a: Yes. The CommaFeed admin adds an account for each person, and each person has their own feeds and unread counts. Public sign-up is off, so strangers cannot create accounts.
   - q: What server size do I need for CommaFeed?
     a: The smallest server is enough, because CommaFeed is one light app with a built-in database. It uses around 100 MB of memory when idle.
 screenshots:

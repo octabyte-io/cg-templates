@@ -9,7 +9,9 @@ faq:
   - q: "Does BetterShift do timesheets or payroll like Deputy?"
     a: "No. BetterShift plans and shares shifts and counts planned hours; it has no time clock, timesheets, payroll export or labour-law checks."
   - q: "Can several managers share one schedule?"
-    a: "Yes. Each calendar's owner gives people read, contribute, manage or admin access, and a calendar can also be shared by link or opened to guests."
+    a: "Yes. In BetterShift, each calendar's owner gives people read, contribute, manage or admin access, and a calendar can also be shared by link or opened to guests."
+  - q: "Can I import my Deputy schedule into BetterShift?"
+    a: "No. BetterShift has no Deputy importer. Create a calendar for each location or team and a shift template for each type of shift, then add the coming weeks' shifts. Keep Deputy or another tool for clocking in, timesheets and payroll."
 ---
 
 Deputy is workforce management software: scheduling, time and attendance, timesheets, labour-law rules for breaks and overtime, payroll links and team messaging for shift-based businesses. It is a paid subscription service.

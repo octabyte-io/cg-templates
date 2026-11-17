@@ -32,17 +32,17 @@ faq:
   - q: Is Immich Kiosk free?
     a: Yes. Immich Kiosk is free, open-source software under the AGPL-3.0 licence, with no paid version. You pay only for your server.
   - q: Do I need Immich to use Immich Kiosk?
-    a: Yes. Kiosk shows the photos and videos stored in an Immich server and keeps none of its own. You can install Immich from this catalogue too. Kiosk is a community project and is not made by the Immich team.
+    a: Yes. Immich Kiosk shows the photos and videos stored in an Immich server and keeps none of its own. You can install Immich from this catalogue too. Kiosk is a community project and is not made by the Immich team.
   - q: Is Immich Kiosk a good alternative to a Nixplay or Aura frame?
-    a: Yes, if you already keep your photos in Immich. Kiosk turns a screen you own into a photo frame with no frame subscription, and it can show any album or person from your library. A Nixplay or Aura frame is simpler to set up, because it is a finished device.
-  - q: Can I use an old tablet as a photo frame?
-    a: Yes. Open Kiosk's web address in the tablet's browser, or in a full-screen kiosk browser app, and leave the tablet on its charger. Very old tablets whose browsers are no longer updated may not run it.
-  - q: Can different screens show different photos?
-    a: Yes. One Kiosk install serves every screen, and each screen's settings, such as the album, the people or the layout, are part of the web address it opens.
-  - q: Who can see my photos?
-    a: Only screens that open Kiosk's address with its password, which Cloudgate creates and shows on the app's variables page. Anyone who has the full link can see the slideshow, and Kiosk's own documentation says this password offers little protection, so point Kiosk at albums you are happy to display.
-  - q: Who is the admin?
-    a: Kiosk has no accounts and no admin. It reads your photos with an Immich API key, which you create in your Immich account settings and can remove there at any time. Kiosk shows only the photos that Immich user can see.
+    a: Yes, if you already keep your photos in Immich. Immich Kiosk turns a screen you own into a photo frame with no frame subscription, and it can show any album or person from your library. A Nixplay or Aura frame is simpler to set up, because it is a finished device.
+  - q: Can I use an old tablet as an Immich Kiosk photo frame?
+    a: Yes. Open Immich Kiosk's web address in the tablet's browser, or in a full-screen kiosk browser app, and leave the tablet on its charger. Very old tablets whose browsers are no longer updated may not run it.
+  - q: Can different screens show different photos in Immich Kiosk?
+    a: Yes. One Immich Kiosk install serves every screen, and each screen's settings, such as the album, the people or the layout, are part of the web address it opens.
+  - q: Who can see my photos in Immich Kiosk?
+    a: Only screens that open Immich Kiosk's address with its password, which Cloudgate creates and shows on the app's variables page. Anyone who has the full link can see the slideshow, and Kiosk's own documentation says this password offers little protection, so point Kiosk at albums you are happy to display.
+  - q: Who is the Immich Kiosk admin?
+    a: Immich Kiosk has no accounts and no admin. It reads your photos with an Immich API key, which you create in your Immich account settings and can remove there at any time. Kiosk shows only the photos that Immich user can see.
 screenshots:
   - src: screenshots/slideshow.webp
     alt: "Immich Kiosk showing a full-screen photo of a white cat resting on a wooden ledge among leaves, with the date and time at top left, the weather in London at top right, and the album, date taken, camera settings and place at bottom right"

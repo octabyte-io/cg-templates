@@ -39,7 +39,7 @@ faq:
   - q: Is Speckle free?
     a: Yes, the self-hosted Speckle server is free and open source under the Apache-2.0 licence, apart from its enterprise modules, which this template leaves switched off. Workspaces, single sign-on, Speckle Automate and the Intelligence dashboards belong to the paid cloud and Enterprise plans and are not part of it.
   - q: Is Speckle a good alternative to Autodesk Construction Cloud?
-    a: Partly. Speckle covers sharing, viewing, comparing and discussing 3D models across many design tools, but it does not replace Autodesk Construction Cloud's document management, and Speckle itself describes it as working alongside ACC.
+    a: Partly. Speckle covers sharing, viewing, comparing and discussing 3D models across many design tools, but it does not replace the document management in Autodesk Construction Cloud, now called Autodesk Forma, and Speckle itself describes it as working alongside ACC.
   - q: Which design tools work with Speckle?
     a: Speckle has connectors for Revit, Rhino, Grasshopper, SketchUp, AutoCAD, Civil 3D, Archicad, Tekla Structures, ETABS, Blender, Vectorworks and Power BI, and they sign in to your server's web address. Speckle's cloud moved to a new data format in 2026 while the public self-hosted server stayed at version 2.31, so test the connector version you install before relying on it. You can always upload IFC files straight into the web app, up to 100 MB each.
   - q: How do I sign in to Speckle the first time?

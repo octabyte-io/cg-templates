@@ -37,17 +37,17 @@ faq:
   - q: Is Easy!Appointments free?
     a: Yes, Easy!Appointments is free and open source under the GPL-3.0 licence, for personal and commercial use. Its maker also sells optional services such as support, hosting and custom work.
   - q: Is Easy!Appointments a good alternative to Acuity Scheduling?
-    a: Yes, for a service business that wants customers to book a service with a member of staff online. Unlike Acuity, the free app does not take payments or send reminder emails or text messages.
+    a: Yes, Easy!Appointments suits a service business that wants customers to book a service with a member of staff online. Unlike Acuity, the free app does not take payments or send reminder emails or text messages.
   - q: Is Easy!Appointments a good alternative to Calendly?
-    a: Yes, if your bookings are services with staff, such as haircuts or consultations. For personal meeting links that check your calendar, Cal.com is a closer match to Calendly.
+    a: Yes, Easy!Appointments fits if your bookings are services with staff, such as haircuts or consultations. For personal meeting links that check your calendar, Cal.com is a closer match to Calendly.
   - q: How do I sign in to Easy!Appointments the first time?
-    a: The first visit to your web address opens an installation wizard, where you create the admin account and enter your company details; do it right after setup. Afterwards the address shows your booking page, and staff sign in at /index.php/login.
+    a: The first visit to your Easy!Appointments web address opens an installation wizard, where you create the admin account and enter your company details; do it right after setup. Afterwards the address shows your booking page, and staff sign in at /index.php/login.
   - q: Does Easy!Appointments send reminders or take payments?
-    a: No, the free app sends emails only when a booking is made, changed or cancelled. Reminders, text messages and online payments are offered only as paid custom work from its maker.
+    a: No, the free Easy!Appointments app sends emails only when a booking is made, changed or cancelled. Reminders, text messages and online payments are offered only as paid custom work from its maker.
   - q: Does Easy!Appointments send emails?
-    a: Yes, if you enter your email service's details when you set it up, or add them later. Without them, bookings still work, but no emails go out.
+    a: Yes, Easy!Appointments sends emails if you enter your email service's details when you set it up, or add them later. Without them, bookings still work, but no emails go out.
   - q: Does Easy!Appointments work with Google Calendar?
-    a: Yes, it syncs appointments both ways with Google Calendar. You need your own Google API credentials, which you enter under Settings > Integrations.
+    a: Yes, Easy!Appointments syncs appointments both ways with Google Calendar. You need your own Google API credentials, which you enter under Settings > Integrations.
 screenshots:
   - src: screenshots/booking.webp
     alt: "The Easy!Appointments booking page at step 1, Appointment Date & Time, for a 15 Minute Call with Jane Doe: a green header with the step numbers, an April 2026 calendar with the 7th selected, a timezone box set to Berlin, a list of free times from 12:15 pm to 1:15 pm, a Next button, and a footer with a language switch"

@@ -10,6 +10,8 @@ faq:
     a: "Yes. Firecrawl's core is open source under the AGPL-3.0 licence and can be self-hosted, and some of its features are only in its paid cloud. This page compares Crawl4AI with Firecrawl's hosted API; Crawl4AI uses the more permissive Apache-2.0 licence, which asks public uses to credit the project."
   - q: "Can Crawl4AI get past bot protection like Firecrawl's cloud?"
     a: "Not on its own. Requests come from your server's address and there is no built-in proxy network or automatic bot-wall handling, so some sites block or challenge them; you can add proxies of your own."
+  - q: "How do I switch my code from Firecrawl to Crawl4AI?"
+    a: "Point your code at Crawl4AI's API instead. Try your usual pages in Crawl4AI's playground, copy the matching Python or cURL request, rewrite your Firecrawl calls for Crawl4AI's endpoints with its API token, and test pages that Firecrawl reached through its proxies first."
 developer: "Yes. Crawl4AI is used through its API, its Python library or an AI assistant, so someone needs to connect it to your code or workflow tool. Cloudgate installs it, gives it a secure web address and creates its API token, and the playground in the browser helps you build the requests."
 ---
 

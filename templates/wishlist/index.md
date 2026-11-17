@@ -37,18 +37,18 @@ switching:
 faq:
   - q: Is Wishlist free?
     a: Yes, Wishlist is free and open source under the MIT licence, with no paid version and no limit on people or lists. You pay only for the server it runs on.
-  - q: Can the person whose list it is see what has been claimed?
-    a: No, not by default. Claims are hidden from the list's owner so gifts stay a surprise, and the admin can change that in the settings if your family prefers.
+  - q: Can the owner of a Wishlist list see what has been claimed?
+    a: No, not by default. Wishlist hides claims from the list's owner so gifts stay a surprise, and the admin can change that in the settings if your family prefers.
   - q: Is Wishlist a good alternative to Giftster or Elfster?
-    a: Yes, for shared wish lists with hidden claims, suggestions and separate family and friend groups. It has no Secret Santa draw and no app-store app, so a group that mainly runs gift exchanges may still want Elfster or Giftster for the draw.
-  - q: Can I add gifts from any shop, not just Amazon?
+    a: Yes, for shared wish lists with hidden claims, suggestions and separate family and friend groups. Wishlist has no Secret Santa draw and no app-store app, so a group that mainly runs gift exchanges may still want Elfster or Giftster for the draw.
+  - q: Can I add gifts to Wishlist from any shop, not just Amazon?
     a: Yes, you can add an item from any shop by pasting its link, and Wishlist fills in the name, price and picture where the shop's page allows it. You can also type the details and upload a picture yourself.
   - q: How do I sign in to Wishlist the first time?
     a: The first time you open Wishlist's address, a setup wizard asks you to create an account, and that first account is the administrator. There is no default password. Then invite your family, or let them sign up from the sign-in page.
   - q: Is there a Wishlist phone app?
     a: No, there is no app-store app, but Wishlist can be installed from the phone's browser to the home screen, where it opens like an app. The whole site works in a phone's browser too.
   - q: Can I use Wishlist as a wedding or baby registry?
-    a: Yes, Registry mode turns a group into one list with a public link. Guests can see it and claim gifts without creating an account, by entering an email address or another way to identify themselves.
+    a: Yes, Wishlist's Registry mode turns a group into one list with a public link. Guests can see it and claim gifts without creating an account, by entering an email address or another way to identify themselves.
 screenshots:
   - src: screenshots/wish-list.webp
     alt: "Dan Lopez's wish list in Wishlist, showing a camping hammock at $45.00 with none claimed and a coffee beans subscription at $24.00 with 1 of 3 claimed and a note, each with a Claim button"

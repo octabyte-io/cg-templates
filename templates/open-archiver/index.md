@@ -38,17 +38,17 @@ faq:
   - q: Is Open Archiver free?
     a: Yes, Open Archiver is free and open source under the AGPL-3.0 licence, and you pay only for your server. A separate paid Enterprise Edition adds retention policies, legal holds, an audit log, encryption at rest, journaling and single sign-on; this page describes only the free edition.
   - q: Is Open Archiver a good alternative to MailStore?
-    a: Yes, if you mainly need one searchable copy of all your company's email. It archives Google Workspace, Microsoft 365 and IMAP mailboxes and searches mail and attachments. Formal compliance tools such as retention rules and legal holds need its paid edition, and it cannot import an existing MailStore archive directly.
+    a: Yes. Open Archiver is a good alternative to MailStore if you mainly need one searchable copy of all your company's email. Open Archiver archives Google Workspace, Microsoft 365 and IMAP mailboxes and searches mail and attachments. Formal compliance tools such as retention rules and legal holds need its paid edition, and it cannot import an existing MailStore archive directly.
   - q: Can Open Archiver archive Google Workspace and Microsoft 365 email?
     a: Yes. After an administrator connects the account, Open Archiver finds every user's mailbox, imports the existing mail and keeps archiving new mail. Google Workspace needs a super admin to create a service account; Microsoft 365 needs an app registration approved by an admin.
   - q: Can I import old PST or Mbox files?
     a: Yes, Open Archiver imports PST files from Outlook, zipped EML files and Mbox files, so mail from old accounts and former staff can sit in the same archive as current mail.
   - q: Can Open Archiver search inside attachments?
-    a: Yes, it searches the text of emails and of attached files such as PDF and Word documents, including text read from scanned images. You can narrow results by sender, recipient, mailbox, source and date.
+    a: Yes. Open Archiver searches the text of emails and of attached files such as PDF and Word documents, including text read from scanned images. You can narrow results by sender, recipient, mailbox, source and date.
   - q: How do I sign in to Open Archiver the first time?
     a: The first person to open Open Archiver's web address is taken to a setup page to create the admin account, so do this right after setup. There is no default password.
   - q: What server size do I need for Open Archiver?
-    a: The project asks for at least 4 GB of memory, and disk space that grows with the amount of email you archive. Cloudgate sets it up with its database and search engine, and you can move to a bigger server later.
+    a: The Open Archiver project asks for at least 4 GB of memory, and disk space that grows with the amount of email you archive. Cloudgate sets it up with its database and search engine, and you can move to a bigger server later.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Open Archiver dashboard showing 102,287 emails archived, 2.39 GB of storage used and no failed imports in the last 7 days, with an area chart of emails archived per day and a pie chart of storage by source such as IMAP, PST and Mbox"

@@ -6,10 +6,12 @@ apps:
 moving: |
   ClassroomIO cannot import from Skilljar, so rebuild your academy. Sign up first to create it, add your email settings so invites reach learners, then recreate each course from lessons, videos, documents and quizzes, and set up certificates. Make introductory courses public if anyone should be able to take them, embed the course catalogue in your website or help centre, and invite existing learners by pasting a list of email addresses. Export completion records from Skilljar before you close the account.
 faq:
-  - q: "Can customers take courses without an account?"
+  - q: "Can customers take ClassroomIO courses without an account?"
     a: "Yes. ClassroomIO has public courses that anyone can open without signing up, alongside courses only invited learners can see."
-  - q: "Can I put the course catalogue on my own website?"
+  - q: "Can I put the ClassroomIO course catalogue on my own website?"
     a: "Yes. ClassroomIO has an embeddable course catalogue widget, and each course has its own landing page."
+  - q: "Does ClassroomIO support SCORM like Skilljar?"
+    a: "No. Skilljar imports SCORM 1.2 packages, but ClassroomIO has no SCORM support, so courses built in an authoring tool as SCORM need to be rebuilt in ClassroomIO from videos, documents and quizzes."
 ---
 
 Skilljar is a hosted customer-education platform: companies use it to run an academy that teaches customers and partners how to use their product, sold by quote.

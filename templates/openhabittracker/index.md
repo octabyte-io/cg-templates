@@ -38,7 +38,7 @@ faq:
   - q: Is OpenHabitTracker free?
     a: Yes, OpenHabitTracker is free and open source under the GPL-3.0 licence, with no ads, subscriptions or in-app purchases. When you host it yourself you pay only for your server.
   - q: Is OpenHabitTracker a good alternative to Habitify, Streaks or Habitica?
-    a: Yes, if you want habits, tasks and notes in one private app with reminders and apps on every device. It has no game or rewards like Habitica and no Apple Health link like Streaks, and it measures habits by how overdue they are rather than by a daily streak.
+    a: Yes. OpenHabitTracker is a good alternative to Habitify, Streaks or Habitica if you want habits, tasks and notes in one private app with reminders and apps on every device. It has no game or rewards like Habitica and no Apple Health link like Streaks, and it measures habits by how overdue they are rather than by a daily streak.
   - q: How do I sign in to OpenHabitTracker the first time?
     a: OpenHabitTracker has no sign-up page; its one account is created when it is installed. You choose the username during setup, Cloudgate creates the password, and you sign in with both at the app's address.
   - q: Is there a phone app for OpenHabitTracker?

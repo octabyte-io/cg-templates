@@ -45,7 +45,7 @@ faq:
   - q: Does Cloud Commander have a terminal or command console?
     a: Not in this template. Cloud Commander has a web console and terminal, but this template switches them off, along with the settings dialog, because they would let anyone signed in run commands on the server. You get the file manager, viewer and editor.
   - q: Does Cloud Commander work on a phone?
-    a: Yes, the web page adapts to the screen and shows one panel at a time on a phone or tablet. There is no phone app.
+    a: Yes, the Cloud Commander web page adapts to the screen and shows one panel at a time on a phone or tablet. There is no phone app.
 screenshots:
   - src: screenshots/two-panels.webp
     alt: "Cloud Commander's two panels for a bakery: the left panel shows the Menus folder with autumn-menu.md and price-list-wholesale.csv, the right panel shows Invoices/2026 with five invoice PDFs, each with size, date, owner and permissions, and a row of F1 to F9 buttons below"

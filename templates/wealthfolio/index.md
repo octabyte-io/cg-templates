@@ -35,11 +35,11 @@ switching:
     - Prices beyond Yahoo Finance need your own key from another data provider
 faq:
   - q: Is Wealthfolio free?
-    a: Yes, Wealthfolio is free and open source under the AGPL-3.0 licence, with no limit on accounts or holdings. Its makers sell an optional Wealthfolio Connect subscription for automatic broker syncing and syncing between devices, but this self-hosted web edition does not use it.
+    a: Yes, Wealthfolio is free and open source under the AGPL-3.0 licence, with no limit on accounts or holdings. Its makers sell an optional Wealthfolio Connect subscription for automatic broker syncing, syncing between devices and cloud backups, which you don't need to run it.
   - q: Is Wealthfolio a good alternative to Sharesight?
-    a: Yes, if you want a private portfolio tracker with no holding limit and no monthly fee. Wealthfolio shows performance against a benchmark, dividends and allocations, but it does not connect to your broker in this edition, so you import a CSV file or enter trades yourself.
+    a: Yes, if you want a private portfolio tracker with no holding limit and no monthly fee. Wealthfolio shows performance against a benchmark, dividends and allocations, but as Cloudgate installs it, it does not connect to your broker, so you import a CSV file or enter trades yourself.
   - q: Is Wealthfolio a good alternative to Empower (Personal Capital)?
-    a: Yes, for tracking investments and net worth without linking your bank and broker logins to a finance company. It also covers loans, property, spending and retirement planning, but you keep it up to date yourself instead of syncing accounts.
+    a: Yes, Wealthfolio tracks investments and net worth without linking your bank and broker logins to a finance company. It also covers loans, property, spending and retirement planning, but you keep it up to date yourself instead of syncing accounts.
   - q: How do I sign in to Wealthfolio the first time?
     a: Open your Wealthfolio address and enter the password shown in the Cloudgate console; there is no username and no sign-up page. Wealthfolio has one password for one person, so share it only with someone who should see all your finances.
   - q: Can I import my trades into Wealthfolio?

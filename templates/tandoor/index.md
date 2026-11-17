@@ -38,7 +38,7 @@ faq:
   - q: Is Tandoor Recipes free?
     a: Yes, Tandoor Recipes is free to self-host, and every feature is in the version you run yourself. Its code is public under the AGPL-3.0 licence with the Commons Clause, which makes it source-available rather than open source, and forbids selling it as a hosted service. You pay only for your server, plus an AI provider if you turn on AI.
   - q: Is Tandoor a good alternative to Paprika?
-    a: Yes, if you want one detailed recipe collection your whole household shares, on your own server and with no fee. Paprika has paid store apps that work fully offline; Tandoor runs in the browser, can be added to a phone's home screen, and keeps only recently opened recipes offline.
+    a: Yes, if you want one detailed recipe collection your whole household shares, on your own server and with no fee. Paprika has store apps that work fully offline, with a free plan limited to 50 recipes; Tandoor runs in the browser, can be added to a phone's home screen, and keeps only recently opened recipes offline.
   - q: What's the difference between Tandoor and Mealie?
     a: Tandoor Recipes is the more detailed of the two, with ingredients for each step, nutrition and cost from ingredient properties, misspelling-tolerant search and more importers, including one for Mealie. Mealie is simpler to learn and is open source, while Tandoor is source-available.
   - q: How do I sign in to Tandoor the first time?

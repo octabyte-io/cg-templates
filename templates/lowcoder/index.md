@@ -36,13 +36,13 @@ faq:
   - q: Is Lowcoder free?
     a: Yes, Lowcoder Community Edition is free and open source under the AGPL-3.0 licence, with no per-user fee when you host it yourself. Lowcoder also sells an Enterprise licence and paid AI and support add-ons, which this template doesn't include.
   - q: What does Lowcoder Community Edition leave out?
-    a: Community Edition leaves out the paid Enterprise features, namely audit logs, separate environments for testing and production, app usage statistics and custom branding, and the Automator AI that builds whole apps from a prompt needs a paid subscription. Building, sharing, public apps, embedding and Google, GitHub or Keycloak sign-in are all included.
+    a: Lowcoder Community Edition leaves out the paid Enterprise features, namely audit logs, separate environments for testing and production, app usage statistics and custom branding, and the Automator AI that builds whole apps from a prompt needs a paid subscription. Building, sharing, public apps, embedding and Google, GitHub or Keycloak sign-in are all included.
   - q: Is Lowcoder a good alternative to Retool?
     a: Yes, for teams that want the same approach of components, SQL queries and JavaScript on their own server without paying per user. Lowcoder's free edition can also publish public apps and embed them in a website, while audit logs and environments are paid extras. There is no importer, so Retool apps are rebuilt.
   - q: Can Lowcoder build a customer portal or public form?
     a: Yes. Any Lowcoder app can be made public, so customers can use it without an account, and it can be embedded in your website. Lowcoder has no built-in database, so a portal reads and writes a database, API or Google Sheet you connect.
   - q: Do I need to know how to code to use Lowcoder?
-    a: Some, yes. You drag the screens together without code, but connecting them to your data takes SQL queries and a little JavaScript, so a semi-technical person should build the apps. The people who use the finished apps need no technical skill.
+    a: Some, yes. In Lowcoder you drag the screens together without code, but connecting them to your data takes SQL queries and a little JavaScript, so a semi-technical person should build the apps. The people who use the finished apps need no technical skill.
   - q: How do I sign in to Lowcoder the first time?
     a: "Open Lowcoder's web address right after setup and click Sign up with your email address and a password; the first person to sign up gets their own workspace, as its admin. Sign-up stays open, and each later sign-up gets a separate workspace of its own, so bring teammates into yours with an invite from the workspace's Members settings. There is also a built-in super-admin account, admin@localhost, whose generated password is on the service's variables page in Cloudgate."
   - q: What server size does Lowcoder need?

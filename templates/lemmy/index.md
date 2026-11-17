@@ -42,7 +42,7 @@ faq:
   - q: How do I sign in to Lemmy the first time?
     a: Cloudgate creates the admin account when Lemmy is set up. Sign in with the username admin and the password Cloudgate generated, which is shown on the app's page in Cloudgate, then rename your site in the admin settings.
   - q: Who can join my Lemmy site?
-    a: You decide. In the admin settings you can let anyone sign up, ask new members to answer a question and wait for your approval, or close sign-ups, and you can make the site private so only signed-in members can read it.
+    a: You decide. In the Lemmy admin settings you can let anyone sign up, ask new members to answer a question and wait for your approval, or close sign-ups, and you can make the site private so only signed-in members can read it.
   - q: Can I import my subreddit or Circle community into Lemmy?
     a: No, Lemmy has no built-in import from Reddit or Circle, so a new site starts empty. Members who move from another Lemmy server can export their subscriptions, blocks and settings there and import them on yours.
   - q: Does Lemmy work with the fediverse?

@@ -37,11 +37,11 @@ faq:
     a: Yes, self-hosted Postiz is free and open source under the AGPL licence, and every feature is included with no limit on channels, posts or users. You pay only for your server, plus any AI service you choose to connect.
   - q: Is Postiz a good alternative to Buffer?
     a: Yes, if you are willing to do some setup once. Postiz covers what most people use Buffer for, a shared calendar, posts tailored per network, team approvals and statistics, without a fee per channel. The catch is that you register your own developer app with each network instead of just clicking connect.
-  - q: Do I need a developer account on each social network?
+  - q: Do I need a developer account on each social network for Postiz?
     a: Yes, for most networks. To post to X, LinkedIn, Facebook, Instagram, Threads, YouTube, TikTok or Pinterest from your own Postiz, you register a developer app with that network and add its keys, and Meta, YouTube and TikTok can take weeks to approve it for public use. Bluesky needs no setup, and Reddit, Mastodon, Discord, Slack and Telegram take a few minutes each.
   - q: How do I sign in to Postiz the first time?
     a: There is no default login. The first person to open Postiz's web address signs up with an email and password and becomes the owner. After that, public sign-up is closed, so to invite a teammate without an account you turn sign-up back on for a moment in Cloudgate.
-  - q: Can I move my scheduled posts from Buffer or Hootsuite?
+  - q: Can I move my scheduled posts from Buffer or Hootsuite to Postiz?
     a: No, Postiz has no import from Buffer, Hootsuite or Later. You connect your social accounts in Postiz and recreate the posts you have scheduled; your published posts stay on the networks themselves.
   - q: Does Postiz have AI writing tools and a phone app?
     a: Postiz has AI tools that help write posts, make images and schedule posts from a chat, but on your own server they need your own OpenAI key. There is no official phone app; you use Postiz in a web browser, including on a phone.

@@ -31,7 +31,7 @@ function body(): string {
       const pick = apps[0];
       const simplest = pick.ease === 'easy' ? undefined : apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
       out.push(
-        `### ${apps.every((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} alternatives to ${product.name}`,
+        `### ${apps.every((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} ${apps.length === 1 ? 'alternative' : 'alternatives'} to ${product.name}`,
         '',
         `Page: ${absolute(`alternatives/${product.id}/`)}`,
         '',

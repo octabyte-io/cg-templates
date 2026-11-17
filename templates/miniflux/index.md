@@ -46,7 +46,7 @@ faq:
   - q: Does Miniflux have a phone app?
     a: No, there is no official Miniflux app, but the web app works on a phone and can be added to the home screen. Reader apps such as NetNewsWire, Reeder Classic, Capy Reader and FluxNews connect to it once you turn on the Fever or Google Reader API under Settings, Integrations.
   - q: How do I sign in to Miniflux the first time?
-    a: Sign in with the admin username you chose during setup and the password Cloudgate generated, which is shown on the app's variables page. There is no sign-up page; the admin adds other people under Settings, Users.
+    a: Sign in to Miniflux with the admin username you chose during setup and the password Cloudgate generated, which is shown on the app's variables page. There is no sign-up page; the admin adds other people under Settings, Users.
   - q: What server size do I need for Miniflux?
     a: The smallest server is enough. Miniflux is a single small program with a PostgreSQL database and uses little memory, so Cloudgate gives it the smallest size.
 screenshots:

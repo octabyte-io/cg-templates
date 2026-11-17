@@ -1,5 +1,5 @@
 name: Open WebUI
-description: "Open WebUI is a self-hosted, ChatGPT-style AI chat for your team, using the AI you choose."
+description: "Open WebUI is a self-hosted, ChatGPT-style AI chat for your team, with accounts, chat history and knowledge bases, using the AI provider you choose."
 version: "0.13.3"
 tags: [chatgpt alternative, self-hosted ai chat, chatgpt business alternative, claude alternative, ai chat for teams, openai api chat]
 links:

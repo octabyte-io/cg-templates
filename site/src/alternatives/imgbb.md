@@ -9,7 +9,9 @@ faq:
   - q: "Can I embed Slink images on other websites?"
     a: "Yes. Copy an image's link, with a width, height or format if you want one, and use it wherever you would have used an ImgBB link. A password-protected or expired link will not show the image."
   - q: "Is there a size limit?"
-    a: "Yes, 15 MB per image by default. Total storage is limited only by your server's disk, or by the S3-compatible storage you connect."
+    a: "Yes. Slink accepts up to 15 MB per image by default. Total storage is limited only by your server's disk, or by the S3-compatible storage you connect."
+  - q: "Can I move my ImgBB images to Slink?"
+    a: "Not automatically. Slink has no ImgBB importer, so upload the images you still need again; Slink takes many at once and spots duplicates. Then replace the old ImgBB links where they are embedded with the new Slink links."
 ---
 
 ImgBB is a free hosted image upload site: you upload a picture and get a direct link and embed codes to use on forums, websites and chats.

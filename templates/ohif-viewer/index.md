@@ -27,12 +27,12 @@ faq:
     a: No. The OHIF Viewer is not FDA cleared or CE marked, and its makers say it is the user's responsibility to follow the rules that apply to them. Its study list is labelled "Investigational use only".
   - q: Is the OHIF Viewer HIPAA compliant?
     a: No. Its makers say the OHIF Viewer does not meet all the criteria for HIPAA compliance on its own, so check your own obligations before you store patient scans.
-  - q: Where are the scans stored?
-    a: On your own server. The viewer itself stores nothing; Cloudgate sets it up with an Orthanc image server that keeps the studies and sends them to the viewer.
-  - q: How do I add scans?
-    a: Open the study list and upload DICOM files, the standard file format for medical images. Orthanc's own pages, also behind your sign-in, let you upload and manage studies as well.
-  - q: How do I sign in the first time?
-    a: Your browser asks for a username and password before the viewer opens. Use the username admin and the password Cloudgate created, shown on the app's variables page; everyone who uses this setup shares that sign-in.
+  - q: Where does OHIF Viewer store the scans?
+    a: On your own server. OHIF Viewer itself stores nothing; Cloudgate sets it up with an Orthanc image server that keeps the studies and sends them to the viewer.
+  - q: How do I add scans to OHIF Viewer?
+    a: Open the OHIF Viewer study list and upload DICOM files, the standard file format for medical images. Orthanc's own pages, also behind your sign-in, let you upload and manage studies as well.
+  - q: How do I sign in to OHIF Viewer the first time?
+    a: Your browser asks for a username and password before OHIF Viewer opens. Use the username admin and the password Cloudgate created, shown on the app's variables page; everyone who uses this setup shares that sign-in.
 screenshots:
   - src: screenshots/viewer-segmentation.webp
     alt: "The OHIF Viewer showing a brain MRI from three directions side by side, with coloured outlines over brain structures, and a segmentation panel listing structures such as cerebral white matter, thalamus and hippocampus"

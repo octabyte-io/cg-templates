@@ -37,16 +37,16 @@ faq:
     a: Yes. PiGallery2 is free, open-source software under the MIT licence, with no paid edition or locked features, so you pay only for your server.
   - q: Is PiGallery2 a good alternative to SmugMug or Flickr?
     a: Yes, for showing and sharing your own photos privately. PiGallery2 turns your photo folders into a fast gallery with search, a map and password-protected share links, on your own web address. It has no print sales, client proofing or photo community, so it does not replace those parts.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to PiGallery2 the first time?
     a: Use the user name admin and the password Cloudgate shows you after setup. PiGallery2's usual admin/admin login is never created, and you can add more users in the settings.
-  - q: How do I add my photos?
+  - q: How do I add my photos to PiGallery2?
     a: You upload them at the second web address Cloudgate gives you, a file manager that comes with this template, in folders named the way you want them shown. PiGallery2 picks up a folder when you open it in the gallery.
   - q: Does PiGallery2 have albums?
-    a: Not in the usual sense. Your folders are the albums, and any search, such as one keyword or one person, can be saved as an album that updates on its own.
-  - q: Can I move my photos from SmugMug or Flickr?
+    a: Not in the usual sense. In PiGallery2 your folders are the albums, and any search, such as one keyword or one person, can be saved as an album that updates on its own.
+  - q: Can I move my photos from SmugMug or Flickr to PiGallery2?
     a: Not automatically. PiGallery2 has no importer, so download your originals from SmugMug or Flickr first, then upload the folders to your server.
   - q: Does PiGallery2 recognise faces or back up my phone?
-    a: No. It shows names that are already tagged in your photos by programs like Lightroom or digiKam, and it has no backup app. For automatic phone backup and face recognition, Immich or PhotoPrism is the better choice.
+    a: No. PiGallery2 shows names that are already tagged in your photos by programs like Lightroom or digiKam, and it has no backup app. For automatic phone backup and face recognition, Immich or PhotoPrism is the better choice.
 screenshots:
   - src: screenshots/gallery.webp
     alt: "The PiGallery2 gallery: a dark top bar with Gallery, Albums and Faces links, a search box, a Share button and the admin user; two folder tiles named day 1 and day 2; a short text note with a small map; and below the date December 26, 2017 a grid of photos of San Juan, Puerto Rico, with the sea, colourful houses and an old fort"

@@ -40,9 +40,9 @@ faq:
   - q: Is WAHA free?
     a: Yes. WAHA is free and open source under the Apache 2.0 licence, and since mid-2026 the features of the former paid Plus version are in the free version too. You pay only for your server.
   - q: Is WAHA a good alternative to the WhatsApp Business API or Twilio?
-    a: Yes for internal tools, small volumes and testing, where no per-message fee and a quick QR setup matter most. For customer messaging at scale, approved templates, a verified business name or anything you cannot risk losing, the official API is the safer choice.
+    a: Yes, WAHA suits internal tools, small volumes and testing, where no per-message fee and a quick QR setup matter most. For customer messaging at scale, approved templates, a verified business name or anything you cannot risk losing, the official WhatsApp Business API is the safer choice.
   - q: How do I connect my WhatsApp number to WAHA?
-    a: Open the dashboard, sign in with the username and password Cloudgate shows, connect with the API key, and start a session. Then scan the QR code with WhatsApp on your phone, under Settings, Linked devices.
+    a: Open the WAHA dashboard, sign in with the username and password Cloudgate shows, connect with the API key, and start a session. Then scan the QR code with WhatsApp on your phone, under Settings, Linked devices.
   - q: Can WAHA work with n8n or Chatwoot?
     a: Yes. WAHA has an n8n community node and works with Chatwoot and Typebot, and any tool that can call a web address and receive webhooks can use it.
   - q: How do I switch from the WhatsApp Business API to WAHA?

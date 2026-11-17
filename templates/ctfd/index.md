@@ -44,7 +44,7 @@ faq:
   - q: How do I set up CTFd the first time?
     a: The first person to open CTFd's web address sees a setup page that asks for the event name, individual or team play, start and end times and the admin account. There is no default password, so finish the setup straight after installing.
   - q: Can CTFd run team competitions?
-    a: Yes, you choose team or individual play during setup and can limit how many people join each team. Players create or join a team, and the scoreboard ranks teams.
+    a: Yes. In CTFd you choose team or individual play during setup and can limit how many people join each team. Players create or join a team, and the scoreboard ranks teams.
   - q: Can I move an event from hosted CTFd or import challenges?
     a: Yes, CTFd can import a backup of a whole event exported from another CTFd, as long as it is not from a newer version, and it can add users, teams and challenges from CSV files. Importing a full backup replaces what is already there, and hosted-only features will not carry over.
   - q: What server size do I need for CTFd?

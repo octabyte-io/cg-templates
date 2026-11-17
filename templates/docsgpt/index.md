@@ -44,7 +44,7 @@ faq:
   - q: How do I sign in to DocsGPT the first time?
     a: DocsGPT asks for an access token, which the app writes in its logs when it starts. Open the app's logs in Cloudgate, copy the token and paste it into the browser once. Anyone with that token can use the app, so share it only with your team.
   - q: Can each person have their own DocsGPT account?
-    a: "No, not in the setup Cloudgate installs: everyone uses the same token and sees the same chats, documents and agents. Personal accounts, admins and usage limits need a separate sign-in service such as Authentik or Keycloak, which this template does not set up. Visitors to your website chat need no token."
+    a: "No, not in the DocsGPT setup Cloudgate installs: everyone uses the same token and sees the same chats, documents and agents. Personal accounts, admins and usage limits need a separate sign-in service such as Authentik or Keycloak, which this template does not set up. Visitors to your website chat need no token."
   - q: How is DocsGPT different from AnythingLLM?
     a: DocsGPT adds a search widget, agents with tools, visual workflows and a free default AI model, while AnythingLLM gives each person their own account and runs on a smaller server. Both answer from your own documents and can put a chat on your website.
   - q: What server size do I need for DocsGPT?

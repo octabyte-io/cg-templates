@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import Crumbs from '../../components/Crumbs.astro';
-import { getTemplates, lastUpdated, licenceKind, usedCategories } from '../../lib/catalogue';
+import { alternativesPages, getTemplates, lastUpdated, licenceKind, usedCategories } from '../../lib/catalogue';
 import type { Category } from '../../categories';
 import { breadcrumbSchema, graph, itemListSchema } from '../../lib/schema';
 import { href } from '../../lib/site';
@@ -19,6 +19,11 @@ const { category } = Astro.props;
 const apps = getTemplates().filter((template) => template.category.id === category.id);
 const others = usedCategories().filter((other) => other.id !== category.id);
 const replaced = [...new Set(apps.flatMap((app) => app.alternativeTo.map((p) => p.name)))];
+// Every paid tool an app here replaces, linked to its alternatives page, A to Z.
+const appIds = new Set(apps.map((app) => app.id));
+const replacedPages = alternativesPages()
+  .filter((page) => page.apps.some((app) => appIds.has(app.id)))
+  .sort((a, b) => a.product.name.localeCompare(b.product.name));
 const trail = [
   { name: 'Home', path: '' },
   { name: category.name, path: `categories/${category.id}/` },
@@ -29,7 +34,8 @@ const noun = category.name
   .split(' ')
   .map((word) => (/^[A-Z]{2,}s?$/.test(word) ? word : word.toLowerCase()))
   .join(' ');
-const title = allOpenSource ? `Open-source ${noun} apps to self-host` : `Self-hosted ${noun} apps`;
+// Shorter wordings for long names, so the title fits the roughly 60 characters a results page shows.
+const title = [allOpenSource ? `Open-source ${noun} apps to self-host` : `Self-hosted ${noun} apps`, `Open-source ${noun} apps`].find((t) => t.length <= 48) ?? `Self-hosted ${noun} apps`;
 // Name as many replaced products as fit in 160 characters, never cutting a name in half.
 const describe = (names: string[]) =>
   `${category.lede} ${apps.length} free ${apps.length === 1 ? 'app' : 'apps'}${names.length ? `, replacing ${names.join(', ')}` : ''}.`;
@@ -62,6 +68,23 @@ const description = fitting ?? category.lede;
       <div class="grid">{apps.map((app) => <Card template={app} />)}</div>
     </div>
   </section>
+  {
+    replacedPages.length > 0 && (
+      <section class="sec browse pad" aria-labelledby="replaces-title">
+        <h2 class="h2" id="replaces-title">Paid tools these apps replace</h2>
+        <ul class="azlist">
+          {replacedPages.map((page) => (
+            <li>
+              <a href={href(`alternatives/${page.product.id}/`)}>
+                {page.product.name} {page.apps.length === 1 ? 'alternative' : 'alternatives'}
+              </a>
+              <span>{page.apps.length} {page.apps.length === 1 ? 'app' : 'apps'}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
   <section class="sec browse pad">
     <h2 class="h2">Other categories</h2>
     <div class="idx">

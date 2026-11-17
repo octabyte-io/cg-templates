@@ -39,14 +39,14 @@ faq:
     a: Yes. wanderer is free, open-source software under the AGPL-3.0 licence, and every feature is included with no paid tier. You pay only for the server it runs on.
   - q: Is wanderer a good alternative to AllTrails?
     a: Yes, if you want your own trail library. wanderer stores, plans, searches and shares your GPS tracks much like AllTrails, without a subscription. Unlike AllTrails, it does not come with a catalogue of trails written by other people; you add your own.
-  - q: Can I bring my trails from komoot or AllTrails?
+  - q: Can I bring my trails into wanderer from komoot or AllTrails?
     a: Partly. Any trail you can download as a GPX or KML file can be uploaded to wanderer. wanderer also has a komoot sync add-on, but it is not included in this template and has to be added to the server separately.
   - q: Does wanderer have a phone app?
     a: Yes, but it is in public beta and needs a special server build that this template does not install yet. The wanderer website works in your phone's browser, so you can look up trails, plan routes and upload files on the go.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to wanderer the first time?
     a: Open wanderer's web address and register with a username, email and password; there is no default login. Do it right after install, because anyone with the address can register until you turn off new sign-ups in the template's settings.
   - q: Is my trail data private with wanderer?
-    a: Yes. Your tracks, photos and notes are stored on your own server, and trails are private until you share or publish them. Route planning and place search use public OpenStreetMap services, which see the map points you ask about.
+    a: Yes. wanderer stores your tracks, photos and notes on your own server, and trails are private until you share or publish them. Route planning and place search use public OpenStreetMap services, which see the map points you ask about.
 screenshots:
   - src: screenshots/trail-detail.webp
     alt: "A wanderer trail page for the Breitenstein hike shown on a laptop, a tablet and a phone: a cover photo of the mountain, tabs for description, waypoints, photos and summit book, a list of waypoints with heights and coordinates, and a 3D map with the route in blue above an elevation profile"

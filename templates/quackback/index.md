@@ -39,11 +39,11 @@ faq:
     a: Yes, Quackback is free and open source under the AGPL-3.0 licence. A self-hosted Quackback has every feature, with unlimited seats and no licence key; you pay only for your server, plus your email service and AI provider if you use them.
   - q: Is Quackback a good alternative to Canny or UserVoice?
     a: Yes, if you want customers to post and vote on ideas, a public roadmap and a changelog that tells voters when their request ships. Quackback also links requests to Linear, GitHub and Jira. Canny connects to more tools and UserVoice is a larger enterprise suite, while Quackback is younger and runs on your own server.
-  - q: Can I import my feedback from Canny?
+  - q: Can I import my feedback from Canny into Quackback?
     a: Partly. You export a CSV file from Canny and import it in Quackback's settings, which brings over posts, boards, statuses, tags and vote counts, but not who voted. Comments and individual voters need Quackback's import script, which a developer can run. The same CSV route works for UserVoice exports.
   - q: How do I sign in to Quackback the first time?
     a: There is no default login. The first person to open your Quackback address creates the owner account with an email address and a password of at least 8 characters, then names the workspace and picks the parts to switch on. Nobody else can sign up until that is done, so do it right after setup.
-  - q: Do I need an email service or an OpenAI key?
+  - q: Does Quackback need an email service or an OpenAI key?
     a: No, both are optional. Without email settings, Quackback only writes its emails to its log, so invitations, password resets and changelog emails are not sent; sign-up and sign-in with a password still work. An OpenAI key turns on AI summaries and duplicate detection.
   - q: What server size does Quackback need?
     a: Quackback recommends 2 GB of memory and 2 CPU cores, so Cloudgate asks for a medium server. Plan extra disk if customers will attach images and videos to their feedback.

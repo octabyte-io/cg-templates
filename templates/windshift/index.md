@@ -44,9 +44,9 @@ faq:
   - q: Can Windshift replace Jira Service Management?
     a: Yes, for many teams. Windshift has a customer portal, email intake, request types, queues, SLAs with working calendars and approvals, and each request is a work item your developers can pick up directly.
   - q: How do I sign in to Windshift the first time?
-    a: The first person to open the web address is asked to create the admin account. There is no default password. Then create a workspace and invite your team, or connect single sign-on through OpenID Connect or LDAP.
+    a: The first person to open the Windshift web address is asked to create the admin account. There is no default password. Then create a workspace and invite your team, or connect single sign-on through OpenID Connect or LDAP.
   - q: Is there a Windshift phone app?
-    a: Yes, as a web app you install from the browser, with no app store. It opens your work, a timer and alerts, and can send push notifications for mentions, assignments and comments. There is also a desktop app for Mac.
+    a: Yes, Windshift comes as a web app you install from the browser, with no app store. It opens your work, a timer and alerts, and can send push notifications for mentions, assignments and comments. There is also a desktop app for Mac.
   - q: Do Windshift's AI features cost extra?
     a: No, Windshift's AI assistant and coding agents are free in the app, but they need an AI model you connect yourself. A hosted model provider charges you for what you use; a model you run yourself does not.
 screenshots:

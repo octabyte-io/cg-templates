@@ -36,13 +36,13 @@ faq:
   - q: Is Etherpad free?
     a: Yes, Etherpad is free and open source under the Apache 2.0 licence, with no paid edition or upsells. You pay only for the server it runs on.
   - q: Is Etherpad a good alternative to Google Docs?
-    a: Yes, for writing together in real time, such as meeting notes, drafts and workshops. It is a simpler editor than Google Docs, with plain formatting unless you add plugins, but your documents stay on your own server and no one needs a Google account.
+    a: Yes, Etherpad works well for writing together in real time, such as meeting notes, drafts and workshops. It is a simpler editor than Google Docs, with plain formatting unless you add plugins, but your documents stay on your own server and no one needs a Google account.
   - q: Do people need an account to use Etherpad?
     a: No, anyone with a pad's link can open it, choose a display name and start writing. Only the admin signs in, at your Etherpad address followed by /admin, with the username admin and the password Cloudgate created, shown on the app's variables page, to manage plugins, settings and pads.
   - q: Can I export an Etherpad document to Word or PDF?
-    a: Yes, you can download any pad as a Word file, a PDF, HTML or plain text, and you can import text, HTML and Word files into a pad.
+    a: Yes, you can download any Etherpad pad as a Word file, a PDF, HTML or plain text, and you can import text, HTML and Word files into a pad.
   - q: Are Etherpad pads private?
-    a: A pad is private only in the sense that people need its link, because anyone who has the link can read and edit it. Give important pads long, hard-to-guess names, and share their links only with the people who should see them.
+    a: An Etherpad pad is private only in the sense that people need its link, because anyone who has the link can read and edit it. Give important pads long, hard-to-guess names, and share their links only with the people who should see them.
   - q: Is Etherpad a good alternative to Dropbox Paper?
     a: Yes, for shared notes and drafts written together live. Etherpad has no folders, tasks or Dropbox storage, but you can move a Paper document across by exporting it as a Word file and importing it into a pad.
 screenshots:

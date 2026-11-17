@@ -38,7 +38,7 @@ faq:
   - q: Is Mathesar free?
     a: Yes, Mathesar is free and open source under the GPL-3.0 licence, and the self-hosted app has no paid features. You pay only for your server.
   - q: Is Mathesar a good alternative to Airtable?
-    a: Yes, if you want linked tables, filters and forms on data stored as plain PostgreSQL tables. It has fewer Airtable features than Baserow or NocoDB, with no formulas, no kanban or calendar views and no automations.
+    a: Yes. Mathesar is a good alternative to Airtable if you want linked tables, filters and forms on data stored as plain PostgreSQL tables. Mathesar has fewer Airtable features than Baserow or NocoDB, with no formulas, no kanban or calendar views and no automations.
   - q: Can Mathesar work with my existing PostgreSQL database?
     a: Yes, Mathesar can connect to an existing PostgreSQL database you have login details for and show its tables as they are, as well as use the database Cloudgate sets up with it. Changes you make in Mathesar are real changes to that database.
   - q: How do I sign in to Mathesar the first time?

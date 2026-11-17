@@ -38,16 +38,16 @@ faq:
   - q: Is Chhoto URL free?
     a: Yes, Chhoto URL costs nothing. It is open source under the MIT licence, every feature is in the free app, and there is no cap on links or clicks. Your only cost is the server, and it fits the smallest one.
   - q: Is Chhoto URL a good alternative to Bitly?
-    a: Yes, if you want plain short links on your own domain, with custom endings, expiry dates and QR codes, and a hit count is all the stats you need. It has no click charts, campaigns, link-in-bio pages or team accounts.
+    a: Yes, Chhoto URL is a good Bitly alternative if you want plain short links on your own domain, with custom endings, expiry dates and QR codes, and a hit count is all the stats you need. It has no click charts, campaigns, link-in-bio pages or team accounts.
   - q: How do I sign in to Chhoto URL the first time?
-    a: Open your app's address and enter the password Cloudgate created, which is shown on the app's variables page. There is no setup step and no username; that one password opens the page where you make and manage links.
+    a: Open your Chhoto URL address and enter the password Cloudgate created, which is shown on the app's variables page. There is no setup step and no username; that one password opens the page where you make and manage links.
   - q: Does Chhoto URL track the people who click my links?
     a: No, Chhoto URL only counts how many times each link is opened. It records no countries, referrers, devices or other details about visitors, and it sets no tracking cookies on them.
   - q: Should I choose Chhoto URL or YOURLS?
     a: Choose Chhoto URL for the simplest app, with link expiry, QR codes, notes and a phone-friendly page built in. Choose YOURLS if you want detailed stats for each link, such as clicks over time, countries and referring sites, or its plugins.
   - q: Can I import my links from Bitly into Chhoto URL?
     a: No, there is no importer for Bitly or any other service, and bit.ly links can never leave Bitly. Recreate the links you still share in Chhoto URL; if they used a branded domain of yours, point that domain at Chhoto URL and reuse the same endings so printed links keep working.
-  - q: Can each person on my team have their own login?
+  - q: Can each person on my team have their own Chhoto URL login?
     a: No, Chhoto URL has one password and no user accounts, by design. Everyone who has the password sees and manages every link; for separate links per person, install a separate copy for each.
 screenshots:
   - src: screenshots/dashboard.webp

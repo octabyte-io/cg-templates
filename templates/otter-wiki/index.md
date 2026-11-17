@@ -36,17 +36,17 @@ faq:
   - q: Is An Otter Wiki free?
     a: Yes, An Otter Wiki is free and open source under the MIT licence, and every feature is in the free app; there is no paid edition or cloud plan. You pay only for your server.
   - q: How do I sign in to An Otter Wiki the first time?
-    a: There is no default password; open your wiki's address and register, and the first account to register becomes the admin. Do it straight after setup. Cloudgate's template lets anyone read but only signed-in people edit or upload, which you can change under Settings. New users confirm their email, so add your mail settings or switch confirmation off.
+    a: An Otter Wiki has no default password; open your wiki's address and register, and the first account to register becomes the admin. Do it straight after setup. Cloudgate's template lets anyone read but only signed-in people edit or upload, which you can change under Settings. New users confirm their email, so add your mail settings or switch confirmation off.
   - q: Is An Otter Wiki a good alternative to Confluence?
-    a: Yes, for small teams that want a simple wiki for handbooks, how-tos and notes, with full page history and no per-user price. It is much plainer than Confluence, with a Markdown editor, no live co-editing, no comments and no spaces or page templates.
+    a: Yes. An Otter Wiki is a good alternative to Confluence for small teams that want a simple wiki for handbooks, how-tos and notes, with full page history and no per-user price. It is much plainer than Confluence, with a Markdown editor, no live co-editing, no comments and no spaces or page templates.
   - q: Can I import my Confluence, Notion or GitBook pages?
     a: No, An Otter Wiki has no built-in importer. Pages are Markdown, so text exported as Markdown can be pasted in, but plan to move your most important pages by hand.
   - q: Where does An Otter Wiki keep my pages?
     a: An Otter Wiki keeps pages and attachments as plain files in a Git repository on your server, with every change kept. Backing up the wiki means copying that repository, and the wiki can push it to a remote such as GitHub after each change.
   - q: How is An Otter Wiki different from Wiki.js, BookStack and DokuWiki?
     a: An Otter Wiki is the simplest of them, a Markdown wiki that keeps everything in Git and needs very little memory. Wiki.js and BookStack keep pages in a database and have friendlier editors, and DokuWiki uses its own wiki syntax by default and adds rights per folder.
-  - q: Is there an An Otter Wiki phone app?
-    a: No, there is no phone app, but the wiki works in a phone's web browser, including dark mode.
+  - q: Does An Otter Wiki have a phone app?
+    a: No. An Otter Wiki has no phone app, but the wiki works in a phone's web browser, including dark mode.
 screenshots:
   - src: screenshots/wiki-page.webp
     alt: "An Otter Wiki in dark mode showing a page titled An Otter Wiki, with a sidebar of Home, A - Z and Create page links, an On this page list and the otter logo, and a page with formatted text, a bulleted list of features, a highlighted code block and a maths formula, below a top bar with a search box and an edit button"

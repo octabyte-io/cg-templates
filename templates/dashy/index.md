@@ -36,7 +36,7 @@ faq:
   - q: Is Dashy free?
     a: Yes, Dashy is free and open source under the MIT licence, with no paid edition and no features held back. You pay only for the server it runs on.
   - q: Is Dashy a good alternative to start.me?
-    a: Yes, if you want one shared start page for your office or team with no ads and your links on your own server. It does not have start.me's browser extension or personal pages that each person builds, but it adds live up or down dots for your own apps.
+    a: Yes, Dashy is a good start.me alternative if you want one shared start page for your office or team with no ads and your links on your own server. It does not have start.me's browser extension or personal pages that each person builds, but it adds live up or down dots for your own apps.
   - q: How do I sign in to Dashy the first time?
     a: The browser asks for a username and password when you open your Dashy address. The username is admin and the password is the one shown in the Cloudgate console; after that you see the sample dashboard and can start replacing it with your own apps.
   - q: Is Dashy's built-in login secure?

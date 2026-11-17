@@ -12,9 +12,11 @@ moving: |
   Dossier also starts from a resume file: download your resume from Resume.io as a PDF and import it into your Dossier profile, then check each section. Importing sends the text to your AI model, so choose a local model if it must stay on your server.
 faq:
   - q: "Can I download my resume as a PDF for free in Reactive Resume?"
-    a: "Yes. Reactive Resume has no paid tier: PDF, Word, Markdown and JSON downloads are free, with no limit."
+    a: "Yes. Reactive Resume has no paid tier: PDF, Word, Markdown and JSON downloads are free, with no limit. When we checked in November 2026, Resume.io's free account downloaded plain text only."
   - q: "Are Reactive Resume templates readable by hiring software?"
-    a: "Yes. It has ATS-safe templates and a check that shows the text hiring software reads from your resume."
+    a: "Yes. Reactive Resume has ATS-safe templates and a check that shows the text hiring software reads from your resume."
+  - q: "Can Reactive Resume write cover letters like Resume.io?"
+    a: "Yes. Reactive Resume writes cover letters as well as resumes, in the same editor with a live preview, and downloads them free. Dossier also drafts a tailored cover letter for each job you paste in."
 ---
 
 Resume.io is an online resume and cover letter builder with guided templates and sample content.

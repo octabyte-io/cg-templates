@@ -34,13 +34,13 @@ faq:
   - q: Is ToolJet free?
     a: Yes, ToolJet Community Edition is free and open source under the AGPL-3.0 licence, with no limit on users, builders or apps when you host it yourself. ToolJet also sells paid editions with extra features, which this template doesn't include.
   - q: What does ToolJet Community Edition leave out?
-    a: Community Edition leaves out the paid features, including AI app building, workflows, single sign-on (including Google and GitHub sign-in), audit logs, Git sync, real-time co-editing and comments, separate test and live environments, custom user groups, public apps and white-labelling. People sign in with an email address and password.
+    a: ToolJet Community Edition leaves out the paid features, including AI app building, workflows, single sign-on (including Google and GitHub sign-in), audit logs, Git sync, real-time co-editing and comments, separate test and live environments, custom user groups, public apps and white-labelling. People sign in with an email address and password.
   - q: Is ToolJet a good alternative to Retool?
     a: Yes, for teams that want the same approach of components, queries and JavaScript on their own server without paying per user. Retool has more built in, while ToolJet Community Edition leaves out features such as workflows, single sign-on and audit logs. There is no importer, so Retool apps are rebuilt.
   - q: Can ToolJet replace Glide or Softr?
     a: Partly. ToolJet can replace Glide or Softr for internal apps on your own data, and you can upload a spreadsheet's rows to its built-in database as a CSV file. It asks for more technical skill, and Community Edition can't publish public apps, so it doesn't replace a Softr customer portal.
   - q: Do I need to know how to code to use ToolJet?
-    a: Some, yes. You drag the screens together without code, but connecting them to your data takes SQL queries and a little JavaScript or Python, so a semi-technical person should build the apps. The people who use the finished apps need no technical skill.
+    a: Some, yes. In ToolJet you drag the screens together without code, but connecting them to your data takes SQL queries and a little JavaScript or Python, so a semi-technical person should build the apps. The people who use the finished apps need no technical skill.
   - q: How do I sign in to ToolJet the first time?
     a: The first person to open ToolJet's web address creates the admin account and the first workspace, so open it right after setup. The admin then invites the rest of the team from the settings.
   - q: What server size does ToolJet need?

@@ -38,11 +38,11 @@ faq:
   - q: Is Koillection a good alternative to CLZ?
     a: Yes, if you want one free catalogue for every kind of collection, with fields you choose. CLZ apps scan barcodes and fill in details automatically; Koillection doesn't, and it can't import a CLZ database, so you add items yourself or with a scraper you set up.
   - q: Does Koillection fill in item details automatically?
-    a: No, not out of the box. You can build your own scraper that copies an item's name, picture and details from a web page such as a Discogs release, but the feature is still experimental.
-  - q: How do I sign in the first time?
+    a: No, not out of the box. In Koillection you can build your own scraper that copies an item's name, picture and details from a web page such as a Discogs release, but the feature is still experimental.
+  - q: How do I sign in to Koillection the first time?
     a: Open Koillection's web address and you'll see a setup page that creates the first account. That account is the admin, so do this right after setup.
-  - q: Can I share my collection with friends?
-    a: Yes. Each collection and item can be public for anyone, internal for signed-in users only, or private, and a setting for your whole account limits what is shown.
+  - q: Can I share my Koillection collection with friends?
+    a: Yes. Each Koillection collection and item can be public for anyone, internal for signed-in users only, or private, and a setting for your whole account limits what is shown.
   - q: Is there a Koillection app for my phone?
     a: No, there is no app in the stores. Koillection works in the phone's browser and can be added to the home screen.
 screenshots:

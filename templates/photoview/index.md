@@ -35,14 +35,14 @@ faq:
     a: Partly. Photoview is a good private gallery for photos you already have, with a timeline, albums, faces and share links. Unlike Google Photos, it does not back up your phone and has no phone app or search by words; Immich is the closer match for that.
   - q: How do I add photos to Photoview?
     a: You upload photos in your browser at a second web address that Cloudgate sets up next to Photoview, signing in as admin with the password Cloudgate shows. Photoview itself only displays photos, so after uploading press Scan All in its Settings, or turn on the scheduled scan.
-  - q: Who is the admin?
+  - q: Who is the Photoview admin?
     a: The first person to open Photoview's web address chooses the admin name and password in its setup screen, so do this right after setup and keep the photo folder it suggests. The admin can then add other users.
-  - q: Can I share an album privately?
-    a: Yes. You can share an album or a single photo or video with a link, and protect the link with a password. The person you send it to does not need an account.
+  - q: Can I share a Photoview album privately?
+    a: Yes. In Photoview you can share an album or a single photo or video with a link, and protect the link with a password. The person you send it to does not need an account.
   - q: Can I move my photos from Google Photos to Photoview?
-    a: Yes, by hand. There is no importer, so download your originals from Google Photos, for example with Google Takeout, and upload the folders; each folder becomes an album.
+    a: Yes, by hand. Photoview has no importer, so download your originals from Google Photos, for example with Google Takeout, and upload the folders; each folder becomes an album.
   - q: Does Photoview have a phone app?
-    a: No. Its old iPhone app is no longer maintained or in the App Store, but the gallery works in the web browser on any phone.
+    a: No. Photoview's old iPhone app is no longer maintained or in the App Store, but the gallery works in the web browser on any phone.
 screenshots:
   - src: screenshots/timeline.webp
     alt: "Photoview's photo timeline: a left menu with Photos, Albums, Places, People and Settings, landscape and street photos grouped by date from August 2021, and a side panel for a selected RAW photo showing its camera, lens and exposure, download sizes and a public share link"

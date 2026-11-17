@@ -41,11 +41,11 @@ faq:
   - q: How do I sign in to NodeBB the first time?
     a: NodeBB sets itself up during installation. Sign in with the admin username you chose, admin unless you changed it, and the password Cloudgate generated, which is shown on the app's page in Cloudgate.
   - q: Can anyone sign up to my NodeBB forum?
-    a: Yes, by default anyone can register, and new members' posts wait in a review queue until a moderator approves them. To make the forum invite-only, require admin approval or close sign-ups, change Registration Type under Admin > Settings > User.
+    a: Yes. By default anyone can register on a NodeBB forum, and new members' posts wait in a review queue until a moderator approves them. To make the forum invite-only, require admin approval or close sign-ups, change Registration Type under Admin > Settings > User.
   - q: Does NodeBB work with Mastodon and the fediverse?
     a: Yes, NodeBB supports ActivityPub, and federation is on by default, so people on Mastodon and similar networks can follow and reply to public discussions. Review the federation settings in the admin area if you want to keep the forum to itself.
   - q: Do I need to set up email for NodeBB?
-    a: Yes, for a good member experience. Until you add your email server under Admin > Settings > Email, members see a notice that their email is unconfirmed, may not be able to post in some categories or chat, and cannot reset their password.
+    a: Yes, for a good member experience. Until you add your email server in NodeBB under Admin > Settings > Email, members see a notice that their email is unconfirmed, may not be able to post in some categories or chat, and cannot reset their password.
 screenshots:
   - src: screenshots/categories.webp
     alt: "The NodeBB home page of the Ridgeway Bike Co-op forum, listing four categories with coloured icons, descriptions, topic and post counts and a preview of the latest reply: Announcements, Repairs & Maintenance, Rides & Routes and Workshop Notes"

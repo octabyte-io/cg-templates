@@ -39,10 +39,10 @@ faq:
     a: Yes, for one person who wants to search inside saved pages. Grimoire keeps each page's text, searches it, and can tag links with AI at no extra cost. Unlike Raindrop.io, it has no shared collections, highlights or phone apps.
   - q: How do I sign in to Grimoire the first time?
     a: You sign in with the username admin and the password Cloudgate generated, shown on the app's variables page; your browser asks for them when you open Grimoire's web address. There is no account to create, so you go straight to your empty library.
-  - q: Can I import my bookmarks from my browser, Raindrop.io or Pinboard?
+  - q: Can Grimoire import my bookmarks from my browser, Raindrop.io or Pinboard?
     a: Yes, if you export them as a standard bookmarks HTML file, which browsers, Raindrop.io and Pinboard can all produce. Grimoire imports that file and then fetches and saves the text of each page in the background.
   - q: Does Grimoire need an AI account?
-    a: No. Saving, importing, keyword search, tags, categories and backups work without AI. Summaries, automatic tags and search by meaning need an AI provider such as OpenAI or your own Ollama, and the text of your links is sent to that provider.
+    a: No. In Grimoire, saving, importing, keyword search, tags, categories and backups work without AI. Summaries, automatic tags and search by meaning need an AI provider such as OpenAI or your own Ollama, and the text of your links is sent to that provider.
   - q: Can my team share one Grimoire?
     a: No, Grimoire is built for one person. It has a single library and no separate accounts, so everyone with the password sees and changes the same bookmarks. For a shared team library, linkding or Linkwarden suit better.
   - q: What server size do I need for Grimoire?

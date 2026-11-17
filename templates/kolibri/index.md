@@ -48,7 +48,7 @@ faq:
   - q: Can I add my own teaching material to Kolibri?
     a: Yes, but not by uploading files straight into Kolibri. You build a channel of your own material in Kolibri Studio, Learning Equality's free online tool, and then import that channel into your Kolibri.
   - q: What server size do I need for Kolibri?
-    a: A small server is enough, since Learning Equality recommends 1 GB of memory on Linux. Disk space is the real limit, because it depends on how many channels you import, and video channels are large.
+    a: A small server is enough for Kolibri, since Learning Equality recommends 1 GB of memory on Linux. Disk space is the real limit, because it depends on how many channels you import, and video channels are large.
 screenshots:
   - src: screenshots/lesson-progress.webp
     alt: "A coach's view of the lesson Space and forces for the class Grade 6 Science in Kolibri, listing six simulations and videos such as My Solar System and Kepler's Laws, each with how many of the 12 learners completed or started it and the average time spent"

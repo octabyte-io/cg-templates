@@ -36,17 +36,17 @@ faq:
   - q: Is Budget Board free?
     a: Yes, Budget Board is free, open-source software under the AGPL-3.0 licence, with no paid edition. You pay only for your server and, if you want automatic bank sync, for SimpleFIN Bridge or LunchFlow.
   - q: Is Budget Board a good Mint alternative?
-    a: Yes, it was built as a self-hosted replacement for Mint after Intuit shut Mint down. It covers the same ground, with accounts, categorized transactions, monthly budgets, goals, net worth and spending trends.
+    a: Yes, Budget Board was built as a self-hosted replacement for Mint after Intuit shut Mint down. It covers the same ground, with accounts, categorized transactions, monthly budgets, goals, net worth and spending trends.
   - q: Does Budget Board connect to my bank?
-    a: Yes, through a separate service you sign up for. SimpleFIN Bridge cost $1.50 a month or $15 a year (plus tax) when we checked in November 2026, and LunchFlow, a paid service, covers more banks outside the US. Without one, you import CSV files from your bank or enter transactions by hand.
-  - q: Can I import my data from Mint, Monarch or YNAB?
+    a: Yes, Budget Board connects to banks through a separate service you sign up for. SimpleFIN Bridge cost $1.50 a month or $15 a year (plus tax) when we checked in November 2026, and LunchFlow, a paid service, covers more banks outside the US. Without one, you import CSV files from your bank or enter transactions by hand.
+  - q: Can I import my data from Mint, Monarch or YNAB into Budget Board?
     a: Partly. Budget Board imports transactions from CSV files, so a transactions export from Monarch or YNAB, or a Mint export you saved, comes across with its dates, descriptions, amounts and categories. Budgets and goals are set up again.
   - q: How do I sign in to Budget Board the first time?
-    a: There is no default password; open the web address right after setup, click "Register Here" and create your account. Anyone who can reach the address can register until you turn on "Turn off new sign-ups" in Cloudgate, so do that once your household has its accounts. Without an email sender there is no password reset, so keep your password safe.
+    a: Budget Board has no default password; open its web address right after setup, click "Register Here" and create your account. Anyone who can reach the address can register until you turn on "Turn off new sign-ups" in Cloudgate, so do that once your household has its accounts. Without an email sender there is no password reset, so keep your password safe.
   - q: Is there a Budget Board phone app?
     a: No, there is no phone app. Budget Board runs in any web browser, and its dashboard has a separate layout for phone screens.
   - q: Is my financial data private with Budget Board?
-    a: Yes, your accounts and transactions are stored on your own server. Even automatic categorization runs there. Data comes in from outside only through a bank sync service you choose to connect.
+    a: Yes, Budget Board stores your accounts and transactions on your own server. Even automatic categorization runs there. Data comes in from outside only through a bank sync service you choose to connect.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Budget Board dashboard with demo data: an Accounts card with checking, savings, a Visa card and a brokerage account at two banks, a Net Worth card grouping spending, credit cards, loans, savings, investments and assets, this month's spending of $2,364.34, and a list of uncategorized transactions"

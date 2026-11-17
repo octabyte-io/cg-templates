@@ -10,6 +10,8 @@ faq:
     a: "Yes, for common cases. Quant-UX supports logic between screens, data binding and form validation, but Axure RP's conditions and variables go further for very complex prototypes."
   - q: "Can I import Axure RP files into Quant-UX?"
     a: "No. Quant-UX imports Figma frames, images, Zip files and Swagger or OpenAPI definitions, not Axure files, so prototypes are rebuilt by hand."
+  - q: "Can Quant-UX test prototypes with real users?"
+    a: "Yes, and Axure RP does not do this itself. Quant-UX shares a prototype with test users through a link, then shows recordings, heatmaps and task analytics of what they did."
 ---
 
 Axure RP is a long-established paid app for building interactive prototypes, known for logic-heavy work: conditions, variables and form validation that make a prototype behave close to the real product.

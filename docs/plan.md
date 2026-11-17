@@ -60,6 +60,7 @@ description), `tags` and `links` (`source` required). Everything else on the pag
 | `license` | yes | SPDX id where one exists |
 | `features` | yes | 3–8 `{ title, text }` in plain language: what you can do with it |
 | `goodFor` | no | One line for the alternatives comparison table |
+| `title` | no | The page title, at most 48 characters; only when the generated "<App>: free, self-hosted alternative to <first product>" would compete with another app's page for the same search |
 | `switching` | no | `{ gain: [...], different: [...] }`: what changes when you switch |
 | `screenshots` | no | up to 4 of `{ src, alt, caption?, credit?: { text, url? } }`, alt text required; at least 800px wide. The site resizes them to WebP. Credit an image that is not Cloudgate's own capture |
 | `faq` | no | `{ q, a }` pairs; rendered and emitted as FAQ structured data |

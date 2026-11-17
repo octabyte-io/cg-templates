@@ -34,14 +34,14 @@ faq:
   - q: Is LibreTranslate free?
     a: Yes, LibreTranslate is free and open source under the AGPL-3.0 licence, with no paid features in the software you host yourself. You pay only for your server. The project also sells access to its own hosted translation service at libretranslate.com, which you don't need here.
   - q: Is LibreTranslate as good as Google Translate or DeepL?
-    a: No, its translations are generally less fluent than DeepL's or Google's, especially for language pairs that go through English. It is good enough to understand a message, draft a reply or translate short interface text, but have a person check anything important before you publish or send it.
+    a: No, LibreTranslate's translations are generally less fluent than DeepL's or Google's, especially for language pairs that go through English. It is good enough to understand a message, draft a reply or translate short interface text, but have a person check anything important before you publish or send it.
   - q: How do I use LibreTranslate the first time?
-    a: Open its web address, click the key button in the top bar and paste the API key Cloudgate shows on the app's variables page; the browser remembers it. Every translation needs that key, so strangers who find the address can't use your server.
+    a: Open LibreTranslate's web address, click the key button in the top bar and paste the API key Cloudgate shows on the app's variables page; the browser remembers it. Every translation needs that key, so strangers who find the address can't use your server.
   - q: How do I connect another app to LibreTranslate?
     a: Give the app your LibreTranslate web address and the API key from Cloudgate. The app sends the key as api_key with each request, and the built-in API documentation lists everything it can ask for.
   - q: Which languages does LibreTranslate support?
     a: LibreTranslate covers about 48 languages, including Arabic, Chinese, Hindi, Japanese, Korean, Russian and Ukrainian. Cloudgate installs English, German, Spanish, French, Italian and Portuguese by default; choose others when you install, or change the list later and restart the app.
-  - q: Does my text leave my server?
+  - q: Does my text leave my server with LibreTranslate?
     a: No, LibreTranslate translates on your own server with language models it downloads once, so the text you translate is not sent to Google, DeepL or any other service.
   - q: Is Cloudgate part of the LibreTranslate project?
     a: No, Cloudgate is not affiliated with or endorsed by the LibreTranslate project. The template installs the LibreTranslate translation software from the project's official image and adds an API key so your server isn't open to everyone.

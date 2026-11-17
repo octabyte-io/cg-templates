@@ -3,7 +3,6 @@ description: "Invio is simple self-hosted invoicing for freelancers: create invo
 version: "2.4.1"
 tags: [invoicing, freshbooks alternative, wave alternative, e-invoicing, zugferd, peppol, freelancers]
 links:
-  website: https://invio.dev
   docs: https://github.com/kittendevv/Invio/wiki
   source: https://github.com/kittendevv/Invio
 cloudgate: 0.1.0

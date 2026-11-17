@@ -10,6 +10,8 @@ faq:
     a: "Yes, for questions a database query can answer. You upload an Excel or CSV file and ask in plain language; it does not run Python for statistics or forecasts."
   - q: "Does SQLBot keep my data private?"
     a: "Your data stays on your server, but your questions, table descriptions and the results it explains go to the AI provider you choose. A model you run yourself keeps everything in-house."
+  - q: "Are SQLBot's answers always right?"
+    a: "No. SQLBot can give wrong answers, so check the SQL behind each answer before you share the numbers, as you would check an analysis from Julius AI. Describing your main tables and columns and adding a glossary of business terms helps SQLBot answer better."
 cost: "SQLBot is free to use, with its code public under a modified GPLv3 licence that requires keeping the SQLBot logo and copyright notice. A paid licence from its maker adds branding, custom prompts, LDAP or OIDC sign-in and audit logs. You also pay your AI provider for the questions you ask, unless you run a model yourself. To run SQLBot you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 ---
 

@@ -44,11 +44,11 @@ faq:
   - q: How is DataLens different from Metabase and Superset?
     a: DataLens is built around datasets with calculated fields and a drag-and-drop chart wizard, and also connects to ClickHouse, Greenplum and YDB. Metabase is simpler and adds alerts, scheduled reports and CSV uploads; Superset offers more than 40 chart types.
   - q: How do I sign in to DataLens the first time?
-    a: Sign in with the user name admin and the password Cloudgate created for you. A demo workbook is already there to explore, and the admin adds colleagues and decides who may edit.
+    a: Sign in to DataLens with the user name admin and the password Cloudgate created for you. A demo workbook is already there to explore, and the admin adds colleagues and decides who may edit.
   - q: What server size do I need for DataLens?
     a: DataLens needs at least 4 GB of memory and 2 processor cores, according to the project. Cloudgate starts it on a large server because it runs several parts; many users or heavy queries need more.
   - q: Does DataLens work on a phone?
-    a: Yes, dashboards adapt to phone screens in the browser. There is no phone app.
+    a: Yes, DataLens dashboards adapt to phone screens in the browser. There is no phone app.
 screenshots: []
 ---
 

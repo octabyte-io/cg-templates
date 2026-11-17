@@ -46,7 +46,7 @@ faq:
   - q: Can I import my Zaps or Make scenarios into Node-RED?
     a: No. There is no import from Zapier, Make or IFTTT, so you rebuild each automation as a flow. Node-RED flows themselves export and import as files, so you can copy flows shared by others.
   - q: Does Node-RED work with Home Assistant and MQTT?
-    a: Yes. MQTT blocks are built in, and Home Assistant blocks are a free community add-on you install from inside the editor.
+    a: Yes. MQTT blocks are built into Node-RED, and Home Assistant blocks are a free community add-on you install from inside the editor.
   - q: What server size does Node-RED need?
     a: A small server is enough for most flows. Node-RED is one light app with no separate database, and it is made to run even on a Raspberry Pi.
 screenshots:

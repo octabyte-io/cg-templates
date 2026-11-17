@@ -38,7 +38,7 @@ faq:
   - q: Is Orbit free?
     a: Yes, Orbit is free and open source under the Apache-2.0 licence, with no paid tiers, seat limits or billing, and its makers say they will not add any. Noveum AI, which sponsors it, also runs a free hosted copy; this template installs your own. You pay only for your server.
   - q: Is Orbit ready for everyday use?
-    a: Not officially. Its makers label self-hosting as a preview, not yet a supported production release, and keep a public list of the work still open. You can use it today, but keep backups and expect changes between versions.
+    a: Not officially. Orbit's makers label self-hosting as a preview, not yet a supported production release, and keep a public list of the work still open. You can use it today, but keep backups and expect changes between versions.
   - q: Is Orbit a good alternative to Linear?
     a: Yes, for teams that like Linear's way of working, with issues, sprints, a command palette and keyboard shortcuts, and want it on their own server for free. Linear is more mature and has phone apps and an importer; Orbit has neither yet.
   - q: Can I import my issues from Linear or Jira?
@@ -46,7 +46,7 @@ faq:
   - q: How do I sign in to Orbit the first time?
     a: There is no default password. Open your Orbit web address, sign up with an email and password, then create a workspace, which makes you its admin, and its first team. Anyone who can reach the address can sign up, so do this right after setup.
   - q: Does Orbit need email to work?
-    a: Partly. You can sign up and work without email, but invitations, sign-in codes, password resets and email notifications need an API key from Resend, a separate email sending service, and a sender address on your own domain.
+    a: Partly. You can sign up and work in Orbit without email, but invitations, sign-in codes, password resets and email notifications need an API key from Resend, a separate email sending service, and a sender address on your own domain.
   - q: Does Orbit have a phone app?
     a: No. Orbit runs in a web browser and is built for a keyboard and a large screen; a better phone layout is on its roadmap.
 screenshots:

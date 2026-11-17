@@ -40,7 +40,7 @@ faq:
   - q: Does Paperless-ngx scan my documents?
     a: No, Paperless-ngx does not scan by itself. You scan with a scanner or a phone app, then upload the files in the browser, send them by email, or use a community phone app; Paperless-ngx then reads the text and files them.
   - q: Is Paperless-ngx a good alternative to DocuWare or Evernote?
-    a: Yes, for archiving scanned paperwork. It captures, reads, tags and searches documents like DocuWare, but has no e-signatures, retention rules or vendor support. It replaces Evernote only as a home for scanned receipts and bills, because it is not a note-taking app.
+    a: Yes, for archiving scanned paperwork. Paperless-ngx captures, reads, tags and searches documents like DocuWare, but has no e-signatures, retention rules or vendor support. Paperless-ngx replaces Evernote only as a home for scanned receipts and bills, because it is not a note-taking app.
   - q: Is there a Paperless-ngx phone app?
     a: There is no official app, but community apps exist for iPhone and Android, such as Swift Paperless and Paperparrot for iPhone. Check that the app supports your Paperless-ngx version. The web app also works in a phone's browser.
   - q: Are my documents encrypted in Paperless-ngx?

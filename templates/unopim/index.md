@@ -38,7 +38,7 @@ faq:
   - q: Is UnoPim free?
     a: Yes, UnoPim is free and open source under the MIT licence, with no paid edition of the core and no fee per user. You pay only for your server. Its maker, Webkul, sells optional extensions such as some shop connectors, plus hosting and services, which you do not need to run it.
   - q: Is UnoPim a good alternative to Akeneo?
-    a: Yes, UnoPim is a good Akeneo alternative for small and mid-sized catalogues. It covers the core of a PIM, with families, attributes, completeness, several channels and languages, imports and exports, variants and an API, under the MIT licence. Akeneo has a much larger choice of connectors, partners and supplier tools; its open-source Community Edition reached end of support on 30 September 2026, and its supported editions are paid plans priced on request.
+    a: Yes, UnoPim is a good Akeneo alternative for small and mid-sized catalogues. It covers the core of a PIM, with families, attributes, completeness, several channels and languages, imports and exports, variants and an API, under the MIT licence. Akeneo has a much larger choice of connectors, partners and supplier tools; its open-source Community Edition is free to self-host and still supported, and its cloud plans are priced on request.
   - q: Can I move my products from Akeneo to UnoPim?
     a: Partly. You can export your products from Akeneo as CSV or Excel files and import them into UnoPim. Webkul also sells an Akeneo to UnoPim migration plugin that copies products, categories, attributes and images through Akeneo's API; it is not part of this install.
   - q: How do I sign in to UnoPim the first time?

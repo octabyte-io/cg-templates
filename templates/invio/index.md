@@ -42,11 +42,11 @@ faq:
   - q: Can Invio create e-invoices such as Factur-X, ZUGFeRD or PEPPOL UBL?
     a: Yes, Invio exports invoices as Factur-X / ZUGFeRD 2.2, UBL 2.1 (PEPPOL BIS Billing 3.0) and FatturaPA files, and can attach the file inside the invoice PDF. It creates the files but doesn't send them through the PEPPOL network, and its makers say to check your own country's rules, since they don't guarantee legal compliance.
   - q: How do I sign in to Invio the first time?
-    a: Sign in with the username admin and the password Cloudgate generates, shown on the app's variables page. There is no public sign-up page. After signing in, add your company details, currency and tax rates in Settings, and add your email server's details if you want to send invoices from the app.
+    a: Sign in to Invio with the username admin and the password Cloudgate generates, shown on the app's variables page. There is no public sign-up page. After signing in, add your company details, currency and tax rates in Settings, and add your email server's details if you want to send invoices from the app.
   - q: Does Invio do quotes, recurring invoices or online payments?
     a: No, Invio sends one-off invoices only. It has no quotes, recurring invoices, card payments or payment reminders; you record payments by marking an invoice paid. InvoiceShelf and SolidInvoice cover those if you need them.
-  - q: Can I import my customers from FreshBooks or Wave?
-    a: No, Invio has no import tool, so you add your customers and products by hand. You can export all of your Invio data at any time.
+  - q: Can Invio import my customers from FreshBooks or Wave?
+    a: No, Invio has no import tool for FreshBooks, Wave or other apps, so you add your customers and products by hand. You can export all of your Invio data at any time.
   - q: Is there an Invio phone app?
     a: No, Invio has no phone or desktop app. It works in any web browser, on a computer or a phone.
 screenshots:

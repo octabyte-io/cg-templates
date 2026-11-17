@@ -7,9 +7,11 @@ moving: |
   eLabFTW cannot import from Benchling, so move in stages. Export the notebook entries you need to keep and store them as an archive, then start new experiments in eLabFTW. Export your registry or inventory lists as spreadsheets and import them as CSV into eLabFTW's resources database, then rebuild your common protocols as experiment templates. Keep sequence design in a dedicated tool if your work depends on it.
 faq:
   - q: "Can eLabFTW design DNA sequences like Benchling?"
-    a: "No. eLabFTW is a lab notebook with an inventory, not a molecular-biology design tool. You can attach sequence files to experiments and resources, but editing and designing sequences needs another tool."
+    a: "No. Unlike Benchling, eLabFTW is a lab notebook with an inventory, not a molecular-biology design tool. You can attach sequence files to experiments and resources, but editing and designing sequences needs another tool."
   - q: "Is eLabFTW suitable for a small biotech company?"
-    a: "Yes, for record keeping. It runs one notebook for many teams with permissions per entry, sign-in through LDAP, SAML or Entra ID, trusted timestamps and an audit log, and every feature is free."
+    a: "Yes, for record keeping, though not for Benchling's design tools. eLabFTW runs one notebook for many teams with permissions per entry, sign-in through LDAP, SAML or Entra ID, trusted timestamps and an audit log, and every feature is free."
+  - q: "Can I import my Benchling data into eLabFTW?"
+    a: "Partly, by hand. eLabFTW has no Benchling importer. Export your Benchling registry or inventory lists as spreadsheets and import them as CSV into eLabFTW's resources database, keep exported notebook entries as an archive, and rebuild common protocols as eLabFTW experiment templates."
 ---
 
 Benchling is a cloud platform for life-science research and development: an electronic lab notebook, a registry and inventory of samples, molecular-biology tools for designing sequences, and LIMS workflows, sold to companies by quote.

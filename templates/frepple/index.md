@@ -38,13 +38,13 @@ faq:
   - q: Is frePPLe a good alternative to Katana?
     a: Yes, for the planning side. frePPLe makes a production plan that respects machine capacity and forecasts sales, but it is not an all-in-one system like Katana; it has no stock tracking, sales channels, shop floor app or accounting links, so it works alongside an ERP or your spreadsheets.
   - q: How do I get my data into frePPLe?
-    a: Through Excel or CSV files, uploaded one table at a time or as a whole workbook, or through the Odoo connector. A built-in wizard walks you through items, locations, sales orders, bills of material, suppliers and machines, and demo data sets let you try it first.
+    a: frePPLe imports data from Excel or CSV files, uploaded one table at a time or as a whole workbook, or through the Odoo connector. A built-in wizard walks you through items, locations, sales orders, bills of material, suppliers and machines, and demo data sets let you try it first.
   - q: Can I import my data from Katana?
     a: No, frePPLe has no Katana import. You would export your products, bills of material and orders from Katana to spreadsheets and reshape them into frePPLe's tables.
   - q: Does frePPLe replace my ERP?
     a: No, frePPLe is a planning tool that sits next to an ERP or spreadsheets. It reads your orders, stock and bills of material and proposes what to make and buy; invoicing, accounting and stock bookings stay in your other system.
   - q: How do I sign in to frePPLe the first time?
-    a: Sign in with the username admin and the password Cloudgate created for you, which is shown in Cloudgate. You can change it later under your user preferences and add accounts for your planners.
+    a: Sign in to frePPLe with the username admin and the password Cloudgate created for you, which is shown in Cloudgate. You can change it later under your user preferences and add accounts for your planners.
   - q: What server size do I need for frePPLe?
     a: A server with 4 processor cores and 16 GB of memory suits a medium-sized frePPLe planning model, according to its makers. That is more than most apps need; a smaller server is enough while you try it with a small model.
 screenshots:

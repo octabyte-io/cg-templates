@@ -46,7 +46,7 @@ faq:
   - q: Is Eneo only for Swedish organisations?
     a: No, Eneo has an English interface and works for any organisation. It was built by Sundsvall and Ånge municipalities for the Swedish public sector, so some admin screens and guides are in Swedish, and its forum is open only to government and municipal email addresses.
   - q: Where is my data kept with Eneo?
-    a: Your chats, assistants, documents and audit log are stored on your own server. Each question is still sent to the AI provider you connect so it can answer, so check that provider's data terms, or run your own model server to keep everything in-house.
+    a: Eneo stores your chats, assistants, documents and audit log on your own server. Each question is still sent to the AI provider you connect so it can answer, so check that provider's data terms, or run your own model server to keep everything in-house.
 screenshots:
   - src: screenshots/personal-assistant.webp
     alt: "The Eneo personal assistant: a left menu with Personal space, Chat, Overview, Assistants, Apps and Knowledge, a GPT-4o model picker and a New conversation button, a welcome message, and a question box with Attach files and a Search switch"

@@ -7,9 +7,11 @@ moving: |
   Nothing is imported automatically. Install Fleet's agent on each computer alongside Intune first, with installers built by Fleet's command-line tool for Windows, macOS and Linux, so you can check that Fleet sees everything. Recreate the settings and checks you rely on as Fleet policies and configuration profiles. When you are ready, follow Fleet's migration guide to unenrol computers from Intune and enrol them in Fleet's MDM, starting with a few test machines, and keep Intune until the last one has moved.
 faq:
   - q: "Can Fleet replace Intune for Windows PCs?"
-    a: "Partly. Fleet enrols Windows PCs, pushes settings, runs PowerShell scripts and shows software and vulnerabilities. Autopilot zero-touch setup, app deployment and enforced updates need the paid Premium tier, and it has no link to Microsoft's conditional access."
+    a: "Partly. Fleet enrols Windows PCs, pushes settings, runs PowerShell scripts and shows software and vulnerabilities. Autopilot zero-touch setup, app deployment and enforced updates need the paid Premium tier, and Fleet has no link to Microsoft's conditional access, which Intune uses to tie device health to sign-in."
   - q: "Does Fleet work with Linux computers?"
     a: "Yes. Fleet's agent runs on many Linux distributions, with the same inventory, vulnerability checks, policies and scripts as on Windows and Mac."
+  - q: "Does Fleet manage iPhones and Android phones like Intune?"
+    a: "Yes. Like Microsoft Intune, Fleet manages phones as well as computers: iPhones and iPads on iOS 17 and later, and Android phones on Android 14 and later, which join through an enrollment link. On Fleet's free edition, Android phones join as personal devices with a work profile."
 ---
 
 Microsoft Intune is Microsoft's cloud service for managing company computers and phones: IT teams enrol Windows PCs, Macs and mobiles, push settings and apps, enforce updates and connect device health to sign-in rules.

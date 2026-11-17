@@ -36,13 +36,13 @@ faq:
   - q: Is KitchenOwl free?
     a: Yes, KitchenOwl is free and open source under the AGPL-3.0 licence, with no paid edition and no locked features. You pay only for your server, and the phone apps are free too.
   - q: Is KitchenOwl a good alternative to AnyList?
-    a: Yes, if you want a shared grocery list with recipes and a meal plan that you own. Like AnyList, it has phone apps and lists that update for everyone at once; unlike AnyList, the meal plan is free, and it adds split household expenses, but it cannot import your AnyList data.
+    a: Yes, if you want a shared grocery list with recipes and a meal plan that you own. Like AnyList, KitchenOwl has phone apps and lists that update for everyone at once; unlike AnyList, the meal plan is free, and it adds split household expenses, but it cannot import your AnyList data.
   - q: Is there a KitchenOwl app for iPhone and Android?
     a: Yes, KitchenOwl has official apps in the App Store, Google Play and F-Droid, plus desktop apps and a web app. You type your KitchenOwl address into the app when you first open it, and the apps keep working partly offline, so the list is there in a shop with no signal.
   - q: How do I sign in to KitchenOwl the first time?
     a: The first person to open your KitchenOwl address creates the first account, which becomes the admin; there is no default password. Then create a household and invite your family or housemates, who get accounts from the admin unless you allowed open sign-ups during setup.
-  - q: Can I import my lists or recipes from AnyList or Paprika?
-    a: No, KitchenOwl only imports files exported from another KitchenOwl. You can add your recipes again by pasting each recipe's web address.
+  - q: Can KitchenOwl import my lists or recipes from AnyList or Paprika?
+    a: No, KitchenOwl cannot import from AnyList or Paprika; it only imports files exported from another KitchenOwl. You can add your recipes again by pasting each recipe's web address.
   - q: How is KitchenOwl different from Mealie or Grocy?
     a: KitchenOwl puts the shared shopping list first, with official phone apps and split expenses. Mealie is a fuller recipe manager that runs in the browser, and Grocy tracks the food you have at home and when it goes off.
   - q: Can I split grocery costs with KitchenOwl?

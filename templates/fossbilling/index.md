@@ -44,7 +44,7 @@ faq:
   - q: Can I import my WHMCS data into FOSSBilling?
     a: No, FOSSBilling has no built-in WHMCS importer. You add your products, clients and open invoices again yourself.
   - q: Does FOSSBilling send invoices by email?
-    a: Yes, once you add your email account's SMTP details in the admin settings. Until then no invoice, reminder or password emails go out, so set this up before inviting customers.
+    a: Yes, FOSSBilling emails invoices once you add your email account's SMTP details in the admin settings. Until then no invoice, reminder or password emails go out, so set this up before inviting customers.
   - q: Is FOSSBilling accounting software?
     a: No, FOSSBilling handles billing, payments and client accounts, but it does not do bookkeeping, tax returns or bank feeds. You can export your invoice list to pass to your accountant.
 screenshots:

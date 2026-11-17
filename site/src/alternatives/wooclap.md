@@ -7,9 +7,11 @@ moving: |
   Wooclap events cannot be imported. Upload the slides you teach from as PDF or PowerPoint to a new Claper event, then add a quiz or poll where each Wooclap question was. If your school uses Moodle, the person who runs Claper can connect it through LTI so quizzes appear in your course and scores reach the gradebook; test this with one course first, since it is still in beta. Export results as CSV after each class to keep a record.
 faq:
   - q: "Does Claper work with Moodle?"
-    a: "Yes, through LTI 1.3, which is in beta and has been tested only with Moodle. Quiz scores can be sent to Moodle's gradebook."
+    a: "Yes. Claper connects to Moodle through LTI 1.3, which is in beta and has been tested only with Moodle. Quiz scores can be sent to Moodle's gradebook."
   - q: "Can students answer anonymously?"
-    a: "Yes. Students join without an account and can post questions with a name or anonymously, and the teacher can pin or delete messages and ban disruptive users."
+    a: "Yes. In Claper, students join without an account and can post questions with a name or anonymously, and the teacher can pin or delete messages and ban disruptive users."
+  - q: "Can Claper put questions on my slides like Wooclap?"
+    a: "Yes. Claper shows polls, scored quizzes, word clouds and questions on your own slides, with students answering from their phones. Wooclap works with PowerPoint and Google Slides, and as of November 2026 its free Starter plan allows 5 questions a month."
 ---
 
 Wooclap is an interactive teaching platform used by schools, universities and trainers. Students answer polls, quizzes and open questions on their phones during a lesson, and it connects to learning platforms such as Moodle.

@@ -7,9 +7,11 @@ moving: |
   There is nothing to move: open ConvertX, create your account, upload your files and pick the format you need, as you would on Convertio. Save the converted files you want to keep, since ConvertX deletes them after 24 hours by default. To let colleagues sign in, turn on account sign-ups briefly, then turn them off again.
 faq:
   - q: "Is there a file size limit in ConvertX?"
-    a: "ConvertX has no paid file size tiers. The size you can convert depends on your server's disk and memory."
+    a: "ConvertX has no paid file size tiers like Convertio's. The size you can convert depends on your server's disk and memory."
   - q: "Does ConvertX show ads?"
-    a: "No. ConvertX has no ads, no plans and no credits."
+    a: "No. ConvertX has no ads, no plans and no credits, unlike Convertio's paid plans."
+  - q: "What can Convertio do that ConvertX can't?"
+    a: "Convertio offers OCR and connections to cloud storage, which ConvertX does not have. ConvertX covers the main job: converting images, video, audio, documents, e-books and more between over a thousand formats on your own server."
 ---
 
 Convertio is an online file converter that works in the browser, with a free tier and paid plans for bigger files and more conversions.

@@ -39,7 +39,7 @@ faq:
   - q: Is LibreBooking a good alternative to Skedda?
     a: Yes, for booking shared rooms and equipment with rules. LibreBooking has schedules, approvals, quotas, limits, check-in and usage reports, with no fee per space. Skedda has an interactive floor plan and a more polished look, which LibreBooking does not have.
   - q: Can LibreBooking book desks and equipment as well as rooms?
-    a: Yes. Anything people share can be a resource, such as a meeting room, a desk, a projector, a van or a lab instrument, each with its own rules, photo and capacity.
+    a: Yes. In LibreBooking, anything people share can be a resource, such as a meeting room, a desk, a projector, a van or a lab instrument, each with its own rules, photo and capacity.
   - q: Does LibreBooking work with Outlook or Google Calendar?
     a: Partly. Each person can add their bookings to Outlook, Thunderbird or Google Calendar through a calendar feed, but bookings are made in LibreBooking, not from the calendar app.
   - q: How do I sign in to LibreBooking the first time?

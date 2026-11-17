@@ -1,5 +1,5 @@
 name: Papra
-description: "Papra is a light, self-hosted document archive that makes receipts, bills and contracts searchable."
+description: "Papra is a light, self-hosted document archive that makes receipts, bills and contracts searchable, a simple alternative to Evernote or DocuWare."
 version: "26.7.1"
 tags: ["self-hosted document archive", "paperless-ngx alternative", "evernote alternative", "receipt storage", "document management", "digital filing cabinet"]
 links:

@@ -39,12 +39,12 @@ faq:
     a: No. Yopass encrypts each secret in your browser before it is sent, and the key sits in the part of the link after the "#", which browsers never send to the server. Anyone who has the whole link can open it once, so for anything sensitive send the short link and the key by different routes.
   - q: Is Yopass a good alternative to Onetime Secret?
     a: Yes, for sending passwords and other secrets as links that work once and expire. Yopass runs on your own web address with no plan limits and encrypts each secret in the browser. It has no accounts, so there is no history of sent secrets, and branding and read receipts need its paid licence.
-  - q: Do I or the person I send it to need an account?
+  - q: Do I or the person I send it to need a Yopass account?
     a: No. Yopass has no accounts or admin login; open your web address, paste the secret, choose when it expires and press Encrypt Message. The recipient only needs the link and a web browser.
   - q: What happens after someone opens a Yopass link?
-    a: A one-time secret is deleted from the server as soon as it is opened, and the recipient is told to save it then. A secret that is never opened is deleted when its hour, day or week runs out, and a server restart also clears unread secrets.
+    a: Yopass deletes a one-time secret from the server as soon as it is opened, and the recipient is told to save it then. A secret that is never opened is deleted when its hour, day or week runs out, and a server restart also clears unread secrets.
   - q: Can I send files with Yopass?
-    a: Yes, small ones. The free edition sends files up to 512 KB, which is enough for key files, certificates or a short document; for larger files use a file transfer app instead.
+    a: Yes, small ones. The free edition of Yopass sends files under 1 MB, which is enough for key files, certificates or a short document; for larger files use a file transfer app instead.
   - q: What size server does Yopass need?
     a: The smallest one. Yopass is a very light app that keeps encrypted secrets in memory only until they are read or expire, so it runs on the smallest server Cloudgate offers.
 screenshots:

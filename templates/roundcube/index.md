@@ -38,9 +38,9 @@ faq:
   - q: Is Roundcube a good alternative to Gmail or Outlook on the web?
     a: Yes, if your email is on your own domain at a web host or mail provider and you want a modern inbox in the browser. Roundcube covers mail, folders, contacts and search, but it has no calendar, chat or documents, and it does not replace the email service itself.
   - q: How do I sign in to Roundcube the first time?
-    a: You sign in with your existing email address and its password; there is no separate admin account. Cloudgate asks for your provider's incoming and outgoing mail server addresses during setup, and anyone with a mailbox there can then use the same web address.
+    a: You sign in to Roundcube with your existing email address and its password; there is no separate admin account. Cloudgate asks for your provider's incoming and outgoing mail server addresses during setup, and anyone with a mailbox there can then use the same web address.
   - q: Can I bring my old emails and contacts into Roundcube?
-    a: Yes, mostly. The mail already in your mailbox appears straight away, contacts can be imported from vCard or CSV files, and old messages saved as mbox or .eml files can be imported into a folder.
+    a: Yes, mostly. The mail already in your mailbox appears in Roundcube straight away, contacts can be imported from vCard or CSV files, and old messages saved as mbox or .eml files can be imported into a folder.
   - q: Does Roundcube work on a phone?
     a: Yes, Roundcube works in a phone or tablet browser with a layout made for small screens. It has no app of its own, but your phone's mail app can still connect to the same mailbox at the same time.
   - q: What server size do I need for Roundcube?

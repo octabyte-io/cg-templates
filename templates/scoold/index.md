@@ -35,15 +35,15 @@ faq:
   - q: Is Scoold free?
     a: Yes. Scoold is free, open-source software under the Apache 2.0 licence, and you pay only for your server. A paid edition, Scoold Pro, adds extras such as Slack and Microsoft Teams integration, file uploads, @mentions, more admins and unlimited spaces.
   - q: Is Scoold a good alternative to Stack Overflow for Teams?
-    a: Yes, for a team or community Q&A site with votes, accepted answers, tags, reputation and search, with no price per user. It can import from Stack Overflow for Teams, but the free edition has one admin, up to 10 spaces and no chat-app integrations.
+    a: Yes. Scoold suits a team or community Q&A site with votes, accepted answers, tags, reputation and search, with no price per user. Scoold can import from Stack Overflow for Teams, but the free edition has one admin, up to 10 spaces and no chat-app integrations.
   - q: How do I sign in to Scoold the first time?
     a: There is no default password. Open /signin/register on your Scoold address and sign up with the admin email address you entered at setup and a password; that account becomes the admin. Everyone else signs up the same way.
-  - q: Can I import my questions from Stack Overflow for Teams?
+  - q: Can I import my questions from Stack Overflow for Teams into Scoold?
     a: Yes. Scoold can import data from Stack Overflow for Teams, so your existing questions and answers can come with you.
   - q: What is the difference between Scoold and Scoold Pro?
     a: Scoold is the free, open-source edition with one admin and up to 10 spaces. Scoold Pro is a paid, one-time licence that adds unlimited spaces and admins, SAML sign-in, Slack, Mattermost and Microsoft Teams integration, file uploads, @mentions and anonymous posts.
   - q: Does Scoold send email notifications?
-    a: Yes, it emails people about replies and comments once you add your email server settings. Without them, Scoold still works, but sends no emails.
+    a: Yes, Scoold emails people about replies and comments once you add your email server settings. Without them, Scoold still works, but sends no emails.
   - q: What server size do I need for Scoold?
     a: A medium server with 2 GB of memory suits most teams, because Scoold runs together with its Para backend. Cloudgate sets up both.
 screenshots:

@@ -40,15 +40,15 @@ faq:
   - q: Is Many Notes a good alternative to Obsidian?
     a: Yes, if you want Obsidian-style vaults of Markdown notes that open in any browser from your own server and can be shared with other people. Obsidian has phone and desktop apps, offline use, wiki-style links, a graph view and plugins, which Many Notes does not.
   - q: Can I import my Obsidian vault into Many Notes?
-    a: Partly. Zip your vault folder and import it as a new vault, and your folders, notes and files come across. Obsidian's [[wiki links]] and plugin features are not understood, so links between notes need changing to normal Markdown links.
+    a: Partly. Zip your Obsidian vault folder and import it into Many Notes as a new vault, and your folders, notes and files come across. Obsidian's [[wiki links]] and plugin features are not understood, so links between notes need changing to normal Markdown links.
   - q: How do I sign in to Many Notes the first time?
     a: Open your Many Notes address and register; there is no default login. The first account created becomes the admin, so register straight away, then turn off sign-ups in the settings if you don't want others to create accounts.
   - q: Can several people use Many Notes?
-    a: Yes, everyone gets their own account and their own vaults. You can invite other users to a vault so you work in it together, and changes show up on screen as they happen.
+    a: Yes, everyone in Many Notes gets their own account and their own vaults. You can invite other users to a vault so you work in it together, and changes show up on screen as they happen.
   - q: Is there a Many Notes phone app?
     a: No, there is no app in the app stores. Many Notes works in a phone's browser and can be added to your home screen as an installable web app, but it needs a connection to your server.
   - q: Are my Many Notes notes stored as Markdown files?
-    a: Yes, every note is also saved as a plain Markdown file in folders on your server, and you can export any vault as a zip of those files. That keeps your notes easy to back up and to move to another app.
+    a: Yes, Many Notes saves every note as a plain Markdown file in folders on your server, and you can export any vault as a zip of those files. That keeps your notes easy to back up and to move to another app.
 screenshots:
   - src: screenshots/editor.webp
     alt: "The Many Notes editor with a Harbour Bakery vault: a folder tree on the left with Recipes, Suppliers, Shop and Meetings; the note Sourdough country loaf in the middle with tags, an ingredients table, numbered method steps, a tip linking to Millbrook Flour and a task list; Links, Backlinks and Tags on the right"

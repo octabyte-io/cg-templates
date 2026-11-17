@@ -38,13 +38,13 @@ faq:
   - q: Is WYGIWYH a good alternative to YNAB or Monarch?
     a: It is if you want to track your money without budgeting. WYGIWYH records every account, currency and transaction and shows monthly totals and net worth, but it has no budgets or envelopes; if you want YNAB's way of budgeting, Actual Budget is the closer match.
   - q: How do I sign in to WYGIWYH the first time?
-    a: There is no default login. Cloudgate asks for your admin email during setup and creates a strong password for it, shown on the app's variables page; sign in with those two.
+    a: WYGIWYH has no default login. Cloudgate asks for your admin email during setup and creates a strong password for it, shown on the app's variables page; sign in with those two.
   - q: Can WYGIWYH connect to my bank?
     a: Yes, through a separate bank-data service you sign up for. WYGIWYH's Bank Sync works with Lunch Flow, SimpleFIN Bridge (mostly US banks) and Pluggy (Brazilian banks), and can match synced transactions to ones you entered by hand.
-  - q: Can I import my transactions from Monarch, YNAB or Quicken?
+  - q: Can WYGIWYH import my transactions from Monarch, YNAB or Quicken?
     a: Partly. WYGIWYH imports CSV files through an import profile you set up for each file layout, and reads Quicken QIF files with a ready-made preset. There is no one-click importer for Monarch or YNAB, and budgets do not carry over.
   - q: Does WYGIWYH work with more than one currency?
-    a: Yes. Every account can have its own currency, you can add your own (such as a cryptocurrency), and exchange rates can be fetched automatically so totals are shown in your main currency.
+    a: Yes. In WYGIWYH every account can have its own currency, you can add your own (such as a cryptocurrency), and exchange rates can be fetched automatically so totals are shown in your main currency.
   - q: Is there a WYGIWYH phone app?
     a: No, there is no official phone app. WYGIWYH runs in any web browser, and its pages adapt to a phone screen.
 screenshots:

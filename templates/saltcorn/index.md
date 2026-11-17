@@ -40,7 +40,7 @@ faq:
   - q: Is Saltcorn a good alternative to Softr or Glide?
     a: Yes, if you want to own the app and its data. Saltcorn builds staff tools and customer portals without code and keeps the data in its own database on your server. It looks plainer than Softr or Glide and takes longer to learn, and Softr and Glide apps don't import, so you rebuild them and bring your data across as CSV files.
   - q: Do I need to know how to code to use Saltcorn?
-    a: No. Tables, screens, roles and automations are all set up with forms and drag-and-drop builders. If you do want code, you can add your own HTML, CSS or JavaScript in places, but it is optional.
+    a: No. In Saltcorn, tables, screens, roles and automations are all set up with forms and drag-and-drop builders. If you do want code, you can add your own HTML, CSS or JavaScript in places, but it is optional.
   - q: How do I sign in to Saltcorn the first time?
     a: The first person to open Saltcorn's web address creates the admin account with an email address and password, so open it right after setup. Saltcorn also allows anyone to sign up by default; if your app is only for your team, turn off Allow signups under Settings, Users and security, Login and Signup.
   - q: Can I use Saltcorn on my phone?

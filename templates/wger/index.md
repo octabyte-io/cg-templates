@@ -36,13 +36,13 @@ faq:
   - q: Is wger free?
     a: Yes, wger is free and open source under the AGPL-3.0 licence, with no paid tier or locked features. You pay only for the server you run it on.
   - q: Is wger a good alternative to MyFitnessPal?
-    a: Yes, if you want to log meals against calorie and macro goals without a subscription or ads, and also track your workouts in the same app. Its food data comes from Open Food Facts, which is smaller than MyFitnessPal's database, so you may need to add some local products yourself.
+    a: Yes, wger suits you if you want to log meals against calorie and macro goals without a subscription or ads, and also track your workouts in the same app. Its food data comes from Open Food Facts, which is smaller than MyFitnessPal's database, so you may need to add some local products yourself.
   - q: Is wger a good alternative to Strong?
     a: Yes, for planning routines and logging sets, reps and weights, with charts of your progress and automatic weight increases. Strong's phone app is more polished; wger adds nutrition, body measurements and room for several people on one server.
   - q: Can I import my MyFitnessPal or Strong data into wger?
     a: No, wger has no importer for MyFitnessPal or Strong, so your old food diary and workout history stay behind. You can bring in your body weight history from a spreadsheet file.
   - q: How do I sign in to wger the first time?
-    a: Sign in with the username admin and the password Cloudgate created for you, shown on the app's page in Cloudgate. Anyone with the address can also create their own account, so share it only with the people you want to use it.
+    a: Sign in to wger with the username admin and the password Cloudgate created for you, shown on the app's page in Cloudgate. Anyone with the address can also create their own account, so share it only with the people you want to use it.
   - q: Does wger have phone apps?
     a: Yes, the free wger Workout Manager app for Android, iPhone and Linux connects to your own wger server. You type in your server's address when you sign in.
   - q: Can a personal trainer or gym use wger for clients?

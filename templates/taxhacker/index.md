@@ -40,14 +40,14 @@ faq:
   - q: Is TaxHacker a good alternative to Dext or Expensify?
     a: Yes, if one person needs receipts and invoices read into a tidy, searchable list. TaxHacker has no bank feeds, team approvals, company cards or link to Xero and QuickBooks, so firms that rely on those should stay with Dext or Expensify.
   - q: Do I need an AI API key for TaxHacker?
-    a: Yes, to read documents you need an API key from OpenAI, Google Gemini or Mistral, or a model you run yourself, such as one in Ollama or LM Studio. The makers say results with your own models are not guaranteed, and you can still type transactions in by hand without a key.
+    a: Yes, to read documents TaxHacker needs an API key from OpenAI, Google Gemini or Mistral, or a model you run yourself, such as one in Ollama or LM Studio. The makers say results with your own models are not guaranteed, and you can still type transactions in by hand without a key.
   - q: How do I sign in to TaxHacker the first time?
     a: Open your TaxHacker address and sign in with the username admin and the password Cloudgate shows on the app's variables page. A short setup screen then asks for your AI provider, its API key and your main currency.
-  - q: Where are my receipts kept?
+  - q: Where does TaxHacker keep my receipts?
     a: Your receipts, invoices and transactions are stored on your own server. To read a document, TaxHacker sends it to the AI provider you picked, unless you use a model that runs on your own computer.
   - q: Can my team use TaxHacker?
     a: No, the self-hosted TaxHacker has one user and no team accounts or roles. Anyone who knows the password sees everything, so share it only with people you trust with your books.
-  - q: Can I bring in my old transactions?
+  - q: Can I bring my old transactions into TaxHacker?
     a: Partly. TaxHacker imports transactions from a CSV file, so you can bring in a spreadsheet or another app's CSV export. It has no direct import from Dext or Expensify, and receipt images do not come across that way.
 screenshots:
   - src: screenshots/dashboard.webp

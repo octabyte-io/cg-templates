@@ -42,10 +42,10 @@ faq:
   - q: Should I choose Sync-in or Nextcloud?
     a: Choose Sync-in if you mainly want a file-focused shared drive with careful control over who sees what. Choose Nextcloud if you also want calendars, contacts, chat and an app store in the same place, or need file version history and phone apps today.
   - q: How do I sign in to Sync-in the first time?
-    a: Sign in with the admin username you chose during setup and the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. Then set your own email address in your profile and add your colleagues.
+    a: Sign in to Sync-in with the admin username you chose during setup and the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. Then set your own email address in your profile and add your colleagues.
   - q: Is there a Sync-in phone app?
     a: No. Sync-in has no phone app of its own yet; you can open the web app in your phone's browser, or use a WebDAV app such as Documents by Readdle on iPhone or FolderSync on Android to reach your files.
-  - q: Can I move my files from Dropbox or Google Drive?
+  - q: Can I move my files from Dropbox or Google Drive to Sync-in?
     a: Yes, by copying them. Sync-in has no importer, so download your files from Dropbox or Google Drive and upload them in the web app, or drop them into a folder synced by the Sync-in desktop app.
   - q: What server size do I need for Sync-in?
     a: Sync-in needs at least 1 GB of memory, 1 CPU core and 2 GB of disk. Choose the disk size by how many files your team stores, with room to grow.

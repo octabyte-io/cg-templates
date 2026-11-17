@@ -41,11 +41,11 @@ faq:
     a: "Yes, ArchiveBox works like a Wayback Machine of your own: you choose the pages, it saves dated copies on your server, and only you decide who can see them. Unlike the public Wayback Machine, it can also be set up to save pages you see only when signed in to a website."
   - q: How is ArchiveBox different from Linkwarden or Karakeep?
     a: ArchiveBox is a web archive, while Linkwarden and Karakeep are bookmark managers that also keep a copy of each page. Pick ArchiveBox to save many pages in many formats, including video and WARC files, on a schedule; pick Linkwarden or Karakeep for shared collections, notes and phone apps.
-  - q: Can I import my bookmarks from Pinboard, Pocket or my browser?
+  - q: Can I import my bookmarks from Pinboard, Pocket or my browser into ArchiveBox?
     a: Yes, ArchiveBox reads exports from Pinboard, Pocket, Instapaper, Wallabag, Shaarli and Delicious, browser bookmark files, RSS feeds and plain lists of links, then archives every page in them. Pinboard's own archived copies do not move across, so ArchiveBox saves each page again.
   - q: How do I sign in to ArchiveBox the first time?
-    a: Sign in with the username admin and the password Cloudgate generated, which you find in the app's settings in Cloudgate. There is no setup wizard to go through; you can start adding links straight away.
-  - q: Are my archived pages private?
+    a: Sign in to ArchiveBox with the username admin and the password Cloudgate generated, which you find in the app's settings in Cloudgate. There is no setup wizard to go through; you can start adding links straight away.
+  - q: Are my archived pages private in ArchiveBox?
     a: Yes, Cloudgate sets ArchiveBox up so that only signed-in people can see your archive, and you can make chosen pages public later. By default ArchiveBox also asks the Internet Archive to save each link you add, which you can turn off in its settings for anything confidential.
   - q: How much disk space does ArchiveBox need?
     a: ArchiveBox uses about 1 GB per 1,000 saved pages without video, and up to around 50 GB per 1,000 pages if it saves video and audio. Start with a modest disk, turn off video saving if you do not need it, and add space as the archive grows.

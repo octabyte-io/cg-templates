@@ -36,13 +36,13 @@ faq:
   - q: Is Reloop free and open source?
     a: Reloop is free to self-host for your own business, but it is source-available rather than open source. Its licence is Apache 2.0 with extra Reloop Labs terms that forbid reselling it, offering it as a hosted service or using it in a competing product.
   - q: Is Reloop a good alternative to Resend?
-    a: Yes, if you want Resend's kind of email API plus campaigns and automations on a server you control. It is not a drop-in Resend API, so your app's sending code needs small changes, and your server must be able to send mail on port 25.
+    a: Yes, if you want Resend's kind of email API plus campaigns and automations on a server you control. Reloop is not a drop-in Resend API, so your app's sending code needs small changes, and your server must be able to send mail on port 25.
   - q: What do I need before Reloop can send email?
     a: You need a sending domain that you verify with DNS records the dashboard shows, and a server whose provider allows outgoing mail on port 25. For Reloop's own sign-in codes and invitations you can also enter an SMTP server you already use, such as Amazon SES or Postmark.
   - q: How do I sign in to Reloop the first time?
-    a: Open the app's setup page and enter the one-time setup key that Cloudgate shows with the app's settings, then choose the administrator's name, email and password. The key works once, and other people join by invitation.
-  - q: Can I import my emails and contacts from Resend or Postmark?
-    a: Partly. You can add contacts from a CSV file or by pasting addresses, and your HTML templates can be copied across, but sending history and statistics do not move.
+    a: Open Reloop's setup page and enter the one-time setup key that Cloudgate shows with the app's settings, then choose the administrator's name, email and password. The key works once, and other people join by invitation.
+  - q: Can I import my emails and contacts from Resend or Postmark into Reloop?
+    a: Partly. You can add contacts to Reloop from a CSV file or by pasting addresses, and your HTML templates can be copied across, but sending history and statistics do not move.
   - q: Can Reloop receive email?
     a: No, not with this setup. Reloop can receive mail into an inbox, but that needs incoming mail on port 25, which Cloudgate does not open, so this setup only sends.
   - q: What server size do I need for Reloop?

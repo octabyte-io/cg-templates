@@ -38,11 +38,11 @@ faq:
   - q: Should I choose Calibre-Web or Calibre-Web Automated?
     a: Choose Calibre-Web Automated if your books come in mixed formats, you send many books to a Kindle, or you want the library kept tidy for you. Choose plain Calibre-Web if you want the lightest setup on a smaller server and your books are already in the format your e-reader uses.
   - q: How do I sign in to Calibre-Web Automated the first time?
-    a: Sign in with the username admin and the password Cloudgate shows for this app. The template replaces the well-known default password, admin123, before the first start, so that password does not work. The library starts empty, ready for uploads.
+    a: Sign in to Calibre-Web Automated with the username admin and the password Cloudgate shows for this app. The template replaces the well-known default password, admin123, before the first start, so that password does not work. The library starts empty, ready for uploads.
   - q: Can Calibre-Web Automated send books to my Kindle?
-    a: Yes. Once the admin enters email server settings, each book can be emailed to one or more Kindles or other e-readers, and new books can be sent automatically after they are added. Its EPUB fixer repairs files that Send to Kindle would otherwise reject.
-  - q: Can I import my Kindle books?
-    a: Only DRM-free ones. Books bought in the Kindle store are copy-protected and can't be added as they are. DRM-free MOBI, AZW3 and other files are imported and converted to EPUB on their own, and its EPUB fixer helps books you send to a Kindle get accepted.
+    a: Yes. Once the admin enters email server settings, Calibre-Web Automated can email each book to one or more Kindles or other e-readers, and new books can be sent automatically after they are added. Its EPUB fixer repairs files that Send to Kindle would otherwise reject.
+  - q: Can I import my Kindle books into Calibre-Web Automated?
+    a: Only DRM-free ones. Books bought in the Kindle store are copy-protected and can't be added as they are. Calibre-Web Automated imports DRM-free MOBI, AZW3 and other files and converts them to EPUB on its own, and its EPUB fixer helps books you send to a Kindle get accepted.
   - q: What server size do I need for Calibre-Web Automated?
     a: A server with 2 GB of memory is enough for Calibre-Web Automated; it needs more than plain Calibre-Web because converting books runs Calibre's converter. Leave disk space for your collection and for the backup copies of original files it keeps after converting or fixing a book.
 screenshots:

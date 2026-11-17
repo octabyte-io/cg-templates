@@ -32,19 +32,19 @@ switching:
     - Moving from Lokalise or Crowdin means exporting your files and importing them, without comments or history
 faq:
   - q: Is Ever Traduora free?
-    a: Yes, Ever Traduora is free and open source under the AGPL-3.0 licence, with no paid edition, seat limit or locked features. When you self-host it, you pay only for your server.
+    a: Yes, Ever Traduora is free and open source under the AGPL-3.0 licence, with no seat limit. When you self-host it, you pay only for your server; Ever Co. also lists paid plans on its pricing page, which you do not need to run it.
   - q: Is Traduora a good alternative to Lokalise?
-    a: Yes, for a small team that mainly needs a shared place to keep, translate and export its app's text files, Traduora replaces Lokalise at no cost. It does far less than Lokalise, with no machine translation, translation memory or app framework kits, so larger localization teams usually need Weblate or Tolgee.
+    a: Yes, Traduora replaces Lokalise at no cost for a small team that mainly needs a shared place to keep, translate and export its app's text files. It does far less than Lokalise, with no machine translation, translation memory or app framework kits, so larger localization teams usually need Weblate or Tolgee.
   - q: What is the difference between Traduora, Weblate and Tolgee?
-    a: Traduora is the simplest of the three, a web editor plus file import, export and an API, with everything free. Weblate connects to your Git repository and adds translation memory, glossaries and quality checks; Tolgee lets you edit text inside your running app, and its free self-hosted version is limited to 10 seats.
+    a: Traduora is the simplest of the three, a web editor plus file import, export and an API, free and open source. Weblate connects to your Git repository and adds translation memory, glossaries and quality checks; Tolgee lets you edit text inside your running app, and its free self-hosted version is limited to 10 seats.
   - q: Can I import my translations from Lokalise or Crowdin?
     a: Partly, you export each language from Lokalise or Crowdin as a file, for example JSON, XLIFF or gettext PO, and import it into a Traduora project. There is no direct importer, so comments, screenshots and history stay behind.
   - q: Does Traduora translate automatically?
     a: No, Traduora has no machine translation at the moment. Your translators type or paste each translation, or you import files that were translated elsewhere.
-  - q: Who can see and edit the translations?
+  - q: Who can see and edit translations in Traduora?
     a: Only the people you add to a Traduora project can see it, each with a role. Admins manage the project and its team, editors add and change terms and translations, and viewers can read and export but not edit. Invitations and password resets are sent by email, which needs an email (SMTP) service that this setup does not configure.
   - q: How do I sign in to Traduora the first time?
-    a: You sign in with the admin email you entered when you set it up and the password Cloudgate created for you, which is shown on the app's variables page. You can change the email, name and password afterwards in your account settings.
+    a: You sign in to Traduora with the admin email you entered when you set it up and the password Cloudgate created for you, which is shown on the app's variables page. You can change the email, name and password afterwards in your account settings.
 screenshots:
   - src: screenshots/translations.webp
     alt: "The Ever Traduora translations page for a sample project called Perfect News App, with 21 terms and 9 languages, listing Danish (Denmark), German (Switzerland, Germany, Liechtenstein), English, English (United States) and Spanish (Costa Rica) with their locale codes, a search box and a New locale button, next to a sidebar with Terms, Translations, Team, Import, Export, API Keys and Project Settings"
@@ -68,6 +68,6 @@ Self-hosted Traduora is a free, open-source translation management tool that you
 
 It is deliberately small. You import the translation files your app already uses, such as JSON, gettext PO, XLIFF, Android XML or iOS Strings, translate and label the terms, and export them again, or let your app fetch them through an API key. A software agency building a booking app for a hotel group, for example, could invite the client's German and Spanish staff as editors, give the client's manager a read-only view, and have the build download the latest wording before each release.
 
-Everything in Traduora is free, with no seat limit. It has no machine translation, translation memory or Git connection, so if you need those, Weblate and Tolgee are the other open-source choices. Ever Traduora is made by Ever Co. and its contributors; Cloudgate is not affiliated with them.
+The open-source Traduora is free, with no seat limit. It has no machine translation, translation memory or Git connection, so if you need those, Weblate and Tolgee are the other open-source choices. Ever Traduora is made by Ever Co. and its contributors; Cloudgate is not affiliated with them.
 
 Cloudgate installs Traduora on a server Cloudgate provides or one you connect, with its database, and gives it a secure web address.

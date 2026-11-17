@@ -12,7 +12,9 @@ faq:
   - q: "Should I choose Etherpad or HedgeDoc?"
     a: "Choose Etherpad if your team wants to write together with simple buttons for formatting and no accounts. Choose HedgeDoc if your team is happy writing Markdown and wants tables, diagrams, slides and published read-only pages."
   - q: "Is Dropbox Paper still available?"
-    a: "Dropbox has folded Paper into Dropbox itself, so Paper docs now sit among your Dropbox files. Teams that only used Paper for shared notes can move those notes to a self-hosted editor."
+    a: "Dropbox has folded Paper into Dropbox itself, so Paper docs now sit among your Dropbox files. Teams that only used Paper for shared notes can move those notes to a self-hosted editor such as Etherpad or HedgeDoc."
+  - q: "Can I import Dropbox Paper docs into Etherpad or HedgeDoc?"
+    a: "Partly. Neither Etherpad nor HedgeDoc imports from Dropbox Paper directly. Export each Paper doc as a Word file and import it into a new Etherpad pad, where bold and lists come across, or copy the text into a HedgeDoc note and tidy it in Markdown. Images and embeds do not come across."
 ---
 
 Dropbox Paper is Dropbox's tool for writing together: meeting notes, project briefs and drafts that a team edits at the same time, with comments and media. Dropbox has since folded Paper into Dropbox itself.

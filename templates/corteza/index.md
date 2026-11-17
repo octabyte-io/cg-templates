@@ -41,10 +41,10 @@ faq:
     a: Yes, if you want to build custom record apps on your own server without paying per user. Corteza uses the same building blocks as Salesforce Platform (record types, fields, page layouts, workflows and role permissions), but it has a much smaller ecosystem, no ready-made apps and no phone app, so you build each app yourself.
   - q: How do I sign in to Corteza the first time?
     a: The first person to sign up on Corteza's web address becomes the administrator, so open it and create your account right after setup. After that anyone who reaches the address can still sign up, until you turn sign-up off in the Admin Area under Settings, Authentication.
-  - q: Can I import my data from Salesforce or Zoho Creator?
+  - q: Can I import my data from Salesforce or Zoho Creator into Corteza?
     a: Partly. Corteza has no importer for Salesforce or Zoho Creator apps, so you rebuild the record types and pages yourself. You can then export each object or form from the old tool as a CSV file and import the records into the matching Corteza record type.
   - q: Do I need to know how to code to use Corteza?
-    a: No, record types, pages, charts, workflows and permissions are all set up with forms and drag and drop. Building a good app still takes some planning and configuration time. Automation scripts in JavaScript need an extra service that this template doesn't include.
+    a: No. In Corteza, record types, pages, charts, workflows and permissions are all set up with forms and drag and drop. Building a good app still takes some planning and configuration time. Automation scripts in JavaScript need an extra service that this template doesn't include.
   - q: What server size does Corteza need?
     a: A medium server is enough for most small teams. Corteza's documentation asks for 1 CPU core and 2 GB of memory for up to 500 users, plus storage that grows with your records and files.
 screenshots:

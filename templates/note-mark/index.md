@@ -42,13 +42,13 @@ faq:
   - q: How do I sign in to Note Mark the first time?
     a: There is no default login. Open Note Mark's web address right after setup and sign up to create your account. Anyone who reaches the address can sign up until you turn sign-up off in Cloudgate.
   - q: Can I share or publish notes with Note Mark?
-    a: Yes. Each note can be made public, so anyone with the link can read it, or shared with named people as read-only or editable. Anyone you give editing access can also change who sees that note, so give it only to people you trust.
+    a: Yes. Each note in Note Mark can be made public, so anyone with the link can read it, or shared with named people as read-only or editable. Anyone you give editing access can also change who sees that note, so give it only to people you trust.
   - q: Can I import my Obsidian vault or Notion pages into Note Mark?
     a: No, Note Mark has no import tool. Because it uses plain Markdown, you can paste notes in one at a time and they keep their formatting.
   - q: Is there a Note Mark phone app?
     a: No, there is no app in the app stores. Note Mark's web app is built for phones too, and you can add it to your home screen like an app.
   - q: Where does Note Mark keep my notes?
-    a: On your own server, as ordinary Markdown files in folders, with a small database for accounts. Backing up that one data folder backs up everything.
+    a: Note Mark keeps your notes on your own server, as ordinary Markdown files in folders, with a small database for accounts. Backing up that one data folder backs up everything.
 screenshots:
   - src: screenshots/notebook.webp
     alt: "The Note Mark window, split diagonally between dark and light theme: a Notebooks tree on the left with the notebook Apps open and the note Note Mark selected, a search button and sort menu above it; buttons for New, Settings and Assets with a breadcrumb leo, apps, note-mark; and the rendered note Note Mark V1 with a paragraph and a Features list"

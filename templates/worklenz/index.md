@@ -41,7 +41,7 @@ faq:
   - q: Can I move my tasks from ClickUp or Asana to Worklenz?
     a: Partly. Worklenz imports tasks from a CSV file, so you can export your task list from ClickUp or Asana and import it into a Worklenz project. There is no direct importer.
   - q: Does Worklenz track time and team workload?
-    a: Yes. Your team logs time on tasks with a timer or by hand, and the workload view and scheduler show who has spare capacity across all projects.
+    a: Yes. In Worklenz your team logs time on tasks with a timer or by hand, and the workload view and scheduler show who has spare capacity across all projects.
   - q: How do I sign in to Worklenz the first time?
     a: Worklenz has no default account. Open its web address right after setup, sign up with your email and a password, and name your organisation, then invite your team. Sign-up stays open afterwards, so anyone who can reach the address can create an account in an organisation of their own, and Worklenz has no setting to turn that off.
 screenshots: []

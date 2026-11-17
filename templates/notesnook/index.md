@@ -45,10 +45,10 @@ faq:
     a: Yes. Export each notebook from Evernote's desktop app as an ENEX file, then use Notesnook's importer in the web or desktop app; notebooks, tags, attachments and web clips come across, but reminders do not.
   - q: Can I move my existing Notesnook account to my own server?
     a: No, not directly. An account on Notesnook's servers does not exist on yours, so back up your notes in the app, log out, connect to your server, sign up again and restore the backup.
-  - q: Can the person who runs the server read my notes?
-    a: No. Notes are encrypted on your device before they are sent, so the server only stores data it cannot open. That also means nobody can recover your notes if you lose both your password and your recovery key.
+  - q: Can the person who runs the Notesnook server read my notes?
+    a: No. Notesnook encrypts your notes on your device before they are sent, so the sync server only stores data it cannot open. That also means nobody can recover your notes if you lose both your password and your recovery key.
   - q: Is the Notesnook sync server ready for everyday use?
-    a: It works, but every release is still called a beta, and Notesnook says self-hosting comes without support. Keep regular backups from the app, and look to Notesnook's community for help.
+    a: The Notesnook sync server works, but every release is still called a beta, and Notesnook says self-hosting comes without support. Keep regular backups from the app, and look to Notesnook's community for help.
 screenshots:
   - src: screenshots/editor.webp
     alt: "The Notesnook web app: a sidebar with Notes, Favorites, Reminders, Trash and Archive; a list of recent notes for a bakery, such as Christmas orders, Cardamom buns, Wedding cake tasting – Saturday, Staff rota – December and Supplier order – week 47, with tags like christmas, recipes, orders and suppliers; and the open note Christmas orders with a bullet list of four customer orders below a formatting toolbar"

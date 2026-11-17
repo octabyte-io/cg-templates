@@ -43,10 +43,10 @@ faq:
     a: Yes. Choose the Headless recipe at install and Orchard Core manages your content types and serves the content over a GraphQL API to your own website or app. Unlike Contentful, it can also render the website itself.
   - q: How is Orchard Core different from Umbraco?
     a: Both are open-source content management systems built on .NET. Orchard Core includes several sites in one install, workflows and a GraphQL API out of the box, while Umbraco has a larger community; Umbraco Cloud is Umbraco's paid hosting, whereas a self-hosted Orchard Core runs on your own server.
-  - q: How do I sign in the first time?
-    a: Open your site's address followed by /admin and sign in with the admin username you chose at install. Cloudgate creates the password and shows it on the app's variables page as ADMIN_PASSWORD. The site is installed automatically, so there is no setup wizard to finish.
+  - q: How do I sign in to Orchard Core the first time?
+    a: Open your Orchard Core site's address followed by /admin and sign in with the admin username you chose at install. Cloudgate creates the password and shows it on the app's variables page as ADMIN_PASSWORD. The site is installed automatically, so there is no setup wizard to finish.
   - q: Do I need a developer to use Orchard Core?
-    a: Not for editing. Editors write pages, posts and menus in the browser. Changing the design or adding new features means editing Liquid or Razor templates or writing C#, which is work for a .NET developer.
+    a: Not for editing. Orchard Core editors write pages, posts and menus in the browser. Changing the design or adding new features means editing Liquid or Razor templates or writing C#, which is work for a .NET developer.
   - q: Can I move my existing website to Orchard Core?
     a: Not automatically. Orchard Core has no importer for WordPress, Umbraco, Sitecore or Contentful, so moving means rebuilding the site and copying the content across.
 screenshots:

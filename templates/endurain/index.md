@@ -31,7 +31,7 @@ switching:
     - Every feature is included when you host it yourself
   different:
     - No segments, leaderboards, kudos or route planning; the social side is followers only
-    - Strava sync needs each person to create their own free Strava API app
+    - Strava sync needs each person to create their own Strava API app, which needs a Strava subscription
     - The phone apps are still in beta, so most people record with their watch or phone app and sync
     - The project is in a feature freeze for now, focused on fixes and stability
 faq:
@@ -40,7 +40,7 @@ faq:
   - q: Is Endurain a good alternative to Strava?
     a: Yes, if you want a private training log rather than a social network. Endurain keeps your activities, maps, stats, gear and goals on your own server and lets people you accept follow you, but it has no segments, leaderboards or kudos.
   - q: Can I move my Strava history to Endurain?
-    a: Yes, Endurain imports the bulk export you can request from Strava, including activity names, descriptions, photos, bikes and shoes; this import is in beta and needs the export in English. It can also sync new Strava activities every hour once you connect your own Strava API app.
+    a: Yes, Endurain imports the bulk export you can request from Strava, including activity names, descriptions, photos, bikes and shoes; this import is in beta and needs the export in English. It can also sync new Strava activities every hour once you connect your own Strava API app; Strava says creating one needs a Strava subscription.
   - q: Does Endurain work with Garmin watches?
     a: Yes, Endurain syncs with Garmin Connect, bringing in your activities, gear and body measurements automatically, and uses Garmin's sleep data as it is. You can also upload .fit files from a Garmin or any other watch directly.
   - q: How do I sign in to Endurain the first time?
@@ -48,7 +48,7 @@ faq:
   - q: Is there an Endurain phone app?
     a: Yes, Endurain has Android and iPhone apps in public beta that record runs, rides, walks and hikes and sync later if you are offline. On Android, RunnerUp and Gadgetbridge can also send activities to Endurain.
   - q: Who can see my activities in Endurain?
-    a: Only you, unless you choose otherwise. Each activity is private, for followers, or public, and public links stay off until the admin turns them on; you can also hide details such as the map, start time or heart rate.
+    a: Only you, unless you choose otherwise. Each Endurain activity is private, for followers, or public, and public links stay off until the admin turns them on; you can also hide details such as the map, start time or heart rate.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Endurain home page with a profile card, Add activity button and this month's cycling, running and swimming totals on the left, a feed showing a 4.67 km run in Coimbra with pace, power and calories above a map of the route, and a weekly swim goal on the right"

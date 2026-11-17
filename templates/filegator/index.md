@@ -37,15 +37,15 @@ faq:
   - q: Is FileGator free?
     a: Yes, FileGator is free and open source under the MIT licence, with no paid edition and no fee per user. You pay only for the server and its disk.
   - q: Is FileGator a good alternative to Google Drive or Dropbox?
-    a: Yes, if you mainly need a shared folder that your team opens in a browser, with each person limited to their own folders. It has no sync app, no phone app, no file history and no document editing; for those, a fuller suite such as Nextcloud fits better.
+    a: Yes, FileGator fits if you mainly need a shared folder that your team opens in a browser, with each person limited to their own folders. It has no sync app, no phone app, no file history and no document editing; for those, a fuller suite such as Nextcloud fits better.
   - q: How do I sign in to FileGator the first time?
     a: Sign in with the username admin and the password Cloudgate created, which is shown on the app's variables page. You can then change it in FileGator's Users screen; after that, the password on the variables page no longer applies.
   - q: Can I share files with people outside my team?
     a: Yes, but only by giving them an account, because FileGator has no share links with an expiry date or password; a copied link works only for someone signed in with download permission, or for everyone if you open up the guest account. You can give a client an account that sees only one folder, with only the permissions you choose.
-  - q: How big can uploaded files be?
-    a: Up to 100 MB per file as installed. Files upload in small pieces, so a slow or dropped connection does not lose the whole upload, and you can pause and resume.
+  - q: How big can files uploaded to FileGator be?
+    a: FileGator accepts up to 100 MB per file as installed. Files upload in small pieces, so a slow or dropped connection does not lose the whole upload, and you can pause and resume.
   - q: Is there a FileGator phone app?
-    a: No, there is no phone or desktop app, but the web page works in a phone's browser, so you can open, upload and download files from your phone.
+    a: No, FileGator has no phone or desktop app, but the web page works in a phone's browser, so you can open, upload and download files from your phone.
 screenshots:
   - src: screenshots/files.webp
     alt: "The FileGator file list signed in as admin, showing the home folder of a small landscaping business with folders for clients, invoices, quotes, site photos, the staff rota and templates, a price list file, columns for permissions, size and time, Add files and New buttons, search and folder-tree icons, and a top menu with Files, Users, Admin and Log out"

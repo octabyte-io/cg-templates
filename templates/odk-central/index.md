@@ -46,9 +46,9 @@ faq:
   - q: Can I move my forms from SurveyCTO or KoboToolbox?
     a: Partly. Forms written as XLSForm spreadsheets can usually be uploaded to ODK Central, though features specific to another service may need changes. Past submissions are not imported; keep your old exports.
   - q: How do I sign in to ODK Central the first time?
-    a: Cloudgate creates the administrator account on first start. Sign in with the admin email you entered during setup and the generated password shown in Cloudgate, then add your colleagues from the Users page. Add your email server's details so account invitations and password resets are delivered.
+    a: Cloudgate creates the ODK Central administrator account on first start. Sign in with the admin email you entered during setup and the generated password shown in Cloudgate, then add your colleagues from the Users page. Add your email server's details so account invitations and password resets are delivered.
   - q: What server size do I need for ODK Central?
-    a: ODK recommends 2 GB of memory for most projects. Photos and other attachments use disk space as submissions come in, so choose a disk with room to grow.
+    a: ODK recommends 2 GB of memory for most ODK Central projects. Photos and other attachments use disk space as submissions come in, so choose a disk with room to grow.
 screenshots:
   - src: screenshots/submissions.webp
     alt: "The ODK Central submissions table for a form called Rome Rivers Traces, with filters for submitter, date and review state, Connect Data and Download buttons, and rows listing each river's name, waterway type and traced line"
