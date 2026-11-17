@@ -65,8 +65,8 @@ const jsonLd = graph(breadcrumbSchema(trail), comparisonSchema(c), faqSchema(c.f
       <h1 class="h1">{a.name} vs {b.name}</h1>
       <p class="lede">{c.lede}</p>
       <div class="chips">
-        <span class="chip">{a.name}: <b>Free</b>, {licence.label.toLowerCase()}</span>
-        <span class="chip"><Ease ease={a.ease} /></span>
+        <span class="chip"><span>{a.name}: <b>Free</b>, {licence.label.toLowerCase()}</span></span>
+        <span class="chip"><span>{a.name}:</span> <Ease ease={a.ease} /></span>
         <span class="chip">Facts checked <b><time datetime={c.checked.toISOString().slice(0, 7)}>{checked}</time></b></span>
       </div>
       <div class="acts">
@@ -180,7 +180,7 @@ const jsonLd = graph(breadcrumbSchema(trail), comparisonSchema(c), faqSchema(c.f
       related.length > 0 && (
         <div class="blk last">
           <h2 class="h2">More comparisons</h2>
-          <ul class="more">
+          <ul class="cmpmore">
             {related.map((r) => (
               <li>
                 <a href={href(`compare/${r.slug}/`)}>
@@ -242,7 +242,7 @@ const jsonLd = graph(breadcrumbSchema(trail), comparisonSchema(c), faqSchema(c.f
     margin-top: 4px;
   }
   .src,
-  .more {
+  .cmpmore {
     margin: 0;
     padding-left: 18px;
     display: grid;
@@ -250,7 +250,7 @@ const jsonLd = graph(breadcrumbSchema(trail), comparisonSchema(c), faqSchema(c.f
     font-size: 0.875rem;
   }
   .src a,
-  .more a {
+  .cmpmore a {
     color: var(--accent-ink);
     text-underline-offset: 3px;
     overflow-wrap: anywhere;

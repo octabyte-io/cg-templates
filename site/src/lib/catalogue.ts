@@ -544,13 +544,17 @@ export function openSourceCount(): number {
 }
 
 /** How an app's code is shared: the words a visitor understands, from its SPDX licence id. */
-export function licenceKind(license: string): { label: string; openSource: boolean } {
+export function licenceKind(license: string): { label: string; openSource: boolean; note: string } {
   // A mixed licence with a closed-source or source-available part (Netdata's NCUL1 dashboard, Enonic's Content Studio) is only partly open source.
-  if (/\b(NCUL|Enonic)/i.test(license)) return { label: 'Partly open source', openSource: false };
-  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub|NPL|WPL|Proprietary|FIT2CLOUD|erxes|Evolution-API|Reloop|Countly)/i.test(license)) {
-    return { label: license.startsWith('SUL') ? 'Fair-code' : 'Source-available', openSource: false };
+  if (/\b(NCUL|Enonic)/i.test(license)) {
+    return { label: 'Partly open source', openSource: false, note: 'Most of the code is open source; one part has extra conditions.' };
   }
-  return { label: 'Open source', openSource: true };
+  if (/^(BUSL|SUL|Elastic|SSPL|Commons-Clause|Open-WebUI|LobeHub|NPL|WPL|Proprietary|FIT2CLOUD|erxes|Evolution-API|Reloop|Countly)/i.test(license)) {
+    return license.startsWith('SUL')
+      ? { label: 'Fair-code', openSource: false, note: 'Free to use and change for your own business; reselling it needs the maker’s permission.' }
+      : { label: 'Source-available', openSource: false, note: 'The code is public, with conditions an open-source licence does not have.' };
+  }
+  return { label: 'Open source', openSource: true, note: 'Anyone may use, change and share the code.' };
 }
 
 /** The home page's popular swaps: products with a `swap` whose target app exists. */

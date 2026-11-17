@@ -259,7 +259,7 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
           <dt>Ease of use</dt><dd><Ease ease={a.ease} /></dd>
           <dt>App price</dt><dd>Free</dd>
           <dt>Server</dt><dd>Yours, or one from Cloudgate</dd>
-          <dt>Code</dt><dd title={`Licence: ${a.license}`}>{licence.label}</dd>
+          <dt>Code</dt><dd title={`Licence: ${a.license}`}>{licence.label}{!licence.openSource && <small class="lnote">{licence.note}</small>}</dd>
           {
             a.updated && (
               <>
@@ -292,6 +292,12 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
 </Base>
 
 <style>
+  .lnote {
+    flex-basis: 100%;
+    color: var(--muted);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
   .chipmark {
     display: inline-flex;
     gap: 5px;

@@ -201,7 +201,7 @@ const thumb = (app: Template) => {
                 <tr>
                   <td class="c-app">
                     <span class="who">
-                      <AppTile template={app} box={32} size={18} />
+                      <AppTile template={app} box={32} size={18} loading="eager" />
                       <a class="plain" href={href(`templates/${app.id}/`)}>
                         {app.name}
                       </a>
@@ -232,14 +232,14 @@ const thumb = (app: Template) => {
 
     {
       copy && (
-        <div class="blk">
+        <div class:list={['blk', count === 1 && 'first']}>
           <h2 class="h2">Why look for an alternative to {product.name}?</h2>
           <div class="prose" set:html={copy.whyHtml} />
         </div>
       )
     }
 
-    <div class="blk">
+    <div class:list={['blk', count === 1 && !copy && 'first']}>
       <h2 class="h2">{count === 1 ? `How ${pick.name} compares` : `The ${plural}, compared`}</h2>
       <div class="opts">
         {
@@ -282,7 +282,7 @@ const thumb = (app: Template) => {
                   )}
                   <div class="meta">
                     <Ease ease={app.ease} />
-                    <span>{kinds.get(app.id)!.label} · {app.license}</span>
+                    <span title={`${kinds.get(app.id)!.note} Licence: ${app.license}`}>{kinds.get(app.id)!.label}</span>
                   </div>
                   <div class="acts">
                     <a class="btn sm" href={deployUrl(app.id)}>

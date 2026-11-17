@@ -55,8 +55,20 @@ const description = `All ${total} free apps you can run on your own server with 
     <FilterBar categories={categories} total={total} />
     <div class="gridwrap pad">
       <Fragment set:html={productSymbols(templates.flatMap((template) => template.alternativeTo.slice(0, 1)))} />
+      <script is:inline>
+        // A shared link with ?category= hides the other cards before the first paint, so the list
+        // doesn't jump when the filter script below runs; that script removes this style.
+        (function () {
+          var c = new URLSearchParams(location.search).get('category');
+          if (!c || !/^[a-z-]+$/.test(c)) return;
+          var s = document.createElement('style');
+          s.id = 'precat';
+          s.textContent = '[data-card]:not([data-cat="' + c + '"]){display:none}';
+          document.head.appendChild(s);
+        })();
+      </script>
       <div class="grid" id="grid">
-        {templates.map((template) => <Card template={template} sharedMarks />)}
+        {templates.map((template, i) => <Card template={template} sharedMarks eager={i < 6} />)}
         <div class="empty" id="empty" hidden>
           <p class="msg" id="emptyMsg"></p>
           <p class="hint">Try a tool you pay for, like Zapier, Notion or Slack. If the app you need is missing, you can add it.</p>
@@ -188,6 +200,7 @@ const description = `All ${total} free apps you can run on your own server with 
     input.focus();
   });
   render();
+  document.getElementById('precat')?.remove();
   // Bring the selected tab into view on phones, where the tabs scroll sideways (above 640px they wrap).
   // Scrolls only the tab row, never the page.
   const picked = cat ? tabs.find((t) => t.dataset.tab === cat) : undefined;

@@ -198,6 +198,7 @@ p{margin:0}
 .segwrap{display:flex;align-items:flex-start;gap:6px;min-width:0}
 /* category chips wrap; with JavaScript they show as one row (biggest first) and "More categories" opens the rest */
 .seg{display:flex;flex-wrap:wrap;gap:6px;min-width:0;flex:1}
+.seg.one{max-height:40px;padding:4px;margin:-4px;overflow:hidden}
 .segmore{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:32px;padding:0 12px;border:1px dashed var(--line-strong);background:transparent;border-radius:var(--r-pill);color:var(--fg);cursor:pointer;font-size:.8125rem;font-weight:500;white-space:nowrap;touch-action:manipulation;transition:border-color .15s,background .15s}
 .segmore:hover{border-color:var(--cross);background:var(--card)}
 .segmore[hidden]{display:none}
@@ -224,9 +225,10 @@ p{margin:0}
 .card .nm{font-weight:600;font-size:1rem;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .cc{font-size:.8125rem;color:var(--faint)}
 .card .ds{font-size:.875rem;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .cf{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;padding-top:12px;border-top:1px solid var(--line);font-size:.8125rem;min-width:0}
+.card .cf{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:6px 10px;padding-top:12px;border-top:1px solid var(--line);font-size:.8125rem;min-width:0}
 .rp{display:flex;align-items:center;gap:6px;color:var(--faint);min-width:0}
-.rp b{font-weight:500;color:var(--muted);white-space:nowrap}
+.rp b{font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.card .cf .ease{flex:none}
 .rp .plus{color:var(--faint);white-space:nowrap}
 .ease{display:inline-flex;align-items:center;gap:6px;font-size:.8125rem;white-space:nowrap;color:var(--muted)}
 .ease.easy i{color:var(--ok)}.ease.some i{color:var(--warn)}
@@ -332,7 +334,7 @@ p{margin:0}
 table{border-collapse:collapse;width:100%;font-size:.875rem}
 th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
 th{font-weight:500;color:var(--faint);font-size:.8125rem;background:var(--sunk)}
-tr:last-child td{border-bottom:0}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
 td .who{display:flex;align-items:center;gap:10px;font-weight:600}
 /* On phones a comparison table becomes one block per row, so no column is cut off */
 @media (max-width:40em){
@@ -400,7 +402,7 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .mbtn{display:flex}
   .split{grid-template-columns:1fr;gap:0}
   .split>aside{order:-1}
-  .sidecard{position:static;margin:0 0 8px}
+  .sidecard{position:static;margin:0 0 8px;max-width:30rem}
   .sidecard .ft{display:none}
   .bento{grid-template-columns:1fr 1fr}.bento .t-a,.bento .t-d{grid-column:1/-1}.bento .t-b,.bento .t-c{grid-column:span 1}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -422,8 +424,9 @@ td .who{display:flex;align-items:center;gap:10px;font-weight:600}
   .grid{grid-template-columns:1fr}
   .bento{grid-template-columns:1fr}.bento .t-b,.bento .t-c{grid-column:1/-1}
   .bento>.tile{padding:24px 16px 28px}
-  .tl{gap:4px}.tl .h{font-size:.625rem}
+  .tl{gap:4px}
   .seg button{padding:0 14px;min-height:44px}
+  .seg.one{max-height:52px}
   .segmore{min-height:44px}
   /* on a phone the button sits under the chips, so the row has the full width */
   .segwrap{flex-direction:column;align-items:stretch}.segmore{align-self:flex-start}

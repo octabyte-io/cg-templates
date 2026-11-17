@@ -225,7 +225,7 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
     <div class="gridwrap pad">
       <Fragment set:html={productSymbols(templates.flatMap((template) => template.alternativeTo.slice(0, 1)))} />
       <div class="grid" id="grid">
-        {templates.map((template) => <Card template={template} sharedMarks />)}
+        {templates.map((template, i) => <Card template={template} sharedMarks eager={i < 6} />)}
         <div class="empty" id="empty" hidden>
           <p class="msg" id="emptyMsg"></p>
           <p class="hint">Try a tool you pay for, like Zapier, Notion or Slack. If the app you need is missing, you can add it.</p>
