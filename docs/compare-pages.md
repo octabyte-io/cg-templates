@@ -18,9 +18,10 @@ and fails with the file, the field and what to change when a rule is broken.
 app: plane                    # the template id
 vs: jira                      # a product id from src/products.ts, or another template id
 vsUrl: https://www.atlassian.com/software/jira   # the rival's official site (required for a product)
+# vsName: Tautulli          # only for a rival that is neither a product nor a template (then vsUrl is required)
 title: Plane vs Jira: features, pricing, hosting  # optional; at most 48 characters, " | Cloudgate" is added
 description: "110 to 160 characters: the answer first, then what the page covers."
-lede: "Two or three sentences. The first answers 'Plane or Jira?' on its own, so it can be quoted as it stands."
+lede: "Two or three sentences, at most 480 characters. The first answers 'Plane or Jira?' on its own."
 checked: 2026-11              # the month you checked the facts, YYYY-MM
 glance:                       # 5 to 10 rows: the comparison table
   - label: Price
@@ -57,6 +58,9 @@ The app's page and the rival's alternatives page link to it.
 - The app lists none: pick the tool people actually compare it with, preferring another template
   (GoToSocial vs Mastodon) or a product already in `src/products.ts`. Do not add products for a
   compare page: a product in `products.ts` that an app lists needs a whole alternatives page.
+- Only when neither fits (a tool's real rival is an open-source app with no template, such as
+  Jellystat and Tautulli), name it in the file itself with `vs: <slug>`, `vsName` and `vsUrl`. It gets
+  a letter tile and no alternatives page.
 - One page per template is the goal. Two templates that are each other's rival share one page.
 
 ## Research: facts only
@@ -102,7 +106,7 @@ Field by field:
 
 - `description`: 110 to 160 characters, starting "<App> vs <Rival>:" and stating the core
   difference (for example, free and self-hosted against per-user pricing).
-- `lede`: the first sentence names both tools and the one difference that decides most choices. The
+- `lede`: at most 480 characters (the build enforces it). The first sentence names both tools and the one difference that decides most choices. The
   second says who each suits.
 - `glance`: 6 to 8 rows. Always **Price**, **Hosting** and **Source code** (the app's licence against
   the rival's), then the rows that matter for this kind of tool (for a project tracker: views,
