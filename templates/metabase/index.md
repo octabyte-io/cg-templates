@@ -38,7 +38,7 @@ faq:
   - q: Is Metabase a good alternative to Tableau or Looker?
     a: Yes, for most small and mid-sized teams Metabase covers the everyday work of charts, dashboards and scheduled reports at no licence cost. Tableau offers more design control and Looker a central data model, which large data teams may still want.
   - q: Do I need to know SQL to use Metabase?
-    a: No, most questions are built by choosing a table, filters and a grouping from menus. SQL is there for people who want it.
+    a: No. In Metabase, most questions are built by choosing a table, filters and a grouping from menus. SQL is there for people who want it.
   - q: Which data can Metabase read?
     a: Metabase connects to common databases and warehouses, including PostgreSQL, MySQL, MariaDB, SQL Server, BigQuery, Snowflake, Redshift and MongoDB. You can also upload CSV files into a connected database.
   - q: How do I self-host Metabase?

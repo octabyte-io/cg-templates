@@ -38,11 +38,11 @@ faq:
   - q: Is DataEase a good alternative to Tableau or Power BI?
     a: Yes, for building good-looking dashboards and wall screens from your own data without a licence per viewer. Tableau and Power BI go much further in analysis and data modelling and give every person their own login, which the free DataEase edition does not.
   - q: Can everyone on my team have their own DataEase account?
-    a: No, the free edition has a single admin account and no user management. The admin builds the dashboards and shares them by public link, with a password if you want one. Separate accounts, roles and data permissions need a paid edition.
+    a: No, the free edition of DataEase has a single admin account and no user management. The admin builds the dashboards and shares them by public link, with a password if you want one. Separate accounts, roles and data permissions need a paid edition.
   - q: Should I choose DataEase, Metabase or Apache Superset?
     a: Choose DataEase if you want drag-and-drop dashboards and full-screen displays and one person builds them. Choose Metabase if several people need their own logins, emailed reports or alerts. Choose Superset if your team writes SQL and wants a full SQL editor.
   - q: Is DataEase available in English?
-    a: Yes, the whole interface can be switched to English from the account menu, under Language. The admin account starts in Chinese, and most of the official documentation and forum are in Chinese.
+    a: Yes, the whole DataEase interface can be switched to English from the account menu, under Language. The admin account starts in Chinese, and most of the official documentation and forum are in Chinese.
   - q: How do I sign in to DataEase the first time?
     a: Sign in with the account admin and the password Cloudgate created, which is shown in Cloudgate. DataEase opens with a sample sales dashboard for a chain of tea shops, so you can look around before connecting your own data.
   - q: What server size do I need for DataEase?

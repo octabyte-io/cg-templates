@@ -35,12 +35,12 @@ faq:
     a: Yes. Synapse and Element are free and open source under the AGPL licence, so you pay only for your server. Element also sells a paid server package with support and extra admin tools, which this setup does not use.
   - q: What is the difference between Matrix, Synapse and Element?
     a: Matrix is the open standard for chat, Synapse is the Matrix server that stores your accounts and messages, and Element is the chat app people use to sign in to it. Cloudgate installs Synapse and the Element web app together.
-  - q: Is a Matrix server a good alternative to Slack?
-    a: Yes, for teams that want rooms, threads and direct messages with end-to-end encryption and the option to chat with other organisations on Matrix. It has fewer ready-made integrations than Slack, no calls in this setup, and adding people is more technical than in Mattermost or Zulip.
-  - q: How do I sign in and add people the first time?
+  - q: Are Element and Synapse a good alternative to Slack?
+    a: Yes. Element and Synapse are a good alternative to Slack for teams that want rooms, threads and direct messages with end-to-end encryption and the option to chat with other organisations on Matrix. Element and Synapse have fewer ready-made integrations than Slack, no calls in this setup, and adding people is more technical than in Mattermost or Zulip.
+  - q: How do I sign in to Element and add people the first time?
     a: Sign in at the Element address with the username admin and the password Cloudgate shows. Nobody can sign up on their own, so the admin opens the included admin panel at its own web address, signs in with the same username and password, creates each person's account under Users and sends them their username and password. The panel also resets passwords and deactivates accounts.
   - q: Can I chat with people on other Matrix servers?
-    a: Yes. Your server can message people and join rooms on any other Matrix server, such as matrix.org or a partner's own server. Every account has an address like @alice:chat.example.com, and the server part can't be changed after setup.
+    a: Yes. Your Synapse server can message people and join rooms on any other Matrix server, such as matrix.org or a partner's own server. Every account has an address like @alice:chat.example.com, and the server part can't be changed after setup.
   - q: Can I make voice and video calls with Element and Synapse?
     a: No, not with this setup. Calls in Element need extra services that this template leaves out, so use it for text chat, files and images, and keep a separate meeting tool for calls.
   - q: Are there phone and desktop apps for Element?

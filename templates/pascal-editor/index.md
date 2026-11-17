@@ -40,7 +40,7 @@ faq:
   - q: Is Pascal Editor free?
     a: Yes, Pascal Editor is free and open source under the MIT licence, and the self-hosted editor has every drawing, 3D and export feature with no limits. You pay only for your server. Pascal's own hosted service sells extras such as AI design runs paid with credits, and those are not part of the self-hosted editor.
   - q: Is Pascal Editor a good alternative to Planner 5D or SketchUp?
-    a: Yes, for drawing floor plans and simple building models. Like Planner 5D, you draw rooms and see them in 3D in the browser, and unlike SketchUp, walls, rooms and roofs are building parts rather than loose shapes. Planner 5D has a much bigger furniture catalogue and realistic renders, and SketchUp is a more general 3D modelling tool.
+    a: Yes, for drawing floor plans and simple building models. In Pascal Editor, like Planner 5D, you draw rooms and see them in 3D in the browser, and unlike SketchUp, walls, rooms and roofs are building parts rather than loose shapes. Planner 5D has a much bigger furniture catalogue and realistic renders, and SketchUp is a more general 3D modelling tool.
   - q: How do I sign in to Pascal Editor the first time?
     a: Open your Pascal Editor web address and enter the password Cloudgate created, shown on the app's variables page. There are no usernames; everyone who has the password signs in to the same workspace and sees the same projects. Then choose New project to start drawing.
   - q: Can I import my SketchUp or Planner 5D projects into Pascal Editor?
@@ -48,7 +48,7 @@ faq:
   - q: What file formats can Pascal Editor export?
     a: Pascal Editor exports 3D models as GLB, USDZ, OBJ, STL and IFC, makes 3MF and STL files for 3D printing, and saves floor plans as PDF. It can also send a model to Blender with Pascal's Blender add-on.
   - q: Where are my Pascal Editor projects stored, and what server do I need?
-    a: Your projects are saved on your own server, so they survive restarts and updates and never go to Pascal's cloud. The server side is light, so Cloudgate uses a small server; the 3D drawing happens in each person's browser, so a computer with decent graphics helps.
+    a: Pascal Editor saves your projects on your own server, so they survive restarts and updates and never go to Pascal's cloud. The server side is light, so Cloudgate uses a small server; the 3D drawing happens in each person's browser, so a computer with decent graphics helps.
 screenshots:
   - src: screenshots/editor-3d.webp
     alt: "The Pascal Editor 3D view of a made-up single-storey cottage seen from above with the roof off, showing doors and windows in the walls and four labelled rooms: Living room 24 m², Kitchen 18 m², Bedroom 16 m² and Bathroom 12 m². The left panel lists room tools (Rectangle, Polygon, Walls), Door, Window, Roof, Stairs, Kitchen and outdoor tools (Fence, Terrain, Terrace)."

@@ -40,13 +40,13 @@ faq:
   - q: How is SurfSense different from Open Notebook?
     a: SurfSense focuses on working with files. Its AI agent creates Word, Excel, PowerPoint and PDF files, edits your documents as tracked changes and runs AI models inside the app, while Open Notebook is simpler and adds web pages and YouTube videos as sources at no extra cost. Both are for one person per install.
   - q: How do I sign in to SurfSense the first time?
-    a: Open the app's web address and enter the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. There are no user accounts; then the app asks you to pick an AI model for chat.
+    a: Open your SurfSense web address and enter the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. There are no user accounts; then the app asks you to pick an AI model for chat.
   - q: Can several people use one SurfSense?
     a: No, SurfSense is built for one person. One password protects the whole install, with no user accounts, roles or sharing, so each person who needs it should get their own install.
   - q: Does SurfSense need an AI provider key?
     a: No, SurfSense can download a model and run it on your server, so your documents never leave it. A server has no graphics card, so local models are slow; for faster answers, add a key for OpenAI, OpenRouter or another OpenAI-compatible service, or sign in with a ChatGPT or Claude plan.
   - q: What server size do I need for SurfSense?
-    a: Plan on at least 4 GB of memory when you connect an AI service, and 8 GB or more to run AI models on the server itself. It also needs several GB of disk for the app, the models you download and your documents.
+    a: Plan on at least 4 GB of memory for SurfSense when you connect an AI service, and 8 GB or more to run AI models on the server itself. It also needs several GB of disk for the app, the models you download and your documents.
 screenshots:
   - src: screenshots/workspace.webp
     alt: "The SurfSense app in dark mode: on the left a sidebar with New chat, Chats, Plugins and a Sources list of seven ticked documents; in the middle a chat answering 'explain tumors in detail' with numbered citation markers and a box to ask a follow-up from 7 sources; on the right the Studio panel with buttons for Markdown, Word, Slides, Spreadsheet, Web page, PDF, Mind map, Flashcards, Quiz, Podcast, Image and Infographic, above a list of generated reports, a PDF and a quiz"

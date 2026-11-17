@@ -38,13 +38,13 @@ faq:
   - q: What is the difference between ClassicPress and WordPress?
     a: ClassicPress is a community-led fork of WordPress 6.2 that keeps the classic editor and leaves out the block editor and full site editing. It looks and works like the WordPress admin, with a smaller core and extras such as media categories, revision clean-up and user groups.
   - q: Do WordPress plugins and themes work with ClassicPress?
-    a: Most do, if they work on WordPress 6.2 or earlier and do not need blocks. Block themes cannot be installed, and plugins built for newer WordPress versions may fail, so test each one before you rely on it.
+    a: Most WordPress plugins and themes work with ClassicPress, if they work on WordPress 6.2 or earlier and do not need blocks. Block themes cannot be installed, and plugins built for newer WordPress versions may fail, so test each one before you rely on it.
   - q: Can I move my WordPress site to ClassicPress?
     a: Yes. Export your content from WordPress and bring it in with the WordPress importer, or switch an existing WordPress site in place with the free ClassicPress migration plugin, which can also switch it back.
   - q: Is ClassicPress a good alternative to Wix or Squarespace?
-    a: Yes, if you want a site you own with no monthly plan and you like writing in a classic editor. It has no drag-and-drop builder, and Wix has no export, so pages from Wix are rebuilt by hand.
+    a: Yes, ClassicPress is a good Wix or Squarespace alternative if you want a site you own with no monthly plan and you like writing in a classic editor. It has no drag-and-drop builder, and Wix has no export, so pages from Wix are rebuilt by hand.
   - q: How do I sign in to ClassicPress the first time?
-    a: There is no default password. The first person to open the site's web address chooses the site name and creates the admin account on a short welcome page, so open it yourself right after setup. Public sign-up is off until you turn it on under Settings > General.
+    a: ClassicPress has no default password. The first person to open the site's web address chooses the site name and creates the admin account on a short welcome page, so open it yourself right after setup. Public sign-up is off until you turn it on under Settings > General.
   - q: What server size do I need for ClassicPress?
     a: A small server with 1 GB of memory runs a typical business website or blog, because ClassicPress is one light app plus a MariaDB database. Choose a larger one for a busy site or many plugins.
 screenshots:

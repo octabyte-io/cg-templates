@@ -15,7 +15,9 @@ faq:
   - q: "Does Corteza, Saltcorn or Steedos have a phone app?"
     a: "No. All three run in a web browser, including a phone’s browser, and none has a native iPhone or Android app like Zoho Creator’s."
   - q: "How many apps can I build in Corteza, Saltcorn or Steedos?"
-    a: "As many as you like. None has a limit on apps or users when you host it yourself."
+    a: "As many as you like. Corteza, Saltcorn and Steedos have no limit on apps or users when you host them yourself, while Zoho Creator's Standard plan allows one app."
+  - q: "Can I move my Zoho Creator records to Corteza, Saltcorn or Steedos?"
+    a: "Partly. Zoho Creator exports a report's records as XLSX or CSV files, and Steedos imports records from Excel through import templates. The apps, forms and workflows themselves are rebuilt by hand, and Corteza and Saltcorn have no Zoho Creator importer."
 ---
 
 Zoho Creator is Zoho’s low-code platform for building business apps from forms, reports, pages and workflows, with native phone apps and ties to the rest of the Zoho suite. It is priced per user every month, and its Standard plan allows one app.

@@ -38,15 +38,15 @@ faq:
   - q: Is I Hate Money free?
     a: Yes, I Hate Money is free and open source under a BSD-style licence, with no paid edition and no limit on projects or bills. You pay only for your server.
   - q: Is I Hate Money a good alternative to Splitwise or Tricount?
-    a: Yes, for groups that want a plain, no-signup way to track who paid and square up at the end. Like Tricount, it works with a project link and code instead of accounts, and like Splitwise it shows balances and the fewest payments to settle. It has no receipt photos, repeating bills or bank import.
+    a: Yes, I Hate Money suits groups that want a plain, no-signup way to track who paid and square up at the end. Like Tricount, it works with a project link and code instead of accounts, and like Splitwise it shows balances and the fewest payments to settle. It has no receipt photos, repeating bills or bank import.
   - q: How do people sign in to I Hate Money?
-    a: They open the project's link and type its private code; there are no personal accounts. In this template, starting a new project asks for the admin password shown on the app's variables page in Cloudgate, unless you chose to let anyone create projects.
+    a: People open the I Hate Money project's link and type its private code; there are no personal accounts. In this template, starting a new project asks for the admin password shown on the app's variables page in Cloudgate, unless you chose to let anyone create projects.
   - q: Can I import my Splitwise or Tricount data into I Hate Money?
     a: No, I Hate Money has no importer for Splitwise or Tricount, so start your projects fresh. It can import and export its own JSON and CSV files.
   - q: Does I Hate Money have a phone app?
-    a: Yes, through apps made by other people that the project links to, MoneyBuster on Android (Google Play and F-Droid) and PayForMe on iPhone. The web pages also work in a phone's browser.
+    a: Yes, I Hate Money works with phone apps made by other people that the project links to, MoneyBuster on Android (Google Play and F-Droid) and PayForMe on iPhone. The web pages also work in a phone's browser.
   - q: Does I Hate Money convert between currencies?
-    a: Not reliably at the moment. The exchange-rate service it uses now asks for an access key, and in our test of version 7.2.1 currency conversion failed, so keep each project in one currency.
+    a: Not reliably at the moment. The exchange-rate service I Hate Money uses now asks for an access key, and in our test of version 7.2.1 currency conversion failed, so keep each project in one currency.
   - q: What server size do I need for I Hate Money?
     a: A small server is enough, because I Hate Money is one light web app and a database. Cloudgate sets up both and you can move to a bigger server later.
 screenshots:

@@ -34,12 +34,12 @@ faq:
   - q: Is Lychee free?
     a: Yes. Lychee is free, open-source software under the MIT licence, with unlimited albums, users and uploads, so you pay only for your server. An optional Supporter Edition, €5 a month as of November 2026, unlocks extras such as watermarks, user groups, upload quotas and statistics, and a Pro add-on adds a webshop.
   - q: Is Lychee a good alternative to SmugMug or Pixieset?
-    a: Yes, for showing and delivering galleries. Lychee gives you clean albums on your own web address, password-protected or shared with chosen accounts, with full-resolution downloads and no storage plan. It has no proofing, where clients pick favourites, and no print lab, so those stay with another service.
-  - q: Can I share a private gallery with one client?
-    a: Yes. Make the album public with a password and send the client the link and password, or create an account for the client and share the album with that account only. You choose whether they can download the photos.
+    a: Yes, Lychee can replace SmugMug or Pixieset for showing and delivering galleries. Lychee gives you clean albums on your own web address, password-protected or shared with chosen accounts, with full-resolution downloads and no storage plan. It has no proofing, where clients pick favourites, and no print lab, so those stay with another service.
+  - q: Can I share a private Lychee gallery with one client?
+    a: Yes. In Lychee, make the album public with a password and send the client the link and password, or create an account for the client and share the album with that account only. You choose whether they can download the photos.
   - q: How do I sign in to Lychee the first time?
     a: The first person to open Lychee's web address is asked to create the admin account, so do this right after setup. The admin can then add other users or send invite links.
-  - q: Can I move my photos from SmugMug or Flickr?
+  - q: Can I move my photos from SmugMug or Flickr to Lychee?
     a: Not automatically. Lychee has no importer for SmugMug or Flickr, so download your originals from them first, then upload them to Lychee in the browser, or import them from a web link or Dropbox.
   - q: Does Lychee have a phone app?
     a: No. Lychee works in any web browser, including on phones, and its team has started work on an Android and iPhone app. For automatic phone backup, Immich is the better choice.

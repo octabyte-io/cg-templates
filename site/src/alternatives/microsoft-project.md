@@ -10,6 +10,8 @@ faq:
     a: "Yes. OpenProject's Gantt charts show phases, milestones and dependencies, and you can plan across several projects at once, in the free Community edition."
   - q: "What can I use now that Project Online has been retired?"
     a: "OpenProject runs in the browser on your own server, so it can take the place of Project Online for planning and tracking. Its free Community edition covers Gantt charts, work packages, time tracking and budgets; portfolio and resource management are paid add-ons."
+  - q: "Can OpenProject open Microsoft Project files?"
+    a: "No. OpenProject has no importer for Microsoft Project files, so plans made in Microsoft Project are rebuilt in OpenProject as work packages on its Gantt chart, with their phases, milestones and dependencies."
 ---
 
 Microsoft Project is Microsoft's project planning software, built around Gantt charts, task dependencies, resources and baselines, sold as per-user subscriptions alongside Microsoft Planner.

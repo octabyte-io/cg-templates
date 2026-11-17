@@ -35,13 +35,13 @@ faq:
   - q: Is Typecho free?
     a: Yes, Typecho is free and open source under the GPL-2.0 licence, with no paid edition. You pay only for the server it runs on.
   - q: Is Typecho a good alternative to Medium?
-    a: Yes, if you want your own blog on your own address. Your posts, comments and design stay yours, with no monthly plan, but there is no newsletter, paid memberships or Medium readership; new readers find you through search, RSS and social media.
+    a: Yes, Typecho suits you if you want your own blog on your own address. Your posts, comments and design stay yours, with no monthly plan, but there is no newsletter, paid memberships or Medium readership; new readers find you through search, RSS and social media.
   - q: How is Typecho different from WordPress?
     a: Typecho is much smaller and simpler than WordPress, which keeps it fast on a small server. It is a blog only, with far fewer themes and plugins and no page builder or shop.
   - q: Is Typecho available in English?
-    a: Yes, the admin includes an English translation, but a new blog starts in Chinese. Switch it on the general settings page, where the language is chosen, and expect a few small labels to stay in Chinese.
+    a: Yes, the Typecho admin includes an English translation, but a new blog starts in Chinese. Switch it on the general settings page, where the language is chosen, and expect a few small labels to stay in Chinese.
   - q: How do I sign in to Typecho the first time?
-    a: Go to your blog's address followed by /admin and sign in with the username admin and the password Cloudgate created for it. The blog is already installed, so there is no setup wizard.
+    a: Go to your Typecho blog's address followed by /admin and sign in with the username admin and the password Cloudgate created for it. The blog is already installed, so there is no setup wizard.
   - q: Can I move my WordPress blog to Typecho?
     a: Not easily. Typecho has no built-in WordPress import; a community plugin exists, but users have reported incomplete imports, so test it on a copy first or copy your main posts by hand.
   - q: What server size do I need for Typecho?

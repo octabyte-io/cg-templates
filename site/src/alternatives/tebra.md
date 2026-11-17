@@ -7,9 +7,11 @@ moving: |
   OpenEMR has no Tebra importer. Ask Tebra for a full export of your patient records, appointments and billing data, and plan the move with an OpenEMR support vendor, who can map the export into OpenEMR. Before go-live, set up your facilities, providers, users and permissions, fee sheets and the insurance companies you bill, and sign up for an e-prescribing service and a claims clearinghouse. Keep read access to Tebra until claims in progress are settled.
 faq:
   - q: "Can OpenEMR send insurance claims like Tebra?"
-    a: "Yes, through a clearinghouse you sign up with, such as Office Ally, or on paper. OpenEMR also checks eligibility and posts payments."
+    a: "Yes. OpenEMR sends claims through a clearinghouse you sign up with, such as Office Ally, or on paper. OpenEMR also checks eligibility and posts payments."
   - q: "Who is responsible for HIPAA compliance after moving from Tebra to OpenEMR?"
     a: "Compliance is up to your practice: no software makes a practice compliant on its own. With OpenEMR on Cloudgate, patient data stays on your own server, and Cloudgate does not hold your records."
+  - q: "Does OpenEMR have e-prescribing like Tebra?"
+    a: "Yes, through an outside service. OpenEMR records prescriptions, but sending them electronically needs an e-prescribing service you sign up with. Tebra has e-prescribing built in, including controlled substances once a provider enrols."
 ---
 
 Tebra, formerly Kareo, is a cloud practice-management and EHR subscription for independent practices, combining charting, scheduling and billing with services such as billing support and patient marketing.

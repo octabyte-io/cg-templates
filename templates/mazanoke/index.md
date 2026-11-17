@@ -46,7 +46,7 @@ faq:
   - q: Do people need an account to use MAZANOKE?
     a: No, MAZANOKE has no accounts and no login, so anyone with the address can use it. Nothing is ever stored on the server, but share the address only with the people who should use it. MAZANOKE can ask for a username and password if they are set in its configuration; this template leaves that off.
   - q: What server size do I need for MAZANOKE?
-    a: The smallest server is enough, because the server only sends the web page. The image work happens in each visitor's browser, so large batches depend on the speed of the computer or phone being used.
+    a: The smallest server is enough for MAZANOKE, because the server only sends the web page. The image work happens in each visitor's browser, so large batches depend on the speed of the computer or phone being used.
 screenshots:
   - src: screenshots/drop-images.webp
     alt: "MAZANOKE in light mode: a large dashed area saying Drop or paste images, listing jpg, png, webp, heic, avif, tiff, gif, svg and ico, with a Browse button, then Settings and Images tabs and the optimization method set to image quality at 80 percent"

@@ -9,7 +9,9 @@ faq:
   - q: "How many technicians can use the free Atlas CMMS?"
     a: "Five users in admin or technician roles. People who only submit requests or view work are not counted, so the rest of the staff can report problems for free. More technicians need a paid licence key."
   - q: "Does Atlas CMMS have a phone app?"
-    a: "Yes. Atlas CMMS has apps for Android and iOS that you point at your own server's address, so technicians can work on their phones."
+    a: "Yes. Technicians moving from MaintainX can use Atlas CMMS's apps for Android and iOS, which you point at your own server's address, so technicians can work on their phones."
+  - q: "Can I import my MaintainX data into Atlas CMMS?"
+    a: "Yes, through CSV files. Atlas CMMS has no MaintainX importer, but it has CSV import templates for assets, locations, parts, meters, preventive maintenance and work orders. Export each list from MaintainX, copy the columns into the matching template, and import locations first."
 cost: "Atlas CMMS is open source under the AGPL-3.0 licence, and its free edition costs nothing, but it is limited: 5 users in admin or technician roles (requesters and view-only users are not counted), 50 assets, 10 locations, 100 parts and 30 open work orders, and file attachments, time and cost tracking, SSO, custom roles, the request portal, API access and more need a paid licence key from its maker. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 ---
 

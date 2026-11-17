@@ -40,7 +40,7 @@ faq:
   - q: Do I need my own AI key for Open Design?
     a: Yes, Open Design has no AI model of its own. You paste an API key from a provider such as Anthropic, OpenAI, Google Gemini or Azure OpenAI, or any OpenAI-compatible service, and that provider bills you for what you use. You can also sign in to the project's paid hosted AI instead.
   - q: How do I sign in to Open Design the first time?
-    a: Your browser asks for a username and password before the app opens. The username is open-design and the password is the one Cloudgate generates and shows with your app. Everyone who uses the workspace shares that password, so give it only to people you trust.
+    a: Your browser asks for a username and password before Open Design opens. The username is open-design and the password is the one Cloudgate generates and shows with your app. Everyone who uses the workspace shares that password, so give it only to people you trust.
   - q: Can I import my Claude Design projects into Open Design?
     a: No, there is no import from Claude Design. Export what you need from Claude Design, then recreate your brand in Open Design as a design system and continue there.
   - q: Can Open Design export to Figma or PowerPoint?

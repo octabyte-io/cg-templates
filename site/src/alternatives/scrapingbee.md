@@ -9,7 +9,9 @@ faq:
   - q: "Does Crawl4AI include proxies like ScrapingBee?"
     a: "No. Self-hosted Crawl4AI has no proxy network, so requests come from your server's address and some sites block or challenge them. You can add proxies of your own."
   - q: "Is there a request limit in Crawl4AI?"
-    a: "No. Crawl4AI has no per-request fee or quota; how much it fetches depends on your server, which needs at least 4 GB of memory because each page loads in a real browser."
+    a: "No. Unlike ScrapingBee's monthly credits, Crawl4AI has no per-request fee or quota; how much it fetches depends on your server, which needs at least 4 GB of memory because each page loads in a real browser."
+  - q: "Can I self-host ScrapingBee?"
+    a: "No. ScrapingBee is a hosted API only, sold as monthly plans of credits. Crawl4AI is a self-hosted option: it fetches and renders pages in a real Chromium browser on your own server and returns clean Markdown."
 developer: "Yes. Crawl4AI is used through its API, its Python library or an AI assistant, so someone needs to connect it to your code or workflow tool. Cloudgate installs it, gives it a secure web address and creates its API token, and the playground in the browser helps you build the requests."
 ---
 

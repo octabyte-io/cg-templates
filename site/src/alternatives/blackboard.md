@@ -9,7 +9,9 @@ faq:
   - q: "Can I move my Blackboard courses to ILIAS?"
     a: "Partly. SCORM packages and QTI tests import, but there is no tool that moves whole courses, enrolments and grades from Blackboard."
   - q: "Does ILIAS handle online exams?"
-    a: "Yes. ILIAS has tests with many question types and complete e-exams, with scoring by participant or question by question and anonymous scoring."
+    a: "Yes, as Blackboard does. ILIAS has tests with many question types and complete e-exams, with scoring by participant or question by question and anonymous scoring."
+  - q: "Can students and staff sign in to ILIAS with our existing accounts?"
+    a: "Yes. ILIAS supports sign-in through LDAP, SAML or Shibboleth, so you can connect the institutional sign-in you used with Blackboard Learn. Set it up as root admin before you create courses."
 ---
 
 Blackboard Learn, now from Anthology, is a long-standing paid learning management system used by universities, colleges and schools for courses, assignments, grading and online tests.

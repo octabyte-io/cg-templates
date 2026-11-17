@@ -36,7 +36,7 @@ faq:
   - q: Is Erugo free?
     a: Yes, Erugo is free and open source under the MIT licence, with no paid edition and no fee per user, even for business use. You pay only for your server and its disk.
   - q: Is Erugo a good alternative to WeTransfer?
-    a: Yes, for sending big files by link from your own business. Like WeTransfer's paid plans it offers passwords, expiry dates, e-mails to recipients, download alerts and your own branding. It has no phone apps and no tools for commenting on files.
+    a: Yes, Erugo works well for sending big files by link from your own business. Like WeTransfer's paid plans it offers passwords, expiry dates, e-mails to recipients, download alerts and your own branding. It has no phone apps and no tools for commenting on files.
   - q: Do the people I send files to need an account?
     a: No, recipients open the Erugo link, type the password if you set one, and download the files. Only the people who send files, such as you and your team, need an account.
   - q: How do I sign in to Erugo the first time?

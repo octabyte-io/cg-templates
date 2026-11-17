@@ -47,7 +47,7 @@ faq:
   - q: Is there a Storyden phone app?
     a: No, there is no phone app. Storyden works in any phone or computer browser, with a layout made for small screens.
   - q: Do I have to use Storyden's AI features?
-    a: No, the AI features are optional and off until you turn them on. To use them, you add your own OpenAI or Anthropic API key in the admin settings.
+    a: No, Storyden's AI features are optional and off until you turn them on. To use them, you add your own OpenAI or Anthropic API key in the admin settings.
 screenshots:
   - src: screenshots/community-home.webp
     alt: "The home page of a sample Storyden community called Makeroom, with a sidebar listing discussion categories General and Tech, library sections Design, Webdev, Programming and Gamedev, Collections, Links and Members, two category cards with cover images, and a feed of threads showing tags, likes, reply counts and link previews"

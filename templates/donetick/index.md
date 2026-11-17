@@ -36,11 +36,11 @@ faq:
   - q: Is Donetick free?
     a: Yes, Donetick is free and open source under the AGPL-3.0 licence. The self-hosted version has no paid plan and no limit on how many people join your household; you pay only for your server.
   - q: Is Donetick a good alternative to Tody or Sweepy?
-    a: Yes, if your household wants to share chores rather than plan cleaning alone. Like Tody and Sweepy it tracks recurring chores and what is overdue; it adds fair rotation between people, points and a wall-tablet view, but it runs mainly in the browser instead of a polished phone app.
+    a: Yes, Donetick suits a household that wants to share chores rather than plan cleaning alone. Like Tody and Sweepy it tracks recurring chores and what is overdue; it adds fair rotation between people, points and a wall-tablet view, but it runs mainly in the browser instead of a polished phone app.
   - q: How do I sign in to Donetick the first time?
     a: Open your Donetick web address and sign up; there is no default password. The first account gets its own household group, and family members sign up too and join it with the group's invite code, which you approve.
   - q: Can Donetick rotate chores between family members?
-    a: Yes. Each repeating chore can pass to the next person in turn, to someone at random, or to whoever has finished the fewest chores.
+    a: Yes. In Donetick, each repeating chore can pass to the next person in turn, to someone at random, or to whoever has finished the fewest chores.
   - q: Is there a Donetick app for iPhone or Android?
     a: Partly. Donetick works in any phone browser and can be added to the home screen, and the project offers an early Android app and an iPhone test version that connect to your own server.
   - q: Does Donetick work with Home Assistant?

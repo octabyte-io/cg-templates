@@ -9,7 +9,9 @@ faq:
   - q: "Can Quant-UX test my Figma prototypes like Maze?"
     a: "Partly. Quant-UX imports frames from a Figma file with a Figma access token, but you add the links and interactions between screens in Quant-UX before testing."
   - q: "Does Quant-UX find testers for me?"
-    a: "No. Quant-UX has no tester panel, so you send the test link to your own customers, users or colleagues. They need no account to take part."
+    a: "No. Unlike Maze, Quant-UX has no tester panel, so you send the test link to your own customers, users or colleagues. They need no account to take part."
+  - q: "What does Maze do that Quant-UX doesn't?"
+    a: "Maze recruits testers from its own panel, runs more kinds of studies, such as interviews and card sorting, and has more report templates. Quant-UX covers unmoderated prototype tests with recordings, heatmaps, task success and surveys, and you find the testers yourself."
 ---
 
 Maze is a hosted user research service: teams run unmoderated tests on prototypes, often made in Figma, and get heatmaps, task success rates and survey answers, with options to recruit testers and run other kinds of studies.

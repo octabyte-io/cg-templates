@@ -42,7 +42,7 @@ faq:
   - q: Can eLabFTW replace Benchling?
     a: Partly. eLabFTW covers the lab notebook, inventory, chemical compounds and equipment booking, but it does not have Benchling's molecular-biology design tools, so labs that depend on those may need to keep a separate tool for them.
   - q: How do I sign in to eLabFTW the first time?
-    a: The first person to register an account becomes the administrator of the whole notebook. They then create teams, invite colleagues and add an email service so people get invitations and can reset passwords.
+    a: In eLabFTW, the first person to register an account becomes the administrator of the whole notebook. They then create teams, invite colleagues and add an email service so people get invitations and can reset passwords.
   - q: Can I import data from another lab notebook into eLabFTW?
     a: Yes, if the other notebook can export the shared .eln format or a CSV file, which eLabFTW imports. The project also lists import scripts for RSpace and Labfolder; there is none for LabArchives or Benchling.
   - q: Can eLabFTW prove when an experiment was done?

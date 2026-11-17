@@ -11,6 +11,8 @@ faq:
     a: "No. Gavel has a visual no-code builder; in docassemble, interviews are written as text files with simple logic. Legal aid groups and courts use it widely, but whoever builds the interviews should expect a learning curve."
   - q: "Can clients sign documents in docassemble?"
     a: "Yes, with a touchscreen signature collected during the interview and placed into the document. It is not a full e-signature service with envelopes and audit trails."
+  - q: "Can I import my Gavel workflows into docassemble?"
+    a: "No. docassemble has no Gavel importer, so each workflow is rebuilt as a docassemble interview. Your Word templates can be kept: mark the fields in them, upload them to docassemble's Playground and write the questions that fill them."
 ---
 
 Gavel, formerly Documate, is a hosted no-code tool for law firms and legal aid groups to automate documents and client intake: you build a questionnaire visually, and clients' answers fill in your templates.

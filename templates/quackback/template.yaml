@@ -1,5 +1,5 @@
 name: Quackback
-description: "Self-hosted Quackback collects feature requests and votes, shares a roadmap and announces what shipped."
+description: "Quackback is a self-hosted alternative to Canny that collects feature requests and votes, shares a roadmap and announces what shipped."
 version: "0.15.0"
 tags: [customer feedback, feature requests, product roadmap, changelog, canny alternative, uservoice alternative]
 links:

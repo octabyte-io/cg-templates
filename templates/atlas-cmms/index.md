@@ -38,14 +38,14 @@ faq:
   - q: Is Atlas CMMS free?
     a: Yes, Atlas CMMS is free and open source under the AGPL-3.0 licence, but the free self-hosted edition has limits. It allows 5 users who manage or do the work, 50 assets, 30 open work orders and 10 preventive maintenance schedules; its maker, Intelloop, sells a licence key that removes the limits and adds paid features. You pay only for your server.
   - q: What does the free edition of Atlas CMMS leave out?
-    a: The free edition leaves out file and photo attachments, time tracking, cost tracking, the preventive maintenance calendar, meter-based schedules, asset hierarchies, barcode scanning, vendor and customer records, custom roles, single sign-on and the API. These are unlocked with a paid licence key from the maker.
+    a: The free edition of Atlas CMMS leaves out file and photo attachments, time tracking, cost tracking, the preventive maintenance calendar, meter-based schedules, asset hierarchies, barcode scanning, vendor and customer records, custom roles, single sign-on and the API. These are unlocked with a paid licence key from the maker.
   - q: Is Atlas CMMS a good alternative to MaintainX or UpKeep?
     a: Yes, for a small maintenance team that needs work orders, preventive maintenance, an equipment list, spare parts and requests on its own server. MaintainX and UpKeep are more polished and include features that Atlas CMMS keeps for paid licences, such as attachments and time and cost tracking.
   - q: How do I sign in to Atlas CMMS the first time?
-    a: Open the app's web address and sign up with the admin email you gave when setting it up; that creates your organization and makes you its administrator, with a password you choose; there is no default password. Only that address can sign up on its own, and everyone else joins by invitation from the People page.
+    a: Open Atlas CMMS's web address and sign up with the admin email you gave when setting it up. That creates your organization and makes you its administrator, with a password you choose; there is no default password. Only that address can sign up on its own, and everyone else joins by invitation from the People page.
   - q: Is there an Atlas CMMS phone app?
     a: Yes, Atlas CMMS has Android and iPhone apps. In the app, you enter your own server's address, and technicians can see their work orders and update them on site.
-  - q: Can I import my equipment list from a spreadsheet?
+  - q: Can I import my equipment list from a spreadsheet into Atlas CMMS?
     a: Yes. Atlas CMMS has CSV import templates for assets, locations, parts, meters, preventive maintenance and work orders, so you can copy your current spreadsheet into them. There is no direct import from MaintainX or UpKeep.
   - q: Does Atlas CMMS send email notifications?
     a: Yes, once you add an email account's details. Without them, Atlas CMMS works but sends no notifications, invitations or password-reset emails; invited people then sign up on the web address with the email they were invited with.

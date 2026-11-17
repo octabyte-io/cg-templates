@@ -36,15 +36,15 @@ faq:
   - q: Is Steedos free?
     a: Yes, the Community edition of Steedos 3.0.14, which Cloudgate installs, is free and open source under the AGPL-3.0 licence, with no limit on users. You pay only for your server. Paid editions from Steedos add custom branding, single sign-on, cluster setups and official support. Newer development versions have moved to a different licence with extra conditions, so check it before upgrading past 3.0.
   - q: Is Steedos a good alternative to Salesforce Platform?
-    a: Yes, if you want to build your own record apps with Salesforce-style objects, approvals and permissions on your own server without paying per user. It has no app marketplace, no ready-made apps and a partly Chinese interface, so it suits teams willing to build and maintain their apps themselves.
+    a: Yes, if you want to build your own record apps with Salesforce-style objects, approvals and permissions on your own server without paying per user. Steedos has no app marketplace, no ready-made apps and a partly Chinese interface, so it suits teams willing to build and maintain their apps themselves.
   - q: Does Steedos come with a CRM?
     a: No, a new Steedos workspace starts with only tasks, events, announcements and the setup area. You build a CRM or any other app yourself from objects, fields, list views and approval processes.
   - q: How do I sign in to Steedos the first time?
     a: The first person to sign up on Steedos's web address creates the company workspace and becomes its admin, so open it and sign up right after setup. After that, sign-up is closed and the admin adds colleagues under Setup, Users. The first start takes about a minute, during which a "Steedos is initializing" page shows.
-  - q: Can I import my data from Salesforce or Excel?
+  - q: Can Steedos import my data from Salesforce or Excel?
     a: Partly. Steedos has no Salesforce importer, so you recreate your objects and fields yourself. You can then export records from the old tool to Excel and bring them in with an import template that maps each column to a field and checks for duplicates.
   - q: Is Steedos available in English?
-    a: Partly. Menus, list views and record pages appear in English, but some menus, system field names and much of the official website and documentation are in Chinese only, with English documentation for the main topics.
+    a: Partly. In Steedos, menus, list views and record pages appear in English, but some menus, system field names and much of the official website and documentation are in Chinese only, with English documentation for the main topics.
   - q: What server size does Steedos need?
     a: Cloudgate asks for a large server for Steedos, because its own quick start recommends at least 4 GB of memory. The database, cache and app all run inside one container.
 screenshots:

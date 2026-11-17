@@ -34,17 +34,17 @@ faq:
   - q: Is ebook2audiobook free?
     a: Yes. ebook2audiobook is free, open-source software under the Apache 2.0 licence. You pay only for your server, but check the licence of the voice model you use.
   - q: Can I sell audiobooks made with ebook2audiobook?
-    a: Not with the default voice. The default XTTSv2 model is under the Coqui Public Model License, which allows non-commercial use only. For commercial work, choose another engine and check that engine's own licence, and only convert books you have the rights to.
+    a: Not with the default voice. The default XTTSv2 model in ebook2audiobook is under the Coqui Public Model License, which allows non-commercial use only. For commercial work, choose another engine and check that engine's own licence, and only convert books you have the rights to.
   - q: Is ebook2audiobook a good alternative to ElevenLabs?
     a: Yes, for turning whole books you own into audiobooks without paying per character, with the text kept private. ElevenLabs is a paid cloud service that is quicker to use; ebook2audiobook runs on your own server, more slowly without a graphics card, with no running fee.
   - q: Does ebook2audiobook have a login?
-    a: No. Anyone who has the web address can convert books and download the audiobooks on it, so keep the address private.
+    a: No, ebook2audiobook has no login. Anyone who has the web address can convert books and download the audiobooks on it, so keep the address private.
   - q: How long does it take to convert a book?
     a: It depends on the engine and the server. On an ordinary server without a graphics card, a full novel with the default XTTSv2 voice can take several hours, and books are converted one at a time. This template converts on the processor only; ebook2audiobook's graphics-card version is much faster but needs a server with an NVIDIA card.
   - q: Is there anything to import from ElevenLabs?
     a: "No. ebook2audiobook reads your e-book files directly: upload a book you have the right to convert, choose a language and a voice, or upload a short recording of a voice you may use, and start the conversion."
   - q: What server size does ebook2audiobook need?
-    a: At least 2 GB of memory, with 8 GB recommended, and plenty of disk, because the app takes about 10 GB and its voice models several more. Plan for 20 GB or more of free space.
+    a: ebook2audiobook needs at least 2 GB of memory, with 8 GB recommended, and plenty of disk, because the app takes about 10 GB and its voice models several more. Plan for 20 GB or more of free space.
   - q: Can I listen to the audiobooks in Audiobookshelf?
     a: Yes. Download the M4B file and add it to your Audiobookshelf library, or have ebook2audiobook upload it to an Audiobookshelf server from its command line.
 screenshots:

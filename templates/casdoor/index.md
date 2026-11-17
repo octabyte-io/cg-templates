@@ -38,7 +38,7 @@ faq:
   - q: Is Casdoor free?
     a: Yes, Casdoor is free and open source under the Apache 2.0 licence, with no limit on users or apps. Single sign-on, social logins, two-step sign-in, LDAP and organizations are all in the free version. You pay only for your server; a paid licence key unlocks some advanced features.
   - q: Which Casdoor features are paid?
-    a: A paid Commercial or Enterprise licence key adds features such as organization security policies, push-notification sign-in, attribute-based access rules, sending accounts out to other apps over SCIM, more than one user sync, access reviews, delegated admins and tamper-proof audit records. Everything listed on this page works without a key.
+    a: A paid Casdoor Commercial or Enterprise licence key adds features such as organization security policies, push-notification sign-in, attribute-based access rules, sending accounts out to other apps over SCIM, more than one user sync, access reviews, delegated admins and tamper-proof audit records. Everything listed on this page works without a key.
   - q: Is Casdoor a good alternative to Auth0?
     a: Yes, if you want to add sign-in to your own apps without a per-user fee. Casdoor gives each app a sign-in and sign-up page, social logins, two-step sign-in and SDKs for most programming languages, all on your own server. Auth0 is a managed service, so with Casdoor you look after updates and backups yourself.
   - q: Can Casdoor give my other apps single sign-on?

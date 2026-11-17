@@ -38,8 +38,8 @@ faq:
   - q: Is PrestaShop a good alternative to Shopify?
     a: Yes, if you want to own your shop rather than rent it. PrestaShop has themes, modules, payments and multi-store selling with no monthly platform fee, but you run the updates, backups and security yourself, and it has fewer ready-made apps than Shopify.
   - q: How do I sign in to the PrestaShop back office?
-    a: Open your shop's web address followed by its back office folder, a random name chosen for security instead of /admin, and sign in with the email you entered during setup. Cloudgate lists the folder name and the generated password among the app's variables.
-  - q: What do I need to do before my shop goes live?
+    a: Open your PrestaShop shop's web address followed by its back office folder, a random name chosen for security instead of /admin, and sign in with the email you entered during setup. Cloudgate lists the folder name and the generated password among the app's variables.
+  - q: What do I need to do before my PrestaShop shop goes live?
     a: Three things. Delete the demo catalogue PrestaShop installs, with its sample t-shirts, mugs, posters and demo customer; add a payment module for the payment methods you want; and add your email sending details so customers get their order emails.
   - q: Can I move my products from Shopify to PrestaShop?
     a: Partly. PrestaShop imports products, categories, customers and addresses from CSV files, so you can export them from Shopify and import them. Moving everything, including past orders, needs a paid third-party migration tool.

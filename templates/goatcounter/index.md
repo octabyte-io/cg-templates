@@ -42,9 +42,9 @@ faq:
   - q: How is GoatCounter different from Plausible or Umami?
     a: GoatCounter is the lighter and plainer of the three. It runs as one small program with its own built-in database, and it can also count visits without JavaScript, but it has fewer reports, with no funnels or goals.
   - q: How do I sign in to GoatCounter the first time?
-    a: Sign in with the admin email you gave Cloudgate during setup and the password Cloudgate creates for it, which you find on the app's variables page. There is no default password and no open sign-up page.
+    a: Sign in to GoatCounter with the admin email you gave Cloudgate during setup and the password Cloudgate creates for it, which you find on the app's variables page. There is no default password and no open sign-up page.
   - q: Can I import my Google Analytics data into GoatCounter?
-    a: Partly. You can upload a Google Analytics report of total visits per page, but those totals only feed the visitor counter you can show on your site; the dashboard starts fresh, so keep your old reports for comparison.
+    a: Partly. You can upload a Google Analytics report to GoatCounter of total visits per page to GoatCounter, but those totals only feed the visitor counter you can show on your site; the dashboard starts fresh, so keep your old reports for comparison.
   - q: What server size do I need for GoatCounter?
     a: The smallest server is enough for most small business websites, because GoatCounter is one small program with its database built in. Its makers publish no exact memory figure; a site with a very large number of different pages needs more.
 screenshots:

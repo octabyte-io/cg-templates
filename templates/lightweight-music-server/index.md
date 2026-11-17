@@ -1,5 +1,6 @@
 ---
 tagline: Stream the music you own to your browser and phone, no subscription.
+title: "Lightweight Music Server: Spotify alternative"
 category: music-audio
 alternativeTo: [spotify, apple-music]
 ease: some-setup

@@ -38,15 +38,15 @@ faq:
   - q: Is Onetime Secret free?
     a: Yes, Onetime Secret is free and open source under the MIT licence, with no paid self-hosted edition. You pay only for your server, with no limit on how many secrets you share.
   - q: Is Onetime Secret a good alternative to Privnote?
-    a: Yes, if you want self-destructing notes on your own server and web address. Like Privnote, it sends a password or note as a link that opens once; it adds a passphrase, a lifetime you choose and a receipt that shows whether the secret was read. It shares text only, and the hosted onetimesecret.com runs the same app.
-  - q: Does the person I send a secret to need an account?
-    a: No, they open the link and click to reveal the secret. If you added a passphrase, they also type that in.
+    a: Yes. Onetime Secret is a good alternative to Privnote if you want self-destructing notes on your own server and web address. Like Privnote, Onetime Secret sends a password or note as a link that opens once; it adds a passphrase, a lifetime you choose and a receipt that shows whether the secret was read. It shares text only, and the hosted onetimesecret.com runs the same app.
+  - q: Does the person I send a secret to need a Onetime Secret account?
+    a: No. They open the Onetime Secret link and click to reveal the secret. If you added a passphrase, they also type that in.
   - q: Will a chat or email link preview use up the secret?
-    a: No, opening the link only shows a "Click to reveal" page, so a preview that just loads it does not use up the secret. Your receipt marks the link as previewed, and the secret is used only when someone reveals it.
+    a: No. Opening a Onetime Secret link only shows a "Click to reveal" page, so a preview that just loads it does not use up the secret. Your receipt marks the link as previewed, and the secret is used only when someone reveals it.
   - q: Is Onetime Secret end-to-end encrypted?
     a: No, Onetime Secret encrypts each secret on your server with your server's own key and deletes it once it is read or expires. The passphrase controls who can open it. If you need encryption in the sender's browser, tools such as PrivateBin or Yopass work that way.
   - q: How do I sign in to Onetime Secret the first time?
-    a: You don't have to; anyone with the address can share a secret right away without signing in. Sign-up asks new users to confirm their email, so connect an email service first, and the admin account is created with one command on the server, which prints its password once.
+    a: You don't have to; anyone with your Onetime Secret address can share a secret right away without signing in. Sign-up asks new users to confirm their email, so connect an email service first, and the admin account is created with one command on the server, which prints its password once.
   - q: What server size do I need for Onetime Secret?
     a: A small server is enough, because Onetime Secret is one light app plus a small database. The project recommends 2 GB of memory, and Cloudgate sets everything up for you.
 screenshots:

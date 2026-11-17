@@ -36,17 +36,17 @@ faq:
   - q: Is tela free?
     a: Yes, tela is free and open source under the AGPL licence, and you pay only for your server. Some company features, such as single sign-on and audit logs, need a paid Enterprise licence key.
   - q: Is tela a good alternative to Confluence or Notion?
-    a: Yes, if you want a team wiki for handbooks, guides and project notes that you host yourself. It covers writing together, comments, page history and search, but it has no databases like Notion and fewer add-ons than Confluence.
-  - q: How do I set up the admin account?
-    a: Cloudgate creates it for you. Sign in with the username admin and the password shown on the app's variables page in Cloudgate. Sign-up starts closed, so add your team from the admin pages, or open sign-up there once email works.
-  - q: Can I bring my documents from Confluence or Notion?
+    a: Yes, if you want a team wiki for handbooks, guides and project notes that you host yourself. tela covers writing together, comments, page history and search, but it has no databases like Notion and fewer add-ons than Confluence.
+  - q: How do I set up the tela admin account?
+    a: Cloudgate creates the tela admin account for you. Sign in with the username admin and the password shown on the app's variables page in Cloudgate. Sign-up starts closed, so add your team from the admin pages, or open sign-up there once email works.
+  - q: Can I bring my documents into tela from Confluence or Notion?
     a: Partly. tela imports a folder of Markdown files as a tree of pages, with a preview first, so you export from Confluence or Notion to Markdown and import that. Word and Excel files need converting to Markdown first.
   - q: Does tela work with ChatGPT or Claude?
     a: Yes, tela has a built-in connector (an MCP server) that lets Claude, ChatGPT, Cursor and other AI assistants search, read and write pages, limited to the access you give them.
   - q: Does tela include its own AI features?
-    a: No, not out of the box. Asking questions of your docs, search by meaning and Atlas, which drafts pages from your code, work once you connect an AI provider of your own; ordinary search works without one.
+    a: No, not out of the box. In tela, asking questions of your docs, search by meaning and Atlas, which drafts pages from your code, work once you connect an AI provider of your own; ordinary search works without one.
   - q: Is my data private with tela?
-    a: Yes. Your pages, comments and attachments are stored on your own server, and only the spaces you choose to make public can be read on the web.
+    a: Yes. tela stores your pages, comments and attachments on your own server, and only the spaces you choose to make public can be read on the web.
 screenshots:
   - src: screenshots/wiki-page.webp
     alt: "A tela wiki page called Late and failed deliveries in an Operations space, with three stat tiles for on-time rate, missed windows and time to recover, an Important callout and the start of a diagram, next to a sidebar with Ask, Home, Graph, Atlas and a page tree of Engineering, Handbook, Operations and Product"

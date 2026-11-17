@@ -36,7 +36,7 @@ faq:
   - q: Is Tinode free?
     a: Yes, Tinode is free and open source. The server is under the GPL-3.0 licence and the web, Android and iOS apps are under Apache-2.0, so you pay only for your server, with no fee per user.
   - q: Is Tinode a good alternative to WhatsApp?
-    a: Yes, if you want a private WhatsApp-style messenger for a team, club or family on your own server. It has groups, channels, voice messages, file sharing and one-to-one calls, but chats are not end-to-end encrypted and there are no group calls.
+    a: Yes, if you want a private WhatsApp-style messenger for a team, club or family on your own server. It has groups, channels, voice messages, file sharing and one-to-one calls, but Tinode chats are not end-to-end encrypted and there are no group calls.
   - q: How do I sign in to Tinode the first time?
     a: Open your Tinode web address and choose Sign up to create your account with a username and password. There is no email check until you set up email, so anyone who can reach the address can sign up; share it only with the people you want.
   - q: Does Tinode have phone apps?

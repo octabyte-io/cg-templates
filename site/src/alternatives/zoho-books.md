@@ -15,7 +15,9 @@ faq:
   - q: "Is Zoho Books free?"
     a: "Zoho Books has a free plan for very small businesses with one user plus an accountant. Paid plans add users and features. Self-hosted Bigcapital, Dolibarr and LedgerSMB are free for any number of users."
   - q: "Does Bigcapital have a phone app?"
-    a: "No. Bigcapital runs in any modern web browser, including on a phone, but it has no app to install."
+    a: "No. Bigcapital runs in any modern web browser, including on a phone, but it has no app to install, unlike Zoho Books, which has phone apps."
+  - q: "Do these apps have bank feeds like Zoho Books?"
+    a: "Not built in. Zoho Books has bank feeds, while Bigcapital's bank feeds need your own Plaid account, LedgerSMB imports bank statements instead, and Dolibarr has no automatic bank feeds."
 ---
 
 Zoho Books is online accounting software from Zoho, the company behind a large suite of business apps. It covers invoicing, bills, inventory, banking and reports, and works closely with the rest of the Zoho suite.

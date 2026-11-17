@@ -11,9 +11,11 @@ moving: |
 cost: "Loomio is free and open source, with no paid features in the self-hosted app. Rallly is free for one signed-in organiser, and people who only vote never need an account. If more people need their own accounts to create polls, Rallly's makers ask you to buy a one-time licence key. To run either app you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 faq:
   - q: "Do people need an account to vote in a Rallly poll?"
-    a: "No. Anyone with the link can vote without signing up, and voters never count as users."
+    a: "No. As with Doodle, anyone with the Rallly link can vote without signing up, and voters never count as users."
   - q: "Should I choose Rallly or Loomio?"
-    a: "Rallly if you only need to find a time that suits everyone. Loomio if your group also discusses, proposes and votes on decisions together and wants its time polls in the same place."
+    a: "Choose Rallly if you only need a Doodle-style poll to find a time that suits everyone. Loomio if your group also discusses, proposes and votes on decisions together and wants its time polls in the same place."
+  - q: "What does Doodle do that Rallly doesn't?"
+    a: "Doodle also has booking pages, one-to-one meetings, sign-up sheets, calendar sync and phone apps, which Rallly does not. Rallly does Doodle's group poll job with no ads, and emails a calendar invite once you pick the time."
 ---
 
 Doodle is best known for its group polls: an organiser suggests a few times, everyone marks when they can make it, and the best time wins. It also offers booking pages, one-to-one meetings and sign-up sheets, with calendar connections.

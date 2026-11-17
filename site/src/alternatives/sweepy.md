@@ -9,7 +9,9 @@ faq:
   - q: "Can Donetick reward finished chores like Sweepy?"
     a: "Yes. Donetick gives points for finished tasks and shows each person's totals, so you can see who has done what."
   - q: "Does Donetick split chores fairly?"
-    a: "Yes. Each chore can rotate between household members by who has done the fewest, at random or in turn."
+    a: "Yes. In Donetick, each chore can rotate between household members by who has done the fewest, at random or in turn."
+  - q: "Does Donetick show how clean each room is like Sweepy?"
+    a: "No. Sweepy splits the home into rooms and shows how clean each one is, but Donetick lists chores by when they are due. You can group Donetick chores by room with labels."
 ---
 
 Sweepy is a home cleaning schedule app for iPhone and Android. It splits the home into rooms, shows how clean each one is, and shares chores between household members, with some features in a paid premium subscription.

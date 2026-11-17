@@ -36,17 +36,17 @@ faq:
   - q: Is Checkmate free?
     a: Yes, Checkmate is free and open source under the AGPL-3.0 licence, with no paid edition, no monitor limit and no user limit. You pay only for the server it runs on.
   - q: Is Checkmate a good alternative to UptimeRobot or Better Stack?
-    a: Yes, for checking websites and servers, getting alerts and publishing status pages, with no per-monitor price. It has no on-call rotas, phone-call alerts or log search, and it checks from your own server rather than from many places around the world.
+    a: Yes, Checkmate is a good UptimeRobot or Better Stack alternative for checking websites and servers, getting alerts and publishing status pages, with no per-monitor price. It has no on-call rotas, phone-call alerts or log search, and it checks from your own server rather than from many places around the world.
   - q: Should I choose Checkmate or Uptime Kuma?
     a: Choose Checkmate if you also want server and Docker monitoring, page speed scores, incident history and separate logins for colleagues. Choose Uptime Kuma if you only need website checks and want the lightest setup with more alert services.
   - q: How do I sign in to Checkmate the first time?
     a: The first person to open Checkmate's web address creates the admin account on a sign-up page; there is no default password. Do it straight after installing, then invite your colleagues.
-  - q: Can I import my monitors from UptimeRobot?
+  - q: Can I import my monitors from UptimeRobot into Checkmate?
     a: No, Checkmate cannot import from UptimeRobot or Pingdom. It imports and exports monitors only in its own file format, and adding a website monitor takes a few seconds.
   - q: Can Checkmate watch my servers, not just my websites?
-    a: Yes. Ping, port and Docker checks work straight away, and the free Capture agent, installed on each server you want to watch, adds its processor, memory, disk and temperature readings.
+    a: Yes. Checkmate's ping, port and Docker checks work straight away, and the free Capture agent, installed on each server you want to watch, adds its processor, memory, disk and temperature readings.
   - q: Do I need an email account for Checkmate alerts?
-    a: No, only email alerts and team invitations need one, and you enter your email account's sending details in Settings. Slack, Teams, Discord, Telegram, SMS and the other channels work without one.
+    a: No, Checkmate needs an email account only for email alerts and team invitations, and you enter your email account's sending details in Settings. Slack, Teams, Discord, Telegram, SMS and the other channels work without one.
 screenshots:
   - src: screenshots/uptime.webp
     alt: "The Checkmate uptime list for a bakery, with five monitors for the website, online shop, booking page, order database and shop server, each showing its status, a response-time bar chart and uptime percentage, with the booking page at 74% after an outage"

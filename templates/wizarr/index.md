@@ -1,5 +1,6 @@
 ---
 tagline: Invite friends to your Plex, Jellyfin or Emby with one link.
+title: "Wizarr: invite links for Plex, Jellyfin and Emby"
 category: media
 ease: some-setup
 easeNote: Create the admin account straight after setup, then connect your media server with its web address and API key, or a Plex sign-in, before you send your first invite.

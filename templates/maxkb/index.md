@@ -42,7 +42,7 @@ faq:
   - q: Is MaxKB a good alternative to Chatbase?
     a: Yes, for a business that needs a handful of chatbots answering from its own documents without message credits. MaxKB adds a visual workflow builder and retrieval testing. Chatbase has no five-agent cap, needs no setup and includes support extras, such as integrations and lead capture, that MaxKB's free edition does not have.
   - q: Can I put a MaxKB chatbot on my website?
-    a: Yes, every published agent has embed code for a floating chat button, a full-page chat or a mobile view, plus a public chat link. You can limit questions per visitor per day and list the websites allowed to embed it.
+    a: Yes. Every published MaxKB agent has embed code for a floating chat button, a full-page chat or a mobile view, plus a public chat link. You can limit questions per visitor per day and list the websites allowed to embed it.
   - q: Does MaxKB come with an AI model?
     a: No, MaxKB includes a model for searching your documents but no AI model to write answers. You connect a provider such as OpenAI, Anthropic or Google Gemini with an API key, or a model server you run, such as Ollama. The bundled search model is tuned for Chinese text, so for English documents you may get better results by adding your provider's embedding model.
   - q: How do I sign in to MaxKB the first time?

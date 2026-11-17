@@ -44,7 +44,7 @@ faq:
   - q: How do I sign in to HumHub the first time?
     a: Sign in with the username admin, or the admin email you entered in Cloudgate, and the password Cloudgate generated, which is shown on the app's page in Cloudgate. HumHub asks for the username first and then the password. Change the password in your account settings afterwards.
   - q: Can anyone sign up to my HumHub?
-    a: No, open sign-up is turned off, so only people you invite can join. Invite them by email or with an invite link, or turn registration on under Administration > Users > Settings if you want people to sign up themselves.
+    a: No, open sign-up to HumHub is turned off, so only people you invite can join. Invite them by email or with an invite link, or turn registration on under Administration > Users > Settings if you want people to sign up themselves.
   - q: Do I need to set up email for HumHub?
     a: Yes. HumHub needs an email server to send invitations, notifications and password resets. Add your email provider's SMTP details under Administration > Settings > Advanced > E-Mail before you invite people.
   - q: Does HumHub have a phone app?

@@ -38,7 +38,7 @@ faq:
   - q: Is Misskey free?
     a: Yes, Misskey is free and open source under the AGPL-3.0 licence, with no paid edition and no locked features. The project is funded by donations, and you pay only for your server.
   - q: Is Misskey a good alternative to X (Twitter)?
-    a: Yes, if you want a short-post timeline that you run yourself, with no ads and no algorithm. The audience starts small, your posts and followers on X do not move across, and you take on the moderation for your server.
+    a: Yes. Misskey is a good alternative to X (Twitter) if you want a short-post timeline that you run yourself, with no ads and no algorithm. The audience starts small, your posts and followers on X do not move across, and you take on the moderation for your server.
   - q: How is Misskey different from Mastodon?
     a: Misskey has more built in, such as emoji reactions, channels, keyword timelines, a file Drive and more ways to customise the screen. Mastodon has its own official phone apps and works with many Mastodon apps, which Misskey does not. Both connect to the fediverse, so their users can follow each other.
   - q: How do I sign in to Misskey the first time?
@@ -46,7 +46,7 @@ faq:
   - q: Does Misskey have phone apps?
     a: Not official ones. Misskey runs in the phone's browser and can be added to the home screen like an app, and volunteers make unofficial apps such as Aria for iPhone and Android. Mastodon apps do not work with Misskey.
   - q: Can I keep my Misskey server private?
-    a: Yes, mostly. You can make sign-up invite-only, and you can limit federation to servers you choose or turn it off so your server talks to no other servers. Sending sign-up and password emails needs an email service you add in the Control Panel.
+    a: Yes, mostly. In Misskey you can make sign-up invite-only, and you can limit federation to servers you choose or turn it off so your server talks to no other servers. Sending sign-up and password emails needs an email service you add in the Control Panel.
   - q: What server size do I need for Misskey?
     a: A medium one with about 2 GB of memory. Misskey needs at least 2 GB to run its first database setup, so Cloudgate sets it up on a medium server.
 screenshots:

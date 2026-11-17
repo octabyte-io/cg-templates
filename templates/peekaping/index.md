@@ -36,15 +36,15 @@ faq:
   - q: Is Peekaping free?
     a: Yes. Peekaping is free and open source under the MIT licence, for personal and commercial use, with no paid edition. You pay only for hosting.
   - q: Is Peekaping a good alternative to Uptime Kuma?
-    a: It can be, if you want an API for everything, checks for databases and message queues, or checks from more than one location. Uptime Kuma is older and more widely used, with more alert services and incident posts on its status pages, while Peekaping is still in beta.
+    a: Peekaping can be, if you want an API for everything, checks for databases and message queues, or checks from more than one location. Uptime Kuma is older and more widely used, with more alert services and incident posts on its status pages, while Peekaping is still in beta.
   - q: Is Peekaping a good alternative to UptimeRobot or Pingdom?
-    a: Yes, for checking that websites and services are up and alerting you when they are not. It has no limit on monitors and includes status pages, but it checks from your own server unless you add checkers elsewhere, and it has no real-user or transaction monitoring.
+    a: Yes, for checking that websites and services are up and alerting you when they are not. Peekaping has no limit on monitors and includes status pages, but it checks from your own server unless you add checkers elsewhere, and it has no real-user or transaction monitoring.
   - q: How do I sign in to Peekaping the first time?
     a: The first person to open Peekaping's web address creates the admin account on the setup screen. There is no default password. The same screen has two ticked boxes for sending anonymous usage statistics and error reports, which you can untick.
-  - q: Can I import my monitors from Uptime Kuma or UptimeRobot?
-    a: No, not yet. An Uptime Kuma import is on the project's plans; for now you add each monitor by pasting its address and choosing how often to check it.
+  - q: Can I import my monitors into Peekaping from Uptime Kuma or UptimeRobot?
+    a: No, not yet. An Uptime Kuma import is on Peekaping's plans; for now you add each monitor by pasting its address and choosing how often to check it.
   - q: Can Peekaping check my website from more than one location?
-    a: Yes. You can run a small checker program on another machine, for example in another country, and each monitor then shows results from every place it is checked.
+    a: Yes. Peekaping can run a small checker program on another machine, for example in another country, and each monitor then shows results from every place it is checked.
   - q: Can my colleagues have their own Peekaping logins?
     a: No, not yet. Peekaping has one admin account; separate users and access levels are on the project's plans. Colleagues can still receive alerts in Slack, Teams, email or any other channel you set up.
 screenshots:

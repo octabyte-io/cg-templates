@@ -39,10 +39,10 @@ faq:
     a: Yes, the It's a Plan Community edition is free and open source under the AGPL-3.0 licence, with no per-seat price. A paid Pro edition adds more workspaces, per-workspace single sign-on, an audit log, agent workflows, AI budgets and public forms; this template installs the free Community edition.
   - q: Is It's a Plan a good alternative to Linear?
     a: Yes, for teams that want Linear's way of working, with issues, cycles and a fast, modern board, on their own server. Linear is cloud-only, charges per seat and has phone and desktop apps, which It's a Plan does not.
-  - q: Can I import my projects from Linear, Trello or Plane?
+  - q: Can It's a Plan import my projects from Linear, Trello or Plane?
     a: Yes, It's a Plan imports a Linear team's project with an API key, a Trello board with an API key and token, and a Plane project, each from a project's Import/Export settings. It has no Jira or Asana importer.
   - q: How do AI agents work in It's a Plan?
-    a: An AI agent is a project member you can assign issues to, @mention in a comment or run on a schedule. Agents run on the server with a model API key you enter, or on your own computer through a coding tool such as Claude Code or Codex, and they report back on the issue.
+    a: In It's a Plan, an AI agent is a project member you can assign issues to, @mention in a comment or run on a schedule. Agents run on the server with a model API key you enter, or on your own computer through a coding tool such as Claude Code or Codex, and they report back on the issue.
   - q: How do I sign in to It's a Plan the first time?
     a: There is no default password. Right after setup, open your It's a Plan web address and register; the first account becomes the admin, who can then choose whether others may sign up, set up email and invite the team.
   - q: Does It's a Plan have a phone app?

@@ -41,11 +41,11 @@ faq:
   - q: How do I add my apps to Homepage?
     a: You list them in Homepage's settings files, one entry per app with its name, web address and an optional icon and widget. The files are plain text where indentation matters, and Homepage writes starter files on its first start for you to edit.
   - q: Which apps can Homepage show live information from?
-    a: More than 100, including Uptime Kuma, Healthchecks, Nextcloud, Immich, Paperless-ngx, FreshRSS, Firefly III, Mealie, Vikunja, Gitea and Grafana. Most widgets need the app's address and an API key from that app.
+    a: Homepage shows live information from more than 100 apps, including Uptime Kuma, Healthchecks, Nextcloud, Immich, Paperless-ngx, FreshRSS, Firefly III, Mealie, Vikunja, Gitea and Grafana. Most widgets need the app's address and an API key from that app.
   - q: Does Homepage alert me when a website goes down?
     a: No. Homepage shows whether each site is up and how fast it answers, but it sends no alerts. For alerts by email or chat, use a monitoring app such as Uptime Kuma, whose status Homepage can display.
   - q: Does Homepage have a phone app?
-    a: No, but the page works in any phone browser and can be added to the home screen like an app.
+    a: No, but Homepage works in any phone browser and can be added to the home screen like an app.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "A dark Homepage dashboard over a painted lakeside background: server CPU, memory, disk and network figures across the top, the weather at the top right, and cards for Plex, Emby, Overseerr, Radarr, Sonarr, SABnzbd, Deluge, Prowlarr, Proxmox, TrueNAS, Portainer and Nextcloud showing live figures, followed by plain links such as a wiki, a web IDE and GitHub"

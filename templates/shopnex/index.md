@@ -42,7 +42,7 @@ faq:
   - q: How do I take card payments in ShopNex?
     a: ShopNex takes card payments through its Stripe app, which Cloudgate installs alongside the shop. In the admin, open Settings, then Payments, and connect your own Stripe account with an API key; customers can then pay by card, Apple Pay or Google Pay, and Stripe charges its usual fees.
   - q: How do I sign in to ShopNex the first time?
-    a: Open your shop's web address followed by /admin, and the setup wizard asks you to create the owner account with your email and a password, then to name the shop and pick its currency. Do this right after install, because until you do, anyone who finds the address could claim the shop.
+    a: Open your ShopNex shop's web address followed by /admin, and the setup wizard asks you to create the owner account with your email and a password, then to name the shop and pick its currency. Do this right after install, because until you do, anyone who finds the address could claim the shop.
   - q: Is ShopNex ready for a live shop?
     a: Not for every shop yet. ShopNex describes itself as pre-1.0 and releases often, with several new versions in November 2026 alone. It suits a small shop willing to test carefully before opening; a shop that can't afford surprises may prefer a mature store such as WooCommerce or PrestaShop.
   - q: What server size do I need for ShopNex?

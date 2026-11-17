@@ -9,7 +9,9 @@ faq:
   - q: "Can UnoPim send product data to retailers like Salsify?"
     a: "Not through a syndication network. UnoPim exports files, offers a REST API and webhooks, and has connectors for shops such as Shopify; feeds to each retailer are yours to set up."
   - q: "Does UnoPim handle several languages and channels?"
-    a: "Yes. Each product can hold different values per channel, language and currency, and UnoPim shows how complete each product is for each channel."
+    a: "Yes. In UnoPim each product can hold different values per channel, language and currency, and UnoPim shows how complete each product is for each channel."
+  - q: "Can I move my Salsify product data into UnoPim?"
+    a: "Yes, by file. Export your products from Salsify as CSV or Excel files and import them into UnoPim once its attribute families, channels and languages are set up, and bring images in as a ZIP. Retailer feeds that Salsify sent for you need another route."
 ---
 
 Salsify is a hosted product experience management platform for brands that sell through retailers, combining product information with syndication to retailers and digital-shelf analytics. It does not publish prices; plans are sold after a demo.

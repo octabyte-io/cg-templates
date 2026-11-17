@@ -9,7 +9,9 @@ faq:
   - q: "Is CiviCRM free donor management software?"
     a: "Yes. CiviCRM is free and open source, with no record or user limit; you pay only for the server it runs on and any services you connect, such as email sending and card payments."
   - q: "Can I import my DonorPerfect records?"
-    a: "Yes, through spreadsheets. There is no direct connector: export your donor and gift lists from DonorPerfect as CSV files, import the donors into CiviCRM as contacts first, then the gifts as contributions."
+    a: "Yes, through spreadsheets. CiviCRM has no direct DonorPerfect connector: export your donor and gift lists from DonorPerfect as CSV files, import the donors into CiviCRM as contacts first, then the gifts as contributions."
+  - q: "What does DonorPerfect offer that CiviCRM doesn't?"
+    a: "DonorPerfect is quicker to start with and comes with vendor support and training. CiviCRM does more, adding donation pages, memberships, events, bulk email and case management, but it has more to learn and needs your own email service and payment processor."
 ---
 
 DonorPerfect is hosted donor management software for nonprofits, with donor and gift records, online forms, reports and email, sold in plans that are priced by features and by how many records you keep.

@@ -7,9 +7,11 @@ moving: |
   There is no import from Later. Download the photos and videos you want to keep from Later's media library, then upload them to Postiz's media library. Connect Instagram, TikTok, Pinterest and your other accounts after registering a developer app with each network; Instagram and Facebook need a Meta developer app, and TikTok needs its own app and a public website, and posts there stay private until TikTok approves it. Recreate the posts still on your calendar and keep Later until each network publishes from Postiz.
 faq:
   - q: "Can Postiz post to Instagram and TikTok?"
-    a: "Yes, once you register a developer app with Meta and with TikTok and add the keys. TikTok posts stay private until TikTok has reviewed your app."
+    a: "Yes, as Later does, once you register a developer app with Meta and with TikTok and add the keys to Postiz. TikTok posts stay private until TikTok has reviewed your app."
   - q: "Can Postiz write captions with AI?"
     a: "Yes, if you add your own OpenAI key. Postiz can draft posts and generate images, and the AI provider bills you for what you use; without a key those buttons do nothing."
+  - q: "Can I import my Later calendar into Postiz?"
+    a: "No. Postiz has no Later importer. Download the photos and videos you want to keep from Later's media library, upload them to Postiz's media library, and recreate the posts still on your calendar."
 ---
 
 Later is a social media planner known for visual planning of Instagram, TikTok and Pinterest posts. You drag photos and videos onto a calendar, preview how a feed will look, and Later publishes them on time, with analytics and a link-in-bio page.

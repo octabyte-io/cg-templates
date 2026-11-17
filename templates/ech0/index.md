@@ -42,7 +42,7 @@ faq:
   - q: How do I sign in to Ech0 the first time?
     a: The first person to open your Ech0 address creates the owner account, with a username, email and password, so do this as soon as Cloudgate has installed it. The owner is the administrator and can post straight away.
   - q: Can other people post on my Ech0?
-    a: Only if you let them. By default only the owner and admins can publish. Anyone can sign up for an ordinary account that can react and comment but not post; you can turn sign-ups off in the settings.
+    a: Only if you let them. By default only the Ech0 owner and admins can publish. Anyone can sign up for an ordinary account that can react and comment but not post; you can turn sign-ups off in the settings.
   - q: Is there an Ech0 phone app?
     a: No, Ech0 has no official phone app. It works in a phone's browser, and you can add it to your home screen to open it like an app.
   - q: What server size does Ech0 need?

@@ -38,11 +38,11 @@ faq:
   - q: Is Remark42 a good alternative to Disqus?
     a: Yes, if you want comments without ads or tracking and with your data on your own server. Remark42 covers replies, voting, moderation and reply notifications, but it has no Disqus-style network across websites and simpler spam tools.
   - q: How do I add Remark42 to my website?
-    a: You paste a short snippet into your website's pages and put one line where the comments should appear, such as under each blog post. It works with any site where you can edit the HTML, including Hugo, Jekyll, Gatsby, Astro and Ghost blogs.
-  - q: How do readers sign in to comment?
+    a: You paste a short Remark42 snippet into your website's pages and put one line where the comments should appear, such as under each blog post. It works with any site where you can edit the HTML, including Hugo, Jekyll, Gatsby, Astro and Ghost blogs.
+  - q: How do readers sign in to comment with Remark42?
     a: Readers can comment with just a name, with no account, or sign in with their email address if you connect an email account for sending sign-in codes. Remark42 also supports social logins such as Google and GitHub, which take extra setup with each provider.
   - q: How do I become the admin of my Remark42?
-    a: There is no default admin password. Sign in to the comment section on your site with your email, click your own name to see your user ID, and add that ID as an admin in Cloudgate; the moderation buttons then appear in the comment section.
+    a: Remark42 has no default admin password. Sign in to the comment section on your site with your email, click your own name to see your user ID, and add that ID as an admin in Cloudgate; the moderation buttons then appear in the comment section.
   - q: Can I import my Disqus comments into Remark42?
     a: Yes, Remark42 can import the comment export file Disqus emails you, and it can also import WordPress comments. The import is a one-time step run on the server, not a button in the app.
   - q: What server size do I need for Remark42?

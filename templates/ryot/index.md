@@ -36,13 +36,13 @@ faq:
     a: Yes. Ryot is open-source software under the GPL-3.0 licence, and the free edition covers media tracking, imports, integrations, notifications and workout logging. A paid Ryot Pro key adds extras such as recommendations, workout templates, custom collections and sharing links; this page describes only the free features.
   - q: Is Ryot a good alternative to Trakt?
     a: Yes, if you want a private history and watchlist rather than a social network. Ryot imports your Trakt history, ratings and lists, follows new episodes, and also tracks books, games and workouts that Trakt does not.
-  - q: Can I import my data from Trakt, Goodreads or Strong?
+  - q: Can I import my data from Trakt, Goodreads or Strong into Ryot?
     a: Yes. Ryot imports from Trakt, Goodreads, The StoryGraph, Hardcover, MyAnimeList, IMDb, Netflix, Plex, Jellyfin, Strong, Hevy and more. Imports bring over finished items; things you are part-way through are updated by an integration or by hand.
   - q: Does Ryot have a phone app?
     a: No. Ryot has no native phone app yet; it is a web app that works in a phone's browser, and you can add it to your home screen so it opens like an app.
-  - q: Do I need anything else to track movies and video games?
-    a: Yes. Movies and shows need a free access token from The Movie Database (TMDB), and video games need a free app key from Twitch. Books, podcasts, music, anime and workouts work without any keys.
-  - q: Who is the admin?
+  - q: Do I need anything else to track movies and video games in Ryot?
+    a: Yes. In Ryot, movies and shows need a free access token from The Movie Database (TMDB), and video games need a free app key from Twitch. Books, podcasts, music, anime and workouts work without any keys.
+  - q: Who is the Ryot admin?
     a: The first person to create an account in Ryot becomes the admin, so do this right after setup. Other people can then create their own accounts, each with a private history.
   - q: Is my data private with Ryot?
     a: Yes. Your history, ratings and workouts are stored on your own server, and Cloudgate turns off Ryot's anonymous usage statistics.

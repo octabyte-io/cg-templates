@@ -8,10 +8,12 @@ moving: |
 faq:
   - q: "Is CKAN free?"
     a: "Yes. CKAN is open source under the AGPL, with no paid edition. Companies sell hosting and support for it, but you can run it yourself at no cost."
-  - q: "Can CKAN show charts and maps like Opendatasoft?"
-    a: "Only partly. It previews tables, images and text as installed here. Charts and maps come from extensions that you add and configure yourself."
+  - q: "Can CKAN show charts and maps like Huwise (formerly Opendatasoft)?"
+    a: "Only partly. CKAN previews tables, images and text as installed here. Charts and maps come from extensions that you add and configure yourself."
+  - q: "Does CKAN have an API like Huwise?"
+    a: "Yes. CKAN has an API for everything it does, so other apps and websites can search and download your datasets, as they do with the API of Huwise, formerly Opendatasoft."
 ---
 
-Opendatasoft is a hosted platform for running a data portal: organisations publish datasets, explore them with charts and maps, and share them through an API. It is sold to public bodies and companies, with prices on quote.
+Huwise, called Opendatasoft until it was renamed in 2025, is a hosted platform for running a data portal: organisations publish datasets, explore them with charts and maps, and share them through an API. It is sold to public bodies and companies, with no public prices.
 
 Councils, universities and nonprofits look for an alternative when the subscription is hard to justify, or when they want the portal and its data on their own server. A self-hosted CKAN, the software behind many national open data portals, does the publishing and API work with no licence fee, though it takes technical skill to set up and theme.

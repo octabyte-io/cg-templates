@@ -1,5 +1,6 @@
 ---
 tagline: Edit pages right on your website, for many sites and languages.
+title: "OpenCms: open-source Java CMS for many sites"
 category: websites
 alternativeTo: [sitecore, adobe-experience-manager, magnolia]
 ease: some-setup
@@ -44,7 +45,7 @@ faq:
   - q: Can OpenCms run several websites in several languages?
     a: Yes. One OpenCms installation runs many websites and subsites, each with its own editors, and each site can have a version of its pages per language.
   - q: Can I move my Sitecore, AEM or Magnolia site to OpenCms?
-    a: Not automatically. There is no importer from Sitecore, Adobe Experience Manager or Magnolia, so moving is a website rebuild, with content moved by hand or with a script.
+    a: Not automatically. OpenCms has no importer from Sitecore, Adobe Experience Manager or Magnolia, so moving is a website rebuild, with content moved by hand or with a script.
   - q: Do I need a developer to use OpenCms?
     a: Not to edit, but usually to build your own design. Editors work in the browser without coding, and the Mercury template gives a ready starting point; custom templates are built in Java, often by an OpenCms agency.
   - q: What server size does OpenCms need?

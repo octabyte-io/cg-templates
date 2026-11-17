@@ -42,13 +42,13 @@ faq:
   - q: How is RAGFlow different from AnythingLLM?
     a: RAGFlow is stronger at reading hard documents, such as scans, tables and multi-column PDFs, and lets you see and edit how each document is split. AnythingLLM is lighter, runs on a much smaller server and has a desktop app and a simpler website chat bubble.
   - q: Does RAGFlow come with an AI model?
-    a: No. After signing in you add a chat model and an embedding model from a provider such as OpenAI, Anthropic, Gemini or DeepSeek with your own API key, or a model you run yourself with Ollama. Your documents are stored on your server, but questions and the passages used to answer them are sent to the provider you connect.
+    a: No. After signing in to RAGFlow you add a chat model and an embedding model from a provider such as OpenAI, Anthropic, Gemini or DeepSeek with your own API key, or a model you run yourself with Ollama. Your documents are stored on your server, but questions and the passages used to answer them are sent to the provider you connect.
   - q: Can I put a RAGFlow chat on my website?
-    a: Yes. Create an API key in your settings, then copy the embed code for a chat assistant into your web page. An agent can also be embedded as a full-screen chat or a floating widget with your own title, text and colours.
+    a: Yes. Create an API key in your RAGFlow settings, then copy the embed code for a chat assistant into your web page. An agent can also be embedded as a full-screen chat or a floating widget with your own title, text and colours.
   - q: What server size do I need for RAGFlow?
     a: RAGFlow recommends 4 CPU cores, 16 GB of memory and 50 GB of disk, so Cloudgate uses its 2xlarge size on an x86-64 server. Reading documents, including text recognition in scans, runs on the server's processor and is the heaviest part, so large uploads take a while.
   - q: How do I sign in to RAGFlow the first time?
-    a: At setup Cloudgate asks for an admin email and creates a strong password, shown afterwards on the app's variables page. That account signs in to the admin panel at /admin. Sign-up is open by default, so anyone with the address can create an account; the admin can see every account in the panel and switch off any that should not be there.
+    a: At setup Cloudgate asks for a RAGFlow admin email and creates a strong password, shown afterwards on the app's variables page. That account signs in to the admin panel at /admin. Sign-up is open by default, so anyone with the address can create an account; the admin can see every account in the panel and switch off any that should not be there.
 screenshots: []
 ---
 

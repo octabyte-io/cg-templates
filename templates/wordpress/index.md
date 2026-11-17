@@ -42,11 +42,11 @@ faq:
   - q: How do I self-host WordPress?
     a: Pick WordPress in Cloudgate's template list and press Set up. Cloudgate installs WordPress and its database on your server and gives it a secure web address, where you choose the site name and create your admin account.
   - q: Can I run an online shop with WordPress?
-    a: Yes. Install the free WooCommerce plugin to sell physical products, services or downloads, and take payments through Stripe, PayPal and other providers.
-  - q: Is my data private?
-    a: Yes. Your pages, posts, customer details and form entries are stored on your own server. Plugins you add may send data to their own services, so check what each one does.
-  - q: What server size do I need?
-    a: A small server (1 GB of memory) runs a typical business website. Choose a larger one for a busy online shop or a site with many plugins.
+    a: Yes. Install the free WooCommerce plugin in WordPress to sell physical products, services or downloads, and take payments through Stripe, PayPal and other providers.
+  - q: Is my data private with WordPress?
+    a: Yes. WordPress stores your pages, posts, customer details and form entries on your own server. Plugins you add may send data to their own services, so check what each one does.
+  - q: What server size do I need for WordPress?
+    a: A small server (1 GB of memory) runs a typical WordPress business website. Choose a larger one for a busy online shop or a site with many plugins.
 screenshots:
   - src: screenshots/editor.webp
     alt: "The WordPress block editor with a coffee shop blog post, including a heading, a list, a quote and a button, and the post settings panel on the right"

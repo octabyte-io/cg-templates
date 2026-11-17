@@ -37,16 +37,16 @@ faq:
     a: Yes. phpList is free, open-source software under the AGPL licence, with no limit on subscribers, lists or emails in the self-hosted version. You pay only for your server and your email sending service. phpList.com is the maker's separate paid hosted service.
   - q: Is phpList a good alternative to Mailchimp?
     a: Yes, for sending regular newsletters to your own lists without a price per contact. phpList covers lists, personalised campaigns, sign-up pages, scheduling and open and click statistics. Mailchimp is easier to learn and adds a drag-and-drop builder, landing pages and automations that phpList doesn't have.
-  - q: Do I need an email sending service?
+  - q: Do I need an email sending service for phpList?
     a: Yes. phpList prepares and queues your campaigns, but an email sending service delivers them, such as Amazon SES, Mailgun, Brevo or your own mail server. Cloudgate asks for its SMTP details during setup; until you add them, phpList runs but cannot send. Set up SPF and DKIM records for your domain with that service so your emails don't land in spam.
-  - q: Can I import my subscribers from Mailchimp?
+  - q: Can I import my subscribers from Mailchimp into phpList?
     a: Yes. Export your Mailchimp audience as a CSV file and import it under Subscribers, Import subscribers, where you match each column to a phpList field and choose the lists to add people to. Campaigns and email designs don't move over.
   - q: Should I choose phpList or listmonk?
     a: Choose phpList if you want ready-made sign-up pages, several administrators with their own permissions and detailed statistics per link and subscriber. Choose listmonk if you prefer a more modern interface and the lightest app to run.
-  - q: How do I sign in the first time?
-    a: Open your app's address and sign in with the name admin and the password Cloudgate created, shown on the app's variables page. Your public sign-up pages are at the same address under /lists/.
-  - q: Is my data private?
-    a: Yes. Your subscriber lists, campaigns and statistics are stored in a database on your own server. The email sending service you choose sees only the emails it delivers.
+  - q: How do I sign in to phpList the first time?
+    a: Open your phpList address and sign in with the name admin and the password Cloudgate created, shown on the app's variables page. Your public sign-up pages are at the same address under /lists/.
+  - q: Is my data private with phpList?
+    a: Yes. phpList stores your subscriber lists, campaigns and statistics in a database on your own server. The email sending service you choose sees only the emails it delivers.
 screenshots:
   - src: screenshots/campaigns.webp
     alt: "The phpList list of sent campaigns for a bakery: campaigns such as 'This week: cardamom buns and a free coffee' sent to the Weekly specials list, each with total and unique views, total clicks, bounces and about 1,200 messages sent, beside a dark sidebar with Dashboard, Subscribers, Campaigns, Statistics, System and Config"

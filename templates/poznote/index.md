@@ -42,13 +42,13 @@ faq:
   - q: Can Poznote replace Notion or Evernote?
     a: Yes, for notes, to-do lists and simple boards, Poznote can replace Notion or Evernote. Poznote has no Notion-style databases, no live co-editing of one note, and no text search inside scanned images like Evernote's.
   - q: Can I import my notes into Poznote?
-    a: Yes, from Obsidian and from Markdown, HTML or text files. A zipped Obsidian vault comes across with its folders, tags, links, images and PDFs; there is no importer for Evernote or OneNote files.
+    a: Yes. Poznote imports from Obsidian and from Markdown, HTML or text files. A zipped Obsidian vault comes across with its folders, tags, links, images and PDFs; there is no importer for Evernote or OneNote files.
   - q: How do I sign in to Poznote the first time?
     a: Poznote starts with one admin account, username admin_change_me and password admin. Sign in, rename the account and change the password straight away, then add other users from the admin settings.
   - q: Is there a Poznote phone app?
     a: Poznote has no official native app, but it works in a phone's browser and installs from there as an app on Android and iPhone, with its own icon and window. Two community apps, Nivurê for Android and Pozzy for Android and iPhone, also connect to your server.
   - q: Can several people use one Poznote?
-    a: Yes, each person gets their own account with private notes and settings. An owner can share a workspace for others to edit or only read, or share a single note or folder by link.
+    a: Yes. In Poznote each person gets their own account with private notes and settings. An owner can share a workspace for others to edit or only read, or share a single note or folder by link.
 screenshots:
   - src: screenshots/markdown-editor.webp
     alt: "The Poznote window with a sidebar of favourites and folders, tabs along the top, and a Markdown note tagged example and mermaid, its source on the left and the rendered preview with a pie chart on the right"

@@ -42,10 +42,10 @@ faq:
   - q: How do I sign in to PeerTube the first time?
     a: Sign in with the user name root and the password Cloudgate created, which is shown on the app's variables page as ROOT_PASSWORD; click "Login" at the top right of your PeerTube address. Then open Administration, then Settings, to choose video qualities, sign-up and the features to switch on.
   - q: Can I move my videos from YouTube to PeerTube?
-    a: Yes, partly. An admin can turn on imports in the settings, then you paste a YouTube or Vimeo video's address to copy it in, or set a channel to stay in sync. You can also download your own videos and upload them again.
-  - q: Can I keep my videos private?
+    a: Yes, partly. A PeerTube admin can turn on imports in the settings, then you paste a YouTube or Vimeo video's address to copy it in, or set a channel to stay in sync. You can also download your own videos and upload them again.
+  - q: Can I keep my videos private on PeerTube?
     a: Yes. In PeerTube, each video can be private, unlisted, password-protected or internal, which means only people with an account on your PeerTube can watch it. Sign-up is closed until you open it, so you decide who has an account.
-  - q: Can I stream live with this template?
+  - q: Can I stream live with PeerTube on Cloudgate?
     a: No. PeerTube can stream live, but live streaming needs a connection Cloudgate does not open, so this template is for uploaded videos only.
   - q: What server size do I need for PeerTube?
     a: A large server. PeerTube itself needs little, but converting uploaded videos uses a lot of processing power, so Cloudgate uses a large server. Its makers suggest 8 CPU cores and 8 GB of memory for a busy site that converts videos on the same server. Plan plenty of disk, because each extra quality adds another copy of every video.

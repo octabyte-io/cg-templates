@@ -38,7 +38,7 @@ faq:
   - q: Is ezBookkeeping free?
     a: Yes, ezBookkeeping is free, open-source software under the MIT licence, with no paid features and no hosted paid plan. You pay only for your server.
   - q: Is ezBookkeeping a good alternative to Quicken?
-    a: Yes, for recording spending and income across your accounts and seeing where money goes. It imports Quicken's QIF, QFX and OFX files, but it has no budgets, no bill pay and no automatic bank sync.
+    a: Yes, ezBookkeeping works well for recording spending and income across your accounts and seeing where money goes. It imports Quicken's QIF, QFX and OFX files, but it has no budgets, no bill pay and no automatic bank sync.
   - q: Does ezBookkeeping have budgets?
     a: No, ezBookkeeping has no budgeting feature; it records what you spend and earn and shows it in charts. If you want to plan each month's spending, Actual Budget or Firefly III are better fits.
   - q: How do I sign in to ezBookkeeping the first time?
@@ -48,7 +48,7 @@ faq:
   - q: Is there an ezBookkeeping phone app?
     a: There is no app-store app, but ezBookkeeping has a separate phone layout that you can add to your home screen and use like an app, on iPhone or Android.
   - q: Is my financial data private with ezBookkeeping?
-    a: Yes, your records are stored on your own server and the project collects nothing. Optional extras, such as exchange-rate updates, maps and AI receipt reading, contact outside services only when they are used.
+    a: Yes, ezBookkeeping stores your records on your own server and the project collects nothing. Optional extras, such as exchange-rate updates, maps and AI receipt reading, contact outside services only when they are used.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The ezBookkeeping desktop home for a household: this month's expense and income, total assets, liabilities and net assets across five accounts, a calendar heatmap of transactions, spending ranked by category, and today, week, month and year totals"

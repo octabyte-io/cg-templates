@@ -35,16 +35,16 @@ faq:
   - q: Is LibrePhotos free?
     a: Yes. LibrePhotos is free, open-source software under the MIT licence, with no paid edition or locked features. You pay only for your server and its disk.
   - q: Is LibrePhotos a good alternative to Google Photos?
-    a: Yes, for organising and searching a photo library. It recognises faces, shows your photos on a map, makes event albums and memories, and finds photos by plain words. It is weaker at phone backup, because its official phone app is not released yet.
+    a: Yes, LibrePhotos can replace Google Photos for organising and searching a photo library. It recognises faces, shows your photos on a map, makes event albums and memories, and finds photos by plain words. It is weaker at phone backup, because its official phone app is not released yet.
   - q: How is LibrePhotos different from Immich and PhotoPrism?
     a: LibrePhotos is a library you browse, like PhotoPrism, while Immich is built around phone backup with released iPhone and Android apps. Compared with Immich, LibrePhotos adds scene tags, written captions and ready-made event albums; compared with PhotoPrism, it adds memories, shared albums others can add to, and sharing a whole library. LibrePhotos uses the MIT licence; the other two use the AGPL.
-  - q: Can I move my photos from Google Photos?
+  - q: Can I move my photos from Google Photos to LibrePhotos?
     a: Yes. Download your library with Google Takeout, copy the unzipped files into your LibrePhotos photo folder on the server and run a scan; LibrePhotos reads each photo's date, place and description from the Takeout files. Albums, people and favourites are not carried over.
   - q: Is there a LibrePhotos phone app?
     a: No, not a released official one yet. LibrePhotos works in any phone browser, and UhuruPhotos, a separate app made by another developer, connects to it on Android and is in open beta on Google Play.
   - q: What server size do I need for LibrePhotos?
     a: LibrePhotos needs at least 4 GB of memory and 2 CPU cores, and its makers recommend 8 GB and 4 cores, because face recognition and captions use a lot of memory. Plan the disk for your whole library plus room for thumbnails.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to LibrePhotos the first time?
     a: Sign in with the username admin and the password Cloudgate shows you after setup. LibrePhotos sets the admin password back to that one each time it restarts, so a password you change inside LibrePhotos does not last; keep using the one Cloudgate shows. As admin you choose your photo folder and can add accounts for family members or colleagues.
 screenshots:
   - src: screenshots/timeline.webp

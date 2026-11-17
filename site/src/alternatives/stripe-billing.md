@@ -7,9 +7,11 @@ moving: |
   There is no import of Stripe Billing plans or subscriptions into Lago, so the move is planned work for a developer. Recreate your products as billable metrics and plans in Lago, with the same prices, then create your customers and their subscriptions through Lago's API. Connect Stripe as Lago's payment provider so it keeps collecting cards; Lago can sync its customers with Stripe. Have your product send usage events to Lago, run both systems for one billing period and compare the invoices, then turn off Stripe Billing's subscriptions.
 faq:
   - q: "Does Lago replace Stripe?"
-    a: "No, only the billing part. Lago works out what each customer owes and creates the invoices; a payment provider such as Stripe, Adyen or GoCardless still collects the money and charges its own card fees."
+    a: "No, Lago replaces only Stripe Billing, not Stripe Payments. Lago works out what each customer owes and creates the invoices; a payment provider such as Stripe, Adyen or GoCardless still collects the money and charges its own card fees."
   - q: "Does Lago take a percentage of my revenue?"
-    a: "No. The self-hosted open-source edition charges no fee on what you bill. Lago's own FAQ puts Stripe Billing's fee at 0.5% of billing volume, up to 0.8%, on top of Stripe's payment fees."
+    a: "No. The self-hosted open-source edition charges no fee on what you bill. Stripe's pricing page puts Stripe Billing's pay-as-you-go fee at 0.7% of billing volume, on top of Stripe's payment fees."
+  - q: "Can Lago bill for usage like Stripe Billing?"
+    a: "Yes. Lago is built for usage-based pricing: your product sends usage events such as API calls, tokens or storage, and Lago turns them into charges with per-unit, graduated, package, volume or percentage prices, alongside subscriptions, coupons and prepaid credits, as Stripe Billing does on Stripe's platform."
 developer: "Yes, for the setup. Cloudgate installs Lago on your server, but billing only works once a developer connects your product to Lago's API or SDKs so it sends usage events. After that, plans, customers and invoices are managed in Lago's web app."
 cost: "Lago's open-source edition is free under the AGPL-3.0 licence. Its makers sell a Premium edition, priced on request, that adds invoice emails, dunning, usage alerts, accounting and CRM integrations, and single sign-on. Your payment provider still charges its own card fees. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 ---

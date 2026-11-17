@@ -48,9 +48,9 @@ faq:
   - q: How do I sign in to AnythingLLM the first time?
     a: The first person to open AnythingLLM's web address goes through a short setup that picks the AI provider and then sets a password, or creates the admin account for a team. There is no default password. Until that is done, anyone with the address can use it, so do it right after setup.
   - q: Is my data private with AnythingLLM?
-    a: Your documents, accounts and chats are stored on your own server. When someone asks a question, the question and the matching passages from your documents go to the AI provider you connect, so check that provider's data terms, or run your own model server to keep everything in-house.
+    a: Mostly. AnythingLLM stores your documents, accounts and chats on your own server. When someone asks a question, the question and the matching passages from your documents go to the AI provider you connect, so check that provider's data terms, or run your own model server to keep everything in-house.
   - q: What server size do I need for AnythingLLM?
-    a: A server with 2 GB of memory is enough when the AI model runs with a cloud provider, so Cloudgate asks for that size. Disk space grows with the documents you add. Running your own AI models needs a much larger server, usually with a graphics card.
+    a: A server with 2 GB of memory is enough for AnythingLLM when the AI model runs with a cloud provider, so Cloudgate asks for that size. Disk space grows with the documents you add. Running your own AI models needs a much larger server, usually with a graphics card.
 screenshots:
   - src: screenshots/chat.webp
     alt: "AnythingLLM chat in a Shop help desk workspace for a bike shop: asked whether a customer can return a helmet opened yesterday, it answers no, because opened helmets cannot be returned for safety reasons; asked the price of a full service, it answers $189 and 2–3 working days, with a Sources panel listing Service Price List 2026.md"

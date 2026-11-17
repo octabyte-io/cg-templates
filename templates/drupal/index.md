@@ -42,9 +42,9 @@ faq:
   - q: Can I move my Drupal site from Acquia or Pantheon?
     a: Yes, because it is the same Drupal software. A developer copies the site's code, uploaded files and database to the new server. You then look after updates, backups and performance that the managed host handled.
   - q: Can I move a WordPress or Squarespace site to Drupal?
-    a: Partly. The free WordPress Migrate module imports a WordPress export file, which Squarespace can also produce, with posts, pages, comments, tags and images, but it is still in alpha and usually needs a developer. Wix sites cannot be exported, so their pages are rebuilt by hand.
+    a: Partly. The free WordPress Migrate module for Drupal imports a WordPress export file, which Squarespace can also produce, with posts, pages, comments, tags and images, but it is still in alpha and usually needs a developer. Wix sites cannot be exported, so their pages are rebuilt by hand.
   - q: How do I sign in to Drupal the first time?
-    a: Go to your site's address followed by /user/login and sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. You can change the password under My account.
+    a: Go to your Drupal site's address followed by /user/login and sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. You can change the password under My account.
   - q: What server size do I need for Drupal?
     a: A small server with 1 GB of memory runs a typical Drupal site and its database. Choose a larger one for a busy site, many modules or many editors working at once.
 screenshots:

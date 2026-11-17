@@ -36,13 +36,13 @@ faq:
   - q: Is Shaarli free?
     a: Yes, Shaarli is free and open source under the zlib licence, with no paid edition. You pay only for the server it runs on.
   - q: Is Shaarli a good alternative to Pinboard?
-    a: Yes, for one person who wants a fast list of tagged, public or private bookmarks. Like Pinboard it keeps things plain, and it adds a public link blog with RSS feeds. It does not keep archived copies of pages or search inside them.
+    a: Yes, for one person who wants a fast list of tagged, public or private bookmarks. Like Pinboard, Shaarli keeps things plain, and it adds a public link blog with RSS feeds. It does not keep archived copies of pages or search inside them.
   - q: Can I import my bookmarks into Shaarli?
     a: Yes, Shaarli imports a bookmarks HTML file. That covers your browser's export and Pinboard's export in Netscape format, with tags and private status; Raindrop.io's HTML export also works, with its folders turned into tags.
   - q: Can more than one person use Shaarli?
     a: No, Shaarli has a single account. Other people can read your public links and follow your feeds, but only you can sign in and add or change links.
   - q: How do I sign in to Shaarli the first time?
-    a: The first person to open the web address sees an install page and chooses the username, password and title. Open it yourself as soon as Cloudgate finishes, before you share the address.
+    a: The first person to open the Shaarli web address sees an install page and chooses the username, password and title. Open it yourself as soon as Cloudgate finishes, before you share the address.
   - q: Does Shaarli have a phone app or browser extension?
     a: No, not from the Shaarli project itself, but community apps exist, such as Shaarlier for Android and ShaarliOS for iPhone, plus extensions for Firefox and Chrome. Shaarli also works in a phone's browser, and its bookmarklet works in any desktop browser.
   - q: Can Shaarli replace Pocket?

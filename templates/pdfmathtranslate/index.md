@@ -34,15 +34,15 @@ faq:
   - q: Is PDFMathTranslate free?
     a: Yes, PDFMathTranslate is free and open source under the AGPL-3.0 licence. The Google and Bing services it uses by default cost nothing; paid services such as DeepL or OpenAI bill you for your own API key.
   - q: Is PDFMathTranslate a good alternative to DeepL for PDFs?
-    a: Yes, for scientific and technical PDFs. It keeps formulas, charts and layout in place and gives you a bilingual copy, and it can even use DeepL as its translation engine; for plain documents, DeepL's own apps are simpler.
+    a: Yes, for scientific and technical PDFs. PDFMathTranslate keeps formulas, charts and layout in place and gives you a bilingual copy, and it can even use DeepL as its translation engine; for plain documents, DeepL's own apps are simpler.
   - q: Does PDFMathTranslate keep my documents private?
-    a: Only if you choose a private engine. With the default Google or Bing service, the text of your PDF is sent to Google or Microsoft for translation; to keep everything in-house, connect it to your own AI server such as Ollama.
+    a: Only if you choose a private engine. With PDFMathTranslate's default Google or Bing service, the text of your PDF is sent to Google or Microsoft for translation; to keep everything in-house, connect it to your own AI server such as Ollama.
   - q: How do I sign in to PDFMathTranslate?
-    a: The web page asks for a username and password. Use admin and the password Cloudgate created for it; there is one shared login.
+    a: PDFMathTranslate's web page asks for a username and password. Use admin and the password Cloudgate created for it; there is one shared login.
   - q: Which languages can PDFMathTranslate translate?
-    a: The web page offers English, Simplified and Traditional Chinese, French, German, Japanese, Korean, Russian, Spanish and Italian. Which pairs work well also depends on the translation service you choose.
+    a: PDFMathTranslate's web page offers English, Simplified and Traditional Chinese, French, German, Japanese, Korean, Russian, Spanish and Italian. Which pairs work well also depends on the translation service you choose.
   - q: What server size do I need for PDFMathTranslate?
-    a: A medium server with about 2 GB of memory, because it analyses each page's layout on the server before translating. Long PDFs simply take longer.
+    a: PDFMathTranslate needs a medium server with about 2 GB of memory, because it analyses each page's layout on the server before translating. Long PDFs simply take longer.
 screenshots:
   - src: screenshots/side-by-side.webp
     alt: "A bilingual PDF from PDFMathTranslate: a maths textbook page on decision making under uncertainty in English on the left and the same page translated into Chinese on the right, with every equation, from 34.32 to 34.41, kept in the same place"

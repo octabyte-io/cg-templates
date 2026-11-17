@@ -59,7 +59,7 @@ const titles = replacedNames.length
       `${a.name}: ${replacedNames[0]} alternative`,
     ]
   : [`${a.name}: ${a.tagline.replace(/\.$/, '')}`, `Self-host ${a.name}`];
-const title = titles.find((t) => t.length <= 48) ?? titles[titles.length - 1];
+const title = a.title ?? titles.find((t) => t.length <= 48) ?? titles[titles.length - 1];
 
 // template.yaml's description is a card line (50-160 characters); the meta description adds what
 // a searcher wants to know next, and stops at a sentence so it is never cut mid-word.

@@ -44,9 +44,9 @@ faq:
   - q: How do I sign in to Mayan EDMS the first time?
     a: Mayan EDMS creates an administrator called admin on its first start and shows that account's random password on the sign-in page. Sign in with it and change the password straight away; the notice then disappears. The first start can take a few minutes.
   - q: What size server does Mayan EDMS need?
-    a: The project asks for at least 4 GB of memory and a dual-core processor, and recommends 16 GB and 8 cores for a busy office. It needs more than a simple file server because it reads and indexes documents in the background.
+    a: At least 4 GB of memory and a dual-core processor, the Mayan EDMS project says, and 16 GB and 8 cores for a busy office. Mayan EDMS needs more than a simple file server because it reads and indexes documents in the background.
   - q: Can I move my documents from DocuWare into Mayan EDMS?
-    a: Partly. There is no DocuWare importer, so you export your files from DocuWare and upload them in batches or drop them into a watched folder. Your index fields do not come across, so create them first as metadata fields on your document types.
+    a: Partly. Mayan EDMS has no DocuWare importer, so you export your files from DocuWare and upload them in batches or drop them into a watched folder. Your index fields do not come across, so create them first as metadata fields on your document types.
   - q: Is there a Mayan EDMS phone app?
     a: No, there is no official phone or desktop app. Mayan EDMS is used in a web browser, which also works on a phone or tablet.
 screenshots:

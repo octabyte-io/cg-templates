@@ -10,6 +10,8 @@ faq:
     a: "Yes. CKAN runs national open data portals, including those of the Government of Canada, Singapore and Australia, as well as many city portals."
   - q: "Does CKAN have an API like Socrata's SODA API?"
     a: "Yes. Everything you can do in CKAN's web interface can also be done through its API, and data in its DataStore can be queried by code."
+  - q: "Can CKAN make charts and maps like Socrata?"
+    a: "Only partly. CKAN previews tables, images and text, and has fewer built-in charts and visualisations than Socrata, now Tyler Data & Insights. Charts and maps in CKAN come from extensions you add and configure yourself."
 ---
 
 Socrata, now called Tyler Data & Insights and owned by Tyler Technologies, is a hosted open data platform used by many US cities, counties and states. It publishes datasets with charts, maps and the SODA API, and is sold by subscription.

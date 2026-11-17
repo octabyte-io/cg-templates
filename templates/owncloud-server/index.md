@@ -40,13 +40,13 @@ faq:
   - q: Is ownCloud Server still maintained?
     a: Yes. ownCloud released version 11.0 of the classic server in July 2026, which needs PHP 8.3, and version 11.1 with security fixes in November 2026. Cloudgate installs version 11.1.
   - q: Is ownCloud Server a good alternative to Dropbox or Google Drive?
-    a: Yes, for storing, sharing and syncing files. It has share links with passwords, file versions, a trash bin and desktop and phone apps, with no fee per user. It does not include document editing like Google Docs in its free edition.
+    a: Yes. ownCloud Server is a good alternative to Dropbox or Google Drive for storing, sharing and syncing files. It has share links with passwords, file versions, a trash bin and desktop and phone apps, with no fee per user. It does not include document editing like Google Docs in its free edition.
   - q: Can I move my files from Dropbox or Google Drive?
     a: Partly. There is no one-click importer, but an admin can connect a Dropbox or Google Drive account as extra storage in ownCloud and copy the files across. Otherwise you download your files and upload or sync them into ownCloud.
   - q: Are there desktop and phone apps for ownCloud Server?
     a: Yes. ownCloud's free Android and iPhone apps work with ownCloud Server. For Windows, macOS and Linux, use ownCloud's desktop app version 6, because version 7 and later only connect to Infinite Scale.
   - q: How do I sign in to ownCloud Server the first time?
-    a: Sign in with the username admin and the password Cloudgate generated, shown in Cloudgate's values for the app. Then add your colleagues and groups on the Users page.
+    a: Sign in to ownCloud Server with the username admin and the password Cloudgate generated, shown in Cloudgate's values for the app. Then add your colleagues and groups on the Users page.
 screenshots:
   - src: screenshots/files.webp
     alt: "The ownCloud Server All files view for Mara Lindqvist of a small interior design studio: a left menu with All files, Favorites, Shared with you, Shared with others, Shared by link, Tags and Deleted files, and a list of the shared folders Clients, Invoices 2026 and Photos, the folders Mood boards and Templates, and the files kitchen-concept.jpg with a thumbnail, Price list 2026.pdf, Studio handbook.pdf and Supplier contacts.csv, each with its size and when it changed"

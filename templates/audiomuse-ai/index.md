@@ -42,11 +42,11 @@ faq:
   - q: What server size does AudioMuse-AI need?
     a: AudioMuse-AI asks for at least 4 CPU cores and 8 GB of memory, so Cloudgate gives it a large server. The first analysis is heavy on the processor and can take from a few hours to several days, depending on the size of your library; if it stops, it carries on where it left off.
   - q: Is AudioMuse-AI a good alternative to Spotify's AI DJ and radio?
-    a: Yes, for music you own. AudioMuse-AI makes similar-song, mood and song-path playlists from your own library on your own server, with no subscription. It has no catalogue, so it cannot suggest new music you don't already have.
+    a: Yes, AudioMuse-AI is a good alternative to Spotify's AI DJ and radio for music you own. AudioMuse-AI makes similar-song, mood and song-path playlists from your own library on your own server, with no subscription. It has no catalogue, so it cannot suggest new music you don't already have.
   - q: Does AudioMuse-AI need OpenAI or another AI service?
-    a: No, analysis, similar songs, song paths, the music map and search all run on your server. Only Instant Playlists, where you describe what you want in words, and AI playlist names need an AI model, either your own Ollama or a paid key for OpenAI, Gemini or Mistral.
+    a: No. In AudioMuse-AI, analysis, similar songs, song paths, the music map and search all run on your server. Only Instant Playlists, where you describe what you want in words, and AI playlist names need an AI model, either your own Ollama or a paid key for OpenAI, Gemini or Mistral.
   - q: How do I sign in to AudioMuse-AI the first time?
-    a: Sign in with the admin username you chose during setup and the password Cloudgate shows on the app's variables page. The setup wizard then asks for your music server's address and account, and you start the first analysis.
+    a: Sign in to AudioMuse-AI with the admin username you chose during setup and the password Cloudgate shows on the app's variables page. The setup wizard then asks for your music server's address and account, and you start the first analysis.
 screenshots:
   - src: screenshots/music-map.webp
     alt: "The AudioMuse-AI Music Map: a scatter plot of 280 songs coloured by genre, with map size buttons, Create playlist, Song Path and Refresh buttons, a song search box and a legend of genres such as jazz, folk, rock, electronic and pop"

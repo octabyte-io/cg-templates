@@ -9,7 +9,9 @@ faq:
   - q: "Does Rybbit have heatmaps like Hotjar?"
     a: "No. Rybbit records and replays sessions and shows funnels and journeys, but it has no heatmaps, on-site surveys or feedback widget."
   - q: "Are form entries recorded in Rybbit's session replay?"
-    a: "No. Rybbit hides what visitors type into forms in its recordings, and you turn session replay on or off for each website."
+    a: "No. Rybbit, which replaces Hotjar's session recordings, hides what visitors type into forms in its recordings, and you turn session replay on or off for each website."
+  - q: "Can I keep my Hotjar recordings when I switch to Rybbit?"
+    a: "No. Recordings and reports do not move from Hotjar to Rybbit, so you start fresh. Run Rybbit's tracking line next to the Hotjar script for a while, then remove Hotjar once you have enough Rybbit recordings to work with."
 ---
 
 Hotjar is a hosted tool for seeing how visitors use a website, best known for session recordings, heatmaps of clicks and scrolls, and on-site surveys and feedback.

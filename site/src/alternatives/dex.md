@@ -10,6 +10,8 @@ faq:
     a: "No. Monica has no connection to LinkedIn, email or calendar accounts, so you add people and notes yourself. It does sync its contacts and birthdays to your phone's address book and calendar over CardDAV and CalDAV."
   - q: "Can a couple or family share one Monica?"
     a: "Yes. A Monica account can have several users, so partners can keep notes on the same friends and relatives, and nothing is charged per user."
+  - q: "Can I import my Dex contacts into Monica?"
+    a: "Yes, as a vCard file. Export your contacts from Dex, or from your phone or email account, and import the file into Monica, which creates a page for each person. Notes, timelines and reminders from Dex do not come across, so add those by hand."
 ---
 
 Dex is a personal CRM: an app for keeping in touch with friends, family and professional contacts. It gathers contacts from your email, calendar and LinkedIn into one timeline, reminds you when to reach out, and has phone apps as well as the web app. It is a paid subscription.

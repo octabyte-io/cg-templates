@@ -38,11 +38,11 @@ faq:
   - q: Is Huginn free?
     a: Yes, Huginn is free and open source under the MIT licence, with no paid edition or locked features. You pay only for the server it runs on.
   - q: Is Huginn a good alternative to IFTTT or Zapier?
-    a: Yes, for watching websites, feeds and inboxes and sending yourself alerts or digests. For connecting many business apps with a point-and-click editor, Zapier, n8n or Activepieces fit better, because Huginn has fewer app connections and its agents are set up with settings text.
+    a: Yes, Huginn can replace IFTTT or Zapier for watching websites, feeds and inboxes and sending yourself alerts or digests. For connecting many business apps with a point-and-click editor, Zapier, n8n or Activepieces fit better, because Huginn has fewer app connections and its agents are set up with settings text.
   - q: What is the difference between Huginn and n8n?
     a: Huginn is built around agents that watch the web on a schedule and pass on only what changed, while n8n is built for multi-step workflows between business apps on a drag-and-drop canvas. Huginn is MIT open source; n8n uses a fair-code licence.
   - q: Do I need to know how to code to use Huginn?
-    a: No, but it helps to be comfortable with a little technical text. Each agent is a form, and its options, such as which part of a page to watch, are written in a short block of settings with examples shown next to it.
+    a: No, but using Huginn is easier if you are comfortable with a little technical text. Each agent is a form, and its options, such as which part of a page to watch, are written in a short block of settings with examples shown next to it.
   - q: How do I sign in to Huginn the first time?
     a: Cloudgate creates the admin account when Huginn first starts, with the username you chose (admin by default) and a strong password shown on the app's variables page. To add colleagues, share the invitation code from the same page so they can sign up.
   - q: Can I import my IFTTT applets or Zaps into Huginn?

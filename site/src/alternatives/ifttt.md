@@ -4,7 +4,7 @@ apps:
     fit: "Our pick for people coming from IFTTT. It keeps the same idea, a trigger and what should happen next, and adds more steps, conditions and business apps. You build each flow from menus."
     import: no
   n8n:
-    fit: "Far more powerful than IFTTT, with branches, loops, code and AI steps. Choose it when your automations go beyond one trigger and one action."
+    fit: "Does far more than IFTTT, with branches, loops, code and AI steps. Choose it when your automations go beyond one trigger and one action."
     import: no
   automatisch:
     fit: "Close to IFTTT's simplicity: a trigger and a few steps, filled in from menus. It focuses on business apps rather than smart-home devices."
@@ -21,9 +21,11 @@ faq:
   - q: "Do these apps work with smart-home devices like IFTTT?"
     a: "Node-RED does: its community blocks connect Home Assistant, MQTT, sensors and many devices. Activepieces, n8n and Automatisch mostly connect web and business apps such as Gmail, Google Sheets, Slack and CRMs, and Huginn watches web pages, feeds and mailboxes; they reach devices only through webhooks or a home automation hub."
   - q: "How many automations can I run?"
-    a: "As many as your server can handle. There is no applet or flow limit on these self-hosted apps."
+    a: "As many as your server can handle. As of November 2026, IFTTT's plans give a monthly allowance of credits that applet runs use up; Activepieces, n8n, Automatisch, Huginn and Node-RED have no applet or run limit when you host them yourself."
+  - q: "Can I import my IFTTT applets?"
+    a: "No. None of these apps imports IFTTT applets, but most applets are one trigger and one action, so rebuilding one in Activepieces, n8n or Automatisch takes a few minutes. Use Node-RED for smart-home triggers and Huginn for watch-and-notify applets."
 ---
 
 IFTTT, short for "if this, then that", links apps and devices with simple rules called applets: when something happens in one service, do something in another. It is popular for personal automations and smart-home devices.
 
-People look for an alternative when they hit the free plan's limits, which allow only a couple of applets, or when they want automations for business work: several steps in a row, conditions, and apps such as CRMs and spreadsheets. A self-hosted tool has no limit on the number of automations and keeps the data they move on your own server.
+People look for an alternative when they run out of the free plan's monthly credits, which every applet run uses, or when they want automations for business work: several steps in a row, conditions, and apps such as CRMs and spreadsheets. A self-hosted tool has no limit on the number of automations or runs and keeps the data they move on your own server.

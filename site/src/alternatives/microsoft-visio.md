@@ -8,9 +8,11 @@ moving: |
 cost: "draw.io is free and open source under the Apache 2.0 licence, with no licence fee per user. Its makers call this server version a test version for evaluating draw.io, and say a paid production version is available for production use. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 faq:
   - q: "Can draw.io open Visio files?"
-    a: "Yes. draw.io imports .vsdx files, and converts older .vsd and .vst files in the browser."
+    a: "Yes. draw.io imports Microsoft Visio .vsdx files, and converts older .vsd and .vst files in the browser."
   - q: "Where does self-hosted draw.io save my diagrams?"
-    a: "On your own device, or wherever you save the file. The server only runs the editor and keeps no diagrams."
+    a: "Self-hosted draw.io saves diagrams on your own device, or wherever you save the file. The server only runs the editor and keeps no diagrams."
+  - q: "Does draw.io work on a Mac?"
+    a: "Yes. Self-hosted draw.io runs in any web browser, on a Mac, a Windows PC or a Linux computer. The full Microsoft Visio desktop app runs only on Windows."
 ---
 
 Microsoft Visio is Microsoft's diagramming app, used for flowcharts, org charts, floor plans and network diagrams, sold as per-user plans in Microsoft 365.

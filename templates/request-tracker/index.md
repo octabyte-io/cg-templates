@@ -36,12 +36,12 @@ faq:
   - q: Is Request Tracker free?
     a: Yes. Request Tracker is free and open source under the GPL-2.0 licence, and there is no paid self-hosted edition or fee per agent. Its maker, Best Practical, sells hosting, support and training, all optional.
   - q: Is Request Tracker a good alternative to Zendesk?
-    a: Yes, for teams whose support runs mostly by email and who want detailed control over queues and rules. It covers tickets, SLAs, automation, a knowledge base and reports with no fee per agent. Zendesk has live chat, social and phone channels, a more polished interface and far more ready-made integrations.
+    a: Yes, for teams whose support runs mostly by email and who want detailed control over queues and rules. Request Tracker covers tickets, SLAs, automation, a knowledge base and reports with no fee per agent. Zendesk has live chat, social and phone channels, a more polished interface and far more ready-made integrations.
   - q: How do I sign in to Request Tracker the first time?
     a: Sign in with the username root and the password Cloudgate generates, shown on the app's variables page in Cloudgate. Request Tracker's well-known default password is replaced on the first start, so it cannot be used to sign in.
   - q: Can Request Tracker receive and send email?
-    a: Yes, but only after you connect a mail server, which the template does not do for you. Until then the team can create and answer tickets in the browser, but no emails arrive as tickets and no replies or notifications go out.
-  - q: Can I import my tickets from Zendesk?
+    a: Yes, but only after you connect Request Tracker to a mail server, which the template does not do for you. Until then the team can create and answer tickets in the browser, but no emails arrive as tickets and no replies or notifications go out.
+  - q: Can I import my tickets from Zendesk into Request Tracker?
     a: No, Request Tracker has no built-in Zendesk importer. Best Practical's guide exports Zendesk views as spreadsheet (CSV) files and loads them with a free import extension, which takes some technical work.
   - q: Should I choose Request Tracker or Zammad?
     a: Choose Request Tracker for email-based ticketing with very detailed queues, permissions and rules on a small server. Choose Zammad for a more modern interface, chat and social channels, and a built-in importer for Zendesk and Freshdesk.

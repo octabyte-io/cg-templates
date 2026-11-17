@@ -40,15 +40,15 @@ faq:
   - q: Is HortusFox a good alternative to Planta?
     a: Yes, if you want to track plants together and keep your data. HortusFox adds locations, tasks, a supplies inventory and a group chat that a whole household shares. Planta suggests care schedules for you and has phone apps; in HortusFox you set your own tasks and use the website.
   - q: How do I sign in to HortusFox the first time?
-    a: Sign in with the admin email you entered in Cloudgate and the password Cloudgate created, shown in your app's settings in Cloudgate. Then add your locations and plants, and invite others from the admin area.
+    a: Sign in to HortusFox with the admin email you entered in Cloudgate and the password Cloudgate created, shown in your app's settings in Cloudgate. Then add your locations and plants, and invite others from the admin area.
   - q: Is there a HortusFox app for iPhone or Android?
     a: No, there is no native app, but the HortusFox website works on phones and can be added to your home screen like an app.
   - q: Can HortusFox remind me to water my plants?
-    a: Yes, with tasks. Overdue tasks always show on the dashboard. Email reminders for overdue and next-day tasks also need an email account for sending and a scheduled job, which take extra setup.
+    a: Yes, HortusFox reminds you with tasks. Overdue tasks always show on the dashboard. Email reminders for overdue and next-day tasks also need an email account for sending and a scheduled job, which take extra setup.
   - q: Can HortusFox identify plants?
     a: Yes. HortusFox can name a plant from a photo using the Pl@ntNet service, once you add a free Pl@ntNet key in the admin area.
   - q: Can my family use the same HortusFox?
-    a: Yes. The admin adds each person as a user; everyone shares the same plants, tasks, inventory and calendar, and the admin decides who else gets admin rights.
+    a: Yes. The HortusFox admin adds each person as a user; everyone shares the same plants, tasks, inventory and calendar, and the admin decides who else gets admin rights.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The HortusFox dashboard in a dark theme, greeting the user with the weather for Berlin, tiles for 27 plants, 3 locations, 41 tasks and 10 users, a list of plants that need special attention with Liatris scariosa marked infected and Alocasia Frydek with a pest infestation, two overdue tasks to check the balcony plants and repot outdoor plants, and photo cards for the Garden, Greenhouse and Living Room locations showing how many plants each has and how many are in danger"

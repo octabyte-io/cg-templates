@@ -40,8 +40,8 @@ faq:
     a: Yes, for a small team that mainly needs Slack's chat. Nebulynk has channels, direct messages, replies, reactions, files and search with no price per user. It has no Slack import, far fewer integrations and no native phone apps, and in this Cloudgate template calls and meetings don't work.
   - q: Do calls and meetings work in Nebulynk on Cloudgate?
     a: No. Nebulynk's voice channels, calls and meetings need network ports that Cloudgate doesn't open, so audio and video don't connect. Chat, direct messages, files and search all work. If your team needs calls, use a separate tool alongside it.
-  - q: How do I sign in the first time and add my team?
-    a: Open your app's web address and follow the short setup, which asks for a workspace name and creates the admin account with your name, email and password. Then invite people from the admin area; each invitation gives a link you can send them yourself, or by email once you add email settings.
+  - q: How do I sign in to Nebulynk the first time and add my team?
+    a: Open your Nebulynk web address and follow the short setup, which asks for a workspace name and creates the admin account with your name, email and password. Then invite people from the admin area; each invitation gives a link you can send them yourself, or by email once you add email settings.
   - q: Can I use Nebulynk on my phone?
     a: Yes, in your phone's web browser, and you can add it to your home screen so it opens like an app. There are no Nebulynk apps in the App Store or Google Play.
   - q: Is my data private with Nebulynk?

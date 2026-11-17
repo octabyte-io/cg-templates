@@ -42,13 +42,13 @@ faq:
   - q: Is Phraseanet still maintained now that Phrasea exists?
     a: Yes, Phraseanet still gets releases; version 4.1.26 came out on 31 October 2026. Alchemy is succeeding it with Phrasea, an entirely rewritten product, and has not announced an end-of-support date for Phraseanet. Moving to Phrasea later is a migration project, not a simple upgrade.
   - q: How do I sign in to Phraseanet the first time?
-    a: You sign in with the admin account set up during install, using the admin email you entered when you set up the template as the login. From there the admin adds users and sets what each one can see.
+    a: You sign in to Phraseanet with the admin account set up during install, using the admin email you entered when you set up the template as the login. From there the admin adds users and sets what each one can see.
   - q: Can I move my files from Bynder or Canto to Phraseanet?
     a: No, there is no importer from Bynder, Canto or other DAMs. Download your files and upload them again; Phraseanet reads the IPTC and XMP metadata embedded in each file, so titles, captions and keywords stored there come across.
   - q: Does Phraseanet have a phone app?
     a: No, Phraseanet has no official phone or desktop apps. It runs in a web browser.
   - q: Is my data private with Phraseanet?
-    a: Yes, your files, metadata and user accounts are stored on your own server, not on a vendor's cloud. You decide who can see each collection and what you share outside your team.
+    a: Yes. Phraseanet stores your files, metadata and user accounts on your own server, not on a vendor's cloud. You decide who can see each collection and what you share outside your team.
 screenshots:
   - src: screenshots/production-search.webp
     alt: "Phraseanet's Prod screen in its dark theme: a search bar at the top, facet filters on the left for base, collection, document type, keywords, city and country, and a grid of photo thumbnails of Paris, including the Eiffel Tower and Seine bridges, with a toolbar for Export, Edit, Push and Tools"

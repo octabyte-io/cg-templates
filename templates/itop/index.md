@@ -42,13 +42,13 @@ faq:
   - q: How do I sign in to iTop the first time?
     a: Sign in with the username admin and the password Cloudgate generated, shown with the app's settings in Cloudgate. Cloudgate installs iTop for you on the first start, which takes a minute or two, so there is no setup wizard to fill in and no default password.
   - q: Can staff email the help desk in iTop?
-    a: Yes, once you add Combodo's free Mail to ticket automation extension, which turns emails into new tickets and adds replies to existing ones. It is not part of this template, so out of the box people open requests in the portal or agents log them from phone calls.
+    a: Yes, staff can email the iTop help desk once you add Combodo's free Mail to ticket automation extension, which turns emails into new tickets and adds replies to existing ones. It is not part of this template, so out of the box people open requests in the portal or agents log them from phone calls.
   - q: Should I choose iTop or GLPI?
     a: Choose iTop if you want tickets tied to a detailed CMDB, an impact graph and service contracts with SLAs, for your own company or for clients you support. Choose GLPI if you want automatic inventory of computers through its agent and stronger asset and licence tracking.
-  - q: Can I import my tickets from ServiceNow or Freshservice?
+  - q: Can iTop import my tickets from ServiceNow or Freshservice?
     a: No, iTop has no importer for ServiceNow, Freshservice or Jira Service Management. You can import people, locations and equipment from CSV files exported from your old tool, and most teams start new tickets fresh in iTop.
   - q: What server size do I need for iTop?
-    a: A server with 2 CPU cores and 4 GB of memory is enough for under 200 tickets a month and up to 20 people working in the console, according to Combodo. Larger teams should plan for 4 cores and 8 GB.
+    a: A server with 2 CPU cores and 4 GB of memory is enough for iTop for under 200 tickets a month and up to 20 people working in the console, according to Combodo. Larger teams should plan for 4 cores and 8 GB.
 screenshots:
   - src: screenshots/tickets.webp
     alt: "The iTop list of all open user requests for Northfield Dental Group, with filters for status, reference, title, caller and organization above a table of eight requests such as X-ray viewer freezes when opening scans, Reception printer jams on every appointment letter and New dental nurse starting Monday needs an account, each with caller, start date, status New, Assigned, Pending or Resolved, and agent Tom Alder or Ruth Okafor"

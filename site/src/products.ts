@@ -104,7 +104,7 @@ export const PRODUCTS: Product[] = [
     name: 'IFTTT',
     icon: 'ifttt',
     job: 'simple if-this-then-that automations',
-    lede: 'Activepieces is a free, open-source IFTTT alternative: pick a trigger, add the steps that follow, and it runs on its own. IFTTT limits how many applets the free plan can run; self-hosted Activepieces has no applet limit.',
+    lede: 'Activepieces is a free, open-source IFTTT alternative: pick a trigger, add the steps that follow, and it runs on its own. IFTTT’s free plan allows unlimited applets but a monthly allowance of credits for their runs; self-hosted Activepieces has no limit on runs.',
     pick: 'activepieces',
   },
   {
@@ -143,7 +143,7 @@ export const PRODUCTS: Product[] = [
     name: 'remove.bg',
     icon: 'removedotbg',
     job: 'removing image backgrounds',
-    lede: 'Rembg is a free, open-source remove.bg alternative that cuts the background out of photos on your own server, in a simple web page or through its API. remove.bg charges credits for full-resolution images; Rembg has no fee per image and keeps your photos with you, though its default model is for non-commercial use only, so businesses should choose one of its permissively licensed models.',
+    lede: 'Rembg is a free, open-source remove.bg alternative that cuts the background out of photos on your own server, in a simple web page or through its API. remove.bg charges credits for full-resolution images, and its standalone website and self-service API close on 1 December 2026; Rembg has no fee per image and keeps your photos with you, though its default model is for non-commercial use only, so businesses should choose one of its permissively licensed models.',
     pick: 'rembg',
   },
   {
@@ -755,7 +755,7 @@ export const PRODUCTS: Product[] = [
     name: 'Toggl Track',
     icon: 'toggltrack',
     job: 'time tracking',
-    lede: 'solidtime is the open-source Toggl Track alternative we recommend: a one-click timer, week calendar, timesheet and reports with a Toggl-like look, free desktop apps and browser extensions, and a built-in Toggl importer. Toggl Track’s free plan stops at 5 users and paid plans charge per user; self-hosted solidtime and Kimai have no per-user fee and keep timesheets on your server, and Kimai also includes invoicing free.',
+    lede: 'solidtime is the open-source Toggl Track alternative we recommend: a one-click timer, week calendar, timesheet and reports with a Toggl-like look, free desktop apps and browser extensions, and a built-in Toggl importer. Toggl Track’s free plan stops at 3 users and paid plans charge per user; self-hosted solidtime and Kimai have no per-user fee and keep timesheets on your server, and Kimai also includes invoicing free.',
     pick: 'solidtime',
   },
   {
@@ -1808,7 +1808,7 @@ export const PRODUCTS: Product[] = [
     id: 'paprika',
     name: 'Paprika',
     job: 'recipes and meal planning',
-    lede: 'Mealie is a free, open-source Paprika alternative for keeping your recipes, meal plan and shopping list in one app the whole household shares, and it imports your Paprika recipes. Paprika sells polished paid apps that work offline; self-hosted Mealie has no fee and runs in any browser, but has no offline mode.',
+    lede: 'Mealie is a free, open-source Paprika alternative for keeping your recipes, meal plan and shopping list in one app the whole household shares, and it imports your Paprika recipes. Paprika has polished apps that work offline, with a free plan limited to 50 recipes; self-hosted Mealie has no fee and runs in any browser, but has no offline mode.',
     pick: 'mealie',
   },
   {
@@ -2262,7 +2262,7 @@ export const PRODUCTS: Product[] = [
     id: 'hackmd',
     name: 'HackMD',
     job: 'collaborative Markdown notes',
-    lede: 'HedgeDoc is the free, open-source HackMD alternative: real-time Markdown notes shared by link, with a live preview, slides and read-only publishing, and it grew out of HackMD’s own open-source edition. HackMD can’t be self-hosted and charges per seat for team plans; self-hosted HedgeDoc has no seat price, though it lacks GitHub sync and team workspaces.',
+    lede: 'HedgeDoc is the free, open-source HackMD alternative: real-time Markdown notes shared by link, with a live preview, slides and read-only publishing, and it grew out of HackMD’s own open-source edition. HackMD charges per seat for team plans and offers self-hosting only on its Enterprise plan, priced by quote; self-hosted HedgeDoc has no seat price, though it lacks GitHub sync and team workspaces.',
     pick: 'hedgedoc',
   },
   {
@@ -2392,7 +2392,7 @@ export const PRODUCTS: Product[] = [
     name: 'Stripe Billing',
     icon: 'stripe',
     job: 'subscription and usage-based billing',
-    lede: 'Lago is a free, open-source Stripe Billing alternative for usage-based and subscription billing: it meters usage from your product, applies your plans and prices and creates invoices, while Stripe can still collect the payments. Lago’s own FAQ puts Stripe Billing’s fee at 0.5% of billing volume, up to 0.8%, on top of payment fees; self-hosted Lago takes no percentage.',
+    lede: 'Lago is a free, open-source Stripe Billing alternative for usage-based and subscription billing: it meters usage from your product, applies your plans and prices and creates invoices, while Stripe can still collect the payments. Stripe Billing’s pay-as-you-go fee is 0.7% of billing volume, on top of payment fees; self-hosted Lago takes no percentage.',
     pick: 'lago',
   },
   {
@@ -3063,7 +3063,7 @@ export const PRODUCTS: Product[] = [
     id: 'huckleberry',
     name: 'Huckleberry',
     job: 'tracking a baby’s sleep, feeds and diapers',
-    lede: 'Baby Buddy is a free, open-source Huckleberry alternative for logging a baby’s sleep, feeds, diaper changes and growth, shared by every parent and carer on your own server. Huckleberry keeps syncing between caregivers’ devices and its SweetSpot nap predictions for paid plans; Baby Buddy shares the log at no cost, though it has no nap predictions, sleep plans or expert advice.',
+    lede: 'Baby Buddy is a free, open-source Huckleberry alternative for logging a baby’s sleep, feeds, diaper changes and growth, shared by every parent and carer on your own server. Huckleberry keeps its SweetSpot nap predictions for paid plans; Baby Buddy shares the log at no cost, though it has no nap predictions, sleep plans or expert advice.',
     pick: 'baby-buddy',
   },
   {
@@ -3589,7 +3589,7 @@ export const PRODUCTS: Product[] = [
     id: 'akeneo',
     name: 'Akeneo',
     job: 'product information management',
-    lede: 'UnoPim is a free, open-source Akeneo alternative for keeping all your product data in one catalogue and sending it to every sales channel, with completeness scores, translations, CSV and Excel import and AI-written descriptions. Akeneo’s last on-premise Community Edition reached end of support in September 2026 and its plans are now hosted and priced by quote; self-hosted UnoPim is MIT-licensed and maintained, though it has far fewer connectors and partners.',
+    lede: 'UnoPim is a free, open-source Akeneo alternative for keeping all your product data in one catalogue and sending it to every sales channel, with completeness scores, translations, CSV and Excel import and AI-written descriptions. Akeneo’s free Community Edition is still supported, but its cloud plans are priced by quote; self-hosted UnoPim is MIT-licensed and maintained, though it has far fewer connectors and partners.',
     pick: 'unopim',
   },
   {
@@ -3756,10 +3756,10 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'autodesk-construction-cloud',
-    name: 'Autodesk Construction Cloud',
+    name: 'Autodesk Forma',
     icon: 'autodesk',
     job: 'sharing and reviewing 3D building models',
-    lede: 'Speckle is a free, open-source Autodesk Construction Cloud alternative for sharing 3D building models from Revit, Rhino, Archicad and other design tools, viewing them in a browser, comparing versions and discussing issues on the model. Autodesk Construction Cloud is a paid subscription that keeps your project data in Autodesk’s cloud; a self-hosted Speckle server has no licence fee and keeps models on your server, though it does not manage project documents and drawings as Autodesk’s platform does.',
+    lede: 'Speckle is a free, open-source alternative to Autodesk Forma (formerly Autodesk Construction Cloud) for sharing 3D building models from Revit, Rhino, Archicad and other design tools, viewing them in a browser, comparing versions and discussing issues on the model. Autodesk Forma is a paid subscription that keeps your project data in Autodesk’s cloud; a self-hosted Speckle server has no licence fee and keeps models on your server, though it does not manage project documents and drawings as Autodesk’s platform does.',
     pick: 'speckle',
   },
   {
@@ -3951,9 +3951,9 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'opendatasoft',
-    name: 'Opendatasoft',
+    name: 'Huwise',
     job: 'running an open data portal',
-    lede: 'CKAN is the free, open-source Opendatasoft alternative for running an open data portal: publish datasets with their descriptions, and let people search, preview and download them or reach them through an API. Opendatasoft is a hosted platform priced on quote; self-hosted CKAN has no licence fee, though it shows fewer charts out of the box and setting it up takes technical work.',
+    lede: 'CKAN is the free, open-source alternative to Huwise (formerly Opendatasoft) for running an open data portal: publish datasets with their descriptions, and let people search, preview and download them or reach them through an API. Huwise is a hosted platform that publishes no prices and quotes after a demo; self-hosted CKAN has no licence fee, though it shows fewer charts out of the box and setting it up takes technical work.',
     pick: 'ckan',
   },
   {

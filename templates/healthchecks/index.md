@@ -40,13 +40,13 @@ faq:
   - q: How is Healthchecks different from Uptime Kuma?
     a: Uptime Kuma checks your websites from the outside, while Healthchecks waits for your own jobs to check in. Healthchecks is built for scheduled work, with cron schedules, grace times, failure signals and run times. Many people run both.
   - q: How do I sign in to Healthchecks the first time?
-    a: Sign in with the admin email you entered at setup and the generated password shown on the app's variables page in Cloudgate, using "Sign in with password". Public sign-up is closed, so only people you invite can get in.
+    a: Sign in to Healthchecks with the admin email you entered at setup and the generated password shown on the app's variables page in Cloudgate, using "Sign in with password". Public sign-up is closed, so only people you invite can get in.
   - q: Do I need to set up email for Healthchecks?
-    a: Only for email alerts and team invitations. You can add your email settings at setup or later; without them, alerts still go to Slack, Discord, Telegram, ntfy, webhooks and other chat or push services.
+    a: Only for email alerts and team invitations in Healthchecks. You can add your email settings at setup or later; without them, alerts still go to Slack, Discord, Telegram, ntfy, webhooks and other chat or push services.
   - q: Should Healthchecks run on the same server as the jobs it watches?
     a: No, run it on a different server. If both share a server and that server goes down, Healthchecks goes down with your jobs and cannot alert you.
-  - q: Can I import my checks from Cronitor or Dead Man's Snitch?
-    a: No, there is no import. You add a check for each job again and replace the old ping link in the job with the new one.
+  - q: Can Healthchecks import my checks from Cronitor or Dead Man's Snitch?
+    a: No, Healthchecks has no import from Cronitor or Dead Man's Snitch. You add a check for each job again and replace the old ping link in the job with the new one.
 screenshots:
   - src: screenshots/checks-dashboard.webp
     alt: "The Healthchecks list of checks for a demo project, with five jobs such as backups, a product sync and weekly reports, each showing its status (down, late, up or paused), tags, alert services, schedule and time of the last ping. The top bar is the hosted healthchecks.io site's."

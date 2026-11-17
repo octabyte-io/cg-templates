@@ -34,7 +34,7 @@ faq:
   - q: Is Drawnix free?
     a: Yes, Drawnix is free and open source under the MIT licence, with no paid edition and no fee per person. You pay only for your server.
   - q: Is Drawnix a good alternative to XMind?
-    a: Yes, for making clear mind maps and saving them as pictures, in a browser and for free. It has fewer mind-map features than XMind, with no outline view or presentation mode, and it cannot open XMind files.
+    a: Yes, Drawnix works well for making clear mind maps and saving them as pictures, in a browser and for free. It has fewer mind-map features than XMind, with no outline view or presentation mode, and it cannot open XMind files.
   - q: Is Drawnix a good alternative to Miro?
     a: Partly. Drawnix gives you an endless board with mind maps, flowcharts, shapes, drawing and images, but only one person works on a board at a time, with no live collaboration, comments or templates. If you need to draw together live, a shared whiteboard such as WBO fits better.
   - q: Where does Drawnix save my boards?

@@ -7,9 +7,11 @@ moving: |
   SENAITE has no LabVantage importer. Configure it from scratch with your analysis services, methods, sample types, specifications, clients and report templates, add your lab users, and check your instruments' export files against SENAITE's parsers. Pick a date from which new samples go into SENAITE, finish open work in LabVantage and keep an export of its records for audits. A SENAITE service provider can help with setup and validation.
 faq:
   - q: "How much does LabVantage cost?"
-    a: "LabVantage publishes no price list; it is sold by subscription or licence through its sales team. SENAITE has no licence fee."
+    a: "LabVantage publishes no price list; it is sold by subscription or licence through its sales team. SENAITE LIMS has no licence fee."
   - q: "Can SENAITE replace LabVantage?"
     a: "For a small or medium testing lab, often yes, for the core from sample intake to the published report. Organisations that use LabVantage's wider enterprise scope will find SENAITE does less."
+  - q: "Can I import my LabVantage data into SENAITE?"
+    a: "No. SENAITE has no LabVantage importer, so you configure it from scratch with your analysis services, methods, sample types, clients and report templates. Start new samples in SENAITE from a set date and keep an export of LabVantage records for audits."
 ---
 
 LabVantage is an enterprise laboratory information management system sold by subscription or licence through its sales team, with no public price list.

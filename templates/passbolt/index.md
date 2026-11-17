@@ -38,14 +38,14 @@ faq:
   - q: Is Passbolt free?
     a: Yes, Passbolt Community Edition is free and open source under the AGPL licence, with no limit on users, and it is the edition this template installs. Passbolt Pro is a paid subscription that adds single sign-on, LDAP and Active Directory sync, account recovery, an activity log, tags and password policies.
   - q: Is Passbolt a good alternative to 1Password or LastPass?
-    a: Yes, for teams that mainly need to share work passwords with chosen people and groups on their own server, with no fee per person. The free edition has no single sign-on, audit log or account recovery, which 1Password's business plans offer.
+    a: Yes. Passbolt suits teams that mainly need to share work passwords with chosen people and groups on their own server, with no fee per person. Passbolt's free edition has no single sign-on, audit log or account recovery, which 1Password's business plans offer.
   - q: What is the difference between Passbolt and Vaultwarden?
     a: Passbolt is built by the company Passbolt SA for teams, with a personal encryption key for every user and sharing rights per password and folder. Vaultwarden is a community-made server for the free Bitwarden apps; it is simpler to set up and needs no email server. Both are free and open source, and Cloudgate installs either.
   - q: How do I create the first admin account in Passbolt?
     a: "In Cloudgate, open the app's Shell tab, pick the passbolt container (not passbolt-db) and run this line with your own email and name: su -m -c \"bin/cake passbolt register_user -u you@example.com -f Ada -l Lovelace -r admin\" -s /bin/sh www-data. It prints a setup link, also sent by email; open it in a browser, install the Passbolt extension when asked, choose a passphrase and download your recovery kit. From then on you invite everyone else from the Users page."
   - q: What happens if someone forgets their Passbolt passphrase?
-    a: In the free Community Edition, their account cannot be recovered without their passphrase and recovery kit, because nobody else holds their encryption key, and any password shared only with them is lost too. Account recovery is a paid Pro feature, so ask everyone to keep their recovery kit somewhere safe and share important passwords with more than one person.
-  - q: Can I import my passwords from LastPass or 1Password?
+    a: In the free Passbolt Community Edition, their account cannot be recovered without their passphrase and recovery kit, because nobody else holds their encryption key, and any password shared only with them is lost too. Account recovery is a paid Pro feature, so ask everyone to keep their recovery kit somewhere safe and share important passwords with more than one person.
+  - q: Can I import my passwords into Passbolt from LastPass or 1Password?
     a: Yes, Passbolt imports CSV files exported from LastPass, 1Password, Bitwarden, Dashlane, NordPass and most browsers, and KeePass files from KeePass and Keeper. You can export your passwords to a KeePass file at any time.
   - q: Does Passbolt need an email server?
     a: Yes, Passbolt sends every invitation, including your own setup link, by email, so Cloudgate asks for your email sending service's details during setup. Any service that offers SMTP sending works.

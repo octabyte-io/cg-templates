@@ -38,17 +38,17 @@ faq:
   - q: Is Grav free?
     a: Yes, Grav is free and open source under the MIT licence, including the admin panel and the default theme. Self-hosting it costs only your server; the Grav team also sells optional premium plugins, such as a visual editor and page revision history.
   - q: Is Grav a good alternative to Squarespace or Wix?
-    a: Yes, for a small, fast website or blog that you want to own with no monthly plan. Grav has no drag-and-drop page builder, so it suits people happy to write pages in a simple text format, and you keep it updated yourself.
+    a: Yes, Grav is a good alternative to Squarespace or Wix for a small, fast website or blog that you want to own with no monthly plan. Grav has no drag-and-drop page builder, so it suits people happy to write pages in a simple text format, and you keep it updated yourself.
   - q: Should I choose Grav or WordPress?
     a: Choose Grav for a smaller site you want light, quick to back up and free of a database, written in Markdown. Choose WordPress if you want a visual editor, the widest choice of themes and plugins, or an online shop.
   - q: Do I need to know how to code to use Grav?
-    a: No. You write pages in Markdown, a simple text format where a toolbar adds headings, bold text, lists, links and images for you. Changing a theme's design beyond its settings does need some web design knowledge.
+    a: No. In Grav you write pages in Markdown, a simple text format where a toolbar adds headings, bold text, lists, links and images for you. Changing a theme's design beyond its settings does need some web design knowledge.
   - q: How do I sign in to Grav the first time?
     a: Open your site's web address; until an account exists, Grav shows a welcome screen where you create the administrator with a username, email and password. There is no default login, so do this straight after setup.
   - q: Can I move my Wix or Squarespace site to Grav?
     a: No, Grav has no importer for Wix or Squarespace. You rebuild the pages in Grav and copy the text and images across.
   - q: Is my data private with Grav?
-    a: Yes. Your pages, images and user accounts are stored as files on your own server. Plugins you add may connect to outside services, so check what each one does.
+    a: Yes. Grav stores your pages, images and user accounts as files on your own server. Plugins you add may connect to outside services, so check what each one does.
 screenshots:
   - src: screenshots/page-editor.webp
     alt: "The Grav admin panel editing the Home page of a florist's website: a sidebar with Dashboard, Configuration, Users, Pages, Media, Plugins, Themes, Translations and Tools, a Title field, a Markdown editor with a formatting toolbar showing the heading 'Willow & Fern Florist', a 'What we do' list and opening hours, a Page Media drop zone, and a Page Info panel showing the page is published and visible in the menu"

@@ -43,12 +43,12 @@ faq:
     a: Partly. Quant-UX imports pages and screens from a Figma file when you paste the file's link and a Figma access key. You then add the links and logic in Quant-UX, so plan to check each screen after the import.
   - q: How do I sign in to Quant-UX the first time?
     a: There is no default login. Open your Quant-UX web address, choose Sign Up, enter your email and a password and accept the terms; no confirmation email is needed. Anyone who can reach the address can sign up until you turn sign-up off.
-  - q: Do testers need an account or an app?
-    a: No. Testers open the test link in any web browser, read a short privacy note and start. On a phone they can scan a QR code to open the same test.
+  - q: Do Quant-UX testers need an account or an app?
+    a: No. Testers open the Quant-UX test link in any web browser, read a short privacy note and start. On a phone they can scan a QR code to open the same test.
   - q: What server size do I need for Quant-UX?
     a: Quant-UX needs a medium server with about 2 GB of memory, because it runs the app, a Java back end and a MongoDB database. The first install is slow because the download is large.
   - q: Can Quant-UX send emails?
-    a: Yes, if you add your email server's details. Sign-up and testing work without email, but password resets and team invitations need it.
+    a: Yes, if you add your email server's details to Quant-UX. Sign-up and testing work without email, but password resets and team invitations need it.
 screenshots:
   - src: screenshots/prototype-editor.webp
     alt: "The Quant-UX editor in Prototype mode showing four phone screens of a bakery order app: a Home screen with a list of breads and Add buttons, a Sourdough loaf product page, a Basket with a total and collection time, and an Order placed screen, joined by blue arrows that show which button opens which screen, with the layers list on the left"

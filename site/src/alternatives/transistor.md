@@ -10,6 +10,8 @@ faq:
     a: "Yes. Castopod's premium podcasts give subscribers their own feed for subscriber-only episodes. It needs an email server to send each subscriber their link."
   - q: "Can I host several shows in one Castopod?"
     a: "Yes. One Castopod hosts as many podcasts as you like, and each podcast can have its own team of contributors."
+  - q: "Can I move my podcast from Transistor to Castopod?"
+    a: "Yes. Castopod imports an existing podcast from its RSS feed, episodes included. After the import, set up a redirect from your Transistor feed to the new Castopod feed so listeners and podcast apps follow you."
 ---
 
 Transistor is a hosted podcast platform for creators and companies, with unlimited shows on every plan, private podcasts for subscribers, a website for each show and analytics.

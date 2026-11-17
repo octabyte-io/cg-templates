@@ -32,19 +32,19 @@ switching:
     - There are no phone apps for your own copy; it works in the phone's browser
 faq:
   - q: Is HuggingChat's Chat UI free?
-    a: Yes, Chat UI is free and open source under the Apache-2.0 licence, with no paid edition. You pay for your server and for the AI provider you connect, which bills its own usage.
+    a: Yes, HuggingChat's Chat UI is free and open source under the Apache-2.0 licence, with no paid edition. You pay for your server and for the AI provider you connect, which bills its own usage.
   - q: Is self-hosted Chat UI the same as HuggingChat on huggingface.co?
     a: No. Chat UI is the open-source app that Hugging Face's HuggingChat service is built on, but your copy is separate from huggingface.co. It shows the name ChatUI, uses the AI provider and key you connect, and does not include Hugging Face accounts or HuggingChat's phone app.
-  - q: Is Chat UI a good alternative to ChatGPT Business?
-    a: Yes, for a team that mostly wants a simple, private chat with open AI models and no seat price. ChatGPT has more extras, such as projects, memory, custom GPTs and phone apps, and teams that need user groups or a shared document library may prefer Open WebUI or LibreChat.
-  - q: Does Chat UI come with an AI model?
-    a: No, Chat UI is only the chat app. It connects to a provider that speaks OpenAI's API format, such as Hugging Face's Inference Providers with a Hugging Face access token, OpenRouter, OpenAI, or a model server you run, such as Ollama.
-  - q: How do I sign in to Chat UI the first time?
-    a: Your browser asks for a username and password first. The username is admin and the password is the ADMIN_PASSWORD that Cloudgate creates, shown on the app's variables page, and everyone on the team shares that login. To manage Chat UI itself, open the address with ?token= and the generated ADMIN_TOKEN at the end.
-  - q: Can I import my ChatGPT chats into Chat UI?
-    a: No, Chat UI has no import for ChatGPT or other chat history, so your team starts with an empty chat list.
-  - q: What server size do I need for Chat UI?
-    a: A small server with about 1 GB of memory is enough when the AI models run at a provider such as Hugging Face. Running your own models with Ollama needs a separate, much larger machine.
+  - q: Is HuggingChat's Chat UI a good alternative to ChatGPT Business?
+    a: Yes, HuggingChat's Chat UI suits a team that mostly wants a simple, private chat with open AI models and no seat price. ChatGPT has more extras, such as projects, memory, custom GPTs and phone apps, and teams that need user groups or a shared document library may prefer Open WebUI or LibreChat.
+  - q: Does HuggingChat's Chat UI come with an AI model?
+    a: No, HuggingChat's Chat UI is only the chat app. It connects to a provider that speaks OpenAI's API format, such as Hugging Face's Inference Providers with a Hugging Face access token, OpenRouter, OpenAI, or a model server you run, such as Ollama.
+  - q: How do I sign in to HuggingChat's Chat UI the first time?
+    a: When you open HuggingChat's Chat UI, your browser asks for a username and password first. The username is admin and the password is the ADMIN_PASSWORD that Cloudgate creates, shown on the app's variables page, and everyone on the team shares that login. To manage Chat UI itself, open the address with ?token= and the generated ADMIN_TOKEN at the end.
+  - q: Can I import my ChatGPT chats into HuggingChat's Chat UI?
+    a: No, HuggingChat's Chat UI has no import for ChatGPT or other chat history, so your team starts with an empty chat list.
+  - q: What server size do I need for HuggingChat's Chat UI?
+    a: A small server with about 1 GB of memory is enough for HuggingChat's Chat UI when the AI models run at a provider such as Hugging Face. Running your own models with Ollama needs a separate, much larger machine.
 screenshots:
   - src: screenshots/chat.webp
     alt: "The Chat UI chat screen in a light theme: a sidebar titled ChatUI with three chats named Weekly bakery order schedule, Instagram post ideas for autumn and Reply to a late order complaint, and an open chat where a fictional bakery, Rosewood Bakery, asks for a weekly order schedule; the answer shows a table of sourdough loaves, croissants and cinnamon rolls for Monday to Saturday and three numbered suggestions, above an Ask anything box with the model llama3.3:70b selected"

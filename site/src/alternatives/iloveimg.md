@@ -13,6 +13,8 @@ faq:
     a: "No. MAZANOKE processes every image in your browser, so pictures never leave your device, not even to your own server."
   - q: "Which iLoveIMG tools does MAZANOKE replace?"
     a: "Compress, resize and convert, including converting iPhone HEIC photos to JPG, PNG or WebP. It does not crop, rotate, add watermarks, edit photos, upscale or remove backgrounds; SnapOtter does all of those."
+  - q: "Can SnapOtter remove backgrounds and upscale images like iLoveIMG?"
+    a: "Yes. SnapOtter removes backgrounds and upscales photos with AI that runs on your own server, with no AI service or key, alongside crop, rotate, watermark and a photo editor. The AI tools need a bigger server. MAZANOKE does not have these tools."
 ---
 
 iLoveIMG is a website with a set of online image tools: compress, resize, crop, convert, rotate, watermark, a photo editor, upscaling and background removal. It has a free plan with limits on how many images each tool processes and a paid Premium plan.

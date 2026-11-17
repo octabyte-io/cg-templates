@@ -10,7 +10,9 @@ faq:
   - q: "Can Grist open Excel and Google Sheets files?"
     a: "Yes. Grist imports Excel, CSV, JSON and TSV files, and files from Google Drive or a web address, and it exports tables back to CSV or Excel."
   - q: "Does Grist work like Google Sheets?"
-    a: "Partly. You edit in a grid, and many spreadsheet functions work, but formulas apply to whole columns and use Python, and each column has a type. It suits lists and records better than free-form sheets."
+    a: "Partly. As in Google Sheets, you edit in a grid, and many spreadsheet functions work in Grist, but formulas apply to whole columns and use Python, and each column has a type. It suits lists and records better than free-form sheets."
+  - q: "How does my team sign in to self-hosted Grist?"
+    a: "In the free Community edition of Grist, people sign in with a free getgrist.com account, while your documents stay on your server, instead of the Google accounts used by Google Sheets. Signing in through your own Google Workspace, Microsoft or other provider needs a full-edition activation key."
 ---
 
 Google Sheets is Google's online spreadsheet. Several people can edit a sheet at once in the browser, and it comes free with a Google account and as part of Google Workspace for businesses.

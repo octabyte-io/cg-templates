@@ -37,15 +37,15 @@ faq:
     a: Yes, LastSignal is free and open source under the MIT licence. There is no paid plan or hosted version; you pay only for your server and the email service it sends through.
   - q: Is LastSignal a good alternative to Dead Man's Switch (deadmansswitch.net)?
     a: Yes, if you are happy to keep your own server running. Both email you check-ins and send your messages when you stop answering, but Dead Man's Switch sends to other people only on its paid plan, while LastSignal sends to your recipients free and encrypts every message so the server can't read it. Dead Man's Switch is run for you, offers more ways to check in and adds file attachments on yearly plans.
-  - q: What happens if my server or email stops working?
+  - q: What happens if my LastSignal server or email stops working?
     a: Nothing is sent, and nothing warns you. LastSignal can only send check-ins and deliver messages while its server is running and its email service is working, so keep your server and email account paid up well ahead, and use an email service with your sending domain set up so its emails don't land in spam.
   - q: How do I sign in to LastSignal the first time?
     a: Open your LastSignal address, type your email and click the sign-in link it emails you; there are no passwords. On your first sign-in it shows a recovery code once, so save it somewhere safe. Then invite your recipients and write your messages.
-  - q: Can anyone read my messages, including whoever runs the server?
-    a: No, your messages are encrypted in your browser before they are saved, and only your chosen recipients can open them, with their own passphrase. The short label you give each message is not encrypted, so keep private details out of it.
-  - q: What if I'm on holiday and miss a check-in?
+  - q: Can anyone read my LastSignal messages, including whoever runs the server?
+    a: No, LastSignal encrypts your messages in your browser before they are saved, and only your chosen recipients can open them, with their own passphrase. The short label you give each message is not encrypted, so keep private details out of it.
+  - q: What if I'm on holiday and miss a LastSignal check-in?
     a: Nothing goes out straight away. With LastSignal's default settings you get three reminders, and delivery comes 21 days after the first missed check-in; you can also press Pause before you leave, or name a trusted contact who can hold delivery back.
-  - q: What if a recipient forgets their passphrase?
+  - q: What if a LastSignal recipient forgets their passphrase?
     a: The recipient can't open the message, because LastSignal can't recover or reset a recipient's passphrase. A recipient can add a hint when they set it up, but the hint is stored unencrypted.
 screenshots:
   - src: screenshots/dashboard.webp

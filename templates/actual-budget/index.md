@@ -37,16 +37,16 @@ faq:
     a: Yes. Actual Budget is free, open-source software under the MIT licence, with no paid edition or locked features. You pay only for your server and, if you want automatic bank sync, for the separate provider that connects to your bank.
   - q: Is Actual Budget a good alternative to YNAB?
     a: Yes. Actual Budget uses the same envelope method as YNAB, works offline, and has flexible rules, goal templates and custom reports. YNAB does more for you out of the box, such as automatic credit card handling and built-in bank sync in North America.
-  - q: Can I import my budget from YNAB?
+  - q: Can I import my budget from YNAB into Actual Budget?
     a: Yes. Actual Budget has built-in importers for today's YNAB (from a JSON export) and for the older YNAB 4, and they bring your accounts, categories and transaction history across. A few things, such as YNAB's credit card payment categories, work differently and may need tidying afterwards.
   - q: Does Actual Budget connect to my bank?
-    a: Yes, through a separate bank-sync provider that you sign up for yourself. SimpleFIN Bridge covers North American banks for $1.50 a month or $15 a year, Enable Banking covers European banks, and there are providers for Brazil and New Zealand. Without one, you import statement files from your bank or type transactions in.
+    a: Yes, Actual Budget connects to banks through a separate bank-sync provider that you sign up for yourself. SimpleFIN Bridge covers North American banks for $1.50 a month or $15 a year, Enable Banking covers European banks, and there are providers for Brazil and New Zealand. Without one, you import statement files from your bank or type transactions in.
   - q: How do I sign in to Actual Budget the first time?
     a: The first person to open Actual Budget's web address sets the server password, so do this right after setup. There is no default login; that one password then protects every budget on the server.
   - q: Is there an Actual Budget phone app?
-    a: Partly. An official iPhone app is in beta testing and there is no official Android app yet, but the web app can be added to any phone's home screen and works offline. There are also desktop apps for Windows, Mac and Linux.
+    a: Partly. An official Actual Budget iPhone app is in beta testing and there is no official Android app yet, but the web app can be added to any phone's home screen and works offline. There are also desktop apps for Windows, Mac and Linux.
   - q: Is my financial data private with Actual Budget?
-    a: Yes. Your budget is stored on your own devices and your own server, not in someone else's cloud, and you can turn on end-to-end encryption so the server can't read it. Keep that encryption password safe, because it can't be recovered if you lose it.
+    a: Yes. Actual Budget stores your budget on your own devices and your own server, not in someone else's cloud, and you can turn on end-to-end encryption so the server can't read it. Keep that encryption password safe, because it can't be recovered if you lose it.
 screenshots:
   - src: screenshots/budget.webp
     alt: "The Actual Budget budget page showing September, October and November side by side, each with available funds and an amount to budget, above a table of categories such as Food, Restaurants, Clothing, Medical, Mortgage and Power with budgeted, spent and balance columns; overspent balances are in red, and a sidebar lists checking, savings, retirement and mortgage accounts"

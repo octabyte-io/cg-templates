@@ -37,15 +37,15 @@ faq:
     a: Yes, TeamPass is free and open source under the GPL-3.0 licence, with no limit on people or passwords. Only the optional browser extension for autofill needs a paid licence.
   - q: Is TeamPass a good alternative to 1Password or LastPass?
     a: Yes, for teams that share work logins by folder and want to know who opened what. TeamPass has detailed rights, an audit log and company sign-in at no extra cost, but no phone apps, and autofill in the browser needs a paid extension.
-  - q: Can I import my passwords from 1Password, LastPass or Bitwarden?
+  - q: Can TeamPass import my passwords from 1Password, LastPass or Bitwarden?
     a: Yes. TeamPass imports exports from Bitwarden, LastPass, 1Password and KeePassXC, as well as CSV files. An administrator turns import on first in the settings.
   - q: Is there a TeamPass browser extension or phone app?
-    a: There is an official extension for Chrome, Edge and Firefox that fills in logins, but it needs a commercial licence after a free 30-day trial. There is no phone app; the web app works in a phone's browser.
+    a: There is an official TeamPass extension for Chrome, Edge and Firefox that fills in logins, but it needs a commercial licence after a free 30-day trial. There is no phone app; the web app works in a phone's browser.
   - q: How do I sign in to TeamPass the first time?
-    a: Sign in with the username admin and the password Cloudgate created for you, shown in the app's settings in Cloudgate. The admin account manages folders, roles and users; create a normal account for yourself to store passwords day to day.
+    a: Sign in to TeamPass with the username admin and the password Cloudgate created for you, shown in the app's settings in Cloudgate. The admin account manages folders, roles and users; create a normal account for yourself to store passwords day to day.
   - q: Can TeamPass use our Active Directory?
     a: Yes. TeamPass can sign people in with LDAP or Active Directory, including nested groups, or with single sign-on through OAuth2, and it supports two-step codes, Duo and YubiKey.
-  - q: What should I back up?
+  - q: What should I back up for TeamPass?
     a: Back up both the database and TeamPass's encryption key, together. Without the key, the stored passwords cannot be decrypted, even with a database backup.
 screenshots: []
 ---

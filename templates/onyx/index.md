@@ -40,7 +40,7 @@ faq:
   - q: Does Onyx come with an AI model?
     a: No, Onyx needs an AI provider. After signing up, the admin connects one, such as OpenAI, Anthropic or Azure with your own API key, or a model you run yourself, and that provider bills its own usage. Your documents and chats are stored on your server, but questions and the passages used to answer them are sent to the provider you connect.
   - q: How do I sign in to Onyx the first time?
-    a: The first person to sign up with an email and password becomes the admin, so do it right after install. Until then anyone who reaches the address could take admin. After that, anyone with the address can still create an account, so the admin turns on invite-only sign-up in the admin panel.
+    a: The first person to sign up to Onyx with an email and password becomes the admin, so do it right after install. Until then anyone who reaches the address could take admin. After that, anyone with the address can still create an account, so the admin turns on invite-only sign-up in the admin panel.
   - q: What server size do I need for Onyx?
     a: Onyx needs a very large server. Cloudgate uses its 2xlarge size, with 8 CPUs and 16 GB of memory, and the server needs 50 GB of disk or more, plus room for your documents. The first start takes several minutes.
   - q: Is Onyx still open source after Zoom bought it?

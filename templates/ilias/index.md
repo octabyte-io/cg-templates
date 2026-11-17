@@ -38,11 +38,11 @@ faq:
   - q: Is ILIAS free?
     a: Yes, ILIAS is free, open-source software under the GPL-3.0 licence, with no licence fee and no paid edition. It is developed by a community around the non-profit ILIAS Society. You pay only for your server, plus outside help if you want it.
   - q: Is ILIAS a good alternative to Canvas or Blackboard?
-    a: Yes, if you want a full learning management system you run yourself. ILIAS covers courses, tests and e-exams, assignments, forums, learning progress and certificates with no licence fee. Your courses don't move across automatically, though; SCORM packages and QTI tests can be imported and the rest is rebuilt.
+    a: Yes, ILIAS is an alternative to Canvas or Blackboard if you want a full learning management system you run yourself. ILIAS covers courses, tests and e-exams, assignments, forums, learning progress and certificates with no licence fee. Your courses don't move across automatically, though; SCORM packages and QTI tests can be imported and the rest is rebuilt.
   - q: Can a company use ILIAS for staff training?
     a: Yes, ILIAS is used by businesses and public bodies as well as universities. You can build onboarding and compliance courses, test staff, track who has completed each course, issue certificates and organise people by department, without the per-user fees of tools such as TalentLMS or Docebo.
   - q: How do I sign in to ILIAS the first time?
-    a: "Sign in with the username root and the admin password Cloudgate creates, shown on the app's variables page in Cloudgate. Change that password straight away, then create user accounts or connect your company sign-in. Self-registration is on by default and new accounts are confirmed by an email link, but no mail server is set up, so turn it off under Administration > User Management > Self-Registration unless you add your email settings."
+    a: "Sign in to ILIAS with the username root and the admin password Cloudgate creates, shown on the app's variables page in Cloudgate. Change that password straight away, then create user accounts or connect your company sign-in. Self-registration is on by default and new accounts are confirmed by an email link, but no mail server is set up, so turn it off under Administration > User Management > Self-Registration unless you add your email settings."
   - q: Can I import my existing courses into ILIAS?
     a: Partly. ILIAS plays SCORM 1.2 and SCORM 2004 packages and imports tests in the IMS QTI format, so content exported in those formats comes across. There is no tool that moves whole courses, members and grades from Canvas, Blackboard, Moodle or TalentLMS.
   - q: What server size does ILIAS need?

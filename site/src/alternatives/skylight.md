@@ -10,6 +10,8 @@ faq:
     a: "Yes. Yuvomi's wall mode runs in the browser of any recent tablet, and the tablet gets its own account, so it shows the family display without anyone's personal sign-in."
   - q: "Does Yuvomi charge for meal planning or rewards like Skylight Plus?"
     a: "No. Meal planning, chore rewards and the photo screensaver are part of the free app; Yuvomi has no paid tier."
+  - q: "Can Yuvomi show my Google or iCloud calendar like Skylight Calendar?"
+    a: "Yes. Yuvomi syncs both ways with Google, iCloud and Nextcloud calendars, subscribes to calendar links and imports calendar files. It has no Skylight importer, so chores, lists and meals are set up again in Yuvomi."
 ---
 
 Skylight Calendar is a touchscreen that hangs in the kitchen and shows the family's calendar, chores and lists. The screen is bought once, and an optional Skylight Plus subscription adds meal planning, rewards, a photo screensaver and more.

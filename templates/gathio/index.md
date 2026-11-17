@@ -39,16 +39,16 @@ faq:
     a: Yes, Gathio is free and open source under the GPL-3.0 licence, with no paid edition and no limit on events or guests. You pay only for the server it runs on.
   - q: Is Gathio a good alternative to Evite or Partiful?
     a: Yes, for simple invites where you want guests to RSVP from a link without signing up. Gathio has no designed invitation cards and no text-message invites or reminders; it keeps guests updated by email instead.
-  - q: Do my guests need an account to RSVP?
-    a: No, guests click Add me and type a name, or a nickname. An email address is optional and only used to send them updates about the event.
+  - q: Do my guests need a Gathio account to RSVP?
+    a: No, Gathio guests click Add me and type a name, or a nickname. An email address is optional and only used to send them updates about the event.
   - q: How do I edit my event if there are no accounts?
     a: You edit a Gathio event with the private editing link it gives you when you create the event. It is emailed to you if your Gathio has an email service, shown on screen and saved in your browser. Keep it safe and share it only with co-hosts, because anyone with it can edit or delete the event.
   - q: Are events on Gathio private?
-    a: Partly, because each event is visible to anyone who has its link but is not listed anywhere public. You can hide the location until you approve each guest, and guests can hide their name from the public guest list.
+    a: Partly, because each Gathio event is visible to anyone who has its link but is not listed anywhere public. You can hide the location until you approve each guest, and guests can hide their name from the public guest list.
   - q: Can I move my events from Facebook to Gathio?
     a: Partly, one event at a time. Export the event from Facebook as a calendar (.ics) file and upload it to Gathio to create the same event; guests who replied on Facebook do not move across.
   - q: How long do events stay on Gathio?
-    a: Events are deleted automatically 7 days after they end, along with their guest lists and comments. Event group pages stay until you delete them.
+    a: Gathio deletes events automatically 7 days after they end, along with their guest lists and comments. Event group pages stay until you delete them.
 screenshots:
   - src: screenshots/event-page.webp
     alt: "A Gathio event page for a picnic, with a Japanese woodblock print as the cover picture, the park's name, the date and time, the host's name, the event's link with a Copy button, and buttons to add it to Google Calendar, export it as a calendar file and show the place on Google Maps or OpenStreetMap"

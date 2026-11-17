@@ -36,13 +36,13 @@ faq:
     a: "Yes, for one organiser. Self-hosted Rallly is open-source software under the AGPL licence, and the free Personal tier covers one registered user with unlimited polls. For a team of organisers, Rallly's makers ask you to buy a one-time licence key; it works on trust, so Rallly keeps working and shows a reminder, but inviting colleagues into a shared space needs the key. People who only vote never count as users."
   - q: Is Rallly a good alternative to Doodle?
     a: "Yes, for group meeting polls. Rallly does Doodle's best-known job, a poll where people vote on dates and times, with no ads and no account needed to vote. Doodle also offers booking pages, sign-up sheets, calendar syncing and phone apps, which Rallly does not."
-  - q: Do participants need an account to vote?
-    a: "No. Anyone with the poll link can vote by entering their name, and can add an email address to edit their answer later and receive the invite when a date is chosen. Only the people who create polls sign in."
+  - q: Do participants need a Rallly account to vote?
+    a: "No. Anyone with the Rallly poll link can vote by entering their name, and can add an email address to edit their answer later and receive the invite when a date is chosen. Only the people who create polls sign in."
   - q: How do I sign in to Rallly the first time?
     a: "With a code sent by email: Rallly has no passwords. Open your Rallly address, enter the admin email you gave during setup and type in the six-digit code Rallly emails you, then open the Control Panel and choose Make me an admin. This is why an email sending service must be connected."
   - q: Can Rallly add Zoom or Google Meet links?
     a: "Yes. Organisers can connect Google Meet, Zoom, Microsoft Teams or Webex, and Rallly creates the meeting link when the date is finalized. Each service needs a one-time app setup by the admin; until then you can paste any video call link yourself."
-  - q: Can I import my polls from Doodle?
+  - q: Can I import my polls from Doodle into Rallly?
     a: "No. Rallly has no Doodle import, so you start new polls in Rallly and let any open Doodle polls finish."
   - q: What server size do I need for Rallly?
     a: "A medium server with 2 GB of memory, which is the minimum Rallly's makers recommend."

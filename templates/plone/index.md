@@ -1,5 +1,6 @@
 ---
 tagline: A self-hosted CMS for websites and intranets with many editors.
+title: "Plone: open-source intranet and website CMS"
 category: websites
 alternativeTo: [sitecore, adobe-experience-manager, sharepoint]
 ease: some-setup

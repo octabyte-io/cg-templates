@@ -41,11 +41,11 @@ faq:
     a: Yes, Whatomate connects to Meta's official WhatsApp Cloud API, not to the WhatsApp Web app on a phone. Your number is not at risk from an unofficial client, but Meta's usual rules apply, such as getting message templates approved.
   - q: Is Whatomate a good alternative to WATI or respond.io?
     a: Yes, Whatomate is a good WATI or respond.io alternative for a team that only needs WhatsApp and wants no monthly or per-user fee. It covers the shared inbox, campaigns, templates and chatbots, but it is beta software, has no phone app and, unlike respond.io, does not handle Instagram, Facebook or email.
-  - q: What do I need before I can send messages?
+  - q: What do I need before Whatomate can send messages?
     a: You need a Meta Business account and a WhatsApp Business phone number on Meta's WhatsApp Business Platform. You then add its access token and phone number ID in Whatomate under Settings, Accounts, and point Meta's webhook at your Whatomate address.
   - q: How do I sign in to Whatomate the first time?
-    a: Sign in with the admin email you entered during setup and the strong password Cloudgate generated, shown on the app's variables page. You can then add your team and their roles.
-  - q: Can I import my chats or contacts from WATI?
+    a: Sign in to Whatomate with the admin email you entered during setup and the strong password Cloudgate generated, shown on the app's variables page. You can then add your team and their roles.
+  - q: Can Whatomate import my chats or contacts from WATI?
     a: No, Whatomate has no importer for WATI or other platforms, so your old chats stay in WATI. You can upload customers from a CSV spreadsheet when you send a campaign.
   - q: What server size does Whatomate need?
     a: A small server with 1 GB of memory is enough for a small team, because Whatomate is one light app with a PostgreSQL database and Redis. Cloudgate sets up all three.

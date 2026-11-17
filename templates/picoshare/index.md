@@ -36,12 +36,12 @@ faq:
   - q: Is PicoShare free?
     a: Yes, PicoShare is free and open source under the AGPL licence (version 3 or later), with no paid edition and no limits on file size or number of files. You pay only for your server and its disk.
   - q: Is PicoShare a good alternative to WeTransfer?
-    a: Yes, if you mostly send one file at a time. You upload it, choose when the link expires and send the link, and the recipient downloads it with no account or ads. Unlike WeTransfer, it sends one file per link, sends no e-mails for you and has no download password.
+    a: Yes, if you mostly send one file at a time. In PicoShare you upload it, choose when the link expires and send the link, and the recipient downloads it with no account or ads. Unlike WeTransfer, PicoShare sends one file per link, sends no e-mails for you and has no download password.
   - q: How do I sign in to PicoShare the first time?
     a: PicoShare has no user accounts. Open the app's address, click Log in and type the passphrase Cloudgate created for you, which you find on the app's variables page. Anyone with that passphrase has full control, so share it only with people you trust.
   - q: Can clients send files to me with PicoShare?
-    a: Yes, with guest links. You create a guest link, optionally limit the file size, the number of uploads and how long it works, and send it to your client, who uploads without signing in. The files appear in your file list.
-  - q: Is there a file size limit, and how long do files stay?
+    a: Yes, with PicoShare guest links. You create a guest link, optionally limit the file size, the number of uploads and how long it works, and send it to your client, who uploads without signing in. The files appear in your file list.
+  - q: Is there a PicoShare file size limit, and how long do files stay?
     a: No, PicoShare sets no file size limit; your server's free disk space is the limit. Each file stays for the time you choose, from one day to a year, until a date you pick, or forever, and expired files are deleted automatically.
   - q: Can I protect a PicoShare link with a password?
     a: No, PicoShare has no download passwords. Each link contains a random code that is hard to guess, so in practice only people you send it to can find the file, and you can set a link to expire or delete the file at any time.

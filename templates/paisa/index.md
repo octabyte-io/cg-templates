@@ -40,7 +40,7 @@ faq:
   - q: Do I need to know accounting to use Paisa?
     a: No, but it helps to learn the basics. Paisa records money moving between accounts, such as from Income:Salary to Assets:Checking, and its tutorial explains this in a few pages.
   - q: How do I sign in to Paisa the first time?
-    a: Sign in with the username you chose during setup (admin by default) and the password Cloudgate creates, which you find on the app's variables page. Then set your default currency on the Configuration page.
+    a: Sign in to Paisa with the username you chose during setup (admin by default) and the password Cloudgate creates, which you find on the app's variables page. Then set your default currency on the Configuration page.
   - q: Can I import my bank statements into Paisa?
     a: Yes, Paisa turns CSV, TXT, Excel and PDF statements into transactions using import templates you can edit and save. It includes ready-made templates for several banks and for a Mint export; PDF import is still experimental.
   - q: Does Paisa connect to my bank or have a phone app?

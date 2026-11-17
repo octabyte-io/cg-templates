@@ -38,7 +38,7 @@ faq:
   - q: Is Fleet free?
     a: Yes, Fleet's free edition is open source under the MIT licence, with no limit on devices or users, and you pay only for your server. Some features, such as installing apps, enforcing disk encryption and OS updates, lock and wipe, device groups and user roles, are in Fleet Premium, which needs a paid licence key.
   - q: Is Fleet a good alternative to Jamf Pro or Microsoft Intune?
-    a: Yes, if you mainly need to see every computer, its software and vulnerabilities, check devices against your rules, run scripts and push settings profiles. The free edition does not install apps, enforce disk encryption or OS updates, lock or wipe devices, or set up new devices automatically, which Jamf Pro and Intune do.
+    a: Yes, Fleet fits if you mainly need to see every computer, its software and vulnerabilities, check devices against your rules, run scripts and push settings profiles. The free edition does not install apps, enforce disk encryption or OS updates, lock or wipe devices, or set up new devices automatically, which Jamf Pro and Intune do.
   - q: Which devices can Fleet manage?
     a: Fleet supports Macs (macOS 15 and later), Windows 10 and 11 PCs and Windows Server, most Linux distributions including Ubuntu, Debian, Fedora and Red Hat, Chromebooks, iPhones and iPads (iOS 17 and later) and Android phones (Android 14 and later). On the free edition, Android phones join as personal devices with a work profile.
   - q: How do I sign in to Fleet the first time?

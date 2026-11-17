@@ -40,14 +40,14 @@ faq:
   - q: Is Usertour a good alternative to Appcues?
     a: Yes, for web apps. Usertour has product tours, checklists, hotspots, banners, surveys and a help center, like Appcues, without a monthly price per user. Appcues also covers native mobile apps and email, which Usertour does not.
   - q: Do I need a developer to use Usertour?
-    a: Only once. A developer adds a short code snippet to your web app and passes in who the signed-in user is; after that, anyone on your team builds tours and checklists in the visual builder.
-  - q: Can I import my tours from Appcues or Userpilot?
+    a: Only once. A developer adds the short Usertour code snippet to your web app and passes in who the signed-in user is; after that, anyone on your team builds tours and checklists in the visual builder.
+  - q: Can Usertour import my tours from Appcues or Userpilot?
     a: No. Usertour has no importer for other onboarding tools, so plan to rebuild your tours, which is often a good moment to shorten them.
   - q: Does Usertour work in mobile apps?
-    a: No, not in native iPhone or Android apps. It works in any web app, including in a phone's browser.
-  - q: Who is the admin?
+    a: No, Usertour does not work in native iPhone or Android apps. It works in any web app, including in a phone's browser.
+  - q: Who is the Usertour admin?
     a: The first person to open Usertour's web address creates the System Admin account, so do this right after setup. No email settings are needed for this. Inviting teammates by email and password resets need the optional email settings you can fill in during setup.
-  - q: Where is my users' data stored?
+  - q: Where does Usertour store my users' data?
     a: On your own server. The users, events and survey answers Usertour collects from your app stay in its database, unless you choose to send events on to another tool.
 screenshots:
   - src: screenshots/in-app-tour-illustration.webp

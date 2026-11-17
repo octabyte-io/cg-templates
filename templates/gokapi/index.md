@@ -37,8 +37,8 @@ faq:
     a: Yes, Gokapi is free and open source under the AGPL-3.0 licence. It has no paid edition or plan; the only cost is your server and the disk space your files use.
   - q: Is Gokapi a good alternative to WeTransfer?
     a: Yes, if you send files to clients by link and want them gone afterwards. Gokapi links expire after a set number of downloads or days and can have a password, and your team gets its own accounts. It sends no e-mails for you, and each file has its own link.
-  - q: Do the people I send files to need an account?
-    a: No, the people you send a link to just open it and download the file, typing the password if you set one. Only you and the colleagues you add need accounts to upload.
+  - q: Do the people I send files to need a Gokapi account?
+    a: No, the people you send a Gokapi link to just open it and download the file, typing the password if you set one. Only you and the colleagues you add need accounts to upload.
   - q: Can clients send files to me with Gokapi?
     a: Yes, Gokapi's file requests let clients upload files to you without an account. You create an upload link with a title, a note, a limit on files and size, and an expiry date, and send it to them. You then download them one by one or as a ZIP file.
   - q: How do I sign in to Gokapi the first time?

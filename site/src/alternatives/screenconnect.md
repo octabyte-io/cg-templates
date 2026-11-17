@@ -10,7 +10,9 @@ faq:
   - q: "How do I keep a self-hosted ScreenConnect replacement secure?"
     a: "Your MeshCentral server can control every enrolled machine, so keep it updated, require two-factor sign-in (app codes, security keys or Duo) or single sign-on for every technician, and give each one only the device groups they need."
   - q: "Can MeshCentral serve several clients, like an MSP?"
-    a: "Yes. Its multi-tenancy keeps separate domains, each with its own admins, users and devices, on one server."
+    a: "Yes. MeshCentral's multi-tenancy keeps separate domains, each with its own admins, users and devices, on one server."
+  - q: "Does ScreenConnect have a self-hosted edition?"
+    a: "Yes. ConnectWise ScreenConnect is sold in the cloud or self-hosted, and both are licensed per technician. MeshCentral is also self-hosted, but free for any number of technicians and machines, with community support instead of a vendor contract."
 ---
 
 ConnectWise ScreenConnect, formerly ConnectWise Control, is a remote support tool for IT teams and managed service providers, with a web console, unattended access agents, support sessions and recordings, available in the cloud or self-hosted.

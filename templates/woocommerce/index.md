@@ -43,12 +43,12 @@ faq:
     a: Yes, if you want to own your store and avoid a monthly plan and per-sale platform fees. In return you look after updates, backups and security yourself, and some features that come with a Shopify plan are paid extensions in WooCommerce.
   - q: Can I move my Shopify store to WooCommerce?
     a: Partly. WooCommerce imports products from a spreadsheet (CSV) out of the box. Moving customers, orders and pages from Shopify needs an extension from the WooCommerce Marketplace, such as a paid Shopify migration tool.
-  - q: How do I set up my store the first time?
+  - q: How do I set up my WooCommerce store the first time?
     a: Open your store's web address straight after Cloudgate sets it up and run WordPress's short installer, which creates your admin account; whoever does it first becomes the admin. WooCommerce is already installed and switches on by itself, then its setup wizard asks for your store address and what you sell.
-  - q: Will my store send order emails to customers?
-    a: Yes, once you connect an email sending service. Order confirmations and other store emails need a sending service such as your email provider's SMTP settings, added through an email plugin.
+  - q: Will my WooCommerce store send order emails to customers?
+    a: Yes, once you connect an email sending service. WooCommerce order confirmations and other store emails need a sending service such as your email provider's SMTP settings, added through an email plugin.
   - q: What server size do I need for WooCommerce?
-    a: A server with 2 GB of memory, which is what Cloudgate asks for. A store needs more room than a simple website, and you can move to a bigger server if your shop gets busy or you add many plugins.
+    a: WooCommerce needs a server with 2 GB of memory, which is what Cloudgate asks for. A store needs more room than a simple website, and you can move to a bigger server if your shop gets busy or you add many plugins.
 screenshots:
   - src: screenshots/shop.webp
     alt: "The storefront Shop page of a pottery shop called Harbour Lane Pottery, with Cart, Checkout and My account links, a grid of products such as a dinner plate set, a serving bowl and a bud vase with prices in pounds and Add to cart buttons, and a Sale badge"

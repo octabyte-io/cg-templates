@@ -1,5 +1,5 @@
 ---
-tagline: Upload files and screenshots, and share them by link from your server.
+tagline: Upload files and screenshots and share them by link from your server.
 category: files-photos
 alternativeTo: [zight, droplr]
 ease: easy
@@ -33,13 +33,13 @@ faq:
   - q: Is Chibisafe free?
     a: Yes. Chibisafe is free and open source under the MIT licence, with no paid plan or locked features. You pay only for your server and its storage.
   - q: Is Chibisafe a good alternative to Zight or Droplr?
-    a: Yes, if you mainly share screenshots and files by link. Chibisafe gives you share links, albums, a link shortener and ShareX uploads on your own server with no per-user fee, but it has no capture or screen-recording app of its own.
+    a: Yes, Chibisafe is a good Zight or Droplr alternative if you mainly share screenshots and files by link. Chibisafe gives you share links, albums, a link shortener and ShareX uploads on your own server with no per-user fee, but it has no capture or screen-recording app of its own.
   - q: How do I sign in to Chibisafe the first time?
     a: Chibisafe creates one account called admin on its first start. Sign in as admin with the password Cloudgate shows in the app's settings, then change it in Chibisafe.
   - q: Does Chibisafe work with ShareX?
     a: Yes. Chibisafe supports ShareX out of the box, so screenshots and screen recordings from ShareX on Windows upload straight to your server and come back as a link. The dashboard links to the ShareX setup, an iPhone share shortcut and a browser extension.
   - q: Can other people upload to my Chibisafe?
-    a: Yes, if you allow it. You can keep uploads to yourself, let anyone upload, or let people sign up with an invite, and each account can have its own storage quota.
+    a: Yes, if you allow it. In Chibisafe you can keep uploads to yourself, let anyone upload, or let people sign up with an invite, and each account can have its own storage quota.
   - q: What server size do I need for Chibisafe?
     a: A small server is enough, because Chibisafe keeps its data in a built-in database and needs no separate database server. Plan the disk for the files you expect to store, or connect S3-compatible storage.
 screenshots:

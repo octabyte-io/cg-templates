@@ -36,12 +36,12 @@ faq:
   - q: Is CKAN free?
     a: Yes. CKAN is free, open-source software under the AGPL-3.0 licence, with no paid edition. You pay only for your server; some companies sell CKAN hosting and support if you want help.
   - q: Is CKAN a good alternative to Opendatasoft or Socrata?
-    a: Yes, if you want to own your data portal. CKAN covers publishing, search, previews and a data API, and it runs many government portals, but out of the box it has fewer charts and visual tools than Opendatasoft or Socrata, and you look after the server.
+    a: Yes, if you want to own your data portal. CKAN covers publishing, search, previews and a data API, and it runs many government portals, but out of the box it has fewer charts and visual tools than Opendatasoft (now Huwise) or Socrata, and you look after the server.
   - q: Who uses CKAN?
     a: Governments, cities, universities and companies use CKAN for their data portals. The CKAN project lists the Government of Canada, the Singapore Government and the Australian Government among them.
   - q: How do I sign in to CKAN the first time?
-    a: Go to the login page and sign in with the admin username you chose during setup and the password Cloudgate shows for the app. This account is a sysadmin, so it can create organisations and add other users.
-  - q: Can people use the data without visiting the website?
+    a: Go to the CKAN login page and sign in with the admin username you chose during setup and the password Cloudgate shows for the app. This account is a sysadmin, so it can create organisations and add other users.
+  - q: Can people use CKAN data without visiting the website?
     a: Yes. Every dataset and its details can be read through CKAN's API, so developers and other tools can fetch data directly, and tables stored in the DataStore can be searched and filtered row by row.
   - q: What server size do I need for CKAN?
     a: A medium server with 2 GB of memory, so Cloudgate asks for that size. CKAN runs with a search engine and a database alongside it, so a 1 GB server is too small.

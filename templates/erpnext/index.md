@@ -42,7 +42,7 @@ faq:
   - q: Is ERPNext a good alternative to SAP Business One?
     a: Yes, for a similar range of work. Like SAP Business One, ERPNext covers finance, sales, purchasing, stock and production, but with no licence fee. SAP Business One has many more implementation partners to help you set it up.
   - q: How do I sign in to ERPNext the first time?
-    a: Sign in with the username Administrator and the password Cloudgate generated, shown on the app's variables page in Cloudgate. A setup wizard then asks for your language, country, time zone, currency, company name and financial year, and creates a chart of accounts for your country.
+    a: Sign in to ERPNext with the username Administrator and the password Cloudgate generated, shown on the app's variables page in Cloudgate. A setup wizard then asks for your language, country, time zone, currency, company name and financial year, and creates a chart of accounts for your country.
   - q: Can I move my data from QuickBooks to ERPNext?
     a: Partly. ERPNext no longer has a QuickBooks importer, so you export your accounts, customers, suppliers, items and open invoices to spreadsheets and bring them in with ERPNext's import tools for data, the chart of accounts and opening balances.
   - q: Does ERPNext include HR and payroll?

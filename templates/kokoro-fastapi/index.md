@@ -41,8 +41,8 @@ faq:
     a: Yes, for most uses. Kokoro-FastAPI answers the same speech requests as OpenAI and maps OpenAI's voice names, such as alloy and nova, to its own voices, so existing apps work by changing the address and key. It ignores OpenAI's style instructions.
   - q: Can I move my voices from ElevenLabs to Kokoro-FastAPI?
     a: No. Voices, and cloned voices in particular, cannot be exported from ElevenLabs. Pick the closest of Kokoro's 54 voices or mix two into a new one, and point your scripts and apps at Kokoro-FastAPI's OpenAI-compatible speech API.
-  - q: Does Kokoro TTS need a graphics card?
-    a: No. Cloudgate installs the CPU version of Kokoro TTS, which runs on an ordinary server with no graphics card. It is slower than a graphics card or a cloud service, so a long text takes a while to generate.
+  - q: Does Kokoro-FastAPI need a graphics card?
+    a: No. Cloudgate installs the CPU version of Kokoro-FastAPI, which runs on an ordinary server with no graphics card. It is slower than a graphics card or a cloud service, so a long text takes a while to generate.
   - q: Which languages does Kokoro-FastAPI speak?
     a: Kokoro-FastAPI speaks eight languages with 54 voices in all. American and British English have the most voices and the best quality; Spanish, French, Hindi, Italian, Japanese, Brazilian Portuguese and Mandarin Chinese have fewer, and French has one.
   - q: How do I sign in to Kokoro-FastAPI the first time?

@@ -44,7 +44,7 @@ faq:
   - q: How do I sign in to BentoPDF the first time?
     a: You don't need to. BentoPDF has no accounts and no admin, so anyone with its web address opens it and picks a tool. Nothing is stored on the server, so there are no documents there to protect.
   - q: What server size do I need for BentoPDF?
-    a: The smallest server is enough, because the server only delivers the app and the PDF work happens on each person's computer. For large files or Office conversion, a recent computer with plenty of memory makes the biggest difference.
+    a: The smallest server is enough for BentoPDF, because the server only delivers the app and the PDF work happens on each person's computer. For large files or Office conversion, a recent computer with plenty of memory makes the biggest difference.
 screenshots:
   - src: screenshots/tools.webp
     alt: "The BentoPDF home page in dark mode: a PDF Tools heading, a search box for tools, and a Popular Tools grid with Edit PDF Text, PDF Workflow Builder, PDF Multi Tool, Merge PDF, Split PDF, Compress PDF, PDF Editor, JPG to PDF, Sign PDF, Crop PDF, Extract Pages, Duplicate & Organize and Delete Pages"

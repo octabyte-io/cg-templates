@@ -38,7 +38,7 @@ faq:
   - q: Is Pixelfed free?
     a: Yes. Pixelfed is free, open-source software under the AGPL licence, and there is no paid edition, so every feature is in the version you install. You pay only for your server, your domain and an email service.
   - q: Is Pixelfed a good alternative to Instagram?
-    a: Yes, if you want an Instagram-style photo feed for your own group with no ads and no algorithm. It has profiles, a time-ordered feed, likes, comments, collections and direct messages. It has no Reels or shopping, and its audience is your members plus people who follow them from other servers.
+    a: Yes, if you want an Instagram-style photo feed for your own group with no ads and no algorithm. Pixelfed has profiles, a time-ordered feed, likes, comments, collections and direct messages. It has no Reels or shopping, and its audience is your members plus people who follow them from other servers.
   - q: Can I move my photos from Instagram to Pixelfed?
     a: Yes. Pixelfed has a built-in Instagram import that brings over your photos with their captions and hashtags, up to 1,000 posts per account by default. Download your information from Instagram's Accounts Center in JSON format, then upload the file in Pixelfed's import settings. The admin switches the import on first.
   - q: Is there a Pixelfed app for iPhone and Android?
@@ -46,9 +46,9 @@ faq:
   - q: Can people on Mastodon follow my Pixelfed accounts?
     a: Yes. Pixelfed uses the same open standard as Mastodon (ActivityPub), so people on Mastodon and on other Pixelfed servers can follow your members' public posts, and your members can follow them back.
   - q: Can I keep my Pixelfed server private to my group?
-    a: Yes. Sign-ups start closed, so only the people you add or invite can join, and members can make their own accounts private. The server is still connected to the fediverse, so public posts can be seen and followed from other servers.
+    a: Yes. Pixelfed sign-ups start closed, so only the people you add or invite can join, and members can make their own accounts private. The server is still connected to the fediverse, so public posts can be seen and followed from other servers.
   - q: How do I sign in to Pixelfed the first time?
-    a: Sign in with the admin email you chose at setup and the password Cloudgate shows on the app's variables page, then change that password. From the admin dashboard you can add members, send invites or open sign-ups.
+    a: Sign in to Pixelfed with the admin email you chose at setup and the password Cloudgate shows on the app's variables page, then change that password. From the admin dashboard you can add members, send invites or open sign-ups.
 screenshots:
   - src: screenshots/home-feed.webp
     alt: "Pixelfed's home feed for a member of a fictional sketch club: a two-picture post of landscape illustrations with the caption 'Harbour sunset and an autumn valley for this month's theme', 3 likes and two comments from other members, a comment box, the menu with Create New Post, Home, Local and Global feeds, Discover, Direct Messages and Notifications, and a list of recent likes, comments and new followers"

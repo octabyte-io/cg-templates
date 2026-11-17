@@ -42,10 +42,10 @@ faq:
     a: Pick Ghost in Cloudgate's template list, enter your email sending details and press Set up. Cloudgate installs Ghost and its database on your server and gives it a secure web address; you then open that address followed by /ghost to create the owner account.
   - q: What do I need to send newsletters?
     a: A Mailgun account, connected in Ghost's settings. Self-hosted Ghost uses Mailgun for bulk newsletters, and the email service you enter at setup for sign-in links, invites and password resets.
-  - q: Is my data private?
-    a: Yes. Your posts, member list and analytics are stored on your own server, not on a publishing platform. Only the services you connect, such as Stripe for payments and Mailgun for newsletters, receive the data they need to do their job.
-  - q: What server size do I need?
-    a: A small server (1 GB of memory) is enough to start. Choose a larger one if your site gets a lot of traffic or you send newsletters to tens of thousands of readers.
+  - q: Is my data private with Ghost?
+    a: Yes. Self-hosted Ghost stores your posts, member list and analytics on your own server, not on a publishing platform. Only the services you connect, such as Stripe for payments and Mailgun for newsletters, receive the data they need to do their job.
+  - q: What server size do I need for Ghost?
+    a: A small server (1 GB of memory) is enough to start Ghost. Choose a larger one if your site gets a lot of traffic or you send newsletters to tens of thousands of readers.
 screenshots:
   - src: screenshots/posts.webp
     alt: "The Ghost admin posts list for a coffee blog, showing scheduled, draft and published posts with their feature images"

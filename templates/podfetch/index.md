@@ -37,14 +37,14 @@ faq:
     a: Yes. PodFetch is free, open-source software under the Apache-2.0 licence, with no paid tier or locked features. You pay only for the server it runs on and the disk your episodes use.
   - q: Is PodFetch a good alternative to Pocket Casts?
     a: Yes, if you want your podcasts and listening progress on your own server instead of a Pocket Casts account, and every episode kept as a file you own. PodFetch is web-first, though, with no iPhone app of its own, so it suits people who listen in the browser, on Android or in AntennaPod.
-  - q: Can I move my podcasts from Pocket Casts or Overcast?
+  - q: Can I move my podcasts from Pocket Casts or Overcast to PodFetch?
     a: Yes, your subscriptions. Export an OPML file from your old podcast app and upload it in PodFetch's Add Podcast window. Listening history and play positions do not come across.
   - q: Does PodFetch have a phone app?
     a: Yes, for Android, installed from the project's GitHub releases with Obtainium, and it can download episodes for offline listening. There is no iPhone app; on an iPhone you add the PodFetch web app to your home screen, which gives lock-screen playback controls.
   - q: Can I keep using AntennaPod with PodFetch?
     a: Yes. PodFetch has a gPodder sync server, switched on in this template, so AntennaPod signs in with your PodFetch web address, username and password and keeps your subscriptions and play position in step.
   - q: How do I sign in to PodFetch the first time?
-    a: Sign in with the username admin and the password Cloudgate creates, shown on the app's variables page in Cloudgate. There is no open sign-up page; you add other people from User administration with an invite link that lasts a week.
+    a: Sign in to PodFetch with the username admin and the password Cloudgate creates, shown on the app's variables page in Cloudgate. There is no open sign-up page; you add other people from User administration with an invite link that lasts a week.
   - q: What server size do I need for PodFetch?
     a: A small server is enough, because PodFetch is one light app with a built-in database. Plan the disk for the episodes you keep; an optional setting converts downloads to the smaller Opus format to save space.
 screenshots:

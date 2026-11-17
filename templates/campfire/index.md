@@ -48,7 +48,7 @@ faq:
   - q: Can I import my Slack or Microsoft Teams history into Campfire?
     a: No, Campfire cannot import Slack or Teams data. Your team starts with a clean slate, so keep your old workspace until you no longer need its history.
   - q: What server size does Campfire need?
-    a: A small server is enough for most small businesses. 37signals says 2 GB of memory and one processor handle about 250 people chatting at the same time, with everything in one app.
+    a: A small server runs Campfire for most small businesses. 37signals says 2 GB of memory and one processor handle about 250 people chatting at the same time, with everything in one app.
 screenshots:
   - src: screenshots/rooms.webp
     alt: "The Campfire All Talk room of a small bakery team, with messages about the Saturday market stall, birthday cake orders and baking more cinnamon buns, emoji reactions on one message, and on the right a row of colleagues to message directly and the rooms All Talk, Deliveries, Front of house, Kitchen and Managers"

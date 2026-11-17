@@ -41,8 +41,8 @@ faq:
     a: Partly. Export your translation files from the old platform, put them in your repository or upload them, and Weblate detects the format and languages; translation memory and glossaries can be imported too. Workflows, permissions, comments and history do not move, so set those up again in Weblate.
   - q: How do I sign in to Weblate the first time?
     a: Sign in at your Weblate address with the username admin and the password Cloudgate shows on the app's variables page. To change that password later, change it on the variables page, because Weblate resets the admin account to it whenever the app restarts. Sign-ups are closed by default, so you add translators yourself unless you turn open sign-up on.
-  - q: Do translators need to know Git or code?
-    a: No, translators work entirely in the web browser, typing translations next to the original text. Only the person who sets up a project connects the repository or uploads the files.
+  - q: Do Weblate translators need to know Git or code?
+    a: No, Weblate translators work entirely in the web browser, typing translations next to the original text. Only the person who sets up a project connects the repository or uploads the files.
   - q: Does Weblate use machine translation or AI?
     a: Only if you want it to. Weblate works fully with human translators, and you can add suggestions from services such as DeepL, Google Translate, Microsoft Translator, LibreTranslate or OpenAI with your own account, and keep their results as suggestions for a person to check.
   - q: What server size do I need for Weblate?

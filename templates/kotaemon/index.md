@@ -42,7 +42,7 @@ faq:
   - q: How do I sign in to Kotaemon the first time?
     a: Open the app's web address and sign in with the username admin and the password Cloudgate generated, shown on the app's variables page. Kotaemon's usual admin / admin login does not work on a Cloudgate install.
   - q: Can several people use one Kotaemon?
-    a: Yes, the admin creates an account for each person under Resources > Users. Each person has private files and conversations, and can also use public file collections and share a conversation with the others.
+    a: Yes, the Kotaemon admin creates an account for each person under Resources > Users. Each person has private files and conversations, and can also use public file collections and share a conversation with the others.
   - q: Which files can Kotaemon read?
     a: This edition reads PDF, HTML and MHTML web pages, Excel (.xlsx) and text files. Word and other Office files need Kotaemon's larger full edition.
   - q: Can I import my ChatPDF or NotebookLM chats into Kotaemon?

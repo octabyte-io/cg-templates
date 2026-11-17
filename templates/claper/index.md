@@ -40,11 +40,11 @@ faq:
   - q: Is Claper a good alternative to Slido or Mentimeter?
     a: Yes, if you want live Q&A, polls, quizzes, word clouds and reactions on slides you already have. Slido and Mentimeter offer more question types, templates and links to meeting tools, while Claper keeps your audience's answers on your own server with no fee per event.
   - q: Do attendees need an app or an account to join Claper?
-    a: No, attendees join from their phone's browser by scanning the QR code or typing the event code. They can post by name or anonymously.
+    a: No, Claper attendees join from their phone's browser by scanning the QR code or typing the event code. They can post by name or anonymously.
   - q: Can I use my PowerPoint slides with Claper?
     a: Yes, Claper takes PDF, PPT and PPTX files and shows your slides as they are. You add polls, quizzes and forms to individual slides in the event manager.
   - q: How do I sign in to Claper the first time?
-    a: You sign in with the admin email you gave Cloudgate and the password it generated, which you find on the app's variables page in Cloudgate. New presenters are added by the admin, so strangers cannot sign up.
+    a: You sign in to Claper with the admin email you gave Cloudgate and the password it generated, which you find on the app's variables page in Cloudgate. New presenters are added by the admin, so strangers cannot sign up.
   - q: Does Claper work with Moodle?
     a: Yes, Claper connects to Moodle through LTI 1.3, so students open the event from their course and quiz scores go to the gradebook. The link is in beta and Moodle is the only learning platform the project has tested.
   - q: What server size do I need for Claper?

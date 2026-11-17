@@ -39,15 +39,15 @@ faq:
     a: Yes. WulfVault is free, open-source software under the AGPL-3.0 licence, with no paid edition or locked features. You pay only for your server and its disk.
   - q: Is WulfVault a good alternative to WeTransfer?
     a: Yes, especially if you need to know who downloaded your files. Like WeTransfer Pro, you upload a file, add a password and an expiry, and send a link; WulfVault also keeps a download history per file, with teams, storage limits and an audit log. It has no phone app and can't import old transfers.
-  - q: Can I see who downloaded my file?
+  - q: Can I see who downloaded my file in WulfVault?
     a: Yes. In WulfVault each file has a download history with the date and time of every download. If you choose sign-in downloads, recipients make a free download account and their email is recorded too; recording IP addresses is optional and off by default.
-  - q: How big can my files be?
+  - q: How big can my files be in WulfVault?
     a: WulfVault accepts files of up to 5,000 MB each in this setup, and the admin can raise or lower that in the settings. Large uploads go in small pieces and pick up again after a dropped connection, so a multi-gigabyte video can finish overnight.
-  - q: Can clients send files to me?
+  - q: Can clients send files to me through WulfVault?
     a: Yes. In WulfVault you create an upload request link and send it to a client or supplier; the files they upload appear in your account.
-  - q: How do I sign in the first time?
-    a: Sign in with the admin email you entered when installing and the password Cloudgate created, which is on the app's variables page. Change the password under Settings, then add colleagues from the admin area.
-  - q: Are my files private and encrypted?
+  - q: How do I sign in to WulfVault the first time?
+    a: Sign in to WulfVault with the admin email you entered when installing and the password Cloudgate created, which is on the app's variables page. Change the password under Settings, then add colleagues from the admin area.
+  - q: Are my files private and encrypted in WulfVault?
     a: Private, yes, but not encrypted on disk. With WulfVault your files stay on your own server and download links are long and hard to guess, but files are stored unencrypted; its makers recommend turning on disk encryption on the server if you need encryption at rest.
 screenshots:
   - src: screenshots/my-files-upload.webp

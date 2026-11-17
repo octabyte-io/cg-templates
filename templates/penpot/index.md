@@ -42,9 +42,9 @@ faq:
   - q: How do I sign in to Penpot the first time?
     a: There is no default login; you create the first account yourself. Open Penpot's web address, choose to create an account and sign up with your name, email and a password, then make a team. Anyone who can reach the address can sign up, so set up your team's accounts first.
   - q: Is Penpot a good replacement for Adobe XD?
-    a: Yes, it is a common choice now that Adobe XD is in maintenance mode and gets no new features. Penpot cannot open XD files directly, so you export screens or assets from XD as SVG or PNG and bring them in.
+    a: Yes, Penpot is a common choice now that Adobe XD is in maintenance mode and gets no new features. Penpot cannot open XD files directly, so you export screens or assets from XD as SVG or PNG and bring them in.
   - q: What server size do I need for Penpot?
-    a: Cloudgate asks for a large server with about 4 GB of memory, which suits a small team. Much of the editing happens in the browser, so each designer also needs a reasonably powerful computer and a recent Chrome.
+    a: Penpot needs a large server with about 4 GB of memory in Cloudgate, which suits a small team. Much of the editing happens in the browser, so each designer also needs a fairly fast computer and a recent Chrome.
   - q: Does Penpot have a desktop or phone app?
     a: No, Penpot has no official desktop or phone apps. It runs in the web browser, and Penpot recommends the latest Chrome.
 screenshots:

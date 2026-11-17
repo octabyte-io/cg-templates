@@ -34,14 +34,14 @@ faq:
   - q: Is Keeper.sh free?
     a: Yes. Keeper.sh is free, open-source software under the AGPL-3.0 licence. Its makers also sell a hosted version, but a self-hosted Keeper.sh includes every paid feature at no cost. You pay only for your server.
   - q: Is Keeper.sh a good alternative to OneCal or CalendarBridge?
-    a: Yes, for keeping busy times in step across calendars. Keeper.sh copies events between Google, Outlook, iCloud, Fastmail and CalDAV calendars, with privacy controls and event filters. It does not offer booking pages, and connecting Google or Outlook takes some setup.
+    a: Yes, Keeper.sh does the main job of OneCal or CalendarBridge, keeping busy times in step across calendars. Keeper.sh copies events between Google, Outlook, iCloud, Fastmail and CalDAV calendars, with privacy controls and event filters. It does not offer booking pages, and connecting Google or Outlook takes some setup.
   - q: Which calendars can Keeper.sh sync?
-    a: "Google Calendar, Outlook and Microsoft 365, iCloud, Fastmail and any CalDAV server, such as Nextcloud or Radicale, can each be a source or a destination. Calendar links (iCal or ICS) can be read but not written to."
-  - q: Will colleagues see my personal appointments?
-    a: No, not by default. A copied event shows only the name of the calendar it came from, so a work calendar shows you as busy without the title, description or place of your personal event. You can choose to pass those on for each calendar.
-  - q: How do I connect Google Calendar or Outlook?
+    a: "Keeper.sh syncs Google Calendar, Outlook and Microsoft 365, iCloud, Fastmail and any CalDAV server, such as Nextcloud or Radicale, can each be a source or a destination. Calendar links (iCal or ICS) can be read but not written to."
+  - q: Will colleagues see my personal appointments through Keeper.sh?
+    a: No, not by default. An event Keeper.sh copies shows only the name of the calendar it came from, so a work calendar shows you as busy without the title, description or place of your personal event. You can choose to pass those on for each calendar.
+  - q: How do I connect Google Calendar or Outlook to Keeper.sh?
     a: You register a free sign-in app with Google or Microsoft, which the Keeper.sh README walks through, and give Keeper.sh its ID and secret as the GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, or MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET, settings. Cloudgate does not ask for these during setup and leaves them empty. iCloud, Fastmail and CalDAV calendars don't need this and connect with an app password.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to Keeper.sh the first time?
     a: Open Keeper.sh's web address and create an account with a username and password. Keeper.sh has no separate admin; each account connects and manages its own calendars, and anyone who can open the address can create one. There is no email check and no password reset on a self-hosted Keeper.sh, so keep your password somewhere safe.
   - q: Can AI assistants use my calendar through Keeper.sh?
     a: Yes. Keeper.sh offers an API and an MCP server, so an AI assistant such as Claude can read your events and manage your calendars across every account you have connected.

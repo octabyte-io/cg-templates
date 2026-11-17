@@ -41,7 +41,7 @@ export const CATEGORIES: Category[] = [
   { id: 'security', name: 'Security & sign-in', lede: 'Self-hosted single sign-on, secure password sharing and whistleblowing tools, so your logins and sensitive reports stay on your own server.' },
   { id: 'health', name: 'Health & clinics', lede: 'Open-source clinic records, medical imaging and health tracking, run on a server you control so patient and health data stay with you.' },
   { id: 'research', name: 'Research & archives', lede: 'Open-source lab notebooks, library catalogues, journal publishing and data collection for labs, libraries, museums and field teams, on your own server.' },
-  { id: 'operations', name: 'Operations', lede: 'Open-source software for maintenance, farms, workshops and production planning, with work orders, stock and records on your own server and no fee per user.' },
+  { id: 'operations', name: 'Operations', lede: 'Open-source software for maintenance, farms, workshops, production and digital signage, with records on your own server and no fee per user or screen.' },
   { id: 'email-calendars', name: 'Email & calendars', lede: 'Self-hosted webmail, groupware and calendar and contacts servers, so your mail, appointments and address books sync to every device from a server you control.' },
   { id: 'monitoring', name: 'Monitoring', lede: 'Self-hosted monitoring that alerts you when a website goes down or a web page, price or stock level changes.' },
   { id: 'developer-tools', name: 'Developer tools', lede: 'Self-hosted Git hosting and developer tools, so your code, reviews and builds stay on your server.' },

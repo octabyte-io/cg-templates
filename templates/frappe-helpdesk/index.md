@@ -1,5 +1,5 @@
 ---
-tagline: A self-hosted help desk for email tickets, SLAs and a customer portal.
+tagline: Self-hosted help desk for email tickets, SLAs and a customer portal.
 category: help-desk
 alternativeTo: [zendesk, freshdesk, jira-service-management, help-scout]
 ease: some-setup
@@ -42,7 +42,7 @@ faq:
   - q: Can I import my tickets from Zendesk or Freshdesk?
     a: No, Frappe Helpdesk has no importer for Zendesk or Freshdesk. You can load customers, contacts and tickets from CSV or Excel files with Frappe's general data import, or keep the old system for history and start fresh.
   - q: How do I sign in to Frappe Helpdesk the first time?
-    a: Sign in as Administrator with the password Cloudgate generated, shown on the app's variables page in Cloudgate. Then open the help desk, where a short setup asks for your help desk's name and which tool you used before.
+    a: Sign in to Frappe Helpdesk as Administrator with the password Cloudgate generated, shown on the app's variables page in Cloudgate. Then open the help desk, where a short setup asks for your help desk's name and which tool you used before.
   - q: Should I choose Frappe Helpdesk or Zammad?
     a: Choose Frappe Helpdesk for an email ticket system with SLAs, a portal and a knowledge base that runs on a medium server, especially if you use ERPNext. Choose Zammad if you need chat, phone, WhatsApp or social media tickets, or a built-in import from Zendesk or Freshdesk.
   - q: Does Frappe Helpdesk work with ERPNext?

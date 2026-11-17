@@ -38,7 +38,7 @@ faq:
   - q: Does DokuWiki need a database?
     a: No, DokuWiki needs no database. Every page is a plain text file and old versions and uploads are files too, so backing up the wiki means copying one folder.
   - q: How do I sign in to DokuWiki the first time?
-    a: There is no default password; you create the admin account yourself. Right after setup, open your wiki's address with /install.php on the end, choose the wiki's name, your admin login and password, and who may read and edit. Do it straight away, because until the installer has run, anyone who opens that address could create the admin.
+    a: DokuWiki has no default password; you create the admin account yourself. Right after setup, open your wiki's address with /install.php on the end, choose the wiki's name, your admin login and password, and who may read and edit. Do it straight away, because until the installer has run, anyone who opens that address could create the admin.
   - q: Is DokuWiki a good alternative to Confluence?
     a: Yes, for teams that want a light, simple wiki for manuals, how-tos and runbooks, with page history and access rights. DokuWiki has no live co-editing, its default editor uses wiki syntax rather than a word-processor view, and it looks plainer than Confluence.
   - q: Does DokuWiki support Markdown?

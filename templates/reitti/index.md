@@ -43,7 +43,7 @@ faq:
   - q: How do I sign in to Reitti the first time?
     a: The first person to open Reitti's web address chooses the admin password, so open it right after setup. The admin can then add accounts for family members.
   - q: Is my location data private with Reitti?
-    a: Yes. Your location history is stored on your own server and is shared only with the people and links you choose. Turning coordinates into place names uses an online address service by default, which you can replace with your own.
+    a: Yes. Reitti stores your location history on your own server and is shared only with the people and links you choose. Turning coordinates into place names uses an online address service by default, which you can replace with your own.
   - q: What server size do I need for Reitti?
     a: A medium server, so Cloudgate asks for that size. Reitti and its map database need memory, especially while importing several years of history.
 screenshots:

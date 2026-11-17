@@ -56,4 +56,4 @@ faq:
 
 Toggl Track is a cloud time tracker known for its simple one-click timer. Freelancers and teams track time across browser, desktop and phone apps, and see reports by client and project.
 
-People look for an alternative because the free plan stops at 5 users and paid plans charge per user each month, with billable rates and fuller reporting on higher tiers. Timesheets also live on Toggl's servers. Self-hosted trackers such as solidtime and Kimai offer timers and reports for any number of users, with no per-user fee; solidtime is closest to Toggl's look and imports its data, and Kimai includes invoicing free.
+People look for an alternative because the free plan stops at 3 users and paid plans charge per user each month, with billable rates and fuller reporting on higher tiers. Timesheets also live on Toggl's servers. Self-hosted trackers such as solidtime and Kimai offer timers and reports for any number of users, with no per-user fee; solidtime is closest to Toggl's look and imports its data, and Kimai includes invoicing free.

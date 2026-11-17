@@ -33,7 +33,7 @@ faq:
   - q: Is Nextcloud free?
     a: Yes. Nextcloud is free, open-source software, and you pay only for hosting. Nextcloud GmbH sells an optional Enterprise subscription with support, which small teams usually do not need.
   - q: Is Nextcloud a good alternative to Google Drive or Dropbox?
-    a: Yes, for teams that want their files on their own server. It syncs and shares files much like Google Drive or Dropbox, and adds calendars, contacts and an app store; the trade-off is that you look after the server and its disk.
+    a: Yes. Nextcloud is a good alternative to Google Drive or Dropbox for teams that want their files on their own server. Nextcloud syncs and shares files much like Google Drive or Dropbox, and adds calendars, contacts and an app store; the trade-off is that you look after the server and its disk.
   - q: How do I self-host Nextcloud?
     a: The easiest way is to set up this template on Cloudgate. Cloudgate installs Nextcloud with its database, cache and background jobs on your server and gives it a secure web address; you then open the address and create the admin account.
   - q: Can I move my files from Google Drive or Dropbox?
@@ -41,7 +41,7 @@ faq:
   - q: Is my data private with Nextcloud?
     a: Yes. Your files live on your own server, not with a cloud provider. For extra protection Nextcloud can also encrypt files on the server, and offers end-to-end encryption for chosen folders.
   - q: What server size do I need for Nextcloud?
-    a: Cloudgate asks for a server with at least 2 GB of memory. Choose the disk size by how many files your team stores, with room to grow.
+    a: Cloudgate asks for a Nextcloud server with at least 2 GB of memory. Choose the disk size by how many files your team stores, with room to grow.
   - q: Who is the admin?
     a: The first person to open Nextcloud's web address creates the admin account, so do this right after setup. The admin then adds everyone else.
 screenshots:

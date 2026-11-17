@@ -8,7 +8,11 @@ moving: |
 cost: "SerpBear is free and open source under the MIT licence, with no paid edition. Each rank check goes through a scraping service you choose, and most charge per request after a small free allowance, so that cost depends on how many keywords you check and how often. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 faq:
   - q: "Does SerpBear track SERP features like AccuRanker?"
-    a: "No. SerpBear records where your page ranks in Google's results for each keyword, on desktop or mobile, with no SERP-feature or share-of-voice tracking."
+    a: "No. SerpBear records where your page ranks in Google's results for each keyword, on desktop or mobile, with no SERP-feature or share-of-voice tracking. AccuRanker tracks both, along with on-demand ranking refreshes."
+  - q: "Can I import my AccuRanker keywords into SerpBear?"
+    a: "Not directly, but it is quick. SerpBear has no AccuRanker importer, so export your tracked keywords from AccuRanker as a list and paste them into SerpBear one per line, choosing desktop or mobile and the country for each batch. Your AccuRanker ranking history stays behind, so export it first if you want to keep it."
+  - q: "What does AccuRanker do that SerpBear doesn't?"
+    a: "AccuRanker has on-demand ranking refreshes, SERP-feature tracking, share-of-voice reports and team accounts. SerpBear is simpler: it tracks Google rankings only, on desktop or mobile, with one login, and each check goes through a scraping service you connect."
 ---
 
 AccuRanker is a dedicated rank tracker for SEO teams and agencies, known for fast, on-demand ranking updates, SERP-feature tracking and share-of-voice reports, priced by the number of keywords you track.

@@ -37,16 +37,16 @@ faq:
     a: Yes, Backdrop CMS is free and open source under the GNU GPL (version 2 or later), with no paid edition or licence fee. Its add-on modules, themes and layouts are free too, so self-hosting Backdrop costs only your server.
   - q: How is Backdrop CMS related to Drupal?
     a: Backdrop CMS is a fork of Drupal 7, kept up to date by its own community after Drupal 8 took a different direction. It feels familiar to anyone who used Drupal 7 and builds in many popular Drupal 7 add-ons such as Views. It is not modern Drupal (10 or 11), and modules made for modern Drupal do not run on it.
-  - q: Can I upgrade my Drupal 7 site to Backdrop?
-    a: Yes, Backdrop has a built-in upgrade path from Drupal 7, which reached end of life in January 2025. Your Drupal 7 database and files are copied into Backdrop and its update script converts them, keeping your content and user accounts. Add-on modules need Backdrop versions and layouts need checking, so it is usually a job for a developer, but far smaller than a rebuild.
-  - q: Should I choose Backdrop or WordPress?
+  - q: Can I upgrade my Drupal 7 site to Backdrop CMS?
+    a: Yes, Backdrop CMS has a built-in upgrade path from Drupal 7, which reached end of life in January 2025. Your Drupal 7 database and files are copied into Backdrop and its update script converts them, keeping your content and user accounts. Add-on modules need Backdrop versions and layouts need checking, so it is usually a job for a developer, but far smaller than a rebuild.
+  - q: Should I choose Backdrop CMS or WordPress?
     a: Choose Backdrop CMS if you are coming from Drupal 7 or want structured content, Views and detailed roles built in. Choose WordPress if you want the widest choice of themes and plugins and the most people who can help.
-  - q: Can I move my Squarespace or Wix site to Backdrop?
-    a: Partly. Squarespace can export blog posts as a WordPress-format file, which the free WordPress Import add-on can read, though images and categories may need fixing by hand. Wix sites cannot be exported, so their pages are rebuilt in Backdrop.
-  - q: How do I sign in to Backdrop the first time?
-    a: Go to your site's address followed by /user/login and sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. Password reset emails go to the admin email you entered during setup.
+  - q: Can I move my Squarespace or Wix site to Backdrop CMS?
+    a: Partly. Squarespace can export blog posts as a WordPress-format file, which the free WordPress Import add-on for Backdrop CMS can read, though images and categories may need fixing by hand. Wix sites cannot be exported, so their pages are rebuilt in Backdrop.
+  - q: How do I sign in to Backdrop CMS the first time?
+    a: Go to your Backdrop CMS site's address followed by /user/login and sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. Password reset emails go to the admin email you entered during setup.
   - q: What server size do I need for Backdrop CMS?
-    a: A small server with 1 GB of memory runs Backdrop and its database. Backdrop is designed to run on low-cost hosting; choose a larger server for a busy site.
+    a: A small server with 1 GB of memory runs Backdrop CMS and its database. Backdrop is designed to run on low-cost hosting; choose a larger server for a busy site.
 screenshots:
   - src: screenshots/editor.webp
     alt: "Backdrop CMS Edit Post form for a post titled 'Tickets for the Winter Concert are on sale', with the admin toolbar (Dashboard, Content, User accounts, Appearance, Functionality, Structure, Configuration, Reports), a Tags field with Concerts and News, the visual editor toolbar with bold, italic, quote, lists, alignment, link and image buttons above the post text, an image upload field and a Published option"

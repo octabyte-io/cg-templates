@@ -1,5 +1,6 @@
 ---
 tagline: Your own self-hosted Q&A site, like Stack Overflow, for any team.
+title: "Apache Answer: a Stack Overflow for your team"
 category: communities
 alternativeTo: [stack-overflow-for-teams]
 ease: easy
@@ -45,10 +46,10 @@ faq:
     a: No, this template has Apache Answer's core features only. Plugins such as single sign-on, outside file storage and extra search engines have to be built into a custom version of the app, so they are not included.
   - q: How do I set up email in Apache Answer?
     a: Enter your email service's details in the admin panel's SMTP settings. Until you do, Apache Answer cannot send notifications or sign-up confirmation emails.
-  - q: Can I import questions from Stack Overflow for Teams?
+  - q: Can I import questions from Stack Overflow for Teams into Apache Answer?
     a: No, Apache Answer has no importer for Stack Overflow for Teams or other tools. You start with an empty site and add your most common questions yourself.
   - q: Can Apache Answer be private for my team only?
-    a: Yes, you can require sign-in to read anything and allow only email addresses from your own company's domain. You can also run it as a public community anyone can read.
+    a: Yes. Apache Answer can require sign-in to read anything and allow only email addresses from your own company's domain. You can also run Apache Answer as a public community anyone can read.
 screenshots:
   - src: screenshots/questions-list.webp
     alt: "The Apache Answer home page listing all questions: pinned questions at the top, then questions with their author, tags, votes, answers and views, sort tabs for Newest, Active, Unanswered and Recommend, a sidebar with Questions, Tags, Users, Badges, quick links and moderation, and Following Tags and Hot Questions on the right"

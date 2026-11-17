@@ -34,12 +34,12 @@ faq:
     a: Yes. Automatisch is open source under the AGPL-3.0 licence and free to self-host, so you pay only for hosting. A few features, such as extra user accounts and roles, need a paid enterprise licence.
   - q: Is Automatisch a good alternative to Zapier?
     a: Automatisch is a good Zapier alternative for simple flows between common apps. It is built the same way, a trigger followed by actions, but it has far fewer ready-made connections, so check that your apps are on its list first.
-  - q: When should I choose n8n or Activepieces instead?
+  - q: When should I choose n8n or Activepieces instead of Automatisch?
     a: Choose n8n or Activepieces when you need many different apps, flows with several branches, or a whole team building automations. Automatisch suits a handful of simple flows that one person looks after.
   - q: How do I self-host Automatisch?
     a: With Cloudgate, you pick Automatisch from the catalogue and click install. Cloudgate sets up the app, its background worker, database and queue on your server, gives it a secure web address and generates its secret keys.
   - q: Is my data private with self-hosted Automatisch?
-    a: Yes. Your flows, run history and app logins are stored in a database on your own server, and app logins are encrypted. Data leaves your server only when a flow sends it to an app you connected.
+    a: Yes. Self-hosted Automatisch stores your flows, run history and app logins in a database on your own server, and app logins are encrypted. Data leaves your server only when a flow sends it to an app you connected.
   - q: What server size do I need for Automatisch?
     a: Automatisch runs on a small server with 1 GB of memory, which is enough for a few flows running every few minutes.
 screenshots:

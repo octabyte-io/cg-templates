@@ -1,5 +1,6 @@
 ---
 tagline: LaTeX editor for writing papers together in your browser.
+title: "Overleaf Community Edition: self-hosted LaTeX"
 category: docs-wikis
 alternativeTo: [overleaf]
 ease: easy
@@ -35,15 +36,15 @@ faq:
   - q: Is Overleaf Community Edition free?
     a: Yes, Overleaf Community Edition is free and open source under the AGPL-3.0 licence, with no limit on users or collaborators. You pay only for your server. Overleaf also sells a paid self-hosted edition, Server Pro, and paid plans on overleaf.com.
   - q: What is the difference between Overleaf Community Edition, Server Pro and overleaf.com?
-    a: Community Edition is the free edition you host yourself, with the editor, real-time co-editing, PDF preview and full history. Server Pro, which is paid, adds comments, track changes, Git, the symbol palette, templates, single sign-on and isolated compiles. overleaf.com is Overleaf's hosted service, whose paid plans add GitHub and Dropbox sync, reference-manager sync and the AI Assistant.
+    a: Overleaf Community Edition is the free edition you host yourself, with the editor, real-time co-editing, PDF preview and full history. Server Pro, which is paid, adds comments, track changes, Git, the symbol palette, templates, single sign-on and isolated compiles. overleaf.com is Overleaf's hosted service, whose paid plans add GitHub and Dropbox sync, reference-manager sync and the AI Assistant.
   - q: Does Overleaf Community Edition have track changes and comments?
     a: No, comments and track changes are only in Overleaf Server Pro and the paid overleaf.com plans. In Community Edition your team can talk in the project chat and use the project history to see who changed what.
   - q: How do I sign in to Overleaf Community Edition the first time?
     a: There is no default login. Open your Overleaf address with /launchpad at the end and enter an email and password to create the admin account. Nobody can sign up on their own; the admin creates each account from Admin, Manage users, and sends the person the set-password link it shows.
-  - q: Can I move my projects from overleaf.com?
-    a: Yes, one project at a time. On overleaf.com, download a project's source as a .zip file, then choose New project and Upload project in Community Edition. The files come across; the project's history and comments do not.
-  - q: Are all LaTeX packages installed?
-    a: No, Community Edition comes with a basic TeX Live, the collection of LaTeX packages, rather than the full set on overleaf.com. If a document uses a package that isn't installed, it won't compile until someone with access to the server adds that package.
+  - q: Can I move my projects from overleaf.com to Overleaf Community Edition?
+    a: Yes, one project at a time. On overleaf.com, download a project's source as a .zip file, then choose New project and Upload project in Overleaf Community Edition. The files come across; the project's history and comments do not.
+  - q: Are all LaTeX packages installed in Overleaf Community Edition?
+    a: No. Overleaf Community Edition comes with a basic TeX Live, the collection of LaTeX packages, rather than the full set on overleaf.com. If a document uses a package that isn't installed, it won't compile until someone with access to the server adds that package.
   - q: What server size do I need for Overleaf Community Edition?
     a: Overleaf recommends at least 2 processor cores and 3 GB of memory for about five people compiling at the same time, plus one core and 1 GB for every five to ten more. Cloudgate treats it as a large app, with 4 GB of memory.
 screenshots:

@@ -40,13 +40,13 @@ faq:
   - q: Is Enclosed a good alternative to Privnote?
     a: Yes, Enclosed works the same way, a note behind a link that can destroy itself after reading, but it runs on your own server. Enclosed also lets you add a password, choose when the note expires and attach files.
   - q: Can the server read my Enclosed notes?
-    a: No, notes and files are encrypted in the sender's browser before they are uploaded, and the key is in the part of the link after the # sign, which browsers never send to the server. Without the link, and the password if you set one, the stored data can't be read.
+    a: "No, Enclosed encrypts notes and files in the sender's browser before they are uploaded, and the key is in the part of the link after the # sign, which browsers never send to the server. Without the link, and the password if you set one, the stored data can't be read."
   - q: What happens to an Enclosed note after it has been read?
-    a: With delete after reading switched on, the note and its files are deleted permanently as soon as they are opened, and the recipient is warned before opening it. Otherwise the note stays until its expiry time and is then removed automatically.
+    a: With delete after reading switched on, the Enclosed note and its files are deleted permanently as soon as they are opened, and the recipient is warned before opening it. Otherwise the note stays until its expiry time and is then removed automatically.
   - q: How do I sign in to Enclosed the first time?
     a: There is nothing to sign in to. Enclosed has no accounts by default, so you open its web address and write a note; the person you send it to only needs the link. Sign-in for creating notes can be turned on for named team members.
   - q: Can I send files with Enclosed instead of WeTransfer?
-    a: Yes, for small confidential files. Each note can carry up to 50 MB of encrypted files by default, which suits contracts, scans or lists of codes; for very large files, a transfer app such as PsiTransfer is the better fit.
+    a: Yes, Enclosed works for small confidential files. Each note can carry up to 50 MB of encrypted files by default, which suits contracts, scans or lists of codes; for very large files, a transfer app such as PsiTransfer is the better fit.
   - q: What server size do I need for Enclosed?
     a: The smallest Cloudgate server is enough, because Enclosed is one light app with no database. Disk space only matters if you send many files.
 screenshots:

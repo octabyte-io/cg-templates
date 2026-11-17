@@ -42,7 +42,7 @@ faq:
   - q: Can I move my users from Auth0 to ZITADEL?
     a: Yes, ZITADEL publishes a guide and a tool that move Auth0 users, including their passwords, so people don't have to reset them. You ask Auth0 support for the password export first, then import the users through ZITADEL's API.
   - q: How do I sign in to ZITADEL the first time?
-    a: Open the app's web address and sign in with the admin email you entered at install and the password Cloudgate created, shown on the app's variables page. The admin console is at the address followed by /ui/console. Anyone can register by default, so turn off self-registration in the console if you don't want that.
+    a: Open your ZITADEL web address and sign in with the admin email you entered at install and the password Cloudgate created, shown on the app's variables page. The admin console is at the address followed by /ui/console. Anyone can register by default, so turn off self-registration in the console if you don't want that.
   - q: What server size do I need for ZITADEL?
     a: ZITADEL needs about 2 GB of memory together with its database, so Cloudgate asks for a medium server. That is enough for a small or mid-sized service.
 screenshots:

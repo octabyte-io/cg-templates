@@ -36,7 +36,7 @@ faq:
   - q: Is Bludit free?
     a: Yes, Bludit is free and open source under the MIT licence, including the editor, themes and bundled plugins. Self-hosting it costs only your server. Supporters of the project on Patreon also get Bludit PRO, a set of extra plugins for page history, backups, galleries and removing the Bludit branding.
   - q: Is Bludit a good alternative to Squarespace or Wix?
-    a: Yes, for a small website or blog that you want to own with no monthly plan. Bludit has no drag-and-drop page builder, so it suits people who are happy to pick a theme and write their pages, and you keep it updated yourself.
+    a: Yes, Bludit is a good Squarespace or Wix alternative for a small website or blog that you want to own with no monthly plan. Bludit has no drag-and-drop page builder, so it suits people who are happy to pick a theme and write their pages, and you keep it updated yourself.
   - q: Should I choose Bludit, Grav or WordPress?
     a: Choose Bludit for a small site or blog with a visual editor and no database, and a short, simple admin panel. Grav is also database-free but you write pages in Markdown. Choose WordPress if you want the widest choice of themes and plugins, or an online shop.
   - q: How do I sign in to Bludit the first time?
@@ -44,7 +44,7 @@ faq:
   - q: Can I move my site from WordPress, Wix or Squarespace to Bludit?
     a: Partly. Community plugins listed in Bludit's plugin directory can import posts from WordPress, but there is no importer for Wix or Squarespace, so those pages are rebuilt by hand by copying the text and images across.
   - q: Do I need to know how to code to use Bludit?
-    a: No. You write pages in a visual editor with a formatting toolbar and choose a theme from the admin panel. Changing a theme's design beyond its settings does need some web design knowledge.
+    a: No. In Bludit you write pages in a visual editor with a formatting toolbar and choose a theme from the admin panel. Changing a theme's design beyond its settings does need some web design knowledge.
   - q: Is my data private with Bludit?
     a: Yes. Your pages, images and user accounts are stored as files on your own server, and Bludit does not track your visitors. Plugins you add, such as comments, may connect to outside services, so check what each one does.
 screenshots:

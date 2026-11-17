@@ -38,7 +38,7 @@ faq:
   - q: Is Castopod free?
     a: Yes, Castopod is free and open source under the AGPL-3.0 licence, with every feature included. You pay only for your server; its makers also sell managed hosting if you would rather not run it yourself.
   - q: Is Castopod a good alternative to Buzzsprout or Transistor?
-    a: Yes, if you want to own your podcast and not pay per upload hour or per download. Castopod gives you an RSS feed, a podcast website, listener stats and unlimited shows; in return you run the server and pay for its storage and bandwidth.
+    a: Yes, Castopod is a good Buzzsprout or Transistor alternative if you want to own your podcast and not pay per upload hour or per download. Castopod gives you an RSS feed, a podcast website, listener stats and unlimited shows; in return you run the server and pay for its storage and bandwidth.
   - q: Can I move my existing podcast to Castopod?
     a: Yes, Castopod imports an existing podcast from its RSS feed, including its episodes. After the import, set up a redirect to your new feed at your old host so listeners and podcast apps follow you.
   - q: How do I sign in to Castopod the first time?
@@ -54,7 +54,7 @@ screenshots:
     alt: "The Castopod admin page listing all episodes of the podcast Harbor Street, with a sidebar showing the podcast cover, its RSS feed link and menus for episodes, analytics, broadcast, monetization and contributors, and a table of four published episodes with artwork, season and episode numbers, titles, downloads and comments"
     caption: "The episode list, where you add, edit and publish episodes."
   - src: screenshots/podcast-page.webp
-    alt: "The public page of the podcast Harbor Street — Small Business Stories, with its cover, a Follow button, Activity, Episodes and About tabs, and posts announcing new episodes with playable episode cards and comment, share and favourite counts"
+    alt: "The public page of the podcast Harbor Street: Small Business Stories, with its cover, a Follow button, Activity, Episodes and About tabs, and posts announcing new episodes with playable episode cards and comment, share and favourite counts"
     caption: "The podcast's public page, where listeners play episodes and fediverse users follow and comment."
   - src: screenshots/podcast-dashboard.webp
     alt: "The Castopod podcast dashboard for Harbor Street, with Edit podcast and Add an episode buttons and the four latest episodes shown as artwork cards marked Published"

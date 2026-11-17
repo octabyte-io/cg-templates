@@ -40,8 +40,8 @@ faq:
   - q: Is Slash a good alternative to Bitly?
     a: Partly. Slash makes short links on your own domain with visit counts and QR codes, but it is built for a team's everyday links rather than marketing campaigns. For a Bitly-style shortener, Kutt or Shlink are closer fits.
   - q: How do I sign in to Slash the first time?
-    a: Open your app's web address and sign up; the first account becomes the admin. Invite your team the same way, then turn off sign-ups in the workspace settings so nobody else can join.
-  - q: How do I open a link by typing s/ and its name?
+    a: Open your Slash web address and sign up; the first account becomes the admin. Invite your team the same way, then turn off sign-ups in the workspace settings so nobody else can join.
+  - q: How do I open a Slash link by typing s/ and its name?
     a: Install the Slash extension for Chrome, Edge or Firefox and point it at your app's address. Without the extension, open the full address, such as your domain followed by /s/ and the link's name.
   - q: Can I import my links from GoLinks or Bitly into Slash?
     a: No, Slash has no importer. Add the links you still use by hand, giving each one its short name.

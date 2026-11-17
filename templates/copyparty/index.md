@@ -37,9 +37,9 @@ faq:
   - q: Is copyparty free?
     a: Yes, copyparty is free and open source under the MIT licence, with no paid edition or paid features. You pay only for your server and its disk.
   - q: Is copyparty a good alternative to WeTransfer?
-    a: Yes, for sending and receiving large files. Share links can have a password and an expiry time, uploads have no size limit and resume after a dropped connection, and an upload-only link lets people send files to you; it does not email transfers or tell you when a file is downloaded.
+    a: Yes, copyparty is a good WeTransfer alternative for sending and receiving large files. Share links can have a password and an expiry time, uploads have no size limit and resume after a dropped connection, and an upload-only link lets people send files to you; it does not email transfers or tell you when a file is downloaded.
   - q: Can copyparty replace Dropbox or Google Drive?
-    a: Partly. copyparty stores and shares files from a browser and can be opened as a network drive, but it has no sync app, no two-way sync and no document editing. If you need files kept in sync on every computer, a full suite such as Nextcloud fits better.
+    a: Partly. copyparty stores and shares files from a browser and can be opened as a network drive, but unlike Dropbox or Google Drive it has no sync app, no two-way sync and no document editing. If you need files kept in sync on every computer, a full suite such as Nextcloud fits better.
   - q: How do I sign in to copyparty the first time?
     a: Open your copyparty address, choose Log in at the top right, and sign in with the username admin and the password Cloudgate created, which is shown on the app's variables page. copyparty sets that password again each time it starts, so change it in Cloudgate rather than in the app. Until you add more accounts, nobody else can see or upload anything.
   - q: How do I add colleagues in copyparty?

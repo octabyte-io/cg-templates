@@ -9,7 +9,9 @@ faq:
   - q: "Can I share a TeamMapper map by link, like in Coggle?"
     a: "Yes. Each map has a view-only link and an edit link, also as a QR code, and nobody needs an account or sign-up to open it. Anyone with the edit link can change the map, so share that one with care."
   - q: "How do I keep a copy of a TeamMapper map?"
-    a: "Export it. TeamMapper saves a map as JSON or Mermaid text, which it can import again, or as a PDF, SVG, PNG or JPEG picture. Do this for maps you want to keep, because a map nobody changes for a set number of days, 30 by default, is deleted."
+    a: "Export it, as you might export a Coggle diagram. TeamMapper saves a map as JSON or Mermaid text, which it can import again, or as a PDF, SVG, PNG or JPEG picture. Do this for maps you want to keep, because a map nobody changes for a set number of days, 30 by default, is deleted."
+  - q: "Can I import my Coggle diagrams into TeamMapper?"
+    a: "No. TeamMapper imports only its own JSON files and Mermaid mind maps, not Coggle diagrams. Recreate the Coggle maps you still use in TeamMapper and keep Coggle's exports of the rest."
 ---
 
 Coggle is a web app for drawing mind maps together, shared by link, with a free plan and paid plans for more private diagrams.

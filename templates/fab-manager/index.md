@@ -39,16 +39,16 @@ faq:
     a: Yes, Fab-manager is free and open source under the AGPL-3.0 licence, with every feature included. You pay only for your server; its makers, Sleede, also sell a hosted cloud version and paid support if you want them.
   - q: Is Fab-manager a good alternative to Fabman?
     a: Yes, if you mainly need machine bookings, trainings, memberships and invoices in one place. Fab-manager also adds a project gallery and a supplies shop, but it has no hardware to unlock machines with a card or phone, which Fabman sells.
-  - q: Can I stop members booking a machine before they are trained?
-    a: Yes. You link trainings to machines, mark each member who completes a session, and only then can that member book the machine.
+  - q: Can Fab-manager stop members booking a machine before they are trained?
+    a: Yes. In Fab-manager you link trainings to machines, mark each member who completes a session, and only then can that member book the machine.
   - q: Can members pay online in Fab-manager?
-    a: Yes, by card through Stripe or PayZen, which you connect in the admin settings. Staff can also record cash or cheque payments on site, top up a member's wallet, and issue credit notes, and every payment gets a PDF invoice.
+    a: Yes, Fab-manager takes card payments through Stripe or PayZen, which you connect in the admin settings. Staff can also record cash or cheque payments on site, top up a member's wallet, and issue credit notes, and every payment gets a PDF invoice.
   - q: How do I sign in to Fab-manager the first time?
-    a: Sign in with the admin email you entered during setup and the password Cloudgate generated for you, shown on the app's variables page as ADMIN_PASSWORD. Then open the admin menu to add your machines, trainings, opening slots and prices.
+    a: Sign in to Fab-manager with the admin email you entered during setup and the password Cloudgate generated for you, shown on the app's variables page as ADMIN_PASSWORD. Then open the admin menu to add your machines, trainings, opening slots and prices.
   - q: Can I move my members from Fabman or another tool?
     a: Partly. Fab-manager has no importer for Fabman, but you can import your member list from a CSV file. Bookings, history and invoices do not move across.
   - q: What server size do I need for Fab-manager?
-    a: About 4 GB of memory, which is what the project recommends, especially with the statistics module or around 200 active members. The first start takes several minutes while it prepares the database and the website.
+    a: Fab-manager needs about 4 GB of memory, which is what the project recommends, especially with the statistics module or around 200 active members. The first start takes several minutes while it prepares the database and the website.
 screenshots:
   - src: screenshots/calendar.webp
     alt: "The Fab-manager calendar for a fictional makerspace, week view, with morning and afternoon machine slots for the laser cutter, 3D printer, vinyl cutter, CNC router and milling machine, evening induction sessions, and events such as a repair café and a kids' birdhouse workshop"

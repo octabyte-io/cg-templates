@@ -9,7 +9,9 @@ faq:
   - q: "Is OpenEMR suitable for a therapy practice?"
     a: "It can be. OpenEMR is broader and more clinical than SimplePractice, so setting it up for a therapy practice takes more work, but it covers scheduling, notes, billing and a client portal."
   - q: "Can clients pay online in OpenEMR?"
-    a: "Yes. Clients can pay through the patient portal, where they can also book appointments and message the practice."
+    a: "Yes. In OpenEMR, clients can pay through the patient portal, where they can also book appointments and message the practice."
+  - q: "Does OpenEMR have a phone app like SimplePractice?"
+    a: "No. SimplePractice has apps for clinicians and a client portal app on iPhone and Android, but OpenEMR has no phone app. You and your clients use OpenEMR and its patient portal in a web browser."
 ---
 
 SimplePractice is a cloud practice-management subscription built for therapists and other private practices, with scheduling, notes, billing and a client portal.

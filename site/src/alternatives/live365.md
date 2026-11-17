@@ -9,7 +9,9 @@ faq:
   - q: "Does AzuraCast include music licensing like Live365?"
     a: "No. AzuraCast is software only, so royalties and licences are yours to arrange for your country. For US stations it can produce a SoundExchange report."
   - q: "Can listeners find my AzuraCast station?"
-    a: "Yes, through your station's public page, the player you embed on your website, or the stream link pasted into any internet radio app. AzuraCast can also post what's playing to TuneIn."
+    a: "Yes, through your AzuraCast station's public page, the player you embed on your website, or the stream link pasted into any internet radio app. AzuraCast can also post what's playing to TuneIn."
+  - q: "Can I move my Live365 station to AzuraCast?"
+    a: "Yes, but not automatically. AzuraCast has no Live365 importer, so you upload your music, rebuild your playlists and their time slots, and point listeners to the new stream. Arrange music licences first, because Live365 includes licensing and AzuraCast does not."
 ---
 
 Live365 is an internet radio hosting service that bundles streaming with music licensing for the US, UK and Canada, so a station can play licensed music without arranging royalties itself. It is a paid service.

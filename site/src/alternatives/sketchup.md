@@ -10,6 +10,8 @@ faq:
     a: "No. Pascal Editor is made for buildings: rooms, walls, floors and roofs. For general 3D modelling, such as furniture, products or landscapes, SketchUp or another modeller is still the right tool."
   - q: "Can Pascal Editor export to IFC?"
     a: "Yes. Pascal Editor exports IFC, the open format architects' software uses, as well as GLB, USDZ, OBJ and STL, and 3MF for 3D printing."
+  - q: "Can Pascal Editor open SketchUp files?"
+    a: "No. Pascal Editor cannot open SketchUp files and has no 3D Warehouse or extensions, so you redraw each building in Pascal Editor as walls, rooms, floors and roofs. It can then export IFC, GLB, OBJ or STL files and a floor plan PDF."
 ---
 
 SketchUp is a 3D modelling tool, sold by subscription, used by architects, builders, interior designers and homeowners to model buildings, interiors and objects, with a huge library of ready-made models and many extensions.

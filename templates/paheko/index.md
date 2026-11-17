@@ -44,7 +44,7 @@ faq:
   - q: Can I import my members from another tool into Paheko?
     a: Yes. Paheko imports member lists from a spreadsheet file, so you can export members from AssoConnect, another tool or your own spreadsheet and bring them in. Past accounting entries can be imported too.
   - q: How do I start with Paheko the first time?
-    a: Open the app's address straight after setup and fill in the install page with your country, your association's name and your own name, email and password. That account becomes the administrator; then open your first financial year.
+    a: Open your Paheko address straight after setup and fill in the install page with your country, your association's name and your own name, email and password. That account becomes the administrator; then open your first financial year.
   - q: Does Paheko send membership fee reminders?
     a: Yes. Paheko can email members automatically when their fee is due. The template does not set up email sending, so reminders and newsletters go out only after an email (SMTP) server is added to Paheko's configuration. Daily tasks such as reminders run when someone signs in.
   - q: Was Paheko called Garradin?

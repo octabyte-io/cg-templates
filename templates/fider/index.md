@@ -46,7 +46,7 @@ faq:
   - q: Can I import my ideas from Canny or UserVoice?
     a: No, Fider has no importer for Canny or UserVoice. A developer can move ideas across with Fider's API, or you can start a fresh board and post your most-requested ideas yourself.
   - q: Can I keep my Fider board private?
-    a: Yes, you can turn off open sign-ups so the board is invite-only, which suits feedback from staff or a small group of customers. You can also leave it public so anyone can post and vote.
+    a: Yes, you can turn off open sign-ups in Fider so the board is invite-only, which suits feedback from staff or a small group of customers. You can also leave it public so anyone can post and vote.
   - q: Does Fider have a phone app?
     a: No, Fider has no phone app. The board works in any phone browser, so customers can post and vote from their phones.
 screenshots:

@@ -40,7 +40,7 @@ faq:
   - q: What is the difference between Checkmk Community and the paid editions?
     a: Checkmk Community, formerly called Checkmk Raw, has the monitoring engine, web interface, agents, alerts and graphs. The paid editions add automatic agent management, recurring maintenance windows, PDF and SLA reports, two-step sign-in, single sign-on, push agents and professional support.
   - q: How do I sign in to Checkmk the first time?
-    a: Sign in with the user cmkadmin and the password Cloudgate shows in the app's settings. There is no setup wizard; you start by adding your first host.
+    a: Sign in to Checkmk with the user cmkadmin and the password Cloudgate shows in the app's settings. There is no setup wizard; you start by adding your first host.
   - q: How do I monitor a server with Checkmk?
     a: Add the server as a host in Checkmk, install the Checkmk agent on that server, and run service discovery. Checkmk then lists what it found, such as disks, memory and services, and starts checking them every minute.
   - q: What server size do I need for Checkmk?

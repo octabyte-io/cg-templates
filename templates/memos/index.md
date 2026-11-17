@@ -10,7 +10,7 @@ features:
   - title: Write a note in seconds
     text: Type a memo in Markdown, from one line to a long entry, and it lands on your timeline.
   - title: Find notes by tag or day
-    text: Add tags such as #ideas, then filter by tag, search, or open the calendar to see what you wrote each day.
+    text: 'Add tags such as #ideas, then filter by tag, search, or open the calendar to see what you wrote each day.'
   - title: Tick off checklists
     text: Turn a memo into a checklist and tick items off as you go.
   - title: Attach photos and files

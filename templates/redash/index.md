@@ -42,7 +42,7 @@ faq:
   - q: Should I choose Redash, Metabase or Apache Superset?
     a: Choose Redash if your team writes SQL and wants a simple editor, dashboards and alerts to chat tools. Choose Metabase if people without SQL will build their own charts, and Apache Superset if you want more chart types and a no-code chart builder.
   - q: Do I need to know SQL to use Redash?
-    a: Yes, someone needs to know SQL to write the queries behind each chart. Everyone else can use the dashboards, change their filters and get alerts without writing any code.
+    a: Yes, someone needs to know SQL to write the Redash queries behind each chart. Everyone else can use the dashboards, change their filters and get alerts without writing any code.
   - q: Which data can Redash read?
     a: Redash connects to more than 35 data sources, including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, BigQuery, Snowflake, Redshift, ClickHouse, MongoDB, Elasticsearch, Google Sheets, Excel and CSV files. It queries the data where it lives rather than copying it in.
   - q: How do I sign in to Redash the first time?

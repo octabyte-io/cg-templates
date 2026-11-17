@@ -37,15 +37,15 @@ faq:
     a: Yes, Helfertool is free and open source under the AGPL-3.0 licence, with no ads and no limit on events or helpers. You pay only for your server and, if you use one, your email sending service.
   - q: Is Helfertool a good alternative to SignUpGenius?
     a: Yes, if you need volunteers to sign up for shifts at an event. Helfertool has shifts with a set number of helpers, private sign-up links, coordinators, badges and gift tracking, with no ads; SignUpGenius is better for general sign-up sheets such as potlucks or parent-teacher slots.
-  - q: Do volunteers need an account to sign up?
-    a: No, volunteers fill in a short form on your event's sign-up page and confirm by email. Only organisers and coordinators have accounts.
+  - q: Do volunteers need a Helfertool account to sign up?
+    a: No, Helfertool volunteers fill in a short form on your event's sign-up page and confirm by email. Only organisers and coordinators have accounts.
   - q: How do I sign in to Helfertool the first time?
     a: Go to the app's address, choose Login and sign in with the username admin and the password Cloudgate created, shown on the app's variables page. Then create your first event and add your jobs and shifts. The footer's Imprint and Privacy links point to the Helfertool project's own pages until you set your organisation's pages in its configuration file.
   - q: Can Helfertool send confirmation emails?
     a: Yes, Helfertool emails each volunteer a confirmation with their shifts, once you give it the details of an email sending service at setup. Without one, sign-ups still work but no emails go out.
   - q: Which languages does Helfertool support?
     a: Helfertool is in English and German, and shows each visitor the language of their browser.
-  - q: Can I import my sign-ups from SignUpGenius?
+  - q: Can Helfertool import my sign-ups from SignUpGenius?
     a: "No, Helfertool has no SignUpGenius importer. Download your current sign-up lists from SignUpGenius to keep them, set up your next event's jobs and shifts in Helfertool, and share its sign-up link where you posted the old one."
   - q: What server size do I need for Helfertool?
     a: A small server is enough, because Helfertool and its database use less than 1 GB of memory. Cloudgate sets up everything it needs.

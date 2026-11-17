@@ -36,17 +36,17 @@ faq:
   - q: Is GlobaLeaks free?
     a: Yes, GlobaLeaks is free and open source under the AGPL-3.0 licence, with no paid edition. You pay only for the server it runs on.
   - q: Is GlobaLeaks a good alternative to NAVEX EthicsPoint or EQS Integrity Line?
-    a: Yes, if you want a web-based reporting channel and case management on your own server, without a yearly subscription. Unlike those services, it has no phone hotline and you handle the setup and running of the site yourself.
+    a: Yes, GlobaLeaks fits if you want a web-based reporting channel and case management on your own server, without a yearly subscription. Unlike those services, it has no phone hotline and you handle the setup and running of the site yourself.
   - q: Can people report anonymously with GlobaLeaks?
     a: Yes, reporters can stay anonymous and still talk to you, using the 16-digit access code they get after sending a report. GlobaLeaks does not log IP addresses, and it advises reporters to use the Tor Browser for extra protection.
   - q: Does GlobaLeaks help with the EU Whistleblower Directive?
     a: Yes, GlobaLeaks is designed to follow the EU Whistleblower Directive (2019/1937) and ISO 37002, with confidential reports, two-way follow-up and data retention rules. Your own policy and how you handle reports still decide whether you comply.
   - q: How do I sign in to GlobaLeaks the first time?
-    a: The first visit opens a setup wizard where you pick a language and a name, then create the admin account and the first recipient's account. There is no default password; afterwards, add your own email account in the notification settings so report alerts come from your domain.
+    a: The first visit to GlobaLeaks opens a setup wizard where you pick a language and a name, then create the admin account and the first recipient's account. There is no default password; afterwards, add your own email account in the notification settings so report alerts come from your domain.
   - q: Does GlobaLeaks have phone apps?
-    a: No, there are no phone apps, but the reporting site and the case screens work in any phone's browser.
+    a: No, GlobaLeaks has no phone apps, but the reporting site and the case screens work in any phone's browser.
   - q: What server size do I need for GlobaLeaks?
-    a: A small server is enough, because the project asks for 2 processor cores, 1 GB of memory and 20 GB of disk. Plan more disk if people send large files or you keep reports for a long time.
+    a: A small server is enough for GlobaLeaks, because the project asks for 2 processor cores, 1 GB of memory and 20 GB of disk. Plan more disk if people send large files or you keep reports for a long time.
 screenshots:
   - src: screenshots/reports.webp
     alt: "The GlobaLeaks Reports list for a recipient, showing three reports with their status (Opened or New), report date, last update, expiry date, counts of comments and files, and a Medium score badge, with an Export link below"

@@ -9,7 +9,9 @@ faq:
   - q: "Is Decidim free?"
     a: "Yes. Decidim is open source under the AGPL, with no paid edition. Other companies sell hosting and support, but you can run it yourself at no cost."
   - q: "Can Decidim run a participatory budget?"
-    a: "Yes. Participants vote for projects within a budget you set, and you report back on how each chosen project is going."
+    a: "Yes. In Decidim, participants vote for projects within a budget you set, and you report back on how each chosen project is going."
+  - q: "Can I import my Go Vocal projects into Decidim?"
+    a: "No. Decidim has no Go Vocal importer, so download the results and reports you want to keep before your Go Vocal subscription ends, then create a participatory process in Decidim for each new consultation."
 ---
 
 Go Vocal, formerly CitizenLab, is a hosted platform that councils and public bodies use to engage residents online, with ideas, surveys, maps, voting and participatory budgets. It is sold by subscription.

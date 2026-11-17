@@ -35,7 +35,7 @@ faq:
   - q: Is Komga free?
     a: Yes. Komga is free, open-source software under the MIT licence, with no paid edition or paid features; the project is funded by donations. You pay only for your server and its storage.
   - q: Is Komga a good alternative to ComiXology?
-    a: Yes, for comics you own as DRM-free files. Komga organises CBZ, CBR, PDF and EPUB files by series and lets you read them in the browser or in phone apps, but it is not a store, so you can't buy comics in it.
+    a: Yes, Komga can replace ComiXology for comics you own as DRM-free files. Komga organises CBZ, CBR, PDF and EPUB files by series and lets you read them in the browser or in phone apps, but it is not a store, so you can't buy comics in it.
   - q: How do I sign in to Komga the first time?
     a: There is no default password. The first person to open Komga's web address creates the admin account with an email address and password, so open it right after setup. The admin then adds other users.
   - q: How do I add my comics to Komga?
@@ -43,9 +43,9 @@ faq:
   - q: Can I move my ComiXology or Kindle comics to Komga?
     a: No. Comics bought on ComiXology or in the Kindle app are copy-protected and can't be moved over. Komga reads DRM-free files, such as downloads from shops that sell without DRM or your own scans.
   - q: Can I read Komga comics on my phone or e-reader?
-    a: Yes. The web reader works on phones and tablets, Android users can use the official Mihon extension, and any OPDS reader app can open the library. EPUB books and reading progress sync with Kobo e-readers and KOReader.
+    a: Yes. The Komga web reader works on phones and tablets, Android users can use the official Mihon extension, and any OPDS reader app can open the library. EPUB books and reading progress sync with Kobo e-readers and KOReader.
   - q: What server size do I need for Komga?
-    a: Cloudgate asks for a server with 2 GB of memory, which suits a small library. Plan the disk for the size of your comic collection.
+    a: Cloudgate asks for a server with 2 GB of memory for Komga, which suits a small library. Plan the disk for the size of your comic collection.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Komga home screen with a left menu for Home, Libraries, Import, Media, History, Server and My Account, a Keep Reading row with two comics and their progress bars, and rows of recently added books and series with covers, issue numbers and unread counts"

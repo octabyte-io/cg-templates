@@ -42,13 +42,13 @@ faq:
   - q: How do I sign in to ConvertX the first time?
     a: ConvertX has no default login; the first person to open its web address creates the account, so do it right after setup. After that, nobody else can sign up unless you turn sign-ups on.
   - q: Can more than one person use ConvertX?
-    a: Yes, each person can have their own account and history, but there is no screen for adding users. Turn on new sign-ups in the app's settings in Cloudgate, let your colleagues register, then turn sign-ups off again. Do not leave them on, or anyone who finds the address can join.
+    a: Yes, each person can have their own ConvertX account and history, but there is no screen for adding users. Turn on new sign-ups in the app's settings in Cloudgate, let your colleagues register, then turn sign-ups off again. Do not leave them on, or anyone who finds the address can join.
   - q: Can ConvertX edit, merge or compress PDFs?
     a: No, ConvertX converts files to and from PDF, such as Word to PDF, but does not edit, merge, split, compress or sign PDFs. For those jobs, use Stirling PDF.
   - q: Is my data private with ConvertX?
     a: Yes. ConvertX converts files on your own server, so they are not sent to an outside website, and it deletes uploaded and converted files after 24 hours.
   - q: What server size do I need for ConvertX?
-    a: A medium server with 2 GB of memory, which is what Cloudgate asks for. Video, office documents and e-books are the heaviest jobs, and the app is a large download, so the first install takes a while.
+    a: ConvertX needs a medium server with 2 GB of memory, which is what Cloudgate asks for. Video, office documents and e-books are the heaviest jobs, and the app is a large download, so the first install takes a while.
 screenshots:
   - src: screenshots/convert.webp
     alt: "ConvertX in dark mode with an uploaded PDF file and a Remove link, a Choose a file or drag it here box, and a Search for conversions list of target formats grouped by converter, such as avif, heic, jpeg, png and webp, with History and Logout links at the top"

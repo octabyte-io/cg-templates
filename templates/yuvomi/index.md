@@ -38,12 +38,12 @@ faq:
   - q: Is Yuvomi free?
     a: Yes, Yuvomi is free and open source under the MIT licence, with no subscription, no ads and no paid tier. You pay only for the server it runs on.
   - q: Is Yuvomi a good alternative to Cozi?
-    a: Yes. Like Cozi it gives a family a shared calendar, to-do lists, shopping lists and a meal planner, and it adds chore rewards, a household budget, a pantry and documents, all on your own server. The difference is that it is a web app you install from the browser rather than from an app store.
+    a: Yes. Like Cozi, Yuvomi gives a family a shared calendar, to-do lists, shopping lists and a meal planner, and it adds chore rewards, a household budget, a pantry and documents, all on your own server. The difference is that it is a web app you install from the browser rather than from an app store.
   - q: Can Yuvomi replace a Skylight calendar?
     a: Partly. Yuvomi's wall mode turns any tablet into a kitchen display with today's plan, chores, the weather and a photo screensaver from Immich, and meal planning and rewards are included at no cost. It is software, not a device, so you supply and mount the tablet yourself.
   - q: Is there a Yuvomi app for iPhone or Android?
     a: No, Yuvomi has no app-store app, but it installs to the home screen straight from the phone's browser and works like an app. It sends reminders as notifications even when closed, and the last shopping list you opened stays readable without signal.
-  - q: Can I bring my calendar over from Cozi or Google?
+  - q: Can I bring my calendar over to Yuvomi from Cozi or Google?
     a: Partly. Yuvomi syncs both ways with Google, iCloud and Nextcloud calendars, subscribes to calendar links and imports calendar files. It has no importer for Cozi's lists, to-dos or recipes, so those are set up again.
   - q: How do I sign in to Yuvomi the first time?
     a: The first visit to your Yuvomi web address shows a form to create the admin account; there is no default password, so do this right after setup. The admin then sends each family member an invite link, valid for seven days, where they choose their own password.

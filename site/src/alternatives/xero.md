@@ -13,9 +13,11 @@ moving: |
   There is no Xero importer, but Bigcapital imports CSV and Excel files. Export your chart of accounts, contacts and items from Xero, import them into Bigcapital and match the columns; invoices, bills, payments and bank transactions can be brought in the same way. Most businesses switch at the start of a financial year, enter opening balances in Bigcapital and keep Xero's reports for earlier years. Dolibarr's import module reads CSV files of customers, suppliers and products in the same way, and LedgerSMB imports CSV files of the chart of accounts, items, customer and vendor invoices and general ledger transactions. Check the plan with your accountant first.
 faq:
   - q: "Do these apps limit how many invoices I can send?"
-    a: "No. Self-hosted Bigcapital, Dolibarr and LedgerSMB have no limit on invoices, bills or users."
+    a: "No. Self-hosted Bigcapital, Dolibarr and LedgerSMB have no limit on invoices, bills or users. When we checked in November 2026, Xero's US entry plan allowed 20 invoices and 5 bills a month."
   - q: "Can my accountant use Bigcapital?"
-    a: "Yes. Invite them as a user with the role you choose. Fewer accountants know Bigcapital than Xero, so they may need a little time to find their way around."
+    a: "Yes. Invite your accountant to Bigcapital as a user with the role you choose. Fewer accountants know Bigcapital than Xero, so they may need a little time to find their way around."
+  - q: "Do these apps have bank feeds like Xero?"
+    a: "Partly. Xero has automatic bank feeds for many banks, while Bigcapital's bank feeds need your own Plaid account, LedgerSMB imports bank statements instead, and Dolibarr has no automatic bank feeds."
 ---
 
 Xero is online accounting software for small businesses. It handles invoicing, bills, bank feeds and reconciliation and reporting, with payroll as an add-on, and it connects to a large marketplace of apps.

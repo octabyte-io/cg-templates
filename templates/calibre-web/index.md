@@ -40,10 +40,10 @@ faq:
     a: Sign in with the username admin and the password Cloudgate shows for this app. The template replaces Calibre-Web's well-known default password, admin123, on the first start, so that password does not work.
   - q: Can Calibre-Web send books to my Kindle?
     a: Yes. Once the admin enters email server settings, each book has a button that emails it to a Kindle or another e-reader. Kobo e-readers can sync with Calibre-Web directly, without email.
-  - q: Can I import my Kindle books?
+  - q: Can I import my Kindle books into Calibre-Web?
     a: Only DRM-free ones. Calibre-Web takes EPUB, PDF, MOBI and other files you upload, but books bought in the Kindle store are copy-protected and can't be added as they are.
   - q: Can Calibre-Web convert e-books to other formats?
-    a: Not in this template. Converting between formats needs the Calibre program, which isn't included; reading, downloading, sending to an e-reader, Kobo sync and OPDS all work without it.
+    a: Not in this template. Calibre-Web needs the separate Calibre program to convert formats, and this template doesn't include it; reading, downloading, sending to an e-reader, Kobo sync and OPDS all work without it.
   - q: What server size do I need for Calibre-Web?
     a: A small server with 1 GB of memory is enough to run Calibre-Web. Plan the disk for the size of your e-book collection.
 screenshots:

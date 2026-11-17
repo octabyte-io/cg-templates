@@ -36,7 +36,7 @@ faq:
   - q: Is Mastodon free?
     a: Yes. Mastodon is free, open-source software under the AGPL licence, and every feature is in the one free version. You pay only for your server, your domain and an email service.
   - q: Is Mastodon a good alternative to X (Twitter)?
-    a: Yes, if you want a short-post timeline you control, with no ads, no algorithm and accounts on your own domain. The trade-off is a smaller audience than X, and you take on the moderation that X would otherwise do.
+    a: Yes. Mastodon is a good alternative to X (Twitter) if you want a short-post timeline you control, with no ads, no algorithm and accounts on your own domain. The trade-off is a smaller audience than X, and you take on the moderation that X would otherwise do.
   - q: Can I bring my X posts or followers to Mastodon?
     a: No. Mastodon cannot import posts or media, and followers on X do not move across, so you start fresh and tell your followers where to find you. Between Mastodon servers, people can move their followers and the accounts they follow, but not their old posts.
   - q: Who handles moderation on my Mastodon server?
@@ -44,9 +44,9 @@ faq:
   - q: Why does Mastodon need an email service?
     a: Mastodon emails new members a link to confirm their address and sends password resets, so it needs an outside email (SMTP) service such as Mailgun or Postmark. You enter its details when you set up the template.
   - q: How do I sign in to Mastodon the first time?
-    a: Sign in with the owner email you chose at setup and the password Cloudgate shows on the app's variables page, then change that password. Sign-ups start closed, so nobody else can join until you open them or send an invite.
+    a: Sign in to Mastodon with the owner email you chose at setup and the password Cloudgate shows on the app's variables page, then change that password. Sign-ups start closed, so nobody else can join until you open them or send an invite.
   - q: Can I change my Mastodon server's web address later?
-    a: No. The address is part of every username on the server, such as @name@yourbrand.social, and changing it later breaks existing follows. Choose your final domain before anyone joins.
+    a: No. The web address is part of every Mastodon username on your server, such as @name@yourbrand.social, and changing it later breaks existing follows. Choose your final domain before anyone joins.
 screenshots:
   - src: screenshots/moderation-roles.webp
     alt: "Mastodon's Roles admin page in the dark theme, with an Add role button, a Default permissions role for all users, and the Owner, Admin and Moderator roles listed with their user and permission counts and an Edit link each"

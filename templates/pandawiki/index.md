@@ -41,7 +41,7 @@ faq:
   - q: How do I sign in to PandaWiki the first time?
     a: Sign in at the first web address, the admin console, with the username admin and the password Cloudgate generated, shown on the app's variables page. Connect your AI models, create a knowledge base, and in its access settings enter the second web address with port 80, and the public wiki then appears there. The admin password is set from that variable each time PandaWiki starts, so change it there rather than in the console.
   - q: Is PandaWiki a good alternative to GitBook?
-    a: It can be, for a public docs or help site with AI answers built in. The free edition is limited to one site, 300 documents and one admin, and the interface is in Chinese, so a team that writes in English may prefer another wiki.
+    a: It can be. PandaWiki suits a public docs or help site with AI answers built in, where it can replace GitBook. Its free edition is limited to one site, 300 documents and one admin, and the interface is in Chinese, so a team that writes in English may prefer another wiki.
   - q: Can I import my docs from Notion or Confluence into PandaWiki?
     a: Yes, PandaWiki has importers for Notion and Confluence, as well as Feishu docs, Yuque, Wiki.js, web pages, sitemaps, RSS feeds and files.
 screenshots:

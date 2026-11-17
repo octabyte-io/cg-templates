@@ -42,7 +42,7 @@ faq:
   - q: Can I move my forum from vBulletin, XenForo or Invision Community to MyBB?
     a: Yes, partly. MyBB's free Merge System imports members, boards and posts from XenForo, vBulletin 3 and 4 and Invision Power Board 3 (version 4 in a pre-release), plus phpBB, SMF and others, but not from vBulletin 5 or 6. It is a separate tool, so plan the move with someone comfortable running it.
   - q: How do I sign in to MyBB the first time?
-    a: Sign in with the username admin and the password Cloudgate shows you after setup, using the forum's Login link. The same account opens the Admin CP, where you add boards and set up your email server so members get their sign-up emails.
+    a: Sign in to MyBB with the username admin and the password Cloudgate shows you after setup, using the forum's Login link. The same account opens the Admin CP, where you add boards and set up your email server so members get their sign-up emails.
   - q: Is MyBB still maintained?
     a: Yes, MyBB 1.8 gets regular security and maintenance releases, the latest being 1.8.41 in September 2026, and version 1.9 is in development. Install updates when they come out, as most of them fix security issues.
   - q: Is there a MyBB phone app?

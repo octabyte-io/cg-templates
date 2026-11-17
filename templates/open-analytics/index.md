@@ -38,7 +38,7 @@ faq:
   - q: Is Open Analytics free?
     a: Yes, the self-hosted Open Analytics is free and open source under the AGPL-3.0 licence, with every feature included and no event limit. You pay only for your server; the makers also sell a hosted version at getopen.so priced by traffic.
   - q: Is Open Analytics a good alternative to Google Analytics?
-    a: Yes, if you want clear visitor numbers without cookies and want to see which pages bring in sales. It has fewer marketing reports than Google Analytics, no Google Ads link, and it does not import Google Analytics history.
+    a: Yes. Open Analytics is a good alternative to Google Analytics if you want clear visitor numbers without cookies and want to see which pages bring in sales. It has fewer marketing reports than Google Analytics, no Google Ads link, and it does not import Google Analytics history.
   - q: How is Open Analytics different from Plausible or Umami?
     a: Open Analytics adds revenue from your own Stripe or Polar account, a live list of who is on your site, and one-day visitor trails on the same cookie-free dashboard. Plausible and Umami are older, simpler and run on a much smaller server.
   - q: Does Open Analytics need a cookie banner?
@@ -46,9 +46,9 @@ faq:
   - q: Can I import my Google Analytics data into Open Analytics?
     a: No, Open Analytics does not import Google Analytics, Fathom or Matomo history. It can read Plausible and Umami exports, but only once file storage is added to the server, which this setup leaves out, so plan to start fresh and keep your old reports for comparison.
   - q: How do I sign in to Open Analytics the first time?
-    a: The first person to open the app's address creates the first account with an email address and a password. Do it straight away, because the offer is open until one account exists.
+    a: The first person to open the Open Analytics address creates the first account with an email address and a password. Do it straight away, because the offer is open until one account exists.
   - q: What server size do I need for Open Analytics?
-    a: The project recommends about 4 GB of memory and 25 GB of free disk. That is more than lighter tools such as Plausible or Umami need, because it keeps visits in a separate fast database.
+    a: The Open Analytics project recommends about 4 GB of memory and 25 GB of free disk. That is more than lighter tools such as Plausible or Umami need, because it keeps visits in a separate fast database.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Open Analytics overview for one day, with visitors, pageviews, bounce rate, average visit and revenue, an hourly chart of pageviews and visitors, and top pages, referrers and revenue cards below"

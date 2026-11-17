@@ -43,10 +43,10 @@ faq:
     a: No, SerpBear tracks Google results only, for desktop or mobile and by country. Some listings online say otherwise, but it does not check Bing, Yahoo or Yandex.
   - q: How do I sign in to SerpBear the first time?
     a: SerpBear has one admin login and no sign-up page. You choose the username when you set it up on Cloudgate, and Cloudgate creates a strong password and shows it on the app's variables page.
-  - q: Can I import my keywords from Semrush or Ahrefs?
+  - q: Can I import my keywords from Semrush or Ahrefs into SerpBear?
     a: No, SerpBear has no importer for other rank trackers. You can paste a list of keywords, one per line, when you add them, but your old ranking history does not move across.
   - q: Does SerpBear work with Google Search Console?
-    a: Yes, you can connect Google Search Console to see real clicks and impressions for each tracked keyword, plus your top keywords, pages and countries. Keyword ideas and search volumes need a separate Google Ads account.
+    a: Yes. You can connect Google Search Console to SerpBear to see real clicks and impressions for each tracked keyword, plus your top keywords, pages and countries. Keyword ideas and search volumes need a separate Google Ads account.
 screenshots:
   - src: screenshots/keyword-tracking.webp
     alt: "The SerpBear tracking page for a bakery website, listing keywords with their current Google position, change, best position, a 7-day history line, monthly search volume, ranking page and last update, with desktop and mobile tabs and country and tag filters"

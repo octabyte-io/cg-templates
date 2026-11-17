@@ -34,15 +34,15 @@ faq:
   - q: Is Vaultwarden the same as Bitwarden?
     a: No. Vaultwarden is an independent, community-made server that works with the official Bitwarden apps and browser extensions. It is not made or supported by Bitwarden, Inc., and it needs far less memory than Bitwarden's own server.
   - q: Is Vaultwarden a good alternative to 1Password or LastPass?
-    a: Yes, for teams happy to run their own server. It stores and fills in passwords, passkeys and cards, shares logins with your team and supports two-step sign-in, without a monthly fee per person.
-  - q: Can I import my passwords from 1Password or LastPass?
+    a: Yes, for teams happy to run their own server. Vaultwarden stores and fills in passwords, passkeys and cards, shares logins with your team and supports two-step sign-in, without a monthly fee per person.
+  - q: Can Vaultwarden import my passwords from 1Password or LastPass?
     a: Yes. Export your vault from 1Password or LastPass, then load the file on the import page of Vaultwarden's web vault. The same page imports from Chrome, Firefox, Dashlane, Keeper and many others.
   - q: Is my data private with Vaultwarden?
-    a: Yes. The Bitwarden apps encrypt your vault on your own device before it is sent, so the server stores only encrypted data, and that server is yours. Keep regular backups, because nobody else holds a copy.
+    a: Yes. With Vaultwarden, the Bitwarden apps encrypt your vault on your own device before it is sent, so the server stores only encrypted data, and that server is yours. Keep regular backups, because nobody else holds a copy.
   - q: How do I self-host Vaultwarden?
     a: The easiest way is to set up this template on Cloudgate. Cloudgate installs Vaultwarden with its database on your server and gives it the secure web address the Bitwarden apps require.
-  - q: How do I manage users and sign-ups?
-    a: Use the admin page at your web address followed by /admin, signed in with the admin token Cloudgate generated, which you find among this app's variables in Cloudgate. There you can invite people, turn off open sign-up and add email settings for invitations.
+  - q: How do I manage Vaultwarden users and sign-ups?
+    a: Use the Vaultwarden admin page at your web address followed by /admin, signed in with the admin token Cloudgate generated, which you find among this app's variables in Cloudgate. There you can invite people, turn off open sign-up and add email settings for invitations.
 screenshots:
   - src: screenshots/vault.webp
     alt: "The vault in the Bitwarden web app served by Vaultwarden, listing logins, a card and a secure note, with filters by type and folder"

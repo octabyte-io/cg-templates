@@ -38,15 +38,15 @@ faq:
   - q: Is Presenton free?
     a: Yes, the self-hosted Presenton is free and open source under the Apache-2.0 licence. You pay for your server and for the AI provider you connect; Presenton Cloud and the Enterprise extras, such as single sign-on and audit logs, are paid.
   - q: Is Presenton a good alternative to Gamma?
-    a: Yes, if you want slide decks you can open in PowerPoint. Like Gamma, it turns a prompt or a document into a deck you then edit, but it uses your own AI key and has no web-page style decks, public share links or viewer analytics.
+    a: Yes, if you want slide decks you can open in PowerPoint. Like Gamma, Presenton turns a prompt or a document into a deck you then edit, but it uses your own AI key and has no web-page style decks, public share links or viewer analytics.
   - q: Can I edit Presenton's slides in PowerPoint?
     a: Yes. Presenton exports an editable PowerPoint file, so you can change text, images and charts in PowerPoint afterwards. It can also export a PDF.
-  - q: Can I use my own PowerPoint template?
+  - q: Can I use my own PowerPoint template in Presenton?
     a: Yes, you can turn a branded PowerPoint file into a reusable Presenton template, and new decks then follow its design. Importing an existing deck to edit it slide by slide is a Presenton Cloud feature and is not in the self-hosted app.
   - q: How do I sign in to Presenton the first time?
-    a: Cloudgate creates the admin account for you, with the username admin and a generated password that Cloudgate lists among the app's variables. Sign in, then open Settings and connect an AI provider before you make your first deck.
+    a: Cloudgate creates the Presenton admin account for you, with the username admin and a generated password that Cloudgate lists among the app's variables. Sign in, then open Settings and connect an AI provider before you make your first deck.
   - q: Does Presenton keep my documents private?
-    a: Your files and decks are stored on your own server, but the text you send is processed by whichever AI provider you connect. For full privacy, connect a model you run yourself; anonymous usage statistics are on by default and can be turned off.
+    a: Presenton stores your files and decks on your own server, but the text you send is processed by whichever AI provider you connect. For full privacy, connect a model you run yourself; anonymous usage statistics are on by default and can be turned off.
   - q: What server size do I need for Presenton?
     a: Cloudgate asks for at least a large server (4 GB of memory), the minimum Presenton's own guide gives for production use. It recommends 8 GB for a small team, and the app is a large download, so the first install takes a while.
 screenshots:

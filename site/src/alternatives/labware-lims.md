@@ -9,7 +9,9 @@ faq:
   - q: "Can SENAITE replace LabWare LIMS?"
     a: "For many small and medium testing labs, yes: it covers sample intake through to the published report. Large organisations in regulated industries that rely on LabWare's wider modules and vendor support will find SENAITE does less."
   - q: "Who supports SENAITE?"
-    a: "There is no vendor. The open-source project is backed by service providers that sell setup, hosting, support and custom development; otherwise your own team looks after it."
+    a: "Unlike LabWare LIMS, SENAITE has no vendor. The open-source project is backed by service providers that sell setup, hosting, support and custom development; otherwise your own team looks after it."
+  - q: "Can I import my LabWare LIMS data into SENAITE?"
+    a: "No. There is no tool to move LabWare LIMS data into SENAITE, so set SENAITE up fresh, run both systems side by side for a while, and keep LabWare's records exported for audits. Labs that need validation usually work with a SENAITE service provider."
 ---
 
 LabWare LIMS is an enterprise laboratory information management system from LabWare, offered cloud-hosted, as a service or installed on your own servers, with an electronic lab notebook and modules for many industries. Prices are given only on request.

@@ -35,17 +35,17 @@ faq:
   - q: Is Chatwoot free?
     a: Yes. The Chatwoot community edition that Cloudgate installs is free and open source under the MIT licence, with no fee per agent. You pay only for hosting and for any email or WhatsApp service you connect.
   - q: Is Chatwoot a good alternative to Intercom or Zendesk?
-    a: Yes, for small and medium support teams that mainly need a shared inbox, live chat and a help centre. It has fewer automation and AI features than Intercom, but it costs nothing per agent and keeps conversations on your server.
+    a: Yes, Chatwoot is a good Intercom or Zendesk alternative for small and medium support teams that mainly need a shared inbox, live chat and a help centre. It has fewer automation and AI features than Intercom, but it costs nothing per agent and keeps conversations on your server.
   - q: Which channels can Chatwoot handle?
     a: Chatwoot handles website live chat, email, WhatsApp, Facebook Messenger, Instagram, Telegram, LINE and SMS in one inbox. Each channel is connected once in the settings, and some, such as WhatsApp, need an account with that service.
   - q: How do I self-host Chatwoot?
-    a: The simplest way is to install it with Cloudgate on a server Cloudgate provides or one you connect. Cloudgate sets up Chatwoot with its database and background workers and gives it a secure web address; the first person to open it creates the admin account.
-  - q: Can I import my data from Intercom or Zendesk?
+    a: The simplest way is to install Chatwoot with Cloudgate on a server Cloudgate provides or one you connect. Cloudgate sets up Chatwoot with its database and background workers and gives it a secure web address; the first person to open it creates the admin account.
+  - q: Can I import my data from Intercom or Zendesk into Chatwoot?
     a: Partly. You can import your customer contacts from a CSV file, but Chatwoot has no built-in import for past Intercom or Zendesk conversations.
-  - q: Is my customer data private?
+  - q: Is my customer data private with Chatwoot?
     a: Yes. Conversations, contacts and attachments are stored on your own server, not with Chatwoot. Messages still pass through the services you connect, such as WhatsApp or Facebook.
-  - q: Do I need an email service?
-    a: Yes, if you want to invite teammates or answer customers by email. During setup you can enter the details of an email sending service such as Mailgun, Brevo or your email provider's SMTP server.
+  - q: Does Chatwoot need an email service?
+    a: Yes, Chatwoot needs an email sending service if you want to invite teammates or answer customers by email. During setup you can enter the details of an email sending service such as Mailgun, Brevo or your email provider's SMTP server.
 screenshots:
   - src: screenshots/inbox.webp
     alt: "The Chatwoot inbox: a list of conversations from website chat, Facebook, WhatsApp and email on the left, an open conversation in the middle and the contact’s details on the right"

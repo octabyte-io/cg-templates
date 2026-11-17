@@ -1,5 +1,6 @@
 ---
 tagline: A self-hosted AI research agent that writes cited reports.
+title: "GPT Researcher: open-source deep research agent"
 category: ai
 alternativeTo: [chatgpt-deep-research, perplexity]
 ease: some-setup
@@ -39,8 +40,8 @@ faq:
     a: Yes, GPT Researcher is free and open source under the Apache-2.0 licence, with no paid edition or hosted plan. You pay for your server and for the AI and search services each report uses, or nothing extra for search if you use DuckDuckGo.
   - q: Is GPT Researcher a good alternative to ChatGPT deep research?
     a: Yes, if you want the same idea, a long report with sources from one question, on your own server with the AI model you choose. ChatGPT's deep research is more polished and has phone apps; GPT Researcher's reports depend on the model and search engine you connect.
-  - q: What do I need before my first report?
-    a: An AI provider key and a search engine. By default that is an OpenAI API key and a Tavily API key; Tavily has a free plan, or you can choose DuckDuckGo, which needs no key. You can enter them when you install or later in the app's variables.
+  - q: What do I need before my first GPT Researcher report?
+    a: GPT Researcher needs an AI provider key and a search engine. By default that is an OpenAI API key and a Tavily API key; Tavily has a free plan, or you can choose DuckDuckGo, which needs no key. You can enter them when you install or later in the app's variables.
   - q: Can GPT Researcher use Claude, Gemini or a local model?
     a: Yes. GPT Researcher works with OpenAI, Anthropic, Google Gemini, Azure OpenAI, Mistral, Groq, Bedrock and Ollama for local models, among others. The project notes that it is tested most on OpenAI's GPT models, and other models can produce shorter or cut-off reports.
   - q: How do I sign in to GPT Researcher the first time?
@@ -48,7 +49,7 @@ faq:
   - q: How is GPT Researcher different from Perplexity or Vane?
     a: GPT Researcher writes a long report, often over 2,000 words, from 20 or more sources, and takes a few minutes. Perplexity and Vane answer in a short reply, usually in seconds, so they suit quick everyday questions better.
   - q: What server size do I need for GPT Researcher?
-    a: A medium server, with about 2 GB of memory, is what the project recommends, since the AI runs at your provider. Deep Research runs use more memory, and the first install is a large download.
+    a: A medium server, with about 2 GB of memory, is what the GPT Researcher project recommends, since the AI runs at your provider. Deep Research runs use more memory, and the first install is a large download.
 screenshots:
   - src: screenshots/research-form.webp
     alt: "GPT Researcher's research page in a dark theme: a question box filled with \"Which online pre-order tools do small bakeries use, and what do they cost?\", the report type set to Detailed (about 5 minutes), the tone set to Objective, the source set to The Web, five websites per query, an empty field for domains to focus on, an MCP checkbox and a Begin Research button, with Status and History buttons at the top right"

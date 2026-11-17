@@ -44,9 +44,9 @@ faq:
   - q: How do I set up TYPO3 the first time?
     a: Open TYPO3's web address after setup and follow its install wizard. The database is already filled in; choose the empty database, then create the admin account and name your site. Do it straight away, because until it is finished anyone who opens the address could complete it.
   - q: Do I need a developer to use TYPO3?
-    a: Usually, yes, to build the design and set up content types. Once the site is built, editors work in the browser without any coding.
+    a: Usually, yes. A developer builds the design and sets up the content types of a TYPO3 site. Once the site is built, editors work in the browser without any coding.
   - q: Can I move my Sitecore or Adobe Experience Manager site to TYPO3?
-    a: Not automatically. There is no importer from Sitecore or AEM, so moving is a website rebuild. A developer or agency builds the site templates, then content is moved by hand or with a script, with redirects from the old addresses.
+    a: Not automatically. TYPO3 has no importer from Sitecore or AEM, so moving is a website rebuild. A developer or agency builds the site templates, then content is moved by hand or with a script, with redirects from the old addresses.
   - q: What server size do I need for TYPO3?
     a: A small server with about 1 GB of memory is enough to start, for TYPO3 and its database. Busy sites with many visitors need more.
 screenshots:

@@ -10,6 +10,8 @@ faq:
     a: "Yes. Fleet is a Mac MDM: it enrols Macs, pushes settings, runs scripts and shows their software and vulnerabilities. App deployment, enforced FileVault and OS updates, and lock and wipe need the paid Premium tier."
   - q: "Does Fleet also manage Windows and Linux computers?"
     a: "Yes. The same console covers macOS, Windows and Linux, and enrols iPhones, iPads and personal Android phones. Jamf Pro manages Apple devices only."
+  - q: "How do I move my Macs from Jamf Pro to Fleet?"
+    a: "One Mac at a time, nothing is imported automatically. Install Fleet's agent alongside Jamf Pro to compare what both show, create a free Apple Push certificate and recreate your configuration profiles in Fleet, then follow Fleet's migration guide to unenrol each Mac from Jamf Pro and enrol it in Fleet."
 ---
 
 Jamf Pro is device management for Apple: IT teams use it to set up, configure, update and secure Macs, iPhones, iPads and Apple TVs, with zero-touch setup, app deployment and a self-service app catalogue.

@@ -32,7 +32,7 @@ faq:
   - q: Is Mattermost free?
     a: Yes. Mattermost Team Edition is free and open source under the MIT licence, so you pay only for hosting. Mattermost says it is meant for teams under 250 active users; larger companies and features such as single sign-on need a paid edition.
   - q: Is Mattermost a good alternative to Slack?
-    a: Yes, for teams that want Slack-style channels, threads and direct messages without a monthly fee per person. It keeps your whole history searchable, but it has fewer ready-made integrations than Slack and group calls need a paid edition.
+    a: Yes. Mattermost is a good alternative to Slack for teams that want channels, threads and direct messages without a monthly fee per person. Mattermost keeps your whole history searchable, but it has fewer ready-made integrations than Slack and group calls need a paid edition.
   - q: How do I self-host Mattermost?
     a: The easiest way is to install it with Cloudgate on a server Cloudgate provides or one you connect. Cloudgate sets up Mattermost and its database and gives it a secure web address; you then open the address and create the first account, which becomes the admin.
   - q: Can I import my Slack history into Mattermost?

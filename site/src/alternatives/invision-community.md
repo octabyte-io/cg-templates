@@ -20,6 +20,8 @@ faq:
     a: "No, mainly its forums. Invision Community also has blogs, galleries, downloads, a store and paid memberships, which none of them has built in. MyBB plugins add some extras, of mixed quality, and Storyden adds a wiki-style knowledge base next to the forum."
   - q: "Can I import my Invision Community forum into phpBB, MyBB or Storyden?"
     a: "Into MyBB, yes, from Invision Power Board 3 with the free MyBB Merge System, and from version 4 with its pre-release support; newer versions are not supported. Into phpBB or Storyden, no: phpBB's own converter only upgrades old phpBB 2 boards and Storyden has no importer, so most communities start fresh."
+  - q: "Which should I choose instead of Invision Community: phpBB, MyBB or Storyden?"
+    a: "Choose phpBB for a classic forum with detailed permissions and free extensions, MyBB if you want to import an Invision Power Board 3 forum, and Storyden for a newer forum with a wiki-style Library beside it. None of them replaces Invision Community's blogs, galleries, downloads or store."
 ---
 
 Invision Community is a paid community suite: forums at its centre, plus blogs, galleries, file downloads, a store and paid memberships, either hosted by Invision or licensed to run on your own server.

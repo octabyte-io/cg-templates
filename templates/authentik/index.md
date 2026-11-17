@@ -38,15 +38,15 @@ faq:
   - q: Is authentik free?
     a: Yes, the authentik core is free and open source under the MIT licence, with no limit on users, and it includes single sign-on, two-step sign-in, LDAP, RADIUS and the proxy. You pay only for your server. Some business features need a paid Enterprise licence.
   - q: Which authentik features are paid?
-    a: The paid Enterprise licence adds Google Workspace and Microsoft Entra ID sync, enhanced audit logs, CSV reports, client certificate login, Windows and Linux device login, scheduled offboarding, access requests and ticket support. Everything else on this page is in the free edition.
+    a: The paid authentik Enterprise licence adds Google Workspace and Microsoft Entra ID sync, enhanced audit logs, CSV reports, client certificate login, Windows and Linux device login, scheduled offboarding, access requests and ticket support. Everything else on this page is in the free authentik edition.
   - q: Is authentik a good alternative to Okta?
     a: Yes, for a team that wants one login and two-step sign-in for its apps without a per-user fee. authentik covers single sign-on, a user directory and an app dashboard on your own server; Okta is a managed service with many more ready-made app connections.
   - q: Can authentik give my other apps single sign-on?
     a: Yes, any app that supports SAML, OpenID Connect, OAuth2 or LDAP can use authentik to sign people in, and its proxy can protect apps that have no login support at all. authentik publishes setup guides for many apps, including Nextcloud, Gitea, Grafana, Outline, BookStack and WordPress.
   - q: How do I sign in to authentik the first time?
-    a: Sign in with the username akadmin, or the admin email you entered at install, and the password Cloudgate creates, shown on the app's variables page in Cloudgate. The first-time setup page is closed, so nobody else can claim the admin account. Then turn on two-step sign-in for akadmin.
+    a: Sign in to authentik with the username akadmin, or the admin email you entered at install, and the password Cloudgate creates, shown on the app's variables page in Cloudgate. The first-time setup page is closed, so nobody else can claim the admin account. Then turn on two-step sign-in for akadmin.
   - q: What happens if authentik is down?
-    a: People cannot sign in to the apps that rely on it until it is back. Keep regular backups, and keep a local admin login in your most important apps.
+    a: People cannot sign in to the apps that rely on authentik until it is back. Keep regular backups, and keep a local admin login in your most important apps.
   - q: What server size do I need for authentik?
     a: authentik needs at least 2 CPU cores and 2 GB of memory, so Cloudgate asks for a medium server. That is enough for a small or mid-sized team.
 screenshots:

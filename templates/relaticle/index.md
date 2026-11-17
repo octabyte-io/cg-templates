@@ -38,13 +38,13 @@ faq:
   - q: Is Relaticle free?
     a: Yes, self-hosted Relaticle is free and open source under the AGPL licence, with no limit on users or records and no paid edition. The AI assistant has no credit limit on your own server; you pay only your AI provider, or nothing if you run a local model.
   - q: Is Relaticle a good alternative to HubSpot?
-    a: Yes, for HubSpot's sales CRM side, with companies, contacts, a deal pipeline, tasks, notes and an AI assistant. It does not replace HubSpot's marketing and service tools, such as email campaigns, forms or a help desk.
+    a: Yes, for HubSpot's sales CRM side. Relaticle has companies, contacts, a deal pipeline, tasks, notes and an AI assistant. Relaticle does not replace HubSpot's marketing and service tools, such as email campaigns, forms or a help desk.
   - q: How does Relaticle compare with Pipedrive or Attio?
     a: Relaticle covers the core of both, a deal pipeline with companies and people, plus an AI assistant and a connection for Claude and ChatGPT. Pipedrive has phone apps and sales automation, and Attio has custom record types and data enrichment, which Relaticle does not.
-  - q: Can I import my data from HubSpot, Pipedrive or Attio?
-    a: Partly. You export companies, people and deals from your old CRM as CSV files and import them with column matching and a review step, up to 10,000 rows per file. Email history, files and workflows do not carry over.
+  - q: Can I import my data from HubSpot, Pipedrive or Attio into Relaticle?
+    a: Partly. You export companies, people and deals from your old CRM as CSV files and import them into Relaticle with column matching and a review step, up to 10,000 rows per file. Email history, files and workflows do not carry over.
   - q: Does the AI assistant send my data to Relaticle?
-    a: No, on your own server your records stay on your server, and the assistant sends prompts only to the AI provider you set up. That can be Claude, OpenAI, or a local model through Ollama, and nothing answers until you add one.
+    a: No. With Relaticle on your own server, your records stay on your server, and the assistant sends prompts only to the AI provider you set up. That can be Claude, OpenAI, or a local model through Ollama, and nothing answers until you add one.
   - q: How do I sign in to Relaticle the first time?
     a: Go to your Relaticle address followed by /app and sign in with the admin email you entered at setup and the password Cloudgate generates, shown on the app's variables page. The admin then invites the rest of the team from the workspace settings.
   - q: Does Relaticle have a mobile app?

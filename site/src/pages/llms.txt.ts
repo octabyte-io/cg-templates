@@ -63,7 +63,7 @@ function body(): string {
     out.push('## Alternatives', '');
     for (const { product, apps } of alternatives) {
       out.push(
-        `- [${apps.every((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} alternatives to ${product.name}](${absolute(`alternatives/${product.id}/`)}): ${listNames(apps.map((app) => app.name))}, for ${product.job}.`,
+        `- [${apps.every((app) => licenceKind(app.license).openSource) ? 'Open-source' : 'Self-hosted'} ${apps.length === 1 ? 'alternative' : 'alternatives'} to ${product.name}](${absolute(`alternatives/${product.id}/`)}): ${listNames(apps.map((app) => app.name))}, for ${product.job}.`,
       );
     }
     out.push('');

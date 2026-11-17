@@ -42,7 +42,7 @@ faq:
   - q: Can I import my Facebook data into Friendica?
     a: No. Friendica has no Facebook importer, so your old posts, photos and friends stay on Facebook. Between Friendica servers you can move an account, and you can import a list of followed accounts from Mastodon.
   - q: How do I become the admin of my Friendica server?
-    a: Register an account using the admin email you entered at setup; that account becomes the admin. Do it straight away, because sign-ups are open to anyone until you change the registration setting.
+    a: Register a Friendica account using the admin email you entered at setup; that account becomes the admin. Do it straight away, because sign-ups are open to anyone until you change the registration setting.
   - q: Is there a Friendica app for phones?
     a: Yes. Friendica works in a phone's browser, and it supports Mastodon apps such as Tusky and Fedilab, as well as Friendica clients for Android.
   - q: Does Friendica need an email service?

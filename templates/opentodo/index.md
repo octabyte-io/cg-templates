@@ -8,7 +8,7 @@ license: AGPL-3.0-only
 goodFor: People, families and small teams who want a Todoist-style to-do list that works offline on every device
 features:
   - title: Add tasks the way you say them
-    text: Type "Call Sarah next Wed 3pm #work p1" and the date, time, project and priority are filled in for you.
+    text: 'Type "Call Sarah next Wed 3pm #work p1" and the date, time, project and priority are filled in for you.'
   - title: See what matters today
     text: Today lists what is due and what is late, with one sentence at the top naming what needs you first.
   - title: Block out your day
@@ -38,15 +38,15 @@ faq:
   - q: Is OpenTodo free?
     a: Yes, OpenTodo is free and open source under the AGPL-3.0 licence. Nothing is held back for a paid plan, so the version on your own server has every feature; you pay only for the server.
   - q: Is OpenTodo a good alternative to Todoist?
-    a: Yes, if you want Todoist-style quick add, Today and Upcoming views and shared projects on your own server, plus time blocking, a focus timer and offline use on every device. Todoist has more integrations and longer-established phone apps.
+    a: Yes. OpenTodo is a good alternative to Todoist if you want Todoist-style quick add, Today and Upcoming views and shared projects on your own server, plus time blocking, a focus timer and offline use on every device. Todoist has more integrations and longer-established phone apps.
   - q: Can I import my tasks from Todoist or TickTick into OpenTodo?
     a: Yes, OpenTodo imports Todoist backups and project exports, or fetches your tasks with a Todoist API token, and it reads TickTick's backup file. It also imports from Things, Microsoft To Do, Apple Reminders, Google Tasks and others, and shows a preview before anything is saved.
   - q: How do I sign in to OpenTodo the first time?
     a: The first person to open your OpenTodo web address creates the owner account with a name, email and password. After that, sign-up is closed and other people join through invitation links you send from the settings.
   - q: Does OpenTodo have phone apps?
-    a: Yes, there is an iPhone and iPad app in the App Store, an Android app you download from the project's GitHub page, and the web app installs on any phone's home screen. All of them keep working offline and sync when you are back online.
+    a: Yes. OpenTodo has an iPhone and iPad app in the App Store, an Android app you download from the project's GitHub page, and the web app installs on any phone's home screen. All of them keep working offline and sync when you are back online.
   - q: Can my family or team share lists in OpenTodo?
-    a: Yes, you can share any project with other people as viewer, editor or admin, assign tasks, comment and see what changed. Everyone can edit offline, and changes merge when they sync.
+    a: Yes. In OpenTodo you can share any project with other people as viewer, editor or admin, assign tasks, comment and see what changed. Everyone can edit offline, and changes merge when they sync.
   - q: What server size do I need for OpenTodo?
     a: The smallest server is enough for OpenTodo, because it is one light app with its data in a single file. The project says it idles at about 20 MB of memory and runs on a Raspberry Pi.
 screenshots:

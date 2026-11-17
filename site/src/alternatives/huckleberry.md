@@ -16,4 +16,4 @@ faq:
 
 Huckleberry is a baby tracker app for logging sleep, feedings, diaper changes and growth, best known for SweetSpot, which predicts when a baby is ready for the next nap, and for its sleep plans and advice from experts.
 
-Parents look for an alternative because the free version covers only the basics: syncing the log between several caregivers' devices and SweetSpot need a paid Plus or Premium plan. Others would rather not keep their child's records in a company's cloud. A self-hosted Baby Buddy lets every parent, grandparent and nanny share one log at no cost and keeps it on your own server, though it records and charts rather than predicts or advises.
+Parents look for an alternative because the free version covers only the basics: SweetSpot nap predictions need a paid Plus or Premium plan. Others would rather not keep their child's records in a company's cloud. A self-hosted Baby Buddy lets every parent, grandparent and nanny share one log at no cost and keeps it on your own server, though it records and charts rather than predicts or advises.

@@ -12,6 +12,7 @@ import {
   lastUpdated,
   licenceKind,
   listNames,
+  relatedAlternatives,
   type AlternativeCopy,
   type Template,
 } from '../../lib/catalogue';
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const { product, apps, copy } = Astro.props;
+const related = relatedAlternatives(product);
 const pick = apps[0];
 // Only suggest a simpler app when the pick itself isn't the easy one.
 const simplest = pick.ease === 'easy' ? undefined : apps.find((app) => app.ease === 'easy' && app.id !== pick.id);
@@ -40,6 +42,7 @@ const plural = count === 1 ? 'alternative' : 'alternatives';
 const names = listNames(apps.map((app) => app.name));
 const kinds = new Map(apps.map((app) => [app.id, licenceKind(app.license)]));
 const openApps = apps.filter((app) => kinds.get(app.id)!.openSource);
+const closedApps = apps.filter((app) => !kinds.get(app.id)!.openSource);
 // "Open-source" only when every app is; a page with a fair-code or source-available app says
 // "self-hosted", so the title never calls that app open source.
 const kindWord = openApps.length === count ? 'open-source' : 'self-hosted';
@@ -48,8 +51,14 @@ const freeLine =
   openApps.length === count
     ? `${count === 1 ? 'It is' : count === 2 ? 'Both are' : `All ${count} are`} free and open source.`
     : `${count === 2 ? 'Both' : `All ${count}`} are free to self-host. ${listNames(openApps.map((a) => a.name)) || 'None'} ${openApps.length === 1 ? 'is' : 'are'} open source; ${listNames(
-        apps.filter((a) => !kinds.get(a.id)!.openSource).map((a) => `${a.name} (${kinds.get(a.id)!.label.toLowerCase()})`),
-      )} ${count - openApps.length === 1 ? 'publishes its code' : 'publish their code'} under a licence with conditions an open-source licence does not have, such as limits on reselling it, keeping the maker's branding or a paid key for some features.`;
+        closedApps.map((a) => `${a.name} (${kinds.get(a.id)!.label.toLowerCase()})`),
+      )} ${
+        // A partly open-source app (Enonic XP, Netdata) keeps only one part under other terms, so it
+        // isn't said to have branding or reselling limits it doesn't have.
+        closedApps.every((a) => kinds.get(a.id)!.label === 'Partly open source')
+          ? `${closedApps.length === 1 ? 'keeps' : 'keep'} part of ${closedApps.length === 1 ? 'its' : 'their'} code under a licence with conditions an open-source licence does not have.`
+          : `${closedApps.length === 1 ? 'publishes its code' : 'publish their code'} under a licence with conditions an open-source licence does not have, such as limits on reselling it, keeping the maker's branding or a paid key for some features.`
+      }`;
 
 // The first sentence answers "what is the open-source <Product> alternative?" on its own, so an
 // answer engine can quote it as it stands (see `Product.lede`).
@@ -77,12 +86,13 @@ const faq = [
         },
       ]),
   {
-    q: 'Is it really free?',
-    a: copy?.cost ?? `Yes, the ${count === 1 ? 'app is' : 'apps are'} free. ${costAnswer().replace(/^The apps are free\. /, '')} One server can run several apps.`,
+    // Each question names the product, so an answer engine can quote it on its own.
+    q: count === 1 ? `Is ${pick.name} really free compared with ${product.name}?` : `Are these ${product.name} alternatives really free?`,
+    a: copy?.cost ?? `Yes, ${count === 1 ? `${pick.name} is` : `${names} are`} free. ${costAnswer().replace(/^The apps are free\. /, '')} One server can run several apps.`,
   },
   {
-    q: 'Do I need a developer?',
-    a: copy?.developer ?? 'No. Cloudgate installs the app on your server and gives it a secure web address. You use it in your browser.',
+    q: `Do I need a developer to replace ${product.name}?`,
+    a: copy?.developer ?? `No. Cloudgate installs ${count === 1 ? pick.name : 'the app you choose'} on your server and gives it a secure web address, and you use it in your browser instead of ${product.name}.`,
   },
 ];
 
@@ -323,6 +333,23 @@ const thumb = (app: Template) => {
       <Faq items={faq} />
     </div>
   </section>
+  {
+    related.length > 0 && (
+      <section class="sec browse pad" aria-labelledby="related-title">
+        <h2 class="h2" id="related-title">More tools people replace</h2>
+        <ul class="azlist">
+          {related.map((page) => (
+            <li>
+              <a href={href(`alternatives/${page.product.id}/`)}>
+                {page.product.name} {page.apps.length === 1 ? 'alternative' : 'alternatives'}
+              </a>
+              <span>{page.apps.length > 3 ? `${page.apps.slice(0, 3).map((app) => app.name).join(', ')} and more` : listNames(page.apps.map((app) => app.name))}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 </Base>
 
 <style>

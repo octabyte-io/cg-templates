@@ -40,15 +40,15 @@ faq:
   - q: Is Sure a good alternative to Monarch Money?
     a: Yes, Sure is the same kind of app as Monarch, with every account, your net worth, cash flow, budgets and an optional AI assistant in one place. Monarch connects to your banks for you; with Sure you set up a bank-sync provider yourself, or import files from your bank.
   - q: Does Sure connect to my bank?
-    a: Yes, through a bank-sync provider that you sign up for yourself, such as Plaid or SimpleFIN, and some of them charge a fee. Without one, you import transactions from CSV or QIF files or enter them by hand.
-  - q: Can I import my data from Mint, YNAB or Quicken?
+    a: Yes, Sure connects through a bank-sync provider that you sign up for yourself, such as Plaid or SimpleFIN, and some of them charge a fee. Without one, you import transactions from CSV or QIF files or enter them by hand.
+  - q: Can Sure import my data from Mint, YNAB or Quicken?
     a: Yes, Sure has importers for Mint and YNAB exports and for QIF files, which Quicken can export. It also imports transactions, accounts and trades from any CSV file.
   - q: How do I sign in to Sure the first time?
     a: The first person to sign up becomes the admin, so open Sure's web address right after setup and create your account. Anyone who can reach the address can sign up until you turn on the "Turn off new sign-ups" setting in Cloudgate, so do that once your household has joined.
   - q: Is there a Sure phone app?
     a: Partly. There is a companion app for iPhone and Android, but it only covers signing in and account balances; for everything else you use Sure in a web browser, on a phone or a computer.
   - q: Is my financial data private with Sure?
-    a: Yes, your accounts and transactions are stored on your own server, not in a finance company's cloud. Data leaves it only for services you choose to connect, such as a bank-sync provider or an AI provider for the optional assistant.
+    a: Yes, Sure stores your accounts and transactions on your own server, not in a finance company's cloud. Data leaves it only for services you choose to connect, such as a bank-sync provider or an AI provider for the optional assistant.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Sure dashboard with sample data: a cash-flow chart from salary, freelance and investment income into housing, food, utilities, travel and savings, a net worth card of $855,419.82 with a rising line chart, a spending card comparing September with August, an outflows donut by category, and an AI assistant panel answering how much the household saved over the last three months"

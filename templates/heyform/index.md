@@ -48,7 +48,7 @@ faq:
   - q: Can I import my Typeform forms into HeyForm?
     a: No, HeyForm cannot import forms from Typeform, Google Forms or Jotform. You rebuild each form in HeyForm's editor, which is quick for most forms.
   - q: Can HeyForm write forms with AI?
-    a: Yes, but only if you add your own OpenAI key. Without one, the AI form writer is off and everything else works as normal.
+    a: Yes, HeyForm can write forms with AI, but only if you add your own OpenAI key. Without one, the AI form writer is off and everything else works as normal.
 screenshots:
   - src: screenshots/form-builder.webp
     alt: "The HeyForm editor for an English Level Exam form: the list of questions on the left, a preview of the Full Name question with first and last name fields and a Next button in the middle, and Question, Design and Logic settings on the right"

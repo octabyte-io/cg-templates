@@ -9,7 +9,9 @@ faq:
   - q: "Does Keeper.sh have booking pages like CalendarBridge?"
     a: "No. Keeper.sh only syncs calendars. For booking pages, pair it with a scheduling app such as Cal.com."
   - q: "Which calendars can Keeper.sh sync?"
-    a: "Google Calendar, Outlook and Microsoft 365, iCloud, Fastmail and any CalDAV server, such as Nextcloud. Calendar links in iCal format can be read but not written to."
+    a: "Keeper.sh syncs Google Calendar, Outlook and Microsoft 365, iCloud, Fastmail and any CalDAV server, such as Nextcloud. Calendar links in iCal format can be read but not written to."
+  - q: "How do I switch from CalendarBridge to Keeper.sh?"
+    a: "Stop your CalendarBridge syncs and clear the copies they made, so nothing is copied twice, then connect the same calendars in Keeper.sh and recreate each sync. There is nothing to import. Google and Outlook need a sign-in app you register yourself."
 ---
 
 CalendarBridge is a paid service that syncs busy times between calendars and also offers booking pages for scheduling meetings.

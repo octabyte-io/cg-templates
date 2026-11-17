@@ -40,7 +40,7 @@ faq:
   - q: Does Ackee need a cookie banner?
     a: For most websites, no, because Ackee sets no cookies and does not track individual visitors. Other tools on your site may still need one, and detailed device data is best collected only after the visitor agrees.
   - q: How do I sign in to Ackee the first time?
-    a: Sign in with the admin username you chose during setup and the password Cloudgate created, shown on the app's variables page. There is no sign-up page; then add your website in Settings and copy its tracking code.
+    a: Sign in to Ackee with the admin username you chose during setup and the password Cloudgate created, shown on the app's variables page. Ackee has no sign-up page. Then add your website in Settings and copy its tracking code.
   - q: Can several people have their own Ackee accounts?
     a: No, Ackee has one login by design and its makers don't plan to add more. Share the login with people you trust, or give an app access with a permanent token from the settings.
   - q: Can I import my Google Analytics data into Ackee?

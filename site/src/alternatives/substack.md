@@ -9,7 +9,9 @@ faq:
   - q: "How much does Substack take compared with Ghost?"
     a: "Substack keeps 10% of paid subscription revenue, on top of card fees. Self-hosted Ghost takes nothing; you pay Stripe's card fees, your server and Mailgun for sending."
   - q: "Will I lose readers who found me through Substack?"
-    a: "Your subscribers come with you. What you lose is Substack's app and recommendation network, which help new readers find you, so plan other ways to grow, such as search, social media and recommendations from other writers."
+    a: "Your subscribers come with you to Ghost. What you lose is Substack's app and recommendation network, which help new readers find you, so plan other ways to grow, such as search, social media and recommendations from other writers."
+  - q: "Can I import my Substack posts and subscribers into Ghost?"
+    a: "Yes. Ghost can bring posts and subscribers over from Substack, as well as from WordPress, Medium and other platforms. Paid subscribers keep paying through your own Stripe account once it is connected to Ghost."
 ---
 
 Substack is a publishing platform for newsletters. Writers publish posts that go to a web page and to subscribers' inboxes, and can charge for paid subscriptions, with Substack handling the website, payments and email.

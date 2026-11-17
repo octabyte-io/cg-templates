@@ -22,6 +22,8 @@ faq:
     a: "Not on their own. Mattermost's free edition has one-to-one calls only, Zulip starts calls through a separate service such as Jitsi or Zoom, and Element and Synapse, Campfire and Chatto have no calls in this setup. Many teams pair any of them with a video meeting tool."
   - q: "Do I need Microsoft 365 to use these apps?"
     a: "No. Mattermost, Zulip, Element, Campfire and Chatto all work on their own, in a browser or their own apps, with any email and document tools."
+  - q: "Can I bring my Microsoft Teams chat history into Zulip?"
+    a: "Yes. Zulip can import a workspace from Microsoft Teams, as well as from Slack, Mattermost and Rocket.Chat, so past conversations come across. Mattermost, Element with Synapse, Campfire and Chatto have no Microsoft Teams importer in this setup, so they start with empty channels."
 ---
 
 Microsoft Teams is Microsoft's chat and meetings app, part of Microsoft 365. It combines chat channels, video meetings, calling and file sharing through SharePoint and OneDrive.

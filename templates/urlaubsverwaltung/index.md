@@ -36,21 +36,21 @@ faq:
   - q: Is Urlaubsverwaltung free?
     a: Yes. Urlaubsverwaltung is free, open-source software under the Apache 2.0 licence, with every feature included, so you pay only for your server. Its makers, Focus Shift, sell a hosted version and paid support, but nothing is held back from the self-hosted version.
   - q: Is Urlaubsverwaltung a good alternative to Timetastic?
-    a: Yes, for leave tracking. Like Timetastic, it handles leave requests, approvals, a team absence calendar and calendar feeds, but with no fee per user and your data on your own server. Timetastic is more polished and has phone apps, and you add people inside the app; here you add staff in a separate sign-in console that Cloudgate installs alongside it.
+    a: Yes, for leave tracking. Like Timetastic, Urlaubsverwaltung handles leave requests, approvals, a team absence calendar and calendar feeds, but with no fee per user and your data on your own server. Timetastic is more polished and has phone apps, and you add people inside the app; here you add staff in a separate sign-in console that Cloudgate installs alongside it.
   - q: How do I sign in to Urlaubsverwaltung the first time?
-    a: Open the app's address and sign in with the email you typed at setup and the password Cloudgate created, shown on the app's variables page as ADMIN_PASSWORD. As the first person to sign in you become the Office admin, who manages staff, permissions and settings. Sign-in runs through Keycloak, a sign-in service Cloudgate installs alongside the app with its own web address; its sign-in page is in German by default, with English to choose.
+    a: Open your Urlaubsverwaltung address and sign in with the email you typed at setup and the password Cloudgate created, shown on the app's variables page as ADMIN_PASSWORD. As the first person to sign in you become the Office admin, who manages staff, permissions and settings. Sign-in runs through Keycloak, a sign-in service Cloudgate installs alongside the app with its own web address; its sign-in page is in German by default, with English to choose.
   - q: How do I add staff to Urlaubsverwaltung?
     a: Add each person in the Keycloak admin console at your sign-in address, under /admin/urlaubsverwaltung/console/, signing in with your own email and password. Create the user with their email and name, set a password under Credentials, and give them the app's address. Their Urlaubsverwaltung account is created the first time they sign in, and you then set their department and leave allowance as Office. People cannot sign up on their own.
   - q: What server size do I need for Urlaubsverwaltung?
-    a: A large server with 4 GB of memory, because the app and its Keycloak sign-in service are both Java programs that run next to a PostgreSQL database. Together they use about 1.6 GB once people are signing in.
+    a: Urlaubsverwaltung needs a large server with 4 GB of memory, because the app and its Keycloak sign-in service are both Java programs that run next to a PostgreSQL database. Together they use about 1.6 GB once people are signing in.
   - q: Is Urlaubsverwaltung available in English?
-    a: Yes. The interface is available in English as well as German, so English-speaking staff can use it. Its name and most of its help pages and setup guide are in German.
-  - q: Can I import my data from Timetastic, absence.io or Personio?
+    a: Yes. The Urlaubsverwaltung interface is available in English as well as German, so English-speaking staff can use it. Its name and most of its help pages and setup guide are in German.
+  - q: Can Urlaubsverwaltung import my data from Timetastic, absence.io or Personio?
     a: No, Urlaubsverwaltung has no importer for other leave tools. Each person's account is created the first time they sign in, and you then enter each person's leave allowance and any remaining days by hand.
   - q: Does Urlaubsverwaltung include time tracking or payroll?
     a: No. Urlaubsverwaltung covers leave, sick notes and overtime. Its makers' time-tracking app is a separate product, and for employee records or payroll you need a full HR system alongside it.
   - q: Does Urlaubsverwaltung work with Google Calendar and Outlook?
-    a: Yes. Each person can subscribe to a calendar link of their own absences, their department's or, if allowed, the whole company's, in Google Calendar, Outlook or any calendar app that reads iCal links.
+    a: Yes. In Urlaubsverwaltung each person can subscribe to a calendar link of their own absences, their department's or, if allowed, the whole company's, in Google Calendar, Outlook or any calendar app that reads iCal links.
 screenshots:
   - src: screenshots/personal-overview.webp
     alt: "Urlaubsverwaltung's personal overview in German for an employee in 2026: 35 days of leave allowed and 18.5 days left, a three-month calendar from August to October with holidays and sick days marked, and a list of her absence requests with edit and delete buttons, next to a left menu of absences, sick notes, overtime and settings"

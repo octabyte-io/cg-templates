@@ -36,7 +36,7 @@ faq:
   - q: Is n8n free to self-host?
     a: Yes. The n8n Community Edition is free to self-host for your own business, and you pay only for hosting. Some team features, such as single sign-on and advanced permissions, need a paid n8n licence.
   - q: Is n8n a good alternative to Zapier?
-    a: Yes, n8n is one of the most popular self-hosted alternatives to Zapier and Make. It connects to more than 400 apps, has no limit on runs when you host it yourself, and handles branches and loops that are awkward in Zapier. The trade-off is a slightly steeper learning curve.
+    a: Yes, n8n is one of the most popular self-hosted alternatives to Zapier and Make. It connects to more than 2,000 apps and services, has no limit on runs when you host it yourself, and handles branches and loops that are awkward in Zapier. The trade-off is a slightly steeper learning curve.
   - q: Is n8n open source?
     a: n8n is "fair-code" rather than open source. Its code is public and you may run and change it for your own business under the Sustainable Use License, but you may not resell n8n itself as a hosted service.
   - q: How do I self-host n8n?
@@ -44,7 +44,7 @@ faq:
   - q: Can I move my Zaps from Zapier to n8n?
     a: There is no automatic import from Zapier or Make. Most simple Zaps take a few minutes to rebuild, and n8n's template library covers many common ones.
   - q: Is my data private with self-hosted n8n?
-    a: Yes. Your workflows, run history and saved app logins stay in a database on your own server, and logins are encrypted with a key only your installation holds. Data leaves the server only when a workflow sends it to an app you connected.
+    a: Yes. With self-hosted n8n, your workflows, run history and saved app logins stay in a database on your own server, and logins are encrypted with a key only your installation holds. Data leaves the server only when a workflow sends it to an app you connected.
   - q: What server size do I need for n8n?
     a: n8n runs on a server with 1 GB of memory for light use. If you run many workflows at once or handle large files, choose 2 GB or more.
 screenshots:
@@ -57,7 +57,7 @@ n8n is a workflow automation tool that connects the apps your business already u
 
 A small online shop, for example, can have every new order added to a Google Sheet, a message posted in the team's Slack channel and a thank-you email sent to the customer, without anyone copying and pasting. The same shop could ask an AI step to sort incoming support emails by topic before they reach a person.
 
-A workflow can start on a schedule, when an email arrives, when someone fills in a form, or when another app sends n8n a message through a webhook. n8n has ready-made blocks for more than 400 services, including Gmail, Google Sheets, Slack, Shopify, HubSpot, Stripe, Notion and Airtable, plus AI models from OpenAI, Anthropic and Google. For anything else, an HTTP block talks to almost any online service. There is no phone app; you use n8n in your web browser.
+A workflow can start on a schedule, when an email arrives, when someone fills in a form, or when another app sends n8n a message through a webhook. n8n has ready-made blocks for more than 2,000 apps and services, including Gmail, Google Sheets, Slack, Shopify, HubSpot, Stripe, Notion and Airtable, plus AI models from OpenAI, Anthropic and Google. For anything else, an HTTP block talks to almost any online service. There is no phone app; you use n8n in your web browser.
 
 ### How Cloudgate installs n8n
 

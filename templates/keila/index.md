@@ -37,16 +37,16 @@ faq:
     a: Yes. Keila is free, open-source software under the AGPL licence, and the self-hosted version has no premium features held back. You pay only for your server and your email sending service. Keila Cloud is the maker's paid hosted version.
   - q: Is Keila a good alternative to Mailchimp?
     a: Yes, for a regular newsletter with sign-up forms. Keila's visual editor, forms, segments and open and click statistics cover what most small senders use in Mailchimp, without a price per contact. Mailchimp has more ready-made designs, landing pages and automations, and it delivers the email for you.
-  - q: Do I need an email sending service?
+  - q: Do I need an email sending service for Keila?
     a: Yes. Keila writes and schedules your emails, but a sending service delivers them, such as Amazon SES, Postmark, Mailgun, SendGrid or any SMTP account. For a small list your own email account can work. Set up SPF, DKIM and DMARC records on your domain with that service, or your emails are more likely to land in spam.
-  - q: Can I import my contacts from Mailchimp or Brevo?
-    a: Yes. Export your contacts as a CSV file and import it into Keila; email address, first name and last name columns are recognised. Campaigns and templates don't move over, so you rebuild your email design in Keila.
+  - q: Can Keila import my contacts from Mailchimp or Brevo?
+    a: Yes. Export your contacts from Mailchimp or Brevo as a CSV file and import it into Keila; email address, first name and last name columns are recognised. Campaigns and templates don't move over, so you rebuild your email design in Keila.
   - q: Should I choose Keila or listmonk?
     a: Choose Keila if you want an editor and sign-up forms that feel closer to Mailchimp's. Choose listmonk if you send to very large lists and want the lightest app to run.
-  - q: How do I sign in the first time?
-    a: Sign in with the admin email address you typed in Cloudgate and the password Cloudgate created, shown on the app's variables page. You can then add team members under Admin, Users.
-  - q: Is my data private?
-    a: Yes. Your contacts, campaigns and statistics are stored on your own server. The email sending service you choose sees only the emails it delivers.
+  - q: How do I sign in to Keila the first time?
+    a: Sign in to Keila with the admin email address you typed in Cloudgate and the password Cloudgate created, shown on the app's variables page. You can then add team members under Admin, Users.
+  - q: Is my data private with Keila?
+    a: Yes. Keila stores your contacts, campaigns and statistics on your own server. The email sending service you choose sees only the emails it delivers.
 screenshots:
   - src: screenshots/campaign-editor.webp
     alt: "The Keila campaign editor: a sidebar with Contacts, Segments, Forms, Templates and Campaigns, a subject line, a formatting toolbar, and an email preview that greets the reader by first name above headlines, a button and a rocket photo, with Save, Schedule and Send buttons"

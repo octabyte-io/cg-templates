@@ -37,12 +37,12 @@ faq:
     a: Yes, Plik is free and open source under the MIT licence, with no paid edition. You pay only for your server and the disk space your files use.
   - q: Is Plik a good alternative to WeTransfer?
     a: Yes, if you mainly need to send big files by link. You upload, choose when the link expires, add a password or encryption if you want, and send the link yourself. Plik does not e-mail links or show branded transfer pages.
-  - q: Does the person I send files to need an account?
-    a: No, anyone with the link can view and download the files, as one ZIP if they like. Only uploading needs an account, so strangers can't use your server to share files.
+  - q: Does the person I send files to need a Plik account?
+    a: No, anyone with the Plik link can view and download the files, as one ZIP if they like. Only uploading needs an account, so strangers can't use your server to share files.
   - q: How do I sign in to Plik the first time?
-    a: Sign in with the username admin and the password Cloudgate created, shown on the app's variables page. Change that password after your first sign-in, then create accounts for colleagues on the Admin page; there is no public sign-up.
-  - q: How long do files stay, and how big can they be?
-    a: Files stay for up to 30 days, or until the first download if you choose, and are then deleted automatically. Each file can be up to 10 GB, and there is no limit on how many files an upload holds.
+    a: Sign in to Plik with the username admin and the password Cloudgate created, shown on the app's variables page. Change that password after your first sign-in, then create accounts for colleagues on the Admin page; there is no public sign-up.
+  - q: How long do Plik files stay, and how big can they be?
+    a: Plik keeps files for up to 30 days, or until the first download if you choose, then deletes them automatically. Each file can be up to 10 GB, and there is no limit on how many files an upload holds.
   - q: Can Plik encrypt my files?
     a: Yes, turn on end-to-end encryption and the files are locked in your browser before they are uploaded, so the server never sees their contents. The recipient needs the passphrase, which Plik can include in the link.
   - q: What server size do I need for Plik?

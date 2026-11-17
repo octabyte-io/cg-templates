@@ -40,8 +40,8 @@ faq:
   - q: Can I import my XMind or MindManager mind maps into WiseMapping?
     a: Yes, WiseMapping imports XMind (.xmind) and MindManager (.mmap) files, as well as FreeMind, Freeplane and OPML. MindMeister's own .mind files cannot be imported directly.
   - q: How do I sign in to WiseMapping the first time?
-    a: Sign in with the admin email you typed at setup, in lowercase, and the password Cloudgate created, shown on the app's variables page as ADMIN_PASSWORD. There are no built-in accounts. Colleagues can sign up on the sign-in page, and the admin activates each new account in Admin console > Accounts, because no email server is set up for them to confirm it themselves.
-  - q: Can several people work on the same mind map?
+    a: Sign in to WiseMapping with the admin email you typed at setup, in lowercase, and the password Cloudgate created, shown on the app's variables page as ADMIN_PASSWORD. There are no built-in accounts. Colleagues can sign up on the sign-in page, and the admin activates each new account in Admin console > Accounts, because no email server is set up for them to confirm it themselves.
+  - q: Can several people work on the same mind map in WiseMapping?
     a: Yes, you can share each map with colleagues as editors or viewers. Only one person edits a map at a time, because WiseMapping locks a map while it is open for editing so nobody's changes are overwritten.
   - q: Is there a WiseMapping phone or desktop app?
     a: No phone app, but WiseMapping works in the browser on phones, tablets and computers. A separate WiseMapping Desktop app for Windows, macOS and Linux keeps maps offline on one computer.

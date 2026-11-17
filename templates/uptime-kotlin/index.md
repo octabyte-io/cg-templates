@@ -38,13 +38,13 @@ faq:
   - q: Is Uptime Kotlin free?
     a: Yes. Uptime Kotlin is free and open source under the MIT licence. There is no paid edition and no limit on monitors, and database checks are included; you pay only for your server.
   - q: Is Uptime Kotlin a good alternative to UptimeRobot?
-    a: Yes, for a small business that wants to watch its own websites and services. It covers uptime checks, alerts, incidents and public status pages without a monitor limit, and it can also check databases. Unlike UptimeRobot, it checks from your one server rather than from many locations.
+    a: Yes, for a small business that wants to watch its own websites and services. Uptime Kotlin covers uptime checks, alerts, incidents and public status pages without a monitor limit, and it can also check databases. Unlike UptimeRobot, it checks from your one server rather than from many locations.
   - q: How is Uptime Kotlin different from Uptime Kuma?
     a: Both are free, self-hosted uptime monitors with status pages. Uptime Kotlin runs in about 50 MB of memory, can check Oracle databases, Kafka and RabbitMQ, and keeps incidents you can export as a spreadsheet; Uptime Kuma offers far more alert services, over 90 against Uptime Kotlin's eleven.
   - q: How do I sign in to Uptime Kotlin the first time?
-    a: Open the app's web address and create your account. There is no default username or password to change.
-  - q: Can I import my monitors from UptimeRobot?
-    a: No, there is no automatic import from UptimeRobot or Pingdom. You add each website or service again by entering its address and how often to check it.
+    a: Open your Uptime Kotlin web address and create your account. There is no default username or password to change.
+  - q: Can Uptime Kotlin import my monitors from UptimeRobot?
+    a: No, Uptime Kotlin has no automatic import from UptimeRobot or Pingdom. You add each website or service again by entering its address and how often to check it.
   - q: Should Uptime Kotlin run on the same server as my website?
     a: No, it is better on a different server. If both share a server and that server goes down, Uptime Kotlin goes down too and cannot alert you.
   - q: What server size do I need for Uptime Kotlin?

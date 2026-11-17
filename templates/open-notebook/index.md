@@ -40,11 +40,11 @@ faq:
   - q: Is Open Notebook a good alternative to NotebookLM?
     a: Yes, if you want NotebookLM's way of working on your own server. Google renamed NotebookLM to Gemini Notebook in July 2026; Open Notebook offers the same idea of sources in notebooks, chat with citations and audio overviews, but you choose the AI provider and keep your documents. It is less polished and needs your own AI key.
   - q: Which AI keys do I need for Open Notebook?
-    a: You need at least one language model and one embedding model, which powers search. Add a provider's API key under Manage > Models, add the two models and let the app assign them as defaults. Podcasts also need a text-to-speech model, and audio files need a speech-to-text model.
+    a: Open Notebook needs at least one language model and one embedding model, which powers search. Add a provider's API key under Manage > Models, add the two models and let the app assign them as defaults. Podcasts also need a text-to-speech model, and audio files need a speech-to-text model.
   - q: Can Open Notebook run with local AI models?
     a: Yes, Open Notebook works with Ollama, LM Studio and other OpenAI-compatible servers, so your documents need not leave your own machines. Local models need a server with much more memory.
   - q: How do I sign in to Open Notebook the first time?
-    a: Open the app's web address and enter the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. There are no user accounts to create; the same password protects the whole app.
+    a: Open the Open Notebook web address and enter the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. There are no user accounts to create; the same password protects the whole app.
   - q: Can several people use one Open Notebook?
     a: No, Open Notebook is built for one person. It has a single shared password and no user accounts, roles or sharing, so give each person their own install.
   - q: What server size do I need for Open Notebook?

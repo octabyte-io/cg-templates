@@ -46,7 +46,7 @@ faq:
   - q: Is Leantime good for people with ADHD?
     a: Leantime is built with ADHD, dyslexia and autism in mind, with a simple layout and a My Work page that shows what is due next. It is aimed at people who are not trained project managers.
   - q: Does Leantime have a phone app?
-    a: Yes, but it is in beta, and connecting it to your own server needs a paid add-on. The web app works in a phone's browser without it.
+    a: Yes, but the Leantime phone app is in beta, and connecting it to your own server needs a paid add-on. The web app works in a phone's browser without it.
   - q: What server size do I need for Leantime?
     a: A small server with 1 GB of memory is enough for Leantime and its database, because the app is light. You can move to a bigger server later as your team grows.
 screenshots:

@@ -37,13 +37,13 @@ faq:
   - q: Can the PrivateBin server read my notes?
     a: No. PrivateBin encrypts each note in the browser with 256-bit AES before sending it, and the key stays in the part of the link after the "#", which is never sent to the server. Anyone who has the whole link can read the note, so add a password for anything sensitive and send that password another way.
   - q: Is PrivateBin a good alternative to Pastebin or Onetime Secret?
-    a: Yes, for private sharing. Like Onetime Secret it makes links that work once or expire, and like Pastebin it shares text and code, but it runs on your own web address with no ads, no accounts and no cap on how many private notes you keep. It has no public archive or search, because it is built for private links.
-  - q: How do I sign in the first time?
+    a: Yes, for private sharing. Like Onetime Secret, PrivateBin makes links that work once or expire, and like Pastebin it shares text and code, but it runs on your own web address with no ads, no accounts and no cap on how many private notes you keep. It has no public archive or search, because it is built for private links.
+  - q: How do I sign in to PrivateBin the first time?
     a: No sign-in is needed. PrivateBin has no accounts or admin login; open your web address, type or paste your text, choose the options and press Create to get a link.
-  - q: What happens when a note is set to burn after reading?
-    a: A burn-after-reading note is deleted from the server the first time it is opened. The reader is asked to confirm before it opens, and once they close the window it cannot be shown again.
+  - q: What happens when a PrivateBin note is set to burn after reading?
+    a: A PrivateBin burn-after-reading note is deleted from the server the first time it is opened. The reader is asked to confirm before it opens, and once they close the window it cannot be shown again.
   - q: Can I use PrivateBin on my phone?
-    a: Yes, in the phone's web browser. There is no separate app, but every note has a QR code so you can open it on a phone in one scan.
+    a: Yes, PrivateBin works in the phone's web browser. There is no separate app, but every note has a QR code so you can open it on a phone in one scan.
   - q: What size server does PrivateBin need?
     a: A very small one. Self-hosted PrivateBin is a light web app that stores encrypted notes as files, with no database, so it runs on the smallest server Cloudgate offers.
 screenshots:

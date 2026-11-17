@@ -7,9 +7,11 @@ moving: |
   Pascal Editor cannot open Planner 5D projects, so you redraw them. Save a picture of each floor plan from Planner 5D first. Sign in to Pascal Editor with the password Cloudgate created, choose New project, and upload the picture as a reference layer to trace over. Draw the rooms, add doors, windows and stairs, add further floors if the building has them, then furnish the rooms and export the plan as a PDF or the model in the format you need.
 faq:
   - q: "Does Pascal Editor have realistic renders like Planner 5D?"
-    a: "No. Pascal Editor shows your design in an interactive 3D view and exports 3D files, but it does not make photo-quality renders."
+    a: "No. Pascal Editor shows your design in an interactive 3D view and exports 3D files, but it does not make photo-quality renders like Planner 5D."
   - q: "Can I use Pascal Editor on a phone or tablet?"
-    a: "Not well. Pascal Editor works in a desktop browser and has no phone apps, and the 3D view runs best on a computer with decent graphics."
+    a: "Not well. Pascal Editor works in a desktop browser and, unlike Planner 5D, has no phone apps, and the 3D view runs best on a computer with decent graphics."
+  - q: "Can Pascal Editor open my Planner 5D projects?"
+    a: "No. Pascal Editor cannot open Planner 5D projects, so you redraw your rooms in Pascal Editor. Once drawn, the design exports as IFC, GLB, OBJ or STL files and a floor plan PDF."
 ---
 
 Planner 5D is a home design app for drawing floor plans and furnishing them in 3D, in the browser and on phones. It is freemium, with a free version and paid plans, a large furniture catalogue and realistic renders.

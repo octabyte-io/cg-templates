@@ -12,7 +12,7 @@ features:
   - title: Keep quick thoughts and lasting notes apart
     text: Short "blinkos" can archive themselves on a schedule, while longer notes stay as your knowledge base.
   - title: Organise with tags and to-do lists
-    text: Add nested tags such as #work/clients, tick off checklists, attach files and record voice notes.
+    text: 'Add nested tags such as #work/clients, tick off checklists, attach files and record voice notes.'
   - title: Ask your notes a question
     text: Optional AI search and chat answer in plain language from your own notes, and can suggest tags and help you write.
   - title: Look back over your notes
@@ -44,7 +44,7 @@ faq:
   - q: Is there a Blinko phone app?
     a: Yes, for Android. Blinko has an Android app and desktop apps for Windows, macOS and Linux that sign in to your own Blinko address. There is no iPhone app, but Blinko works in a phone's browser.
   - q: Can I import my notes into Blinko?
-    a: Yes, from Markdown files (one file or a zip of them) and from a Memos database. There is no direct importer for Mem, flomo or Google Keep.
+    a: Yes. Blinko imports Markdown files (one file or a zip of them) and a Memos database. There is no direct importer for Mem, flomo or Google Keep.
   - q: Should I choose Blinko or Memos?
     a: Choose Blinko if you want AI search and chat over your notes, or Android and desktop apps. Choose Memos for a lighter, simpler notes timeline with no AI.
 screenshots:

@@ -41,10 +41,10 @@ faq:
     a: You install Self-hosted LiveSync in Obsidian from the Community plugins list, open its setup and enter your server's web address, the user name you chose when installing, the password Cloudgate created for it (shown on the app's variables page), the database name obsidiannotes and an encryption passphrase of your own. Then copy a setup link from that first device to connect each other device. Back up your vault before you start.
   - q: Does Self-hosted LiveSync work on iPhone and Android?
     a: Yes, Self-hosted LiveSync works in the Obsidian app on iPhone, iPad and Android, as well as on Windows, Mac and Linux. Phones need a secure https address, which Cloudgate gives your server.
-  - q: Can the server read my notes?
-    a: No, the server cannot read your notes when you turn on end-to-end encryption, which the plugin strongly recommends. Notes are encrypted on your device with your passphrase before they are sent, so keep the passphrase safe, because without it the notes cannot be read.
+  - q: Can the Self-hosted LiveSync server read my notes?
+    a: No. The Self-hosted LiveSync server cannot read your notes when you turn on end-to-end encryption, which the plugin strongly recommends. Notes are encrypted on your device with your passphrase before they are sent, so keep the passphrase safe, because without it the notes cannot be read.
   - q: What server size do I need for Self-hosted LiveSync?
-    a: A very small server is enough for one person's notes, because the server only stores and passes on the changes. Choose a larger disk if your vault holds many pictures or PDFs.
+    a: A very small server is enough to run Self-hosted LiveSync for one person's notes, because the server only stores and passes on the changes. Choose a larger disk if your vault holds many pictures or PDFs.
 screenshots:
   - src: screenshots/connection-and-encryption.webp
     alt: "Two Self-hosted LiveSync setup windows side by side: CouchDB Configuration, with fields for the server address, user name, password and database name and a warning that phones need a secure https address, and End-to-End Encryption, with encryption ticked, a hidden passphrase, a note explaining the server cannot read your data without it, and an option to hide file names and dates"

@@ -41,13 +41,13 @@ faq:
   - q: Can I send files with Password Pusher?
     a: Yes, the free edition of Password Pusher can send files, web links and QR codes as well as passwords and text. Files are kept on your server and deleted when the link expires.
   - q: Can I see who opened a Password Pusher link?
-    a: Yes, each link has an activity log that records every view with its time, IP address and browser, plus any attempts after it expired. You need to be signed in when you create the link to see its log in your dashboard.
+    a: Yes. Each Password Pusher link has an activity log that records every view with its time, IP address and browser, plus any attempts after it expired. You need to be signed in when you create the link to see its log in your dashboard.
   - q: How do I sign in to Password Pusher the first time?
-    a: Sign in with the admin email you entered during setup and the password Cloudgate created for it, which Cloudgate shows on the app's variables page. That account can open the admin dashboard straight away.
+    a: Sign in to Password Pusher with the admin email you entered during setup and the password Cloudgate created for it, which Cloudgate shows on the app's variables page. That account can open the admin dashboard straight away.
   - q: Can strangers use my Password Pusher?
-    a: Yes, by default anyone who can reach your web address can create links and sign up for an account. Both can be switched off in the app's settings, so only your team creates links; the secret links themselves always open for whoever you send them to.
+    a: Yes. By default, anyone who can reach your Password Pusher web address can create links and sign up for an account. Both can be switched off in the app's settings, so only your team creates links; the secret links themselves always open for whoever you send them to.
   - q: Is there a Password Pusher phone app?
-    a: No, there is no phone app, but the app and its secret links work in any phone's browser. There is also a Chrome extension and a command-line tool for people who send passwords often.
+    a: No, Password Pusher has no phone app, but the site and its secret links work in any phone's browser. There is also a Chrome extension and a command-line tool for people who send passwords often.
 screenshots:
   - src: screenshots/new-push.webp
     alt: "The Password Pusher form with a shop till password typed in, sliders set to delete the link after 3 days or 1 view, a passphrase, a name and a private note, and a Push It button, with tabs for Files, URLs and QR codes"

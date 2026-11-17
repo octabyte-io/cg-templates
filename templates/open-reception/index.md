@@ -39,13 +39,13 @@ faq:
   - q: Is OpenReception a good alternative to Doctolib?
     a: Yes, for a practice that wants its own online booking page and encrypted patient data. Unlike Doctolib, OpenReception has no patient directory, ratings, text-message reminders, video consultations or link to practice software.
   - q: Who can read the appointments in OpenReception?
-    a: Only your staff can. Patients' details are encrypted on their own device before they are sent, and staff unlock them with their passkey, so the server and its administrator cannot read them.
+    a: Only your staff can. In OpenReception, patients' details are encrypted on their own device before they are sent, and staff unlock them with their passkey, so the server and its administrator cannot read them.
   - q: What do staff need to sign in to OpenReception?
     a: Each staff member needs a passkey that supports the PRF extension, such as Apple Keychain, 1Password, Enpass, Windows Hello on Windows 11 25H2 or newer, a YubiKey 5 or a Nitrokey 3. Bitwarden and Dashlane passkeys do not work, and the makers recommend a spare hardware key in case one is lost.
   - q: How do I sign in to OpenReception the first time?
-    a: Open your web address right after setup; the first person to open it creates the admin account with a passkey or a passphrase. Then you add your practice, its booking settings and your staff, who each get an email invitation.
+    a: Open your OpenReception web address right after setup; the first person to open it creates the admin account with a passkey or a passphrase. Then you add your practice, its booking settings and your staff, who each get an email invitation.
   - q: Can patients see or cancel their appointments online?
-    a: Yes. Patients sign in on your booking page with their email address and a PIN to see their upcoming appointments and cancel them, and staff are notified in the dashboard.
+    a: Yes. Patients sign in on your OpenReception booking page with their email address and a PIN to see their upcoming appointments and cancel them, and staff are notified in the dashboard.
   - q: Can I move my appointments from Doctolib or connect my practice software?
     a: No, OpenReception has no importer from Doctolib and does not connect to practice management software yet. You set up your appointment types and people once, and new bookings start from there.
 screenshots:

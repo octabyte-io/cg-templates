@@ -42,11 +42,11 @@ faq:
   - q: How is WeKnora different from RAGFlow and AnythingLLM?
     a: WeKnora sits between them. RAGFlow reads hard scans and tables more deeply but needs a 16 GB server; AnythingLLM is lighter and simpler, with a desktop app. WeKnora adds an automatic wiki, FAQ knowledge bases and team workspaces with roles, and recommends 8 GB of memory.
   - q: Does WeKnora come with an AI model?
-    a: No. You add a chat model and an embedding model from a provider such as OpenAI, Anthropic, Gemini, DeepSeek or Qwen with your own API key, or from an Ollama server you run. Your documents stay on your server, but questions and the passages used to answer them go to the provider you connect.
+    a: No. In WeKnora you add a chat model and an embedding model from a provider such as OpenAI, Anthropic, Gemini, DeepSeek or Qwen with your own API key, or from an Ollama server you run. Your documents stay on your server, but questions and the passages used to answer them go to the provider you connect.
   - q: Is WeKnora available in English?
-    a: Yes. The interface is available in English, Chinese, Japanese, Korean and Russian; pick the language on the sign-in page or in General settings. Much of the official documentation is written in Chinese.
+    a: Yes. The WeKnora interface is available in English, Chinese, Japanese, Korean and Russian; pick the language on the sign-in page or in General settings. Much of the official documentation is written in Chinese.
   - q: How do I sign in to WeKnora the first time?
-    a: There is no default account; open the app's address and sign up. To become the system administrator, sign up with the admin email you gave Cloudgate at setup, then restart the app once. Sign-up is open by default, so the administrator can switch it to invitation-only in the system settings.
+    a: WeKnora has no default account; open the app's address and sign up. To become the system administrator, sign up with the admin email you gave Cloudgate at setup, then restart the app once. Sign-up is open by default, so the administrator can switch it to invitation-only in the system settings.
   - q: What server size do I need for WeKnora?
     a: WeKnora recommends at least 4 CPU cores and 8 GB of memory, because reading documents uses a lot of memory, plus disk space for your files. Running AI models on the same server would need much more.
 screenshots:

@@ -36,11 +36,11 @@ faq:
   - q: Is Fireshare free?
     a: Yes. Fireshare is free, open-source software under the GPL-3.0 licence, with no paid edition. You pay only for the server and its disk space.
   - q: Is Fireshare a good alternative to Streamable?
-    a: Yes, for sharing clips by link. Like Streamable, each video gets its own watch page that friends open without an account, but the clips live on your own server with no upload limit or expiry other than your disk.
+    a: Yes, Fireshare works well for sharing clips by link. Like Streamable, each video gets its own watch page that friends open without an account, but the clips live on your own server with no upload limit or expiry other than your disk.
   - q: Can Fireshare record my game clips like Medal?
     a: No. Fireshare hosts and shares clips but doesn't record them. Capture clips with the tool you already use, such as your graphics card's overlay or OBS, then upload them to Fireshare.
-  - q: Do people need an account to watch my clips?
-    a: No. Anyone with a clip's link can watch it in the browser. Private clips are reachable only by their link, and you can also put a password on a video.
+  - q: Do people need an account to watch my Fireshare clips?
+    a: No. Anyone with a Fireshare clip's link can watch it in the browser. Private clips are reachable only by their link, and you can also put a password on a video.
   - q: Will my links show a preview in Discord?
     a: Yes. Fireshare adds preview details to every shared link, so Discord and social apps show the clip's title and picture. Cloudgate sets your app's web address so the previews work.
   - q: How do I sign in the first time?

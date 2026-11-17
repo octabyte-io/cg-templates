@@ -42,7 +42,7 @@ faq:
   - q: How do I sign in to LeafWiki the first time?
     a: LeafWiki creates one admin account when it first starts, with the username admin and the password Cloudgate generated for you, which you find in your app's settings in Cloudgate. There is no sign-up page; after signing in, change the password and add your team from the user management.
   - q: Can I import my Obsidian notes or Markdown files into LeafWiki?
-    a: Yes, editors and admins can import a ZIP of Markdown files, and Obsidian-style wiki links are turned into links between pages. It works best with a tidy folder structure; it is not an automatic converter for every format.
+    a: Yes, LeafWiki editors and admins can import a ZIP of Markdown files, and Obsidian-style wiki links are turned into links between pages. It works best with a tidy folder structure; it is not an automatic converter for every format.
   - q: Can I import my Confluence pages into LeafWiki?
     a: No, LeafWiki has no importer for Confluence. Its importer reads Markdown files only, so plan to move your most-used pages across by hand.
   - q: Does LeafWiki keep a history of changes?

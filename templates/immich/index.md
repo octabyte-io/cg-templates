@@ -32,16 +32,16 @@ faq:
   - q: Is Immich free?
     a: Yes. Immich is free, open-source software, and you pay only for hosting and storage. Its makers sell an optional supporter licence, which unlocks no extra features.
   - q: Is Immich a good alternative to Google Photos?
-    a: Yes. It is one of the closest open-source matches to Google Photos, with automatic phone backup, face recognition, a photo map, search in plain words, shared albums and memories. The difference is that you look after the server and its disk.
+    a: Yes. Immich is one of the closest open-source matches to Google Photos, with automatic phone backup, face recognition, a photo map, search in plain words, shared albums and memories. The difference is that you look after the server and its disk.
   - q: How do I self-host Immich?
     a: The easiest way is to set up this template on Cloudgate. Cloudgate installs Immich and everything it needs on your server and gives it a secure web address; you then create the admin account and sign in with the phone app.
-  - q: Can I move my photos from Google Photos?
+  - q: Can I move my photos from Google Photos to Immich?
     a: Yes. Download your library with Google Takeout, then upload it with immich-go, a free community tool that keeps each photo's date and place.
   - q: Is my data private with Immich?
-    a: Yes. Your photos are stored on your own server, and face recognition and smart search run on that server too, so your pictures are not sent to an outside AI service.
+    a: Yes. Immich stores your photos on your own server, and face recognition and smart search run on that server too, so your pictures are not sent to an outside AI service.
   - q: What server size do I need for Immich?
     a: Immich recommends 8 GB of memory and 4 CPU cores, so Cloudgate asks for a server that size. Plan the disk for your whole library plus about 10 to 20 percent for thumbnails and converted videos.
-  - q: Who is the admin?
+  - q: Who is the Immich admin?
     a: The first person to open Immich's web address creates the admin account, so do this right after setup. The admin can then add family members or colleagues, each with a private library.
 screenshots:
   - src: screenshots/overview.webp

@@ -46,7 +46,7 @@ faq:
   - q: How do I sign in to Sharkey the first time?
     a: The first person to open your Sharkey address creates the admin account, after entering a setup password that Cloudgate generates and shows on the app's variables page; there is no default login. Sharkey advises keeping that first account for administration and posting from a second account.
   - q: Can I approve who joins my Sharkey server?
-    a: Yes. You can keep sign-ups open, make them invite-only, or require approval, where each newcomer gives a reason for joining and a moderator approves them before they can post.
+    a: Yes. On a Sharkey server you can keep sign-ups open, make them invite-only, or require approval, where each newcomer gives a reason for joining and a moderator approves them before they can post.
   - q: What server size do I need for Sharkey?
     a: Cloudgate puts Sharkey on a medium server with about 2 GB of memory, which its first database setup needs. Sharkey's install guide asks for more than 2 GB of free memory and recommends 4 GB, so pick a bigger server for a busy community.
 screenshots:

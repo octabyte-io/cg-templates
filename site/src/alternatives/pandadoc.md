@@ -12,7 +12,9 @@ faq:
   - q: "Can DocuSeal make proposals and quotes like PandaDoc?"
     a: "No. DocuSeal does not build proposals, price tables or quotes. You write the document elsewhere, upload it as a PDF, and DocuSeal handles filling in and signing."
   - q: "Can clients pay when they sign in DocuSeal?"
-    a: "Not in the free edition. Accepting payments is part of DocuSeal's paid Pro edition."
+    a: "Not in DocuSeal's free edition. Accepting payments is part of DocuSeal's paid Pro edition, and Documenso has no payments, while PandaDoc collects payments with the signature."
+  - q: "Do DocuSeal and Documenso track when clients open a document like PandaDoc?"
+    a: "No. PandaDoc tracks when clients open a document, but neither DocuSeal nor Documenso has document analytics. Both record who signed and when: DocuSeal keeps an audit log, and Documenso adds a page to each signed PDF showing who signed."
 ---
 
 PandaDoc is a document platform for sales teams. It builds proposals, quotes and contracts from templates and a content library, adds pricing tables, tracks when clients open a document, collects e-signatures and payments, and connects to CRMs.

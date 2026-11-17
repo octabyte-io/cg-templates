@@ -38,11 +38,11 @@ faq:
     a: Yes. Seafile is one of the closest self-hosted matches to Dropbox, with desktop sync, share links with passwords and expiry dates, file history and phone apps. The Community Edition searches file names only and has no file locking, and you look after the server and its disk.
   - q: Should I choose Seafile or Nextcloud?
     a: Choose Seafile if you mainly need fast, dependable file sync and sharing. Choose Nextcloud if you also want calendars, contacts, an office suite and other apps in the same place.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to Seafile the first time?
     a: Sign in to Seafile with the admin email you entered during setup and the password Cloudgate generated for it, shown on the app's variables page in Cloudgate. Change the password in Seafile afterwards, then add your colleagues.
-  - q: Can I move my files from Dropbox or Google Drive?
+  - q: Can I move my files from Dropbox or Google Drive to Seafile?
     a: Yes, by copying them. Seafile has no importer, so download your files from Dropbox or Google Drive, put them in a library synced by the Seafile desktop app, and it uploads them for you.
-  - q: Can I edit documents in the browser?
+  - q: Can I edit documents in the browser with Seafile?
     a: No, not in this Cloudgate template. Seafile can work with OnlyOffice or Collabora for editing office files, but that needs a separate server, and Seafile's own SeaDoc editor is turned off here.
   - q: What server size do I need for Seafile?
     a: Seafile needs at least 2 GB of memory and 2 CPU cores, so Cloudgate asks for a server that size. Choose the disk size by how many files your team stores, with room to grow.

@@ -44,7 +44,7 @@ faq:
   - q: Can I import my patients from Tebra, DrChrono or SimplePractice?
     a: Not with one click, because OpenEMR has no importer for those products. Ask your current system for a full export of your records and plan the move with an OpenEMR support vendor.
   - q: Can OpenEMR send prescriptions and insurance claims electronically?
-    a: Yes, with outside accounts. Electronic prescriptions go through an e-prescribing service such as Weno Exchange, and electronic claims go through a clearinghouse such as Office Ally; printing and paper claims work without either.
+    a: Yes, with outside accounts. OpenEMR sends electronic prescriptions through an e-prescribing service such as Weno Exchange, and electronic claims through a clearinghouse such as Office Ally; printing and paper claims work without either.
   - q: Is there an OpenEMR phone app?
     a: No, OpenEMR has no official phone or tablet app. Staff use it in any modern web browser, and patients use the patient portal in theirs.
 screenshots: []

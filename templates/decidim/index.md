@@ -40,13 +40,13 @@ faq:
   - q: Is Decidim a good alternative to Go Vocal (CitizenLab)?
     a: Yes, if you are ready to run the platform yourself. Decidim covers proposals, participatory budgets, surveys, meetings and voting like Go Vocal, with no licence fee; Go Vocal adds a vendor that hosts it and helps you set it up.
   - q: What can participants do on Decidim?
-    a: Participants can write and support proposals, vote in participatory budgets, answer surveys, join debates, comment, and sign up for meetings. They follow the processes that interest them and get notified of new activity.
+    a: On Decidim, participants can write and support proposals, vote in participatory budgets, answer surveys, join debates, comment, and sign up for meetings. They follow the processes that interest them and get notified of new activity.
   - q: How do I sign in the first time?
     a: Sign in at your Decidim address with the admin email you entered at setup and the password Cloudgate created, shown on the app's variables page. The same login opens the system panel at /system. Decidim then asks admins to change their password every 90 days.
   - q: Does Decidim need an email service?
     a: Yes. Decidim emails new participants a link to confirm their address, so add your email provider's SMTP details before you open sign-ups.
   - q: Can one Decidim host several organisations?
-    a: Yes. From the system panel you can add more organisations, each with its own web address, admins and participants.
+    a: Yes. From the Decidim system panel you can add more organisations, each with its own web address, admins and participants.
   - q: What server size does Decidim need?
     a: Decidim is a large app, so Cloudgate asks for a server with 4 GB of memory. It runs the platform, a background worker for emails and scheduled tasks, and its database.
 ---

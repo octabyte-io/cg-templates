@@ -37,14 +37,14 @@ faq:
   - q: Is changedetection.io free?
     a: Yes. changedetection.io is free, open-source software under the Apache-2.0 licence, and no feature is held back for a paid edition. Its maker sells only a hosted version; when you self-host, you pay only for your server.
   - q: Is changedetection.io a good alternative to Visualping?
-    a: Yes, for ordinary web pages. It watches pages, prices and stock levels with no limit on pages or checks, and sends alerts to email, Slack, Discord, Telegram and more. Visualping is easier for beginners and handles JavaScript-heavy pages without extra setup.
+    a: Yes, changedetection.io is a good Visualping alternative for ordinary web pages. It watches pages, prices and stock levels with no limit on pages or checks, and sends alerts to email, Slack, Discord, Telegram and more. Visualping is easier for beginners and handles JavaScript-heavy pages without extra setup.
   - q: How do I sign in to changedetection.io the first time?
-    a: There is no sign-in at first, so anyone who knows the web address can use it. Open the address right after setup and set a password under Settings; from then on everyone needs that password.
+    a: changedetection.io has no sign-in at first, so anyone who knows the web address can use it. Open the address right after setup and set a password under Settings; from then on everyone needs that password.
   - q: Does changedetection.io work with JavaScript-heavy websites?
-    a: Not in this template. It reads a page's HTML, which works for most pages, but pages that build their content with JavaScript, Browser Steps (logging in or clicking before a check), the Visual Selector and screenshots need a separate Chrome browser that this template does not include.
+    a: Not in this template. Here changedetection.io reads a page's HTML, which works for most pages, but pages that build their content with JavaScript, Browser Steps (logging in or clicking before a check), the Visual Selector and screenshots need a separate Chrome browser that this template does not include.
   - q: Can changedetection.io track prices and back-in-stock alerts?
-    a: Yes. On product pages it detects the price and whether the item is in stock, keeps a price history chart, and can alert you when the item is back in stock or the price goes above or below a limit you set.
-  - q: Can I import my pages from Visualping or Distill.io?
+    a: Yes. On product pages changedetection.io detects the price and whether the item is in stock, keeps a price history chart, and can alert you when the item is back in stock or the price goes above or below a limit you set.
+  - q: Can I import my pages from Visualping or Distill.io into changedetection.io?
     a: No, there is no direct importer. You can paste a list of links or upload an Excel file, and changedetection.io starts watching every page on it.
   - q: Is changedetection.io an uptime monitor?
     a: No. changedetection.io watches what a page says, such as its text, a price or stock status. To be told when a website goes down, use an uptime monitor such as Uptime Kuma.

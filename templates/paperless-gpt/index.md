@@ -28,13 +28,13 @@ faq:
   - q: Which AI services does paperless-gpt work with?
     a: paperless-gpt works with OpenAI, Anthropic, Mistral and Google Gemini, and with Ollama for models you run yourself. You choose the provider and model when you set it up.
   - q: Do my documents leave my server with paperless-gpt?
-    a: With a cloud AI provider, yes, the text of each document it processes is sent to that provider, and page images too if AI scan reading is on. With Ollama on your own hardware, nothing leaves your servers.
+    a: Yes, with a cloud AI provider. paperless-gpt sends the text of each document it processes to that provider, and page images too if AI scan reading is on. With Ollama on your own hardware, nothing leaves your servers.
   - q: How do I use paperless-gpt day to day?
     a: In Paperless-ngx, add the tag paperless-gpt to documents you want to review, or paperless-gpt-auto to have suggestions applied automatically. Then open paperless-gpt's web page to check and apply the suggestions.
   - q: How do I sign in to paperless-gpt?
     a: paperless-gpt has no accounts of its own, so Cloudgate puts a password prompt in front of it. Sign in with the username admin and the password shown in the app's settings in Cloudgate.
   - q: Can paperless-gpt read bad scans?
-    a: Yes, if you give it an AI model that can read images. It then re-reads scanned pages with that model, which often copes better with faint or messy scans than standard text recognition.
+    a: Yes, if you give paperless-gpt an AI model that can read images. It then re-reads scanned pages with that model, which often copes better with faint or messy scans than standard text recognition.
 screenshots: []
 ---
 

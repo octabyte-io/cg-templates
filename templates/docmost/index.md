@@ -37,7 +37,7 @@ faq:
   - q: Is Docmost a good alternative to Confluence or Notion?
     a: Yes, for a team wiki. Docmost covers spaces, nested pages, live editing, comments, page history, search and diagrams, much like Confluence. It has far fewer add-ons than Confluence, and none of Notion's databases or boards in the free edition.
   - q: How is Docmost different from Outline?
-    a: Docmost has its own email-and-password accounts, so you don't need a sign-in service such as Google Workspace or Microsoft, and it is open source rather than source-available. It also has Confluence-style spaces with permissions and built-in diagrams. Outline imports Confluence exports for free, while Docmost's Confluence importer needs a paid licence.
+    a: Docmost has its own email-and-password accounts, so you don't need a sign-in service such as Google Workspace or Microsoft, and it is open source rather than source-available. It also has Confluence-style spaces with permissions and built-in diagrams. Both Outline and Docmost keep their Confluence importers for paid editions.
   - q: Can I import my pages from Notion or Confluence?
     a: From Notion, yes. Docmost imports a Notion export, as well as Markdown and HTML files. Its Confluence importer, and importing Word and PDF files, need a paid licence.
   - q: How do I sign in to Docmost the first time?

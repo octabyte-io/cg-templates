@@ -38,7 +38,7 @@ faq:
   - q: Is Termix a good alternative to Termius?
     a: Yes, if you want your saved servers, keys and terminal sessions on your own server, shared with your team at no cost. The main difference is that Termix connects to your servers from the Termix server, while Termius connects from your own device.
   - q: How do I sign in to Termix the first time?
-    a: Open the app's web address and create an account; the first account becomes the admin. Then turn off sign-up in the admin settings so nobody else can register, and turn on two-step sign-in.
+    a: Open your Termix web address and create an account; the first account becomes the admin. Then turn off sign-up in the admin settings so nobody else can register, and turn on two-step sign-in.
   - q: Does Termix have phone and desktop apps?
     a: Yes, Termix has apps for iPhone and iPad, Android, Windows, macOS and Linux, and they can link to your Termix server. It also works in any modern browser.
   - q: Can I import my servers into Termix?
@@ -46,7 +46,7 @@ faq:
   - q: Can Termix reach servers on my home or office network?
     a: Only if the Termix server can reach them, for example through a VPN or a public address, because connections start from where Termix runs.
   - q: What server size do I need for Termix?
-    a: A small server with 1 GB of memory is enough for a few people. Cloudgate sets it up with everything it needs.
+    a: Termix runs on a small server with 1 GB of memory, which is enough for a few people. Cloudgate sets it up with everything it needs.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The Termix dashboard in dark mode, with a host list in Production, Homelab and Edge folders, counts of hosts, credentials and active tunnels, a status list of servers with CPU, memory and disk bars and Online or Offline tags, and recent activity"

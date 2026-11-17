@@ -44,9 +44,9 @@ faq:
   - q: Can I import my ChatGPT chats into Open WebUI?
     a: Partly. Each person can export their chats from ChatGPT and import the conversations.json file in Open WebUI's Settings > Data Controls. Only chats come across; custom GPTs, memory and uploaded files do not.
   - q: Is my data private with Open WebUI?
-    a: Your chats, accounts and documents are stored on your own server. Each message is still sent to the AI provider you connect so it can answer, so check that provider's data terms, or run your own model server to keep everything in-house.
+    a: Mostly. With Open WebUI, your chats, accounts and documents are stored on your own server. Each message is still sent to the AI provider you connect so it can answer, so check that provider's data terms, or run your own model server to keep everything in-house.
   - q: What server size do I need for Open WebUI?
-    a: A server with 2 GB of memory is enough when the AI models run with a cloud provider, so Cloudgate asks for that size. Running your own AI models needs a separate, much larger server, usually with a graphics card.
+    a: A server with 2 GB of memory is enough for Open WebUI when the AI models run with a cloud provider, so Cloudgate asks for that size. Running your own AI models needs a separate, much larger server, usually with a graphics card.
 screenshots:
   - src: screenshots/chat.webp
     alt: "The Open WebUI chat home: a sidebar with New Chat, Search, Notes and Workspace, a greeting to Maya Lindqvist, a message box reading How can I help you today? with a Select a model picker and voice buttons, and suggested prompts below"

@@ -38,11 +38,11 @@ faq:
   - q: Is EGroupware free?
     a: Yes, the EGroupware Community Edition is free and open source under the GPL (version 2 or later), with no fee per user; you pay only for your server. EGroupware GmbH also sells a paid EPL edition and hosting, which add Kanban boards, e-invoices, Active Directory and single sign-on, and an audit log.
   - q: Is EGroupware a good alternative to Microsoft Exchange or Microsoft 365?
-    a: Yes, for the shared calendars, contacts, tasks and files, if your team is happy to work in the browser and sync phones over open standards. It does not replace the mail server itself or Word and Excel online, and Outlook connects through a free CalDAV add-in rather than as an Exchange account.
+    a: Yes, EGroupware covers the shared calendars, contacts, tasks and files, if your team is happy to work in the browser and sync phones over open standards. It does not replace the mail server itself or Word and Excel online, and Outlook connects through a free CalDAV add-in rather than as an Exchange account.
   - q: Does EGroupware include email?
     a: Yes, a mail client, but not a mail server. You connect the IMAP and SMTP details of the mailboxes you already have, for example from your web host or email provider, and then read and send mail inside EGroupware next to your contacts and tasks.
   - q: How do I sign in to EGroupware the first time?
-    a: Sign in with the username sysop and the password Cloudgate creates, shown on the app's variables page in Cloudgate. There is no default password. Add your team's accounts under Admin, and change the sysop password if you like.
+    a: Sign in to EGroupware with the username sysop and the password Cloudgate creates, shown on the app's variables page in Cloudgate. There is no default password. Add your team's accounts under Admin, and change the sysop password if you like.
   - q: Can I sync EGroupware with my phone and Outlook?
     a: Yes, calendars and contacts sync over CalDAV and CardDAV to iPhone, Mac and Thunderbird, to Android with the DAVx5 app, and to Outlook with the free Outlook CalDAV Synchronizer. Basic ActiveSync is included too. There is no EGroupware app in the app stores, but the web app has a mobile view.
   - q: Can I move my contacts and calendars from Google or Outlook?

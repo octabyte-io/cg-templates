@@ -42,7 +42,7 @@ faq:
   - q: How do people sign in to Outline?
     a: People sign in with an account from a sign-in service you connect, such as Google Workspace, Microsoft Entra or Okta. Outline has no passwords of its own, and the first person to sign in becomes the admin.
   - q: Can I import my documents from Notion or Confluence?
-    a: Yes. Outline imports exports from Notion and Confluence, along with Word, Markdown and HTML files. Notion databases do not carry over as databases, so check them after the import.
+    a: Yes. Outline imports Notion exports, along with Word, Markdown and HTML files; its Confluence importer is part of the paid Business and Enterprise editions, not the free Community Edition. Notion databases do not carry over as databases, so check them after the import.
   - q: Is my data private with Outline?
     a: Yes. Your documents, images and attachments are stored on your own server, not with Outline. Only the pages you choose to publish are visible on the web.
 screenshots:

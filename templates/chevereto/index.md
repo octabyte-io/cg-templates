@@ -39,15 +39,15 @@ faq:
     a: Yes, Chevereto's free edition is open-source software under the AGPL, and this template installs that edition, so you pay only for your server. Its makers also sell paid Lite and Pro editions that add watermarks, social login, likes and followers, upload moderation, CAPTCHA and other spam tools.
   - q: Is Chevereto a good alternative to Imgur?
     a: Yes, for uploading images and sharing them by link. Chevereto works much like Imgur, with drag-and-drop uploads, direct links and embed codes, but on your own web address with no ads. The free edition has no likes, comments or community feed.
-  - q: How do I sign in the first time?
+  - q: How do I sign in to Chevereto the first time?
     a: The first person to open Chevereto's web address sees a setup page and creates the admin account with a username, email and password, so do this right after setup. There is no default password.
   - q: Can other people upload to my Chevereto site?
-    a: Only if you allow it. Sign-ups and uploads by visitors without an account are off at the start, and the admin can turn them on. The free edition has no CAPTCHA or upload moderation, so think carefully before you open uploads to the public.
+    a: Only if you allow it. In Chevereto, sign-ups and uploads by visitors without an account are off at the start, and the admin can turn them on. The free edition has no CAPTCHA or upload moderation, so think carefully before you open uploads to the public.
   - q: Does Chevereto work with ShareX?
     a: Yes, Chevereto accepts uploads from ShareX through its upload API, so a screenshot can go straight to your site and give you a link to share.
   - q: Is there a Chevereto phone app?
-    a: No, there is no official phone app. The site works in a phone's web browser, where you can upload photos from your gallery or take one with the camera.
-  - q: Can I move my images from Imgur?
+    a: No, there is no official Chevereto phone app. The site works in a phone's web browser, where you can upload photos from your gallery or take one with the camera.
+  - q: Can I move my images from Imgur to Chevereto?
     a: No, Chevereto has no Imgur importer. Download your images from Imgur first, then upload them by dragging them into Chevereto, or ask your admin to use the bulk importer for a large folder.
 screenshots:
   - src: screenshots/uploader.webp

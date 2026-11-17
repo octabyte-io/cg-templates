@@ -38,7 +38,7 @@ faq:
   - q: Is wallabag a good alternative to Pocket?
     a: Yes. wallabag does the job Pocket did, saving articles from your browser or phone to read later without clutter, and it imports a Pocket export file. Mozilla shut Pocket down in July 2025; a self-hosted wallabag cannot be shut down by someone else.
   - q: Can I import my articles from Pocket or Instapaper?
-    a: Yes. wallabag imports a Pocket CSV or HTML export, an Instapaper CSV export, Omnivore and Pinboard exports, and Firefox or Chrome bookmark files. It fetches each article's text again from the original website, so articles from sites that no longer exist may arrive as a link only.
+    a: Yes. wallabag imports the CSV file from a Pocket export, an Instapaper CSV export, Omnivore and Pinboard exports, and Firefox or Chrome bookmark files. It fetches each article's text again from the original website, so articles from sites that no longer exist may arrive as a link only.
   - q: How do I sign in to wallabag the first time?
     a: Sign in with the username wallabag and the password Cloudgate generated, shown on the app's variables page in Cloudgate. The template replaces wallabag's well-known default password on the first start, so the usual wallabag/wallabag login does not work. Public sign-up is off; you add other people in Users management.
   - q: Is there a wallabag phone app and browser extension?

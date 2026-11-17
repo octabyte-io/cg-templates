@@ -9,7 +9,9 @@ faq:
   - q: "Can GlobaLeaks run channels for several companies in a group?"
     a: "Yes. One GlobaLeaks install can host several sites, for subsidiaries or clients, each with its own channels, questionnaire, look and case handlers."
   - q: "Is GlobaLeaks secure enough for whistleblowing?"
-    a: "It is built for it: reports are encrypted, IP addresses are not logged, sign-in can use two-factor codes, email alerts can be PGP-encrypted, and reporters can use Tor Browser. Run it on a server you trust and keep it updated."
+    a: "GlobaLeaks is built for it: reports are encrypted, IP addresses are not logged, sign-in can use two-factor codes, email alerts can be PGP-encrypted, and reporters can use Tor Browser. Run it on a server you trust and keep it updated."
+  - q: "Does GlobaLeaks have a phone hotline like EQS Integrity Line?"
+    a: "No. GlobaLeaks takes written reports through its web channel, with files attached and follow-up through a 16-digit access code, in over 70 languages, but it has no phone hotline. If you offered phone reporting through EQS Integrity Line, keep a separate phone line for it."
 ---
 
 EQS Integrity Line is a hosted whistleblowing system from EQS Group, used by many European companies to meet the EU Whistleblower Directive. Reporters submit concerns online, stay anonymous if they choose, and talk with case handlers through a secure mailbox.

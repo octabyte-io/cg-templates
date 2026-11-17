@@ -41,8 +41,8 @@ faq:
     a: Sign in with the user name Admin (with a capital A) and the password Cloudgate generated, which the Cloudgate console shows you. Zabbix normally starts with the well-known password "zabbix"; Cloudgate replaces it for you. After signing in, change the password in your user settings or create your own administrator account.
   - q: How do I monitor my servers with Zabbix?
     a: Install the free Zabbix agent on each server you want to watch, then add the server in Zabbix and pick a template such as "Linux by Zabbix agent". Your Zabbix server asks the agent for its figures, so it must be able to reach that machine. Agents that send figures in on their own, and Zabbix proxies for remote offices, need one more network port opened on your server, which Cloudgate does not open by default. Network devices can be watched over SNMP or ping without an agent.
-  - q: Can I import my devices from PRTG or SolarWinds?
-    a: No, there is no automatic import from PRTG, SolarWinds or Datadog. Network discovery can scan your address ranges and add the devices it finds, which saves typing them in one by one.
+  - q: Can Zabbix import my devices from PRTG or SolarWinds?
+    a: No, Zabbix has no automatic import from PRTG, SolarWinds or Datadog. Network discovery can scan your address ranges and add the devices it finds, which saves typing them in one by one.
   - q: Does Zabbix have a phone app?
     a: No, not an official one yet; Zabbix describes its own mobile app as coming soon. The web interface works in a phone's browser, several third-party apps exist, and alerts can reach your phone by SMS, Telegram, Slack or email.
   - q: What server size do I need for Zabbix?

@@ -38,14 +38,14 @@ faq:
   - q: Is ProjectSend free?
     a: Yes, ProjectSend is free and open source under the GPL version 2 or later, including for commercial use with paying clients. The self-hosted version has no limits on users, clients, files or storage; there is also a paid hosted version, ProjectSend Cloud, run by the same team.
   - q: Is ProjectSend a good alternative to ShareFile?
-    a: Yes, if what you need is a client portal. Each client gets a private page to download and upload files, and you see every download, much like a ShareFile portal. It has no e-signatures, request lists or desktop sync, and it runs on your own server with no fee per user.
-  - q: Do my clients need an account?
-    a: "Yes, for their private page: you add each client, and they sign in with their email address. For a one-off file you can also make a public link with an expiry date or a download limit, which needs no account."
-  - q: Can clients upload files to me?
-    a: Yes, clients can upload files from their own page, and you can sort them into folders and categories. Uploads resume if the connection drops, which helps with large files.
+    a: Yes, if what you need is a client portal. In ProjectSend each client gets a private page to download and upload files, and you see every download, much like a ShareFile portal. It has no e-signatures, request lists or desktop sync, and it runs on your own server with no fee per user.
+  - q: Do my clients need a ProjectSend account?
+    a: "Yes, for their private ProjectSend page: you add each client, and they sign in with their email address. For a one-off file you can also make a public link with an expiry date or a download limit, which needs no account."
+  - q: Can clients upload files to me with ProjectSend?
+    a: Yes, clients can upload files from their own ProjectSend page, and you can sort them into folders and categories. Uploads resume if the connection drops, which helps with large files.
   - q: How do I sign in to ProjectSend the first time?
-    a: Sign in with the admin email you entered when you set it up in Cloudgate and the admin password Cloudgate generated, which you find on the app's variables page. There is no setup wizard to complete first.
-  - q: Will my clients get email notifications?
+    a: Sign in to ProjectSend with the admin email you entered when you set it up in Cloudgate and the admin password Cloudgate generated, which you find on the app's variables page. There is no setup wizard to complete first.
+  - q: Will my clients get email notifications from ProjectSend?
     a: Yes, once you add your mail server's details in ProjectSend's email settings, which have a button to send a test email. Until then, no emails go out.
   - q: What server size do I need for ProjectSend?
     a: A small Cloudgate server with 1 GB of memory is enough to start. Plan the disk for all the files you will share, because ProjectSend keeps them on your server.

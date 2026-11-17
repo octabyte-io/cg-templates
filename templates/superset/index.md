@@ -36,17 +36,17 @@ faq:
   - q: Is Apache Superset free?
     a: Yes, Apache Superset is free and open source under the Apache 2.0 licence, and there is no paid edition, so every feature comes in the one release. You pay only for your server. Preset, a separate company, sells hosted Superset, but you don't need it to self-host.
   - q: Is Apache Superset a good alternative to Tableau or Power BI?
-    a: Yes, for teams with someone who knows SQL and data in a database, Superset covers charts, dashboards and shared access with no licence per viewer. Tableau and Power BI are easier for non-technical people, work directly with spreadsheets and offer more design and data-modelling tools.
-  - q: Should I choose Superset or Metabase?
-    a: Choose Metabase if most people building charts don't know SQL, because its menus are easier to learn. Choose Superset if you have people who write SQL and want a full SQL editor, more chart types and every feature without a paid edition, and you accept more setup.
+    a: Yes, for teams with someone who knows SQL and data in a database, Apache Superset covers charts, dashboards and shared access with no licence per viewer. Tableau and Power BI are easier for non-technical people, work directly with spreadsheets and offer more design and data-modelling tools.
+  - q: Should I choose Apache Superset or Metabase?
+    a: Choose Metabase if most people building charts don't know SQL, because its menus are easier to learn. Choose Apache Superset if you have people who write SQL and want a full SQL editor, more chart types and every feature without a paid edition, and you accept more setup.
   - q: Do I need to know SQL to use Apache Superset?
-    a: No, not for simple charts on one table or view, which you build from menus. Combining several tables needs SQL, either in SQL Lab or as a saved query or database view that others can then chart.
+    a: No, not for simple charts on one table or view, which you build from menus in Apache Superset. Combining several tables needs SQL, either in SQL Lab or as a saved query or database view that others can then chart.
   - q: How do I sign in to Apache Superset the first time?
-    a: Sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. Superset starts empty and has no sign-up page, so the admin adds a database under Settings, Database Connections and creates accounts for everyone else.
-  - q: Can I import my Tableau or Power BI dashboards?
-    a: No, Superset can't open Tableau workbooks, Power BI files or Looker models, so you rebuild your dashboards. Superset's own dashboards, charts and datasets can be exported and imported between Superset installs.
+    a: Sign in with the username admin and the password Cloudgate created, which is shown in Cloudgate. Apache Superset starts empty and has no sign-up page, so the admin adds a database under Settings, Database Connections and creates accounts for everyone else.
+  - q: Can Apache Superset import my Tableau or Power BI dashboards?
+    a: No, Apache Superset can't open Tableau workbooks, Power BI files or Looker models, so you rebuild your dashboards. Superset's own dashboards, charts and datasets can be exported and imported between Superset installs.
   - q: What server size do I need for Apache Superset?
-    a: Cloudgate starts Superset on a medium server with 2 GB of memory, which suits a small team. Superset's own FAQ says admins report 8 GB of memory and 2 CPUs as enough for a moderately sized instance, because the size depends on users and activity, not on how much data you have. The first start takes a few minutes.
+    a: Cloudgate starts Apache Superset on a medium server with 2 GB of memory, which suits a small team. Superset's own FAQ says admins report 8 GB of memory and 2 CPUs as enough for a moderately sized instance, because the size depends on users and activity, not on how much data you have. The first start takes a few minutes.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "An Apache Superset sales dashboard for a demo vehicle shop, with a filter panel for country, time range and state, big-number tiles for total revenue and products sold, stacked and grouped bar charts of quarterly revenue, a products table and a donut chart of revenue by product"

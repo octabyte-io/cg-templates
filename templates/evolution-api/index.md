@@ -38,13 +38,13 @@ faq:
   - q: Is Evolution API an official WhatsApp API?
     a: No. Evolution API is not made by or connected to WhatsApp or Meta. Its usual connection links your number as a WhatsApp Web device by QR code. It can also connect to Meta's official WhatsApp Cloud API, but then Meta's rules and per-message charges apply.
   - q: Can WhatsApp ban my number if I use Evolution API?
-    a: Yes. The QR-code connection is unofficial, WhatsApp does not allow unofficial clients, and a number used this way can be restricted or banned. Bulk or unsolicited messages raise the risk most, so test with a spare number and only message people who expect to hear from you.
+    a: Yes. The QR-code connection Evolution API uses is unofficial, WhatsApp does not allow unofficial clients, and a number used this way can be restricted or banned. Bulk or unsolicited messages raise the risk most, so test with a spare number and only message people who expect to hear from you.
   - q: Is Evolution API free and open source?
     a: "It is free, with its code public, but it is not plain open source. Its licence is Apache 2.0 with extra conditions: you must keep the Evolution logo and copyright in its manager, and if you build it into a product, show administrators that it uses Evolution API, or a commercial licence may be needed. Every feature is in the free version, and you pay only for your server."
   - q: Is Evolution API a good alternative to the WhatsApp Business API or Twilio?
     a: Yes for chatbots, internal tools and small volumes, where no per-message fee and a quick QR setup matter most. For customer messaging at scale, approved templates, a verified business name or a number you cannot risk losing, use the official API, which Evolution API can also connect to.
-  - q: How do I sign in and connect my WhatsApp number?
-    a: Open the manager at your app's web address followed by /manager and sign in with the API key Cloudgate shows. Create an instance, click Get QR Code and scan it with WhatsApp on your phone, under Settings, Linked devices.
+  - q: How do I sign in to Evolution API and connect my WhatsApp number?
+    a: Open the Evolution API manager at your app's web address followed by /manager and sign in with the API key Cloudgate shows. Create an instance, click Get QR Code and scan it with WhatsApp on your phone, under Settings, Linked devices.
   - q: Does Evolution API work with n8n, Chatwoot or Typebot?
     a: Yes. The manager has built-in settings for Chatwoot, Typebot, n8n, Evolution Bot, EvoAI, OpenAI, Dify and Flowise, and n8n also has an Evolution API community node. Any other tool can use its web API and webhooks.
   - q: Should I choose Evolution API or WAHA?

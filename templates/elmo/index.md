@@ -48,7 +48,7 @@ faq:
   - q: What server size do I need for Elmo?
     a: A small server with 1 GB of memory is enough. Elmo's web app, its background worker and its PostgreSQL database use about 450 MB together when idle, because the AI checks themselves run at the providers.
   - q: Is my data private when I host Elmo myself?
-    a: Yes, your brands, competitors, tracked questions and every AI answer are stored in a database on your own server. The questions themselves are sent to the AI providers you choose, because that is how they get checked.
+    a: Yes, Elmo stores your brands, competitors, tracked questions and every AI answer in a database on your own server. The questions themselves are sent to the AI providers you choose, because that is how they get checked.
 screenshots:
   - src: screenshots/overview.webp
     alt: "The Elmo overview with demo data for a sportswear brand: cards for AI visibility 69%, share of voice 19%, sentiment 90 and average position 1.7, above a line chart and table comparing competitors' visibility over 30 days"

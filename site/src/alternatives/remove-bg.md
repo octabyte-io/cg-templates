@@ -14,6 +14,6 @@ faq:
     a: "Yes, through its API. The web page takes one image at a time, but a script can send a whole folder of photos to the API."
 ---
 
-remove.bg, from Canva, is an online service that removes the background from photos in one click, with a web editor, apps, plugins and an API.
+remove.bg, from Canva, is an online service that removes the background from photos in one click, with a web editor, apps, plugins and an API. Its standalone website and self-service API close on 1 December 2026: background removal moves into Canva, and the API moves to Leonardo.Ai, also part of Canva.
 
 People look for an alternative because remove.bg's free use gives low-resolution results, and full-resolution images cost credits, so a shop cutting out hundreds of product photos pays for each one. It also means uploading every photo to a third party. A self-hosted Rembg cuts out as many images as your server can handle, at full size, and keeps the photos on your own server.

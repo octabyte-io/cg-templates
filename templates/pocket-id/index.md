@@ -45,8 +45,8 @@ faq:
     a: Any app that offers sign-in with OpenID Connect, often labelled SSO, OAuth or OIDC, works with Pocket ID. Its documentation has setup guides for about a hundred apps, including Nextcloud, Immich, Jellyfin, BookStack, Paperless-ngx, Grafana and WordPress. Apps that only support SAML or LDAP need a separate sign-in proxy.
   - q: How do I sign in to Pocket ID the first time?
     a: There is no default password. Open your Pocket ID address with /setup at the end, enter your username, email and name, then add a passkey. The setup page closes once this first admin account exists.
-  - q: What happens if someone loses their passkey?
-    a: An admin creates a one-time login code for them, and they use it to sign in once and add a new passkey. Each person can add several passkeys, such as one on their phone and one on a security key, so losing one does not lock them out.
+  - q: What happens if someone loses their Pocket ID passkey?
+    a: A Pocket ID admin creates a one-time login code for them, and they use it to sign in once and add a new passkey. Each person can add several passkeys, such as one on their phone and one on a security key, so losing one does not lock them out.
   - q: Should I choose Pocket ID or authentik?
     a: Choose Pocket ID if you want the simplest passkey-only sign-in for apps that support OpenID Connect. Choose authentik if you need passwords and two-step codes, SAML, LDAP for older software, or a login in front of apps that have none.
 screenshots:

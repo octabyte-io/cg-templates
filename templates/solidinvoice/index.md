@@ -40,12 +40,12 @@ faq:
   - q: Is SolidInvoice a good alternative to FreshBooks?
     a: Yes, for invoicing and getting paid. SolidInvoice covers quotes, invoices, recurring invoices, online payments and reminders without a monthly fee. It has no expenses, time tracking, accounting or phone app, which FreshBooks has.
   - q: Can clients pay SolidInvoice invoices online?
-    a: Yes, each invoice email includes a link where the client can view the invoice and pay it by card through Stripe, by PayPal, or through other supported payment services.
+    a: Yes, each SolidInvoice invoice email includes a link where the client can view the invoice and pay it by card through Stripe, by PayPal, or through other supported payment services.
   - q: Can SolidInvoice send recurring invoices and payment reminders?
     a: Yes, SolidInvoice sends recurring invoices on a schedule you choose and marks unpaid invoices overdue on its own, then sends payment reminders on the schedule you set. Both are included in the free self-hosted app.
   - q: How do I set up SolidInvoice the first time?
-    a: Sign in with the admin email you entered during setup and the strong password Cloudgate created, shown on the app's variables page. Cloudgate creates this admin account for you, and there is no public sign-up page. After you sign in, a short checklist helps you create your first company; set up email sending in the settings before you send invoices.
-  - q: Can I import my clients from FreshBooks or Wave?
+    a: Sign in to SolidInvoice with the admin email you entered during setup and the strong password Cloudgate created, shown on the app's variables page. Cloudgate creates this admin account for you, and there is no public sign-up page. After you sign in, a short checklist helps you create your first company; set up email sending in the settings before you send invoices.
+  - q: Can SolidInvoice import my clients from FreshBooks or Wave?
     a: No, SolidInvoice has no import tool yet, so you add your clients by hand. Keep your old account until your open invoices are paid.
   - q: Does SolidInvoice do expenses or accounting?
     a: No, SolidInvoice does quotes, invoices and payments only, with no expenses, time tracking or bookkeeping. If you need full accounts, Bigcapital is accounting software, and InvoiceShelf adds expense tracking to invoicing.

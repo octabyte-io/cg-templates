@@ -10,6 +10,8 @@ faq:
     a: "For a small café or counter-service restaurant, yes: it has restaurant tables, suspended sales and receipts. It has no kitchen display screens, ordering app for staff phones or built-in card payments, which restaurant systems such as Lightspeed include."
   - q: "Can Open Source Point of Sale run several shops?"
     a: "It can keep stock in more than one location within one installation, but it was built for small businesses and does not sync separate shops' systems or report across a chain as Lightspeed does."
+  - q: "Can I import my Lightspeed products into Open Source Point of Sale?"
+    a: "Yes, from a spreadsheet. Export your products from Lightspeed and import them as a CSV file on Open Source Point of Sale's Items page, then check the columns and stock counts. Customer lists and past sales history do not come across."
 ---
 
 Lightspeed sells cloud point-of-sale systems for retail shops and restaurants, with inventory, purchasing, customer loyalty, e-commerce, payments and reporting across several locations.

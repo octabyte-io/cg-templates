@@ -14,7 +14,9 @@ faq:
   - q: "Is Fider a full UserVoice replacement?"
     a: "No. Fider replaces the idea board, voting, comments, statuses and roadmap. It does not have UserVoice's analytics, admin tools for large product teams or enterprise integrations."
   - q: "Can Fider be used inside a company only?"
-    a: "Yes. Turn off public sign-ups and invite people, or let them sign in through your own OAuth provider, so only your staff can see and vote on ideas."
+    a: "Yes. Turn off Fider's public sign-ups and invite people, or let them sign in through your own OAuth provider, so only your staff can see and vote on ideas."
+  - q: "Should I choose Fider or Quackback to replace UserVoice?"
+    a: "Choose Fider for a light idea board with voting, statuses and a roadmap on a small server. Choose Quackback if you also want a changelog that notifies voters, several boards and links to Linear, GitHub or Jira, and can give it a bigger server. Neither has UserVoice's enterprise analytics."
 ---
 
 UserVoice is product feedback software for larger companies. Customers and staff post and vote on ideas in a feedback portal, and product teams gather, analyse and prioritise that feedback to plan what to build.

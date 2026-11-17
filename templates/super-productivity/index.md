@@ -39,14 +39,14 @@ faq:
   - q: Is Super Productivity a good alternative to Todoist?
     a: Yes, for one person who also wants time tracking, a day schedule and focus timers next to their to-do list. Todoist is better if you share projects with other people, because Super Productivity has no team accounts. You can bring your Todoist projects, tasks, labels and due dates across with its built-in importer.
   - q: Can Super Productivity replace Sunsama or Toggl Track?
-    a: Partly. It covers daily planning, timeboxing and tracking time per task for one person, and exports time sheets. It has no guided planning routine like Sunsama and no invoicing, billing rates or team reports like Toggl Track.
+    a: Partly. Super Productivity covers daily planning, timeboxing and tracking time per task for one person, and exports time sheets. It has no guided planning routine like Sunsama and no invoicing, billing rates or team reports like Toggl Track.
   - q: How do I sign in to Super Productivity the first time?
     a: There is no sign-in. Super Productivity has no accounts, so opening your web address shows the app straight away. To save your tasks on your server, enter the sync password shown in Cloudgate in the app's sync settings and turn sync on.
-  - q: Are my tasks saved on my server?
-    a: Only once sync is on. The browser version keeps tasks in that browser's own storage, so clearing it or switching browsers starts empty. With sync on, each browser, desktop app and phone app keeps a copy on your server and stays up to date. Sync uses the app's WebDAV option, which upstream marks as experimental because WebDAV servers behave differently.
-  - q: Can I import my tasks from Todoist or TickTick?
+  - q: Does Super Productivity save my tasks on my server?
+    a: Only once sync is on. The browser version of Super Productivity keeps tasks in that browser's own storage, so clearing it or switching browsers starts empty. With sync on, each browser, desktop app and phone app keeps a copy on your server and stays up to date. Sync uses the app's WebDAV option, which upstream marks as experimental because WebDAV servers behave differently.
+  - q: Can Super Productivity import my tasks from Todoist or TickTick?
     a: Yes. Super Productivity imports active projects, tasks, sub-tasks, labels and due dates from Todoist, and lists, tasks, checklists and tags from a TickTick backup file. Completed tasks are not imported.
-  - q: Is there a phone or desktop app?
+  - q: Is there a Super Productivity phone or desktop app?
     a: Yes, Super Productivity has free apps for Android, iPhone, Windows, macOS and Linux, and they can sync with the same server as the web app.
 screenshots:
   - src: screenshots/today.webp

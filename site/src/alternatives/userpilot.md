@@ -8,8 +8,10 @@ moving: |
 faq:
   - q: "Does Usertour include product analytics like Userpilot?"
     a: "No. Usertour reports on its own tours, checklists and surveys, but has no general product analytics or session replay. It can send its events to tools such as Mixpanel, Amplitude or PostHog."
-  - q: "Can I import my Userpilot flows?"
-    a: "No. Usertour has no importer, so flows are rebuilt by hand."
+  - q: "Can I import my Userpilot flows into Usertour?"
+    a: "No. Usertour has no Userpilot importer, so flows are rebuilt by hand in Usertour's visual builder."
+  - q: "Does Usertour work in mobile apps like Userpilot?"
+    a: "No. Userpilot offers mobile SDKs for guidance inside phone apps, but Usertour works in web apps only."
 cost: "Usertour's Community Edition is free under the MIT licence, for commercial use too, with no limit on users or sessions when you host it yourself. A paid Business or Enterprise licence removes the small Usertour mark on your tours and adds single sign-on, two-step sign-in for your team and an audit log. To run it you need Cloudgate and a server: use hosted Cloudgate, which can also provide the server, or install Cloudgate on a server of your own for free. Cloudgate's plans and prices are at cloudgate.octabyte.io/pricing."
 developer: "Once. Cloudgate installs Usertour and gives it a secure web address, but a developer has to add Usertour's short code snippet, by npm or a script tag, to your web app and pass in who the signed-in user is. After that, anyone on your team builds tours and checklists in the visual builder."
 ---

@@ -10,7 +10,9 @@ faq:
   - q: "Can docassemble use my existing Word templates?"
     a: "Yes, once you mark them up. docassemble fills .docx templates and fillable PDFs, and a Word add-in helps you mark fields in Word. HotDocs variables and logic have to be rewritten in docassemble's format."
   - q: "Who uses docassemble?"
-    a: "It was built by a lawyer and programmer to automate legal work, and legal aid organisations and courts use it widely for court forms, but it works for any guided form or document."
+    a: "docassemble was built by a lawyer and programmer to automate legal work, and legal aid organisations and courts use it widely for court forms, but it works for any guided form or document."
+  - q: "Can docassemble import my HotDocs templates?"
+    a: "No. docassemble cannot read HotDocs templates or component files. Rebuild your most-used templates first: replace the HotDocs variables in each Word template with docassemble's fields, then write the questions that fill them and test against documents HotDocs produced."
 ---
 
 HotDocs is long-established commercial document assembly software, now part of Mitratech, used by law firms and other organisations to turn Word templates into documents filled in from interview answers.

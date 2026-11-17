@@ -42,9 +42,9 @@ faq:
   - q: Is useSend a good alternative to Resend?
     a: Yes, if you want Resend's kind of sending API and dashboard but run it yourself on Amazon SES. useSend also sends marketing campaigns to contact lists, but it is in beta and has fewer extras than Resend or SendGrid.
   - q: How do I sign in to useSend the first time?
-    a: You sign in with GitHub, using the GitHub app you created before installing, and Google sign-in can be added too. The first person to sign in becomes the admin, and others join by team invitation.
+    a: You sign in to useSend with GitHub, using the GitHub app you created before installing, and Google sign-in can be added too. The first person to sign in becomes the admin, and others join by team invitation.
   - q: Can I import my contacts into useSend?
-    a: Yes, you can upload contacts to a contact list from a CSV or text file, one address per line. Email history from Resend, SendGrid or Postmark does not move across.
+    a: Yes, in useSend you can upload contacts to a contact list from a CSV or text file, one address per line. Email history from Resend, SendGrid or Postmark does not move across.
   - q: Can my app send through useSend with SMTP?
     a: No, not with this setup. useSend's SMTP relay runs as a separate service that Cloudgate does not install, so your app sends through the useSend API or its code libraries instead.
   - q: What server size do I need for useSend?

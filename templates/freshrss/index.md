@@ -42,7 +42,7 @@ faq:
   - q: Does FreshRSS have a phone app?
     a: No, there is no official FreshRSS app, but many reader apps for iPhone, Android and computers connect to it, such as NetNewsWire, Reeder Classic, FeedMe and Readrops. Each person first sets an API password in their FreshRSS profile and uses it to sign in from the app.
   - q: How do I sign in to FreshRSS the first time?
-    a: Sign in with the username admin and the password Cloudgate generated, which it shows you after setup. Nobody can create an account on their own; the admin adds other people under Administration, Manage users.
+    a: Sign in to FreshRSS with the username admin and the password Cloudgate generated, which it shows you after setup. Nobody can create an account on their own; the admin adds other people under Administration, Manage users.
   - q: How often does FreshRSS check for new articles?
     a: Twice an hour. Cloudgate sets FreshRSS to fetch every feed at a fixed time twice each hour, and you can refresh by hand whenever you want the newest articles straight away.
   - q: What server size do I need for FreshRSS?

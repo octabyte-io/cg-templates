@@ -42,13 +42,13 @@ faq:
   - q: Can I import my inventory from Fishbowl or Cin7?
     a: Partly. OpenBoxes imports products, suppliers, stock levels, locations, bins and purchase orders from CSV or Excel files, so you can export your data and bring it in. There is no direct Fishbowl or Cin7 importer, and order history does not come across.
   - q: Does OpenBoxes track lot numbers and expiry dates?
-    a: Yes. Every stock entry can carry a lot or serial number and an expiry date, picking follows first expiry, first out, and a recall finds a lot at every location. This is why clinics and health programmes use it for medicines and medical supplies.
+    a: Yes. Every OpenBoxes stock entry can carry a lot or serial number and an expiry date, picking follows first expiry, first out, and a recall finds a lot at every location. This is why clinics and health programmes use it for medicines and medical supplies.
   - q: How do I sign in to OpenBoxes the first time?
     a: Sign in with the user name admin and the password Cloudgate generates, shown on the app's variables page. OpenBoxes normally starts with the password "password"; Cloudgate replaces it before the app's address opens. The first start takes several minutes.
   - q: Is there an OpenBoxes phone app?
     a: No, OpenBoxes has no app in the app stores, but it works in a phone's browser and its warehouse screens are made for phones and handheld scanners, for picking, putaway, receiving and stock lookups.
   - q: What server size do I need for OpenBoxes?
-    a: A large server with 4 GB of memory, which is what Cloudgate asks for and the project's stated minimum. The project recommends 8 to 16 GB for busy production use.
+    a: OpenBoxes needs a large server with 4 GB of memory, which is what Cloudgate asks for and the project's stated minimum. The project recommends 8 to 16 GB for busy production use.
 screenshots:
   - src: screenshots/dashboard.webp
     alt: "The OpenBoxes dashboard for a Distribution Center, with a top menu of Dashboard, Inventory, Purchasing, Invoicing, Inbound, Outbound, Reporting, Products and Stocklists, tiles for 3,243 items in stock by lot and bin and 20 products in the receiving bin, an inventory summary bar chart of items in stock and no longer in stock, an expiration summary line chart for the next six months, incoming shipments by status, outgoing shipments in progress, delayed incoming shipments by air and sea, and items received with a discrepancy"

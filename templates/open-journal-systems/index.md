@@ -37,8 +37,8 @@ switching:
 faq:
   - q: Is Open Journal Systems free?
     a: Yes, Open Journal Systems (OJS) is free and open source under the GPL-3.0 licence, with every feature in the one download. You pay only for your server; the Public Knowledge Project, which makes OJS, sells hosting, training and support separately if you want them.
-  - q: Is OJS a good alternative to Scholastica?
-    a: Yes, if you are willing to set the journal up yourself. OJS covers online submissions, peer review, editorial decisions and the published journal website, with no fee per submission. Scholastica is quicker to start and also sells typesetting, which OJS does not include.
+  - q: Is Open Journal Systems (OJS) a good alternative to Scholastica?
+    a: Yes. Open Journal Systems (OJS) is a good alternative to Scholastica if you are willing to set the journal up yourself. OJS covers online submissions, peer review, editorial decisions and the published journal website, with no fee per submission. Scholastica is quicker to start and also sells typesetting, which OJS does not include.
   - q: Can OJS replace ScholarOne or Editorial Manager?
     a: Yes, for most society and university journals. OJS handles submissions, reviewer invitations, review rounds, reminders and decisions, and it also publishes the journal, which ScholarOne and Editorial Manager leave to a separate platform.
   - q: Can I run more than one journal in OJS?

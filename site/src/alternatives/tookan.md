@@ -10,6 +10,8 @@ faq:
     a: "Yes. Fleetbase plans routes and orders the stops with routing engines such as OSRM, Valhalla or VROOM, and its Orchestrator plans multi-stop runs."
   - q: "How big a server does Fleetbase need?"
     a: "Fleetbase recommends at least 2 cores, 4 GB of memory and 40 GB of disk, and 4 cores with 8 GB or more for heavier use."
+  - q: "Does Fleetbase have driver apps like Tookan?"
+    a: "Yes, but not ready-made. Tookan's driver apps are in the app stores, while Fleetbase's Navigator driver app has to be built with your own server's address before drivers can install it."
 ---
 
 Tookan, from Jungleworks, is a hosted delivery management and dispatch service, with automatic allocation of orders to drivers, route optimisation, driver apps and customer tracking.
