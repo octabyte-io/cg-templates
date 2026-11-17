@@ -1,0 +1,15 @@
+name: Garlic-Hub
+description: "Garlic-Hub is a self-hosted, open-source digital signage CMS: upload media, build playlists and send them to the screens in your shop or office."
+version: "1.2.0"
+tags: [digital signage, digital signage cms, open source digital signage, smil playlists, screen management]
+links:
+  website: https://garlic-signage.com/garlic-hub/
+  docs: https://garlic-signage.com/garlic-hub/docs/
+  source: https://github.com/garlic-signage/garlic-hub
+cloudgate: 0.1.0
+compose: app
+size: small
+inputs:
+  APP_SECRET: { generate: hex }
+domains:
+  - { service: garlic-hub, port: 80 }
