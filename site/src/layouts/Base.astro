@@ -110,7 +110,7 @@ const footCategories = usedCategories().slice(0, 4);
     <meta name="generator" content={Astro.generator} />
     {pageJsonLd && <script type="application/ld+json" set:html={pageJsonLd} />}
     <script is:inline>
-      // A theme the visitor picked with the header toggle, applied before paint so the page never
+      // A theme the visitor picked with the footer toggle, applied before paint so the page never
       // flashes the other theme. Without a choice the system setting decides.
       (function () {
         try {
@@ -173,15 +173,6 @@ const footCategories = usedCategories().slice(0, 4);
               ><circle cx="7" cy="7" r="5"></circle><path d="m11 11 3.5 3.5"></path></svg
             ><span>Search apps</span><kbd data-modk>Ctrl K</kbd></button
           >
-          <button class="tbtn" type="button" data-theme-toggle aria-label="Switch to dark theme"
-            ><svg class="moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
-              ><path d="M16.5 12.2A7 7 0 0 1 7.8 3.5a7 7 0 1 0 8.7 8.7Z"></path></svg
-            ><svg class="sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
-              ><circle cx="10" cy="10" r="3.5"></circle><path
-                d="M10 1.75v2M10 16.25v2M1.75 10h2M16.25 10h2M4.17 4.17l1.41 1.41M14.42 14.42l1.41 1.41M4.17 15.83l1.41-1.41M14.42 5.58l1.41-1.41"
-              ></path></svg
-            ></button
-          >
           <a class="btn sm getcg" href={cloudgate()}>Get Cloudgate</a>
           <button class="mbtn" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menu" data-menu
             ><svg class="bars" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"
@@ -211,6 +202,15 @@ const footCategories = usedCategories().slice(0, 4);
             <b>Cloudgate Templates</b>
             <span>Self-hosted apps, set up for you in a few clicks. Bring a server, or get one from Cloudgate.</span>
             {isSample && <span class="proto">Preview with sample data</span>}
+            <button class="tbtn" type="button" data-theme-toggle aria-label="Switch to dark theme"
+              ><svg class="moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+                ><path d="M16.5 12.2A7 7 0 0 1 7.8 3.5a7 7 0 1 0 8.7 8.7Z"></path></svg
+              ><svg class="sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+                ><circle cx="10" cy="10" r="3.5"></circle><path
+                  d="M10 1.75v2M10 16.25v2M1.75 10h2M16.25 10h2M4.17 4.17l1.41 1.41M14.42 14.42l1.41 1.41M4.17 15.83l1.41-1.41M14.42 5.58l1.41-1.41"
+                ></path></svg
+              ><span data-theme-name>Dark theme</span></button
+            >
           </div>
           <div>
             <h2>Browse</h2>
@@ -265,7 +265,12 @@ const footCategories = usedCategories().slice(0, 4);
         const root = document.documentElement;
         const system = window.matchMedia('(prefers-color-scheme: dark)');
         const current = () => (root.dataset.theme as 'light' | 'dark' | undefined) ?? (system.matches ? 'dark' : 'light');
-        const label = () => toggle.setAttribute('aria-label', current() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+        const name = toggle.querySelector('[data-theme-name]');
+        const label = () => {
+          const next = current() === 'dark' ? 'light' : 'dark';
+          toggle.setAttribute('aria-label', `Switch to ${next} theme`);
+          if (name) name.textContent = next === 'dark' ? 'Dark theme' : 'Light theme';
+        };
         label();
         system.addEventListener('change', label);
         toggle.addEventListener('click', () => {
