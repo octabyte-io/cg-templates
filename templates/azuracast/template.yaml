@@ -11,5 +11,9 @@ compose: app
 size: medium
 inputs:
   MYSQL_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup/register
+    note: "Create the administrator account, then finish the short wizard for your first station."
 domains:
   - { service: azuracast, port: 80 }

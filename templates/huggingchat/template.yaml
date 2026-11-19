@@ -26,6 +26,9 @@ inputs:
       description: A Hugging Face access token (hf_...) for the router, or your provider's key. Leave empty to add it later on the app's variables page; chatting needs it.
       secret: true
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: proxy, port: 80 }
 files:

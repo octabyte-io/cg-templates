@@ -11,5 +11,8 @@ compose: app
 size: medium
 inputs:
   KOTAEMON_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: KOTAEMON_ADMIN_PASSWORD
 domains:
   - { service: kotaemon, port: 7860 }

@@ -17,5 +17,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   TRAGGO_DEFAULT_USER_PASS: { generate: password }
+signIn:
+  username: TRAGGO_DEFAULT_USER_NAME
+  password: TRAGGO_DEFAULT_USER_PASS
 domains:
   - { service: traggo, port: 3030 }

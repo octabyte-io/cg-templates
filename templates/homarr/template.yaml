@@ -12,6 +12,10 @@ size: small
 inputs:
   BASE_URL: { value: "{{domains.homarr.url}}" }
   SECRET_ENCRYPTION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /init
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: homarr, port: 7575 }
 files: []

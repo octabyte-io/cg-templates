@@ -13,5 +13,9 @@ inputs:
   ORIGIN: { value: "{{domains.wishlist.url}}" }
   DEFAULT_CURRENCY:
     ask: { label: Default currency, description: "The three-letter currency code shown on prices, such as USD, EUR or GBP. Each item can still use its own currency.", default: "USD", required: false }
+signIn:
+  firstVisit:
+    path: /setup-wizard
+    note: "Finish the setup wizard to create your account; the first account made is the admin."
 domains:
   - { service: wishlist, port: 3280 }

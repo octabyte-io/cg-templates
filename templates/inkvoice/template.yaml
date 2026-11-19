@@ -19,5 +19,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASS: { generate: password }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASS
 domains:
   - { service: inkvoice, port: 3000 }

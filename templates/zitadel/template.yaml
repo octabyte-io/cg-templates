@@ -41,6 +41,9 @@ inputs:
       label: Organization name
       description: The name of the first organization in ZITADEL, usually your company's name.
       default: ZITADEL
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 # The Caddy proxy sends each path to the API or the login UI, as ZITADEL's
 # official Traefik setup does, so it is the service that gets the address.
 domains:

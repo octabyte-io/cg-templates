@@ -14,5 +14,7 @@ inputs:
   OPENCLAW_GATEWAY_TOKEN: { generate: hex }
   # The browser origin the dashboard is served from.
   OPENCLAW_PUBLIC_ORIGIN: { value: "{{domains.openclaw-gateway.url}}" }
+signIn:
+  password: OPENCLAW_GATEWAY_TOKEN
 domains:
   - { service: openclaw-gateway, port: 18789 }

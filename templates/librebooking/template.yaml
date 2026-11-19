@@ -53,5 +53,9 @@ inputs:
       description: The From address on LibreBooking's emails, for example bookings@yourcompany.com.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /Web/register.php
+    note: "Register with the admin email you entered at setup; that account becomes the administrator."
 domains:
   - { service: librebooking, port: 8080 }

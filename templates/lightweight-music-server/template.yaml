@@ -13,6 +13,10 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # music at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account; the first person to open LMS makes it."
 domains:
   - { service: lms, port: 5082 }
   - { service: filebrowser, port: 80 }

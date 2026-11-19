@@ -21,6 +21,9 @@ inputs:
   ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  username: { value: Admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: mediawiki, port: 80 }
 files:

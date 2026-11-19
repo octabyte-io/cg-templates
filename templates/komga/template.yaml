@@ -19,6 +19,10 @@ inputs:
       description: Used for dates and scheduled library scans in Komga, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email address and a password; there is no default login."
 domains:
   - { service: komga, port: 25600 }
   - { service: filebrowser, port: 80 }

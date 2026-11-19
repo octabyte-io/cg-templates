@@ -13,5 +13,9 @@ inputs:
   DB_PASSWORD: { generate: password }
   APP_SECRET: { generate: hex }
   TWO_FACTOR_ENCRYPTION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in as admin with the password umami, then change the password."
 domains:
   - { service: umami, port: 3000 }

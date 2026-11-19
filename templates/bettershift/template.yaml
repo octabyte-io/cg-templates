@@ -24,5 +24,9 @@ inputs:
       default: "true"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Sign up; the first account made is the admin."
 domains:
   - { service: bettershift, port: 3000 }

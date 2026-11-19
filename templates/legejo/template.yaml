@@ -14,5 +14,8 @@ inputs:
   # Creates the admin account "admin" on the first start, so nobody else can
   # claim it by opening the site first. Shown afterwards on the app's variables page.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: legejo, port: 3000 }

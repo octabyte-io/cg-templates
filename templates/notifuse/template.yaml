@@ -13,5 +13,9 @@ inputs:
   API_ENDPOINT: { value: "{{domains.notifuse.url}}" }
   SECRET_KEY: { generate: base64 }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard with your admin email and SMTP server; Notifuse then emails you a code each time you sign in."
 domains:
   - { service: notifuse, port: 8080 }

@@ -13,5 +13,9 @@ inputs:
   APP_BASE_URL: { value: "{{domains.papra.url}}" }
   # Signs sessions; Papra needs at least 32 characters (hex is 64).
   AUTH_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: papra, port: 1221 }

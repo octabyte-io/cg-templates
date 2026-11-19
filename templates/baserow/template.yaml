@@ -11,5 +11,9 @@ compose: app
 size: medium
 inputs:
   PUBLIC_URL: { value: "{{domains.baserow.url}}" }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: baserow, port: 80 }

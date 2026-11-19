@@ -15,5 +15,8 @@ inputs:
   # The password of the admin user "admin", set once on the first start.
   # Change it later in Gokapi itself.
   GOKAPI_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: GOKAPI_ADMIN_PASSWORD
 domains:
   - { service: gokapi, port: 53842 }

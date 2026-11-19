@@ -12,5 +12,9 @@ size: small
 inputs:
   CORE_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /auth/setup
+    note: "Choose the admin username and password; the first person to reach this page becomes the admin."
 domains:
   - { service: zipline, port: 3000 }

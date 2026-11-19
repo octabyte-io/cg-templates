@@ -16,6 +16,9 @@ inputs:
   CELLS_ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: CELLS_ADMIN_PASSWORD
 domains:
   - { service: pydio-cells, port: 8080 }
 files:

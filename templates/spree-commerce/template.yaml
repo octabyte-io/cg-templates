@@ -55,5 +55,8 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: spree, port: 3000 }

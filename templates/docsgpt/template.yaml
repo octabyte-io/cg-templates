@@ -27,5 +27,9 @@ inputs:
       description: Your API key for the provider above. Leave it empty for "docsgpt".
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Paste the access token from the app's logs in Cloudgate."
 domains:
   - { service: docsgpt, port: 7091 }

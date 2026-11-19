@@ -13,6 +13,10 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # music at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with a username and password, then choose /music as your music folder."
 domains:
   - { service: swingmusic, port: 1970 }
   - { service: filebrowser, port: 80 }

@@ -12,6 +12,10 @@ size: small
 inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the install wizard: choose the empty database, then create the admin account and name the site."
 domains:
   - { service: typo3, port: 80 }
 files:

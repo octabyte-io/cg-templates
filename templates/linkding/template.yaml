@@ -16,5 +16,8 @@ inputs:
   LD_SUPERUSER_PASSWORD: { generate: password }
   # Lets the login form and bookmark saves work behind Cloudgate's HTTPS proxy.
   LD_CSRF_TRUSTED_ORIGINS: { value: "{{domains.linkding.url}}" }
+signIn:
+  username: { value: admin }
+  password: LD_SUPERUSER_PASSWORD
 domains:
   - { service: linkding, port: 9090 }

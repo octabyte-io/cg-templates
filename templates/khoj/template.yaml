@@ -19,5 +19,8 @@ inputs:
       label: Admin email
       description: You sign in to Khoj's admin panel (<Khoj's address>/server/admin) with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: KHOJ_ADMIN_EMAIL
+  password: KHOJ_ADMIN_PASSWORD
 domains:
   - { service: khoj, port: 42110 }

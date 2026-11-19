@@ -12,6 +12,10 @@ size: small
 inputs:
   COCKPIT_SEC_KEY: { generate: hex }
   COCKPIT_SITE_URL: { value: "{{domains.cockpit.url}}" }
+signIn:
+  firstVisit:
+    path: /install
+    note: "Fill in the install form to create the admin account; do it right away, because until then anyone who opens this page can."
 domains:
   - { service: cockpit, port: 80 }
 files:

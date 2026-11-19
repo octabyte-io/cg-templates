@@ -13,5 +13,9 @@ inputs:
   JWT_SECRET: { generate: hex }
   SIG_KEY: { generate: hex }
   SIG_SALT: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the short setup: pick an AI provider, then set a password or create the admin account."
 domains:
   - { service: anythingllm, port: 3001 }

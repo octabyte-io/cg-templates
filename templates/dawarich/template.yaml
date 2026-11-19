@@ -24,5 +24,9 @@ inputs:
       description: The time zone your trips and stats are shown in, as a tz database name such as Europe/Berlin or America/New_York.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /users/sign_in
+    note: "Sign in as demo@dawarich.app with the password safepassword, then change the email and password."
 domains:
   - { service: dawarich, port: 3000 }

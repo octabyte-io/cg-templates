@@ -19,6 +19,8 @@ size: small
 inputs:
   ADMIN_PASSWORD: { generate: password }
   AUTH_SECRET: { generate: hex }
+signIn:
+  password: ADMIN_PASSWORD
 domains:
   - { service: codex-docs, port: 3000 }
 files:

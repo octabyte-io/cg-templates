@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up; the first account made is the admin."
 domains:
   - { service: slash, port: 5231 }

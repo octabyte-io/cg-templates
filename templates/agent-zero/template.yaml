@@ -18,5 +18,8 @@ inputs:
       description: Lets Agent Zero use AI models through OpenRouter. Leave it empty to connect OpenAI, Anthropic, Google, a local model or another provider in the app's model setup instead.
       secret: true
       required: false
+signIn:
+  username: { value: admin }
+  password: AUTH_PASSWORD
 domains:
   - { service: agent-zero, port: 80 }

@@ -50,5 +50,9 @@ inputs:
       label: Sender
       description: "The address emails come from, for example kaneo@example.com."
       required: false
+signIn:
+  firstVisit:
+    path: /auth/sign-up
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: kaneo, port: 5173 }

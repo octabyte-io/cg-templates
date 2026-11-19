@@ -21,5 +21,9 @@ inputs:
       description: Type true once your own account exists, so nobody else can create an account.
       default: "false"
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register with a username, email and password, then set Turn off new sign-ups to true unless others should join."
 domains:
   - { service: wanderer, port: 3000 }

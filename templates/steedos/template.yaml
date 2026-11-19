@@ -18,5 +18,9 @@ compose: app
 size: large
 inputs:
   ROOT_URL: { value: "{{domains.steedos.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up to create your company's workspace; the first account made is the admin."
 domains:
   - { service: steedos, port: 80 }

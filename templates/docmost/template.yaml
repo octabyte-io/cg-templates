@@ -13,5 +13,9 @@ inputs:
   APP_URL: { value: "{{domains.docmost.url}}" }
   APP_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup/register
+    note: "Create the owner account and name your workspace."
 domains:
   - { service: docmost, port: 3000 }

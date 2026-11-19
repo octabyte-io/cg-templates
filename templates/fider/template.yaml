@@ -42,5 +42,9 @@ inputs:
       default: "false"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Fill in your site's name, your name and your email, then click the confirmation link Fider emails you to sign in as the admin."
 domains:
   - { service: fider, port: 3000 }

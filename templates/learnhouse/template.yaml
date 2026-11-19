@@ -29,5 +29,8 @@ inputs:
       default: My Academy
       pattern: "[^<>\"]{1,60}"
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: learnhouse, port: 80 }

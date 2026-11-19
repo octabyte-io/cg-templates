@@ -22,5 +22,9 @@ inputs:
       description: Used for activities without GPS, such as indoor swims or gym sessions, as a tz database name such as Europe/Lisbon or America/New_York.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in as admin with the password admin, then change the password."
 domains:
   - { service: endurain, port: 8080 }

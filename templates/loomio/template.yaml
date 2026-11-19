@@ -44,5 +44,9 @@ inputs:
     ask:
       label: Email server password
       secret: true
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with your email and confirm it from the email Loomio sends you."
 domains:
   - { service: loomio, port: 80 }

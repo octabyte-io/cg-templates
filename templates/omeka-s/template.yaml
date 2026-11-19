@@ -31,5 +31,8 @@ inputs:
       description: Used for dates and times, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: omeka-s, port: 80 }

@@ -61,5 +61,8 @@ inputs:
       description: The address Relaticle sends mail from. Use one your email service lets you send from.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: relaticle, port: 8080 }

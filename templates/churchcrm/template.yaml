@@ -14,6 +14,9 @@ inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: Admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: churchcrm, port: 8080 }
 files:

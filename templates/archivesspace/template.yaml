@@ -18,6 +18,9 @@ inputs:
   ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   # The staff interface, where archivists work and the admin signs in.
   - { service: archivesspace, port: 8080 }

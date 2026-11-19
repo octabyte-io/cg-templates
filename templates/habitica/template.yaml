@@ -45,5 +45,9 @@ inputs:
       description: The address Habitica's emails come from.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with a username, email and password; the first account made is the admin."
 domains:
   - { service: habitica, port: 3000 }

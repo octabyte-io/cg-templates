@@ -19,5 +19,9 @@ inputs:
       default: "true"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with an email and a password; the first account made is the admin."
 domains:
   - { service: squidex, port: 5000 }

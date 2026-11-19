@@ -20,5 +20,8 @@ inputs:
       label: Admin email
       description: You sign in to ProjectSend with this email and the generated ADMIN_PASSWORD.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: projectsend, port: 80 }

@@ -52,5 +52,8 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  username: ADMIN_LOGIN
+  password: ADMIN_PASSWORD
 domains:
   - { service: davis, port: 9000 }

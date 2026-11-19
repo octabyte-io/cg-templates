@@ -22,6 +22,10 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Sign up with your email and a password; the admin username and password are for the admin dashboard at its own address."
 domains:
   # The reader, where people sign up, follow feeds and read.
   - { service: glean, port: 80 }

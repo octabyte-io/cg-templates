@@ -32,6 +32,9 @@ inputs:
       label: Admin email
       description: The email of the admin user "admin". You sign in as admin with the password Cloudgate creates, shown afterwards on the app's variables page as ADMIN_PASSWORD.
       format: email
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: authelia, port: 9091 }
 files:

@@ -25,5 +25,8 @@ inputs:
       description: Used for scheduled campaigns, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: listmonk, port: 9000 }

@@ -14,6 +14,9 @@ inputs:
   NODE_RED_ADMIN_PASSWORD: { generate: password }
   # Encrypts the passwords and tokens saved in flows.
   NODE_RED_CREDENTIAL_SECRET: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: NODE_RED_ADMIN_PASSWORD
 domains:
   - { service: node-red, port: 1880 }
 files:

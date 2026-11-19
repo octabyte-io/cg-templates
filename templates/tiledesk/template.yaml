@@ -54,6 +54,9 @@ inputs:
       aud: [rabbitmq, 100-APIADMIN]
       kid: tiledesk-key
       tiledesk_api_roles: admin
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: tiledesk, port: 80 }
 files:

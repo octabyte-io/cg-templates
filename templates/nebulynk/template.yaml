@@ -25,6 +25,10 @@ inputs:
   STORAGE_S3_SECRET_KEY: { generate: password }
   LIVEKIT_API_KEY: { generate: password }
   LIVEKIT_API_SECRET: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the short setup to name your workspace and create the admin account."
 domains:
   - { service: nebulynk, port: 8080 }
   - { service: nebulynk-api, port: 3030 }

@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account; the first person to open Uptime Kuma makes it."
 domains:
   - { service: uptime-kuma, port: 3001 }

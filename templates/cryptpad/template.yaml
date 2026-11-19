@@ -26,6 +26,10 @@ inputs:
         licence. no leaves them out; every other app works without them.
       default: "yes"
       pattern: "^(yes|no)$"
+signIn:
+  firstVisit:
+    path: /install
+    note: "Use the admin setup link CPAD_ADMIN_SETUP_URL from the variables page, which holds the one-time token, to create the admin account."
 domains:
   - { service: cryptpad, port: 3000 }
   - { service: cryptpad-sandbox, port: 3001 }

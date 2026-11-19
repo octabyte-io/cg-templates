@@ -14,6 +14,9 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
   SETUP_PASSWORD: { generate: password }
+signIn:
+  username: { value: sysop }
+  password: ADMIN_PASSWORD
 domains:
   - { service: egroupware-nginx, port: 80 }
 files:

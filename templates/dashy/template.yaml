@@ -14,5 +14,8 @@ inputs:
   # for this password (username: admin) before it hands out the dashboard's
   # config or runs any status check or widget request.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: dashy, port: 8080 }

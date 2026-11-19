@@ -15,6 +15,10 @@ inputs:
   CLICKHOUSE_PASSWORD: { generate: password }
   POSTGRES_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: rybbit, port: 80 }
 files:

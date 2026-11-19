@@ -14,5 +14,9 @@ inputs:
   APP_HOST: { value: "{{domains.docuseal.host}}" }
   SECRET_KEY_BASE: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account with your name, email and a password."
 domains:
   - { service: docuseal, port: 3000 }

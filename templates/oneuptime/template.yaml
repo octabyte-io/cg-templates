@@ -18,6 +18,10 @@ inputs:
   DATABASE_PASSWORD: { generate: password }
   CLICKHOUSE_PASSWORD: { generate: password }
   VALKEY_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /accounts/register
+    note: "Sign up; the first account made is the admin."
 domains:
   - { service: oneuptime-ingress, port: 7849 }
 files:

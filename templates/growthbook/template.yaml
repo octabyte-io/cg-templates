@@ -17,6 +17,10 @@ inputs:
   JWT_SECRET: { generate: hex }
   ENCRYPTION_KEY: { generate: hex }
   MONGO_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with your name, email, password and company name."
 domains:
   # The web app, where people sign in and manage flags and experiments.
   - { service: growthbook, port: 3000 }

@@ -26,5 +26,8 @@ inputs:
       description: Used for scheduled channel scans and downloads, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: TA_USERNAME
+  password: TA_PASSWORD
 domains:
   - { service: tubearchivist, port: 8000 }

@@ -11,5 +11,9 @@ compose: app
 size: small
 inputs:
   SECRET_KEY_BASE: { generate: hex }
+signIn:
+  firstVisit:
+    path: /first_run
+    note: "Create the admin account with your name, email and a password."
 domains:
   - { service: campfire, port: 80 }

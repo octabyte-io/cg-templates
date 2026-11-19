@@ -11,5 +11,9 @@ compose: app
 size: small
 inputs:
   ROOT_URL: { value: "{{domains.titra.url}}" }
+signIn:
+  firstVisit:
+    path: /join
+    note: "Register an account, then open /claim/admin to claim admin rights."
 domains:
   - { service: titra, port: 3000 }

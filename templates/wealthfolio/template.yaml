@@ -15,5 +15,7 @@ inputs:
   # Encrypts saved secrets (such as API keys) and signs sign-in sessions.
   WF_SECRET_KEY: { generate: base64 }
   APP_URL: { value: "{{domains.wealthfolio.url}}" }
+signIn:
+  password: ADMIN_PASSWORD
 domains:
   - { service: wealthfolio, port: 8088 }

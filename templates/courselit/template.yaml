@@ -42,5 +42,9 @@ inputs:
     ask:
       label: Email server password
       secret: true
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in with the admin email you chose; CourseLit emails you a one-time code."
 domains:
   - { service: courselit, port: 3000 }

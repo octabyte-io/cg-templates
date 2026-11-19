@@ -33,5 +33,8 @@ inputs:
       description: Used for scheduling agents, as a Rails time zone name such as UTC, London or Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: huginn, port: 3000 }

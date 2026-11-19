@@ -18,6 +18,9 @@ size: small
 inputs:
   # The password the sign-in prompt in front of big-AGI asks for (username: admin).
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: proxy, port: 80 }
 files:

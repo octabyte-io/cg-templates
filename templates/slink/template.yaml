@@ -23,5 +23,8 @@ inputs:
       description: Used for the dates shown on uploads, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: slink, port: 3000 }

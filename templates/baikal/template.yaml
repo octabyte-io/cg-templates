@@ -12,5 +12,8 @@ size: xsmall
 inputs:
   BAIKAL_ADMIN_PASSWORD: { generate: password }
   BAIKAL_ENCRYPTION_KEY: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: BAIKAL_ADMIN_PASSWORD
 domains:
   - { service: baikal, port: 80 }

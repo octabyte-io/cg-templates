@@ -24,5 +24,8 @@ inputs:
       description: The name shown on your client portal and invoices. You can change it later under Admin > Settings.
       default: Paymenter
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: paymenter, port: 80 }

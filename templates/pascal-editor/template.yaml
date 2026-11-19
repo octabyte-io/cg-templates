@@ -13,5 +13,7 @@ inputs:
   PASCAL_PUBLIC_URL: { value: "{{domains.editor.url}}" }
   PASCAL_ADMIN_PASSWORD: { generate: password }
   PASCAL_SCENE_API_TOKEN: { generate: hex }
+signIn:
+  password: PASCAL_ADMIN_PASSWORD
 domains:
   - { service: editor, port: 3000 }

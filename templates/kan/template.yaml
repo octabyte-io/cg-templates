@@ -54,5 +54,9 @@ inputs:
       label: Sender
       description: "The address emails come from, for example Kan <kan@example.com>."
       required: false
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password, then turn on Invite-only sign-up on the variables page."
 domains:
   - { service: kan, port: 3000 }

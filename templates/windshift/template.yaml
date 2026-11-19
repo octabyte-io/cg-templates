@@ -15,5 +15,9 @@ inputs:
   WEBAUTHN_RP_ID: { value: "{{domains.windshift.host}}" }
   SSO_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account; the first person to open Windshift becomes the admin."
 domains:
   - { service: windshift, port: 8080 }

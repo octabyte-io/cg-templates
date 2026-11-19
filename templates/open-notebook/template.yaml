@@ -14,5 +14,7 @@ inputs:
   OPEN_NOTEBOOK_PASSWORD: { generate: password }
   OPEN_NOTEBOOK_ENCRYPTION_KEY: { generate: hex }
   SURREAL_PASSWORD: { generate: password }
+signIn:
+  password: OPEN_NOTEBOOK_PASSWORD
 domains:
   - { service: open-notebook, port: 8502 }

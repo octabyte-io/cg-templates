@@ -43,5 +43,9 @@ inputs:
       description: The address Bonfire's emails come from, such as bonfire@yourdomain.com.
       required: false
       format: email
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up; the first account made is the admin and needs no email confirmation."
 domains:
   - { service: bonfire, port: 4000 }

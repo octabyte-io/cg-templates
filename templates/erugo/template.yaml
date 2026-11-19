@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email address and a password; there is no default login."
 domains:
   - { service: erugo, port: 80 }

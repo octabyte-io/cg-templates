@@ -13,5 +13,8 @@ inputs:
   # The password of the user "admin". FileBrowser Quantum sets it back to this
   # value on every start, so change it here, not in the app.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: FILEBROWSER_ADMIN_PASSWORD
 domains:
   - { service: filebrowser, port: 80 }

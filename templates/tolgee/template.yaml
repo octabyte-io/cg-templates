@@ -19,5 +19,8 @@ inputs:
       description: The email you sign in to Tolgee with as its administrator.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: tolgee, port: 8080 }

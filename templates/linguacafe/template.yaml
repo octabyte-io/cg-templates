@@ -21,5 +21,9 @@ inputs:
   APP_KEY: { generate: base64 }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /login
+    note: "Create the first account, which becomes the admin."
 domains:
   - { service: linguacafe, port: 80 }

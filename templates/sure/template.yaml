@@ -45,5 +45,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /registration/new
+    note: "Sign up as the first user to create your account."
 domains:
   - { service: sure, port: 3000 }

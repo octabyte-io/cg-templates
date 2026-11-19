@@ -16,5 +16,9 @@ inputs:
   WEBHOOK_SECRET_KEY: { generate: hex }
   APP_SECRET_KEY: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /installation
+    note: "Create the admin account with your name, email and a password."
 domains:
   - { service: automatisch, port: 3000 }

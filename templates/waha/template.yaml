@@ -25,5 +25,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   DASHBOARD_PASSWORD: { generate: password }
+signIn:
+  username: DASHBOARD_USERNAME
+  password: DASHBOARD_PASSWORD
 domains:
   - { service: waha, port: 3000 }

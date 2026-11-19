@@ -19,5 +19,8 @@ inputs:
   # the /admin page.
   ADMIN_SECRET: { generate: hex }
   USER_SECRET: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: etherpad, port: 9001 }

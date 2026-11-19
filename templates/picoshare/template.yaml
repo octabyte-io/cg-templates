@@ -11,5 +11,7 @@ compose: app
 size: xsmall
 inputs:
   PS_SHARED_SECRET: { generate: password }
+signIn:
+  password: PS_SHARED_SECRET
 domains:
   - { service: picoshare, port: 4001 }

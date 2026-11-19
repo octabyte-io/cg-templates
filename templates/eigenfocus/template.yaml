@@ -14,5 +14,8 @@ inputs:
   # browser's sign-in prompt (username: admin, password: this value).
   HTTP_AUTH_PASSWORD: { generate: password }
   DEFAULT_HOST_URL: { value: "{{domains.eigenfocus.url}}" }
+signIn:
+  username: { value: admin }
+  password: HTTP_AUTH_PASSWORD
 domains:
   - { service: eigenfocus, port: 3000 }

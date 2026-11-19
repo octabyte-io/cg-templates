@@ -48,6 +48,10 @@ inputs:
       description: The address emails are sent from, such as maintenance@yourdomain.com.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /account/register
+    note: "Sign up with the admin email you gave at setup to create your organization; you choose the password."
 domains:
   # nginx in front of the web app (/), the API (/api/) and file storage (/storage/).
   - { service: atlas-cmms, port: 80 }

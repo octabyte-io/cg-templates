@@ -20,5 +20,8 @@ inputs:
       description: The site's time zone for dates and events, as an IANA name such as Europe/Berlin. You can change it later in Plone's site setup.
       default: UTC
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: plone-frontend, port: 3000 }

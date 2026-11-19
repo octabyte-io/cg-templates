@@ -47,5 +47,9 @@ inputs:
       description: The address emails come from. Leave it empty to use the username.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with a passkey or a passphrase."
 domains:
   - { service: open-reception, port: 3000 }

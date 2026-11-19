@@ -18,5 +18,8 @@ inputs:
   SECRET_KEY: { generate: hex }
   DB_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: maxkb, port: 8080 }

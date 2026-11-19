@@ -14,6 +14,10 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # media at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: jellyfin, port: 8096 }
   - { service: filebrowser, port: 80 }

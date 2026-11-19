@@ -15,5 +15,9 @@ inputs:
   JWT_SECRET_KEY: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Click Get Started to create the first account, which becomes the admin. Save the security token it shows; you sign in with it."
 domains:
   - { service: ghostfolio, port: 3333 }

@@ -25,5 +25,8 @@ inputs:
       default: en-US
       required: false
       pattern: "[a-z]{2,3}(-[A-Za-z0-9]{2,8})*"
+signIn:
+  username: AUTH_USERNAME
+  password: AUTH_PASSWORD
 domains:
   - { service: openbudgeteer, port: 8080 }

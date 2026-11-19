@@ -12,5 +12,9 @@ size: small
 inputs:
   ORIGIN: { value: "{{domains.airtrail.url}}" }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account on the welcome screen; there is no default password."
 domains:
   - { service: airtrail, port: 3000 }

@@ -14,6 +14,9 @@ inputs:
   RT_ROOT_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  username: { value: root }
+  password: RT_ROOT_PASSWORD
 domains:
   - { service: request-tracker, port: 80 }
 files:

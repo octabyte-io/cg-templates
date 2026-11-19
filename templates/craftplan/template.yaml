@@ -21,6 +21,10 @@ inputs:
   POSTGRES_PASSWORD: { generate: password }
   STORAGE_ACCESS_KEY: { generate: password }
   STORAGE_SECRET_KEY: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account on the setup screen."
 domains:
   - { service: craftplan, port: 4000 }
   - { service: craftplan-storage, port: 9000 }

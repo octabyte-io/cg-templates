@@ -31,6 +31,9 @@ inputs:
       label: Forum name
       description: Shown at the top of every page. You can change it later in the Administration Control Panel.
       default: My phpBB Forum
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: phpbb, port: 8080 }
 files:

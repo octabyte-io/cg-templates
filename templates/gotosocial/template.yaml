@@ -23,6 +23,9 @@ inputs:
       description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: gotosocial, port: 8080 }
 files:

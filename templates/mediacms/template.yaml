@@ -31,6 +31,9 @@ inputs:
       description: Type false once your own account exists, so nobody else can create an account.
       default: "true"
       required: false
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: mediacms, port: 80 }
 files:

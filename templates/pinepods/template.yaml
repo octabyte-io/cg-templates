@@ -30,5 +30,8 @@ inputs:
       description: Used for episode dates and the download schedule, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: pinepods, port: 8040 }

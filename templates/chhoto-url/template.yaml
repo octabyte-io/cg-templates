@@ -16,5 +16,7 @@ inputs:
   API_KEY_B: { generate: hex }
   SESSION_KEY_A: { generate: hex }
   SESSION_KEY_B: { generate: hex }
+signIn:
+  password: CHHOTO_PASSWORD
 domains:
   - { service: chhoto-url, port: 4567 }

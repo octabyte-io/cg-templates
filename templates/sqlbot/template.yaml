@@ -21,5 +21,9 @@ inputs:
   SECRET_KEY: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
   DEFAULT_PWD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign in as admin with the password SQLBot@123456, then change the password."
 domains:
   - { service: sqlbot, port: 8000 }

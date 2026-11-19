@@ -20,5 +20,9 @@ inputs:
       description: The default time zone for new users and dates, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  firstVisit:
+    path: /install
+    note: "Fill in the install page with your name, email, password and company to create the admin account."
 domains:
   - { service: leantime, port: 8080 }

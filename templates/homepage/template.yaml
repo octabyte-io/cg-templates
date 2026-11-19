@@ -17,6 +17,8 @@ inputs:
   HOMEPAGE_AUTH_SECRET: { generate: hex }
   # The password for the sign-in page, shown afterwards on the app's variables page.
   HOMEPAGE_AUTH_PASSWORD: { generate: password }
+signIn:
+  password: HOMEPAGE_AUTH_PASSWORD
 domains:
   - { service: homepage, port: 3000 }
 files: []

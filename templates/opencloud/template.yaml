@@ -12,5 +12,8 @@ size: small
 inputs:
   OC_URL: { value: "{{domains.opencloud.url}}" }
   IDM_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: IDM_ADMIN_PASSWORD
 domains:
   - { service: opencloud, port: 9200 }

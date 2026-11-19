@@ -14,5 +14,9 @@ inputs:
   NEXTCLOUD_URL: { value: "{{domains.nextcloud.url}}" }
   POSTGRES_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account on the setup page; the first person to open it becomes the admin."
 domains:
   - { service: nextcloud, port: 80 }

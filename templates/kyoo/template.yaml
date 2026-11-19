@@ -33,6 +33,10 @@ inputs:
       description: Optional. Leave empty to use Kyoo's built-in key.
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Create your account right away; the first account made is the admin."
 domains:
   - { service: kyoo, port: 8901 }
   - { service: filebrowser, port: 80 }

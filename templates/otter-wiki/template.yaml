@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /-/register
+    note: "Register an account; the first account made is the admin."
 domains:
   - { service: otterwiki, port: 80 }

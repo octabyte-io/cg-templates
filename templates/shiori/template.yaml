@@ -14,6 +14,9 @@ inputs:
   SHIORI_HTTP_SECRET_KEY: { generate: hex }
   # Replaces the default password ("gopher") of the account "shiori" on the first start.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: shiori }
+  password: ADMIN_PASSWORD
 domains:
   - { service: shiori, port: 8080 }
 files:

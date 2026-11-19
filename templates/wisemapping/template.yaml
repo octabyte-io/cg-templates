@@ -20,5 +20,8 @@ inputs:
   DB_PASSWORD: { generate: password }
   JWT_SECRET: { generate: hex }
   OAUTH_TOKEN_SECRET: { generate: hex }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: wisemapping, port: 80 }

@@ -26,5 +26,9 @@ inputs:
       format: email
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register with the admin email you gave at setup; that account becomes the admin."
 domains:
   - { service: friendica, port: 80 }

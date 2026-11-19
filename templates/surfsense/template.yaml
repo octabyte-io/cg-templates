@@ -12,5 +12,7 @@ size: large
 inputs:
   SURFSENSE_PASSWORD: { generate: password }
   SURFSENSE_SECRET: { generate: hex }
+signIn:
+  password: SURFSENSE_PASSWORD
 domains:
   - { service: surfsense, port: 80 }

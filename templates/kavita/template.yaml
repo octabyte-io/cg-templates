@@ -13,6 +13,10 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # books at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /registration/register
+    note: "Create the admin account with a username, email and password; the first account made is the admin."
 domains:
   - { service: kavita, port: 5000 }
   - { service: filebrowser, port: 80 }

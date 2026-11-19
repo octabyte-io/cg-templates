@@ -25,5 +25,8 @@ inputs:
       label: Admin email
       description: The admin's email address, used for password resets. You can change it later on the admin's contact record.
       format: email
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: civicrm, port: 80 }

@@ -11,5 +11,9 @@ compose: app
 size: xsmall
 inputs:
   CLIENT_URL: { value: "{{domains.peekaping.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account on the setup screen."
 domains:
   - { service: peekaping, port: 8383 }

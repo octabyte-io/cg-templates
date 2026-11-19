@@ -25,6 +25,9 @@ inputs:
       description: Used for dates and times shown in the gallery, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: piwigo, port: 80 }
 files:

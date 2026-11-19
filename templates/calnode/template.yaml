@@ -35,5 +35,9 @@ inputs:
       description: Optional. The secret of the Microsoft app registration above.
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account with your name, email and a password."
 domains:
   - { service: calnode, port: 3000 }

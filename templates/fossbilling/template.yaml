@@ -25,5 +25,8 @@ inputs:
       default: USD
       required: false
       pattern: "[A-Z]{3}"
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: fossbilling, port: 80 }

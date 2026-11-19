@@ -13,5 +13,8 @@ inputs:
   # The password of the user "admin". Set once, on the first start; change it
   # afterwards in Kanboard.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: kanboard, port: 80 }

@@ -22,5 +22,9 @@ inputs:
       description: Used for dates and times shown in your galleries, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account; there is no default password."
 domains:
   - { service: lychee, port: 8000 }

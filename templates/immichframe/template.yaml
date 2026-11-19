@@ -37,5 +37,7 @@ inputs:
   # Every screen needs this once to show the slideshow, so the address isn't open
   # to anyone: open the address with ?authsecret=<value>, or type it in when asked.
   AUTHENTICATION_SECRET: { generate: hex }
+signIn:
+  password: ADMIN_PASSWORD
 domains:
   - { service: immichframe, port: 8080 }

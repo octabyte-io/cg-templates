@@ -17,5 +17,9 @@ inputs:
       description: Type true only while colleagues create their accounts, then set it back to false.
       default: "false"
       required: false
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create your account; it is the only account unless you turn on sign-ups."
 domains:
   - { service: convertx, port: 3000 }

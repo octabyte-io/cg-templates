@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard: create the admin account, then your first notebook."
 domains:
   - { service: silverbullet, port: 3000 }

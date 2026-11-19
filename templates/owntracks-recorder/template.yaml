@@ -28,6 +28,9 @@ inputs:
       description: The time zone the Recorder uses for dates and its log, as a tz database name such as Europe/Berlin or America/New_York.
       default: Etc/UTC
       required: false
+signIn:
+  username: RECORDER_USERNAME
+  password: RECORDER_PASSWORD
 domains:
   - { service: proxy, port: 80 }
 files:

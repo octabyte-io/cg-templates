@@ -18,5 +18,9 @@ inputs:
   # exists, so it is made once here and kept with the app's settings, not
   # only on the data volume.
   DB_ENCRYPTION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account."
 domains:
   - { service: yuvomi, port: 3000 }

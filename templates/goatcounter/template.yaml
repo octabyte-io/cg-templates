@@ -17,5 +17,8 @@ inputs:
       format: email
   ADMIN_PASSWORD: { generate: password }
   APP_HOST: { value: "{{domains.goatcounter.host}}" }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: goatcounter, port: 8080 }

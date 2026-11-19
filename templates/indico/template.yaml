@@ -45,6 +45,10 @@ inputs:
       label: Email server password (optional)
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /bootstrap
+    note: "Create the admin account with your name, email and a password; the first account made is the admin."
 domains:
   - { service: indico, port: 59999 }
 files:

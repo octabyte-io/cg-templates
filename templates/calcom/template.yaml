@@ -44,5 +44,9 @@ inputs:
       label: Email server password (optional)
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /auth/setup
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: calcom, port: 3000 }

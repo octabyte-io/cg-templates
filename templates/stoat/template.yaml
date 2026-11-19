@@ -48,6 +48,10 @@ inputs:
       description: Optional. Turns on the GIF picker. Create a free key in your account settings at gifbox.me.
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create an account with your email and a password; there is no default admin account."
 domains:
   - { service: stoat, port: 80 }
 files:

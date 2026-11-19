@@ -18,5 +18,8 @@ inputs:
       label: Admin email
       description: You sign in to TREK with this email. Cloudgate creates a first password for it, shown afterwards on the app's variables page; TREK asks you to choose a new one at the first sign-in.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: trek, port: 3000 }

@@ -21,5 +21,9 @@ inputs:
       description: Used for dates and times in the app, such as when recurring invoices go out, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  firstVisit:
+    path: /installation
+    note: "Finish the setup wizard to create your admin account and company."
 domains:
   - { service: invoiceshelf, port: 8080 }

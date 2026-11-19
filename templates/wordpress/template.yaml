@@ -12,6 +12,10 @@ size: small
 inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /wp-admin/install.php
+    note: "Choose the site name and create the admin account."
 domains:
   - { service: wordpress, port: 80 }
 files:

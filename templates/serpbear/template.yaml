@@ -20,5 +20,8 @@ inputs:
   ADMIN_PASSWORD: { generate: password }
   SECRET: { generate: hex }
   APIKEY: { generate: hex }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: serpbear, port: 3000 }

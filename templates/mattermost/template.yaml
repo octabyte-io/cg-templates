@@ -12,5 +12,9 @@ size: medium
 inputs:
   SITE_URL: { value: "{{domains.mattermost.url}}" }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the first account; it becomes the system admin."
 domains:
   - { service: mattermost, port: 8065 }

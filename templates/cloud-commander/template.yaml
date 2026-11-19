@@ -14,5 +14,8 @@ inputs:
   # (it signs in with your browser's username and password prompt), so change
   # it here, not in the app.
   CLOUDCMD_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: CLOUDCMD_PASSWORD
 domains:
   - { service: cloudcmd, port: 8000 }

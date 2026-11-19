@@ -62,6 +62,9 @@ inputs:
       description: The address emails come from, for example leave@example.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   # Urlaubsverwaltung itself (through the small proxy in front of it).
   - { service: urlaubsverwaltung, port: 80 }

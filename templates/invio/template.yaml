@@ -13,5 +13,8 @@ inputs:
   ADMIN_PASS: { generate: password }
   JWT_SECRET: { generate: hex }
   ORIGIN: { value: "{{domains.invio.url}}" }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASS
 domains:
   - { service: invio, port: 8000 }

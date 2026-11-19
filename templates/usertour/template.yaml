@@ -48,5 +48,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the System Admin account; the first account made is the admin."
 domains:
   - { service: usertour, port: 80 }

@@ -12,5 +12,7 @@ size: xsmall
 inputs:
   MANAGER_PASSWORD: { generate: password }
   JWT_SECRET: { generate: hex }
+signIn:
+  password: MANAGER_PASSWORD
 domains:
   - { service: razzia, port: 3000 }

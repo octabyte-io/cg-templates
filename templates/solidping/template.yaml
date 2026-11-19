@@ -18,5 +18,9 @@ inputs:
       label: Admin email
       description: The sign-in address of the first admin account. Its first password is solidpass, and SolidPing asks for a new one at the first sign-in.
       format: email
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign in with the admin email you chose and the password solidpass, then set a new password."
 domains:
   - { service: solidping, port: 4000 }

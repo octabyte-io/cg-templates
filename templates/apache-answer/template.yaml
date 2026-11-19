@@ -25,5 +25,8 @@ inputs:
       default: Answer
       pattern: "[^<>]{1,30}"
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: answer, port: 80 }

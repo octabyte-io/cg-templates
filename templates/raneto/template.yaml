@@ -18,5 +18,8 @@ inputs:
       description: Used for page dates, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: { value: admin }
+  password: RANETO_ADMIN_PASSWORD
 domains:
   - { service: raneto, port: 3000 }

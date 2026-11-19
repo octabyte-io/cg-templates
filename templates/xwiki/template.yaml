@@ -13,5 +13,9 @@ compose: app
 size: large
 inputs:
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the Distribution Wizard: create the admin account, then install the XWiki Standard flavor, which takes several minutes."
 domains:
   - { service: xwiki, port: 8080 }

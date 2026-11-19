@@ -21,6 +21,9 @@ inputs:
       label: Admin email
       description: The email you sign in with as the administrator. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: password-pusher, port: 5100 }
 files:

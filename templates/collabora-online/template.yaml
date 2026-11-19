@@ -18,5 +18,8 @@ inputs:
       format: url
   # Sign-in for Collabora's admin console at /browser/dist/admin/admin.html.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: collabora, port: 9980 }

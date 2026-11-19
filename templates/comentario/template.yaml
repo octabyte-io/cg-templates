@@ -40,5 +40,9 @@ inputs:
       description: The address emails come from, such as comments@example.com. If empty, the username is used.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with an email and password; the first account made becomes the superuser."
 domains:
   - { service: comentario, port: 80 }

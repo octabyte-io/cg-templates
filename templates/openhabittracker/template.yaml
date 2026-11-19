@@ -33,5 +33,8 @@ inputs:
       label: Time zone
       description: Your time zone for dates and reminders, such as Europe/Berlin, America/New_York or UTC.
       default: UTC
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: openhabittracker, port: 8080 }

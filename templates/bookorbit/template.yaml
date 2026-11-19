@@ -25,5 +25,9 @@ inputs:
       description: Used for reading statistics, streaks and scheduled tasks, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter the setup token from the app's variables page, then create the admin account."
 domains:
   - { service: bookorbit, port: 3000 }

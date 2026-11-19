@@ -20,5 +20,8 @@ inputs:
       description: The email you sign in with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: traduora, port: 8080 }

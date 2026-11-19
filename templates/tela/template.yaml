@@ -47,6 +47,9 @@ inputs:
       description: The address emails are sent from, such as wiki@yourdomain.com.
       format: email
       required: false
+signIn:
+  username: { value: admin }
+  password: TELA_ADMIN_PASSWORD
 domains:
   # tela's own Caddy edge: /api, /ws and /dav go to the backend, the rest to the web app.
   - { service: proxy, port: 80 }

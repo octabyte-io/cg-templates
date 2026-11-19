@@ -13,5 +13,7 @@ inputs:
   SERVER_URL: { value: "{{domains.evolution-api.url}}" }
   AUTHENTICATION_API_KEY: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  password: AUTHENTICATION_API_KEY
 domains:
   - { service: evolution-api, port: 8080 }

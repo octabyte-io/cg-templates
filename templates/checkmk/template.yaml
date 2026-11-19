@@ -12,5 +12,8 @@ size: medium
 inputs:
   # Password of the cmkadmin user, set when the site is first created.
   CMK_PASSWORD: { generate: password }
+signIn:
+  username: { value: cmkadmin }
+  password: CMK_PASSWORD
 domains:
   - { service: checkmk, port: 5000 }

@@ -12,5 +12,9 @@ size: small
 inputs:
   SECRET: { generate: hex }
   URLS: { value: "{{domains.yamtrack.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Choose Register now and create your account with a username and a password."
 domains:
   - { service: yamtrack, port: 8000 }

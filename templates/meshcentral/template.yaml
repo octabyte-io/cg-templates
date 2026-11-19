@@ -13,6 +13,10 @@ inputs:
   MESHCENTRAL_HOST: { value: "{{domains.meshcentral.host}}" }
   MESHCENTRAL_URL: { value: "{{domains.meshcentral.url}}" }
   SESSION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Choose Create Account; the first account made is the site administrator."
 # MeshCentral serves plain HTTP on 4430 behind Cloudgate's HTTPS proxy; the
 # browser and the agents both use the domain's port 443 (agents over wss).
 domains:

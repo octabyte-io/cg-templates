@@ -13,5 +13,8 @@ inputs:
   DB_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
   SERVER_NAME: { value: "{{domains.xibo.host}}" }
+signIn:
+  username: { value: xibo_admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: xibo, port: 80 }

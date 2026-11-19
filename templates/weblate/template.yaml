@@ -53,5 +53,8 @@ inputs:
       description: Used for dates in the app and in emails, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: { value: admin }
+  password: WEBLATE_ADMIN_PASSWORD
 domains:
   - { service: weblate, port: 8080 }

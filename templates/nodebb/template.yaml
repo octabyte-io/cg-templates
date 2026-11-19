@@ -24,5 +24,8 @@ inputs:
       description: The email address of your admin account, used for password resets and forum notifications.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: nodebb, port: 4567 }

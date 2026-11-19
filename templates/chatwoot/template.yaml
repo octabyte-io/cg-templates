@@ -40,5 +40,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /installation/onboarding
+    note: "Create the admin account; the first person to open the app does this."
 domains:
   - { service: chatwoot, port: 3000 }

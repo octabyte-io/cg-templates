@@ -13,5 +13,7 @@ inputs:
   WAXUM_URL: { value: "{{domains.waxum.url}}" }
   SUPERADMIN_TOKEN: { generate: hex }
   JWT_SECRET: { generate: hex }
+signIn:
+  password: SUPERADMIN_TOKEN
 domains:
   - { service: waxum, port: 3451 }

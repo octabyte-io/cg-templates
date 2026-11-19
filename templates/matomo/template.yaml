@@ -12,5 +12,9 @@ size: medium
 inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard and create the admin account; the database details are already filled in."
 domains:
   - { service: matomo, port: 80 }

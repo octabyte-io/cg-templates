@@ -19,5 +19,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: miniflux, port: 8080 }

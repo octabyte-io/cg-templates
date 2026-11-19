@@ -27,6 +27,10 @@ inputs:
       description: The name your shop starts with. You can change it later in the admin.
       default: My Shop
       required: false
+signIn:
+  firstVisit:
+    path: /admin
+    note: "Create the owner account in the setup wizard. Do it right away; until then, anyone who finds the address could claim the shop."
 domains:
   # The shop: the storefront at /, the admin at /admin and the hosted checkout.
   - { service: shopnex, port: 3000 }

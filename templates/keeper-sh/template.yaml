@@ -19,5 +19,9 @@ inputs:
   BETTER_AUTH_SECRET: { generate: base64 }
   ENCRYPTION_KEY: { generate: base64 }
   KEEPER_URL: { value: "{{domains.keeper.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create an account with a username and a password; anyone who can open the address can make one."
 domains:
   - { service: keeper, port: 80 }

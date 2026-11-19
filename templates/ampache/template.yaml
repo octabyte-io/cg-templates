@@ -22,5 +22,8 @@ inputs:
       description: The email of Ampache's first admin. You sign in with the username admin.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: ampache, port: 80 }

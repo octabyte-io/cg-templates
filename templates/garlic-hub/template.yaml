@@ -11,5 +11,9 @@ compose: app
 size: small
 inputs:
   APP_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /create-initial
+    note: "Create the admin account."
 domains:
   - { service: garlic-hub, port: 80 }

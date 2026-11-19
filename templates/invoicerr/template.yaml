@@ -47,5 +47,9 @@ inputs:
       description: The address emails come from. Leave empty to use the SMTP username.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with your email and a password to create the first account."
 domains:
   - { service: invoicerr, port: 80 }

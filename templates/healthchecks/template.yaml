@@ -44,5 +44,8 @@ inputs:
       description: The address alert emails come from, for example alerts@yourcompany.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: healthchecks, port: 8000 }

@@ -12,6 +12,9 @@ size: small
 inputs:
   # Password of the "admin" account Chibisafe creates on first start.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 # Chibisafe's official setup puts Caddy in front: it serves uploaded files
 # itself and sends /api and /docs to the server and everything else to the web app.
 domains:

@@ -9,6 +9,10 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /install.php
+    note: "Choose a language and set the password for the user named admin."
 domains:
   - { service: bludit, port: 80 }
 files:

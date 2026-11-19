@@ -67,6 +67,10 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /auth/register
+    note: "Sign up to create your account and company; there is no default account."
 domains:
   - { service: bigcapital, port: 8080 }
 files:

@@ -12,5 +12,9 @@ size: medium
 inputs:
   WEBUI_URL: { value: "{{domains.open-webui.url}}" }
   WEBUI_SECRET_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /auth
+    note: "Create the admin account; the first account made is the admin."
 domains:
   - { service: open-webui, port: 8080 }

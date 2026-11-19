@@ -43,5 +43,8 @@ inputs:
       label: Sender address
       description: The From address of Keila's account emails, e.g. keila@yourcompany.com.
       format: email
+signIn:
+  username: KEILA_USER
+  password: KEILA_PASSWORD
 domains:
   - { service: keila, port: 4000 }

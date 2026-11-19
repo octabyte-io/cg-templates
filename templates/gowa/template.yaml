@@ -26,5 +26,8 @@ inputs:
       pattern: "[a-z][a-z0-9_-]{2,31}"
   GOWA_PASSWORD: { generate: password }
   WEBHOOK_SECRET: { generate: hex }
+signIn:
+  username: GOWA_USERNAME
+  password: GOWA_PASSWORD
 domains:
   - { service: gowa, port: 3000 }

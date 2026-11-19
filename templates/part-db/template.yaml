@@ -13,5 +13,8 @@ inputs:
   APP_URL: { value: "{{domains.part-db.url}}" }
   APP_SECRET: { generate: hex }
   INITIAL_ADMIN_PW: { generate: password }
+signIn:
+  username: { value: admin }
+  password: INITIAL_ADMIN_PW
 domains:
   - { service: part-db, port: 80 }

@@ -26,6 +26,8 @@ inputs:
       description: "true holds each new comment until you approve it on the admin page; false publishes comments straight away."
       default: "false"
       pattern: "true|false"
+signIn:
+  password: ADMIN_PASSWORD
 domains:
   - { service: isso, port: 8080 }
 files:

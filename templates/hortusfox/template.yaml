@@ -25,5 +25,8 @@ inputs:
       description: Used for dates, tasks and reminders in HortusFox, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: hortusfox, port: 80 }

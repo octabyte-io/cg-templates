@@ -18,5 +18,9 @@ size: small
 inputs:
   WWW_URL: { value: "{{domains.paheko.url}}/" }
   SECRET_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your association and its admin account on the install page."
 domains:
   - { service: paheko, port: 80 }

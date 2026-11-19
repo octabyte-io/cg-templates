@@ -42,5 +42,9 @@ inputs:
       label: Allowed sign-in emails
       description: Optional, but recommended. The email addresses that may use this instance, separated by commas. Leave it empty to let anyone who finds the web address sign up.
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter your email and open the sign-in link LastSignal emails you; there is no password."
 domains:
   - { service: lastsignal, port: 80 }

@@ -57,6 +57,9 @@ inputs:
       label: Send emails from
       description: The address Mastodon's emails come from, such as notifications@yourdomain.com.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 # Mastodon's own proxy (Caddy, as nginx is in Mastodon's guide) sends
 # /api/v1/streaming to the streaming server and everything else to Puma, so the
 # web app and its live updates share one address.

@@ -18,6 +18,10 @@ inputs:
   ENCRYPTION_KEY_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
   OPENSEARCH_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: nginx, port: 80 }
 files:

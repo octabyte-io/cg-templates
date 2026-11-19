@@ -21,5 +21,9 @@ inputs:
       default: "true"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up to create your account; anyone who reaches the address can sign up until you turn sign-ups off."
 domains:
   - { service: note-mark, port: 8080 }

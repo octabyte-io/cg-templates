@@ -11,5 +11,9 @@ compose: app
 size: xsmall
 inputs:
   APP_URL: { value: "{{domains.jotty.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account; there is no default password."
 domains:
   - { service: jotty, port: 3000 }

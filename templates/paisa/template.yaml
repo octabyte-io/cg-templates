@@ -17,6 +17,9 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_.-]{2,31}"
   PAISA_PASSWORD: { generate: password }
+signIn:
+  username: PAISA_USERNAME
+  password: PAISA_PASSWORD
 domains:
   - { service: paisa, port: 7500 }
 files:

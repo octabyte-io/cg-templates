@@ -14,5 +14,9 @@ size: medium
 inputs:
   POSTGIS_PASSWORD: { generate: password }
   ADVERTISE_URI: { value: "{{domains.reitti.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Set the admin password; whoever opens Reitti first chooses it."
 domains:
   - { service: reitti, port: 8080 }

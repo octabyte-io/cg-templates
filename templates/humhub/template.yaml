@@ -21,5 +21,8 @@ inputs:
   ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: humhub, port: 80 }

@@ -12,5 +12,9 @@ size: large
 inputs:
   OVERLEAF_SITE_URL: { value: "{{domains.overleaf.url}}" }
   OVERLEAF_INVITE_TOKEN_SECRET: { generate: base64 }
+signIn:
+  firstVisit:
+    path: /launchpad
+    note: "Create the admin account with your email and a password; the admin then adds everyone else."
 domains:
   - { service: overleaf, port: 80 }

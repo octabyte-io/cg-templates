@@ -23,5 +23,9 @@ inputs:
         setup leaves nobody able to register, not even the admin.
       default: "false"
       pattern: "true|false"
+signIn:
+  firstVisit:
+    path: /user/sign_up
+    note: "Register an account; the first account registered becomes the admin."
 domains:
   - { service: gitea, port: 3000 }

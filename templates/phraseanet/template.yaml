@@ -19,6 +19,9 @@ inputs:
   PHRASEANET_ADMIN_PASSWORD: { generate: password }
   MYSQL_ROOT_PASSWORD: { generate: password }
   RABBITMQ_PASSWORD: { generate: password }
+signIn:
+  username: PHRASEANET_ADMIN_EMAIL
+  password: PHRASEANET_ADMIN_PASSWORD
 domains:
   - { service: gateway, port: 80 }
 files: []

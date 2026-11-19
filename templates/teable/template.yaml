@@ -14,5 +14,9 @@ inputs:
   SECRET_KEY: { generate: base64 }
   POSTGRES_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up to become the admin, then turn off new sign-ups in System Admin > Instance settings."
 domains:
   - { service: teable, port: 3000 }

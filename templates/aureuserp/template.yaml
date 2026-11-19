@@ -32,5 +32,8 @@ inputs:
       description: The company's time zone, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: aureuserp, port: 80 }

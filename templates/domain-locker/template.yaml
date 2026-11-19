@@ -12,5 +12,7 @@ size: small
 inputs:
   DL_BASE_URL: { value: "{{domains.domain-locker.url}}" }
   DL_AUTH_PASSWORD: { generate: password }
+signIn:
+  password: DL_AUTH_PASSWORD
 domains:
   - { service: domain-locker, port: 3000 }

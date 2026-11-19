@@ -15,5 +15,9 @@ inputs:
   MASTER_KEY: { generate: base64 }
   OBSCURA_CDP_TOKEN: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password; the first account made is the admin, and sign-ups then close."
 domains:
   - { service: norish, port: 3000 }

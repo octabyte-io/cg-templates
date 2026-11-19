@@ -26,6 +26,10 @@ inputs:
   # Studio's API access tokens: signing needs at least 512 bits (hex is 64 characters).
   STUDIO_TOKEN_SIGN_PASSWORD: { generate: hex }
   STUDIO_TOKEN_ENCRYPT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /studio
+    note: "Sign in as admin with the password admin, then change the password."
 domains:
   # Crafter Studio (at /studio) and the Engine preview of each site (at /).
   - { service: crafter-studio, port: 8080 }

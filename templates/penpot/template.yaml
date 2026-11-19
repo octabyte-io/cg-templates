@@ -13,5 +13,9 @@ inputs:
   PENPOT_PUBLIC_URI: { value: "{{domains.penpot-frontend.url}}" }
   PENPOT_SECRET_KEY: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /#/auth/register
+    note: "Create your account, then make a team; colleagues sign up the same way."
 domains:
   - { service: penpot-frontend, port: 8080 }

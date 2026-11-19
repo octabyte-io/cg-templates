@@ -13,5 +13,8 @@ inputs:
   # Password of the "orthanc" user, the account you sign in with.
   ORTHANC_PASSWORD: { generate: password }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  username: { value: orthanc }
+  password: ORTHANC_PASSWORD
 domains:
   - { service: orthanc, port: 8042 }

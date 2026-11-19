@@ -20,6 +20,10 @@ inputs:
   MINIO_PASSWORD: { generate: password }
   BETTER_AUTH_SECRET: { generate: hex }
   CRON_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with an email and a password, then create a workspace; whoever creates it is its admin."
 # The gateway sends /api/ws to the realtime service and everything else to the
 # web app, so it is the service that gets the app's web address.
 domains:

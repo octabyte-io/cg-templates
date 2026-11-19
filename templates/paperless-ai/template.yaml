@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Finish the setup wizard to create your account, then connect Paperless-ngx and an AI provider."
 domains:
   - { service: paperless-ai, port: 3000 }

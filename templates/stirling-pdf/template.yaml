@@ -18,5 +18,8 @@ inputs:
       default: admin
       pattern: "[a-zA-Z0-9][a-zA-Z0-9_.-]{2,49}"
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: stirling-pdf, port: 8080 }

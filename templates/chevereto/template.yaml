@@ -17,5 +17,9 @@ inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /install
+    note: "Create the admin account; there is no default password."
 domains:
   - { service: chevereto, port: 8080 }

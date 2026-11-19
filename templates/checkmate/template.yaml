@@ -13,5 +13,9 @@ inputs:
   CLIENT_HOST: { value: "{{domains.checkmate.url}}" }
   JWT_SECRET: { generate: hex }
   ENCRYPTION_KEY: { generate: base64 }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Create the admin account; there is no default password."
 domains:
   - { service: checkmate, port: 52345 }

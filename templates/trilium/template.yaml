@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Start a new knowledge base and set Trilium's password; there is no username."
 domains:
   - { service: trilium, port: 8080 }

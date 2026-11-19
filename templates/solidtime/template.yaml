@@ -26,6 +26,9 @@ inputs:
       default: "invite-only"
       pattern: "on|off|invite-only"
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: solidtime, port: 8000 }
 files:

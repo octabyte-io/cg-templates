@@ -21,5 +21,8 @@ inputs:
   FLATNOTES_PASSWORD: { generate: password }
   # Signs the sign-in tokens.
   FLATNOTES_SECRET_KEY: { generate: hex }
+signIn:
+  username: FLATNOTES_USERNAME
+  password: FLATNOTES_PASSWORD
 domains:
   - { service: flatnotes, port: 8080 }

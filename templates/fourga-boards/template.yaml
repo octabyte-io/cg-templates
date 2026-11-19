@@ -20,5 +20,8 @@ inputs:
       label: Admin email
       description: You sign in with this email (or the username "admin"). Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: fourga-boards, port: 1337 }

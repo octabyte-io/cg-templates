@@ -12,5 +12,9 @@ size: xsmall
 inputs:
   APP_URL: { value: "{{domains.pocket-id.url}}" }
   ENCRYPTION_KEY: { generate: base64 }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account and add its passkey."
 domains:
   - { service: pocket-id, port: 1411 }

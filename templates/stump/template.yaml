@@ -18,5 +18,9 @@ inputs:
       description: Used for dates and scheduled library scans in Stump, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Set up the server and create the owner account; the first person to open it becomes the owner."
 domains:
   - { service: stump, port: 10801 }

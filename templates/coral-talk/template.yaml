@@ -13,5 +13,9 @@ inputs:
   SIGNING_SECRET: { generate: hex }
   MONGO_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /install
+    note: "Run the install wizard, which creates the admin account and adds your website."
 domains:
   - { service: coral, port: 5000 }

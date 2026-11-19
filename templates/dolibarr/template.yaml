@@ -25,5 +25,8 @@ inputs:
       label: Country code
       description: Your company's country as two capital letters, such as US, GB, FR or DE. Dolibarr uses it for taxes and the chart of accounts.
       pattern: "[A-Z]{2}"
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: dolibarr, port: 80 }

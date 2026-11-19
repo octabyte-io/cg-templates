@@ -45,6 +45,9 @@ inputs:
       label: Email server password (optional)
       secret: true
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: pretalx, port: 80 }
 files:

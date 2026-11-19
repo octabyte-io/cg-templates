@@ -18,5 +18,9 @@ inputs:
       label: Admin email
       description: Sign up in Scoold with this email address and that account becomes the admin.
       format: email
+signIn:
+  firstVisit:
+    path: /signin/register
+    note: "Sign up with the admin email you entered at setup and a password; that account becomes the admin."
 domains:
   - { service: scoold, port: 8000 }

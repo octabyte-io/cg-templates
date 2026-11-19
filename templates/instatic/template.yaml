@@ -12,5 +12,9 @@ size: small
 inputs:
   PUBLIC_ORIGIN: { value: "{{domains.instatic.url}}" }
   INSTATIC_SECRET_KEY: { generate: base64 }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup screen to name your site and create the owner account."
 domains:
   - { service: instatic, port: 3001 }

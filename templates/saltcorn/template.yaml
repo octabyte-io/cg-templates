@@ -12,5 +12,9 @@ size: small
 inputs:
   SALTCORN_SESSION_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email address and a password."
 domains:
   - { service: saltcorn, port: 3000 }

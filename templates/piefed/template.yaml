@@ -32,6 +32,9 @@ inputs:
       description: The admin account's email address.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: piefed, port: 5000 }
 files:

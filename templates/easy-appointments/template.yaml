@@ -42,5 +42,9 @@ inputs:
       default: "tls"
       pattern: "tls|ssl"
       required: false
+signIn:
+  firstVisit:
+    path: /index.php/installation
+    note: "Finish the installation wizard and create the admin account."
 domains:
   - { service: easyappointments, port: 80 }

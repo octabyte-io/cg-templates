@@ -21,6 +21,9 @@ inputs:
       pattern: "[a-z][a-z0-9_-]{2,31}"
   COUCHDB_PASSWORD: { generate: password }
   COUCHDB_SECRET: { generate: hex }
+signIn:
+  username: COUCHDB_USER
+  password: COUCHDB_PASSWORD
 domains:
   - { service: couchdb, port: 5984 }
 files:

@@ -61,6 +61,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: psono, port: 80 }
 files:

@@ -16,6 +16,10 @@ inputs:
   SECRET_KEY_BASE: { generate: hex }
   COLLABORATIVE_SERVER_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in as admin with the password admin, then set a new password when asked."
 # OpenProject's own proxy routes /hocuspocus to the collaboration server and
 # everything else to the web container, so it is the service that gets the address.
 domains:

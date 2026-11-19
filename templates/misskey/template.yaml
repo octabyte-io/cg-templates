@@ -20,6 +20,10 @@ inputs:
   # admin account (setupPassword in default.yml); read it on the stack's
   # variables page.
   SETUP_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter the setup password Cloudgate shows on the variables page, then create the admin account."
 domains:
   - { service: misskey, port: 3000 }
 files:

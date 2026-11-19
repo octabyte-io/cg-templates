@@ -29,6 +29,9 @@ inputs:
   SECRET_KEY: { generate: hex }
   CSRF_SECRET_KEY: { generate: hex }
   JWT_SECRET: { generate: hex }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: ckan, port: 5000 }
 files:

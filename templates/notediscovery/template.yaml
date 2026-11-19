@@ -21,5 +21,7 @@ inputs:
   LOGIN_PASSWORD: { generate: password }
   SESSION_SECRET: { generate: hex }
   APP_URL: { value: "{{domains.notediscovery.url}}" }
+signIn:
+  password: LOGIN_PASSWORD
 domains:
   - { service: notediscovery, port: 8000 }

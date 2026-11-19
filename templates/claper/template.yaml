@@ -53,5 +53,8 @@ inputs:
       description: The address Claper's emails come from, for example claper@yourdomain.com. Your email service must allow sending from it.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: claper, port: 4000 }

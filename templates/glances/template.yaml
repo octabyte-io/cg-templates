@@ -17,5 +17,8 @@ compose: app
 size: xsmall
 inputs:
   GLANCES_PASSWORD: { generate: password }
+signIn:
+  username: { value: glances }
+  password: GLANCES_PASSWORD
 domains:
   - { service: glances, port: 61208 }

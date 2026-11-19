@@ -14,5 +14,9 @@ inputs:
   APP_URL: { value: "{{domains.corteza.url}}" }
   DB_PASSWORD: { generate: password }
   AUTH_JWT_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up to create your account; the first account made is the administrator."
 domains:
   - { service: corteza, port: 80 }

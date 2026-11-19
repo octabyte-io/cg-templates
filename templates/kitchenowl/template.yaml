@@ -20,5 +20,9 @@ inputs:
       default: "false"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the first account; it becomes the admin."
 domains:
   - { service: kitchenowl, port: 8080 }

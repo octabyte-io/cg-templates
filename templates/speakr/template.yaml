@@ -23,5 +23,8 @@ inputs:
       label: OpenAI API key
       description: Speakr sends recordings to OpenAI to transcribe them and write summaries, and won't start without a key. Create one at platform.openai.com; usage is billed by OpenAI.
       secret: true
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: speakr, port: 8899 }

@@ -50,5 +50,9 @@ inputs:
       description: Optional. Turns on AI summaries, duplicate detection and feedback extraction.
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account with an email and a password, then name the workspace."
 domains:
   - { service: quackback, port: 3000 }

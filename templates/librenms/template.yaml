@@ -25,5 +25,8 @@ inputs:
       description: Used for graphs, alerts and schedules, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: librenms, port: 8000 }

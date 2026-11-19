@@ -18,5 +18,9 @@ inputs:
       label: Time zone
       description: Your organisation's time zone for events and dates, such as Europe/Berlin, America/New_York or UTC. Pick the same zone in the setup wizard.
       default: UTC
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard: name your organisation and create the admin account."
 domains:
   - { service: admidio, port: 8080 }

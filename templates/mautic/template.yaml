@@ -12,6 +12,10 @@ size: medium
 inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /installer
+    note: "Finish the installer and create the admin account."
 domains:
   - { service: mautic, port: 80 }
 files:

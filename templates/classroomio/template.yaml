@@ -49,6 +49,10 @@ inputs:
       label: Sender address
       description: The address emails come from, for example academy@example.com.
       required: false
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password; the first account made names the academy and becomes the admin."
 domains:
   - { service: classroomio, port: 3082 }
   - { service: classroomio-storage, port: 9000 }

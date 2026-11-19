@@ -20,6 +20,10 @@ inputs:
   # Shared by the API and the socket server. Socket auth itself stays off, as upstream's
   # installer leaves it, so the driver and customer apps keep connecting.
   SOCKETCLUSTER_AUTH_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account and organisation; the first account made is the admin."
 domains:
   # The console, where people sign in and work.
   - { service: fleetbase, port: 4200 }

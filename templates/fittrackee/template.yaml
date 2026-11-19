@@ -27,5 +27,8 @@ inputs:
   # The owner account's first password, read afterwards on the app's variables
   # page. Changing it here later does nothing: change it in FitTrackee instead.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: fittrackee, port: 5000 }

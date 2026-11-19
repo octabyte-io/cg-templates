@@ -55,6 +55,9 @@ inputs:
       description: Optional. A key for Google's Gemini models.
       required: false
       secret: true
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 # Eneo's official setup puts a proxy in front: /api and the API docs go to the
 # backend and everything else to the web app, on one address.
 domains:

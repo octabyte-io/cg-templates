@@ -16,5 +16,9 @@ inputs:
   MEILI_MASTER_KEY: { generate: hex }
   JWT_SECRET: { generate: hex }
   ENCRYPTION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account."
 domains:
   - { service: open-archiver, port: 3000 }

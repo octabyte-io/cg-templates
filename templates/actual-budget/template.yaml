@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /bootstrap
+    note: "Set the server password; it is the one password that opens every budget on the server."
 domains:
   - { service: actual, port: 5006 }

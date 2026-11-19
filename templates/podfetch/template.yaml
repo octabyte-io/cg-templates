@@ -18,5 +18,8 @@ size: small
 inputs:
   ADMIN_USERNAME: { value: "admin" }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: podfetch, port: 8000 }

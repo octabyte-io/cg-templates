@@ -16,6 +16,9 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   # Replaces the default password ("wallabag") of the account "wallabag" on the first start.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: wallabag }
+  password: ADMIN_PASSWORD
 domains:
   - { service: wallabag, port: 80 }
 files:

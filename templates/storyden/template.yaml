@@ -18,5 +18,9 @@ compose: app
 size: small
 inputs:
   APP_URL: { value: "{{domains.storyden.url}}" }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register an account right away; the first account registered is the admin."
 domains:
   - { service: storyden, port: 8000 }

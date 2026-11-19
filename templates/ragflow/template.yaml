@@ -23,6 +23,9 @@ inputs:
   MYSQL_PASSWORD: { generate: password }
   MINIO_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: ragflow, port: 80 }
 files:

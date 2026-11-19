@@ -21,5 +21,9 @@ inputs:
       description: The lab's time zone, as an IANA name such as Europe/Berlin. Dates and timestamps on entries use it.
       default: UTC
       required: false
+signIn:
+  firstVisit:
+    path: /register.php
+    note: "Register the first account; it becomes the administrator of the whole notebook."
 domains:
   - { service: elabftw, port: 8080 }

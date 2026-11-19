@@ -18,6 +18,10 @@ inputs:
   ENCRYPTION_KEY: { generate: hex }
   ENCRYPTION_SALT: { generate: hex }
   S3_SECRET_ACCESS_KEY: { generate: password }
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up with your email and a password and name your organisation."
 domains:
   - { service: worklenz, port: 80 }
 files:

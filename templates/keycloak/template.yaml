@@ -28,5 +28,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   KC_BOOTSTRAP_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: KC_BOOTSTRAP_ADMIN_USERNAME
+  password: KC_BOOTSTRAP_ADMIN_PASSWORD
 domains:
   - { service: keycloak, port: 8080 }

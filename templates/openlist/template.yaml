@@ -14,5 +14,8 @@ inputs:
   # Change it later in the app's own profile page.
   OPENLIST_ADMIN_PASSWORD: { generate: password }
   SITE_URL: { value: "{{domains.openlist.url}}" }
+signIn:
+  username: { value: admin }
+  password: OPENLIST_ADMIN_PASSWORD
 domains:
   - { service: openlist, port: 5244 }

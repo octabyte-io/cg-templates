@@ -14,5 +14,7 @@ inputs:
   PSITRANSFER_UPLOAD_PASS: { generate: password }
   # Opens the /admin page, which lists every upload.
   PSITRANSFER_ADMIN_PASS: { generate: password }
+signIn:
+  password: PSITRANSFER_UPLOAD_PASS
 domains:
   - { service: psitransfer, port: 3000 }

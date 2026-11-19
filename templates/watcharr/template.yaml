@@ -15,5 +15,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account."
 domains:
   - { service: watcharr, port: 3080 }

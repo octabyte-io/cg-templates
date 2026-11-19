@@ -13,5 +13,9 @@ inputs:
   APP_HOST: { value: "{{domains.mathesar.host}}" }
   SECRET_KEY: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /complete_installation/
+    note: "Create the admin account; untick the two usage-data boxes if you want nothing sent to Mathesar."
 domains:
   - { service: mathesar, port: 8000 }

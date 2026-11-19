@@ -19,6 +19,9 @@ inputs:
   WGER_ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   POWERSYNC_DB_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: WGER_ADMIN_PASSWORD
 # nginx serves the static and media files and passes everything else to the
 # wger server, so it is the service that gets the address.
 domains:

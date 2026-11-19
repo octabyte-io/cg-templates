@@ -17,5 +17,8 @@ inputs:
       label: Admin email
       description: The email you sign in with as WulfVault's first administrator.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: wulfvault, port: 8080 }

@@ -19,6 +19,9 @@ inputs:
       description: The lab's time zone for dates and times in SENAITE, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: senaite, port: 8080 }
 files:

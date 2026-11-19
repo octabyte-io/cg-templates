@@ -22,5 +22,9 @@ inputs:
         invite people from there instead.
       default: "true"
       pattern: "true|false"
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account, then sign in to the Bitwarden apps with this web address."
 domains:
   - { service: vaultwarden, port: 80 }

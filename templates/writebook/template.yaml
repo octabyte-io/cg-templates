@@ -12,5 +12,9 @@ size: medium
 inputs:
   # Rails signs sessions and cookies with this.
   SECRET_KEY_BASE: { generate: hex }
+signIn:
+  firstVisit:
+    path: /first_run
+    note: "Create the admin account with your name, email and a password."
 domains:
   - { service: writebook, port: 80 }

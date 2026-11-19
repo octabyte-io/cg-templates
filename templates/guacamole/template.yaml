@@ -18,5 +18,8 @@ inputs:
       default: guacadmin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: guacamole, port: 8080 }

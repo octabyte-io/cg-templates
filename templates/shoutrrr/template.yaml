@@ -13,5 +13,9 @@ inputs:
   APP_URL: { value: "{{domains.shoutrrr.url}}" }
   # Laravel's APP_KEY (32 random bytes, base64); the compose file adds the "base64:" prefix.
   APP_KEY: { generate: base64 }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register with your name, email and a password; the first account made is the owner."
 domains:
   - { service: shoutrrr, port: 8080 }

@@ -14,5 +14,9 @@ inputs:
   ENCRYPTION_KEY: { generate: password }
   JWT_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /sign-up
+    note: "Create the admin account; the first account made is the admin."
 domains:
   - { service: activepieces, port: 80 }

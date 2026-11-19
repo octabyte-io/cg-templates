@@ -15,5 +15,8 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
   CRON_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: itop, port: 80 }

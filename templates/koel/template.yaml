@@ -22,5 +22,8 @@ inputs:
       description: The email you sign in to Koel with as its first admin.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: koel, port: 80 }

@@ -26,5 +26,9 @@ inputs:
       default: "true"
       pattern: "^(true|false)$"
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Sign up with any email; the first account made is the admin."
 domains:
   - { service: librechat, port: 3080 }

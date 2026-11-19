@@ -17,5 +17,8 @@ inputs:
       default: admin
   ACKEE_PASSWORD: { generate: password }
   MONGO_PASSWORD: { generate: password }
+signIn:
+  username: ACKEE_USERNAME
+  password: ACKEE_PASSWORD
 domains:
   - { service: ackee, port: 3000 }

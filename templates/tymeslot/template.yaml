@@ -44,5 +44,9 @@ inputs:
       label: Sender email
       description: The address Tymeslot's emails come from, on a domain your email service lets you send from.
       format: email
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up and confirm your email; the first account made is the admin."
 domains:
   - { service: tymeslot, port: 4000 }

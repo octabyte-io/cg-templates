@@ -14,5 +14,9 @@ inputs:
   JWT_SECRET: { generate: hex }
   NICEGUI_STORAGE_SECRET: { generate: hex }
   RESET_PASSWORD_TOKEN_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Create your account with your email and a password; there is no default login."
 domains:
   - { service: beaverhabits, port: 8080 }

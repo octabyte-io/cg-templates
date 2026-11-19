@@ -17,6 +17,9 @@ inputs:
       label: Weather location
       description: The city the weather widget shows, as "City, Country". You can change it later in glance.yml.
       default: "London, United Kingdom"
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: glance, port: 8080 }
 files:

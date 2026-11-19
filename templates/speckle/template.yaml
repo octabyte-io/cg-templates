@@ -23,6 +23,10 @@ inputs:
   GARAGE_RPC_SECRET: { generate: hex }
   S3_ACCESS_KEY: { generate: hex }
   S3_SECRET_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /authn/register
+    note: "Register the first account; the first account made is the server admin."
 # Speckle's own ingress sends the API paths to the server and the rest to the frontend.
 domains:
   - { service: speckle-ingress, port: 8080 }

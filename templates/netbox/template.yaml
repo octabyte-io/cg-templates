@@ -28,5 +28,8 @@ inputs:
       label: Admin email
       description: The admin account's email address. You can change it later in your NetBox user profile.
       format: email
+signIn:
+  username: SUPERUSER_NAME
+  password: SUPERUSER_PASSWORD
 domains:
   - { service: netbox, port: 8080 }

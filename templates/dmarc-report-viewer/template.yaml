@@ -35,5 +35,8 @@ inputs:
       label: Mailbox folder
       description: The folder the reports arrive in.
       default: INBOX
+signIn:
+  username: { value: dmarc }
+  password: HTTP_SERVER_PASSWORD
 domains:
   - { service: dmarc-report-viewer, port: 8080 }

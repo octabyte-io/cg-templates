@@ -20,5 +20,7 @@ inputs:
   # The access token: without it the instance and its feeds answer "token
   # required", so strangers can't use your server to scrape other sites.
   RSS_BRIDGE_TOKEN: { generate: hex }
+signIn:
+  password: RSS_BRIDGE_TOKEN
 domains:
   - { service: rss-bridge, port: 80 }

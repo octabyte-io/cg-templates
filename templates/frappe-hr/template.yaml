@@ -16,6 +16,9 @@ inputs:
   APP_URL: { value: "{{domains.frontend.url}}" }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: Administrator }
+  password: ADMIN_PASSWORD
 # Frappe's own nginx serves the web pages (Desk at /app, the mobile app at
 # /hrms) and routes /socket.io to the websocket container, so it gets the address.
 domains:

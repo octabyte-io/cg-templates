@@ -14,5 +14,9 @@ inputs:
   POSTGRES_PASSWORD: { generate: password }
   RABBITMQ_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign in as admin with the password shown on the sign-in page, then change the password."
 domains:
   - { service: mayan, port: 8000 }

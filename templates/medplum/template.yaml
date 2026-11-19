@@ -21,6 +21,9 @@ inputs:
       description: The email you sign in to Medplum with as the super admin. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 # The first address is the Medplum app (the web pages people sign in to); the second is the
 # FHIR API that the app, your own apps and integrations talk to.
 domains:

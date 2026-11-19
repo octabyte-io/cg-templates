@@ -21,6 +21,9 @@ inputs:
   FILEGATOR_ADMIN_PASSWORD: { generate: password }
   # FileGator's CSRF key, which its sample config says to randomize.
   FILEGATOR_CSRF_KEY: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: FILEGATOR_ADMIN_PASSWORD
 domains:
   - { service: filegator, port: 8080 }
 files:

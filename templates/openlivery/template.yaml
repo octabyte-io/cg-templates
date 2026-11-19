@@ -15,6 +15,10 @@ inputs:
   SECRET_KEY: { generate: hex }
   ENCRYPTION_KEY: { generate: hex }
   WHATSAPP_BRIDGE_TOKEN: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your agency and its owner account; sign-up closes after the first one."
 domains:
   - { service: openlivery, port: 80 }
 files:

@@ -11,5 +11,9 @@ compose: app
 size: xsmall
 inputs:
   APP_URL: { value: "{{domains.beszel.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email address and a password; the first account made is the admin."
 domains:
   - { service: beszel, port: 8090 }

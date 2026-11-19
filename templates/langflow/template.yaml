@@ -25,5 +25,8 @@ inputs:
       description: Type false once your team has its accounts, so nobody else can request one. New accounts stay inactive until the admin turns them on.
       default: "true"
       required: false
+signIn:
+  username: LANGFLOW_SUPERUSER
+  password: LANGFLOW_SUPERUSER_PASSWORD
 domains:
   - { service: langflow, port: 7860 }

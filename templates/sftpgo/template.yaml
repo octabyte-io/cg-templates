@@ -15,5 +15,8 @@ inputs:
   SFTPGO_DEFAULT_ADMIN_PASSWORD: { generate: password }
   # Signs WebAdmin and WebClient sessions, so a restart doesn't sign everyone out.
   SFTPGO_SIGNING_PASSPHRASE: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: SFTPGO_DEFAULT_ADMIN_PASSWORD
 domains:
   - { service: sftpgo, port: 8080 }

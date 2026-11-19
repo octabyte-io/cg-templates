@@ -12,5 +12,7 @@ size: medium
 inputs:
   OPENWA_URL: { value: "{{domains.openwa.url}}" }
   API_MASTER_KEY: { generate: hex }
+signIn:
+  password: API_MASTER_KEY
 domains:
   - { service: openwa, port: 2785 }

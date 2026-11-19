@@ -16,5 +16,9 @@ inputs:
   KEPT_DB_APP_PASSWORD: { generate: hex }
   KEPT_DB_AUTH_PASSWORD: { generate: hex }
   KEPT_DB_SYSTEM_PASSWORD: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter the one-time setup code from the app's logs and create your account; it becomes the admin."
 domains:
   - { service: kept, port: 8080 }

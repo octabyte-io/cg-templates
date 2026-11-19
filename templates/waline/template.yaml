@@ -74,6 +74,10 @@ inputs:
       description: Used for the times in notification emails, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /ui/register
+    note: "Register the first account; it becomes the admin."
 domains:
   - { service: waline, port: 8360 }
 files:

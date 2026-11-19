@@ -30,5 +30,8 @@ inputs:
       description: Used for scheduled tasks such as recurring transactions, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: wygiwyh, port: 8000 }

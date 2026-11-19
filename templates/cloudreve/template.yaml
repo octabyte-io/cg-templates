@@ -11,5 +11,9 @@ compose: app
 size: small
 inputs:
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: cloudreve, port: 5212 }

@@ -14,5 +14,9 @@ inputs:
   JWT_SECRET: { generate: hex }
   # The site's public address, used in links Ech0 builds (comments, feeds).
   SERVER_URL: { value: "{{domains.ech0.url}}" }
+signIn:
+  firstVisit:
+    path: /init
+    note: "Create the owner account; the owner is the admin."
 domains:
   - { service: ech0, port: 6277 }

@@ -24,5 +24,9 @@ inputs:
       description: Used for dates and the scheduled bank sync, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Click Register Here and create your account, then set Turn off new sign-ups to true in the app's variables."
 domains:
   - { service: budget-board-client, port: 6253 }

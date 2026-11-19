@@ -22,6 +22,9 @@ inputs:
   INVITE_PASSWORD: { generate: password }
   SERVER_SECRET: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: sharry, port: 9090 }
 files:

@@ -12,5 +12,9 @@ size: small
 inputs:
   HALO_URL: { value: "{{domains.halo.url}}" }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /system/setup
+    note: "Fill in the Setup page with your site's name and create the admin account; there is no default login."
 domains:
   - { service: halo, port: 8090 }

@@ -60,5 +60,7 @@ inputs:
       description: The address emails come from, for example noreply@yourdomain.com.
       format: email
       required: false
+signIn:
+  password: ADMIN_PASSWORD
 domains:
   - { service: ihatemoney, port: 8000 }

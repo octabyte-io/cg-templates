@@ -55,6 +55,9 @@ inputs:
       description: The address Docs emails come from, for example docs@yourcompany.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: docs, port: 8083 }
   - { service: docs-keycloak, port: 8080 }

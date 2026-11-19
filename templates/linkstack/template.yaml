@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard: choose SQLite and create the admin account."
 domains:
   - { service: linkstack, port: 80 }

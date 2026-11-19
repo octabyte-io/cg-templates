@@ -18,5 +18,9 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
   MEILISEARCH_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the short setup, leaving the database step as it is, and create your admin account."
 domains:
   - { service: linkace, port: 80 }

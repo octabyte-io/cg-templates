@@ -35,5 +35,9 @@ inputs:
       label: Twitch client secret (optional)
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create an account; the first account made is the admin."
 domains:
   - { service: ryot, port: 8000 }

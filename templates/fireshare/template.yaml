@@ -14,5 +14,8 @@ inputs:
   ADMIN_PASSWORD: { generate: password }
   SECRET_KEY: { generate: hex }
   DOMAIN: { value: "{{domains.fireshare.host}}" }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: fireshare, port: 80 }

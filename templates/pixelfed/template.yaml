@@ -59,6 +59,9 @@ inputs:
       description: The address Pixelfed's emails come from, such as pixelfed@yourdomain.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: pixelfed, port: 8080 }
 files:

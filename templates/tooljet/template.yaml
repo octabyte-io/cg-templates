@@ -15,5 +15,9 @@ inputs:
   SECRET_KEY_BASE: { generate: hex }
   PGRST_JWT_SECRET: { generate: hex }
   PG_PASS: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account and your first workspace; the first person to open ToolJet becomes the admin."
 domains:
   - { service: tooljet, port: 80 }

@@ -17,5 +17,8 @@ inputs:
       description: The email you sign in to the store's admin panel (/admin) with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: evershop, port: 3000 }

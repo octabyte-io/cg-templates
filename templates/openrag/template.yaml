@@ -43,6 +43,9 @@ inputs:
       description: The secret for the client ID above. Leave empty if you left that empty.
       secret: true
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   # The OpenRAG web app (chat, knowledge, settings), behind a password prompt.
   - { service: proxy, port: 80 }

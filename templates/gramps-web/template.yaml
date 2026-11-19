@@ -12,5 +12,9 @@ size: medium
 inputs:
   BASE_URL: { value: "{{domains.grampsweb.url}}" }
   SECRET_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account; the first account made is the owner."
 domains:
   - { service: grampsweb, port: 5000 }

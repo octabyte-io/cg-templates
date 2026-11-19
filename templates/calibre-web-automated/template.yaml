@@ -18,6 +18,9 @@ inputs:
       description: Used for dates and times in Calibre-Web Automated, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: calibre-web-automated, port: 8083 }
 files:

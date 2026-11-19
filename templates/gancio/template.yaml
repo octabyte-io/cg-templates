@@ -9,5 +9,9 @@ links:
 cloudgate: 0.1.0
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /
+    note: "Fill in the setup page, then copy the admin login and password it shows; the password is shown only once."
 domains:
   - { service: gancio, port: 13120 }

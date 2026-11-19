@@ -13,5 +13,9 @@ inputs:
   SITE_URL: { value: "{{domains.nocodb.url}}" }
   JWT_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: nocodb, port: 8080 }

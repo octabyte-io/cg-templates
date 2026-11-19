@@ -15,5 +15,8 @@ inputs:
   # Password of the "admin" account Plik creates on its first start. Uploading
   # needs an account, so strangers can't use the server to share files.
   PLIK_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: PLIK_ADMIN_PASSWORD
 domains:
   - { service: plik, port: 8080 }

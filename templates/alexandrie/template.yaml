@@ -38,6 +38,10 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up to create your account, then set DISABLE_SIGNUP to true on the variables page once your team has joined."
 # Two addresses: the app (web app and API, behind Caddy) and the S3 store that
 # serves uploaded files, as in Alexandrie's official setup.
 domains:

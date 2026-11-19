@@ -18,5 +18,7 @@ inputs:
       label: Time zone
       description: Where your event takes place, for example Europe/London. Ontime's clocks and scheduled start times use it.
       default: Etc/UTC
+signIn:
+  password: SESSION_PASSWORD
 domains:
   - { service: ontime, port: 4001 }

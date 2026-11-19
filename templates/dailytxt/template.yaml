@@ -23,5 +23,9 @@ inputs:
       default: "true"
       pattern: "^(true|false)$"
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your diary account on the sign-up page; there is no default login."
 domains:
   - { service: dailytxt, port: 80 }

@@ -13,6 +13,10 @@ inputs:
   DASHBOARD_URL: { value: "{{domains.openpanel-proxy.url}}" }
   COOKIE_SECRET: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account; the first account made is the owner, and sign-up then closes."
 domains:
   - { service: openpanel-proxy, port: 80 }
 files:

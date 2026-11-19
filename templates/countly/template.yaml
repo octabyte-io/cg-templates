@@ -19,6 +19,10 @@ size: large
 inputs:
   MONGO_PASSWORD: { generate: password }
   SESSION_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account on the setup screen; there is no default password."
 domains:
   - { service: countly, port: 80 }
 files:
