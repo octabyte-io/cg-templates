@@ -49,7 +49,7 @@ inputs:
       required: false
 signIn:
   firstVisit:
-    path: /
-    note: "Sign up with your email and a password to create the first account."
+    path: /auth/sign-up
+    note: "Sign up with your name, email and a password to create the first account."
 domains:
   - { service: invoicerr, port: 80 }

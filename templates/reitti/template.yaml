@@ -16,7 +16,7 @@ inputs:
   ADVERTISE_URI: { value: "{{domains.reitti.url}}" }
 signIn:
   firstVisit:
-    path: /
-    note: "Set the admin password; whoever opens Reitti first chooses it."
+    path: /setup
+    note: "Set a password for the user named admin; whoever opens Reitti first chooses it."
 domains:
   - { service: reitti, port: 8080 }
