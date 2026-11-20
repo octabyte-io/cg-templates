@@ -28,5 +28,6 @@ inputs:
 signIn:
   username: ADMIN_USER
   password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: listmonk, port: 9000 }

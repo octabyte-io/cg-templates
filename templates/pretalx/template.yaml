@@ -48,6 +48,7 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /orga/
 domains:
   - { service: pretalx, port: 80 }
 files:

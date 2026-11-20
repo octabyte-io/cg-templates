@@ -26,5 +26,6 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /profile/login
 domains:
   - { service: slink, port: 3000 }

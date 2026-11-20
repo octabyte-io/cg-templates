@@ -36,5 +36,6 @@ inputs:
 signIn:
   username: ADMIN_USERNAME
   password: ADMIN_PASSWORD
+  path: /users/sign_in
 domains:
   - { service: huginn, port: 3000 }

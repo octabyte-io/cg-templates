@@ -24,5 +24,6 @@ inputs:
 signIn:
   username: YOURLS_USER
   password: YOURLS_PASS
+  path: /admin/
 domains:
   - { service: yourls, port: 8080 }

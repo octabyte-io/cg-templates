@@ -19,5 +19,6 @@ inputs:
   DB_PASSWORD: { generate: password }
 signIn:
   password: WUZAPI_ADMIN_TOKEN
+  path: /dashboard
 domains:
   - { service: wuzapi, port: 8080 }

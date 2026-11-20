@@ -28,5 +28,6 @@ inputs:
 signIn:
   username: DASHBOARD_USERNAME
   password: DASHBOARD_PASSWORD
+  path: /dashboard
 domains:
   - { service: waha, port: 3000 }

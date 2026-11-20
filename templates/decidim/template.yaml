@@ -56,5 +56,6 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /users/sign_in
 domains:
   - { service: decidim, port: 3000 }

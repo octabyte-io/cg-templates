@@ -22,6 +22,7 @@ inputs:
 signIn:
   username: { value: admin }
   password: WGER_ADMIN_PASSWORD
+  path: /en/user/login
 # nginx serves the static and media files and passes everything else to the
 # wger server, so it is the service that gets the address.
 domains:

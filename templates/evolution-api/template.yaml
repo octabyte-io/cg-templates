@@ -15,5 +15,6 @@ inputs:
   DB_PASSWORD: { generate: password }
 signIn:
   password: AUTHENTICATION_API_KEY
+  path: /manager
 domains:
   - { service: evolution-api, port: 8080 }

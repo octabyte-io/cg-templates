@@ -24,6 +24,7 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /users/sign_in
 domains:
   - { service: password-pusher, port: 5100 }
 files:

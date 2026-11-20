@@ -32,6 +32,7 @@ inputs:
 signIn:
   username: ADMIN_USER
   password: ADMIN_PASSWORD
+  path: /user/login
 domains:
   - { service: ckan, port: 5000 }
 files:

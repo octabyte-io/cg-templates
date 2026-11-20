@@ -17,5 +17,6 @@ inputs:
 signIn:
   username: ADMIN_USERNAME
   password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: fireshare, port: 80 }

@@ -26,6 +26,7 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /settings
 domains:
   - { service: gotosocial, port: 8080 }
 files:

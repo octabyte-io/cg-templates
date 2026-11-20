@@ -39,5 +39,6 @@ inputs:
   AUTHENTICATION_SECRET: { generate: hex }
 signIn:
   password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: immichframe, port: 8080 }

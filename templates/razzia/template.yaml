@@ -14,5 +14,6 @@ inputs:
   JWT_SECRET: { generate: hex }
 signIn:
   password: MANAGER_PASSWORD
+  path: /manager
 domains:
   - { service: razzia, port: 3000 }

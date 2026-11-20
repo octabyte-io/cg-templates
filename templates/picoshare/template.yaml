@@ -13,5 +13,6 @@ inputs:
   PS_SHARED_SECRET: { generate: password }
 signIn:
   password: PS_SHARED_SECRET
+  path: /login
 domains:
   - { service: picoshare, port: 4001 }

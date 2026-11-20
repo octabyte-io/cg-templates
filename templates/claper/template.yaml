@@ -56,5 +56,6 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /users/log_in
 domains:
   - { service: claper, port: 4000 }

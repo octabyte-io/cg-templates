@@ -21,5 +21,6 @@ inputs:
 signIn:
   username: { value: admin }
   password: RANETO_ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: raneto, port: 3000 }

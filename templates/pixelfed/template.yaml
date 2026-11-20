@@ -62,6 +62,7 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: pixelfed, port: 8080 }
 files:

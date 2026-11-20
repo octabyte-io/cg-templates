@@ -18,7 +18,8 @@ inputs:
 signIn:
   firstVisit:
     path: /
-    note: "Use the admin console address, not this one, to create the admin account; the first account made there is the admin."
+    note: "Create the admin account in the admin console; the first account made there is the admin."
+    domain: logto-admin
 # The first address is where people sign in; the second is the admin console.
 domains:
   - { service: logto, port: 3001 }

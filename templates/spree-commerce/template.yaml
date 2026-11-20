@@ -58,5 +58,6 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /dashboard
 domains:
   - { service: spree, port: 3000 }

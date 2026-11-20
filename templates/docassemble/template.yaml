@@ -20,5 +20,6 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /user/sign-in
 domains:
   - { service: docassemble, port: 80 }

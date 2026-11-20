@@ -60,6 +60,7 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /auth/sign_in
 # Mastodon's own proxy (Caddy, as nginx is in Mastodon's guide) sends
 # /api/v1/streaming to the streaming server and everything else to Puma, so the
 # web app and its live updates share one address.

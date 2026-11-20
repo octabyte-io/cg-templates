@@ -15,5 +15,6 @@ inputs:
 signIn:
   username: { value: admin }
   password: BAIKAL_ADMIN_PASSWORD
+  path: /admin/
 domains:
   - { service: baikal, port: 80 }

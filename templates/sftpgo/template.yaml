@@ -18,5 +18,6 @@ inputs:
 signIn:
   username: { value: admin }
   password: SFTPGO_DEFAULT_ADMIN_PASSWORD
+  path: /web/admin
 domains:
   - { service: sftpgo, port: 8080 }

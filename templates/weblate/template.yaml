@@ -56,5 +56,6 @@ inputs:
 signIn:
   username: { value: admin }
   password: WEBLATE_ADMIN_PASSWORD
+  path: /accounts/login/
 domains:
   - { service: weblate, port: 8080 }

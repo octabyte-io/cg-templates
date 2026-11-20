@@ -24,6 +24,7 @@ inputs:
 signIn:
   username: { value: Admin }
   password: ADMIN_PASSWORD
+  path: "/index.php?title=Special:UserLogin"
 domains:
   - { service: mediawiki, port: 80 }
 files:

@@ -27,5 +27,6 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: paymenter, port: 80 }

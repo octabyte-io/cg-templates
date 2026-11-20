@@ -34,6 +34,7 @@ inputs:
 signIn:
   username: ADMIN_USER
   password: ADMIN_PASSWORD
+  path: /accounts/login/
 domains:
   - { service: mediacms, port: 80 }
 files:

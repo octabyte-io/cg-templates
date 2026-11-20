@@ -55,5 +55,6 @@ inputs:
 signIn:
   username: { value: root }
   password: ROOT_PASSWORD
+  path: /login
 domains:
   - { service: peertube, port: 9000 }

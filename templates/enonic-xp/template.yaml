@@ -14,5 +14,6 @@ inputs:
 signIn:
   username: { value: su }
   password: SU_PASSWORD
+  path: /admin
 domains:
   - { service: enonic-xp, port: 8080 }

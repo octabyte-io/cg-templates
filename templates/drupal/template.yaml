@@ -26,6 +26,7 @@ inputs:
 signIn:
   username: { value: admin }
   password: ADMIN_PASSWORD
+  path: /user/login
 domains:
   - { service: drupal, port: 80 }
 files:

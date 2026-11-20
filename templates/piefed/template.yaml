@@ -35,6 +35,7 @@ inputs:
 signIn:
   username: ADMIN_USERNAME
   password: ADMIN_PASSWORD
+  path: /auth/login
 domains:
   - { service: piefed, port: 5000 }
 files:

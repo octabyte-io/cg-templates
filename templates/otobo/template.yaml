@@ -17,5 +17,6 @@ inputs:
 signIn:
   username: { value: root@localhost }
   password: ADMIN_PASSWORD
+  path: /otobo/index.pl
 domains:
   - { service: otobo-web, port: 5000 }

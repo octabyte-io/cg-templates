@@ -18,6 +18,7 @@ inputs:
 signIn:
   username: { value: Admin }
   password: ADMIN_PASSWORD
+  path: /system/login
 domains:
   - { service: opencms, port: 8080 }
 files:

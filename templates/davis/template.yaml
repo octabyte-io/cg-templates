@@ -55,5 +55,6 @@ inputs:
 signIn:
   username: ADMIN_LOGIN
   password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: davis, port: 9000 }

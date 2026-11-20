@@ -22,5 +22,6 @@ inputs:
 signIn:
   username: KHOJ_ADMIN_EMAIL
   password: KHOJ_ADMIN_PASSWORD
+  path: /server/admin
 domains:
   - { service: khoj, port: 42110 }

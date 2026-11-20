@@ -64,5 +64,6 @@ inputs:
 signIn:
   username: ADMIN_EMAIL
   password: ADMIN_PASSWORD
+  path: /app/login
 domains:
   - { service: relaticle, port: 8080 }
