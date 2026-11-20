@@ -6,7 +6,7 @@ links:
   website: https://bigcapital.app
   docs: https://docs.bigcapital.app
   source: https://github.com/bigcapitalhq/bigcapital
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -67,6 +67,10 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /auth/register
+    note: "Sign up to create your account and company; there is no default account."
 domains:
   - { service: bigcapital, port: 8080 }
 files:

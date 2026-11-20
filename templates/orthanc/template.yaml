@@ -6,12 +6,15 @@ links:
   website: https://www.orthanc-server.com
   docs: https://orthanc.uclouvain.be/book/
   source: https://github.com/jodogne/OrthancMirror
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   # Password of the "orthanc" user, the account you sign in with.
   ORTHANC_PASSWORD: { generate: password }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  username: { value: orthanc }
+  password: ORTHANC_PASSWORD
 domains:
   - { service: orthanc, port: 8042 }

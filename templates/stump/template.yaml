@@ -6,7 +6,7 @@ links:
   website: https://stumpapp.dev
   docs: https://stumpapp.dev/docs
   source: https://github.com/stumpapp/stump
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -18,5 +18,9 @@ inputs:
       description: Used for dates and scheduled library scans in Stump, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Set up the server and create the owner account; the first person to open it becomes the owner."
 domains:
   - { service: stump, port: 10801 }

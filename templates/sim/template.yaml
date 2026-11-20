@@ -6,7 +6,7 @@ links:
   website: https://www.sim.ai
   docs: https://docs.sim.ai/platform/self-hosting
   source: https://github.com/simstudioai/sim
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:
@@ -21,6 +21,10 @@ inputs:
   INTERNAL_API_SECRET: { generate: hex }
   CRON_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password; there is no default login."
 domains:
   - { service: sim, port: 3000 }
   - { service: sim-realtime, port: 3002 }

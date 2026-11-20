@@ -6,7 +6,7 @@ links:
   website: https://joinmastodon.org
   docs: https://docs.joinmastodon.org/admin/install/
   source: https://github.com/mastodon/mastodon
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Web (Puma), Sidekiq, the streaming server, PostgreSQL and Redis together use
 # about 900 MB at rest (measured); 2 GB leaves room for a small community.
@@ -57,6 +57,10 @@ inputs:
       label: Send emails from
       description: The address Mastodon's emails come from, such as notifications@yourdomain.com.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /auth/sign_in
 # Mastodon's own proxy (Caddy, as nginx is in Mastodon's guide) sends
 # /api/v1/streaming to the streaming server and everything else to Puma, so the
 # web app and its live updates share one address.

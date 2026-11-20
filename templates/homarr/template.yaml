@@ -6,12 +6,16 @@ links:
   website: https://homarr.dev
   docs: https://homarr.dev/docs/getting-started
   source: https://github.com/homarr-labs/homarr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   BASE_URL: { value: "{{domains.homarr.url}}" }
   SECRET_ENCRYPTION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /init
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: homarr, port: 7575 }
 files: []

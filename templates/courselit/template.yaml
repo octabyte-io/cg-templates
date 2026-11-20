@@ -6,7 +6,7 @@ links:
   website: https://courselit.app
   docs: https://docs.courselit.app
   source: https://github.com/codelitdev/courselit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -42,5 +42,9 @@ inputs:
     ask:
       label: Email server password
       secret: true
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in with the admin email you chose; CourseLit emails you a one-time code."
 domains:
   - { service: courselit, port: 3000 }

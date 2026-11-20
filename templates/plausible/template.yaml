@@ -6,7 +6,7 @@ links:
   website: https://plausible.io
   docs: https://github.com/plausible/community-edition/wiki
   source: https://github.com/plausible/analytics
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -14,6 +14,10 @@ inputs:
   SECRET_KEY_BASE: { generate: hex }
   TOTP_VAULT_KEY: { generate: base64 }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Create the owner account, then add your website."
 domains:
   - { service: plausible, port: 8000 }
 files:

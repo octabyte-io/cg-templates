@@ -6,7 +6,7 @@ links:
   website: https://fossbilling.org
   docs: https://docs.fossbilling.org
   source: https://github.com/FOSSBilling/FOSSBilling
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -25,5 +25,9 @@ inputs:
       default: USD
       required: false
       pattern: "[A-Z]{3}"
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: fossbilling, port: 80 }

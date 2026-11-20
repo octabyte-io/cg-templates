@@ -6,7 +6,7 @@ links:
   website: https://answer.apache.org
   docs: https://answer.apache.org/docs
   source: https://github.com/apache/answer
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -25,5 +25,9 @@ inputs:
       default: Answer
       pattern: "[^<>]{1,30}"
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /users/login
 domains:
   - { service: answer, port: 80 }

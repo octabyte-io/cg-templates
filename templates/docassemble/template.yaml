@@ -6,7 +6,7 @@ links:
   website: https://docassemble.org
   docs: https://docassemble.org/docs.html
   source: https://github.com/jhpyle/docassemble
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -17,5 +17,9 @@ inputs:
       format: email
   ADMIN_PASSWORD: { generate: password }
   DA_HOST: { value: "{{domains.docassemble.host}}" }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /user/sign-in
 domains:
   - { service: docassemble, port: 80 }

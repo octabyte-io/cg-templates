@@ -6,7 +6,7 @@ links:
   website: https://paymenter.org
   docs: https://paymenter.org/docs
   source: https://github.com/Paymenter/Paymenter
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -24,5 +24,9 @@ inputs:
       description: The name shown on your client portal and invoices. You can change it later under Admin > Settings.
       default: Paymenter
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: paymenter, port: 80 }

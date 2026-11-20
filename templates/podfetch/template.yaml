@@ -12,11 +12,14 @@ links:
   website: https://github.com/SamTV12345/PodFetch
   docs: https://samtv12345.github.io/PodFetch/
   source: https://github.com/SamTV12345/PodFetch
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   ADMIN_USERNAME: { value: "admin" }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: podfetch, port: 8000 }

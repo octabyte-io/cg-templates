@@ -6,7 +6,7 @@ links:
   website: https://classroomio.com
   docs: https://classroomio.com/docs/self-hosted/docker
   source: https://github.com/classroomio/classroomio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Three Node.js services plus PostgreSQL, Redis and file storage use about
 # 700 MB at rest (measured); 2 GB leaves room for video processing.
@@ -49,6 +49,10 @@ inputs:
       label: Sender address
       description: The address emails come from, for example academy@example.com.
       required: false
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password; the first account made names the academy and becomes the admin."
 domains:
   - { service: classroomio, port: 3082 }
   - { service: classroomio-storage, port: 9000 }

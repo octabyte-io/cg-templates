@@ -6,11 +6,15 @@ links:
   website: https://www.overleaf.com
   docs: https://docs.overleaf.com/on-premises
   source: https://github.com/overleaf/overleaf
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   OVERLEAF_SITE_URL: { value: "{{domains.overleaf.url}}" }
   OVERLEAF_INVITE_TOKEN_SECRET: { generate: base64 }
+signIn:
+  firstVisit:
+    path: /launchpad
+    note: "Create the admin account with your email and a password; the admin then adds everyone else."
 domains:
   - { service: overleaf, port: 80 }

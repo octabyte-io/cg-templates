@@ -6,12 +6,16 @@ links:
   website: https://coralproject.net
   docs: https://docs.coralproject.net
   source: https://github.com/coralproject/talk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   SIGNING_SECRET: { generate: hex }
   MONGO_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /install
+    note: "Run the install wizard, which creates the admin account and adds your website."
 domains:
   - { service: coral, port: 5000 }

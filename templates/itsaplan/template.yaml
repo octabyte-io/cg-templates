@@ -6,7 +6,7 @@ links:
   website: https://itsaplan.dev
   docs: https://github.com/croffasia/itsaplan/blob/v1.11.0/docs/self-hosting.md
   source: https://github.com/croffasia/itsaplan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -19,6 +19,10 @@ inputs:
   # Root credentials of the built-in RustFS file store that keeps attachments.
   S3_ACCESS_KEY_ID: { generate: password }
   S3_SECRET_ACCESS_KEY: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register the first account; the first account made is the admin."
 # The first address is the web app people use; the second is its API, which the
 # browser calls and the sign-in cookie is shared with (both sit under one parent domain).
 domains:

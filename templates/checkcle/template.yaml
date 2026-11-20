@@ -12,12 +12,15 @@ links:
   website: https://checkcle.io
   docs: https://docs.checkcle.io
   source: https://github.com/operacle/checkcle
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   # Replaces the image's built-in default password (Admin123456) for the
   # admin@example.com account on the first start.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin@example.com }
+  password: ADMIN_PASSWORD
 domains:
   - { service: checkcle, port: 8090 }

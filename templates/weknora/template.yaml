@@ -6,7 +6,7 @@ links:
   website: https://weknora.weixin.qq.com
   docs: https://weknora.weixin.qq.com/docs/
   source: https://github.com/Tencent/WeKnora
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:
@@ -22,5 +22,9 @@ inputs:
       label: Admin email
       description: Sign up with this email first; after the next restart this account becomes the system administrator.
       format: email
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with the admin email you gave at setup, then restart the app once to make that account the system administrator."
 domains:
   - { service: frontend, port: 80 }

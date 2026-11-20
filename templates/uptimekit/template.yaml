@@ -6,7 +6,7 @@ links:
   website: https://uptimekit.dev
   docs: https://docs.uptimekit.dev
   source: https://github.com/uptimekit/uptimekit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -15,6 +15,10 @@ inputs:
   DB_PASSWORD: { generate: password }
   CLICKHOUSE_PASSWORD: { generate: password }
   WORKER_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up to create the admin account; the first account made is the admin, and sign-up then closes."
 domains:
   - { service: uptimekit, port: 3000 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://apitable.com
   docs: https://github.com/apitable/apitable#installation
   source: https://github.com/apitable/apitable
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:
@@ -14,5 +14,9 @@ inputs:
   REDIS_PASSWORD: { generate: password }
   RABBITMQ_PASSWORD: { generate: password }
   STORAGE_SECRET: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with an email address and a password; each account gets its own space, and there is no default admin login."
 domains:
   - { service: apitable, port: 80 }

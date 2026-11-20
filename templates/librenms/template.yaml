@@ -6,7 +6,7 @@ links:
   website: https://www.librenms.org
   docs: https://docs.librenms.org
   source: https://github.com/librenms/librenms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -25,5 +25,8 @@ inputs:
       description: Used for graphs, alerts and schedules, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: librenms, port: 8000 }

@@ -6,7 +6,7 @@ links:
   website: https://tolgee.io
   docs: https://docs.tolgee.io/platform
   source: https://github.com/tolgee/tolgee-platform
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -19,5 +19,8 @@ inputs:
       description: The email you sign in to Tolgee with as its administrator.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: tolgee, port: 8080 }

@@ -6,12 +6,14 @@ links:
   website: https://www.pascal.app
   docs: https://editor.pascal.app/docs
   source: https://github.com/pascalorg/editor
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   PASCAL_PUBLIC_URL: { value: "{{domains.editor.url}}" }
   PASCAL_ADMIN_PASSWORD: { generate: password }
   PASCAL_SCENE_API_TOKEN: { generate: hex }
+signIn:
+  password: PASCAL_ADMIN_PASSWORD
 domains:
   - { service: editor, port: 3000 }

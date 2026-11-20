@@ -6,8 +6,12 @@ links:
   website: https://shaarli.readthedocs.io
   docs: https://shaarli.readthedocs.io/en/master/
   source: https://github.com/shaarli/Shaarli
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /install
+    note: "Choose your username and password; the first person to open the address sets them."
 domains:
   - { service: shaarli, port: 80 }

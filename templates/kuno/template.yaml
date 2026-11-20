@@ -6,12 +6,16 @@ links:
   website: https://github.com/xuemian168/kuno
   docs: https://github.com/xuemian168/kuno#readme
   source: https://github.com/xuemian168/kuno
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   API_URL: { value: "{{domains.kuno.url}}/api" }
   JWT_SECRET: { generate: hex }
   SECRET_PHRASE: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter the one-time setup code from the app's logs in Cloudgate, then choose your site name and admin login."
 domains:
   - { service: kuno, port: 80 }

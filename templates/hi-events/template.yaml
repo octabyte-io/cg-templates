@@ -6,7 +6,7 @@ links:
   website: https://hi.events
   docs: https://hi.events/docs
   source: https://github.com/HiEventsDev/Hi.Events
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -58,5 +58,9 @@ inputs:
       description: Starts with whsec_. Add a webhook in Stripe pointing to your app's address followed by /api/public/webhooks/stripe.
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /auth/register
+    note: "Sign up to create your account, then invite your team."
 domains:
   - { service: hi-events, port: 80 }

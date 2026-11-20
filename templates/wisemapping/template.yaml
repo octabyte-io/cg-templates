@@ -6,7 +6,7 @@ links:
   website: https://www.wisemapping.com
   docs: https://github.com/wisemapping/wisemapping-open-source/tree/develop/distribution/app
   source: https://github.com/wisemapping/wisemapping-open-source
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -20,5 +20,8 @@ inputs:
   DB_PASSWORD: { generate: password }
   JWT_SECRET: { generate: hex }
   OAUTH_TOKEN_SECRET: { generate: hex }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: wisemapping, port: 80 }

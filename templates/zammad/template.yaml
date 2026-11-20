@@ -6,13 +6,17 @@ links:
   website: https://zammad.org
   docs: https://docs.zammad.org/en/latest/install/docker-compose.html
   source: https://github.com/zammad/zammad
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   ZAMMAD_FQDN: { value: "{{domains.zammad-nginx.host}}" }
   POSTGRES_PASS: { generate: password }
   POSTGRES_SUPERUSER_PASS: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: zammad-nginx, port: 8080 }
 files:

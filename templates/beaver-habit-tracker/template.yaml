@@ -6,7 +6,7 @@ links:
   website: https://beaverhabits.com
   docs: https://github.com/daya0576/beaverhabits/wiki
   source: https://github.com/daya0576/beaverhabits
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -14,5 +14,9 @@ inputs:
   JWT_SECRET: { generate: hex }
   NICEGUI_STORAGE_SECRET: { generate: hex }
   RESET_PASSWORD_TOKEN_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Create your account with your email and a password; there is no default login."
 domains:
   - { service: beaverhabits, port: 8080 }

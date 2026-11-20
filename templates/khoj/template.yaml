@@ -6,7 +6,7 @@ links:
   website: https://khoj.dev
   docs: https://docs.khoj.dev
   source: https://github.com/khoj-ai/khoj
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -19,5 +19,9 @@ inputs:
       label: Admin email
       description: You sign in to Khoj's admin panel (<Khoj's address>/server/admin) with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: KHOJ_ADMIN_EMAIL
+  password: KHOJ_ADMIN_PASSWORD
+  path: /server/admin
 domains:
   - { service: khoj, port: 42110 }

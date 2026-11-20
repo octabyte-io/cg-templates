@@ -6,7 +6,7 @@ links:
   website: https://paisa.fyi
   docs: https://paisa.fyi/getting-started/installation/
   source: https://github.com/ananthakumaran/paisa
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -17,6 +17,9 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_.-]{2,31}"
   PAISA_PASSWORD: { generate: password }
+signIn:
+  username: PAISA_USERNAME
+  password: PAISA_PASSWORD
 domains:
   - { service: paisa, port: 7500 }
 files:

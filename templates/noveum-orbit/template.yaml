@@ -6,7 +6,7 @@ links:
   website: https://orbit.noveum.ai
   docs: https://noveum.github.io/orbit/
   source: https://github.com/Noveum/orbit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Eight containers: the web app, a realtime service, a scheduler, a small
 # gateway, PostgreSQL, Redis, MinIO file storage and its bucket set-up.
@@ -20,6 +20,10 @@ inputs:
   MINIO_PASSWORD: { generate: password }
   BETTER_AUTH_SECRET: { generate: hex }
   CRON_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with an email and a password, then create a workspace; whoever creates it is its admin."
 # The gateway sends /api/ws to the realtime service and everything else to the
 # web app, so it is the service that gets the app's web address.
 domains:

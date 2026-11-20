@@ -6,7 +6,7 @@ links:
   website: https://phpipam.net
   docs: https://phpipam.net/documents/
   source: https://github.com/phpipam/phpipam
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -14,5 +14,8 @@ inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: Admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: phpipam, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://wealthfolio.app
   docs: https://wealthfolio.app/docs/guide/self-hosting/docker
   source: https://github.com/wealthfolio/wealthfolio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -15,5 +15,7 @@ inputs:
   # Encrypts saved secrets (such as API keys) and signs sign-in sessions.
   WF_SECRET_KEY: { generate: base64 }
   APP_URL: { value: "{{domains.wealthfolio.url}}" }
+signIn:
+  password: ADMIN_PASSWORD
 domains:
   - { service: wealthfolio, port: 8088 }

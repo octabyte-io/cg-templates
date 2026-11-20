@@ -12,7 +12,7 @@ links:
   website: https://erxes.io
   docs: https://docs.erxes.io
   source: https://github.com/erxes/erxes
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Four Node.js services (gateway, core, inbox, sales), the web app, an nginx front,
 # MongoDB and Redis; erxes asks for at least 2 GB for the core alone.
@@ -22,6 +22,10 @@ inputs:
   # Signs every session; shared by the gateway and the API services.
   JWT_TOKEN_SECRET: { generate: hex }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account with your name, email and a password."
 domains:
   - { service: erxes, port: 80 }
 files:

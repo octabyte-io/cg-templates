@@ -6,7 +6,7 @@ links:
   website: https://about.gitea.com
   docs: https://docs.gitea.com
   source: https://github.com/go-gitea/gitea
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -23,5 +23,9 @@ inputs:
         setup leaves nobody able to register, not even the admin.
       default: "false"
       pattern: "true|false"
+signIn:
+  firstVisit:
+    path: /user/sign_up
+    note: "Register an account; the first account registered becomes the admin."
 domains:
   - { service: gitea, port: 3000 }

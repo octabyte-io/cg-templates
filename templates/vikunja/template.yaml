@@ -6,7 +6,7 @@ links:
   website: https://vikunja.io
   docs: https://vikunja.io/docs/
   source: https://github.com/go-vikunja/vikunja
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -25,5 +25,9 @@ inputs:
       description: Type false to stop new people creating accounts once your team has signed up.
       default: "true"
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Create your account; there is no default account, and anyone who can reach the address can sign up."
 domains:
   - { service: vikunja, port: 3456 }

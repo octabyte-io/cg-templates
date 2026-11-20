@@ -6,7 +6,7 @@ links:
   website: https://snapotter.com
   docs: https://docs.snapotter.com
   source: https://github.com/snapotter-hq/SnapOtter
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:
@@ -22,5 +22,8 @@ inputs:
   POSTGRES_PASSWORD: { generate: password }
   POSTGRES_APP_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: snapotter, port: 1349 }

@@ -12,7 +12,7 @@ links:
   website: https://waha.devlike.pro
   docs: https://waha.devlike.pro/docs/overview/introduction/
   source: https://github.com/devlikeapro/waha
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -25,5 +25,9 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   DASHBOARD_PASSWORD: { generate: password }
+signIn:
+  username: DASHBOARD_USERNAME
+  password: DASHBOARD_PASSWORD
+  path: /dashboard
 domains:
   - { service: waha, port: 3000 }

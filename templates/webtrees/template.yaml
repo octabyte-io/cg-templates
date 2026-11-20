@@ -6,7 +6,7 @@ links:
   website: https://webtrees.net
   docs: https://webtrees.net/install/
   source: https://github.com/fisharebest/webtrees
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -19,5 +19,8 @@ inputs:
       description: The email of the first administrator. You sign in with the username admin and a strong password Cloudgate creates, shown afterwards on the app's variables page.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: webtrees, port: 80 }

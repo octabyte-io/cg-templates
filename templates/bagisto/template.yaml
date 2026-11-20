@@ -6,7 +6,7 @@ links:
   website: https://bagisto.com
   docs: https://devdocs.bagisto.com
   source: https://github.com/bagisto/bagisto
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -32,5 +32,9 @@ inputs:
       description: The shop's time zone, as an IANA name such as Europe/Berlin. Scheduled tasks such as campaigns run at times in this zone.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: bagisto, port: 80 }

@@ -6,12 +6,16 @@ links:
   website: https://twenty.com
   docs: https://docs.twenty.com/developers/self-host/capabilities/docker-compose
   source: https://github.com/twentyhq/twenty
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   SERVER_URL: { value: "{{domains.twenty.url}}" }
   ENCRYPTION_KEY: { generate: base64 }
   PG_DATABASE_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /welcome
+    note: "Sign up with an email and a password; the first account creates the workspace and is its admin."
 domains:
   - { service: twenty, port: 3000 }

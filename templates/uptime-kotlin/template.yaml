@@ -6,12 +6,16 @@ links:
   website: https://demo.uptime-kotlin.com
   docs: https://github.com/TheoMeunier/uptime-kotlin#readme
   source: https://github.com/TheoMeunier/uptime-kotlin
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   APP_URL: { value: "{{domains.uptime-kotlin.url}}" }
   ENCRYPTION_MASTER_KEY: { generate: base64 }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account; there is no default username or password."
 domains:
   - { service: uptime-kotlin, port: 8080 }

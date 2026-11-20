@@ -6,7 +6,7 @@ links:
   website: https://mifos.org
   docs: https://fineract.apache.org/docs/current/
   source: https://github.com/apache/fineract
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -19,6 +19,10 @@ inputs:
       description: The time zone your organisation's business days follow, as an IANA name such as Africa/Nairobi. Set it before the first start; it is saved with your data.
       default: UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign in as mifos with the password password, then change the password."
 domains:
   - { service: mifos, port: 80 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://evershop.io
   docs: https://evershop.io/docs/development/getting-started/introduction
   source: https://github.com/evershopcommerce/evershop
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -17,5 +17,9 @@ inputs:
       description: The email you sign in to the store's admin panel (/admin) with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: evershop, port: 3000 }

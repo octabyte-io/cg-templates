@@ -6,7 +6,7 @@ links:
   website: https://shridarpatil.github.io/whatomate/
   docs: https://shridarpatil.github.io/whatomate/
   source: https://github.com/shridarpatil/whatomate
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -27,5 +27,8 @@ inputs:
       description: Used for business hours in call menus, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: whatomate, port: 8080 }

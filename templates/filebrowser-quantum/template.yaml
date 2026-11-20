@@ -6,12 +6,15 @@ links:
   website: https://filebrowserquantum.com
   docs: https://filebrowserquantum.com/en/docs/
   source: https://github.com/gtsteffaniak/filebrowser
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   # The password of the user "admin". FileBrowser Quantum sets it back to this
   # value on every start, so change it here, not in the app.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: FILEBROWSER_ADMIN_PASSWORD
 domains:
   - { service: filebrowser, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://github.com/icereed/paperless-gpt
   docs: https://github.com/icereed/paperless-gpt#readme
   source: https://github.com/icereed/paperless-gpt
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -51,6 +51,9 @@ inputs:
       label: AI model for reading scans (optional)
       description: A model that can read images, at the same provider, for example gpt-4o or minicpm-v. Leave empty to keep only Paperless-ngx's own text recognition.
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: proxy, port: 80 }
 files:

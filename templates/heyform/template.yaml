@@ -6,7 +6,7 @@ links:
   website: https://heyform.net
   docs: https://docs.heyform.net/open-source/self-hosting
   source: https://github.com/heyform/heyform
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -22,5 +22,9 @@ inputs:
       description: Type true once your team has signed up, so nobody else can create an account. Invitation links still work.
       default: "false"
       required: false
+signIn:
+  firstVisit:
+    path: /sign-up
+    note: "Sign up with your name, email and a password; the first account gets the first workspace."
 domains:
   - { service: heyform, port: 9157 }

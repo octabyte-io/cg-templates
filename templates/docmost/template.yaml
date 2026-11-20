@@ -6,12 +6,16 @@ links:
   website: https://docmost.com
   docs: https://docmost.com/docs/installation
   source: https://github.com/docmost/docmost
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   APP_URL: { value: "{{domains.docmost.url}}" }
   APP_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup/register
+    note: "Create the owner account and name your workspace."
 domains:
   - { service: docmost, port: 3000 }

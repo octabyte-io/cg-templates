@@ -6,8 +6,12 @@ links:
   website: https://readeck.org
   docs: https://readeck.org/en/docs/
   source: https://codeberg.org/readeck/readeck
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account on the welcome screen; the first account is the admin."
 domains:
   - { service: readeck, port: 8000 }

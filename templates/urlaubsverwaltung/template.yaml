@@ -6,7 +6,7 @@ links:
   website: https://focus-shift.de/software/
   docs: https://github.com/urlaubsverwaltung/urlaubsverwaltung#readme
   source: https://github.com/urlaubsverwaltung/urlaubsverwaltung
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Urlaubsverwaltung and Keycloak (both Java, each capped at a 768 MB heap), PostgreSQL and a small
 # proxy: about 1.6 GB in use after sign-ins, so 4 GB leaves room.
@@ -62,6 +62,9 @@ inputs:
       description: The address emails come from, for example leave@example.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   # Urlaubsverwaltung itself (through the small proxy in front of it).
   - { service: urlaubsverwaltung, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://www.audiobookshelf.org
   docs: https://www.audiobookshelf.org/docs
   source: https://github.com/advplyr/audiobookshelf
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -16,5 +16,9 @@ inputs:
       description: Used for listening stats, backups and the podcast download schedule, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /login
+    note: "Create the root user, the admin account for the server."
 domains:
   - { service: audiobookshelf, port: 80 }

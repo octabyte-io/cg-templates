@@ -6,7 +6,7 @@ links:
   website: https://www.getgrist.com
   docs: https://support.getgrist.com/self-managed/
   source: https://github.com/gristlabs/grist-core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -18,5 +18,9 @@ inputs:
       label: Owner email
       description: The email of the person who runs Grist. It becomes the installation admin and owns the team site.
       format: email
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter the boot key from the app's variables page, then finish Quick setup and choose how people sign in."
 domains:
   - { service: grist, port: 8484 }

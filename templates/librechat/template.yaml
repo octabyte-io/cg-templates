@@ -6,7 +6,7 @@ links:
   website: https://www.librechat.ai
   docs: https://www.librechat.ai/docs
   source: https://github.com/LibreChat-AI/LibreChat
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -26,5 +26,9 @@ inputs:
       default: "true"
       pattern: "^(true|false)$"
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Sign up with any email; the first account made is the admin."
 domains:
   - { service: librechat, port: 3080 }

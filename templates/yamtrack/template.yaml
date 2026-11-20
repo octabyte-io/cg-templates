@@ -6,11 +6,15 @@ links:
   website: https://github.com/FuzzyGrim/Yamtrack
   docs: https://fuzzygrim.github.io/Yamtrack/release/
   source: https://github.com/FuzzyGrim/Yamtrack
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   SECRET: { generate: hex }
   URLS: { value: "{{domains.yamtrack.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Choose Register now and create your account with a username and a password."
 domains:
   - { service: yamtrack, port: 8000 }

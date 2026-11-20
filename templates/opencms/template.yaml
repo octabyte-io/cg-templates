@@ -6,7 +6,7 @@ links:
   website: https://www.opencms.org
   docs: https://documentation.opencms.org
   source: https://github.com/alkacon/opencms-core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # OpenCms runs on Java in Jetty; the official image starts it with a 2 GB heap
 # (-Xmx2g), plus MariaDB alongside it.
@@ -15,6 +15,10 @@ inputs:
   SERVER_URL: { value: "{{domains.opencms.url}}" }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: Admin }
+  password: ADMIN_PASSWORD
+  path: /system/login
 domains:
   - { service: opencms, port: 8080 }
 files:

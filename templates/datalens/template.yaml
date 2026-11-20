@@ -6,7 +6,7 @@ links:
   website: https://datalens.tech
   docs: https://datalens.tech/docs/en/
   source: https://github.com/datalens-tech/datalens
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -17,5 +17,8 @@ inputs:
   AUTH_MASTER_TOKEN: { generate: hex }
   EXPORT_DATA_VERIFICATION_KEY: { generate: hex }
   CONTROL_API_CRYPTO_KEY: { generate: base64 }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: datalens, port: 8080 }

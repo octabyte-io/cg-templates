@@ -6,7 +6,7 @@ links:
   website: https://plane.so
   docs: https://developers.plane.so/self-hosting/overview
   source: https://github.com/makeplane/plane
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Plane's self-hosting docs ask for at least 4 GB of memory (8 GB for production).
 size: large
@@ -18,6 +18,10 @@ inputs:
   RABBITMQ_PASSWORD: { generate: password }
   MINIO_ACCESS_KEY: { generate: password }
   MINIO_SECRET_KEY: { generate: password }
+signIn:
+  firstVisit:
+    path: /god-mode
+    note: "Create the admin account, then create a workspace for the team."
 # Plane's own proxy sends /api, /auth, /god-mode, /spaces, /live and uploads to
 # the right container, so it is the service that gets the web address.
 domains:

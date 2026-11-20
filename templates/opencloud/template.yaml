@@ -6,11 +6,14 @@ links:
   website: https://opencloud.eu/en
   docs: https://docs.opencloud.eu/docs/admin/getting-started/container/docker-compose/docker-compose-base
   source: https://github.com/opencloud-eu/opencloud
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   OC_URL: { value: "{{domains.opencloud.url}}" }
   IDM_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: IDM_ADMIN_PASSWORD
 domains:
   - { service: opencloud, port: 9200 }

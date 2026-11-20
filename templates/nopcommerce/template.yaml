@@ -6,7 +6,7 @@ links:
   website: https://www.nopcommerce.com
   docs: https://docs.nopcommerce.com
   source: https://github.com/nopSolutions/nopCommerce
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -18,5 +18,9 @@ inputs:
       label: Admin email
       description: You sign in to the store's admin area with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: nopcommerce, port: 80 }

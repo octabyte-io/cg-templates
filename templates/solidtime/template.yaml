@@ -6,7 +6,7 @@ links:
   website: https://www.solidtime.io
   docs: https://docs.solidtime.io
   source: https://github.com/solidtime-io/solidtime
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -26,6 +26,9 @@ inputs:
       default: "invite-only"
       pattern: "on|off|invite-only"
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: solidtime, port: 8000 }
 files:

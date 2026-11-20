@@ -6,12 +6,16 @@ links:
   website: https://chibisafe.app
   docs: https://chibisafe.app/docs/intro
   source: https://github.com/chibisafe/chibisafe
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   # Password of the "admin" account Chibisafe creates on first start.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
+  path: /login
 # Chibisafe's official setup puts Caddy in front: it serves uploaded files
 # itself and sends /api and /docs to the server and everything else to the web app.
 domains:

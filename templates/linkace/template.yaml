@@ -6,7 +6,7 @@ links:
   website: https://www.linkace.org
   docs: https://www.linkace.org/docs/v2/
   source: https://github.com/Kovah/LinkAce
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -18,5 +18,9 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   REDIS_PASSWORD: { generate: password }
   MEILISEARCH_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the short setup, leaving the database step as it is, and create your admin account."
 domains:
   - { service: linkace, port: 80 }

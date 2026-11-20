@@ -13,12 +13,14 @@ links:
   website: https://rss-bridge.org
   docs: https://rss-bridge.github.io/rss-bridge/
   source: https://github.com/RSS-Bridge/rss-bridge
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   # The access token: without it the instance and its feeds answer "token
   # required", so strangers can't use your server to scrape other sites.
   RSS_BRIDGE_TOKEN: { generate: hex }
+signIn:
+  password: RSS_BRIDGE_TOKEN
 domains:
   - { service: rss-bridge, port: 80 }

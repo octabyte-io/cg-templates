@@ -6,7 +6,7 @@ links:
   website: https://ezbookkeeping.mayswind.net
   docs: https://ezbookkeeping.mayswind.net/installation/installation-docker
   source: https://github.com/mayswind/ezbookkeeping
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -14,5 +14,9 @@ inputs:
   APP_DOMAIN: { value: "{{domains.ezbookkeeping.host}}" }
   SECRET_KEY: { generate: base64 }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Choose Sign up and create your account; there is no default login."
 domains:
   - { service: ezbookkeeping, port: 8080 }

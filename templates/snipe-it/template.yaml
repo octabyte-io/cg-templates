@@ -6,7 +6,7 @@ links:
   website: https://snipeitapp.com
   docs: https://snipe-it.readme.io/docs
   source: https://github.com/grokability/snipe-it
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -20,5 +20,9 @@ inputs:
       description: Used for dates and times in Snipe-IT, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: snipe-it, port: 80 }

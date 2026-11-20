@@ -6,7 +6,7 @@ links:
   website: https://spreecommerce.org
   docs: https://spreecommerce.org/docs
   source: https://github.com/spree/spree
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -55,5 +55,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /dashboard
 domains:
   - { service: spree, port: 3000 }

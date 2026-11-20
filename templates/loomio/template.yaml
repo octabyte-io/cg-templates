@@ -6,7 +6,7 @@ links:
   website: https://www.loomio.com
   docs: https://github.com/loomio/loomio/blob/master/deploy/README.md
   source: https://github.com/loomio/loomio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -44,5 +44,9 @@ inputs:
     ask:
       label: Email server password
       secret: true
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with your email and confirm it from the email Loomio sends you."
 domains:
   - { service: loomio, port: 80 }

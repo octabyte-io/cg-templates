@@ -6,7 +6,7 @@ links:
   website: https://calibre-ebook.com
   docs: https://manual.calibre-ebook.com
   source: https://github.com/kovidgoyal/calibre
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # The full Calibre desktop is streamed to the browser; LinuxServer.io suggests
 # about 2 GB of memory for its desktop images.
@@ -21,5 +21,8 @@ inputs:
       description: Used for dates and times in Calibre, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: CALIBRE_USER
+  password: CALIBRE_PASSWORD
 domains:
   - { service: calibre, port: 8080 }

@@ -6,7 +6,7 @@ links:
   website: https://unopim.com
   docs: https://devdocs.unopim.com
   source: https://github.com/unopim/unopim
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -31,5 +31,8 @@ inputs:
       description: UnoPim's time zone, as an IANA name such as Europe/Berlin. Scheduled jobs run at times in this zone.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: unopim, port: 80 }

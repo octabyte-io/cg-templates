@@ -6,10 +6,14 @@ links:
   website: https://jotty.page
   docs: https://github.com/fccview/jotty/tree/main/howto
   source: https://github.com/fccview/jotty
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   APP_URL: { value: "{{domains.jotty.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account; there is no default password."
 domains:
   - { service: jotty, port: 3000 }

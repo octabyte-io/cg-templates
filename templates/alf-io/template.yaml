@@ -6,13 +6,17 @@ links:
   website: https://alf.io
   docs: https://alf.io/docs/
   source: https://github.com/alfio-event/alf.io
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   APP_URL: { value: "{{domains.alf-io-proxy.url}}" }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /admin
+    note: "Sign in as admin with the password alf.io prints once in the app's logs on its first start, then change it."
 domains:
   - { service: alf-io-proxy, port: 80 }
 files:

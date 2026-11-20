@@ -6,12 +6,16 @@ links:
   website: https://ledgersmb.org
   docs: https://ledgersmb.org/content/documentation
   source: https://github.com/ledgersmb/LedgerSMB
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   # The PostgreSQL superuser ("postgres") password. LedgerSMB's setup.pl asks for it to
   # create the company database and its first user.
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup.pl
+    note: "Sign in as postgres with the database password from the app's variables page, then create your company and its first user."
 domains:
   - { service: ledgersmb, port: 5762 }

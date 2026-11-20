@@ -6,8 +6,12 @@ links:
   website: https://linkstack.org
   docs: https://docs.linkstack.org
   source: https://github.com/LinkStackOrg/linkstack
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard: choose SQLite and create the admin account."
 domains:
   - { service: linkstack, port: 80 }

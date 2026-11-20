@@ -6,8 +6,12 @@ links:
   website: https://triliumnotes.org
   docs: https://docs.triliumnotes.org
   source: https://github.com/TriliumNext/Trilium
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Start a new knowledge base and set Trilium's password; there is no username."
 domains:
   - { service: trilium, port: 8080 }

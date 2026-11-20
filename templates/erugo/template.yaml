@@ -6,8 +6,12 @@ links:
   website: https://erugo.app
   docs: https://erugo.app/docs
   source: https://github.com/ErugoOSS/Erugo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email address and a password; there is no default login."
 domains:
   - { service: erugo, port: 80 }

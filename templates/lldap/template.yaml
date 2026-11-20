@@ -6,7 +6,7 @@ links:
   website: https://github.com/lldap/lldap
   docs: https://github.com/lldap/lldap/tree/main/docs
   source: https://github.com/lldap/lldap
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -20,5 +20,8 @@ inputs:
       description: The root of your directory, usually your domain written as dc parts, such as dc=example,dc=com. Apps that sign people in through LDAP use it in their settings.
       default: dc=example,dc=com
       pattern: "dc=[a-z0-9-]+(,dc=[a-z0-9-]+)*"
+signIn:
+  username: { value: admin }
+  password: LLDAP_LDAP_USER_PASS
 domains:
   - { service: lldap, port: 17170 }

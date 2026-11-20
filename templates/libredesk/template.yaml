@@ -6,7 +6,7 @@ links:
   website: https://libredesk.io
   docs: https://docs.libredesk.io
   source: https://github.com/abhinavxd/libredesk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -20,5 +20,8 @@ inputs:
       description: The password of Libredesk's admin account, which signs in with the name "System". 10 to 72 characters, with an upper-case letter, a lower-case letter, a digit and a symbol, as Libredesk requires.
       secret: true
       pattern: "(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{10,72}"
+signIn:
+  username: { value: System }
+  password: ADMIN_PASSWORD
 domains:
   - { service: libredesk, port: 9000 }

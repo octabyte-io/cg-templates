@@ -6,7 +6,7 @@ links:
   website: https://www.orangehrm.com/open-source
   docs: https://starterhelp.orangehrm.com/hc/en-us
   source: https://github.com/orangehrm/orangehrm
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -30,5 +30,8 @@ inputs:
       description: Your organization's country as a two-letter code, such as US, GB or DE. You can change it later under Admin, Organization.
       default: US
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: orangehrm, port: 80 }

@@ -9,7 +9,7 @@ links:
   website: https://github.com/vrtmrz/obsidian-livesync
   docs: https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
   source: https://github.com/vrtmrz/obsidian-livesync
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -21,6 +21,9 @@ inputs:
       pattern: "[a-z][a-z0-9_-]{2,31}"
   COUCHDB_PASSWORD: { generate: password }
   COUCHDB_SECRET: { generate: hex }
+signIn:
+  username: COUCHDB_USER
+  password: COUCHDB_PASSWORD
 domains:
   - { service: couchdb, port: 5984 }
 files:

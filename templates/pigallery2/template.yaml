@@ -6,7 +6,7 @@ links:
   website: https://bpatrik.github.io/pigallery2/
   docs: https://bpatrik.github.io/pigallery2/setup/docker/
   source: https://github.com/bpatrik/pigallery2
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -17,6 +17,9 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # photos at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: pigallery2, port: 80 }
   - { service: filebrowser, port: 80 }

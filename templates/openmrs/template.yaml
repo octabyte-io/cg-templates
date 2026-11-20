@@ -6,12 +6,15 @@ links:
   website: https://openmrs.org
   docs: https://o3-docs.openmrs.org
   source: https://github.com/openmrs/openmrs-distro-referenceapplication
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: gateway, port: 80 }

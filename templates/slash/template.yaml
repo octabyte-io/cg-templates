@@ -6,8 +6,12 @@ links:
   website: https://github.com/yourselfhosted/slash
   docs: https://github.com/yourselfhosted/slash/tree/main/docs
   source: https://github.com/yourselfhosted/slash
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up; the first account made is the admin."
 domains:
   - { service: slash, port: 5231 }

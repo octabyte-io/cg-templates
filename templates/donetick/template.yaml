@@ -6,7 +6,7 @@ links:
   website: https://donetick.com
   docs: https://docs.donetick.com
   source: https://github.com/donetick/donetick
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -14,5 +14,9 @@ inputs:
   # least 32 characters (hex gives 64).
   JWT_SECRET: { generate: hex }
   PUBLIC_URL: { value: "{{domains.donetick.url}}" }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up to make the first account and its household group; there is no default password."
 domains:
   - { service: donetick, port: 2021 }

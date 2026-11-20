@@ -6,7 +6,7 @@ links:
   website: https://www.hortusfox.com
   docs: https://github.com/danielbrendel/hortusfox-web#installation
   source: https://github.com/danielbrendel/hortusfox-web
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -25,5 +25,8 @@ inputs:
       description: Used for dates, tasks and reminders in HortusFox, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: hortusfox, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://timetracker.drytrix.com
   docs: https://github.com/DRYTRIX/TimeTracker/tree/main/docs
   source: https://github.com/DRYTRIX/TimeTracker
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -14,5 +14,9 @@ inputs:
   SECRET_KEY: { generate: hex }
   SETTINGS_ENCRYPTION_KEY: { generate: base64 }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign in with the username admin and type the password you want to use; it becomes the admin password."
 domains:
   - { service: timetracker, port: 8080 }

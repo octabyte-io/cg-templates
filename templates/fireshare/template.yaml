@@ -6,7 +6,7 @@ links:
   website: https://github.com/fireshare-app/fireshare
   docs: https://github.com/fireshare-app/fireshare#readme
   source: https://github.com/fireshare-app/fireshare
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -14,5 +14,9 @@ inputs:
   ADMIN_PASSWORD: { generate: password }
   SECRET_KEY: { generate: hex }
   DOMAIN: { value: "{{domains.fireshare.host}}" }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: fireshare, port: 80 }

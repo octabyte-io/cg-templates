@@ -6,7 +6,7 @@ links:
   website: https://github.com/panteLx/BetterShift
   docs: https://github.com/panteLx/BetterShift/tree/main/docs
   source: https://github.com/panteLx/BetterShift
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -24,5 +24,9 @@ inputs:
       default: "true"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Sign up; the first account made is the admin."
 domains:
   - { service: bettershift, port: 3000 }

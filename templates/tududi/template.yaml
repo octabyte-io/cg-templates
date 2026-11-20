@@ -6,7 +6,7 @@ links:
   website: https://tududi.com
   docs: https://docs.tududi.com
   source: https://github.com/chrisvel/tududi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -19,5 +19,8 @@ inputs:
       description: You sign in with this email. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: tududi, port: 3002 }

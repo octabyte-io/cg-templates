@@ -6,7 +6,7 @@ links:
   website: https://www.navidrome.org
   docs: https://www.navidrome.org/docs/
   source: https://github.com/navidrome/navidrome
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -14,6 +14,10 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # music at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account by choosing a username and password."
 domains:
   - { service: navidrome, port: 4533 }
   - { service: filebrowser, port: 80 }

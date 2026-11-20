@@ -6,7 +6,7 @@ links:
   website: https://frappe.io/helpdesk
   docs: https://docs.frappe.io/helpdesk
   source: https://github.com/frappe/helpdesk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Nine containers (web, nginx, websocket, two queue workers, scheduler, MariaDB
 # and two Redis); creating the site on the first start takes a few minutes.
@@ -15,6 +15,9 @@ inputs:
   APP_URL: { value: "{{domains.frontend.url}}" }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: Administrator }
+  password: ADMIN_PASSWORD
 # Frappe's own nginx serves the web pages (the agent app at /helpdesk) and
 # routes /socket.io to the websocket container, so it gets the address.
 domains:

@@ -6,7 +6,7 @@ links:
   website: https://netboxlabs.com/oss/netbox/
   docs: https://netboxlabs.com/docs/netbox/
   source: https://github.com/netbox-community/netbox
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -28,5 +28,8 @@ inputs:
       label: Admin email
       description: The admin account's email address. You can change it later in your NetBox user profile.
       format: email
+signIn:
+  username: SUPERUSER_NAME
+  password: SUPERUSER_PASSWORD
 domains:
   - { service: netbox, port: 8080 }

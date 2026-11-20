@@ -6,7 +6,7 @@ links:
   website: https://documenso.com
   docs: https://docs.documenso.com
   source: https://github.com/documenso/documenso
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -50,5 +50,9 @@ inputs:
       description: Keep "false" for port 587, which still switches to TLS with STARTTLS. Set "true" for port 465.
       default: "false"
       pattern: "true|false"
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password, then confirm the account with the link Documenso emails you."
 domains:
   - { service: documenso, port: 3000 }

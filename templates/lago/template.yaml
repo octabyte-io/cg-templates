@@ -6,7 +6,7 @@ links:
   website: https://getlago.com
   docs: https://getlago.com/docs
   source: https://github.com/getlago/lago
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -55,6 +55,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  username: LAGO_ORG_USER_EMAIL
+  password: LAGO_ORG_USER_PASSWORD
 # The first address is the Lago dashboard; the second is the API your product sends usage
 # events to (and the address webhooks, invoice PDFs and file links use).
 domains:

@@ -6,7 +6,7 @@ links:
   website: https://churchcrm.io
   docs: https://docs.churchcrm.io
   source: https://github.com/ChurchCRM/CRM
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -14,6 +14,9 @@ inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: Admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: churchcrm, port: 8080 }
 files:

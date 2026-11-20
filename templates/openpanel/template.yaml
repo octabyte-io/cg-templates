@@ -6,13 +6,17 @@ links:
   website: https://openpanel.dev
   docs: https://openpanel.dev/docs/self-hosting/self-hosting
   source: https://github.com/Openpanel-dev/openpanel
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   DASHBOARD_URL: { value: "{{domains.openpanel-proxy.url}}" }
   COOKIE_SECRET: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account; the first account made is the owner, and sign-up then closes."
 domains:
   - { service: openpanel-proxy, port: 80 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://calnode.com
   docs: https://github.com/Calnode/calnode/blob/v0.14.0/DEPLOY.md
   source: https://github.com/Calnode/calnode
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -35,5 +35,9 @@ inputs:
       description: Optional. The secret of the Microsoft app registration above.
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account with your name, email and a password."
 domains:
   - { service: calnode, port: 3000 }

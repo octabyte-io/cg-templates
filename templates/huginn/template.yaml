@@ -6,7 +6,7 @@ links:
   website: https://github.com/huginn/huginn
   docs: https://github.com/huginn/huginn/wiki
   source: https://github.com/huginn/huginn
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -33,5 +33,9 @@ inputs:
       description: Used for scheduling agents, as a Rails time zone name such as UTC, London or Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
+  path: /users/sign_in
 domains:
   - { service: huginn, port: 3000 }

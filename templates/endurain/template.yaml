@@ -6,7 +6,7 @@ links:
   website: https://endurain.com
   docs: https://docs.endurain.com
   source: https://github.com/endurain-project/endurain
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # FastAPI app and PostgreSQL.
 size: small
@@ -22,5 +22,9 @@ inputs:
       description: Used for activities without GPS, such as indoor swims or gym sessions, as a tz database name such as Europe/Lisbon or America/New_York.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in as admin with the password admin, then change the password."
 domains:
   - { service: endurain, port: 8080 }

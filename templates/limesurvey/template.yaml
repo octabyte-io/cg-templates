@@ -6,7 +6,7 @@ links:
   website: https://www.limesurvey.org
   docs: https://www.limesurvey.org/manual/LimeSurvey_Manual
   source: https://github.com/LimeSurvey/LimeSurvey
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -21,5 +21,9 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   ENCRYPT_SECRET_BOX_KEY: { generate: hex }
   ENCRYPT_NONCE_SEED: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
+  path: /index.php/admin
 domains:
   - { service: limesurvey, port: 8080 }

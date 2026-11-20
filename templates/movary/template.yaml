@@ -6,7 +6,7 @@ links:
   website: https://movary.org
   docs: https://docs.movary.org
   source: https://github.com/leepeuker/movary
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -24,6 +24,10 @@ inputs:
       description: Used for watch dates, as a PHP time zone name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account, with a password of at least 15 characters."
 domains:
   - { service: movary, port: 8080 }
 files:

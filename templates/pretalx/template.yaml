@@ -6,7 +6,7 @@ links:
   website: https://pretalx.com
   docs: https://docs.pretalx.org
   source: https://github.com/pretalx/pretalx
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -45,6 +45,10 @@ inputs:
       label: Email server password (optional)
       secret: true
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /orga/
 domains:
   - { service: pretalx, port: 80 }
 files:

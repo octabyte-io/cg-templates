@@ -6,7 +6,7 @@ links:
   website: https://www.lightdash.com
   docs: https://docs.lightdash.com
   source: https://github.com/lightdash/lightdash
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -19,6 +19,10 @@ inputs:
   STORAGE_URL: { value: "{{domains.lightdash-storage.url}}" }
   STORAGE_ACCESS_KEY: { generate: password }
   STORAGE_SECRET_KEY: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Create the admin account and your organisation; there is no default login."
 domains:
   - { service: lightdash, port: 8080 }
   - { service: lightdash-storage, port: 9000 }

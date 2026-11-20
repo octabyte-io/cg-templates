@@ -6,7 +6,7 @@ links:
   website: https://eneo.ai
   docs: https://docs.eneo.ai
   source: https://github.com/eneo-ai/eneo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -55,6 +55,9 @@ inputs:
       description: Optional. A key for Google's Gemini models.
       required: false
       secret: true
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 # Eneo's official setup puts a proxy in front: /api and the API docs go to the
 # backend and everything else to the web app, on one address.
 domains:

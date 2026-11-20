@@ -6,7 +6,7 @@ links:
   website: https://claper.co
   docs: https://docs.claper.co
   source: https://github.com/ClaperCo/Claper
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -53,5 +53,9 @@ inputs:
       description: The address Claper's emails come from, for example claper@yourdomain.com. Your email service must allow sending from it.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /users/log_in
 domains:
   - { service: claper, port: 4000 }

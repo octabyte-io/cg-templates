@@ -6,12 +6,16 @@ links:
   website: https://anythingllm.com
   docs: https://docs.anythingllm.com
   source: https://github.com/Mintplex-Labs/anything-llm
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   JWT_SECRET: { generate: hex }
   SIG_KEY: { generate: hex }
   SIG_SALT: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the short setup: pick an AI provider, then set a password or create the admin account."
 domains:
   - { service: anythingllm, port: 3001 }

@@ -6,7 +6,7 @@ links:
   website: https://github.com/LeslieLeung/glean
   docs: https://github.com/LeslieLeung/glean/blob/main/DEPLOY.md
   source: https://github.com/LeslieLeung/glean
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Six containers: the web app, the admin dashboard (two small nginx images), the Python API
 # and its background worker (one image each, a few hundred MB of memory), PostgreSQL and Redis.
@@ -22,6 +22,10 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Sign up with your email and a password; the admin username and password are for the admin dashboard at its own address."
 domains:
   # The reader, where people sign up, follow feeds and read.
   - { service: glean, port: 80 }

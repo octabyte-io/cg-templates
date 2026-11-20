@@ -6,7 +6,7 @@ links:
   website: https://easyappointments.org
   docs: https://github.com/alextselegidis/easyappointments/blob/1.6.1/docs/readme.md
   source: https://github.com/alextselegidis/easyappointments
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -42,5 +42,9 @@ inputs:
       default: "tls"
       pattern: "tls|ssl"
       required: false
+signIn:
+  firstVisit:
+    path: /index.php/installation
+    note: "Finish the installation wizard and create the admin account."
 domains:
   - { service: easyappointments, port: 80 }

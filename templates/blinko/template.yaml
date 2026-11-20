@@ -6,12 +6,16 @@ links:
   website: https://blinko.space
   docs: https://docs.blinko.space
   source: https://github.com/blinko-space/blinko
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   BLINKO_URL: { value: "{{domains.blinko.url}}" }
   NEXTAUTH_SECRET: { generate: base64 }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Create your account; the first account made is the admin."
 domains:
   - { service: blinko, port: 1111 }

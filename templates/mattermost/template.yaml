@@ -6,11 +6,15 @@ links:
   website: https://mattermost.com
   docs: https://docs.mattermost.com
   source: https://github.com/mattermost/mattermost
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   SITE_URL: { value: "{{domains.mattermost.url}}" }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the first account; it becomes the system admin."
 domains:
   - { service: mattermost, port: 8065 }

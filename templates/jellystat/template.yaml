@@ -6,7 +6,7 @@ links:
   website: https://github.com/CyferShepard/Jellystat
   docs: https://github.com/CyferShepard/Jellystat#readme
   source: https://github.com/CyferShepard/Jellystat
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -18,5 +18,9 @@ inputs:
       description: Used for the times shown in statistics, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create a Jellystat username and password, then enter your Jellyfin address and an API key made in Jellyfin."
 domains:
   - { service: jellystat, port: 3000 }

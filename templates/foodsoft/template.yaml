@@ -6,7 +6,7 @@ links:
   website: https://foodcoops.net
   docs: https://github.com/foodcoops/foodsoft/wiki
   source: https://github.com/foodcoops/foodsoft
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -40,6 +40,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: foodsoft, port: 3000 }
 files:

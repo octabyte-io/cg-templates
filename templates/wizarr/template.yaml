@@ -12,8 +12,12 @@ links:
   website: https://docs.wizarr.dev
   docs: https://docs.wizarr.dev/getting-started/installation
   source: https://github.com/wizarrrr/wizarr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with a username and password; there is no default login."
 domains:
   - { service: wizarr, port: 5690 }

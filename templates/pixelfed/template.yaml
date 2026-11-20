@@ -6,7 +6,7 @@ links:
   website: https://pixelfed.org
   docs: https://docs.pixelfed.org
   source: https://github.com/pixelfed/pixelfed
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # The web app, the Horizon queue worker and the scheduler (three PHP containers),
 # MariaDB and Redis. 2 GB fits a small community; photos and videos fill the disk.
@@ -59,6 +59,10 @@ inputs:
       description: The address Pixelfed's emails come from, such as pixelfed@yourdomain.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: pixelfed, port: 8080 }
 files:

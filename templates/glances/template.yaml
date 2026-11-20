@@ -12,10 +12,13 @@ links:
   website: https://nicolargo.github.io/glances/
   docs: https://glances.readthedocs.io
   source: https://github.com/nicolargo/glances
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   GLANCES_PASSWORD: { generate: password }
+signIn:
+  username: { value: glances }
+  password: GLANCES_PASSWORD
 domains:
   - { service: glances, port: 61208 }

@@ -6,7 +6,7 @@ links:
   website: https://oneuptime.com
   docs: https://oneuptime.com/docs
   source: https://github.com/OneUptime/oneuptime
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:
@@ -18,6 +18,10 @@ inputs:
   DATABASE_PASSWORD: { generate: password }
   CLICKHOUSE_PASSWORD: { generate: password }
   VALKEY_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /accounts/register
+    note: "Sign up; the first account made is the admin."
 domains:
   - { service: oneuptime-ingress, port: 7849 }
 files:

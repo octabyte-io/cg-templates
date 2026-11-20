@@ -6,11 +6,15 @@ links:
   website: https://www.commafeed.com
   docs: https://athou.github.io/commafeed/documentation
   source: https://github.com/Athou/commafeed
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   # Keeps people signed in when the app restarts (at least 16 characters).
   SESSION_ENCRYPTION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account on the Initial Setup page; there is no default password."
 domains:
   - { service: commafeed, port: 8082 }

@@ -6,10 +6,14 @@ links:
   website: https://scriberr.app
   docs: https://github.com/rishikanthc/Scriberr#readme
   source: https://github.com/rishikanthc/Scriberr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   APP_URL: { value: "{{domains.scriberr.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account; the first account made is the only one, and sign-up closes after it."
 domains:
   - { service: scriberr, port: 8080 }

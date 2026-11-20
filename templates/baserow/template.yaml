@@ -6,10 +6,14 @@ links:
   website: https://baserow.io
   docs: https://baserow.io/docs/installation/install-with-docker
   source: https://github.com/baserow/baserow
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   PUBLIC_URL: { value: "{{domains.baserow.url}}" }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: baserow, port: 80 }

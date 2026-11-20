@@ -6,7 +6,7 @@ links:
   website: https://eikek.github.io/sharry/
   docs: https://eikek.github.io/sharry/doc/
   source: https://github.com/eikek/sharry
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -22,6 +22,9 @@ inputs:
   INVITE_PASSWORD: { generate: password }
   SERVER_SECRET: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: sharry, port: 9090 }
 files:

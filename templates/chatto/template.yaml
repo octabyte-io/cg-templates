@@ -6,7 +6,7 @@ links:
   website: https://chatto.run
   docs: https://docs.chatto.run
   source: https://github.com/chattocorp/chatto
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -16,6 +16,10 @@ inputs:
   COOKIE_ENCRYPTION_SECRET: { generate: hex }
   CORE_SECRET_KEY: { generate: hex }
   ASSETS_SIGNING_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Fill in the setup page with a server name and the owner's username and password; the first person to finish it becomes the owner."
 domains:
   - { service: chatto, port: 4000 }
 files:

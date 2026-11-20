@@ -6,7 +6,7 @@ links:
   website: https://www.pinepods.online
   docs: https://www.pinepods.online/docs/intro
   source: https://github.com/madeofpendletonwool/PinePods
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -30,5 +30,8 @@ inputs:
       description: Used for episode dates and the download schedule, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: pinepods, port: 8040 }

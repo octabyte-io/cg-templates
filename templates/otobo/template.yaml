@@ -6,7 +6,7 @@ links:
   website: https://otobo.io
   docs: https://doc.otobo.org/manual/installation/11.1/en/content/installation/installation-docker.html
   source: https://github.com/RotherOSS/otobo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -14,5 +14,9 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: root@localhost }
+  password: ADMIN_PASSWORD
+  path: /otobo/index.pl
 domains:
   - { service: otobo-web, port: 5000 }

@@ -6,7 +6,7 @@ links:
   website: https://openseo.so
   docs: https://github.com/every-app/open-seo/blob/main/docs/SELF_HOSTING_DOCKER.md
   source: https://github.com/every-app/open-seo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -25,5 +25,9 @@ inputs:
       description: "Optional. Turns on the AI assistant, website research and summaries. You pay OpenRouter for what you use. You can add it later on the app's variables page."
       required: false
       secret: true
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email and a password; sign-up closes after that."
 domains:
   - { service: openseo, port: 80 }

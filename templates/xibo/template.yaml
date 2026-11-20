@@ -6,12 +6,15 @@ links:
   website: https://xibosignage.com
   docs: https://docs.xibosignage.com/
   source: https://github.com/xibosignage/xibo-cms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   DB_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
   SERVER_NAME: { value: "{{domains.xibo.host}}" }
+signIn:
+  username: { value: xibo_admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: xibo, port: 80 }

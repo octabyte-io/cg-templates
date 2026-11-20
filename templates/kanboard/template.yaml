@@ -6,12 +6,15 @@ links:
   website: https://kanboard.org
   docs: https://docs.kanboard.org/v1/
   source: https://github.com/kanboard/kanboard
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   # The password of the user "admin". Set once, on the first start; change it
   # afterwards in Kanboard.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: kanboard, port: 80 }

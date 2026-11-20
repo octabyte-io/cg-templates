@@ -6,7 +6,7 @@ links:
   website: https://wallabag.org
   docs: https://doc.wallabag.org
   source: https://github.com/wallabag/wallabag
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -16,6 +16,9 @@ inputs:
   DB_ROOT_PASSWORD: { generate: password }
   # Replaces the default password ("wallabag") of the account "wallabag" on the first start.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: wallabag }
+  password: ADMIN_PASSWORD
 domains:
   - { service: wallabag, port: 80 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://miniflux.app
   docs: https://miniflux.app/docs/
   source: https://github.com/miniflux/v2
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -19,5 +19,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: miniflux, port: 8080 }

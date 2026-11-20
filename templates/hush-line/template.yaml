@@ -6,7 +6,7 @@ links:
   website: https://hushline.app
   docs: https://hushline.app/library/docs/getting-started/start-here
   source: https://github.com/scidsg/hushline
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -17,5 +17,9 @@ inputs:
   ENCRYPTION_KEY: { generate: base64 }
   SESSION_FERNET_KEY: { generate: base64 }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register the first account; it becomes the admin."
 domains:
   - { service: hush-line, port: 8080 }

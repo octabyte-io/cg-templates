@@ -6,7 +6,7 @@ links:
   website: https://rxresu.me
   docs: https://docs.rxresu.me/self-hosting/docker
   source: https://github.com/reactive-resume/reactive-resume
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -20,5 +20,9 @@ inputs:
       description: Type true once your own account exists, so nobody else can create an account.
       default: "false"
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your account with your email and a password, then turn off new sign-ups in Cloudgate."
 domains:
   - { service: reactive-resume, port: 3000 }

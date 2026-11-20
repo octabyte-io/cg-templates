@@ -6,7 +6,7 @@ links:
   website: https://docs.numerique.gouv.fr
   docs: https://github.com/suitenumerique/docs/blob/main/documentation/installation/compose.md
   source: https://github.com/suitenumerique/docs
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -55,6 +55,9 @@ inputs:
       description: The address Docs emails come from, for example docs@yourcompany.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: docs, port: 8083 }
   - { service: docs-keycloak, port: 8080 }

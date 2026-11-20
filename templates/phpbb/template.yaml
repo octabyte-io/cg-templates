@@ -6,7 +6,7 @@ links:
   website: https://www.phpbb.com
   docs: https://www.phpbb.com/support/docs/en/3.3/ug/
   source: https://github.com/phpbb/phpbb
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -31,6 +31,9 @@ inputs:
       label: Forum name
       description: Shown at the top of every page. You can change it later in the Administration Control Panel.
       default: My phpBB Forum
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: phpbb, port: 8080 }
 files:

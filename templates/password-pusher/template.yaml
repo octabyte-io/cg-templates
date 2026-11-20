@@ -6,7 +6,7 @@ links:
   website: https://pwpush.com
   docs: https://docs.pwpush.com
   source: https://github.com/pglombardo/PasswordPusher
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -21,6 +21,10 @@ inputs:
       label: Admin email
       description: The email you sign in with as the administrator. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /users/sign_in
 domains:
   - { service: password-pusher, port: 5100 }
 files:

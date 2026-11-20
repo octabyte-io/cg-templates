@@ -6,8 +6,12 @@ links:
   website: https://seerr.dev
   docs: https://docs.seerr.dev
   source: https://github.com/seerr-team/seerr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Finish the setup wizard and sign in with your Jellyfin, Plex or Emby admin account; it becomes the owner."
 domains:
   - { service: seerr, port: 5055 }

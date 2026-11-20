@@ -6,7 +6,7 @@ links:
   website: https://kener.ing
   docs: https://kener.ing/docs
   source: https://github.com/rajnandan1/kener
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -24,5 +24,9 @@ inputs:
     ask: { label: Send emails from, description: "The sender address, for example status@yourcompany.com.", required: false, format: email }
   SMTP_SECURE:
     ask: { label: Use SSL (port 465), description: "Type 1 if your SMTP port is 465; leave 0 for 587.", default: "0", required: false }
+signIn:
+  firstVisit:
+    path: /account/signin
+    note: "Create the admin account; the first person to open this page makes it."
 domains:
   - { service: kener, port: 3000 }

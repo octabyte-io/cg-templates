@@ -6,7 +6,7 @@ links:
   website: https://sftpgo.com
   docs: https://docs.sftpgo.com/
   source: https://github.com/drakkan/sftpgo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -15,5 +15,9 @@ inputs:
   SFTPGO_DEFAULT_ADMIN_PASSWORD: { generate: password }
   # Signs WebAdmin and WebClient sessions, so a restart doesn't sign everyone out.
   SFTPGO_SIGNING_PASSPHRASE: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: SFTPGO_DEFAULT_ADMIN_PASSWORD
+  path: /web/admin
 domains:
   - { service: sftpgo, port: 8080 }

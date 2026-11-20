@@ -6,10 +6,14 @@ links:
   website: https://once.com/campfire
   docs: https://github.com/basecamp/once-campfire/blob/main/docs/self-hosting.md
   source: https://github.com/basecamp/once-campfire
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   SECRET_KEY_BASE: { generate: hex }
+signIn:
+  firstVisit:
+    path: /first_run
+    note: "Create the admin account with your name, email and a password."
 domains:
   - { service: campfire, port: 80 }

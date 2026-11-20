@@ -6,12 +6,16 @@ links:
   website: https://orderrestro.nodedr.com/
   docs: https://github.com/Raktim94/nodedr-restaurant-pos/blob/master/TUTORIAL.md
   source: https://github.com/Raktim94/nodedr-restaurant-pos
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   APP_URL: { value: "{{domains.web.url}}" }
   JWT_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Create the restaurant and the owner account; sign-up closes after that."
 domains:
   - { service: web, port: 3000 }

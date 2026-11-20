@@ -6,10 +6,14 @@ links:
   website: https://homebox.software
   docs: https://homebox.software/en/quick-start/
   source: https://github.com/sysadminsmedia/homebox
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   HBOX_AUTH_API_KEY_PEPPER: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Click Register and create your account; there is no default account."
 domains:
   - { service: homebox, port: 7745 }

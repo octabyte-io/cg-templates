@@ -13,7 +13,7 @@ links:
   website: https://www.synaplan.com
   docs: https://docs.synaplan.com
   source: https://github.com/metadist/synaplan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:
@@ -52,5 +52,8 @@ inputs:
       description: Lets Synaplan use Claude models. Usage is billed by Anthropic. You can also add it later in the app.
       secret: true
       required: false
+signIn:
+  username: BOOTSTRAP_ADMIN_EMAIL
+  password: BOOTSTRAP_ADMIN_PASSWORD
 domains:
   - { service: synaplan, port: 80 }

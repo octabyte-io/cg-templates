@@ -6,7 +6,7 @@ links:
   website: https://chiefonboarding.com
   docs: https://docs.chiefonboarding.com
   source: https://github.com/chiefonboarding/chiefonboarding
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -67,5 +67,9 @@ inputs:
       label: File storage secret key
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /setup/
+    note: "Enter your company details and create the admin account with your own email and password."
 domains:
   - { service: chiefonboarding, port: 8000 }

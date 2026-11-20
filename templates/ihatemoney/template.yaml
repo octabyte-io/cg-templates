@@ -6,7 +6,7 @@ links:
   website: https://ihatemoney.org
   docs: https://ihatemoney.readthedocs.io/en/latest/
   source: https://github.com/spiral-project/ihatemoney
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -60,5 +60,7 @@ inputs:
       description: The address emails come from, for example noreply@yourdomain.com.
       format: email
       required: false
+signIn:
+  password: ADMIN_PASSWORD
 domains:
   - { service: ihatemoney, port: 8000 }

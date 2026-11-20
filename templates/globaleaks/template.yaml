@@ -6,11 +6,15 @@ links:
   website: https://www.globaleaks.org
   docs: https://docs.globaleaks.org
   source: https://github.com/globaleaks/globaleaks-whistleblowing-software
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # One Python process with its own SQLite database; GlobaLeaks asks for 1 GB
 # at least, and encryption of reports and attachments wants some headroom.
 size: small
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard, which creates the admin account and the first recipient."
 # GlobaLeaks only redirects plain HTTP to HTTPS, so the small proxy in front
 # of its HTTPS port is the service that gets the address.
 domains:

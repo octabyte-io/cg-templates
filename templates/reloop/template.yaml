@@ -6,7 +6,7 @@ links:
   website: https://reloop.sh
   docs: https://reloop.sh/docs
   source: https://github.com/reloop-labs/reloop
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Upstream's installer needs 4 GB at least and recommends 8 GB: about 15
 # containers, most of them Node services.
@@ -53,6 +53,10 @@ inputs:
       description: "true for port 465, false for 587."
       default: "false"
       required: false
+signIn:
+  firstVisit:
+    path: /dashboard/setup
+    note: "Enter the one-time setup key from the app's variables page, then create the administrator account."
 domains:
   - { service: proxy, port: 80 }
 files:

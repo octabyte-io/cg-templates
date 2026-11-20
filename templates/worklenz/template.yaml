@@ -6,7 +6,7 @@ links:
   website: https://worklenz.com
   docs: https://github.com/Worklenz/worklenz/blob/main/DOCKER_SETUP.md
   source: https://github.com/Worklenz/worklenz
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -18,6 +18,10 @@ inputs:
   ENCRYPTION_KEY: { generate: hex }
   ENCRYPTION_SALT: { generate: hex }
   S3_SECRET_ACCESS_KEY: { generate: password }
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up with your email and a password and name your organisation."
 domains:
   - { service: worklenz, port: 80 }
 files:

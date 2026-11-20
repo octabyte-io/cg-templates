@@ -6,7 +6,7 @@ links:
   website: https://traggo.net
   docs: https://traggo.net/install/
   source: https://github.com/traggo/server
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -17,5 +17,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   TRAGGO_DEFAULT_USER_PASS: { generate: password }
+signIn:
+  username: TRAGGO_DEFAULT_USER_NAME
+  password: TRAGGO_DEFAULT_USER_PASS
 domains:
   - { service: traggo, port: 3030 }

@@ -6,7 +6,7 @@ links:
   website: https://www.redmine.org
   docs: https://www.redmine.org/projects/redmine/wiki/Guide
   source: https://github.com/redmine/redmine
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -21,6 +21,10 @@ inputs:
       label: Admin email
       description: The email of Redmine's admin account (user name admin). Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: redmine, port: 3000 }
 files:

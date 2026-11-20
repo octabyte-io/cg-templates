@@ -6,7 +6,7 @@ links:
   website: https://trypost.it
   docs: https://docs.trypost.it
   source: https://github.com/trypostit/trypost
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -20,5 +20,8 @@ inputs:
       label: Admin email
       description: You sign in to TryPost with this email and the generated ADMIN_PASSWORD.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: trypost, port: 80 }

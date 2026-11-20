@@ -6,10 +6,14 @@ links:
   website: https://open-todo.app
   docs: https://open-todo.app/docs/
   source: https://github.com/OpenTodoApp/OpenTodo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   OPENTODO_BASE_URL: { value: "{{domains.opentodo.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account with your name, email and a password; sign-up then closes."
 domains:
   - { service: opentodo, port: 8080 }

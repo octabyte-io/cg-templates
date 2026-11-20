@@ -6,12 +6,15 @@ links:
   website: https://www.netdata.cloud
   docs: https://learn.netdata.cloud
   source: https://github.com/netdata/netdata
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   # The password the sign-in prompt in front of Netdata asks for (username: admin).
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: proxy, port: 80 }
 files:

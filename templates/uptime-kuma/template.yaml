@@ -6,8 +6,12 @@ links:
   website: https://uptime.kuma.pet
   docs: https://github.com/louislam/uptime-kuma/wiki
   source: https://github.com/louislam/uptime-kuma
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account; the first person to open Uptime Kuma makes it."
 domains:
   - { service: uptime-kuma, port: 3001 }

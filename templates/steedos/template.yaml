@@ -13,10 +13,14 @@ links:
   website: https://www.steedos.com
   docs: https://docs.steedos.com/
   source: https://github.com/steedos/steedos-platform
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   ROOT_URL: { value: "{{domains.steedos.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up to create your company's workspace; the first account made is the admin."
 domains:
   - { service: steedos, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://joinpeertube.org
   docs: https://docs.joinpeertube.org
   source: https://github.com/Chocobozzz/PeerTube
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -52,5 +52,9 @@ inputs:
       description: The address PeerTube's emails come from, such as videos@yourcompany.com. Needed if you fill in an email server above.
       format: email
       required: false
+signIn:
+  username: { value: root }
+  password: ROOT_PASSWORD
+  path: /login
 domains:
   - { service: peertube, port: 9000 }

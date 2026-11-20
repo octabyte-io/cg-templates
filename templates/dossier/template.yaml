@@ -6,7 +6,7 @@ links:
   website: https://dossier.aien.me
   docs: https://github.com/AienTech/dossier/wiki
   source: https://github.com/AienTech/dossier
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -23,5 +23,7 @@ inputs:
       description: Nightly backups run at 03:00 in it, and letters are dated in it. An IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  password: SIGN_IN_PASSWORD
 domains:
   - { service: dossier, port: 3000 }

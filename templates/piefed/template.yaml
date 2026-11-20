@@ -13,7 +13,7 @@ links:
   website: https://join.piefed.social
   docs: https://codeberg.org/rimu/pyfedi/src/branch/main/INSTALL-docker.md
   source: https://codeberg.org/rimu/pyfedi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -32,6 +32,10 @@ inputs:
       description: The admin account's email address.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
+  path: /auth/login
 domains:
   - { service: piefed, port: 5000 }
 files:

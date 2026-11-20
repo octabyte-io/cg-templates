@@ -12,7 +12,7 @@ links:
   website: https://www.quant-ux.com
   docs: https://github.com/KlausSchaefers/quant-ux#readme
   source: https://github.com/KlausSchaefers/quant-ux
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -43,5 +43,9 @@ inputs:
     ask:
       label: Email server password
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with your email and a password to create the first account; no confirmation email is needed."
 domains:
   - { service: quant-ux, port: 8082 }

@@ -6,7 +6,7 @@ links:
   website: https://nightscout.github.io
   docs: https://nightscout.github.io/nightscout/new_user/
   source: https://github.com/nightscout/cgm-remote-monitor
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -21,5 +21,7 @@ inputs:
       description: "mg/dl (used in the US and some other countries) or mmol (mmol/L, used in the UK, Canada, Australia and most of Europe)."
       default: "mg/dl"
       pattern: "mg/dl|mmol"
+signIn:
+  password: API_SECRET
 domains:
   - { service: nightscout, port: 1337 }

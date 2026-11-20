@@ -6,7 +6,7 @@ links:
   website: https://pydio.com
   docs: https://docs.pydio.com/cells-v5/admin-guide/quick-start/cells-installation/docker/
   source: https://github.com/pydio/cells
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -16,6 +16,9 @@ inputs:
   CELLS_ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: CELLS_ADMIN_PASSWORD
 domains:
   - { service: pydio-cells, port: 8080 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://inkvoice.app
   docs: https://docs.inkvoice.app
   source: https://github.com/pigontech/inkvoice
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -19,5 +19,8 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASS: { generate: password }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASS
 domains:
   - { service: inkvoice, port: 3000 }

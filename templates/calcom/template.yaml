@@ -6,7 +6,7 @@ links:
   website: https://cal.com
   docs: https://cal.com/docs/self-hosting/installation
   source: https://github.com/calcom/cal.com
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -44,5 +44,9 @@ inputs:
       label: Email server password (optional)
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /auth/setup
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: calcom, port: 3000 }

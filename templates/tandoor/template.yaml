@@ -6,7 +6,7 @@ links:
   website: https://tandoor.dev
   docs: https://docs.tandoor.dev
   source: https://github.com/TandoorRecipes/recipes
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -22,5 +22,9 @@ inputs:
       description: Used for meal plan dates, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /setup/
+    note: "Create the admin username and password, then follow the welcome steps to make your first space."
 domains:
   - { service: tandoor, port: 80 }

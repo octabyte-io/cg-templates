@@ -12,7 +12,7 @@ links:
   website: https://filegator.io
   docs: https://docs.filegator.io
   source: https://github.com/filegator/filegator
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -21,6 +21,9 @@ inputs:
   FILEGATOR_ADMIN_PASSWORD: { generate: password }
   # FileGator's CSRF key, which its sample config says to randomize.
   FILEGATOR_CSRF_KEY: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: FILEGATOR_ADMIN_PASSWORD
 domains:
   - { service: filegator, port: 8080 }
 files:

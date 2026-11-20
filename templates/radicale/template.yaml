@@ -6,7 +6,7 @@ links:
   website: https://radicale.org
   docs: https://radicale.org/v3.html
   source: https://github.com/Kozea/Radicale
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -17,6 +17,9 @@ inputs:
       default: admin
       pattern: "[a-z][a-z0-9_.-]{1,31}"
   RADICALE_PASSWORD: { generate: password }
+signIn:
+  username: RADICALE_USER
+  password: RADICALE_PASSWORD
 domains:
   - { service: radicale, port: 5232 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://cortezaproject.org
   docs: https://docs.cortezaproject.org
   source: https://github.com/cortezaproject/corteza
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -14,5 +14,9 @@ inputs:
   APP_URL: { value: "{{domains.corteza.url}}" }
   DB_PASSWORD: { generate: password }
   AUTH_JWT_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up to create your account; the first account made is the administrator."
 domains:
   - { service: corteza, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://fider.io
   docs: https://docs.fider.io/hosting-instance
   source: https://github.com/getfider/fider
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -42,5 +42,9 @@ inputs:
       default: "false"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Fill in your site's name, your name and your email, then click the confirmation link Fider emails you to sign in as the admin."
 domains:
   - { service: fider, port: 3000 }

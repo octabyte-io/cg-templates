@@ -6,7 +6,7 @@ links:
   website: https://www.bookstackapp.com
   docs: https://www.bookstackapp.com/docs/
   source: https://codeberg.org/bookstack/bookstack
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -20,5 +20,9 @@ inputs:
       description: Used for dates and times shown in the app, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in as admin@admin.com with the password password, then change the email and password."
 domains:
   - { service: bookstack, port: 80 }

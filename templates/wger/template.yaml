@@ -6,7 +6,7 @@ links:
   website: https://wger.de
   docs: https://wger.readthedocs.io/en/latest/
   source: https://github.com/wger-project/wger
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # The web server, Celery worker and beat (Python), PowerSync (Node), PostgreSQL,
 # Redis and nginx together use about 1.5 GB.
@@ -19,6 +19,10 @@ inputs:
   WGER_ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   POWERSYNC_DB_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: WGER_ADMIN_PASSWORD
+  path: /en/user/login
 # nginx serves the static and media files and passes everything else to the
 # wger server, so it is the service that gets the address.
 domains:

@@ -6,7 +6,7 @@ links:
   website: https://paperclip.ing
   docs: https://docs.paperclip.ing
   source: https://github.com/paperclipai/paperclip
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -17,5 +17,9 @@ inputs:
   # Signs approval-gated agent tool actions; independent of the session secret.
   PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create an account with your email and a password, then choose Claim this instance to become the administrator."
 domains:
   - { service: paperclip, port: 3100 }

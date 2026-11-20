@@ -6,7 +6,7 @@ links:
   website: https://redash.io
   docs: https://redash.io/help/
   source: https://github.com/getredash/redash
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -14,5 +14,9 @@ inputs:
   REDASH_COOKIE_SECRET: { generate: hex }
   REDASH_SECRET_KEY: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Fill in the setup form to create the admin account and your organization."
 domains:
   - { service: redash, port: 5000 }

@@ -6,7 +6,7 @@ links:
   website: https://killbill.io
   docs: https://docs.killbill.io/latest/
   source: https://github.com/killbill/killbill
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Two Java servers (Kill Bill and Kaui) plus MariaDB use about 1.7 GB of memory at rest.
 size: large
@@ -16,6 +16,9 @@ inputs:
   # image's default ("password") and is shown afterwards on the app's variables page.
   ADMIN_PASSWORD: { generate: password }
   KAUI_SECRET_KEY_BASE: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 # The address is Kaui, the admin UI. Kill Bill's REST API stays on the private network.
 domains:
   - { service: kaui, port: 8080 }

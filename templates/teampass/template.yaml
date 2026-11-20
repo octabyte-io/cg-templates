@@ -6,7 +6,7 @@ links:
   website: https://teampass.net
   docs: https://documentation.teampass.net
   source: https://github.com/nilsteampassnet/TeamPass
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -18,6 +18,9 @@ inputs:
       label: Admin email
       description: The email of TeamPass's administrator account. You sign in as "admin" with the generated ADMIN_PASSWORD.
       format: email
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: teampass, port: 80 }
 files:

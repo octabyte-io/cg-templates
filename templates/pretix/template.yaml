@@ -6,7 +6,7 @@ links:
   website: https://pretix.eu
   docs: https://docs.pretix.eu
   source: https://github.com/pretix/pretix
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -46,6 +46,10 @@ inputs:
       label: Email server password (optional)
       secret: true
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /control/
 domains:
   - { service: pretix, port: 80 }
 files:

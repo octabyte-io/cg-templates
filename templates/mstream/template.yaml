@@ -6,12 +6,15 @@ links:
   website: https://mstream.io
   docs: https://github.com/IrosTheBeggar/mStream/tree/master/docs
   source: https://github.com/IrosTheBeggar/mStream
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   # The password of mStream's user "admin", created on the first start.
   # Without a user mStream is open to anyone who has the address.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: mstream, port: 3000 }

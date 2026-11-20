@@ -6,10 +6,14 @@ links:
   website: https://garlic-signage.com/garlic-hub/
   docs: https://garlic-signage.com/garlic-hub/docs/
   source: https://github.com/garlic-signage/garlic-hub
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   APP_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /create-initial
+    note: "Create the admin account."
 domains:
   - { service: garlic-hub, port: 80 }

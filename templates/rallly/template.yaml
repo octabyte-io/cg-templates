@@ -6,7 +6,7 @@ links:
   website: https://rallly.co
   docs: https://support.rallly.co/self-hosting/introduction
   source: https://github.com/lukevella/rallly
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -57,6 +57,10 @@ inputs:
       default: "false"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /login
+    note: "Sign in with the admin email you entered at setup and the code Rallly emails you, then open the Control Panel and choose Make me an admin."
 domains:
   - { service: rallly, port: 3000 }
 files:

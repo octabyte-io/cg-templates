@@ -6,9 +6,13 @@ links:
   website: https://poznote.com
   docs: https://github.com/timothepoznanski/Poznote#readme
   source: https://github.com/timothepoznanski/Poznote
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs: {}
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign in as admin_change_me with the password admin, then rename the account and change the password."
 domains:
   - { service: webserver, port: 80 }

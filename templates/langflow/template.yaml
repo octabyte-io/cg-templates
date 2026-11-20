@@ -6,7 +6,7 @@ links:
   website: https://www.langflow.org
   docs: https://docs.langflow.org
   source: https://github.com/langflow-ai/langflow
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -25,5 +25,8 @@ inputs:
       description: Type false once your team has its accounts, so nobody else can request one. New accounts stay inactive until the admin turns them on.
       default: "true"
       required: false
+signIn:
+  username: LANGFLOW_SUPERUSER
+  password: LANGFLOW_SUPERUSER_PASSWORD
 domains:
   - { service: langflow, port: 7860 }

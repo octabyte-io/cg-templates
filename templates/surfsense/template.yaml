@@ -6,11 +6,13 @@ links:
   website: https://www.surfsense.com
   docs: https://github.com/MODSetter/SurfSense/tree/main/docs
   source: https://github.com/MODSetter/SurfSense
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   SURFSENSE_PASSWORD: { generate: password }
   SURFSENSE_SECRET: { generate: hex }
+signIn:
+  password: SURFSENSE_PASSWORD
 domains:
   - { service: surfsense, port: 80 }

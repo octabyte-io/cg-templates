@@ -6,13 +6,16 @@ links:
   website: https://copyparty.eu
   docs: https://github.com/9001/copyparty#readme
   source: https://github.com/9001/copyparty
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   # The password of the user "admin", set from this value on every start, so
   # change it here, not in the app.
   COPYPARTY_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: COPYPARTY_ADMIN_PASSWORD
 domains:
   - { service: copyparty, port: 3923 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://www.dokuwiki.org
   docs: https://www.dokuwiki.org/manual
   source: https://github.com/dokuwiki/dokuwiki
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -16,5 +16,9 @@ inputs:
       description: Used for page dates and the change history, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /install.php
+    note: "Run the installer and create the admin account. Do it right away; until then, anyone who finds the address could."
 domains:
   - { service: dokuwiki, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://www.learnhouse.app
   docs: https://docs.learnhouse.app
   source: https://github.com/learnhouse/learnhouse
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -29,5 +29,9 @@ inputs:
       default: My Academy
       pattern: "[^<>\"]{1,60}"
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: learnhouse, port: 80 }

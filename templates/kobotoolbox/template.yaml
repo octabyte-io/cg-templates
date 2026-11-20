@@ -6,7 +6,7 @@ links:
   website: https://www.kobotoolbox.org
   docs: https://support.kobotoolbox.org
   source: https://github.com/kobotoolbox/kpi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -31,6 +31,9 @@ inputs:
       description: The username of the KoboToolbox administrator Cloudgate creates. Lowercase letters, digits and underscores, starting with a letter.
       default: admin
       pattern: "^[a-z][a-z0-9_]{2,29}$"
+signIn:
+  username: KOBO_SUPERUSER_USERNAME
+  password: KOBO_SUPERUSER_PASSWORD
 domains:
   - { service: kobotoolbox, port: 80 }
   - { service: kobotoolbox-collect, port: 80 }

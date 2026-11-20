@@ -6,7 +6,7 @@ links:
   website: https://github.com/blackcandy-org/blackcandy
   docs: https://github.com/blackcandy-org/blackcandy#readme
   source: https://github.com/blackcandy-org/blackcandy
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -23,6 +23,9 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # music at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: blackcandy, port: 80 }
   - { service: filebrowser, port: 80 }

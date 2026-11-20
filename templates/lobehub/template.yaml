@@ -6,7 +6,7 @@ links:
   website: https://lobehub.com
   docs: https://lobehub.com/docs/self-hosting/platform/docker-compose
   source: https://github.com/lobehub/lobehub
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -26,6 +26,10 @@ inputs:
       label: Who can sign up (optional)
       description: Email addresses or domains allowed to create an account, separated by commas, for example you@example.com,example.com. Leave it empty to let anyone who opens the app's address sign up.
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign up with your email and a password; each person makes their own account."
 domains:
   - { service: lobehub, port: 3210 }
   - { service: lobehub-rustfs, port: 9000 }

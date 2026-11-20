@@ -6,7 +6,7 @@ links:
   website: https://goauthentik.io
   docs: https://docs.goauthentik.io
   source: https://github.com/goauthentik/authentik
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -19,5 +19,8 @@ inputs:
       label: Admin email
       description: The email of the admin user akadmin. You sign in as akadmin with the password Cloudgate creates, shown afterwards on the app's variables page.
       format: email
+signIn:
+  username: { value: akadmin }
+  password: AUTHENTIK_BOOTSTRAP_PASSWORD
 domains:
   - { service: server, port: 9000 }

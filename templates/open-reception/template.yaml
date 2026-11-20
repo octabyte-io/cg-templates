@@ -6,7 +6,7 @@ links:
   website: https://open-reception.org
   docs: https://github.com/open-reception/appointment-booking-software/blob/v2.8.1/docs/deployment.md
   source: https://github.com/open-reception/appointment-booking-software
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -47,5 +47,9 @@ inputs:
       description: The address emails come from. Leave it empty to use the username.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with a passkey or a passphrase."
 domains:
   - { service: open-reception, port: 3000 }

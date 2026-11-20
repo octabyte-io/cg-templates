@@ -6,7 +6,7 @@ links:
   website: https://github.com/cry-inc/dmarc-report-viewer
   docs: https://github.com/cry-inc/dmarc-report-viewer#configuration
   source: https://github.com/cry-inc/dmarc-report-viewer
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -35,5 +35,8 @@ inputs:
       label: Mailbox folder
       description: The folder the reports arrive in.
       default: INBOX
+signIn:
+  username: { value: dmarc }
+  password: HTTP_SERVER_PASSWORD
 domains:
   - { service: dmarc-report-viewer, port: 8080 }

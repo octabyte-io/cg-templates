@@ -6,7 +6,7 @@ links:
   website: https://kitchenowl.org
   docs: https://docs.kitchenowl.org
   source: https://github.com/TomBursch/kitchenowl
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -20,5 +20,9 @@ inputs:
       default: "false"
       pattern: "true|false"
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the first account; it becomes the admin."
 domains:
   - { service: kitchenowl, port: 8080 }

@@ -12,11 +12,15 @@ links:
   website: https://paheko.cloud
   docs: https://paheko.cloud/aide
   source: https://fossil.kd2.org/paheko
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   WWW_URL: { value: "{{domains.paheko.url}}/" }
   SECRET_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create your association and its admin account on the install page."
 domains:
   - { service: paheko, port: 80 }

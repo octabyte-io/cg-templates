@@ -6,11 +6,15 @@ links:
   website: https://www.appsmith.com
   docs: https://docs.appsmith.com
   source: https://github.com/appsmithorg/appsmith
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
   APPSMITH_ENCRYPTION_PASSWORD: { generate: hex }
   APPSMITH_ENCRYPTION_SALT: { generate: hex }
+signIn:
+  firstVisit:
+    path: /setup/welcome
+    note: "Create the admin account; the first account made is the admin."
 domains:
   - { service: appsmith, port: 80 }

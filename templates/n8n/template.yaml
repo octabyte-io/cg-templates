@@ -6,7 +6,7 @@ links:
   website: https://n8n.io
   docs: https://docs.n8n.io/hosting/
   source: https://github.com/n8n-io/n8n
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -30,5 +30,9 @@ inputs:
       description: Used by schedule triggers, as an IANA name such as Europe/Berlin.
       default: UTC
   TZ: { value: "{{GENERIC_TIMEZONE}}" }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the owner account; the first account made is the owner."
 domains:
   - { service: n8n, port: 5678 }

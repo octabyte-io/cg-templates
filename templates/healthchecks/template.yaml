@@ -6,7 +6,7 @@ links:
   website: https://healthchecks.io
   docs: https://healthchecks.io/docs/self_hosted/
   source: https://github.com/healthchecks/healthchecks
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -44,5 +44,8 @@ inputs:
       description: The address alert emails come from, for example alerts@yourcompany.com.
       format: email
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: healthchecks, port: 8000 }

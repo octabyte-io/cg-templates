@@ -6,7 +6,7 @@ links:
   website: https://docs.fittrackee.org/en/
   docs: https://docs.fittrackee.org/en/installation/index.html
   source: https://codeberg.org/FitTrackee/FitTrackee
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -27,5 +27,8 @@ inputs:
   # The owner account's first password, read afterwards on the app's variables
   # page. Changing it here later does nothing: change it in FitTrackee instead.
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: fittrackee, port: 5000 }

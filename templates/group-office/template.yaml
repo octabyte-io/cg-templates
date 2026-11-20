@@ -6,7 +6,7 @@ links:
   website: https://www.group-office.com
   docs: https://groupoffice.readthedocs.io
   source: https://github.com/Intermesh/groupoffice
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Apache with PHP, a scheduler container and MariaDB; 2 GB keeps PHP and MariaDB comfortable.
 size: medium
@@ -20,5 +20,8 @@ inputs:
   ADMIN_PASSWORD: { generate: password }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: groupoffice, port: 80 }

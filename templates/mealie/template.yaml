@@ -6,7 +6,7 @@ links:
   website: https://mealie.io
   docs: https://docs.mealie.io
   source: https://github.com/mealie-recipes/mealie
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -33,6 +33,9 @@ inputs:
       description: Used for meal plan dates and scheduled tasks, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: mealie, port: 9000 }
 files:

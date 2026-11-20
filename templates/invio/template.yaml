@@ -5,7 +5,7 @@ tags: [invoicing, freshbooks alternative, wave alternative, e-invoicing, zugferd
 links:
   docs: https://github.com/kittendevv/Invio/wiki
   source: https://github.com/kittendevv/Invio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -13,5 +13,8 @@ inputs:
   ADMIN_PASS: { generate: password }
   JWT_SECRET: { generate: hex }
   ORIGIN: { value: "{{domains.invio.url}}" }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASS
 domains:
   - { service: invio, port: 8000 }

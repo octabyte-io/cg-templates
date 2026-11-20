@@ -6,7 +6,7 @@ links:
   website: https://www.monicahq.com
   docs: https://github.com/monicahq/docker
   source: https://github.com/monicahq/monica
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -21,5 +21,9 @@ inputs:
       description: With true, only the first account can be created (yours, on your first visit); nobody else can sign up. Type false to let others register.
       default: "true"
       required: false
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register your account; with sign-ups off, only this first account can be made."
 domains:
   - { service: monica, port: 80 }

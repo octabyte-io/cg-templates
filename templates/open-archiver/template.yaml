@@ -6,7 +6,7 @@ links:
   website: https://openarchiver.com
   docs: https://docs.openarchiver.com
   source: https://github.com/LogicLabs-OU/OpenArchiver
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -16,5 +16,9 @@ inputs:
   MEILI_MASTER_KEY: { generate: hex }
   JWT_SECRET: { generate: hex }
   ENCRYPTION_KEY: { generate: hex }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account."
 domains:
   - { service: open-archiver, port: 3000 }

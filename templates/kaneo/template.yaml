@@ -6,7 +6,7 @@ links:
   website: https://kaneo.app
   docs: https://kaneo.app/docs/core/installation
   source: https://github.com/usekaneo/kaneo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Kaneo's docs ask for at least 2 GB of memory.
 size: medium
@@ -50,5 +50,9 @@ inputs:
       label: Sender
       description: "The address emails come from, for example kaneo@example.com."
       required: false
+signIn:
+  firstVisit:
+    path: /auth/sign-up
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: kaneo, port: 5173 }

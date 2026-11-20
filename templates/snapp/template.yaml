@@ -6,7 +6,7 @@ links:
   website: https://github.com/urania-dev/snapp
   docs: https://github.com/urania-dev/snapp/blob/0.9-rc/README.md
   source: https://github.com/urania-dev/snapp
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -20,5 +20,8 @@ inputs:
       label: Admin email
       description: The email address of Snapp's first admin account (username "admin").
       format: email
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: snapp, port: 3000 }

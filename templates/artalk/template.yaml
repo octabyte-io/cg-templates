@@ -6,7 +6,7 @@ links:
   website: https://artalk.js.org
   docs: https://artalk.js.org/guide/deploy.html
   source: https://github.com/ArtalkJS/Artalk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -38,5 +38,8 @@ inputs:
       label: Time zone
       description: For dates in emails and the dashboard, for example Europe/Berlin.
       default: Etc/UTC
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: artalk, port: 23366 }

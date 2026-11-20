@@ -6,7 +6,7 @@ links:
   website: https://tinode.co
   docs: https://github.com/tinode/chat/blob/master/INSTALL.md
   source: https://github.com/tinode/chat
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -14,5 +14,9 @@ inputs:
   POSTGRES_PASSWORD: { generate: password }
   AUTH_TOKEN_KEY: { generate: base64 }
   UID_KEY_SEED: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Choose Sign up and create your account; anyone who can reach the address can sign up."
 domains:
   - { service: tinode, port: 6060 }

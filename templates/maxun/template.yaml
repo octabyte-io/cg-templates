@@ -6,7 +6,7 @@ links:
   website: https://www.maxun.dev
   docs: https://docs.maxun.dev
   source: https://github.com/getmaxun/maxun
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Idle, the six containers use about 850 MB; each robot that runs or records adds a
 # Chromium page. Upstream allows the backend up to 6 GB, so busy setups want large.
@@ -19,6 +19,10 @@ inputs:
   # Encrypts saved site passwords and proxy settings; Maxun needs 64 hex characters.
   ENCRYPTION_KEY: { generate: hex }
   MINIO_SECRET_KEY: { generate: password }
+signIn:
+  firstVisit:
+    path: /register
+    note: "Register your account with your email and a password; there is no default admin."
 # One address: a small nginx sends the API, websocket and stored screenshots to their
 # containers and everything else to the web app, as Maxun's own nginx example does.
 domains:

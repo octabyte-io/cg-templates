@@ -6,12 +6,15 @@ links:
   website: https://evolutionfoundation.com.br
   docs: https://docs.evolutionfoundation.com.br
   source: https://github.com/evolution-foundation/evolution-api
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   SERVER_URL: { value: "{{domains.evolution-api.url}}" }
   AUTHENTICATION_API_KEY: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  password: AUTHENTICATION_API_KEY
+  path: /manager
 domains:
   - { service: evolution-api, port: 8080 }

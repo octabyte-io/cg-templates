@@ -6,12 +6,16 @@ links:
   website: https://ctfd.io
   docs: https://docs.ctfd.io
   source: https://github.com/CTFd/CTFd
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   SECRET_KEY: { generate: hex }
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Finish the setup page to name your event and create the admin account."
 domains:
   - { service: ctfd, port: 8000 }

@@ -6,7 +6,7 @@ links:
   website: https://www.seafile.com
   docs: https://manual.seafile.com/13.0/setup/setup_ce_by_docker/
   source: https://github.com/haiwen/seafile-server
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -27,5 +27,8 @@ inputs:
       description: The server's time zone, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: INIT_SEAFILE_ADMIN_EMAIL
+  password: INIT_SEAFILE_ADMIN_PASSWORD
 domains:
   - { service: seafile, port: 80 }

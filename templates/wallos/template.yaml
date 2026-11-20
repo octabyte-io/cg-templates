@@ -6,7 +6,7 @@ links:
   website: https://wallosapp.com
   docs: https://github.com/ellite/Wallos#readme
   source: https://github.com/ellite/Wallos
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -16,5 +16,9 @@ inputs:
       description: Used for due dates and reminders, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /registration.php
+    note: "Create the admin account; the first account made is the admin."
 domains:
   - { service: wallos, port: 80 }

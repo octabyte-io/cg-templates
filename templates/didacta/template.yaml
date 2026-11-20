@@ -6,7 +6,7 @@ links:
   website: https://didacta.io
   docs: https://docs.didacta.io
   source: https://github.com/va360labs/didacta-io
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -33,5 +33,9 @@ inputs:
       description: A paid key from the AI provider above. Leave it empty to run Didacta without AI features.
       required: false
       secret: true
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Add ?token= and the setup token from the app's variables page to the address, then create your academy and admin account."
 domains:
   - { service: didacta, port: 3000 }

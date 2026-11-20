@@ -6,12 +6,16 @@ links:
   website: https://hedgedoc.org
   docs: https://docs.hedgedoc.org
   source: https://github.com/hedgedoc/hedgedoc
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   CMD_DOMAIN: { value: "{{domains.hedgedoc.host}}" }
   CMD_SESSION_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Choose Sign in, then Register with your email and a password."
 domains:
   - { service: hedgedoc, port: 3000 }

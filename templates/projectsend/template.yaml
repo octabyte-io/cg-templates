@@ -6,7 +6,7 @@ links:
   website: https://www.projectsend.org
   docs: https://github.com/projectsend/projectsend/blob/v2.9.0/DOCKER.md
   source: https://github.com/projectsend/projectsend
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -20,5 +20,8 @@ inputs:
       label: Admin email
       description: You sign in to ProjectSend with this email and the generated ADMIN_PASSWORD.
       format: email
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: projectsend, port: 80 }

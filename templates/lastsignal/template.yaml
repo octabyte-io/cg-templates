@@ -6,7 +6,7 @@ links:
   website: https://lastsignal.app
   docs: https://github.com/giovantenne/lastsignal/blob/master/docs/deploy-docker-compose.md
   source: https://github.com/giovantenne/lastsignal
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -42,5 +42,9 @@ inputs:
       label: Allowed sign-in emails
       description: Optional, but recommended. The email addresses that may use this instance, separated by commas. Leave it empty to let anyone who finds the web address sign up.
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter your email and open the sign-in link LastSignal emails you; there is no password."
 domains:
   - { service: lastsignal, port: 80 }

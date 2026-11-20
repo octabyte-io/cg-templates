@@ -6,11 +6,14 @@ links:
   website: https://archivebox.io
   docs: https://github.com/ArchiveBox/ArchiveBox/wiki
   source: https://github.com/ArchiveBox/ArchiveBox
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   BASE_URL: { value: "{{domains.archivebox.url}}" }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: archivebox, port: 5797 }

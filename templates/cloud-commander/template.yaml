@@ -6,7 +6,7 @@ links:
   website: https://cloudcmd.io
   docs: https://cloudcmd.io/#help
   source: https://github.com/coderaiser/cloudcmd
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -14,5 +14,8 @@ inputs:
   # (it signs in with your browser's username and password prompt), so change
   # it here, not in the app.
   CLOUDCMD_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: CLOUDCMD_PASSWORD
 domains:
   - { service: cloudcmd, port: 8000 }

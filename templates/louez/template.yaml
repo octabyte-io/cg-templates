@@ -6,7 +6,7 @@ links:
   website: https://louez.io
   docs: https://github.com/Synapsr/Louez#-self-host-in-one-command
   source: https://github.com/Synapsr/Louez
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Upstream plans for at least 2 GB with its optional background-removal worker; without
 # it the app, MySQL and the file store fit in about 1 GB, so medium leaves headroom.
@@ -18,6 +18,10 @@ inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
   MINIO_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /login
+    note: "Create your account with an email and a password; the first account made is the store owner."
 # One address: the storefront is at the root and the dashboard under /dashboard. Uploaded
 # images are served by the app under /files, so the file store needs no address.
 domains:

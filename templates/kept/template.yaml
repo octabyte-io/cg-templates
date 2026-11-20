@@ -6,7 +6,7 @@ links:
   website: https://keptinventory.info
   docs: https://keptinventory.info/install/compose/
   source: https://github.com/keptinventory/kept
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -16,5 +16,9 @@ inputs:
   KEPT_DB_APP_PASSWORD: { generate: hex }
   KEPT_DB_AUTH_PASSWORD: { generate: hex }
   KEPT_DB_SYSTEM_PASSWORD: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter the one-time setup code from the app's logs and create your account; it becomes the admin."
 domains:
   - { service: kept, port: 8080 }

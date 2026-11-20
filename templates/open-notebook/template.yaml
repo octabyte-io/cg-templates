@@ -6,7 +6,7 @@ links:
   website: https://www.open-notebook.ai
   docs: https://github.com/lfnovo/open-notebook/tree/main/docs
   source: https://github.com/lfnovo/open-notebook
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -14,5 +14,7 @@ inputs:
   OPEN_NOTEBOOK_PASSWORD: { generate: password }
   OPEN_NOTEBOOK_ENCRYPTION_KEY: { generate: hex }
   SURREAL_PASSWORD: { generate: password }
+signIn:
+  password: OPEN_NOTEBOOK_PASSWORD
 domains:
   - { service: open-notebook, port: 8502 }

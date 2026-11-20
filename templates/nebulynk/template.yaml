@@ -6,7 +6,7 @@ links:
   website: https://nebulynk.net
   docs: https://github.com/sapientorius/Nebulynk/blob/v0.8.1/docs/SELF_HOSTING.md
   source: https://github.com/sapientorius/Nebulynk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -25,6 +25,10 @@ inputs:
   STORAGE_S3_SECRET_KEY: { generate: password }
   LIVEKIT_API_KEY: { generate: password }
   LIVEKIT_API_SECRET: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the short setup to name your workspace and create the admin account."
 domains:
   - { service: nebulynk, port: 8080 }
   - { service: nebulynk-api, port: 3030 }

@@ -6,7 +6,7 @@ links:
   website: https://join-lemmy.org
   docs: https://join-lemmy.org/docs/
   source: https://github.com/LemmyNet/lemmy
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Five containers: the Lemmy backend (Rust), lemmy-ui (Node), pict-rs for images, Postgres and
 # Lemmy's own nginx router. A small community fits in 2 GB; federating with large instances
@@ -18,6 +18,10 @@ inputs:
   PICTRS_API_KEY: { generate: hex }
   # The first admin, created by Lemmy's setup block on the first start: user "admin".
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: proxy, port: 80 }
 files:

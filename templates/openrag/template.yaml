@@ -13,7 +13,7 @@ links:
   website: https://www.openr.ag
   docs: https://docs.openr.ag
   source: https://github.com/langflow-ai/openrag
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Six containers: a password proxy, the web app, the API, Langflow, OpenSearch
 # (1 GB heap) and Docling, which reads uploaded files. The project recommends
@@ -43,6 +43,9 @@ inputs:
       description: The secret for the client ID above. Leave empty if you left that empty.
       secret: true
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   # The OpenRAG web app (chat, knowledge, settings), behind a password prompt.
   - { service: proxy, port: 80 }

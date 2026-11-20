@@ -6,7 +6,7 @@ links:
   website: https://koha-community.org
   docs: https://koha-community.org/documentation/
   source: https://github.com/Koha-Community/Koha
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -19,6 +19,11 @@ inputs:
       label: Time zone
       description: The library's time zone for due dates and opening hours, as an IANA name such as Europe/London.
       default: Etc/UTC
+signIn:
+  firstVisit:
+    path: /
+    note: "Sign in to the setup wizard as koha_library with the database password, DB_PASSWORD on the variables page, then create your library and admin account."
+    domain: staff
 domains:
   # The public catalogue (OPAC) readers search and sign in to.
   - { service: opac, port: 8080 }

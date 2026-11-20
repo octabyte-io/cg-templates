@@ -6,7 +6,7 @@ links:
   website: https://github.com/crocodilestick/Calibre-Web-Automated
   docs: https://github.com/crocodilestick/Calibre-Web-Automated/wiki
   source: https://github.com/crocodilestick/Calibre-Web-Automated
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -18,6 +18,9 @@ inputs:
       description: Used for dates and times in Calibre-Web Automated, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: calibre-web-automated, port: 8083 }
 files:

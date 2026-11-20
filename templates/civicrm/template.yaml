@@ -6,7 +6,7 @@ links:
   website: https://civicrm.org
   docs: https://docs.civicrm.org/user/en/latest/
   source: https://github.com/civicrm/civicrm-core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -25,5 +25,8 @@ inputs:
       label: Admin email
       description: The admin's email address, used for password resets. You can change it later on the admin's contact record.
       format: email
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
 domains:
   - { service: civicrm, port: 80 }

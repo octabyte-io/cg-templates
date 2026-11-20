@@ -6,7 +6,7 @@ links:
   website: https://glpi-project.org
   docs: https://glpi-project.org/documentation/
   source: https://github.com/glpi-project/glpi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -14,5 +14,8 @@ inputs:
   DB_PASSWORD: { generate: password }
   DB_ROOT_PASSWORD: { generate: password }
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: glpi }
+  password: ADMIN_PASSWORD
 domains:
   - { service: glpi, port: 80 }

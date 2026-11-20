@@ -6,7 +6,7 @@ links:
   website: https://docs.paperless-ngx.com
   docs: https://docs.paperless-ngx.com
   source: https://github.com/paperless-ngx/paperless-ngx
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -26,5 +26,9 @@ inputs:
       description: Used for document dates and schedules, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account; there is no default password."
 domains:
   - { service: paperless, port: 8000 }

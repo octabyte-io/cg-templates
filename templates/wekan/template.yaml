@@ -6,10 +6,14 @@ links:
   website: https://wekan.fi
   docs: https://github.com/wekan/wekan/tree/main/docs
   source: https://github.com/wekan/wekan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   ROOT_URL: { value: "{{domains.wekan.url}}" }
+signIn:
+  firstVisit:
+    path: /sign-up
+    note: "Register with a username, email and password; the first account made is the admin."
 domains:
   - { service: wekan, port: 8080 }

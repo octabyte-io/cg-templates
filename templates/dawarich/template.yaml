@@ -6,7 +6,7 @@ links:
   website: https://dawarich.app
   docs: https://dawarich.app/docs/intro
   source: https://github.com/Freika/dawarich
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Rails app with embedded Sidekiq, PostGIS and Redis; imports of large location
 # histories are memory-hungry.
@@ -24,5 +24,9 @@ inputs:
       description: The time zone your trips and stats are shown in, as a tz database name such as Europe/Berlin or America/New_York.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /users/sign_in
+    note: "Sign in as demo@dawarich.app with the password safepassword, then change the email and password."
 domains:
   - { service: dawarich, port: 3000 }

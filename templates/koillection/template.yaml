@@ -6,7 +6,7 @@ links:
   website: https://koillection.github.io
   docs: https://github.com/koillection/koillection/wiki
   source: https://github.com/koillection/koillection
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -19,5 +19,9 @@ inputs:
       description: Used for dates in the app, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account; the first account made is the admin."
 domains:
   - { service: koillection, port: 80 }

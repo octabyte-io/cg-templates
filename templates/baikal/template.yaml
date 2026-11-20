@@ -6,11 +6,15 @@ links:
   website: https://sabre.io/baikal/
   docs: https://sabre.io/baikal/install/
   source: https://github.com/sabre-io/Baikal
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   BAIKAL_ADMIN_PASSWORD: { generate: password }
   BAIKAL_ENCRYPTION_KEY: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: BAIKAL_ADMIN_PASSWORD
+  path: /admin/
 domains:
   - { service: baikal, port: 80 }

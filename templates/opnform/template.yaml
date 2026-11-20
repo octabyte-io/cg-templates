@@ -6,7 +6,7 @@ links:
   website: https://opnform.com
   docs: https://docs.opnform.com/deployment/docker
   source: https://github.com/OpnForm/OpnForm
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Laravel API, queue worker, scheduler, the Nuxt web app, nginx, Postgres and
 # Redis together; 2 GB keeps PHP and Node comfortable.
@@ -20,6 +20,10 @@ inputs:
   # Shared between the API and the web app's server-side rendering.
   FRONT_API_SECRET: { generate: hex }
   DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Create the admin account with your name, email and a password."
 # OpnForm's own nginx ingress sends /api to the Laravel API and everything else
 # to the Nuxt web app, so it is the service that gets the address.
 domains:

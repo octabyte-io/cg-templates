@@ -6,7 +6,7 @@ links:
   website: https://fluxer.com
   docs: https://docs.fluxer.com/operator/
   source: https://github.com/fluxerapp/fluxer
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -24,6 +24,10 @@ inputs:
   FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: { generate: base64 }
   FLUXER_ADMIN_SECRET_KEY_BASE: { generate: hex }
   FLUXER_ADMIN_OAUTH_CLIENT_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Enter the setup token FLUXER_SETUP_TOKEN from the variables page to create the admin account, then choose username or email sign-in."
 domains:
   - { service: fluxer, port: 80 }
 files:

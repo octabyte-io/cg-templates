@@ -6,7 +6,7 @@ links:
   website: https://www.silex.me
   docs: https://docs.silex.me
   source: https://github.com/silexlabs/Silex
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -16,6 +16,9 @@ inputs:
   SILEX_SESSION_SECRET: { generate: hex }
   # The password the sign-in prompt in front of the editor asks for (username: admin).
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   # The Silex editor, behind the password prompt.
   - { service: proxy, port: 80 }

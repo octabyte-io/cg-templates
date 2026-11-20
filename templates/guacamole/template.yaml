@@ -6,7 +6,7 @@ links:
   website: https://guacamole.apache.org
   docs: https://guacamole.apache.org/doc/1.6.0/gug/
   source: https://github.com/apache/guacamole-client
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -18,5 +18,8 @@ inputs:
       default: guacadmin
       pattern: "[a-z][a-z0-9_-]{2,31}"
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_USERNAME
+  password: ADMIN_PASSWORD
 domains:
   - { service: guacamole, port: 8080 }

@@ -6,7 +6,7 @@ links:
   website: https://postiz.com
   docs: https://docs.postiz.com
   source: https://github.com/gitroomhq/postiz-app
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -14,6 +14,10 @@ inputs:
   JWT_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
   TEMPORAL_DB_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /auth
+    note: "Sign up with an email and password; the first account becomes the owner."
 domains:
   - { service: postiz, port: 5000 }
 files:

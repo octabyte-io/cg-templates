@@ -12,7 +12,7 @@ links:
   website: https://github.com/usnistgov/NEMO
   docs: https://github.com/usnistgov/NEMO/wiki
   source: https://github.com/usnistgov/NEMO
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -59,6 +59,9 @@ inputs:
       description: The address NEMO's emails come from, for example nemo@yourlab.org.
       format: email
       required: false
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: nemo, port: 80 }
   - { service: nemo-ldap, port: 17170 }

@@ -6,7 +6,7 @@ links:
   website: https://quackback.io
   docs: https://github.com/QuackbackIO/quackback/blob/v0.15.0/deploy/self-hosted/README.md
   source: https://github.com/QuackbackIO/quackback
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # A Bun app plus PostgreSQL and file storage; 2 GB leaves room for the
 # migrations of the first start and for video uploads.
@@ -50,5 +50,9 @@ inputs:
       description: Optional. Turns on AI summaries, duplicate detection and feedback extraction.
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the owner account with an email and a password, then name the workspace."
 domains:
   - { service: quackback, port: 3000 }

@@ -12,7 +12,7 @@ links:
   website: https://immichframe.dev
   docs: https://immichframe.dev/docs/overview
   source: https://github.com/immichFrame/ImmichFrame
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -37,5 +37,8 @@ inputs:
   # Every screen needs this once to show the slideshow, so the address isn't open
   # to anyone: open the address with ?authsecret=<value>, or type it in when asked.
   AUTHENTICATION_SECRET: { generate: hex }
+signIn:
+  password: ADMIN_PASSWORD
+  path: /admin
 domains:
   - { service: immichframe, port: 8080 }

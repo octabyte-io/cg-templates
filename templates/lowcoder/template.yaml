@@ -6,7 +6,7 @@ links:
   website: https://www.lowcoder.cloud
   docs: https://docs.lowcoder.cloud
   source: https://github.com/lowcoder-org/lowcoder
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -17,5 +17,8 @@ inputs:
   LOWCODER_NODE_SERVICE_SECRET: { generate: hex }
   LOWCODER_NODE_SERVICE_SECRET_SALT: { generate: hex }
   LOWCODER_SUPERUSER_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin@localhost }
+  password: LOWCODER_SUPERUSER_PASSWORD
 domains:
   - { service: lowcoder, port: 3000 }

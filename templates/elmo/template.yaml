@@ -6,7 +6,7 @@ links:
   website: https://www.elmohq.com
   docs: https://www.elmohq.com/docs
   source: https://github.com/elmohq/elmo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -25,5 +25,9 @@ inputs:
       label: AI models to track
       description: Comma-separated model:provider:version[:online] entries. The default asks ChatGPT, Claude and Gemini through OpenRouter with web search. Add scraper entries (for example chatgpt:cloro:online) after adding that provider's key on the app's variables page.
       default: "chatgpt:openrouter:openai/gpt-6-luna:online,claude:openrouter:anthropic/claude-haiku-5.5:online,gemini:openrouter:google/gemini-2.5-flash:online"
+signIn:
+  firstVisit:
+    path: /
+    note: "Click Sign In, then Create an account; only the first account can be made."
 domains:
   - { service: elmo-web, port: 3000 }

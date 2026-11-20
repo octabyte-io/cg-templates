@@ -6,11 +6,15 @@ links:
   website: https://learningequality.org/kolibri/
   docs: https://kolibri.readthedocs.io/
   source: https://github.com/learningequality/kolibri
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   ZIP_CONTENT_ORIGIN: { value: "{{domains.kolibri-zipcontent.url}}" }
+signIn:
+  firstVisit:
+    path: /
+    note: "Follow the setup wizard and create the super admin account."
 domains:
   - { service: kolibri, port: 8080 }
   - { service: kolibri-zipcontent, port: 8081 }

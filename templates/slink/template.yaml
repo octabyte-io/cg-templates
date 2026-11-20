@@ -6,7 +6,7 @@ links:
   website: https://docs.slinkapp.io
   docs: https://docs.slinkapp.io
   source: https://github.com/andrii-kryvoviaz/slink
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -23,5 +23,9 @@ inputs:
       description: Used for the dates shown on uploads, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /profile/login
 domains:
   - { service: slink, port: 3000 }

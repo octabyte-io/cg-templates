@@ -6,7 +6,7 @@ links:
   website: https://getopen.so
   docs: https://github.com/OpenLabs-so/openanalytics/blob/v0.8.0/SELF-HOSTING.md
   source: https://github.com/OpenLabs-so/openanalytics
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Ten long-running containers, ClickHouse among them; the makers measured about 4 GB.
 size: large
@@ -30,6 +30,10 @@ inputs:
   CREDENTIAL_SOURCE_SECRET: { generate: hex }
   # Turns a visitor's address into an anonymous id that changes daily.
   ANONYMOUS_IDENTITY_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the first account with an email and a password; anyone can do this until one account exists."
 # Four addresses, as the official setup has them: the dashboard first, then the
 # api, the collector (which also serves the oa.js tracking script) and the
 # realtime stream.

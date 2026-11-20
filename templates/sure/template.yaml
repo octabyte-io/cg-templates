@@ -6,7 +6,7 @@ links:
   website: https://sure.am
   docs: https://github.com/we-promise/sure/blob/main/docs/hosting/docker.md
   source: https://github.com/we-promise/sure
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -45,5 +45,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /registration/new
+    note: "Sign up to create your account; the first person to sign up is the admin."
 domains:
   - { service: sure, port: 3000 }

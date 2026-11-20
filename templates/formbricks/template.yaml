@@ -6,7 +6,7 @@ links:
   website: https://formbricks.com
   docs: https://formbricks.com/docs/self-hosting/setup/docker
   source: https://github.com/formbricks/formbricks
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -19,6 +19,10 @@ inputs:
   CUBEJS_API_SECRET: { generate: hex }
   AUTHZED_TOKEN: { generate: hex }
   AUTHZED_DATABASE_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard and create the owner account."
 domains:
   - { service: formbricks, port: 3000 }
 files:

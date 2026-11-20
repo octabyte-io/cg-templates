@@ -6,7 +6,7 @@ links:
   website: https://www.activepieces.com
   docs: https://www.activepieces.com/docs/install/overview
   source: https://github.com/activepieces/activepieces
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -14,5 +14,9 @@ inputs:
   ENCRYPTION_KEY: { generate: password }
   JWT_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /sign-up
+    note: "Create the admin account; the first account made is the admin."
 domains:
   - { service: activepieces, port: 80 }

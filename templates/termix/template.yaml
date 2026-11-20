@@ -12,9 +12,13 @@ links:
   website: https://termix.site
   docs: https://docs.termix.site
   source: https://github.com/Termix-SSH/Termix
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs: {}
+signIn:
+  firstVisit:
+    path: /
+    note: "Create an account; the first account made is the admin."
 domains:
   - { service: termix, port: 8080 }

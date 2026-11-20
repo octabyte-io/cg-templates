@@ -6,11 +6,15 @@ links:
   website: https://saltcorn.com
   docs: https://wiki.saltcorn.com
   source: https://github.com/saltcorn/saltcorn
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
   SALTCORN_SESSION_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email address and a password."
 domains:
   - { service: saltcorn, port: 3000 }

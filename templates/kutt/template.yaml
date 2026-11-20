@@ -6,7 +6,7 @@ links:
   website: https://kutt.to
   docs: https://github.com/thedevs-network/kutt#readme
   source: https://github.com/thedevs-network/kutt
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -14,5 +14,9 @@ inputs:
   # wants the bare host, not a URL.
   DEFAULT_DOMAIN: { value: "{{domains.kutt.host}}" }
   JWT_SECRET: { generate: hex }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with an email address and a password."
 domains:
   - { service: kutt, port: 3000 }

@@ -6,13 +6,17 @@ links:
   website: https://swetrix.com
   docs: https://swetrix.com/docs/selfhosting/how-to
   source: https://github.com/Swetrix/swetrix
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
   BASE_URL: { value: "{{domains.swetrix.url}}" }
   SECRET_KEY_BASE: { generate: base64 }
   CLICKHOUSE_PASSWORD: { generate: hex }
+signIn:
+  firstVisit:
+    path: /signup
+    note: "Sign up; the first account made is the admin, and sign-up then closes."
 domains:
   - { service: swetrix, port: 80 }
 files:

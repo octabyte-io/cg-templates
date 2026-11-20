@@ -6,7 +6,7 @@ links:
   website: https://presenton.ai
   docs: https://docs.presenton.ai
   source: https://github.com/presenton/presenton
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -15,5 +15,8 @@ inputs:
   # The admin account made on first start (username: admin). Presenton asks
   # for at least 8 characters; letters and digits are accepted.
   AUTH_PASSWORD: { generate: password }
+signIn:
+  username: { value: admin }
+  password: AUTH_PASSWORD
 domains:
   - { service: presenton, port: 80 }

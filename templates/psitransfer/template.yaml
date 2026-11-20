@@ -6,7 +6,7 @@ links:
   website: https://github.com/psi-4ward/psitransfer
   docs: https://github.com/psi-4ward/psitransfer/tree/master/docs
   source: https://github.com/psi-4ward/psitransfer
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
@@ -14,5 +14,7 @@ inputs:
   PSITRANSFER_UPLOAD_PASS: { generate: password }
   # Opens the /admin page, which lists every upload.
   PSITRANSFER_ADMIN_PASS: { generate: password }
+signIn:
+  password: PSITRANSFER_UPLOAD_PASS
 domains:
   - { service: psitransfer, port: 3000 }

@@ -6,8 +6,12 @@ links:
   website: https://otterwiki.com
   docs: https://otterwiki.com/Installation
   source: https://github.com/redimp/otterwiki
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
+signIn:
+  firstVisit:
+    path: /-/register
+    note: "Register an account; the first account made is the admin."
 domains:
   - { service: otterwiki, port: 80 }

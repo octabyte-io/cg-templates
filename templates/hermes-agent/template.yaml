@@ -6,7 +6,7 @@ links:
   website: https://hermes-agent.nousresearch.com
   docs: https://hermes-agent.nousresearch.com/docs/
   source: https://github.com/NousResearch/hermes-agent
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -16,5 +16,8 @@ inputs:
   HERMES_DASHBOARD_SECRET: { generate: hex }
   # The dashboard's public web address.
   HERMES_DASHBOARD_PUBLIC_URL: { value: "{{domains.hermes.url}}" }
+signIn:
+  username: { value: admin }
+  password: HERMES_DASHBOARD_PASSWORD
 domains:
   - { service: hermes, port: 9119 }

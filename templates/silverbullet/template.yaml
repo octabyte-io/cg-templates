@@ -6,8 +6,12 @@ links:
   website: https://silverbullet.md
   docs: https://docs.silverbullet.md
   source: https://github.com/silverbulletmd/silverbullet
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard: create the admin account, then your first notebook."
 domains:
   - { service: silverbullet, port: 3000 }

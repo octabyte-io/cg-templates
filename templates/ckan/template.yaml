@@ -6,7 +6,7 @@ links:
   website: https://ckan.org
   docs: https://docs.ckan.org/en/2.12/
   source: https://github.com/ckan/ckan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -29,6 +29,10 @@ inputs:
   SECRET_KEY: { generate: hex }
   CSRF_SECRET_KEY: { generate: hex }
   JWT_SECRET: { generate: hex }
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
+  path: /user/login
 domains:
   - { service: ckan, port: 5000 }
 files:

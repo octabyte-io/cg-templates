@@ -6,7 +6,7 @@ links:
   website: https://damselfly.info
   docs: https://github.com/Webreaper/Damselfly/blob/master/docs/Installation.md
   source: https://github.com/Webreaper/Damselfly
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -17,6 +17,9 @@ inputs:
   # Remembers a browser that passed the sign-in prompt, so Damselfly's own
   # log-in (which replaces the prompt's credentials) keeps working.
   SESSION_TOKEN: { generate: hex }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: proxy, port: 80 }
 files:

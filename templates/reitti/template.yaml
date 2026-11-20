@@ -6,7 +6,7 @@ links:
   website: https://www.dedicatedcode.com/projects/reitti/
   docs: https://www.dedicatedcode.com/projects/reitti/latest/
   source: https://github.com/dedicatedcode/reitti
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Java (Spring Boot) app with PostGIS, Redis and a small map tile cache;
 # importing years of location history needs memory.
@@ -14,5 +14,9 @@ size: medium
 inputs:
   POSTGIS_PASSWORD: { generate: password }
   ADVERTISE_URI: { value: "{{domains.reitti.url}}" }
+signIn:
+  firstVisit:
+    path: /setup
+    note: "Set a password for the user named admin; whoever opens Reitti first chooses it."
 domains:
   - { service: reitti, port: 8080 }

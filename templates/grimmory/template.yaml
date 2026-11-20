@@ -12,7 +12,7 @@ links:
   website: https://grimmory.org
   docs: https://grimmory.org/docs/getting-started
   source: https://github.com/grimmory-tools/grimmory
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Grimmory's docs: 2 GB RAM minimum, 4 GB+ recommended (Java app plus MariaDB).
 size: medium
@@ -25,5 +25,9 @@ inputs:
       description: Used for reading statistics and scheduled tasks, as an IANA name such as Europe/Berlin.
       default: Etc/UTC
       required: false
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with a username, email and password. Keep the password safe; there is no password reset."
 domains:
   - { service: grimmory, port: 6060 }

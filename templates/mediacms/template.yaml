@@ -6,7 +6,7 @@ links:
   website: https://mediacms.io
   docs: https://github.com/mediacms-io/mediacms/tree/main/docs
   source: https://github.com/mediacms-io/mediacms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:
@@ -31,6 +31,10 @@ inputs:
       description: Type false once your own account exists, so nobody else can create an account.
       default: "true"
       required: false
+signIn:
+  username: ADMIN_USER
+  password: ADMIN_PASSWORD
+  path: /accounts/login/
 domains:
   - { service: mediacms, port: 80 }
 files:

@@ -6,7 +6,7 @@ links:
   website: https://jellyfin.org
   docs: https://jellyfin.org/docs/
   source: https://github.com/jellyfin/jellyfin
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -14,6 +14,10 @@ inputs:
   # The password of FileBrowser Quantum's user "admin", used to upload
   # media at the second address.
   FILEBROWSER_ADMIN_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard and create the admin account."
 domains:
   - { service: jellyfin, port: 8096 }
   - { service: filebrowser, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://www.horilla.com
   docs: https://docs.horilla.com
   source: https://github.com/horilla/horilla-hr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -21,5 +21,9 @@ inputs:
       label: Time zone
       description: The time zone Horilla uses for attendance, leave and payroll dates, as a tz database name such as Europe/London or America/New_York.
       default: UTC
+signIn:
+  firstVisit:
+    path: /login
+    note: "Click Initialize Database, enter DB_INIT_PASSWORD from the app's variables page, then create the admin account."
 domains:
   - { service: horilla, port: 8000 }

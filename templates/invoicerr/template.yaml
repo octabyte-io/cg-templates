@@ -6,7 +6,7 @@ links:
   website: https://invoicerr.app
   docs: https://docs.invoicerr.app
   source: https://github.com/invoicerr-app/invoicerr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -47,5 +47,9 @@ inputs:
       description: The address emails come from. Leave empty to use the SMTP username.
       format: email
       required: false
+signIn:
+  firstVisit:
+    path: /auth/sign-up
+    note: "Sign up with your name, email and a password to create the first account."
 domains:
   - { service: invoicerr, port: 80 }

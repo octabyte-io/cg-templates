@@ -6,7 +6,7 @@ links:
   website: https://splitpro.app
   docs: https://github.com/oss-apps/split-pro/blob/main/docs/CONFIGURATION.md
   source: https://github.com/oss-apps/split-pro
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -35,5 +35,9 @@ inputs:
     ask:
       label: Email server password
       secret: true
+signIn:
+  firstVisit:
+    path: /auth/signin
+    note: "Enter your email and click the sign-in link SplitPro emails you; there is no password."
 domains:
   - { service: splitpro, port: 3000 }

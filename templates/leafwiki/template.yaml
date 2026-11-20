@@ -6,12 +6,15 @@ links:
   website: https://leafwiki.com
   docs: https://github.com/perber/leafwiki#readme
   source: https://github.com/perber/leafwiki
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:
   JWT_SECRET: { generate: hex }
   ADMIN_PASSWORD: { generate: password }
   PUBLIC_URL: { value: "{{domains.leafwiki.url}}" }
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASSWORD
 domains:
   - { service: leafwiki, port: 8080 }

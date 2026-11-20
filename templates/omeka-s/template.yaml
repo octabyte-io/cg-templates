@@ -6,7 +6,7 @@ links:
   website: https://omeka.org/s/
   docs: https://omeka.org/s/docs/user-manual/
   source: https://github.com/omeka/omeka-s
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -31,5 +31,9 @@ inputs:
       description: Used for dates and times, as an IANA name such as Europe/Berlin.
       default: UTC
       required: false
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /login
 domains:
   - { service: omeka-s, port: 80 }

@@ -6,7 +6,7 @@ links:
   website: https://onyx.app
   docs: https://docs.onyx.app
   source: https://github.com/onyx-dot-app/onyx
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Nine containers: OpenSearch (2 GB heap), two model servers, the API, the
 # background workers, the web app, Postgres, Redis and nginx. Onyx asks for
@@ -18,6 +18,10 @@ inputs:
   ENCRYPTION_KEY_SECRET: { generate: hex }
   POSTGRES_PASSWORD: { generate: password }
   OPENSEARCH_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /auth/signup
+    note: "Sign up with your email and a password; the first account made is the admin."
 domains:
   - { service: nginx, port: 80 }
 files:

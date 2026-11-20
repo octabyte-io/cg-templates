@@ -6,7 +6,7 @@ links:
   website: https://www.growthbook.io
   docs: https://docs.growthbook.io/self-host
   source: https://github.com/growthbook/growthbook
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # GrowthBook's production docs ask for at least 2 GB of memory and 1 vCPU per app instance,
 # plus MongoDB.
@@ -17,6 +17,10 @@ inputs:
   JWT_SECRET: { generate: hex }
   ENCRYPTION_KEY: { generate: hex }
   MONGO_PASSWORD: { generate: password }
+signIn:
+  firstVisit:
+    path: /
+    note: "Create the admin account with your name, email, password and company name."
 domains:
   # The web app, where people sign in and manage flags and experiments.
   - { service: growthbook, port: 3000 }

@@ -6,7 +6,7 @@ links:
   website: https://koel.dev
   docs: https://docs.koel.dev
   source: https://github.com/koel/koel
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -22,5 +22,8 @@ inputs:
       description: The email you sign in to Koel with as its first admin.
       format: email
   ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
 domains:
   - { service: koel, port: 80 }

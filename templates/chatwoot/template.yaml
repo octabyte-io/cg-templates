@@ -6,7 +6,7 @@ links:
   website: https://www.chatwoot.com
   docs: https://developers.chatwoot.com/self-hosted
   source: https://github.com/chatwoot/chatwoot
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
@@ -40,5 +40,9 @@ inputs:
       label: Email server password
       secret: true
       required: false
+signIn:
+  firstVisit:
+    path: /installation/onboarding
+    note: "Create the admin account; the first person to open the app does this."
 domains:
   - { service: chatwoot, port: 3000 }

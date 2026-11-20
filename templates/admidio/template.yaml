@@ -6,7 +6,7 @@ links:
   website: https://www.admidio.org
   docs: https://www.admidio.org/dokuwiki/doku.php?id=en:2.0:index
   source: https://github.com/Admidio/admidio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:
@@ -18,5 +18,9 @@ inputs:
       label: Time zone
       description: Your organisation's time zone for events and dates, such as Europe/Berlin, America/New_York or UTC. Pick the same zone in the setup wizard.
       default: UTC
+signIn:
+  firstVisit:
+    path: /
+    note: "Finish the setup wizard: name your organisation and create the admin account."
 domains:
   - { service: admidio, port: 8080 }
