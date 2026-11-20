@@ -12,7 +12,7 @@ links:
   website: https://friendi.ca
   docs: https://wiki.friendi.ca
   source: https://github.com/friendica/friendica
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Apache with PHP serves the site, a second container runs Friendica's worker daemon, next to
 # MariaDB; 2 GB keeps all three comfortable.

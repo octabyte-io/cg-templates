@@ -6,7 +6,7 @@ links:
   website: https://dhis2.org
   docs: https://docs.dhis2.org
   source: https://github.com/dhis2/dhis2-core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # DHIS2's own sizing guide asks for 8 GB of memory and 4 cores for a small instance.
 size: xlarge

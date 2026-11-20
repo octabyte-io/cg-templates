@@ -6,7 +6,7 @@ links:
   website: https://gancio.org
   docs: https://gancio.org/install/docker
   source: https://framagit.org/les/gancio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 signIn:

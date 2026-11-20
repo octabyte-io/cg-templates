@@ -6,7 +6,7 @@ links:
   website: https://github.com/crocodilestick/Calibre-Web-Automated
   docs: https://github.com/crocodilestick/Calibre-Web-Automated/wiki
   source: https://github.com/crocodilestick/Calibre-Web-Automated
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

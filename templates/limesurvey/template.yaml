@@ -6,7 +6,7 @@ links:
   website: https://www.limesurvey.org
   docs: https://www.limesurvey.org/manual/LimeSurvey_Manual
   source: https://github.com/LimeSurvey/LimeSurvey
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

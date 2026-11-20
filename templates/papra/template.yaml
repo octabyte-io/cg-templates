@@ -6,7 +6,7 @@ links:
   website: https://papra.app
   docs: https://docs.papra.app
   source: https://github.com/papra-hq/papra
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

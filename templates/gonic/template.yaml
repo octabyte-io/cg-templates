@@ -6,7 +6,7 @@ links:
   website: https://github.com/sentriz/gonic
   docs: https://github.com/sentriz/gonic/wiki
   source: https://github.com/sentriz/gonic
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

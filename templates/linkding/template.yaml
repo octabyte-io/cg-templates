@@ -6,7 +6,7 @@ links:
   website: https://linkding.link
   docs: https://linkding.link/installation/
   source: https://github.com/sissbruecker/linkding
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

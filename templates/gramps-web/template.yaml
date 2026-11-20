@@ -6,7 +6,7 @@ links:
   website: https://www.grampsweb.org
   docs: https://www.grampsweb.org/install_setup/deployment/
   source: https://github.com/gramps-project/gramps-web
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

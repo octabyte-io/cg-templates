@@ -6,7 +6,7 @@ links:
   website: https://www.openproject.org
   docs: https://www.openproject.org/docs/installation-and-operations/installation/docker-compose/
   source: https://github.com/opf/openproject
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # OpenProject's system requirements ask for 4 GB of memory; the stack runs web,
 # worker, cron, a collaboration server, memcached and PostgreSQL.

@@ -12,7 +12,7 @@ links:
   website: https://filegator.io
   docs: https://docs.filegator.io
   source: https://github.com/filegator/filegator
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

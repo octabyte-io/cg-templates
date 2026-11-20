@@ -6,7 +6,7 @@ links:
   website: https://frappe.io/erpnext
   docs: https://docs.frappe.io/erpnext
   source: https://github.com/frappe/erpnext
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Nine containers (web, nginx, websocket, two queue workers, scheduler, MariaDB
 # and two Redis); creating the site on the first start takes several minutes.

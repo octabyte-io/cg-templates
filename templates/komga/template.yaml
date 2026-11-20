@@ -6,7 +6,7 @@ links:
   website: https://komga.org
   docs: https://komga.org/docs/introduction/
   source: https://github.com/gotson/komga
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

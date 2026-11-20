@@ -6,7 +6,7 @@ links:
   website: https://ihatemoney.org
   docs: https://ihatemoney.readthedocs.io/en/latest/
   source: https://github.com/spiral-project/ihatemoney
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

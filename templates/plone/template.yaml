@@ -6,7 +6,7 @@ links:
   website: https://plone.org
   docs: https://6.docs.plone.org
   source: https://github.com/plone/Products.CMFPlone
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

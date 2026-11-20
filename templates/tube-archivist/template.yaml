@@ -6,7 +6,7 @@ links:
   website: https://www.tubearchivist.com
   docs: https://docs.tubearchivist.com
   source: https://github.com/tubearchivist/tubearchivist
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Elasticsearch takes a 1 GB heap on top of the app and its download workers.
 size: large

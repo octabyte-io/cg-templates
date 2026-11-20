@@ -6,7 +6,7 @@ links:
   website: https://www.lightdash.com
   docs: https://docs.lightdash.com
   source: https://github.com/lightdash/lightdash
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

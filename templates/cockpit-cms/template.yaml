@@ -6,7 +6,7 @@ links:
   website: https://getcockpit.com
   docs: https://getcockpit.com/documentation
   source: https://github.com/Cockpit-HQ/Cockpit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

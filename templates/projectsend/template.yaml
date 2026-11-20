@@ -6,7 +6,7 @@ links:
   website: https://www.projectsend.org
   docs: https://github.com/projectsend/projectsend/blob/v2.9.0/DOCKER.md
   source: https://github.com/projectsend/projectsend
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

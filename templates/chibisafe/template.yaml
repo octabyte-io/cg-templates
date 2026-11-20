@@ -6,7 +6,7 @@ links:
   website: https://chibisafe.app
   docs: https://chibisafe.app/docs/intro
   source: https://github.com/chibisafe/chibisafe
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

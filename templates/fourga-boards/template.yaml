@@ -6,7 +6,7 @@ links:
   website: https://4gaboards.com
   docs: https://docs.4gaboards.com
   source: https://github.com/RARgames/4gaBoards
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

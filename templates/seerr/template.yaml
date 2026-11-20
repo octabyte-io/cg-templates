@@ -6,7 +6,7 @@ links:
   website: https://seerr.dev
   docs: https://docs.seerr.dev
   source: https://github.com/seerr-team/seerr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 signIn:

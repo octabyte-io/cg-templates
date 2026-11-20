@@ -12,7 +12,7 @@ links:
   website: https://big-agi.com
   docs: https://github.com/enricoros/big-AGI/tree/main/docs
   source: https://github.com/enricoros/big-AGI
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

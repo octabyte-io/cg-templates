@@ -6,7 +6,7 @@ links:
   website: https://didacta.io
   docs: https://docs.didacta.io
   source: https://github.com/va360labs/didacta-io
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

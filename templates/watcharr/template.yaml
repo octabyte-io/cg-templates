@@ -12,7 +12,7 @@ links:
   website: https://watcharr.app
   docs: https://watcharr.app/docs/introduction
   source: https://github.com/sbondCo/Watcharr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 signIn:

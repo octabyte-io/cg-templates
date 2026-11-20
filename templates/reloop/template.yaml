@@ -6,7 +6,7 @@ links:
   website: https://reloop.sh
   docs: https://reloop.sh/docs
   source: https://github.com/reloop-labs/reloop
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Upstream's installer needs 4 GB at least and recommends 8 GB: about 15
 # containers, most of them Node services.

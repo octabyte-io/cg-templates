@@ -6,7 +6,7 @@ links:
   website: https://alexandrie-hub.fr
   docs: https://github.com/Smaug6739/Alexandrie/blob/main/docs/README.md
   source: https://github.com/Smaug6739/Alexandrie
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

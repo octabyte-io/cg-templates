@@ -6,7 +6,7 @@ links:
   website: https://www.medplum.com
   docs: https://www.medplum.com/docs/self-hosting/install-on-docker
   source: https://github.com/medplum/medplum
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

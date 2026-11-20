@@ -6,7 +6,7 @@ links:
   website: https://matomo.org
   docs: https://matomo.org/docs/
   source: https://github.com/matomo-org/matomo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

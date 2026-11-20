@@ -6,7 +6,7 @@ links:
   website: https://openboxes.com
   docs: https://docs.openboxes.com/en/latest/
   source: https://github.com/openboxes/openboxes
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

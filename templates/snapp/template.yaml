@@ -6,7 +6,7 @@ links:
   website: https://github.com/urania-dev/snapp
   docs: https://github.com/urania-dev/snapp/blob/0.9-rc/README.md
   source: https://github.com/urania-dev/snapp
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

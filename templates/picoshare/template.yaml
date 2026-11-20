@@ -6,7 +6,7 @@ links:
   website: https://github.com/mtlynch/picoshare
   docs: https://github.com/mtlynch/picoshare#readme
   source: https://github.com/mtlynch/picoshare
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

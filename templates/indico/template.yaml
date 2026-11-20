@@ -6,7 +6,7 @@ links:
   website: https://getindico.io
   docs: https://docs.getindico.io
   source: https://github.com/indico/indico
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

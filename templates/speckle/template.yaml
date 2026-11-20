@@ -12,7 +12,7 @@ links:
   website: https://speckle.systems
   docs: https://docs.speckle.systems/developers/server/getting-started
   source: https://github.com/specklesystems/speckle-server
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Speckle's docs ask for at least 4 GB of memory; the preview service alone can use up to 3 GB.
 size: large

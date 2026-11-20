@@ -6,7 +6,7 @@ links:
   website: https://github.com/rmyndharis/OpenWA
   docs: https://github.com/rmyndharis/OpenWA/blob/main/docs/README.md
   source: https://github.com/rmyndharis/OpenWA
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

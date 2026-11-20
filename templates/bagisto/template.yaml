@@ -6,7 +6,7 @@ links:
   website: https://bagisto.com
   docs: https://devdocs.bagisto.com
   source: https://github.com/bagisto/bagisto
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

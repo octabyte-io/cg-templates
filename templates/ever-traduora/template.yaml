@@ -6,7 +6,7 @@ links:
   website: https://traduora.co
   docs: https://docs.traduora.co
   source: https://github.com/ever-co/ever-traduora
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

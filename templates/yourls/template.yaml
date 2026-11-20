@@ -6,7 +6,7 @@ links:
   website: https://yourls.org
   docs: https://yourls.org/docs
   source: https://github.com/YOURLS/YOURLS
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

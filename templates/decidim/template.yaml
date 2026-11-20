@@ -6,7 +6,7 @@ links:
   website: https://decidim.org
   docs: https://docs.decidim.org
   source: https://github.com/decidim/decidim
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Three Rails processes (two web workers and Sidekiq) plus the hourly scheduled tasks, next to
 # PostgreSQL and Redis.

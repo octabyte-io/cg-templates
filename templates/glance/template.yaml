@@ -6,7 +6,7 @@ links:
   website: https://github.com/glanceapp/glance
   docs: https://github.com/glanceapp/glance/blob/main/docs/configuration.md
   source: https://github.com/glanceapp/glance
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://grocy.info
   docs: https://github.com/grocy/grocy#readme
   source: https://github.com/grocy/grocy
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

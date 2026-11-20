@@ -6,7 +6,7 @@ links:
   website: https://www.classicpress.net
   docs: https://docs.classicpress.net
   source: https://github.com/ClassicPress/ClassicPress
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

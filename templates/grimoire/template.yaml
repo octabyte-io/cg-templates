@@ -6,7 +6,7 @@ links:
   website: https://goniszewski.com/grimoire/
   docs: https://github.com/goniszewski/grimoire/tree/main/docs
   source: https://github.com/goniszewski/grimoire
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # The official Docker guide asks for at least 2 GB of memory.
 size: medium

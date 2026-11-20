@@ -6,7 +6,7 @@ links:
   website: https://docs.numerique.gouv.fr
   docs: https://github.com/suitenumerique/docs/blob/main/documentation/installation/compose.md
   source: https://github.com/suitenumerique/docs
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://cloudcmd.io
   docs: https://cloudcmd.io/#help
   source: https://github.com/coderaiser/cloudcmd
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

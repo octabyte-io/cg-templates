@@ -12,7 +12,7 @@ links:
   website: https://termix.site
   docs: https://docs.termix.site
   source: https://github.com/Termix-SSH/Termix
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs: {}

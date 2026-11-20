@@ -12,7 +12,7 @@ links:
   website: https://waha.devlike.pro
   docs: https://waha.devlike.pro/docs/overview/introduction/
   source: https://github.com/devlikeapro/waha
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

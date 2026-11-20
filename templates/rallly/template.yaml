@@ -6,7 +6,7 @@ links:
   website: https://rallly.co
   docs: https://support.rallly.co/self-hosting/introduction
   source: https://github.com/lukevella/rallly
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://www.joomla.org
   docs: https://docs.joomla.org
   source: https://github.com/joomla/joomla-cms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

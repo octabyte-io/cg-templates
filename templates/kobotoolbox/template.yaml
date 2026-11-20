@@ -6,7 +6,7 @@ links:
   website: https://www.kobotoolbox.org
   docs: https://support.kobotoolbox.org
   source: https://github.com/kobotoolbox/kpi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

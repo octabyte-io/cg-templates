@@ -6,7 +6,7 @@ links:
   website: https://checkmate.so
   docs: https://checkmate.so/docs
   source: https://github.com/bluewave-labs/Checkmate
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

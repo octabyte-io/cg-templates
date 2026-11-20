@@ -6,7 +6,7 @@ links:
   website: https://apitable.com
   docs: https://github.com/apitable/apitable#installation
   source: https://github.com/apitable/apitable
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:

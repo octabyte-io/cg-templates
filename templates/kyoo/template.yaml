@@ -12,7 +12,7 @@ links:
   website: https://github.com/zoriya/Kyoo
   docs: https://github.com/zoriya/Kyoo/blob/v5.3.0/INSTALLING.md
   source: https://github.com/zoriya/Kyoo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://beaverhabits.com
   docs: https://github.com/daya0576/beaverhabits/wiki
   source: https://github.com/daya0576/beaverhabits
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

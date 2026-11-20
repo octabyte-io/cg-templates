@@ -6,7 +6,7 @@ links:
   website: https://www.seafile.com
   docs: https://manual.seafile.com/13.0/setup/setup_ce_by_docker/
   source: https://github.com/haiwen/seafile-server
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

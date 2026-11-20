@@ -6,7 +6,7 @@ links:
   website: https://openslides.com
   docs: https://github.com/OpenSlides/OpenSlides/blob/main/INSTALL.md
   source: https://github.com/OpenSlides/OpenSlides
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Fourteen containers (thirteen services plus PostgreSQL and Redis); measured
 # with `template try` (see build notes).

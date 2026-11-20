@@ -6,7 +6,7 @@ links:
   website: https://inventree.org
   docs: https://docs.inventree.org/en/stable/
   source: https://github.com/inventree/InvenTree
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Web server, background worker, PostgreSQL, Redis and the proxy; InvenTree's
 # Python processes need about 1.5 GB together.

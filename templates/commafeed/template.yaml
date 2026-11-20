@@ -6,7 +6,7 @@ links:
   website: https://www.commafeed.com
   docs: https://athou.github.io/commafeed/documentation
   source: https://github.com/Athou/commafeed
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

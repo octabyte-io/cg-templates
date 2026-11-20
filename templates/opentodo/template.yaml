@@ -6,7 +6,7 @@ links:
   website: https://open-todo.app
   docs: https://open-todo.app/docs/
   source: https://github.com/OpenTodoApp/OpenTodo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://notemark.docs.enchantedcode.co.uk
   docs: https://notemark.docs.enchantedcode.co.uk/docs/setup/install/
   source: https://github.com/enchant97/note-mark
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://github.com/CyferShepard/Jellystat
   docs: https://github.com/CyferShepard/Jellystat#readme
   source: https://github.com/CyferShepard/Jellystat
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

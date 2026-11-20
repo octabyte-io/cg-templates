@@ -6,7 +6,7 @@ links:
   website: https://www.drupal.org
   docs: https://www.drupal.org/docs
   source: https://git.drupalcode.org/project/drupal
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

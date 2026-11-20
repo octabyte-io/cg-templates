@@ -13,7 +13,7 @@ links:
   website: https://countly.com/lite
   docs: https://support.countly.com/hc/en-us
   source: https://github.com/Countly/countly-server
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

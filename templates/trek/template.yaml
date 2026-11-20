@@ -6,7 +6,7 @@ links:
   website: https://liketrek.com
   docs: https://github.com/liketrek/TREK/wiki
   source: https://github.com/liketrek/TREK
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

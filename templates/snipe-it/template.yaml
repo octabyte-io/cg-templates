@@ -6,7 +6,7 @@ links:
   website: https://snipeitapp.com
   docs: https://snipe-it.readme.io/docs
   source: https://github.com/grokability/snipe-it
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

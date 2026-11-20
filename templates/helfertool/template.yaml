@@ -12,7 +12,7 @@ links:
   website: https://www.helfertool.org
   docs: https://docs.helfertool.org
   source: https://github.com/helfertool/helfertool
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

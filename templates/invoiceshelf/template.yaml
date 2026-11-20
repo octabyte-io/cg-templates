@@ -6,7 +6,7 @@ links:
   website: https://invoiceshelf.com
   docs: https://docs.invoiceshelf.com
   source: https://github.com/InvoiceShelf/InvoiceShelf
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

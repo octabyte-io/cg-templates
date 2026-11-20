@@ -6,7 +6,7 @@ links:
   website: https://plane.so
   docs: https://developers.plane.so/self-hosting/overview
   source: https://github.com/makeplane/plane
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Plane's self-hosting docs ask for at least 4 GB of memory (8 GB for production).
 size: large

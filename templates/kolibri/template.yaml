@@ -6,7 +6,7 @@ links:
   website: https://learningequality.org/kolibri/
   docs: https://kolibri.readthedocs.io/
   source: https://github.com/learningequality/kolibri
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://evolutionfoundation.com.br
   docs: https://docs.evolutionfoundation.com.br
   source: https://github.com/evolution-foundation/evolution-api
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

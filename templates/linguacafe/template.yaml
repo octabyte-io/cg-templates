@@ -12,7 +12,7 @@ links:
   website: https://github.com/simjanos-dev/LinguaCafe
   docs: https://github.com/simjanos-dev/LinguaCafe/wiki
   source: https://github.com/simjanos-dev/LinguaCafe
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

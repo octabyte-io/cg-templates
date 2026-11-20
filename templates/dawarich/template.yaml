@@ -6,7 +6,7 @@ links:
   website: https://dawarich.app
   docs: https://dawarich.app/docs/intro
   source: https://github.com/Freika/dawarich
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Rails app with embedded Sidekiq, PostGIS and Redis; imports of large location
 # histories are memory-hungry.

@@ -6,7 +6,7 @@ links:
   website: https://puemos.github.io/craftplan/
   docs: https://puemos.github.io/craftplan/docs/
   source: https://github.com/puemos/craftplan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

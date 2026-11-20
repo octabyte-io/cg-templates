@@ -6,7 +6,7 @@ links:
   website: https://ghostfol.io
   docs: https://github.com/ghostfolio/ghostfolio#self-hosting
   source: https://github.com/ghostfolio/ghostfolio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

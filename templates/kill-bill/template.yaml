@@ -6,7 +6,7 @@ links:
   website: https://killbill.io
   docs: https://docs.killbill.io/latest/
   source: https://github.com/killbill/killbill
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Two Java servers (Kill Bill and Kaui) plus MariaDB use about 1.7 GB of memory at rest.
 size: large

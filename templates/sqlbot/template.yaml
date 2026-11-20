@@ -13,7 +13,7 @@ links:
   website: https://sqlbot.org
   docs: https://dataease.cn/sqlbot/v1/
   source: https://github.com/dataease/SQLBot
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

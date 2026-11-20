@@ -6,7 +6,7 @@ links:
   website: https://mybb.com
   docs: https://docs.mybb.com
   source: https://github.com/mybb/mybb
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Three containers: MyBB on PHP-FPM, nginx and PostgreSQL. A community forum runs well in 1 GB.
 size: small

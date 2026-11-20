@@ -6,7 +6,7 @@ links:
   website: https://www.dolibarr.org
   docs: https://wiki.dolibarr.org
   source: https://github.com/Dolibarr/dolibarr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

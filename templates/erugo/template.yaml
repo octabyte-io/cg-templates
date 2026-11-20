@@ -6,7 +6,7 @@ links:
   website: https://erugo.app
   docs: https://erugo.app/docs
   source: https://github.com/ErugoOSS/Erugo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 signIn:

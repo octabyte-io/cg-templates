@@ -6,7 +6,7 @@ links:
   website: https://keptinventory.info
   docs: https://keptinventory.info/install/compose/
   source: https://github.com/keptinventory/kept
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

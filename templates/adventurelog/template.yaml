@@ -6,7 +6,7 @@ links:
   website: https://adventurelog.app
   docs: https://adventurelog.app/docs/intro/adventurelog_overview.html
   source: https://github.com/seanmorley15/AdventureLog
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # The first start downloads world country and region data, which needs about 2 GB of memory.
 size: medium

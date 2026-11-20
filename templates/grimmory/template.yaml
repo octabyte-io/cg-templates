@@ -12,7 +12,7 @@ links:
   website: https://grimmory.org
   docs: https://grimmory.org/docs/getting-started
   source: https://github.com/grimmory-tools/grimmory
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Grimmory's docs: 2 GB RAM minimum, 4 GB+ recommended (Java app plus MariaDB).
 size: medium

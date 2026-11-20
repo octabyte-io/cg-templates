@@ -6,7 +6,7 @@ links:
   website: https://www.lowcoder.cloud
   docs: https://docs.lowcoder.cloud
   source: https://github.com/lowcoder-org/lowcoder
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

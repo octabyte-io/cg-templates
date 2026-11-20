@@ -6,7 +6,7 @@ links:
   website: https://www.overleaf.com
   docs: https://docs.overleaf.com/on-premises
   source: https://github.com/overleaf/overleaf
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

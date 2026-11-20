@@ -6,7 +6,7 @@ links:
   website: https://jotty.page
   docs: https://github.com/fccview/jotty/tree/main/howto
   source: https://github.com/fccview/jotty
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

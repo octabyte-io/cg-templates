@@ -6,7 +6,7 @@ links:
   website: https://www.combodo.com/itop
   docs: https://www.itophub.io/wiki/page
   source: https://github.com/Combodo/iTop
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

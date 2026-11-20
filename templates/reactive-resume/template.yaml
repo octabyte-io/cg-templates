@@ -6,7 +6,7 @@ links:
   website: https://rxresu.me
   docs: https://docs.rxresu.me/self-hosting/docker
   source: https://github.com/reactive-resume/reactive-resume
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

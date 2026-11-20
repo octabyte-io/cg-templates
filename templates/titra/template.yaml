@@ -6,7 +6,7 @@ links:
   website: https://titra.io
   docs: https://wiki.titra.io
   source: https://github.com/titraio/titra
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

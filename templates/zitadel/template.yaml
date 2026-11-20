@@ -13,7 +13,7 @@ links:
   website: https://zitadel.com
   docs: https://zitadel.com/docs/self-hosting/deploy/compose
   source: https://github.com/zitadel/zitadel
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # API, login UI, PostgreSQL and a small proxy; ZITADEL's docs ask for at least
 # 2 GB of memory.

@@ -6,7 +6,7 @@ links:
   website: https://domain-locker.com
   docs: https://domain-locker.com/about/self-hosting
   source: https://github.com/Lissy93/domain-locker
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

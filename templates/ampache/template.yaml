@@ -6,7 +6,7 @@ links:
   website: https://ampache.org
   docs: https://ampache.org/docs/
   source: https://github.com/ampache/ampache
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

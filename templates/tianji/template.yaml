@@ -6,7 +6,7 @@ links:
   website: https://tianji.dev
   docs: https://tianji.dev/docs/intro
   source: https://github.com/msgbyte/tianji
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

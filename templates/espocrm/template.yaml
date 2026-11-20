@@ -6,7 +6,7 @@ links:
   website: https://www.espocrm.com
   docs: https://docs.espocrm.com/administration/docker/installation/
   source: https://github.com/espocrm/espocrm
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Web app, daemon, WebSocket server and MariaDB together; 2 GB keeps PHP and
 # MariaDB comfortable.

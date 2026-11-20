@@ -13,7 +13,7 @@ links:
   website: https://www.steedos.com
   docs: https://docs.steedos.com/
   source: https://github.com/steedos/steedos-platform
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

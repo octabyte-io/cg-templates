@@ -6,7 +6,7 @@ links:
   website: https://usetrmnl.github.io/larapaper/
   docs: https://usetrmnl.github.io/larapaper/
   source: https://github.com/usetrmnl/larapaper
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

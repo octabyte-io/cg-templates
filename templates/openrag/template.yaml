@@ -13,7 +13,7 @@ links:
   website: https://www.openr.ag
   docs: https://docs.openr.ag
   source: https://github.com/langflow-ai/openrag
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Six containers: a password proxy, the web app, the API, Langflow, OpenSearch
 # (1 GB heap) and Docling, which reads uploaded files. The project recommends

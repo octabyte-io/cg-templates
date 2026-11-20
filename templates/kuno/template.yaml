@@ -6,7 +6,7 @@ links:
   website: https://github.com/xuemian168/kuno
   docs: https://github.com/xuemian168/kuno#readme
   source: https://github.com/xuemian168/kuno
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

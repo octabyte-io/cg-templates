@@ -6,7 +6,7 @@ links:
   website: https://timetagger.app
   docs: https://timetagger.readthedocs.io
   source: https://github.com/almarklein/timetagger
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

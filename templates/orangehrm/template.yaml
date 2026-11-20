@@ -6,7 +6,7 @@ links:
   website: https://www.orangehrm.com/open-source
   docs: https://starterhelp.orangehrm.com/hc/en-us
   source: https://github.com/orangehrm/orangehrm
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

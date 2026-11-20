@@ -6,7 +6,7 @@ links:
   website: https://habitica.com
   docs: https://github.com/awinterstein/habitica-self-host#readme
   source: https://github.com/HabitRPG/habitica
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

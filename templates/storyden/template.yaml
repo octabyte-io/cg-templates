@@ -13,7 +13,7 @@ links:
   website: https://www.storyden.org
   docs: https://www.storyden.org/docs
   source: https://github.com/Southclaws/storyden
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

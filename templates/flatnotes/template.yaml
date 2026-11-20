@@ -6,7 +6,7 @@ links:
   website: https://flatnotes.io
   docs: https://github.com/dullage/flatnotes/wiki
   source: https://github.com/dullage/flatnotes
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

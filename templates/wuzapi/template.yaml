@@ -5,7 +5,7 @@ tags: [whatsapp api, whatsapp rest api, whatsapp business api alternative, self-
 links:
   docs: https://github.com/asternic/wuzapi/blob/main/API.md
   source: https://github.com/asternic/wuzapi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

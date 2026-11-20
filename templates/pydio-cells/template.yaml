@@ -6,7 +6,7 @@ links:
   website: https://pydio.com
   docs: https://docs.pydio.com/cells-v5/admin-guide/quick-start/cells-installation/docker/
   source: https://github.com/pydio/cells
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://trypost.it
   docs: https://docs.trypost.it
   source: https://github.com/trypostit/trypost
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

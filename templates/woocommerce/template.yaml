@@ -6,7 +6,7 @@ links:
   website: https://woocommerce.com
   docs: https://woocommerce.com/documentation/woocommerce/
   source: https://github.com/woocommerce/woocommerce
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

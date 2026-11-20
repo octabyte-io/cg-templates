@@ -6,7 +6,7 @@ links:
   website: https://github.com/PhiTux/DailyTxT
   docs: https://github.com/PhiTux/DailyTxT#readme
   source: https://github.com/PhiTux/DailyTxT
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

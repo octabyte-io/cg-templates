@@ -6,7 +6,7 @@ links:
   website: https://claper.co
   docs: https://docs.claper.co
   source: https://github.com/ClaperCo/Claper
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

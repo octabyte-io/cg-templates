@@ -6,7 +6,7 @@ links:
   website: https://legejo.se
   docs: https://github.com/jularboolean/legejo/blob/main/docs/configuration.md
   source: https://github.com/jularboolean/legejo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

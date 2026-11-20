@@ -6,7 +6,7 @@ links:
   website: https://ledgersmb.org
   docs: https://ledgersmb.org/content/documentation
   source: https://github.com/ledgersmb/LedgerSMB
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

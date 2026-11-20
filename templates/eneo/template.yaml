@@ -6,7 +6,7 @@ links:
   website: https://eneo.ai
   docs: https://docs.eneo.ai
   source: https://github.com/eneo-ai/eneo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

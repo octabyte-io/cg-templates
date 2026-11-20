@@ -6,7 +6,7 @@ links:
   website: https://mediacms.io
   docs: https://github.com/mediacms-io/mediacms/tree/main/docs
   source: https://github.com/mediacms-io/mediacms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

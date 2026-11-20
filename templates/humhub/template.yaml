@@ -6,7 +6,7 @@ links:
   website: https://www.humhub.com
   docs: https://docs.humhub.org
   source: https://github.com/humhub/humhub
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # One container runs PHP, the web server, the scheduler and two queue workers, next to MariaDB;
 # 2 GB keeps both comfortable.

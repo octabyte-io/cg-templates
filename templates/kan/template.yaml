@@ -6,7 +6,7 @@ links:
   website: https://kan.bn
   docs: https://docs.kan.bn/guides/self-hosting/introduction
   source: https://github.com/kanbn/kan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

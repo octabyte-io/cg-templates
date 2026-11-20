@@ -6,7 +6,7 @@ links:
   website: https://copyparty.eu
   docs: https://github.com/9001/copyparty#readme
   source: https://github.com/9001/copyparty
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

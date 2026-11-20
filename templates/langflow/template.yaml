@@ -6,7 +6,7 @@ links:
   website: https://www.langflow.org
   docs: https://docs.langflow.org
   source: https://github.com/langflow-ai/langflow
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

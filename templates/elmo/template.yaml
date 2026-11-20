@@ -6,7 +6,7 @@ links:
   website: https://www.elmohq.com
   docs: https://www.elmohq.com/docs
   source: https://github.com/elmohq/elmo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

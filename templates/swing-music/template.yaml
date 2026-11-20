@@ -6,7 +6,7 @@ links:
   website: https://swingmx.com
   docs: https://swingmx.com/guide/introduction.html
   source: https://github.com/swingmx/swingmusic
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

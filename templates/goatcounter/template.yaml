@@ -6,7 +6,7 @@ links:
   website: https://www.goatcounter.com
   docs: https://github.com/arp242/goatcounter#self-hosting-goatcounter
   source: https://github.com/arp242/goatcounter
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

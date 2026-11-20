@@ -6,7 +6,7 @@ links:
   website: https://tududi.com
   docs: https://docs.tududi.com
   source: https://github.com/chrisvel/tududi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

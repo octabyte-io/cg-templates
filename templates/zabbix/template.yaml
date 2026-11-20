@@ -6,7 +6,7 @@ links:
   website: https://www.zabbix.com
   docs: https://www.zabbix.com/documentation/8.0/en/manual
   source: https://github.com/zabbix/zabbix
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

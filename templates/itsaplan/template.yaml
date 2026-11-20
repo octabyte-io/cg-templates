@@ -6,7 +6,7 @@ links:
   website: https://itsaplan.dev
   docs: https://github.com/croffasia/itsaplan/blob/v1.11.0/docs/self-hosting.md
   source: https://github.com/croffasia/itsaplan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

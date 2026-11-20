@@ -6,7 +6,7 @@ links:
   website: https://www.xwiki.org
   docs: https://www.xwiki.org/xwiki/bin/view/Documentation/AdminGuide/Installation/InstallationViaDocker/
   source: https://github.com/xwiki/xwiki-platform
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # XWiki runs on Java in Tomcat (with LibreOffice for office imports); its docs ask
 # for at least 2 GB of memory for the wiki alone, plus PostgreSQL.

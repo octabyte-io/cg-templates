@@ -6,7 +6,7 @@ links:
   website: https://ragflow.io
   docs: https://ragflow.io/docs
   source: https://github.com/infiniflow/ragflow
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Six containers: RAGFlow (web app, API, document parsing with OCR and layout models on the
 # CPU), the Infinity search engine, MySQL, a MinIO-compatible file store, Kvrocks and NATS.

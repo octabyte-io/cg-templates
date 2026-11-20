@@ -6,7 +6,7 @@ links:
   website: https://www.firefly-iii.org
   docs: https://docs.firefly-iii.org
   source: https://github.com/firefly-iii/firefly-iii
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

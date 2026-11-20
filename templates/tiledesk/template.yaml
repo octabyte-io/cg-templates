@@ -6,7 +6,7 @@ links:
   website: https://tiledesk.com
   docs: https://github.com/Tiledesk/tiledesk-deployment/tree/master/docker-compose
   source: https://github.com/Tiledesk/tiledesk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

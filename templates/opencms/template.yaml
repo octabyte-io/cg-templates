@@ -6,7 +6,7 @@ links:
   website: https://www.opencms.org
   docs: https://documentation.opencms.org
   source: https://github.com/alkacon/opencms-core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # OpenCms runs on Java in Jetty; the official image starts it with a 2 GB heap
 # (-Xmx2g), plus MariaDB alongside it.

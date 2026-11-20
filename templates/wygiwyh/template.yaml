@@ -6,7 +6,7 @@ links:
   website: https://github.com/eitchtee/WYGIWYH
   docs: https://github.com/eitchtee/WYGIWYH#how-to-use
   source: https://github.com/eitchtee/WYGIWYH
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

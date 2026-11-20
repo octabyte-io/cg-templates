@@ -6,7 +6,7 @@ links:
   website: https://rybbit.com
   docs: https://rybbit.com/docs
   source: https://github.com/rybbit-io/rybbit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

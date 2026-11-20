@@ -6,7 +6,7 @@ links:
   website: https://hushline.app
   docs: https://hushline.app/library/docs/getting-started/start-here
   source: https://github.com/scidsg/hushline
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

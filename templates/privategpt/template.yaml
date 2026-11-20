@@ -6,7 +6,7 @@ links:
   website: https://privategpt.dev
   docs: https://docs.privategpt.dev
   source: https://github.com/zylon-ai/private-gpt
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

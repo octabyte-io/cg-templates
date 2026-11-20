@@ -6,7 +6,7 @@ links:
   website: https://artalk.js.org
   docs: https://artalk.js.org/guide/deploy.html
   source: https://github.com/ArtalkJS/Artalk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

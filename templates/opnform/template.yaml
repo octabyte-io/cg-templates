@@ -6,7 +6,7 @@ links:
   website: https://opnform.com
   docs: https://docs.opnform.com/deployment/docker
   source: https://github.com/OpnForm/OpnForm
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Laravel API, queue worker, scheduler, the Nuxt web app, nginx, Postgres and
 # Redis together; 2 GB keeps PHP and Node comfortable.

@@ -6,7 +6,7 @@ links:
   website: https://omeka.org/s/
   docs: https://omeka.org/s/docs/user-manual/
   source: https://github.com/omeka/omeka-s
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://github.com/Frimurare/WulfVault
   docs: https://github.com/Frimurare/WulfVault/wiki
   source: https://github.com/Frimurare/WulfVault
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

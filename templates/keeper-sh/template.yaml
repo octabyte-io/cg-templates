@@ -12,7 +12,7 @@ links:
   website: https://www.keeper.sh
   docs: https://github.com/ridafkih/keeper.sh#self-hosted
   source: https://github.com/ridafkih/keeper.sh
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

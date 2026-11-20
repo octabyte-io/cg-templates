@@ -6,7 +6,7 @@ links:
   website: https://bpatrik.github.io/pigallery2/
   docs: https://bpatrik.github.io/pigallery2/setup/docker/
   source: https://github.com/bpatrik/pigallery2
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

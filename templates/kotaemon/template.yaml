@@ -6,7 +6,7 @@ links:
   website: https://cinnamon.github.io/kotaemon/
   docs: https://cinnamon.github.io/kotaemon/
   source: https://github.com/Cinnamon/kotaemon
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://www.solidtime.io
   docs: https://docs.solidtime.io
   source: https://github.com/solidtime-io/solidtime
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://github.com/cmintey/wishlist
   docs: https://github.com/cmintey/wishlist#getting-started
   source: https://github.com/cmintey/wishlist
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

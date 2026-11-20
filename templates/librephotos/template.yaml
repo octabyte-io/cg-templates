@@ -6,7 +6,7 @@ links:
   website: https://docs.librephotos.com
   docs: https://docs.librephotos.com/docs/intro
   source: https://github.com/LibrePhotos/librephotos
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

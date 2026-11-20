@@ -6,7 +6,7 @@ links:
   website: https://mifos.org
   docs: https://fineract.apache.org/docs/current/
   source: https://github.com/apache/fineract
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

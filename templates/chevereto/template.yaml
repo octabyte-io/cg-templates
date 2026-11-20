@@ -6,7 +6,7 @@ links:
   website: https://chevereto.com
   docs: https://v4-docs.chevereto.com
   source: https://github.com/chevereto/chevereto
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

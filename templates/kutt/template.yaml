@@ -6,7 +6,7 @@ links:
   website: https://kutt.to
   docs: https://github.com/thedevs-network/kutt#readme
   source: https://github.com/thedevs-network/kutt
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

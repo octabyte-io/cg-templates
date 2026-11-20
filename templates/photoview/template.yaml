@@ -6,7 +6,7 @@ links:
   website: https://photoview.github.io
   docs: https://photoview.github.io/docs/
   source: https://github.com/photoview/photoview
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

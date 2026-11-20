@@ -6,7 +6,7 @@ links:
   website: https://www.maxun.dev
   docs: https://docs.maxun.dev
   source: https://github.com/getmaxun/maxun
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Idle, the six containers use about 850 MB; each robot that runs or records adds a
 # Chromium page. Upstream allows the backend up to 6 GB, so busy setups want large.

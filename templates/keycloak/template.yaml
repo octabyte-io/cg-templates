@@ -13,7 +13,7 @@ links:
   website: https://www.keycloak.org
   docs: https://www.keycloak.org/documentation
   source: https://github.com/keycloak/keycloak
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

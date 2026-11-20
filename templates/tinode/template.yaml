@@ -6,7 +6,7 @@ links:
   website: https://tinode.co
   docs: https://github.com/tinode/chat/blob/master/INSTALL.md
   source: https://github.com/tinode/chat
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

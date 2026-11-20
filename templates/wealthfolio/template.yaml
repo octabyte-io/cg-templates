@@ -6,7 +6,7 @@ links:
   website: https://wealthfolio.app
   docs: https://wealthfolio.app/docs/guide/self-hosting/docker
   source: https://github.com/wealthfolio/wealthfolio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

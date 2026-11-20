@@ -6,7 +6,7 @@ links:
   website: https://cal.com
   docs: https://cal.com/docs/self-hosting/installation
   source: https://github.com/calcom/cal.com
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

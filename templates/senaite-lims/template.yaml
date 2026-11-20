@@ -6,7 +6,7 @@ links:
   website: https://www.senaite.com
   docs: https://www.senaite.com/docs/installation
   source: https://github.com/senaite/senaite.core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

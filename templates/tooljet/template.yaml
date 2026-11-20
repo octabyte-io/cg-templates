@@ -6,7 +6,7 @@ links:
   website: https://www.tooljet.com
   docs: https://docs.tooljet.com
   source: https://github.com/ToolJet/ToolJet
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

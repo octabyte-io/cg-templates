@@ -6,7 +6,7 @@ links:
   website: https://gotosocial.org
   docs: https://docs.gotosocial.org
   source: https://codeberg.org/superseriousbusiness/gotosocial
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

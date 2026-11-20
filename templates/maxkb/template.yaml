@@ -6,7 +6,7 @@ links:
   website: https://maxkb.pro
   docs: https://docs.maxkb.pro
   source: https://github.com/1Panel-dev/MaxKB
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # One container: the MaxKB web app and workers, with its own PostgreSQL (pgvector), Redis and a
 # local embedding model inside. MaxKB recommends 4 CPU cores and 8 GB of memory.

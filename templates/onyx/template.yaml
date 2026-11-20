@@ -6,7 +6,7 @@ links:
   website: https://onyx.app
   docs: https://docs.onyx.app
   source: https://github.com/onyx-dot-app/onyx
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Nine containers: OpenSearch (2 GB heap), two model servers, the API, the
 # background workers, the web app, Postgres, Redis and nginx. Onyx asks for

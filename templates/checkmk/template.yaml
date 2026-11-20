@@ -6,7 +6,7 @@ links:
   website: https://checkmk.com
   docs: https://docs.checkmk.com/latest/en/introduction_docker.html
   source: https://github.com/Checkmk/checkmk
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

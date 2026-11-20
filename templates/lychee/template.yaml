@@ -6,7 +6,7 @@ links:
   website: https://lycheeorg.dev
   docs: https://lycheeorg.dev/docs/
   source: https://github.com/LycheeOrg/Lychee
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Two PHP containers (web and queue worker) and MariaDB; resizing large photos needs headroom.
 size: medium

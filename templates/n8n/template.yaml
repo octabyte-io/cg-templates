@@ -6,7 +6,7 @@ links:
   website: https://n8n.io
   docs: https://docs.n8n.io/hosting/
   source: https://github.com/n8n-io/n8n
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

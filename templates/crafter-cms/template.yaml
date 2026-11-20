@@ -6,7 +6,7 @@ links:
   website: https://craftercms.com
   docs: https://docs.craftercms.org
   source: https://github.com/craftercms/craftercms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Studio's Tomcat may grow to 4 GB, OpenSearch takes 1 GB and the Deployer 1 GB;
 # CrafterCMS asks for at least 8 GB for its Docker setup.

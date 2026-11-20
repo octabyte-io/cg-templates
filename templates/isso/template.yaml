@@ -6,7 +6,7 @@ links:
   website: https://isso-comments.de
   docs: https://isso-comments.de/docs/
   source: https://github.com/isso-comments/isso
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

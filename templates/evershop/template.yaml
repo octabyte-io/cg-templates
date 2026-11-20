@@ -6,7 +6,7 @@ links:
   website: https://evershop.io
   docs: https://evershop.io/docs/development/getting-started/introduction
   source: https://github.com/evershopcommerce/evershop
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

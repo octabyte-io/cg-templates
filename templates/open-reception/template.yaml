@@ -6,7 +6,7 @@ links:
   website: https://open-reception.org
   docs: https://github.com/open-reception/appointment-booking-software/blob/v2.8.1/docs/deployment.md
   source: https://github.com/open-reception/appointment-booking-software
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

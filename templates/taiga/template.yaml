@@ -6,7 +6,7 @@ links:
   website: https://taiga.io
   docs: https://docs.taiga.io/setup-production.html
   source: https://github.com/taigaio/taiga-back
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Nine containers: the API (three web workers), a Celery worker, the web app, live
 # updates, attachment links, PostgreSQL and two RabbitMQ brokers. 2 GB is the floor.

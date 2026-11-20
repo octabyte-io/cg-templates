@@ -6,7 +6,7 @@ links:
   website: https://owntracks.org
   docs: https://owntracks.org/booklet/clients/recorder/
   source: https://github.com/owntracks/recorder
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # A small C program that keeps locations as plain files, behind a Caddy proxy.
 size: xsmall

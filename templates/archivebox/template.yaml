@@ -6,7 +6,7 @@ links:
   website: https://archivebox.io
   docs: https://github.com/ArchiveBox/ArchiveBox/wiki
   source: https://github.com/ArchiveBox/ArchiveBox
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

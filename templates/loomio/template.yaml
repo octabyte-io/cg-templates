@@ -6,7 +6,7 @@ links:
   website: https://www.loomio.com
   docs: https://github.com/loomio/loomio/blob/master/deploy/README.md
   source: https://github.com/loomio/loomio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

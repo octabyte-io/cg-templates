@@ -6,7 +6,7 @@ links:
   website: https://peekaping.com
   docs: https://docs.peekaping.com
   source: https://github.com/0xfurai/peekaping
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

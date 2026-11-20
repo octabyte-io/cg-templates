@@ -6,7 +6,7 @@ links:
   website: https://dashy.to
   docs: https://dashy.to/docs
   source: https://github.com/Lissy93/dashy
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

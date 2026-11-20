@@ -6,7 +6,7 @@ links:
   website: https://courselit.app
   docs: https://docs.courselit.app
   source: https://github.com/codelitdev/courselit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

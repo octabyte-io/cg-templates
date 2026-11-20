@@ -6,7 +6,7 @@ links:
   website: https://otobo.io
   docs: https://doc.otobo.org/manual/installation/11.1/en/content/installation/installation-docker.html
   source: https://github.com/RotherOSS/otobo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

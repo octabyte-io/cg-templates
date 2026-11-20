@@ -6,7 +6,7 @@ links:
   website: https://raneto.com
   docs: https://docs.raneto.com
   source: https://github.com/ryanlelek/Raneto
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

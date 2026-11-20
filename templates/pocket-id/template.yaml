@@ -6,7 +6,7 @@ links:
   website: https://pocket-id.org
   docs: https://pocket-id.org/docs/introduction
   source: https://github.com/pocket-id/pocket-id
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

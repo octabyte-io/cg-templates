@@ -6,7 +6,7 @@ links:
   website: https://www.horilla.com
   docs: https://docs.horilla.com
   source: https://github.com/horilla/horilla-hr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

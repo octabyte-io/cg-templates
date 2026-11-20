@@ -6,7 +6,7 @@ links:
   website: https://ezbookkeeping.mayswind.net
   docs: https://ezbookkeeping.mayswind.net/installation/installation-docker
   source: https://github.com/mayswind/ezbookkeeping
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

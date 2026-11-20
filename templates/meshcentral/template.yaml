@@ -6,7 +6,7 @@ links:
   website: https://meshcentral.com
   docs: https://docs.meshcentral.com
   source: https://github.com/Ylianst/MeshCentral
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

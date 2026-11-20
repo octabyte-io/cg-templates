@@ -8,7 +8,7 @@ links:
   website: https://www.tryton.org
   docs: https://docs.tryton.org/8.2/
   source: https://github.com/tryton/tryton
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

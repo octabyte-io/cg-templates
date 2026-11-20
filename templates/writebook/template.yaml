@@ -6,7 +6,7 @@ links:
   website: https://once.com/writebook
   docs: https://github.com/basecamp/writebook#readme
   source: https://github.com/basecamp/writebook
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

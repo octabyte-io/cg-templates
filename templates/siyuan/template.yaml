@@ -6,7 +6,7 @@ links:
   website: https://b3log.org/siyuan/en/
   docs: https://github.com/siyuan-note/siyuan#docker-hosting
   source: https://github.com/siyuan-note/siyuan
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

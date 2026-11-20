@@ -6,7 +6,7 @@ links:
   website: https://xibosignage.com
   docs: https://docs.xibosignage.com/
   source: https://github.com/xibosignage/xibo-cms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

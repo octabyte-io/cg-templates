@@ -6,7 +6,7 @@ links:
   website: https://waline.js.org/en/
   docs: https://waline.js.org/en/guide/get-started/
   source: https://github.com/walinejs/waline
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://www.open-emr.org
   docs: https://www.open-emr.org/wiki/index.php/OpenEMR_Wiki_Home_Page
   source: https://github.com/openemr/openemr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

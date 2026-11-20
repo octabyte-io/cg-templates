@@ -6,7 +6,7 @@ links:
   website: https://karakeep.com
   docs: https://docs.karakeep.com
   source: https://github.com/karakeep-app/karakeep
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

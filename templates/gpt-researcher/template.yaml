@@ -6,7 +6,7 @@ links:
   website: https://gptr.dev
   docs: https://docs.gptr.dev
   source: https://github.com/assafelovic/gpt-researcher
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

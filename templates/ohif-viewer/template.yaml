@@ -6,7 +6,7 @@ links:
   website: https://ohif.org
   docs: https://docs.ohif.org
   source: https://github.com/OHIF/Viewers
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

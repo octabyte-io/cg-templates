@@ -6,7 +6,7 @@ links:
   website: https://huggingface.co/chat
   docs: https://huggingface.co/docs/chat-ui
   source: https://github.com/huggingface/chat-ui
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

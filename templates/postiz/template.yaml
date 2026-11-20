@@ -6,7 +6,7 @@ links:
   website: https://postiz.com
   docs: https://docs.postiz.com
   source: https://github.com/gitroomhq/postiz-app
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

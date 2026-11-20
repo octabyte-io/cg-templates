@@ -6,7 +6,7 @@ links:
   website: https://windshift.sh
   docs: https://windshift.sh/self-hosting
   source: https://github.com/Windshiftapp/core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # The official compose gives Windshift a 2 GB budget; with PostgreSQL alongside, 2 GB is the floor.
 size: medium

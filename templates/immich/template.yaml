@@ -6,7 +6,7 @@ links:
   website: https://immich.app
   docs: https://docs.immich.app
   source: https://github.com/immich-app/immich
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:

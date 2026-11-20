@@ -6,7 +6,7 @@ links:
   website: https://joinsharkey.org/
   docs: https://docs.joinsharkey.org/docs/install/fresh/
   source: https://activitypub.software/TransFem-org/Sharkey
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Sharkey's Node server, PostgreSQL and Redis. Its docs ask for more than
 # 2 GB of memory and recommend 4 GB for a busy server.

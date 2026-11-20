@@ -6,7 +6,7 @@ links:
   website: https://waxum.imtaqin.id
   docs: https://waxum.imtaqin.id/docs/api/sessions/
   source: https://github.com/imtaqin/waxum
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

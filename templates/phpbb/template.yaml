@@ -6,7 +6,7 @@ links:
   website: https://www.phpbb.com
   docs: https://www.phpbb.com/support/docs/en/3.3/ug/
   source: https://github.com/phpbb/phpbb
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

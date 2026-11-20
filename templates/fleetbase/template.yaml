@@ -6,7 +6,7 @@ links:
   website: https://www.fleetbase.io
   docs: https://www.fleetbase.io/docs
   source: https://github.com/fleetbase/fleetbase
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Fleetbase asks for at least 4 GB of memory (README, "Deploy in Cloud").
 size: large

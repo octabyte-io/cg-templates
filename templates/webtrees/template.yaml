@@ -6,7 +6,7 @@ links:
   website: https://webtrees.net
   docs: https://webtrees.net/install/
   source: https://github.com/fisharebest/webtrees
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

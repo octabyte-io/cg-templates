@@ -6,7 +6,7 @@ links:
   website: https://openpanel.dev
   docs: https://openpanel.dev/docs/self-hosting/self-hosting
   source: https://github.com/Openpanel-dev/openpanel
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://kitchenowl.org
   docs: https://docs.kitchenowl.org
   source: https://github.com/TomBursch/kitchenowl
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

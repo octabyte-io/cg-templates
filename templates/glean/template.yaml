@@ -6,7 +6,7 @@ links:
   website: https://github.com/LeslieLeung/glean
   docs: https://github.com/LeslieLeung/glean/blob/main/DEPLOY.md
   source: https://github.com/LeslieLeung/glean
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Six containers: the web app, the admin dashboard (two small nginx images), the Python API
 # and its background worker (one image each, a few hundred MB of memory), PostgreSQL and Redis.

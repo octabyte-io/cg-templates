@@ -12,7 +12,7 @@ links:
   website: https://shopnex.ai
   docs: https://shopnex.ai/docs
   source: https://github.com/shopnex-ai/shopnex
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # ShopNex's self-hosting guide asks for a server with at least 2 GB of memory.
 size: medium

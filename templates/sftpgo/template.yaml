@@ -6,7 +6,7 @@ links:
   website: https://sftpgo.com
   docs: https://docs.sftpgo.com/
   source: https://github.com/drakkan/sftpgo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

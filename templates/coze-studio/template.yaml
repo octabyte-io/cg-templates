@@ -6,7 +6,7 @@ links:
   website: https://github.com/coze-dev/coze-studio
   docs: https://github.com/coze-dev/coze-studio/wiki
   source: https://github.com/coze-dev/coze-studio
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Ten containers and three one-shot setup jobs: the web front end, the Coze Studio server,
 # MySQL, Redis, Elasticsearch, a MinIO-compatible file store, Milvus with its etcd, and NSQ.

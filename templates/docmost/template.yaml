@@ -6,7 +6,7 @@ links:
   website: https://docmost.com
   docs: https://docmost.com/docs/installation
   source: https://github.com/docmost/docmost
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

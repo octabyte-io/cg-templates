@@ -6,7 +6,7 @@ links:
   website: https://paymenter.org
   docs: https://paymenter.org/docs
   source: https://github.com/Paymenter/Paymenter
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

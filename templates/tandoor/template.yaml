@@ -6,7 +6,7 @@ links:
   website: https://tandoor.dev
   docs: https://docs.tandoor.dev
   source: https://github.com/TandoorRecipes/recipes
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

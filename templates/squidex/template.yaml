@@ -6,7 +6,7 @@ links:
   website: https://squidex.io
   docs: https://docs.squidex.io/id-01-getting-started/installation/platforms/install-on-docker
   source: https://github.com/Squidex/squidex
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://www.elabftw.net
   docs: https://doc.elabftw.net
   source: https://github.com/elabftw/elabftw
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # MySQL plus PHP, which eLabFTW allows up to 2 GB for big PDF exports and images.
 size: medium

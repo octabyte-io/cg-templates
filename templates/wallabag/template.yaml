@@ -6,7 +6,7 @@ links:
   website: https://wallabag.org
   docs: https://doc.wallabag.org
   source: https://github.com/wallabag/wallabag
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

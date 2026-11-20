@@ -6,7 +6,7 @@ links:
   website: https://orbit.noveum.ai
   docs: https://noveum.github.io/orbit/
   source: https://github.com/Noveum/orbit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Eight containers: the web app, a realtime service, a scheduler, a small
 # gateway, PostgreSQL, Redis, MinIO file storage and its bucket set-up.

@@ -6,7 +6,7 @@ links:
   website: https://anythingllm.com
   docs: https://docs.anythingllm.com
   source: https://github.com/Mintplex-Labs/anything-llm
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

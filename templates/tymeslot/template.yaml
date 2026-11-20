@@ -6,7 +6,7 @@ links:
   website: https://tymeslot.app
   docs: https://tymeslot.app/docs
   source: https://github.com/Tymeslot/tymeslot
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

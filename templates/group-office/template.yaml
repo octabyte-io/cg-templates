@@ -6,7 +6,7 @@ links:
   website: https://www.group-office.com
   docs: https://groupoffice.readthedocs.io
   source: https://github.com/Intermesh/groupoffice
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Apache with PHP, a scheduler container and MariaDB; 2 GB keeps PHP and MariaDB comfortable.
 size: medium

@@ -12,7 +12,7 @@ links:
   website: https://pandawiki.docs.baizhi.cloud
   docs: https://pandawiki.docs.baizhi.cloud
   source: https://github.com/chaitin/PandaWiki
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Twelve containers: the API, its background worker, the admin console, the public wiki app and
 # its Caddy proxy, PostgreSQL, Redis, NATS, MinIO, Qdrant, the document crawler and the

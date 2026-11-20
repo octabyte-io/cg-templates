@@ -6,7 +6,7 @@ links:
   website: https://www.orthanc-server.com
   docs: https://orthanc.uclouvain.be/book/
   source: https://github.com/jodogne/OrthancMirror
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

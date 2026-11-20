@@ -6,7 +6,7 @@ links:
   website: https://bonfirenetworks.org
   docs: https://docs.bonfirenetworks.org
   source: https://github.com/bonfire-networks/bonfire-app
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

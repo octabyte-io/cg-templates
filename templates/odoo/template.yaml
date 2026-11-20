@@ -6,7 +6,7 @@ links:
   website: https://www.odoo.com
   docs: https://www.odoo.com/documentation/20.0/
   source: https://github.com/odoo/odoo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

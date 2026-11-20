@@ -6,7 +6,7 @@ links:
   website: https://usememos.com
   docs: https://usememos.com/docs
   source: https://github.com/usememos/memos
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://github.com/Part-DB/Part-DB-server
   docs: https://docs.part-db.de/
   source: https://github.com/Part-DB/Part-DB-server
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

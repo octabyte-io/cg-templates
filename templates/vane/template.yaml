@@ -6,7 +6,7 @@ links:
   website: https://github.com/ItzCrazyKns/Vane
   docs: https://github.com/ItzCrazyKns/Vane/tree/master/docs
   source: https://github.com/ItzCrazyKns/Vane
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

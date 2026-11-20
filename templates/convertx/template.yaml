@@ -6,7 +6,7 @@ links:
   website: https://github.com/C4illin/ConvertX
   docs: https://github.com/C4illin/ConvertX#readme
   source: https://github.com/C4illin/ConvertX
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

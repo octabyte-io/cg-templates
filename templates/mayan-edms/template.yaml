@@ -6,7 +6,7 @@ links:
   website: https://www.mayan-edms.com
   docs: https://docs.mayan-edms.com
   source: https://gitlab.com/mayan-edms/mayan-edms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xlarge
 inputs:

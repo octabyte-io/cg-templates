@@ -6,7 +6,7 @@ links:
   website: https://docs.paperless-ngx.com
   docs: https://docs.paperless-ngx.com
   source: https://github.com/paperless-ngx/paperless-ngx
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

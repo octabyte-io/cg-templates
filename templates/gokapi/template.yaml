@@ -6,7 +6,7 @@ links:
   website: https://github.com/Forceu/Gokapi
   docs: https://gokapi.readthedocs.io
   source: https://github.com/Forceu/Gokapi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://nightscout.github.io
   docs: https://nightscout.github.io/nightscout/new_user/
   source: https://github.com/nightscout/cgm-remote-monitor
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

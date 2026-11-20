@@ -6,7 +6,7 @@ links:
   website: https://fluxer.com
   docs: https://docs.fluxer.com/operator/
   source: https://github.com/fluxerapp/fluxer
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

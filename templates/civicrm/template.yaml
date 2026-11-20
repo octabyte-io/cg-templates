@@ -6,7 +6,7 @@ links:
   website: https://civicrm.org
   docs: https://docs.civicrm.org/user/en/latest/
   source: https://github.com/civicrm/civicrm-core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

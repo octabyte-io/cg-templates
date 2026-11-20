@@ -6,7 +6,7 @@ links:
   website: https://superset.apache.org
   docs: https://superset.apache.org/docs/intro/
   source: https://github.com/apache/superset
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://pkp.sfu.ca/software/ojs/
   docs: https://docs.pkp.sfu.ca/
   source: https://github.com/pkp/ojs
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

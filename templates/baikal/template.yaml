@@ -6,7 +6,7 @@ links:
   website: https://sabre.io/baikal/
   docs: https://sabre.io/baikal/install/
   source: https://github.com/sabre-io/Baikal
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

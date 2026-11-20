@@ -6,7 +6,7 @@ links:
   website: https://joinmastodon.org
   docs: https://docs.joinmastodon.org/admin/install/
   source: https://github.com/mastodon/mastodon
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Web (Puma), Sidekiq, the streaming server, PostgreSQL and Redis together use
 # about 900 MB at rest (measured); 2 GB leaves room for a small community.

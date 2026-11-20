@@ -6,7 +6,7 @@ links:
   website: https://phpipam.net
   docs: https://phpipam.net/documents/
   source: https://github.com/phpipam/phpipam
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

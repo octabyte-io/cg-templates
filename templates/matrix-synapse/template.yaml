@@ -6,7 +6,7 @@ links:
   website: https://element.io
   docs: https://element-hq.github.io/synapse/latest/
   source: https://github.com/element-hq/synapse
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

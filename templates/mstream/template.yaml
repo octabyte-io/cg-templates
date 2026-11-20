@@ -6,7 +6,7 @@ links:
   website: https://mstream.io
   docs: https://github.com/IrosTheBeggar/mStream/tree/master/docs
   source: https://github.com/IrosTheBeggar/mStream
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

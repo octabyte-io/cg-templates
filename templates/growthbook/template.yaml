@@ -6,7 +6,7 @@ links:
   website: https://www.growthbook.io
   docs: https://docs.growthbook.io/self-host
   source: https://github.com/growthbook/growthbook
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # GrowthBook's production docs ask for at least 2 GB of memory and 1 vCPU per app instance,
 # plus MongoDB.

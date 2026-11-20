@@ -6,7 +6,7 @@ links:
   website: https://invoicerr.app
   docs: https://docs.invoicerr.app
   source: https://github.com/invoicerr-app/invoicerr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

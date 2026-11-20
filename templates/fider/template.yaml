@@ -6,7 +6,7 @@ links:
   website: https://fider.io
   docs: https://docs.fider.io/hosting-instance
   source: https://github.com/getfider/fider
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

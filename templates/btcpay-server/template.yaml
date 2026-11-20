@@ -6,7 +6,7 @@ links:
   website: https://btcpayserver.org
   docs: https://docs.btcpayserver.org
   source: https://github.com/btcpayserver/btcpayserver
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # BTCPay's docs ask for at least 2 GB of memory and 80 GB of disk for a pruned
 # Bitcoin node. The first sync of the Bitcoin blockchain takes one to several days.

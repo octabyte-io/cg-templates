@@ -6,7 +6,7 @@ links:
   website: https://www.pinepods.online
   docs: https://www.pinepods.online/docs/intro
   source: https://github.com/madeofpendletonwool/PinePods
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

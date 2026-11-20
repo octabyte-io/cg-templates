@@ -6,7 +6,7 @@ links:
   website: https://relaticle.com
   docs: https://relaticle.com/developers/self-hosting
   source: https://github.com/relaticle/relaticle
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Upstream asks for 2 GB of memory at least (Self-Hosting Guide, Requirements).
 size: medium

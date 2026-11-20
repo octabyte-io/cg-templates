@@ -6,7 +6,7 @@ links:
   website: https://nextcloud.com
   docs: https://docs.nextcloud.com/server/latest/admin_manual/
   source: https://github.com/nextcloud/server
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

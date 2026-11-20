@@ -6,7 +6,7 @@ links:
   website: https://spreecommerce.org
   docs: https://spreecommerce.org/docs
   source: https://github.com/spree/spree
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

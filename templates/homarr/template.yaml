@@ -6,7 +6,7 @@ links:
   website: https://homarr.dev
   docs: https://homarr.dev/docs/getting-started
   source: https://github.com/homarr-labs/homarr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

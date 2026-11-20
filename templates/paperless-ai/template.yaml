@@ -6,7 +6,7 @@ links:
   website: https://github.com/clusterzx/paperless-ai
   docs: https://github.com/clusterzx/paperless-ai#readme
   source: https://github.com/clusterzx/paperless-ai
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 signIn:

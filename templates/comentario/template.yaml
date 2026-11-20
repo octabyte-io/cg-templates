@@ -6,7 +6,7 @@ links:
   website: https://comentario.app
   docs: https://docs.comentario.app
   source: https://gitlab.com/comentario/comentario
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

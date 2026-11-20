@@ -6,7 +6,7 @@ links:
   website: https://www.silex.me
   docs: https://docs.silex.me
   source: https://github.com/silexlabs/Silex
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

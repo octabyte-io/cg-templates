@@ -6,7 +6,7 @@ links:
   website: https://eigenfocus.com
   docs: https://github.com/Eigenfocus/eigenfocus#installation
   source: https://github.com/Eigenfocus/eigenfocus
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

@@ -12,7 +12,7 @@ links:
   website: https://www.authelia.com
   docs: https://www.authelia.com/integration/prologue/get-started/
   source: https://github.com/authelia/authelia
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Authelia itself uses well under 100 MB of memory; Redis adds a little.
 size: small

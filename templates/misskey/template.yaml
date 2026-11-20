@@ -6,7 +6,7 @@ links:
   website: https://misskey-hub.net/en/
   docs: https://misskey-hub.net/en/docs/for-admin/install/guides/docker/
   source: https://github.com/misskey-dev/misskey
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Misskey's Node server, PostgreSQL and Redis; Misskey's guide asks for at
 # least 2 GB of memory on the server.

@@ -6,7 +6,7 @@ links:
   website: https://frepple.com
   docs: https://frepple.com/docs/current/
   source: https://github.com/frePPLe/frepple
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://atlas-cmms.com
   docs: https://github.com/Grashjs/cmms/tree/main/dev-docs
   source: https://github.com/Grashjs/cmms
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # A Java (Spring Boot) API with PostgreSQL, file storage and a web app.
 size: medium

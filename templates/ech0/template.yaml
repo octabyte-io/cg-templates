@@ -6,7 +6,7 @@ links:
   website: https://ech0.app
   docs: https://ech0.app/docs
   source: https://github.com/lin-snow/Ech0
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

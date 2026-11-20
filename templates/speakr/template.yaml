@@ -6,7 +6,7 @@ links:
   website: https://murtaza-nasir.github.io/speakr/
   docs: https://murtaza-nasir.github.io/speakr/getting-started/installation/
   source: https://github.com/murtaza-nasir/speakr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

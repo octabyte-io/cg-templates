@@ -6,7 +6,7 @@ links:
   website: https://documenso.com
   docs: https://docs.documenso.com
   source: https://github.com/documenso/documenso
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

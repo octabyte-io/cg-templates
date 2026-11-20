@@ -6,7 +6,7 @@ links:
   website: https://telawiki.com
   docs: https://telawiki.com/tela/docs
   source: https://github.com/zcag/tela
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

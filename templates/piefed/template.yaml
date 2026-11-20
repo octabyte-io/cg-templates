@@ -13,7 +13,7 @@ links:
   website: https://join.piefed.social
   docs: https://codeberg.org/rimu/pyfedi/src/branch/main/INSTALL-docker.md
   source: https://codeberg.org/rimu/pyfedi
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

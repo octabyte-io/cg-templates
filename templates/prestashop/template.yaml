@@ -6,7 +6,7 @@ links:
   website: https://www.prestashop-project.org
   docs: https://docs.prestashop-project.org
   source: https://github.com/PrestaShop/PrestaShop
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://openseo.so
   docs: https://github.com/every-app/open-seo/blob/main/docs/SELF_HOSTING_DOCKER.md
   source: https://github.com/every-app/open-seo
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://www.activepieces.com
   docs: https://www.activepieces.com/docs/install/overview
   source: https://github.com/activepieces/activepieces
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://docs.slinkapp.io
   docs: https://docs.slinkapp.io
   source: https://github.com/andrii-kryvoviaz/slink
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://formbricks.com
   docs: https://formbricks.com/docs/self-hosting/setup/docker
   source: https://github.com/formbricks/formbricks
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://airtrail.johan.ohly.dk
   docs: https://airtrail.johan.ohly.dk/docs
   source: https://github.com/johanohly/AirTrail
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

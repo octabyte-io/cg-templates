@@ -6,7 +6,7 @@ links:
   website: https://kener.ing
   docs: https://kener.ing/docs
   source: https://github.com/rajnandan1/kener
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

@@ -6,7 +6,7 @@ links:
   website: https://aureuserp.com
   docs: https://devdocs.aureuserp.com
   source: https://github.com/aureuserp/aureuserp
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

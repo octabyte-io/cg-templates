@@ -6,7 +6,7 @@ links:
   website: https://zulip.com
   docs: https://zulip.readthedocs.io/projects/docker/
   source: https://github.com/zulip/zulip
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

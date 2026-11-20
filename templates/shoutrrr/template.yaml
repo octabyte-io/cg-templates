@@ -6,7 +6,7 @@ links:
   website: https://shoutrrr.com
   docs: https://shoutrrr.com/docs
   source: https://github.com/coollabsio/shoutrrr
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

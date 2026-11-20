@@ -6,7 +6,7 @@ links:
   website: https://mathesar.org
   docs: https://docs.mathesar.org/latest/
   source: https://github.com/mathesar-foundation/mathesar
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

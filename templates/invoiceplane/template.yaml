@@ -6,7 +6,7 @@ links:
   website: https://invoiceplane.com
   docs: https://wiki.invoiceplane.com
   source: https://github.com/InvoicePlane/InvoicePlane
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

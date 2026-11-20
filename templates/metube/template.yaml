@@ -6,7 +6,7 @@ links:
   website: https://github.com/alexta69/metube
   docs: https://github.com/alexta69/metube/wiki
   source: https://github.com/alexta69/metube
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

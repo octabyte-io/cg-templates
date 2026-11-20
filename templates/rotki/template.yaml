@@ -13,7 +13,7 @@ links:
   website: https://rotki.com
   docs: https://docs.rotki.com
   source: https://github.com/rotki/rotki
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

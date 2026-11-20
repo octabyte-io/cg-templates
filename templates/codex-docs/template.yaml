@@ -13,7 +13,7 @@ links:
   website: https://docs.codex.so
   docs: https://docs.codex.so/getting-started
   source: https://github.com/codex-team/codex.docs
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

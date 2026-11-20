@@ -6,7 +6,7 @@ links:
   website: https://owncloud.com
   docs: https://doc.owncloud.com/server/11.1/
   source: https://github.com/owncloud/core
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

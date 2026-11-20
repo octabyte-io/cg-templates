@@ -6,7 +6,7 @@ links:
   website: https://bigcapital.app
   docs: https://docs.bigcapital.app
   source: https://github.com/bigcapitalhq/bigcapital
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: large
 inputs:

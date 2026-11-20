@@ -12,7 +12,7 @@ links:
   website: https://immichframe.dev
   docs: https://immichframe.dev/docs/overview
   source: https://github.com/immichFrame/ImmichFrame
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

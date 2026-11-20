@@ -6,7 +6,7 @@ links:
   website: https://radicale.org
   docs: https://radicale.org/v3.html
   source: https://github.com/Kozea/Radicale
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 inputs:

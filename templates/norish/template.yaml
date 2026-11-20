@@ -6,7 +6,7 @@ links:
   website: https://norish.dev
   docs: https://docs.norish.dev
   source: https://github.com/norish-recipes/norish
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:

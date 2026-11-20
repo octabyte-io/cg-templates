@@ -6,7 +6,7 @@ links:
   website: https://www.ilias.de/en/
   docs: https://docu.ilias.de
   source: https://github.com/ILIAS-eLearning/ILIAS
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # The project asks for at least 4 GB of memory.
 size: large

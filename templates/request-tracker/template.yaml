@@ -6,7 +6,7 @@ links:
   website: https://bestpractical.com/request-tracker
   docs: https://docs.bestpractical.com/rt/latest/
   source: https://github.com/bestpractical/rt
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

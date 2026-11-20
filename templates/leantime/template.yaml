@@ -6,7 +6,7 @@ links:
   website: https://leantime.io
   docs: https://docs.leantime.io
   source: https://github.com/Leantime/leantime
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: small
 inputs:

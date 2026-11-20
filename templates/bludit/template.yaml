@@ -6,7 +6,7 @@ links:
   website: https://www.bludit.com
   docs: https://docs.bludit.com
   source: https://github.com/bludit/bludit
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: xsmall
 signIn:

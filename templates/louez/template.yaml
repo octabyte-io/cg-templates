@@ -6,7 +6,7 @@ links:
   website: https://louez.io
   docs: https://github.com/Synapsr/Louez#-self-host-in-one-command
   source: https://github.com/Synapsr/Louez
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 # Upstream plans for at least 2 GB with its optional background-removal worker; without
 # it the app, MySQL and the file store fit in about 1 GB, so medium leaves headroom.

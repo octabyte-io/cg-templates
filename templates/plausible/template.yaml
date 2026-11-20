@@ -6,7 +6,7 @@ links:
   website: https://plausible.io
   docs: https://github.com/plausible/community-edition/wiki
   source: https://github.com/plausible/analytics
-cloudgate: 0.1.0
+cloudgate: "0.3.11"
 compose: app
 size: medium
 inputs:
