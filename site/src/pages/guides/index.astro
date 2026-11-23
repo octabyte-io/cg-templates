@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { listNames } from '../../lib/catalogue';
+import { guides } from '../../lib/guides';
+import { breadcrumbSchema, graph, pageListSchema } from '../../lib/schema';
+import { href } from '../../lib/site';
+
+const all = guides();
+const newest = all.map((g) => (g.updated ?? g.checked).getTime());
+const trail = [
+  { name: 'Home', path: '' },
+  { name: 'Guides', path: 'guides/' },
+];
+---
+
+<Base
+  title="Guides to self-hosted apps"
+  description="Plain guides to choosing self-hosted apps: what each kind of app does, how they differ, and which ones you can deploy with Cloudgate."
+  path="guides/"
+  pageType="CollectionPage"
+  dateModified={newest.length ? new Date(Math.max(...newest)) : undefined}
+  jsonLd={graph(
+    breadcrumbSchema(trail),
+    pageListSchema(
+      'Guides to self-hosted apps',
+      all.map((g) => ({ name: g.h1, path: `guides/${g.slug}/` })),
+    ),
+  )}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead one pad">
+    <div class="body">
+      <h1 class="h1">Guides to self-hosted apps</h1>
+      <p class="lede">
+        Each guide looks at one kind of app across the catalogue: what to check before you choose, how the apps differ, and
+        which one fits which job.
+      </p>
+    </div>
+  </section>
+  <section class="sec browse pad" aria-labelledby="g-all">
+    <h2 class="h2" id="g-all">All guides</h2>
+    <ul class="azlist">
+      {
+        all.map((g) => (
+          <li>
+            <a href={href(`guides/${g.slug}/`)}>{g.h1}</a>
+            <span>{listNames(g.apps.map((a) => a.app.name))}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

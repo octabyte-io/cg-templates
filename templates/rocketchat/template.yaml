@@ -1,0 +1,27 @@
+name: Rocket.Chat
+description: "Self-hosted Rocket.Chat: Slack-style team chat with channels, threads and direct messages, plus website live chat, all on your own server."
+version: "9.0.0"
+tags: [rocket.chat, self-hosted team chat, slack alternative, microsoft teams alternative, live chat, team messaging]
+links:
+  website: https://www.rocket.chat
+  docs: https://docs.rocket.chat
+  source: https://github.com/RocketChat/Rocket.Chat
+cloudgate: "0.3.11"
+compose: app
+# About 800 MB in use at rest (app and MongoDB). Rocket.Chat's system requirements page asks
+# for 4 GB for the app alone when sizing for up to 500 people online at once.
+size: medium
+inputs:
+  ROOT_URL: { value: "{{domains.rocketchat.url}}" }
+  # The first admin, created on the first start. Sign in as "admin".
+  ADMIN_PASS: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email of Rocket.Chat's first admin, whose username is admin. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+signIn:
+  username: { value: admin }
+  password: ADMIN_PASS
+domains:
+  - { service: rocketchat, port: 3000 }

@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { alternativesPages, getTemplates, GITHUB_REPO, isSample, listNames, usedCategories, licenceKind } from '../lib/catalogue';
 import { HOW_IT_WORKS } from '../lib/copy';
 import { comparisons } from '../lib/compare';
+import { guides } from '../lib/guides';
 import { appUrl, markdownUrl, SAMPLE_NOTE } from '../lib/machine';
 import { absolute, cloudgate, deployUrl, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
 
@@ -47,6 +48,7 @@ function body(): string {
     `- [All apps](${absolute('templates/')}): every app in the directory, filterable by category or by the tool it replaces.`,
     `- [How it works](${absolute('how-it-works/')}): what happens from choosing an app and clicking Deploy to opening it at its own web address.`,
     `- [Comparisons](${absolute('compare/')}): each app side by side with the paid tool it replaces: features, pricing, hosting and how to switch.`,
+    `- [Guides](${absolute('guides/')}): guides to choosing one kind of self-hosted app, such as a headless CMS, across the catalogue.`,
     `- [Why Cloudgate](${absolute('why-cloudgate/')}): what a small team pays for per-seat tools against open-source apps on one server, and when a paid tool is still the better choice.`,
     '',
   );
@@ -78,6 +80,15 @@ function body(): string {
     out.push('');
   }
 
+  const guideList = guides();
+  if (guideList.length) {
+    out.push('## Guides', '');
+    for (const g of guideList) {
+      out.push(`- [${g.h1}](${absolute(`guides/${g.slug}/`)}): ${g.description} Markdown: ${absolute(`guides/${g.slug}.md`)}`);
+    }
+    out.push('');
+  }
+
   out.push('## Categories', '');
   for (const category of usedCategories()) {
     out.push(`- [${category.name}](${absolute(`categories/${category.id}/`)}): ${category.lede} (${category.count} ${category.count === 1 ? 'app' : 'apps'})`);
@@ -87,7 +98,7 @@ function body(): string {
   out.push(
     '## Optional',
     '',
-    `- [Everything in one file](${absolute('llms-full.txt')}): every app page, alternatives page and comparison as Markdown.`,
+    `- [Everything in one file](${absolute('llms-full.txt')}): every app page, alternatives page, comparison and guide as Markdown.`,
     `- [Machine-readable index](${absolute('templates.json')}): every app as JSON, with links to its page, Markdown copy and logo.`,
     `- Markdown copy of each app page: ${absolute('templates/')}<id>.md${example ? `, for example [${example.name}](${markdownUrl(example)})` : ''}.`,
     `- [Source on GitHub](${GITHUB_REPO}): every app's template folder; add an app with a pull request.`,
