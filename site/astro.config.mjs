@@ -38,6 +38,9 @@ function lastmod(url) {
   const compare = path.match(/^compare\/([^/]+)$/);
   if (compare) return lastCommit(`src/compare/${compare[1]}.md`);
   if (path === 'compare') return lastCommit('src/compare');
+  const guide = path.match(/^guides\/([^/]+)$/);
+  if (guide) return lastCommit(`src/guides/${guide[1]}.md`);
+  if (path === 'guides') return lastCommit('src/guides');
   if (path === '' || /^(templates|categories|alternatives)(\/|$)/.test(path)) return lastCommit(templatesDir);
   return lastCommit(`src/pages/${path}.astro`);
 }

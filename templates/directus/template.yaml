@@ -1,0 +1,28 @@
+name: Directus
+description: "Self-hosted Directus is a headless CMS and no-code admin on your own SQL database, with a REST and GraphQL API. A source-available Contentful alternative."
+version: "12.7.0"
+tags: [headless cms, self-hosted headless cms, contentful alternative, sanity alternative, no-code database admin, rest and graphql api]
+links:
+  website: https://directus.com
+  docs: https://directus.com/docs
+  source: https://github.com/directus/directus
+cloudgate: "0.3.11"
+compose: app
+size: small
+inputs:
+  PUBLIC_URL: { value: "{{domains.directus.url}}" }
+  # Signs Directus's sign-in tokens.
+  SECRET: { generate: hex }
+  DB_PASSWORD: { generate: password }
+  ADMIN_EMAIL:
+    ask:
+      label: Admin email
+      description: The email you sign in to Directus with. Cloudgate creates a strong password for it, shown afterwards on the app's variables page.
+      format: email
+  ADMIN_PASSWORD: { generate: password }
+signIn:
+  username: ADMIN_EMAIL
+  password: ADMIN_PASSWORD
+  path: /admin
+domains:
+  - { service: directus, port: 8055 }

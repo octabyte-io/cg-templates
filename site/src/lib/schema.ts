@@ -38,7 +38,7 @@ export function withPage(
   const nodes = doc['@graph'];
   const breadcrumb = nodes.find((node) => node['@type'] === 'BreadcrumbList');
   if (breadcrumb && !breadcrumb['@id']) breadcrumb['@id'] = `${page.url}#breadcrumb`;
-  const main = nodes.find((node) => ['SoftwareApplication', 'ItemList', 'HowTo'].includes(String(node['@type'])));
+  const main = nodes.find((node) => ['SoftwareApplication', 'Article', 'ItemList', 'HowTo'].includes(String(node['@type'])));
   if (main && !main['@id']) main['@id'] = `${page.url}#main`;
   if (!nodes.some((node) => node['@type'] === 'WebSite')) {
     nodes.push({ '@type': 'WebSite', '@id': `${absolute()}#website`, name: SITE_NAME, url: absolute() });
@@ -264,4 +264,52 @@ export function comparisonSchema(c: {
       },
     ],
   };
+}
+
+/**
+ * A guide's article and the apps it recommends. The `Article` states only what the page shows: its
+ * heading, summary, the month its facts were checked (as `dateModified` when git has no later date)
+ * and the apps it lists, each pointing at its own page's `SoftwareApplication` node.
+ */
+export function guideSchema(g: {
+  slug: string;
+  h1: string;
+  description: string;
+  modified: Date;
+  apps: Template[];
+  image: string;
+}): Json[] {
+  const url = absolute(`guides/${g.slug}/`);
+  const node = (t: Template) => ({
+    '@type': 'SoftwareApplication',
+    '@id': `${absolute(`templates/${t.id}/`)}#app`,
+    name: t.name,
+    url: absolute(`templates/${t.id}/`),
+    applicationCategory: applicationCategory(t),
+    operatingSystem: 'Linux, Docker',
+    license: t.license,
+  });
+  return [
+    {
+      '@type': 'Article',
+      '@id': `${url}#article`,
+      headline: g.h1,
+      description: g.description,
+      url,
+      image: absolute(g.image),
+      inLanguage: 'en',
+      dateModified: g.modified.toISOString(),
+      author: { '@id': ORGANIZATION['@id'] },
+      publisher: { '@id': ORGANIZATION['@id'] },
+      mainEntityOfPage: { '@id': `${url}#webpage` },
+      about: { '@id': `${url}#apps` },
+    },
+    {
+      '@type': 'ItemList',
+      '@id': `${url}#apps`,
+      name: g.h1,
+      numberOfItems: g.apps.length,
+      itemListElement: g.apps.map((t, index) => ({ '@type': 'ListItem', position: index + 1, item: node(t) })),
+    },
+  ];
 }

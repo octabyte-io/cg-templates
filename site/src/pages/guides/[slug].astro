@@ -1,0 +1,379 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppTile from '../../components/AppTile.astro';
+import Chev from '../../components/Chev.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Ease from '../../components/Ease.astro';
+import Faq from '../../components/Faq.astro';
+import { licenceKind, type Template } from '../../lib/catalogue';
+import { comparisons, monthYear } from '../../lib/compare';
+import { GUIDE_HEADINGS, guides, sectionHtml, type Guide } from '../../lib/guides';
+import { breadcrumbSchema, faqSchema, graph, guideSchema } from '../../lib/schema';
+import { deployUrl, href } from '../../lib/site';
+
+export function getStaticPaths() {
+  return guides().map((g) => ({ params: { slug: g.slug }, props: { g } }));
+}
+
+interface Props {
+  g: Guide;
+}
+
+const { g } = Astro.props;
+const checked = monthYear(g.checked);
+const modified = g.updated ?? g.checked;
+const ogImage = 'og/default.png';
+// Each app's own compare page (the app against the tool it replaces first), when there is one.
+const compareOf = (app: Template) => comparisons().find((c) => c.app.id === app.id);
+
+const thumb = (app: Template) => {
+  const shot = app.screenshots[0];
+  if (!shot) return undefined;
+  const at = (w: number) => href(`screenshots/${app.id}/${shot.name}-${w}.webp`);
+  return {
+    src: at(shot.widths[0]),
+    srcset: shot.widths.slice(0, 2).map((w) => `${at(w)} ${w}w`).join(', '),
+    width: shot.width,
+    height: shot.height,
+  };
+};
+
+const trail = [
+  { name: 'Home', path: '' },
+  { name: 'Guides', path: 'guides/' },
+  { name: g.h1, path: `guides/${g.slug}/` },
+];
+const jsonLd = graph(
+  breadcrumbSchema(trail),
+  ...guideSchema({ slug: g.slug, h1: g.h1, description: g.description, modified, apps: g.apps.map((a) => a.app), image: ogImage }),
+  ...(g.faq.length ? [faqSchema(g.faq)] : []),
+);
+---
+
+<Base
+  title={g.title}
+  description={g.description}
+  path={`guides/${g.slug}/`}
+  jsonLd={jsonLd}
+  ogImage={ogImage}
+  ogType="article"
+  markdown={`guides/${g.slug}.md`}
+  dateModified={modified}
+>
+  <Crumbs trail={trail} />
+  <section class="apphead one pad">
+    <div class="body">
+      <h1 class="h1">{g.h1}</h1>
+      <p class="lede">{g.lede}</p>
+      <div class="chips">
+        <span class="chip"><b>{g.apps.length}</b> apps you can deploy</span>
+        <span class="chip">Facts checked <b><time datetime={g.checked.toISOString().slice(0, 7)}>{checked}</time></b></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec pad">
+    <div class="blk first">
+      <h2 class="h2">{GUIDE_HEADINGS.glance}</h2>
+      <div class="tablewrap">
+        <table class="cmp">
+          <thead>
+            <tr>
+              <th scope="col">App</th>
+              <th scope="col">Content API</th>
+              <th scope="col">Content stored in</th>
+              <th scope="col">Code</th>
+              <th scope="col">Ease of use</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              g.apps.map(({ app, api, data }) => (
+                <tr>
+                  <td class="c-app">
+                    <span class="who">
+                      <AppTile template={app} box={32} size={18} loading="eager" />
+                      <a class="plain" href={href(`templates/${app.id}/`)}>
+                        {app.name}
+                      </a>
+                    </span>
+                  </td>
+                  <td class="c-x">
+                    <span class="lab">Content API</span>
+                    {api}
+                  </td>
+                  <td class="c-x">
+                    <span class="lab">Content stored in</span>
+                    {data}
+                  </td>
+                  <td class="c-x">
+                    <span class="lab">Code</span>
+                    <span title={`Licence: ${app.license}`}>{licenceKind(app.license).label}</span>
+                  </td>
+                  <td class="c-ease">
+                    <Ease ease={app.ease} />
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {
+      g.sections.map((section) => (
+        <div class="blk">
+          <h2 class="h2" id={section.id}>
+            {section.heading}
+          </h2>
+          <div class="prose" set:html={sectionHtml(section, href())} />
+        </div>
+      ))
+    }
+
+    <div class="blk">
+      <h2 class="h2">{GUIDE_HEADINGS.apps}</h2>
+      <div class="opts">
+        {
+          g.apps.map(({ app, note }) => {
+            const shot = thumb(app);
+            const kind = licenceKind(app.license);
+            const cmp = compareOf(app);
+            return (
+              <article class="opt" id={app.id}>
+                <div class="otx">
+                  <div class="ttl">
+                    <AppTile template={app} box={40} size={22} />
+                    <h3 class="nm">
+                      <a href={href(`templates/${app.id}/`)}>{app.name}</a>
+                    </h3>
+                  </div>
+                  <p class="tag">{app.tagline}</p>
+                  <p class="fit">{note}</p>
+                  <div class="meta">
+                    <Ease ease={app.ease} />
+                    <span title={`${kind.note} Licence: ${app.license}`}>{kind.label}</span>
+                  </div>
+                  <div class="acts">
+                    <a class="btn sm" href={deployUrl(app.id)}>
+                      Deploy {app.name}
+                    </a>
+                    <a class="btn sm ghost" href={href(`templates/${app.id}/`)}>
+                      About {app.name} <Chev />
+                    </a>
+                    {cmp && (
+                      <a class="btn sm ghost" href={href(`compare/${cmp.slug}/`)}>
+                        {cmp.app.name} vs {cmp.rival.name} <Chev />
+                      </a>
+                    )}
+                  </div>
+                </div>
+                {shot && (
+                  <a class="oshot" href={href(`templates/${app.id}/`)} tabindex="-1" aria-hidden="true">
+                    <img
+                      src={shot.src}
+                      srcset={shot.srcset}
+                      sizes="(min-width: 960px) 420px, 100vw"
+                      width={shot.width}
+                      height={shot.height}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                )}
+              </article>
+            );
+          })
+        }
+      </div>
+    </div>
+
+    {
+      g.faq.length > 0 && (
+        <div class="blk">
+          <h2 class="h2">{GUIDE_HEADINGS.faq}</h2>
+          <Faq items={g.faq} />
+        </div>
+      )
+    }
+
+    <div class="blk last">
+      <h2 class="h2">{GUIDE_HEADINGS.sources}</h2>
+      <p class="muted measure">
+        Facts checked in {checked} against these pages and each app’s own page in this catalogue. Licences and editions change, so
+        check the maker’s site before you decide.
+      </p>
+      <ul class="src">
+        {
+          g.sources.map((s) => (
+            <li>
+              <a href={s.url} rel="noopener">{s.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .measure {
+    max-width: 64ch;
+  }
+  .src {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    font-size: 0.875rem;
+  }
+  .src a {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+  .nm {
+    font: 600 1.125rem var(--sans);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .nm a {
+    text-decoration: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nm a:hover {
+      color: var(--accent-ink);
+    }
+  }
+
+  /* The at-a-glance table; on phones each row becomes a small card (as on alternatives pages). */
+  .cmp .c-x {
+    color: var(--muted);
+  }
+  .cmp .lab {
+    display: none;
+  }
+  @media (max-width: 40em) {
+    .cmp thead {
+      display: none;
+    }
+    .cmp tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .cmp tr:last-child {
+      border-bottom: 0;
+    }
+    .cmp td {
+      padding: 0;
+      border: 0;
+    }
+    .cmp .c-ease {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .cmp .c-x {
+      grid-column: 1 / -1;
+    }
+    .cmp .lab {
+      display: inline;
+      color: var(--faint);
+      margin-right: 8px;
+    }
+    .cmp .lab::after {
+      content: ':';
+    }
+  }
+
+  /* One block per app, as on alternatives pages. */
+  .opts {
+    display: grid;
+    gap: 16px;
+  }
+  .opt {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: 28px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--card);
+    align-items: start;
+    scroll-margin-top: 80px;
+  }
+  .otx {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+  .ttl {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font: italic 300 1.125rem / 1.35 var(--serif);
+  }
+  .fit {
+    color: var(--muted);
+    font-size: 0.9375rem;
+    max-width: 62ch;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: var(--faint);
+  }
+  .acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .oshot {
+    display: block;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--sunk);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .oshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .oshot:hover {
+      transform: translateY(-2px);
+    }
+  }
+  @media (max-width: 60em) {
+    .opt {
+      grid-template-columns: 1fr;
+    }
+    .oshot {
+      order: -1;
+    }
+  }
+  @media (max-width: 40em) {
+    .opt {
+      padding: 18px 16px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .oshot {
+      transition: none;
+    }
+  }
+</style>
