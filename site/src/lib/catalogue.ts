@@ -66,6 +66,32 @@ const templateYamlRules = z.object({
     }, { error: 'is required, with at least links.source' }),
 });
 
+/** The headings of an app page's "After you deploy" section, the same for every app, in order. */
+export const AFTER_DEPLOY_HEADINGS = {
+  signIn: 'Sign in the first time',
+  domain: 'Use your own domain',
+  backup: 'Back up and restore',
+  upgrade: 'Upgrade safely',
+  import: 'Move your data in',
+} as const;
+
+export type AfterDeployKey = keyof typeof AFTER_DEPLOY_HEADINGS;
+
+const afterDeployRules = z.strictObject({
+  lede: plain('one or two sentences that answer "how do I self-host this app" on their own').max(
+    360,
+    'is too long: keep the lede to two sentences',
+  ),
+  signIn: plain('Markdown: the first sign-in, from template.yaml\'s signIn, then what to lock down'),
+  domain: plain('Markdown: one or two lines and a link to /guides/use-your-own-domain/, plus any quirk of this app'),
+  backup: plain('Markdown: what to back up for this app, what to restore together, and a link to /guides/backup-and-restore/'),
+  upgrade: plain('Markdown: what to check before a new version'),
+  import: plain('Markdown: how to move data in, only when the app has a real import path').optional(),
+  sources: z
+    .array(z.strictObject({ title: plain('the page’s title'), url: z.url({ error: 'must be a full URL' }) }))
+    .min(1, 'needs at least 1 source: the official pages the steps came from'),
+});
+
 const indexRules = z.strictObject({
   tagline: plain('one line on what the app does for you').max(70, 'is too long: keep it under 70 characters'),
   category: z.string().refine((id) => categoryById.has(id), {
@@ -92,6 +118,8 @@ const indexRules = z.strictObject({
     .strictObject({ gain: z.array(z.string()).default([]), different: z.array(z.string()).default([]) })
     .optional(),
   faq: z.array(z.strictObject({ q: plain('the question'), a: plain('the answer') })).default([]),
+  /** Real steps after setup: sign in, own domain, backups, upgrades, moving data in. */
+  afterDeploy: afterDeployRules.optional(),
   screenshots: z
     .array(
       z.strictObject({
@@ -162,6 +190,12 @@ export interface Template {
   features: { title: string; text: string }[];
   switching?: { gain: string[]; different: string[] };
   faq: { q: string; a: string }[];
+  /** The "After you deploy" section, when the app has one: Markdown with site links written from the root. */
+  afterDeploy?: {
+    lede: string;
+    sections: { key: AfterDeployKey; heading: string; markdown: string }[];
+    sources: { title: string; url: string }[];
+  };
   screenshots: Screenshot[];
   /** `ink`: a logo drawn only in black or near-black on a transparent background, which needs a light tile in the dark theme. */
   logo: { file: string; ext: 'svg' | 'png'; path: string; ink: boolean };
@@ -347,6 +381,18 @@ function readTemplate(id: string): Template {
       })
     : [];
 
+  if (page.success && page.data.afterDeploy) {
+    const after = page.data.afterDeploy;
+    for (const key of Object.keys(AFTER_DEPLOY_HEADINGS) as AfterDeployKey[]) {
+      const text = after[key];
+      if (!text) continue;
+      for (const match of text.matchAll(SITE_LINK)) {
+        const problem = siteLinkProblem(match[1]);
+        if (problem) problems.push(`  ${rel}/index.md: afterDeploy.${key} ${problem}`);
+      }
+    }
+  }
+
   if (problems.length || !meta.success || !page.success || !logoExt) {
     throw new Error(`Template "${id}" cannot be published yet:\n${problems.join('\n')}`);
   }
@@ -371,6 +417,15 @@ function readTemplate(id: string): Template {
     features: p.features,
     switching: p.switching && (p.switching.gain.length || p.switching.different.length) ? p.switching : undefined,
     faq: p.faq,
+    afterDeploy: p.afterDeploy
+      ? {
+          lede: p.afterDeploy.lede.trim(),
+          sections: (Object.keys(AFTER_DEPLOY_HEADINGS) as AfterDeployKey[])
+            .filter((key) => p.afterDeploy![key])
+            .map((key) => ({ key, heading: AFTER_DEPLOY_HEADINGS[key], markdown: p.afterDeploy![key]!.trim() })),
+          sources: p.afterDeploy.sources,
+        }
+      : undefined,
     screenshots,
     logo: {
       file: path.join(folder, `logo.${logoExt}`),
@@ -386,6 +441,41 @@ function readTemplate(id: string): Template {
     updated: lastCommit(folder) ?? statSync(folder).mtime,
     folder: rel,
   };
+}
+
+/**
+ * Links to this site inside an "After you deploy" section are written from the site root, e.g.
+ * `](/guides/backup-and-restore/)`, and get the base path (or the full URL) when rendered.
+ */
+const SITE_LINK = /\]\(\/([^)\s]*)\)/g;
+
+/** Why a site link in an app's Markdown points nowhere, or undefined when it is a page. */
+function siteLinkProblem(target: string): string | undefined {
+  const page = target.replace(/#.*$/, '');
+  if (!page.endsWith('/')) return `link /${target}: end site links with a slash, e.g. /guides/backup-and-restore/`;
+  const [kind, id, extra] = page.replace(/\/$/, '').split('/');
+  if (extra !== undefined || !id) return `link /${target}: is not a page an app section links to`;
+  const exists =
+    kind === 'templates'
+      ? existsSync(path.join(catalogueDir, id, 'template.yaml'))
+      : kind === 'alternatives'
+        ? productById.has(id)
+        : kind === 'compare'
+          ? existsSync(path.join(siteRoot, 'src', 'compare', `${id}.md`))
+          : kind === 'guides'
+            ? existsSync(path.join(siteRoot, 'src', 'guides', `${id}.md`))
+            : false;
+  return exists ? undefined : `link /${target}: there is no such page on this site`;
+}
+
+/** An app's Markdown with its site links pointing under `root` (the base path for HTML, the full URL for Markdown copies). */
+export function withSiteLinks(markdown: string, root: string): string {
+  return markdown.replace(SITE_LINK, (_, target: string) => `](${root}${target})`);
+}
+
+/** An app's Markdown as HTML, with its site links under the site's base path. */
+export function markdownHtml(markdown: string, base: string): string {
+  return marked.parse(withSiteLinks(markdown, base), { async: false }) as string;
 }
 
 let cache: Template[] | null = null;

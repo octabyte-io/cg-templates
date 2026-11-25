@@ -16,7 +16,7 @@ const trail = [
 
 <Base
   title="Guides to self-hosted apps"
-  description="Plain guides to choosing self-hosted apps: what each kind of app does, how they differ, and which ones you can deploy with Cloudgate."
+  description="Plain guides to self-hosted apps: how each kind of app differs, which ones you can deploy with Cloudgate, and how to run them on your own domain with backups."
   path="guides/"
   pageType="CollectionPage"
   dateModified={newest.length ? new Date(Math.max(...newest)) : undefined}
@@ -33,8 +33,9 @@ const trail = [
     <div class="body">
       <h1 class="h1">Guides to self-hosted apps</h1>
       <p class="lede">
-        Each guide looks at one kind of app across the catalogue: what to check before you choose, how the apps differ, and
-        which one fits which job.
+        Some guides look at one kind of app across the catalogue: what to check before you choose, how the apps differ, and
+        which one fits which job. Others cover what every app you run with Cloudgate shares, such as your own domain and
+        backups.
       </p>
     </div>
   </section>
@@ -45,7 +46,7 @@ const trail = [
         all.map((g) => (
           <li>
             <a href={href(`guides/${g.slug}/`)}>{g.h1}</a>
-            <span>{listNames(g.apps.map((a) => a.app.name))}</span>
+            <span>{g.apps.length ? listNames(g.apps.map((a) => a.app.name)) : g.description}</span>
           </li>
         ))
       }

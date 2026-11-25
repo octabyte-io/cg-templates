@@ -38,13 +38,66 @@ faq:
   - q: Is Outline a good alternative to Notion or Confluence?
     a: Yes, if what you need is a fast, well-organised wiki for documents. Outline covers handbooks, how-to guides and meeting notes very well, but it has no databases or project boards like Notion and fewer add-ons than Confluence.
   - q: How do I self-host Outline?
-    a: The simplest way is to install it with Cloudgate on a server Cloudgate provides or one you connect. Cloudgate sets up Outline with its database and gives it a secure web address; you register Outline once with your sign-in service and enter those details during setup.
+    a: The simplest way is to install it with Cloudgate on a server Cloudgate provides or one you connect. Cloudgate sets up Outline with its database and gives it a secure web address; you register Outline once with your sign-in service and enter those details during setup. Then sign in first yourself, to become the workspace admin, and set up backups of its database, its files and its SECRET_KEY.
   - q: How do people sign in to Outline?
     a: People sign in with an account from a sign-in service you connect, such as Google Workspace, Microsoft Entra or Okta. Outline has no passwords of its own, and the first person to sign in becomes the admin.
   - q: Can I import my documents from Notion or Confluence?
     a: Yes. Outline imports Notion exports, along with Word, Markdown and HTML files; its Confluence importer is part of the paid Business and Enterprise editions, not the free Community Edition. Notion databases do not carry over as databases, so check them after the import.
+  - q: How do I back up self-hosted Outline?
+    a: "Back up Outline's PostgreSQL database (the outline-db-data volume) and its files (outline-data, which holds images and attachments) from the same moment, and keep a copy of the SECRET_KEY variable. Outline's docs warn that losing SECRET_KEY makes encrypted data in the database inaccessible. For a readable copy, an admin can export the workspace as Markdown, HTML or JSON from Settings, Export."
+  - q: How do I update self-hosted Outline safely?
+    a: "Read the release notes for every version you skip, back up the database and files, then change the image tag in the stack's compose file and deploy. Outline runs its database migrations automatically when the new version starts, and releases are not always backwards compatible, so the backup is your way back."
   - q: Is my data private with Outline?
     a: Yes. Your documents, images and attachments are stored on your own server, not with Outline. Only the pages you choose to publish are visible on the web.
+afterDeploy:
+  lede: "To self-host Outline with Cloudgate, register it with your sign-in service, deploy the template with those details and sign in first: the first person becomes the workspace admin. Then back up its database, its files and its SECRET_KEY, and back up again before each upgrade."
+  signIn: |
+    Outline has no passwords of its own. Everyone signs in through the OIDC sign-in service you entered at setup (Google, Microsoft Entra, Okta, Authentik and others), using the button labelled with the **Sign-in button text** you chose.
+
+    - **Sign in first yourself.** The first sign-in creates the Outline workspace and makes that person its **admin**. Everyone who signs in after that joins as a **Member**, the default role for new people.
+    - **Decide who can get in at your sign-in service.** Anyone your sign-in service lets through to the Outline app can join the workspace, so limit the app there to the people or groups who should have it.
+    - If sign-in fails with a redirect error, check that the app you registered uses Outline's address followed by `/auth/oidc.callback` as its redirect URL.
+  domain: |
+    Outline reads its public address from the `URL` variable, which must be the full address people use, such as `https://wiki.example.com`. Cloudgate fills it in once, at setup. If you add or change the domain later (see [using your own domain](/guides/use-your-own-domain/)):
+
+    1. Change `URL` on the stack's **Variables** tab to the new address.
+    2. In your sign-in service, change the app's redirect URL to the new address followed by `/auth/oidc.callback`.
+    3. Deploy the stack again.
+  backup: |
+    Outline keeps its data in three volumes. Restore the first two together, from the same moment:
+
+    - **`outline-db-data`**, the PostgreSQL database: documents, collections, users and settings. Outline recommends backing it up at least daily and keeping the copies for a month.
+    - **`outline-data`**, Outline's files at `/var/lib/outline/data`: the images and attachments in your documents, because this template stores files on the server's disk (`FILE_STORAGE=local`). A database restored without them has documents with missing images.
+    - **`outline-redis-data`**, Redis. Outline's backup guidance does not list it.
+
+    Keep a copy of the stack's **Variables** as well. Outline's docs warn that losing `SECRET_KEY` makes all encrypted data in the database inaccessible. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) covers where to keep the copies and how a restore goes.
+
+    For a readable copy of the content, an admin can export the whole workspace from **Settings → Export** as Markdown, HTML or JSON. An export is not a full backup, but it opens anywhere and moves to another Outline.
+  upgrade: |
+    The template pins an exact Outline version in its compose file (`outlinewiki/outline:1.12.0` at the time of writing). Outline runs its database migrations automatically when the new container starts, and its docs say releases are not always backwards compatible. So for each upgrade:
+
+    1. Read the [release notes](https://github.com/outline/outline/releases) for every version you skip. Changes that need action are called out there, such as a new minimum Node version.
+    2. Back up the database and the files volume.
+    3. Change the image tag in the stack's **Compose file** and **Deploy**. Keep a pinned version rather than `latest`, as Outline's docs recommend.
+  import: |
+    An admin can import in bulk from **Settings → Preferences → Import**. Outline's docs list Notion exports, Word (`.docx`) files, and Markdown or JSON exports from another Outline; JSON is the best choice between two Outline workspaces and works up to about 1.5 GB. You can also drag HTML, Markdown or text files into a collection, or use **Import document** from a document's menu.
+  sources:
+    - title: "Outline: Docker (migrations and updating)"
+      url: https://docs.getoutline.com/s/hosting/doc/docker-7pfeLP5a8t
+    - title: "Outline: Backups"
+      url: https://docs.getoutline.com/s/hosting/doc/backups-KZtPOADCHG
+    - title: "Outline: File storage"
+      url: https://docs.getoutline.com/s/hosting/doc/file-storage-N4M0T6Ypu7
+    - title: "Outline: OIDC"
+      url: https://docs.getoutline.com/s/hosting/doc/oidc-8CPBm6uC0I
+    - title: "Outline: Import data"
+      url: https://docs.getoutline.com/s/guide/doc/import-data-D2ZvLqz411
+    - title: "Outline: Export data"
+      url: https://docs.getoutline.com/s/guide/doc/export-data-Da6C7HqL8M
+    - title: "Outline: .env.sample"
+      url: https://github.com/outline/outline/blob/main/.env.sample
+    - title: "Outline: account provisioning (first user becomes admin)"
+      url: https://github.com/outline/outline/blob/main/server/commands/accountProvisioner.ts
 screenshots:
   - src: screenshots/document.webp
     alt: "An Outline document called Opening and closing checklist, with task lists and a table, inside a Café operations collection in the sidebar"

@@ -269,7 +269,8 @@ export function comparisonSchema(c: {
 /**
  * A guide's article and the apps it recommends. The `Article` states only what the page shows: its
  * heading, summary, the month its facts were checked (as `dateModified` when git has no later date)
- * and the apps it lists, each pointing at its own page's `SoftwareApplication` node.
+ * and the apps it lists, each pointing at its own page's `SoftwareApplication` node. A how-to guide
+ * lists no apps, so it is the `Article` alone, with no `ItemList` and no `about`.
  */
 export function guideSchema(g: {
   slug: string;
@@ -302,14 +303,14 @@ export function guideSchema(g: {
       author: { '@id': ORGANIZATION['@id'] },
       publisher: { '@id': ORGANIZATION['@id'] },
       mainEntityOfPage: { '@id': `${url}#webpage` },
-      about: { '@id': `${url}#apps` },
+      ...(g.apps.length ? { about: { '@id': `${url}#apps` } } : {}),
     },
-    {
+    ...(g.apps.length ? [{
       '@type': 'ItemList',
       '@id': `${url}#apps`,
       name: g.h1,
       numberOfItems: g.apps.length,
       itemListElement: g.apps.map((t, index) => ({ '@type': 'ListItem', position: index + 1, item: node(t) })),
-    },
+    }] : []),
   ];
 }

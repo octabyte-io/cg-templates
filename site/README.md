@@ -25,7 +25,7 @@ Each app page is built from its folder (ADR-0003):
 | File | The site reads |
 |---|---|
 | `template.yaml` | name, description (50–160 characters), tags, links (`source` required) |
-| `index.md` front matter | tagline, category, alternativeTo, ease, license, features, switching, faq, screenshots |
+| `index.md` front matter | tagline, category, alternativeTo, ease, license, features, switching, faq, afterDeploy (the "After you deploy" section, see `docs/after-deploy-queue.md`), screenshots |
 | `index.md` body | the "What is …?" overview |
 | `logo.svg` / `logo.png` | the logo |
 | `screenshots/` | images listed in `screenshots` |

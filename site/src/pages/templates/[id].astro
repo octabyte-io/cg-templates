@@ -9,7 +9,7 @@ import Ease from '../../components/Ease.astro';
 import Faq from '../../components/Faq.astro';
 import ProductMark from '../../components/ProductMark.astro';
 import Screens from '../../components/Screens.astro';
-import { alternativesPages, getTemplates, licenceKind, listNames, relatedTemplates, type Template } from '../../lib/catalogue';
+import { alternativesPages, getTemplates, licenceKind, listNames, markdownHtml, relatedTemplates, type Template } from '../../lib/catalogue';
 import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
 import { comparisonsFor } from '../../lib/compare';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
@@ -232,6 +232,32 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         <ConsoleDeploy id={a.id} name={a.name} />
       </div>
 
+      {
+        a.afterDeploy && (
+          <div class="blk" id="after-deploy">
+            <h2 class="h2">After you deploy {a.name}</h2>
+            <p class="muted measure">{a.afterDeploy.lede}</p>
+            <div class="after">
+              {a.afterDeploy.sections.map((section) => (
+                <section class="astep" aria-labelledby={`after-${section.key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`}>
+                  <h3 class="h3" id={`after-${section.key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`}>{section.heading}</h3>
+                  <div class="prose" set:html={markdownHtml(section.markdown, href())} />
+                </section>
+              ))}
+            </div>
+            <p class="asrc">
+              From the official documentation:{' '}
+              {a.afterDeploy.sources.map((source, index) => (
+                <>
+                  {index > 0 && ', '}
+                  <a href={source.url} rel="noopener">{source.title}</a>
+                </>
+              ))}
+            </p>
+          </div>
+        )
+      }
+
       <div class="blk">
         <h2 class="h2">Questions</h2>
         <Faq items={faq} />
@@ -313,6 +339,55 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  }
+  /* After you deploy: the same headings for every app, one row each, in a card like the deploy steps */
+  #after-deploy {
+    scroll-margin-top: calc(var(--hh) + 16px);
+  }
+  .after {
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--card);
+    overflow: hidden;
+  }
+  .astep {
+    padding: 20px 22px;
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+  }
+  .astep + .astep {
+    border-top: 1px solid var(--line);
+  }
+  .astep .prose {
+    gap: 10px;
+  }
+  .astep .prose :global(p),
+  .astep .prose :global(li) {
+    font-size: .9375rem;
+  }
+  .astep :global(pre) {
+    margin: 0;
+    padding: 10px 12px;
+    overflow-x: auto;
+    background: var(--sunk);
+    border: 1px solid var(--line);
+    border-radius: var(--r-xs);
+    font: .8125rem/1.5 var(--mono);
+  }
+  .astep :global(pre code) {
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+  .asrc {
+    font-size: .8125rem;
+    color: var(--muted);
+  }
+  .asrc a {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
   }
   .enote {
     padding: 0 18px 12px;

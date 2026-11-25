@@ -66,13 +66,15 @@ const jsonLd = graph(
       <h1 class="h1">{g.h1}</h1>
       <p class="lede">{g.lede}</p>
       <div class="chips">
-        <span class="chip"><b>{g.apps.length}</b> apps you can deploy</span>
+        {g.apps.length > 0 && <span class="chip"><b>{g.apps.length}</b> apps you can deploy</span>}
         <span class="chip">Facts checked <b><time datetime={g.checked.toISOString().slice(0, 7)}>{checked}</time></b></span>
       </div>
     </div>
   </section>
 
   <section class="sec pad">
+    {
+      g.apps.length > 0 && (
     <div class="blk first">
       <h2 class="h2">{GUIDE_HEADINGS.glance}</h2>
       <div class="tablewrap">
@@ -120,10 +122,12 @@ const jsonLd = graph(
         </table>
       </div>
     </div>
+      )
+    }
 
     {
-      g.sections.map((section) => (
-        <div class="blk">
+      g.sections.map((section, index) => (
+        <div class={g.apps.length === 0 && index === 0 ? 'blk first' : 'blk'}>
           <h2 class="h2" id={section.id}>
             {section.heading}
           </h2>
@@ -132,6 +136,8 @@ const jsonLd = graph(
       ))
     }
 
+    {
+      g.apps.length > 0 && (
     <div class="blk">
       <h2 class="h2">{GUIDE_HEADINGS.apps}</h2>
       <div class="opts">
@@ -189,6 +195,8 @@ const jsonLd = graph(
         }
       </div>
     </div>
+      )
+    }
 
     {
       g.faq.length > 0 && (
@@ -202,8 +210,11 @@ const jsonLd = graph(
     <div class="blk last">
       <h2 class="h2">{GUIDE_HEADINGS.sources}</h2>
       <p class="muted measure">
-        Facts checked in {checked} against these pages and each app’s own page in this catalogue. Licences and editions change, so
-        check the maker’s site before you decide.
+        {
+          g.apps.length > 0
+            ? `Facts checked in ${checked} against these pages and each app’s own page in this catalogue. Licences and editions change, so check the maker’s site before you decide.`
+            : `Facts checked in ${checked} against these pages. Cloudgate changes with each release, so check its documentation for the version you run.`
+        }
       </p>
       <ul class="src">
         {
