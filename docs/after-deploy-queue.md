@@ -16,8 +16,8 @@ and [How backups work](../site/src/guides/backup-and-restore.md).
 
 | # | App | Template | Why it is here | Links | Status |
 | ---: | --- | --- | --- | ---: | --- |
-| 1 | n8n | `n8n` | Popular swap | 4 | in PR #TBD |
-| 2 | Outline | `outline` | Popular swap | 3 | in PR #TBD |
+| 1 | n8n | `n8n` | Popular swap | 4 | in PR #103 |
+| 2 | Outline | `outline` | Popular swap | 3 | in PR #103 |
 | 3 | Plausible Analytics | `plausible` | Popular swap | 2 | todo |
 | 4 | Mattermost | `mattermost` | Popular swap | 3 | todo |
 | 5 | listmonk | `listmonk` | Popular swap | 2 | todo |
