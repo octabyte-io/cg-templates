@@ -25,7 +25,7 @@ export function HOW_IT_WORKS(template: Template): { name: string; text: string }
     },
     {
       name: 'Open your app and sign in',
-      text: 'Your app gets a free web address to start, without https. Add your own domain, like app.yourshop.com, and Cloudgate secures it with https for you.',
+      text: 'Your app gets a free web address right away, secured with https when the server has a public address, as every server from Cloudgate does. Add your own domain, like app.yourshop.com, and Cloudgate secures it with https too.',
     },
   ];
 }

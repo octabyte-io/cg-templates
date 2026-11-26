@@ -1,4 +1,4 @@
-import { EASE_LABEL, isSample, listNames, type Template } from './catalogue';
+import { EASE_LABEL, isSample, listNames, withSiteLinks, type Template } from './catalogue';
 import { appFaq, HOW_IT_WORKS } from './copy';
 import { absolute, deployUrl } from './site';
 import type { Product } from '../products';
@@ -79,6 +79,14 @@ export function appMarkdown(template: Template, level = 1): string {
   out.push(`${h(1)} What happens when you click Deploy?`, '', `Deploy link: ${deployUrl(a.id)}`, '');
   HOW_IT_WORKS(a).forEach((step, index) => out.push(`${index + 1}. **${step.name}.** ${step.text}`));
   out.push('');
+
+  if (a.afterDeploy) {
+    out.push(`${h(1)} After you deploy ${a.name}`, '', a.afterDeploy.lede, '');
+    for (const section of a.afterDeploy.sections) {
+      out.push(`${h(2)} ${section.heading}`, '', shiftHeadings(withSiteLinks(section.markdown, absolute()), level + 2), '');
+    }
+    out.push(`Sources: ${a.afterDeploy.sources.map((s) => `[${s.title}](${s.url})`).join(', ')}`, '');
+  }
 
   out.push(`${h(1)} Questions`, '');
   for (const item of appFaq(a)) out.push(`${h(2)} ${item.q}`, '', item.a, '');

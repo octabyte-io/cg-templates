@@ -56,8 +56,9 @@ const guideRules = z.strictObject({
         ),
       }),
     )
-    .min(2, 'needs at least 2 apps')
-    .max(12, 'has more than 12 apps'),
+    .min(2, 'needs at least 2 apps, or none for a how-to guide that recommends no app')
+    .max(12, 'has more than 12 apps')
+    .optional(),
   faq: z
     .array(z.strictObject({ q: plain('the question'), a: plain('the answer') }))
     .min(3, 'needs at least 3 questions')
@@ -179,7 +180,7 @@ function readGuide(name: string): Guide {
 
   const apps: GuideApp[] = [];
   const seen = new Set<string>();
-  d.apps.forEach((entry, index) => {
+  (d.apps ?? []).forEach((entry, index) => {
     const app = getTemplate(entry.id);
     if (!app) problems.push(`apps.${index}.id: "${entry.id}" is not a template in templates/; a guide recommends only apps in the catalogue`);
     else if (seen.has(app.id)) problems.push(`apps.${index}.id: "${entry.id}" is listed twice`);
@@ -283,15 +284,18 @@ export function guideMarkdown(
     `- Page: ${pageUrl}`,
     `- Facts checked: ${monthYear(g.checked)}`,
     '',
-    `${h(1)} ${GUIDE_HEADINGS.glance}`,
-    '',
-    `| App | ${cell(g.columns.api)} | ${cell(g.columns.data)} | Code |`,
-    '| --- | --- | --- | --- |',
-    ...g.apps.map((a) => `| [${a.app.name}](${appUrl(a.app)}) | ${cell(a.api)} | ${cell(a.data)} | ${cell(codeLabel(a.app))} |`),
-    '',
+    ...(g.apps.length
+      ? [
+          `${h(1)} ${GUIDE_HEADINGS.glance}`,
+          '',
+          `| App | ${cell(g.columns.api)} | ${cell(g.columns.data)} | Code |`,
+          '| --- | --- | --- | --- |',
+          ...g.apps.map((a) => `| [${a.app.name}](${appUrl(a.app)}) | ${cell(a.api)} | ${cell(a.data)} | ${cell(codeLabel(a.app))} |`),
+          '',
+        ]
+      : []),
     ...g.sections.flatMap((s) => [`${h(1)} ${s.heading}`, '', shift(withLinks(s.markdown, root)), '']),
-    `${h(1)} ${GUIDE_HEADINGS.apps}`,
-    '',
+    ...(g.apps.length ? [`${h(1)} ${GUIDE_HEADINGS.apps}`, ''] : []),
     ...g.apps.flatMap((a) => [`${h(2)} ${a.app.name}`, '', `${a.app.tagline} ${a.note}`, '', `- Page: ${appUrl(a.app)}`, `- Licence: ${a.app.license}`, '']),
     ...(g.faq.length ? [`${h(1)} ${GUIDE_HEADINGS.faq}`, '', ...g.faq.flatMap((item) => [`${h(2)} ${item.q}`, '', item.a, ''])] : []),
     `${h(1)} ${GUIDE_HEADINGS.sources}`,
