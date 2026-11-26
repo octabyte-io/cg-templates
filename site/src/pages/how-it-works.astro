@@ -18,8 +18,8 @@ import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
  * hosted-only, ADR-0071), and a setup that runs
  * without an Apply press in the get-started wizard only. In a console, a template setup is a
  * Plan reviewed and applied (ADR-0065). Values are made at setup (ADR-0064), a copy never updates
- * from its template, a generated address is plain http and the user's own gets a Let's Encrypt
- * certificate, backups run on a schedule to a destination the user adds (not yet for Compose
+ * from its template, a generated sslip.io address gets a Let's Encrypt certificate on a Server with a
+ * public address (plain http on a private one, Cloudgate 0.3.9) and the user's own gets one too, backups run on a schedule to a destination the user adds (not yet for Compose
  * stacks), and deleting keeps stored data unless asked. Plans, prices, billing and what Cloudgate
  * does once an app is running belong on Cloudgate's own website (cloudgate.octabyte.io), not here.
  */
@@ -64,7 +64,7 @@ const steps = [
   },
   {
     name: named[3] ?? 'Open your app and sign in',
-    text: 'Your app starts on a free web address, which uses plain http. Add your own, like crm.yourshop.com, and Cloudgate gets the https certificate for you once your domain points at the server.',
+    text: 'Your app starts on a free web address, secured with https when the server has a public address, as every server from Cloudgate does. Add your own, like crm.yourshop.com, and Cloudgate gets its https certificate for you once your domain points at the server.',
   },
 ];
 
@@ -87,7 +87,7 @@ const faq = [
   },
   {
     q: 'Can I use my own web address?',
-    a: 'Yes. Type it when you deploy, or add it later, then add one record where you bought your domain so the name points at your server. Cloudgate gets the https certificate for you. Until then the app works on a free temporary address, without https.',
+    a: 'Yes. Type it when you deploy, or add it later, then add one record where you bought your domain so the name points at your server. Cloudgate gets the https certificate for you. Until then the app works on its free address, which also has https on a server with a public address.',
   },
   {
     q: 'I already run Cloudgate. Can I deploy from my own console?',
@@ -254,7 +254,7 @@ const howTo = {
           <span class="num">Step 5</span>
           <h3 class="h3">{steps[4].name}</h3>
           <p>{steps[4].text}</p>
-          <p class="aside">Until you add your own domain, the app works on its free address, without https.</p>
+          <p class="aside">Until you add your own domain, the app works on its free address, with https on a server that has a public address.</p>
         </div>
         <div class="frag open server" role="img" aria-label={`Example: ${appName} open at https://${address}, marked secure`}>
           <div class="bar" aria-hidden="true">

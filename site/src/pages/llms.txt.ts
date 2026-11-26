@@ -30,7 +30,7 @@ function body(): string {
     '',
     `- Each app page has a Deploy button that opens hosted Cloudgate (${HOSTED_URL}) with the app chosen, for example ${example ? deployUrl(example.id) : deployUrl('<id>')}. People without a server can get one from Cloudgate when they deploy; people who already rent one can connect it instead.`,
     '- Passwords and keys are generated at setup. In a self-hosted Cloudgate console, every app here is on the Templates screen, and setting one up lists everything Cloudgate will create before anything is created.',
-    '- Each app gets a free web address, which is plain http (not encrypted), or the user\'s own domain with an automatic https certificate. Cloudgate never updates an app on its own.',
+    '- Each app gets a free web address (on sslip.io) with an automatic https certificate when the server has a public address, or plain http on a server with only a private address; or the user\'s own domain, also with an automatic https certificate. Cloudgate never updates an app on its own.',
     '',
     '## Cloudgate',
     '',
