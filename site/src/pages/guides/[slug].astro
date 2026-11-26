@@ -82,8 +82,8 @@ const jsonLd = graph(
           <thead>
             <tr>
               <th scope="col">App</th>
-              <th scope="col">Content API</th>
-              <th scope="col">Content stored in</th>
+              <th scope="col">{g.columns.api}</th>
+              <th scope="col">{g.columns.data}</th>
               <th scope="col">Code</th>
               <th scope="col">Ease of use</th>
             </tr>
@@ -101,11 +101,11 @@ const jsonLd = graph(
                     </span>
                   </td>
                   <td class="c-x">
-                    <span class="lab">Content API</span>
+                    <span class="lab">{g.columns.api}</span>
                     {api}
                   </td>
                   <td class="c-x">
-                    <span class="lab">Content stored in</span>
+                    <span class="lab">{g.columns.data}</span>
                     {data}
                   </td>
                   <td class="c-x">

@@ -597,3 +597,5 @@ and [How backups work](../site/src/guides/backup-and-restore.md).
 | 579 | Seerr | `seerr` | Alternatives or compare page | 1 | todo |
 | 580 | Tube Archivist | `tube-archivist` | Alternatives or compare page | 1 | todo |
 | 581 | Wizarr | `wizarr` | Alternatives or compare page | 1 | todo |
+| 582 | Forgejo | `forgejo` | Alternatives or compare page | 4 | todo |
+| 583 | Invoice Ninja | `invoice-ninja` | Alternatives or compare page | 5 | todo |
