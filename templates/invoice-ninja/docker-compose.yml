@@ -1,0 +1,102 @@
+# From Invoice Ninja's official Docker setup (github.com/invoiceninja/dockerfiles, debian
+# branch, debian/docker-compose.yml with its .env and nginx/ folder), the setup its README
+# calls current. Images are pinned and the .env settings are written out here.
+services:
+  invoice-ninja:
+    # PHP-FPM on port 9000, with Chrome for PDFs. Supervisor in the same container also
+    # runs the queue workers and Laravel's scheduler (recurring invoices, reminders).
+    # On start it runs the database migrations and, on the very first start, creates the
+    # admin account from IN_USER_EMAIL and IN_PASSWORD. The image has its own healthcheck.
+    image: invoiceninja/invoiceninja-debian:5.14.0
+    restart: unless-stopped
+    depends_on:
+      invoice-ninja-db:
+        condition: service_healthy
+      invoice-ninja-redis:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL}
+      # Laravel's key: 32 random bytes, base64-encoded, with the "base64:" prefix.
+      APP_KEY: base64:${APP_KEY}
+      APP_ENV: production
+      APP_DEBUG: "false"
+      # Cloudgate's proxy ends HTTPS and passes X-Forwarded-Proto on; trusting it makes
+      # Invoice Ninja build https links without forcing its own redirect.
+      REQUIRE_HTTPS: "false"
+      TRUSTED_PROXIES: "*"
+      PHANTOMJS_PDF_GENERATION: "false"
+      PDF_GENERATOR: snappdf
+      CACHE_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
+      REDIS_HOST: invoice-ninja-redis
+      REDIS_PASSWORD: "null"
+      REDIS_PORT: "6379"
+      FILESYSTEM_DISK: debian_docker
+      DB_CONNECTION: mysql
+      DB_HOST: invoice-ninja-db
+      DB_PORT: "3306"
+      DB_DATABASE: ninja
+      DB_USERNAME: ninja
+      DB_PASSWORD: ${DB_PASSWORD}
+      # The first admin account, created once on the first start.
+      IN_USER_EMAIL: ${ADMIN_EMAIL}
+      IN_PASSWORD: ${ADMIN_PASSWORD}
+      # Emails are written to the log until an email server is set in the app's settings.
+      MAIL_MAILER: log
+      MAIL_FROM_ADDRESS: ${ADMIN_EMAIL}
+      MAIL_FROM_NAME: Invoice Ninja
+      IS_DOCKER: "true"
+      SCOUT_DRIVER: "null"
+    volumes:
+      # The web files, shared with nginx, and the uploads, PDFs and logs.
+      - invoice-ninja-public:/var/www/html/public
+      - invoice-ninja-storage:/var/www/html/storage
+
+  # The web server in front of PHP-FPM, as in the official setup; it gets the web address.
+  invoice-ninja-web:
+    image: nginx:1.30.8-alpine
+    restart: unless-stopped
+    depends_on:
+      invoice-ninja:
+        condition: service_healthy
+    volumes:
+      - ../files/laravel.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../files/invoiceninja.conf:/etc/nginx/conf.d/invoiceninja.conf:ro
+      - invoice-ninja-public:/var/www/html/public:ro
+      - invoice-ninja-storage:/var/www/html/storage:ro
+
+  invoice-ninja-db:
+    # The official file uses mysql:8; this is the current 8.4 LTS release, pinned.
+    image: mysql:8.4.13
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ninja
+      MYSQL_USER: ninja
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - invoice-ninja-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uninja -p\"$$MYSQL_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  invoice-ninja-redis:
+    image: redis:8.12.0-alpine
+    restart: unless-stopped
+    volumes:
+      - invoice-ninja-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  invoice-ninja-public:
+  invoice-ninja-storage:
+  invoice-ninja-db-data:
+  invoice-ninja-redis-data:

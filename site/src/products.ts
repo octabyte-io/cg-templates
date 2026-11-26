@@ -570,6 +570,14 @@ export const PRODUCTS: Product[] = [
     pick: 'gitea',
   },
   {
+    id: 'gitlab',
+    name: 'GitLab',
+    icon: 'gitlab',
+    job: 'hosting code',
+    lede: 'Forgejo is a free, open-source GitLab alternative for hosting your team’s code, with pull requests for review (GitLab’s merge requests), issues, project boards, a package registry and automatic builds on a runner you connect, and it imports your GitLab projects with their issues and history. GitLab’s paid plans charge per user and its own self-managed edition needs a large server; Forgejo runs on a small one with no per-user price, though it has fewer built-in DevOps tools, such as security scanning and advanced planning.',
+    pick: 'forgejo',
+  },
+  {
     id: 'salesforce',
     name: 'Salesforce',
     icon: 'salesforce',

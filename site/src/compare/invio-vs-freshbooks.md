@@ -43,7 +43,7 @@ chooseVs:
   - "You bill by the hour and want time tracking, projects and expenses in the same tool."
   - "You want bookkeeping too: FreshBooks has double-entry reports and bank reconciliation from the Plus plan."
   - "You want phone apps, automatic payment reminders and a support team, with no server to run."
-moving: "Invio has no importer, so moving from FreshBooks is a fresh start. Add your company details, currency, tax rates and logo in Invio's Settings, set your invoice number pattern, then add your customers and products by hand from FreshBooks' client and item lists. Add your email server's details if you want to send invoices from Invio. Past invoices stay in FreshBooks, so download their PDFs and reports before you cancel. Recurring invoices, payment settings, time entries and expenses do not have a place in Invio; if you rely on them, look at Inkvoice or InvoicePlane instead."
+moving: "Invio has no importer, so moving from FreshBooks is a fresh start. Add your company details, currency, tax rates and logo in Invio's Settings, set your invoice number pattern, then add your customers and products by hand from FreshBooks' client and item lists. Add your email server's details if you want to send invoices from Invio. Past invoices stay in FreshBooks, so download their PDFs and reports before you cancel. Recurring invoices, payment settings, time entries and expenses do not have a place in Invio; if you rely on them, look at Inkvoice or InvoicePlane instead, or at Invoice Ninja, which can also import your data from FreshBooks."
 faq:
   - q: Is Invio better than FreshBooks?
     a: "Invio is better than FreshBooks for freelancers who only need to create, send and track plain invoices, with European e-invoice files and no subscription. FreshBooks is better for businesses that want quotes, recurring invoices, online payments, time tracking, phone apps and accounting."
@@ -66,6 +66,10 @@ sources:
     url: https://github.com/kittendevv/Invio
   - title: Invio documentation
     url: https://github.com/kittendevv/Invio/wiki
+  - title: Invoice Ninja
+    url: https://invoiceninja.com/
+  - title: Invoice Ninja FreshBooks importer (source)
+    url: https://github.com/invoiceninja/invoiceninja/blob/v5.14.0/app/Import/Providers/Freshbooks.php
 ---
 
 ### Invio and FreshBooks pricing
