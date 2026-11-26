@@ -32,12 +32,24 @@ const guideRules = z.strictObject({
   checked: z
     .string({ error: 'is required: the month the facts were checked, as YYYY-MM' })
     .regex(/^20\d\d-(0[1-9]|1[0-2])$/, 'must be the month the facts were checked, as YYYY-MM'),
+  columns: z
+    .strictObject({
+      api: plain('the heading of the at-a-glance column filled by each app’s `api`, e.g. "Cookies"').max(
+        32,
+        'is too long: keep a column heading to 32 characters',
+      ),
+      data: plain('the heading of the at-a-glance column filled by each app’s `data`, e.g. "Data stored in"').max(
+        32,
+        'is too long: keep a column heading to 32 characters',
+      ),
+    })
+    .optional(),
   apps: z
     .array(
       z.strictObject({
         id: plain('a template id from templates/'),
-        api: plain('how a website or app gets the content, e.g. "REST and GraphQL"'),
-        data: plain('where the app keeps the content, e.g. "MongoDB"'),
+        api: plain('the first at-a-glance fact, under `columns.api` (by default how a website or app gets the content, e.g. "REST and GraphQL")'),
+        data: plain('the second at-a-glance fact, under `columns.data` (by default where the app keeps the content, e.g. "MongoDB")'),
         note: plain('one or two sentences: who this app suits, in this guide’s terms').max(
           320,
           'is too long: keep the note to two sentences',
@@ -55,6 +67,9 @@ const guideRules = z.strictObject({
     .array(z.strictObject({ title: plain('the page’s title'), url: z.url({ error: 'must be a full URL' }) }))
     .min(2, 'needs at least 2 sources: the pages the facts came from'),
 });
+
+/** The at-a-glance table's two fact columns, when a guide does not name its own (the headless CMS guide's). */
+export const DEFAULT_GUIDE_COLUMNS = { api: 'Content API', data: 'Content stored in' };
 
 export interface GuideApp {
   app: Template;
@@ -77,6 +92,8 @@ export interface Guide {
   description: string;
   lede: string;
   checked: Date;
+  /** The headings of the at-a-glance columns that hold each app's `api` and `data`. */
+  columns: { api: string; data: string };
   apps: GuideApp[];
   /** The body, split at its `##` headings; each one is a block on the page. */
   sections: GuideSection[];
@@ -197,6 +214,7 @@ function readGuide(name: string): Guide {
     description: d.description,
     lede: d.lede,
     checked: new Date(Date.UTC(year, month - 1, 1)),
+    columns: d.columns ?? DEFAULT_GUIDE_COLUMNS,
     apps,
     sections,
     faq: d.faq ?? [],
@@ -267,7 +285,7 @@ export function guideMarkdown(
     '',
     `${h(1)} ${GUIDE_HEADINGS.glance}`,
     '',
-    '| App | Content API | Content stored in | Code |',
+    `| App | ${cell(g.columns.api)} | ${cell(g.columns.data)} | Code |`,
     '| --- | --- | --- | --- |',
     ...g.apps.map((a) => `| [${a.app.name}](${appUrl(a.app)}) | ${cell(a.api)} | ${cell(a.data)} | ${cell(codeLabel(a.app))} |`),
     '',
