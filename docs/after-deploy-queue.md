@@ -8,7 +8,7 @@ Order: apps in the home page's **Popular swaps** first (in the order the home pa
 then apps with alternatives or compare pages, then the rest. Within a group, apps linked from more
 pages (alternatives pages they appear on, compare pages and guides) come first, then by id.
 
-Each run takes the next two apps whose status is `todo` and that no open pull request is changing.
+Each run takes the next three apps whose status is `todo` and that no open pull request is changing.
 Status is `todo`, `in PR #n` or `done`. A new template joins the end of its group as `todo`.
 
 The shared guides the sections link to: [Use your own domain](../site/src/guides/use-your-own-domain.md)
@@ -16,11 +16,11 @@ and [How backups work](../site/src/guides/backup-and-restore.md).
 
 | # | App | Template | Why it is here | Links | Status |
 | ---: | --- | --- | --- | ---: | --- |
-| 1 | n8n | `n8n` | Popular swap | 4 | in PR #103 |
-| 2 | Outline | `outline` | Popular swap | 3 | in PR #103 |
-| 3 | Plausible Analytics | `plausible` | Popular swap | 2 | todo |
-| 4 | Mattermost | `mattermost` | Popular swap | 3 | todo |
-| 5 | listmonk | `listmonk` | Popular swap | 2 | todo |
+| 1 | n8n | `n8n` | Popular swap | 4 | done |
+| 2 | Outline | `outline` | Popular swap | 3 | done |
+| 3 | Plausible Analytics | `plausible` | Popular swap | 2 | in PR #105 |
+| 4 | Mattermost | `mattermost` | Popular swap | 3 | in PR #105 |
+| 5 | listmonk | `listmonk` | Popular swap | 2 | in PR #105 |
 | 6 | Ghost | `ghost` | Alternatives or compare page | 7 | todo |
 | 7 | CourseLit | `courselit` | Alternatives or compare page | 6 | todo |
 | 8 | Didacta | `didacta` | Alternatives or compare page | 6 | todo |

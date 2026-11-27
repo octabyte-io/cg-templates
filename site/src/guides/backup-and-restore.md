@@ -72,4 +72,4 @@ Test a restore once, on a spare server if you can, before you need it. If the re
 
 ## Back up before every upgrade
 
-Many apps change their database the first time a new version starts, and going back to the old image does not undo that. A backup from just before the upgrade is the way back. Each app's page in this catalogue says what to check before its upgrades, for example [n8n](/templates/n8n/) and [Outline](/templates/outline/).
+Many apps change their database the first time a new version starts, and going back to the old image does not undo that. A backup from just before the upgrade is the way back. Each app's page in this catalogue says what to check before its upgrades, for example [n8n](/templates/n8n/), [Outline](/templates/outline/), [Plausible](/templates/plausible/), [Mattermost](/templates/mattermost/) and [listmonk](/templates/listmonk/).
