@@ -1,6 +1,6 @@
 name: Plausible Analytics
 description: "Self-hosted Plausible Analytics: a simple, privacy-friendly Google Analytics alternative for small businesses. No cookies, so no cookie banner needed."
-version: "3.2.1"
+version: "3.2.2"
 tags: [web analytics, google analytics alternative, privacy-friendly analytics, cookieless analytics, gdpr, website statistics]
 links:
   website: https://plausible.io
