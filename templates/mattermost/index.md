@@ -36,7 +36,7 @@ faq:
   - q: How do I self-host Mattermost?
     a: The easiest way is to install it with Cloudgate on a server Cloudgate provides or one you connect. Cloudgate sets up Mattermost and its database and gives it a secure web address; you then open the address and create the first account, which becomes the system admin. Add an email server and set up backups of the database, files and config before your team moves in.
   - q: How do I back up self-hosted Mattermost?
-    a: "Stop Mattermost, then back up three things from the same moment: the PostgreSQL database (mattermost-db-data), the shared files (mattermost-data) and the config folder (mattermost-config) with config.json. Add the two plugin volumes if you installed plugins. A restore puts all three back together."
+    a: "Stop Mattermost, then back up three things from the same moment: the PostgreSQL database (mattermost-db-data), the shared files (mattermost-data) and the config folder (mattermost-config) with config.json. Add the two plugin volumes if you installed plugins. A restore puts all three back together. In Cloudgate, a whole-stack backup on the stack's Volume backups tab does this on a schedule: it stops the stack, copies every volume to S3-compatible storage and starts it again."
   - q: How do I update self-hosted Mattermost safely?
     a: "Read Mattermost's important upgrade notes for every version between yours and the new one, back up the database, files and config, then change the image tag in the stack's compose file and deploy. Mattermost changes its database when the new version starts, and it advises against going back more than one major version, so the backup is your way back."
   - q: Can I import my Slack history into Mattermost?
@@ -67,12 +67,12 @@ afterDeploy:
 
     Add **`mattermost-plugins`** and **`mattermost-client-plugins`** if you installed plugins; `mattermost-logs` holds only logs. Keep a copy of the stack's **Variables** too, since `POSTGRES_PASSWORD` is how Mattermost reaches its database.
 
-    Mattermost says to stop it for the whole backup, or the database and the files can get out of step. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) covers where to keep the copies and how a restore goes.
+    Mattermost says to stop it for the whole backup, or the database and the files can get out of step. A whole-stack backup does that: open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It stops the stack once, copies every volume, the plugin volumes included, to your S3-compatible storage on the schedule you set, and starts it again. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps.
   upgrade: |
     The template pins an exact Mattermost version in its compose file (`mattermost/mattermost-team-edition:12.1.0` at the time of writing). To upgrade:
 
     1. Read Mattermost's [important upgrade notes](https://docs.mattermost.com/administration-guide/upgrade/important-upgrade-notes.html) for every version between yours and the new one. For example, version 12.3 turns on a site health dashboard that runs hourly checks, and the notes say how to switch it off.
-    2. Back up all the volumes above. Mattermost changes its database when the new version starts, and on a large server that first start can take a while. Mattermost advises against going back more than one major version, so the backup is your way back.
+    2. Back up all the volumes above (press **Run now** on the stack's whole-stack backup). Mattermost changes its database when the new version starts, and on a large server that first start can take a while. Mattermost advises against going back more than one major version, so the backup is your way back.
     3. Change the image tag in the stack's **Compose file** and **Deploy**. Keep a pinned version rather than `latest`. Mattermost 12 needs PostgreSQL 15 or newer; the template runs 17.
   import: |
     Mattermost moves a Slack workspace in with two free command-line tools. Since version 12 this is the only way; the old built-in Slack import was removed.

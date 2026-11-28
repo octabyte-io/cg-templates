@@ -14,6 +14,33 @@ Status is `todo`, `in PR #n` or `done`. A new template joins the end of its grou
 The shared guides the sections link to: [Use your own domain](../site/src/guides/use-your-own-domain.md)
 and [How backups work](../site/src/guides/backup-and-restore.md).
 
+## Writing the "Back up and restore" part
+
+Each app's `backup` part names the app's own volumes and keys, then says how Cloudgate backs them up.
+Use Cloudgate's real screen names (checked against Cloudgate 0.3.14; see
+[the guide](../site/src/guides/backup-and-restore.md) for the full flow):
+
+- **Whole-stack backup** (Cloudgate calls it a Stack backup). On the Compose stack's **Volume
+  backups** tab, **Add a backup** → **The whole stack** (the default). One cron schedule and one run
+  copy every named volume the stack mounts, as one moment, to a destination added under
+  **Settings → Destinations** (any S3-compatible bucket). **Keep the newest** counts whole moments.
+  **Stop the stack while it runs** starts on when a service runs a `postgres`, `mysql`, `mariadb` or
+  `mongo` image. **Run now** takes one at once. **Restore** lists the moments, asks for the stack's
+  name, then removes the stack's containers, restores every volume and starts the stack. This is the
+  backup every app page recommends. It does not copy the stack's **Variables**, so say which keys to
+  keep a copy of.
+- **One volume.** The same **Add a backup** offers **One volume** (a service, then one of its
+  named volumes) for a volume that needs its own schedule. It restores that volume only.
+- **Server backups** (hosted Cloudgate, a server bought from Cloudgate). On the server's **Bought
+  Server** tab: daily copies of the whole disk, 7 at most, **Back up now**, and **Restore**, which
+  takes a safety copy first and then redeploys every Service newer than the backup. Extra storage is
+  not included, and turning backups off deletes them all.
+- **Not available:** a stack in a Cloud account has no Volume backups tab; on a Swarm stack only
+  the copy on the stack's own Server is backed up.
+
+In the `upgrade` part, the backup step says to press **Run now** on the stack's whole-stack backup,
+and the "How do I back up self-hosted <app>?" FAQ ends with one sentence on the whole-stack backup.
+
 | # | App | Template | Why it is here | Links | Status |
 | ---: | --- | --- | --- | ---: | --- |
 | 1 | n8n | `n8n` | Popular swap | 4 | done |

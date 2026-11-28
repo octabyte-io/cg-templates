@@ -42,7 +42,7 @@ faq:
   - q: How do I self-host n8n?
     a: With Cloudgate, you pick n8n from the catalogue, choose your time zone and click install. Cloudgate sets up n8n and its PostgreSQL database on your server and gives it a secure web address. Then open /setup on that address to create the owner account, and set up backups of n8n's two volumes and its encryption key before you rely on it.
   - q: How do I back up self-hosted n8n?
-    a: "Back up both of its volumes, the PostgreSQL database (n8n-db-data) and n8n's folder (n8n-data), at the same time, and keep a copy of the N8N_ENCRYPTION_KEY variable. n8n encrypts saved credentials with that key, so a restored database without it loses every saved login. For a portable copy of workflows, n8n's export:workflow and export:credentials commands write them as JSON."
+    a: "Back up both of its volumes, the PostgreSQL database (n8n-db-data) and n8n's folder (n8n-data), at the same time, and keep a copy of the N8N_ENCRYPTION_KEY variable. n8n encrypts saved credentials with that key, so a restored database without it loses every saved login. For a portable copy of workflows, n8n's export:workflow and export:credentials commands write them as JSON. In Cloudgate, a whole-stack backup on the stack's Volume backups tab copies every volume from the same moment to S3-compatible storage on a schedule, and Restore puts them back together."
   - q: How do I update self-hosted n8n safely?
     a: "Read n8n's release notes for every version between yours and the new one, back up both volumes, then change the image tag in the stack's compose file and deploy. n8n changes its database by itself when the new version starts, and going back to the old image does not undo that, so the backup is your way back."
 
@@ -75,7 +75,7 @@ afterDeploy:
     - **`n8n-data`**, n8n's folder at `/home/node/.n8n`: its own settings and any community nodes you installed.
     - **`N8N_ENCRYPTION_KEY`** on the stack's **Variables** tab. n8n encrypts saved credentials with it; without the same key, a restored database's credentials cannot be decrypted. Keep a copy with your backups.
 
-    Stop n8n and its database while you copy the volumes, or back them up with the service stopped, so the copy is consistent. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) covers where to keep the copies and how a restore goes.
+    To copy both volumes from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy because n8n runs a database. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps.
 
     For a quick, portable copy of your workflows, open the stack's **Shell** tab on the `n8n` service and run:
 
@@ -89,7 +89,7 @@ afterDeploy:
     The template pins an exact n8n version in its compose file (`n8nio/n8n:2.47.4` at the time of writing). To upgrade:
 
     1. Read n8n's [release notes](https://github.com/n8n-io/n8n/releases) for every version between yours and the new one, looking for breaking changes. n8n suggests updating at least once a month, so there are fewer versions to read.
-    2. Back up both volumes. n8n runs its database migrations by itself when the new version starts, and switching back to the old image does not undo them; your backup is the way back.
+    2. Back up both volumes (press **Run now** on the stack's whole-stack backup). n8n runs its database migrations by itself when the new version starts, and switching back to the old image does not undo them; your backup is the way back.
     3. Change the image tag in the stack's **Compose file** and **Deploy**. Keep a pinned version rather than `latest`.
   import: |
     Workflows and credentials exported from another n8n move in with n8n's own commands. With the exported folders inside the `n8n-data` volume (for example under `/home/node/.n8n/backups/`), run on the stack's **Shell** tab:

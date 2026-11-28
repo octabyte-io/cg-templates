@@ -43,7 +43,7 @@ faq:
   - q: How do I self-host Plausible Analytics?
     a: With Cloudgate you pick Plausible, choose a server and press Set up; Cloudgate installs it with its databases and a secure web address. Then open /register to create the owner account, add your website and paste the tracking line into it, and set up backups of both databases and the secret keys before you rely on it.
   - q: How do I back up self-hosted Plausible Analytics?
-    a: "Back up both of its databases at the same time, the PostgreSQL volume (db-data) and the ClickHouse volume (event-data), plus Plausible's own folder (plausible-data), with the stack stopped. Keep a copy of the SECRET_KEY_BASE and TOTP_VAULT_KEY variables too: Plausible encrypts two-factor secrets with the second. For a portable copy of a site's stats, use Export data in its settings."
+    a: "Back up both of its databases at the same time, the PostgreSQL volume (db-data) and the ClickHouse volume (event-data), plus Plausible's own folder (plausible-data), with the stack stopped. Keep a copy of the SECRET_KEY_BASE and TOTP_VAULT_KEY variables too: Plausible encrypts two-factor secrets with the second. For a portable copy of a site's stats, use Export data in its settings. In Cloudgate, a whole-stack backup on the stack's Volume backups tab copies every volume from the same moment to S3-compatible storage on a schedule, and Restore puts them back together."
   - q: How do I update self-hosted Plausible Analytics safely?
     a: "Read Plausible's release notes for every version between yours and the new one, back up the volumes, then change the image tag in the stack's compose file and deploy. Plausible changes its database when the new version starts and does not backport security fixes, so stay current and keep the backup as your way back."
   - q: Can I import my data from Google Analytics?
@@ -74,14 +74,14 @@ afterDeploy:
     - **`plausible-data`**, Plausible's own folder at `/var/lib/plausible`.
     - **`SECRET_KEY_BASE`** and **`TOTP_VAULT_KEY`** on the stack's **Variables** tab. Plausible signs sessions with the first and encrypts two-factor secrets with the second, so keep a copy of both with your backups.
 
-    `event-logs` holds only ClickHouse's log files and does not need a backup. Stop the stack while you copy the volumes so the two databases agree. Plausible's docs have no backup page; [how backups work for apps you run with Cloudgate](/guides/backup-and-restore/) covers where to keep the copies and how a restore goes.
+    `event-logs` holds only ClickHouse's log files and does not need a backup. Plausible's docs have no backup page. To copy both databases and the folder from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy so the two databases agree. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps.
 
     For a portable copy of the statistics, use **Site settings** → **Imports & exports** → **Export data**. It exports the site's stats as CSV files, which another Plausible can import. It covers statistics only, not accounts.
   upgrade: |
     The template pins an exact version in its compose file (`ghcr.io/plausible/community-edition:v3.2.2` at the time of writing). Plausible does not backport security fixes, so stay on the newest release. To upgrade:
 
     1. Read the [release notes](https://github.com/plausible/analytics/releases) for every version between yours and the new one. Plausible puts each release's upgrade steps there, and major versions can need extra steps, such as a ClickHouse upgrade or changed ClickHouse settings.
-    2. Back up the volumes. The template runs Plausible's database migrations every time it starts, so the new version changes the database on its first start, and going back to the old image does not undo that.
+    2. Back up the volumes (press **Run now** on the stack's whole-stack backup). The template runs Plausible's database migrations every time it starts, so the new version changes the database on its first start, and going back to the old image does not undo that.
     3. Change the image tag in the stack's **Compose file** and **Deploy**. Keep a pinned version rather than `latest`.
   import: |
     Plausible imports past statistics from **Site settings** → **Imports & exports** → **Import data**:
