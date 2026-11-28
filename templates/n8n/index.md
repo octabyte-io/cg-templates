@@ -75,7 +75,7 @@ afterDeploy:
     - **`n8n-data`**, n8n's folder at `/home/node/.n8n`: its own settings and any community nodes you installed.
     - **`N8N_ENCRYPTION_KEY`** on the stack's **Variables** tab. n8n encrypts saved credentials with it; without the same key, a restored database's credentials cannot be decrypted. Keep a copy with your backups.
 
-    To copy both volumes from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy because n8n runs a database. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps.
+    To copy both volumes from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy because n8n runs a database. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps, and Cloudgate's user guide explains each field in [back up a whole Compose stack](https://cloudgate.octabyte.io/docs/guide/backups#back-up-a-whole-compose-stack) and [restore a moment of a whole-stack backup](https://cloudgate.octabyte.io/docs/guide/backups#restore-a-moment-of-a-whole-stack-backup).
 
     For a quick, portable copy of your workflows, open the stack's **Shell** tab on the `n8n` service and run:
 

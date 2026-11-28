@@ -10,10 +10,10 @@ import Faq from '../../components/Faq.astro';
 import ProductMark from '../../components/ProductMark.astro';
 import Screens from '../../components/Screens.astro';
 import { alternativesPages, getTemplates, licenceKind, listNames, markdownHtml, relatedTemplates, type Template } from '../../lib/catalogue';
-import { appFaq, HOW_IT_WORKS } from '../../lib/copy';
+import { AFTER_DEPLOY_GUIDE, appFaq, HOW_IT_WORKS } from '../../lib/copy';
 import { comparisonsFor } from '../../lib/compare';
 import { breadcrumbSchema, faqSchema, graph, howToSchema, softwareSchema } from '../../lib/schema';
-import { cloudgate, deployUrl, formatDate, href } from '../../lib/site';
+import { cloudgate, deployUrl, formatDate, href, userGuide } from '../../lib/site';
 
 export function getStaticPaths() {
   return getTemplates().map((template) => ({ params: { id: template.id }, props: { template } }));
@@ -226,7 +226,8 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
         <div class="dfoot">
           <a class="btn lg" href={deploy}>Deploy {a.name}</a>
           <p class="muted">
-            New to Cloudgate? <a href={cloudgate()}>See what Cloudgate is</a>
+            New to Cloudgate? <a href={cloudgate()}>See what Cloudgate is</a>, or follow
+            <a href={userGuide('get-started')}>the get-started wizard step by step</a>.
           </p>
         </div>
         <ConsoleDeploy id={a.id} name={a.name} />
@@ -246,12 +247,15 @@ const jsonLd = graph(breadcrumbSchema(trail), softwareSchema(a), howToSchema(a, 
               ))}
             </div>
             <p class="asrc">
+              Every Cloudgate screen named here is in Cloudgate's user guide:{' '}
+              {AFTER_DEPLOY_GUIDE.map((page, index) => (
+                <>{index > 0 && (index === AFTER_DEPLOY_GUIDE.length - 1 ? ' and ' : ', ')}<a href={page.url}>{page.title}</a></>
+              ))}.
+            </p>
+            <p class="asrc">
               From the official documentation:{' '}
               {a.afterDeploy.sources.map((source, index) => (
-                <>
-                  {index > 0 && ', '}
-                  <a href={source.url} rel="noopener">{source.title}</a>
-                </>
+                <>{index > 0 && ', '}<a href={source.url} rel="noopener">{source.title}</a></>
               ))}
             </p>
           </div>

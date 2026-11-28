@@ -5,6 +5,7 @@ import Crumbs from '../components/Crumbs.astro';
 import Faq from '../components/Faq.astro';
 import { CATEGORIES } from '../categories';
 import { GITHUB_REPO } from '../lib/catalogue';
+import { cloudgate, userGuide } from '../lib/site';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
 
 const trail = [
@@ -100,6 +101,12 @@ const faq = [
   logo.svg             <span class="c">the app's own logo, square</span>
   index.md             <span class="c">this website's page: tagline, category, what it replaces, features, questions</span>
   screenshots/         <span class="c">optional</span></pre>
+      <p class="muted">
+        To check a template on your own computer before you open the pull request, see
+        <a href={userGuide('templates', 'write-or-test-a-template')}>how to write or test a template</a> in Cloudgate's user guide,
+        and the CLI reference for <a href={cloudgate('docs/cli/commands#cloudgate-template-check')}>template check</a> and
+        <a href={cloudgate('docs/cli/commands#cloudgate-template-try')}>template try</a>.
+      </p>
     </div>
     <div class="blk last">
       <h2 class="h2">Questions</h2>

@@ -20,6 +20,12 @@ faq:
   - q: What should I back up before upgrading an app?
     a: "Every volume in its compose file, from the same moment, plus a copy of its Variables, which hold keys such as encryption secrets. Run the stack's whole-stack backup with Run now just before the upgrade. Many apps change their database on the first start of a new version, so that backup is the way back."
 sources:
+  - title: "Cloudgate user guide: Backups and restore"
+    url: https://cloudgate.octabyte.io/docs/guide/backups
+  - title: "Cloudgate user guide: Backup destinations"
+    url: https://cloudgate.octabyte.io/docs/guide/destinations
+  - title: "Cloudgate user guide: Buy a Server from Cloudgate (server backups)"
+    url: https://cloudgate.octabyte.io/docs/guide/bought-servers
   - title: "Cloudgate: CONTEXT.md (Stack backup, Server backup)"
     url: https://github.com/octabyte-io/cloudgate/blob/main/CONTEXT.md
   - title: "Cloudgate ADR-0092: a Compose stack is backed up as one moment"
@@ -43,7 +49,7 @@ An app from this catalogue runs as a Compose stack on your server. Everything it
 
 Some apps also keep a cache, such as Redis, that they can rebuild.
 
-The rest of what the app needs is on the stack's **Variables** tab: passwords and secret keys Cloudgate generated at setup. Some apps use one of those keys to encrypt data in their database, so a restored database is only readable with the same key. Volume backups do not copy the Variables, so keep a copy of them with your backups.
+The rest of what the app needs is on the stack's **Variables** tab: passwords and secret keys Cloudgate generated at setup. Some apps use one of those keys to encrypt data in their database, so a restored database is only readable with the same key. Volume backups do not copy the Variables, so keep a copy of them with your backups. Cloudgate's user guide explains [a stack's Variables](https://cloudgate.octabyte.io/docs/guide/compose-stacks#set-variables-for-the-compose-file).
 
 ## What Cloudgate keeps, and what can remove it
 
@@ -59,7 +65,7 @@ None of this protects you if the server itself fails. For that you need a copy s
 
 This is the backup to set up for every app in the catalogue. It copies all of the app's volumes in one run, so the database and the files always come from the same moment.
 
-1. **Add your storage once.** Under **Settings → Destinations**, add an S3-compatible bucket (AWS S3, Cloudflare R2, MinIO, Wasabi or any other S3-compatible service) and use **Test connection**. Destinations are shared by the whole organization.
+1. **Add your storage once.** Under **Settings → Destinations**, add an S3-compatible bucket (AWS S3, Cloudflare R2, MinIO, Wasabi or any other S3-compatible service) and use **Test connection**. Destinations are shared by the whole organization. Cloudgate's user guide shows how to [add a backup destination](https://cloudgate.octabyte.io/docs/guide/destinations#add-a-destination) and what Test connection checks.
 2. **Open the app's Compose stack** and go to its **Volume backups** tab.
 3. **Choose Add a backup** and keep **The whole stack**, the default.
 4. **Pick the destination, a prefix** (the folder inside the bucket) **and a cron schedule**, such as `0 2 * * *` for every night at 02:00.
@@ -68,7 +74,7 @@ This is the backup to set up for every app in the catalogue. It copies all of th
 
 Use **Run now** on the backup's row to take a copy straight away, for example just before an upgrade, and open its run history to see each run's log.
 
-Two limits: on a Swarm stack, only the copy of a volume on the stack's own Server is backed up, and a stack in a Cloud account has no Volume backups tab, since there is no Server to copy from.
+Two limits: on a Swarm stack, only the copy of a volume on the stack's own Server is backed up, and a stack in a Cloud account has no Volume backups tab, since there is no Server to copy from. Every field of the form is explained in Cloudgate's user guide, under [back up a whole Compose stack](https://cloudgate.octabyte.io/docs/guide/backups#back-up-a-whole-compose-stack).
 
 ### Back up one volume on its own schedule
 
@@ -82,7 +88,7 @@ On the stack's **Volume backups** tab, choose **Restore** on the whole-stack bac
 2. Type the stack's name to confirm. Everything written since that moment is lost.
 3. Cloudgate runs the restore as one run, and shows each step: it removes the stack's containers (on a Swarm stack it stops it), puts back every volume from that moment, then starts the stack again.
 
-Before you restore, check that the stack's Variables are the ones the backup was taken with, and that its compose file names the same app version. Then check the app before you upgrade it again. Test a restore once before you need it. If the restored app answers on a new address, see [using your own domain](/guides/use-your-own-domain/) for the settings that hold it.
+Before you restore, check that the stack's Variables are the ones the backup was taken with, and that its compose file names the same app version. Then check the app before you upgrade it again. Test a restore once before you need it. Cloudgate's user guide walks through each screen in [restore a moment of a whole-stack backup](https://cloudgate.octabyte.io/docs/guide/backups#restore-a-moment-of-a-whole-stack-backup). If the restored app answers on a new address, see [using your own domain](/guides/use-your-own-domain/) for the settings that hold it.
 
 ## Back up a whole server bought from Cloudgate
 
@@ -92,7 +98,7 @@ On hosted Cloudgate, a server you buy from Cloudgate can have backups turned on,
 - **Back up now** takes one more copy at once, in the same 7 slots. Once all 7 are kept, its confirmation names the backup it will push out.
 - **Restore** on a backup puts the disk back as it was then. You confirm by typing the server's name. Cloudgate first takes a **safety copy** of the disk as it is now, so the restore itself can be undone. Afterwards it sets the server up again and redeploys every app there whose current version is newer than the backup, so the data is the backup's and the code is the current version.
 
-Three limits: extra storage is not in server backups and is left as it is, turning backups off deletes every server backup at once, and the backups go with the server when it is deleted. A whole-stack backup to your own bucket is still the copy that outlives the server, so use both.
+Three limits: extra storage is not in server backups and is left as it is, turning backups off deletes every server backup at once, and the backups go with the server when it is deleted. A whole-stack backup to your own bucket is still the copy that outlives the server, so use both. Cloudgate's user guide has the details on [server backups](https://cloudgate.octabyte.io/docs/guide/bought-servers#what-is-a-server-backup) and [restoring a bought server](https://cloudgate.octabyte.io/docs/guide/bought-servers#how-do-i-restore-a-bought-server-from-a-backup).
 
 ## Use the app's own export too
 

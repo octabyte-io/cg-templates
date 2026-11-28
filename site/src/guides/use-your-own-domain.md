@@ -14,6 +14,12 @@ faq:
   - q: I changed my app's domain and links or sign-in still use the old address. Why?
     a: "Some apps keep their public address in a setting, such as n8n's WEBHOOK_URL or Outline's URL. Cloudgate fills those in once, at setup, so after a domain change you edit them on the app's Variables tab and deploy the app again."
 sources:
+  - title: "Cloudgate user guide: Domains and TLS certificates"
+    url: https://cloudgate.octabyte.io/docs/guide/domains
+  - title: "Cloudgate user guide: Compose stacks (give a service a Domain)"
+    url: https://cloudgate.octabyte.io/docs/guide/compose-stacks#give-a-service-in-the-stack-a-domain
+  - title: "Cloudgate user guide: the get-started wizard (HTTPS and your own domain)"
+    url: https://cloudgate.octabyte.io/docs/guide/get-started#https-and-your-own-domain
   - title: "Cloudgate: CHANGELOG (Template setup, Check DNS, served certificate)"
     url: https://github.com/octabyte-io/cloudgate/blob/main/CHANGELOG.md
   - title: "Cloudgate ADR-0064: a template's values are made once at setup"
@@ -40,7 +46,7 @@ When you set up an app from the catalogue, the **Web address** field starts with
 2. Press **Check DNS** to see whether the record is live. DNS changes can take a while to spread; a failed check does not stop the setup, so you can carry on and the address starts working once DNS catches up.
 3. Finish the setup. Cloudgate starts the app and asks Let's Encrypt for a certificate. In the Get started wizard, **Open** appears once the certificate is issued, usually within a minute.
 
-Setting your domain here is the easiest path, because Cloudgate fills in every setting that holds the app's address with your domain from the start.
+Setting your domain here is the easiest path, because Cloudgate fills in every setting that holds the app's address with your domain from the start. Cloudgate's user guide covers [HTTPS and your own domain in the get-started wizard](https://cloudgate.octabyte.io/docs/guide/get-started#https-and-your-own-domain), and the free [sslip.io address](https://cloudgate.octabyte.io/docs/guide/domains#use-a-free-sslipio-address).
 
 ## Add or change a domain later
 
@@ -50,7 +56,7 @@ An app from the catalogue runs as a Compose stack, and its addresses are on the 
 2. On the stack's **Domains** tab, choose **Add a domain**. Type the host, pick the **service** in the compose file it should reach (the app's own service, such as `n8n` or `outline`) and its port, and leave **Serve over HTTPS** on with **Let's Encrypt** as the certificate.
 3. **Deploy** the stack. Cloudgate writes the domains into the stack when it deploys, so a host added or changed starts being served on the next deployment.
 
-You can keep the old address alongside the new one, or remove it once everyone uses the new one.
+You can keep the old address alongside the new one, or remove it once everyone uses the new one. Cloudgate's user guide shows the form in [give a service in the stack a Domain](https://cloudgate.octabyte.io/docs/guide/compose-stacks#give-a-service-in-the-stack-a-domain).
 
 ## Update apps that store their own address
 
@@ -68,6 +74,6 @@ On the stack's **Domains** tab, the **Certificate** column says where the certif
 - **Let's Encrypt · valid until** a date: the app is served over HTTPS. Let's Encrypt certificates are renewed for you.
 - **Not issued yet**: check that the A record points at this server and that port 80 is open. The attempts are in the server's Traefik log.
 
-Until the certificate is issued, the server answers with a temporary self-signed certificate, so a browser warns about the address. That clears once Let's Encrypt has issued.
+Until the certificate is issued, the server answers with a temporary self-signed certificate, so a browser warns about the address. That clears once Let's Encrypt has issued. Cloudgate's user guide lists what to check in [check that the HTTPS certificate is issued](https://cloudgate.octabyte.io/docs/guide/domains#check-that-the-https-certificate-is-issued), and what to do [if Traefik refuses a route](https://cloudgate.octabyte.io/docs/guide/domains#what-if-traefik-refuses-a-route).
 
 Before you move an app to a new domain, take a backup first: [how backups work for apps you run with Cloudgate](/guides/backup-and-restore/).

@@ -14,6 +14,31 @@ Status is `todo`, `in PR #n` or `done`. A new template joins the end of its grou
 The shared guides the sections link to: [Use your own domain](../site/src/guides/use-your-own-domain.md)
 and [How backups work](../site/src/guides/backup-and-restore.md).
 
+## Link Cloudgate's user guide too
+
+Cloudgate's public user guide (`https://cloudgate.octabyte.io/docs/guide/<page>`) documents every screen these sections name. Link
+it where a section tells people to use a Cloudgate screen, beside the link to this site's own guide (ours
+first: it is the plain-language version; the user guide has every field). Only link pages and headings
+that exist there; open the page and check the heading's anchor before you use it. In `.astro` files use
+`userGuide(page, heading)` from `site/src/lib/site.ts`; in Markdown write the full URL. The app page
+already lists the main pages under every After you deploy section (`AFTER_DEPLOY_GUIDE` in
+`site/src/lib/copy.ts`), so a section needs a user-guide link only where it names a specific screen.
+
+| Topic | User guide link |
+| --- | --- |
+| Whole-stack backup, its form | `https://cloudgate.octabyte.io/docs/guide/backups#back-up-a-whole-compose-stack` |
+| Restoring a whole-stack backup | `https://cloudgate.octabyte.io/docs/guide/backups#restore-a-moment-of-a-whole-stack-backup` |
+| One-volume backup and restore | `https://cloudgate.octabyte.io/docs/guide/backups#how-do-i-back-up-a-volume`, `#how-do-i-restore-a-volume` |
+| Adding a destination | `https://cloudgate.octabyte.io/docs/guide/destinations#add-a-destination` |
+| Server backups (bought server) | `https://cloudgate.octabyte.io/docs/guide/bought-servers#what-is-a-server-backup`, `#how-do-i-restore-a-bought-server-from-a-backup` |
+| A stack's Domains tab | `https://cloudgate.octabyte.io/docs/guide/compose-stacks#give-a-service-in-the-stack-a-domain` |
+| A stack's Variables tab | `https://cloudgate.octabyte.io/docs/guide/compose-stacks#set-variables-for-the-compose-file` |
+| Certificate not issued | `https://cloudgate.octabyte.io/docs/guide/domains#check-that-the-https-certificate-is-issued` |
+| Free sslip.io address | `https://cloudgate.octabyte.io/docs/guide/domains#use-a-free-sslipio-address` |
+| Shell and logs | `https://cloudgate.octabyte.io/docs/guide/compose-stacks#read-a-containers-logs-and-open-a-shell` |
+| Editing a template's config files | `https://cloudgate.octabyte.io/docs/guide/compose-stacks#edit-the-config-files-a-template-shipped` |
+| The get-started wizard, sign-in block | `https://cloudgate.octabyte.io/docs/guide/get-started#sign-in-to-your-new-app` |
+
 ## Writing the "Back up and restore" part
 
 Each app's `backup` part names the app's own volumes and keys, then says how Cloudgate backs them up.
@@ -40,6 +65,9 @@ Use Cloudgate's real screen names (checked against Cloudgate 0.3.14; see
 
 In the `upgrade` part, the backup step says to press **Run now** on the stack's whole-stack backup,
 and the "How do I back up self-hosted <app>?" FAQ ends with one sentence on the whole-stack backup.
+The `backup` part ends with the link to [How backups work](../site/src/guides/backup-and-restore.md) and the
+user guide's [back up a whole Compose stack](https://cloudgate.octabyte.io/docs/guide/backups#back-up-a-whole-compose-stack) and
+[restore a moment of a whole-stack backup](https://cloudgate.octabyte.io/docs/guide/backups#restore-a-moment-of-a-whole-stack-backup).
 
 | # | App | Template | Why it is here | Links | Status |
 | ---: | --- | --- | --- | ---: | --- |

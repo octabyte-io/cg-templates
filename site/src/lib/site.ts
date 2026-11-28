@@ -27,6 +27,15 @@ export function cloudgate(path = ''): string {
   return path ? `${CLOUDGATE_URL}/${path.replace(/^\//, '')}` : `${CLOUDGATE_URL}/`;
 }
 
+/**
+ * A page of Cloudgate's user guide (cloudgate.octabyte.io/docs/guide/<page>), optionally at one of its headings:
+ * `userGuide('backups', 'back-up-a-whole-compose-stack')`. Link only pages and headings that exist there; the
+ * guide has no index page of its own, so always name a page.
+ */
+export function userGuide(page: string, heading?: string): string {
+  return cloudgate(`docs/guide/${page}`) + (heading ? `#${heading}` : '');
+}
+
 /** A shared ChatGPT conversation about Cloudgate. Linked from the header and footer only, with rel=nofollow,
  * and kept out of the sitemap, structured data and llms.txt on purpose. */
 export const ASK_GPT_URL = 'https://chatgpt.com/share/6afca8d4-272c-83ee-a74b-ce8bbac37470';

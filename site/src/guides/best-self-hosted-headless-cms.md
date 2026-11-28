@@ -84,7 +84,7 @@ Self-hosted means the CMS runs on a server you control instead of as a hosted se
 ## How to choose a self-hosted headless CMS
 
 - **The content API.** Most of the apps here offer both REST and GraphQL; Enonic XP and Orchard Core deliver content over GraphQL. Check what your front-end developer prefers.
-- **Where the content lives.** [Directus](/templates/directus/) works on a SQL database, [Squidex](/templates/squidex/) on MongoDB, [Cockpit](/templates/cockpit-cms/) in files with no separate database, and [CrafterCMS](/templates/crafter-cms/) in Git. That decides what you back up and what your developers already know.
+- **Where the content lives.** [Directus](/templates/directus/) works on a SQL database, [Squidex](/templates/squidex/) on MongoDB, [Cockpit](/templates/cockpit-cms/) in files with no separate database, and [CrafterCMS](/templates/crafter-cms/) in Git. That decides [what you back up](/guides/backup-and-restore/) and what your developers already know.
 - **How editors work.** Squidex, Cockpit and Directus give editors forms; [Enonic XP](/templates/enonic-xp/) and CrafterCMS also let them build pages visually, with drag and drop.
 - **Review and scheduling.** Squidex, Enonic XP and CrafterCMS have review steps and scheduled publishing, and [Orchard Core](/templates/orchard-core/) has drafts and scheduling. The free Cockpit Core edition has neither.
 - **Server size.** Cockpit, Directus and Orchard Core start on a small server. Squidex needs about 2 GB of memory, Enonic XP at least 4 GB and CrafterCMS at least 8 GB.

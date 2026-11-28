@@ -4,7 +4,7 @@ import { HOW_IT_WORKS } from '../lib/copy';
 import { comparisons } from '../lib/compare';
 import { guides } from '../lib/guides';
 import { appUrl, markdownUrl, SAMPLE_NOTE } from '../lib/machine';
-import { absolute, cloudgate, deployUrl, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, cloudgate, deployUrl, HOSTED_URL, SITE_DESCRIPTION, SITE_NAME, userGuide } from '../lib/site';
 
 /** The llmstxt.org index: what the site is, then one line per page worth reading. */
 function body(): string {
@@ -42,6 +42,16 @@ function body(): string {
     `- [Self-host Cloudgate](${cloudgate('self-hosted')}): installing Cloudgate on your own server for free.`,
     `- [Cloudgate docs](${cloudgate('docs')}): the user guide, API, CLI and MCP reference.`,
     `- [Cloudgate llms.txt](${cloudgate('llms.txt')}): the same, for language models.`,
+    '',
+    'Pages of Cloudgate\'s user guide that the app pages here rely on:',
+    '',
+    `- [Deploy your first app with the get-started wizard](${userGuide('get-started')}): the Deploy button's steps, from account to open app.`,
+    `- [Templates](${userGuide('templates')}): setting up an app from this catalogue in a Cloudgate console.`,
+    `- [Compose stacks](${userGuide('compose-stacks')}): the stack each app runs as, with its Domains, Variables and Volume backups tabs.`,
+    `- [Backups and restore](${userGuide('backups')}): whole-stack and one-volume backups to S3-compatible storage, and restoring them.`,
+    `- [Backup destinations](${userGuide('destinations')}): adding the S3-compatible bucket backups go to.`,
+    `- [Buy a Server from Cloudgate](${userGuide('bought-servers')}): servers from Cloudgate and their daily server backups.`,
+    `- [Domains and TLS certificates](${userGuide('domains')}): your own domain, the free sslip.io address and Let's Encrypt HTTPS.`,
     '',
     '## Pages',
     '',
