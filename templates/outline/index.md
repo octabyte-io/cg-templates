@@ -44,7 +44,7 @@ faq:
   - q: Can I import my documents from Notion or Confluence?
     a: Yes. Outline imports Notion exports, along with Word, Markdown and HTML files; its Confluence importer is part of the paid Business and Enterprise editions, not the free Community Edition. Notion databases do not carry over as databases, so check them after the import.
   - q: How do I back up self-hosted Outline?
-    a: "Back up Outline's PostgreSQL database (the outline-db-data volume) and its files (outline-data, which holds images and attachments) from the same moment, and keep a copy of the SECRET_KEY variable. Outline's docs warn that losing SECRET_KEY makes encrypted data in the database inaccessible. For a readable copy, an admin can export the workspace as Markdown, HTML or JSON from Settings, Export."
+    a: "Back up Outline's PostgreSQL database (the outline-db-data volume) and its files (outline-data, which holds images and attachments) from the same moment, and keep a copy of the SECRET_KEY variable. Outline's docs warn that losing SECRET_KEY makes encrypted data in the database inaccessible. For a readable copy, an admin can export the workspace as Markdown, HTML or JSON from Settings, Export. In Cloudgate, a whole-stack backup on the stack's Volume backups tab copies every volume from the same moment to S3-compatible storage on a schedule, and Restore puts them back together."
   - q: How do I update self-hosted Outline safely?
     a: "Read the release notes for every version you skip, back up the database and files, then change the image tag in the stack's compose file and deploy. Outline runs its database migrations automatically when the new version starts, and releases are not always backwards compatible, so the backup is your way back."
   - q: Is my data private with Outline?
@@ -70,14 +70,16 @@ afterDeploy:
     - **`outline-data`**, Outline's files at `/var/lib/outline/data`: the images and attachments in your documents, because this template stores files on the server's disk (`FILE_STORAGE=local`). A database restored without them has documents with missing images.
     - **`outline-redis-data`**, Redis. Outline's backup guidance does not list it.
 
-    Keep a copy of the stack's **Variables** as well. Outline's docs warn that losing `SECRET_KEY` makes all encrypted data in the database inaccessible. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) covers where to keep the copies and how a restore goes.
+    Keep a copy of the stack's **Variables** as well, since volume backups do not include them. Outline's docs warn that losing `SECRET_KEY` makes all encrypted data in the database inaccessible.
+
+    To copy the database and the files from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy because Outline runs a database. To follow Outline's advice, run it every night (`0 2 * * *`) and set **Keep the newest** to 30. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps.
 
     For a readable copy of the content, an admin can export the whole workspace from **Settings → Export** as Markdown, HTML or JSON. An export is not a full backup, but it opens anywhere and moves to another Outline.
   upgrade: |
     The template pins an exact Outline version in its compose file (`outlinewiki/outline:1.12.0` at the time of writing). Outline runs its database migrations automatically when the new container starts, and its docs say releases are not always backwards compatible. So for each upgrade:
 
     1. Read the [release notes](https://github.com/outline/outline/releases) for every version you skip. Changes that need action are called out there, such as a new minimum Node version.
-    2. Back up the database and the files volume.
+    2. Back up the database and the files volume (press **Run now** on the stack's whole-stack backup).
     3. Change the image tag in the stack's **Compose file** and **Deploy**. Keep a pinned version rather than `latest`, as Outline's docs recommend.
   import: |
     An admin can import in bulk from **Settings → Preferences → Import**. Outline's docs list Notion exports, Word (`.docx`) files, and Markdown or JSON exports from another Outline; JSON is the best choice between two Outline workspaces and works up to about 1.5 GB. You can also drag HTML, Markdown or text files into a collection, or use **Import document** from a document's menu.

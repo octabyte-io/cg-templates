@@ -19,8 +19,8 @@ import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
  * without an Apply press in the get-started wizard only. In a console, a template setup is a
  * Plan reviewed and applied (ADR-0065). Values are made at setup (ADR-0064), a copy never updates
  * from its template, a generated sslip.io address gets a Let's Encrypt certificate on a Server with a
- * public address (plain http on a private one, Cloudgate 0.3.9) and the user's own gets one too, backups run on a schedule to a destination the user adds (not yet for Compose
- * stacks), and deleting keeps stored data unless asked. Plans, prices, billing and what Cloudgate
+ * public address (plain http on a private one, Cloudgate 0.3.9) and the user's own gets one too, backups run on a schedule to a destination the user adds (a
+ * Compose stack's whole-stack backup copies every volume as one moment, Cloudgate 0.3.13), and deleting keeps stored data unless asked. Plans, prices, billing and what Cloudgate
  * does once an app is running belong on Cloudgate's own website (cloudgate.octabyte.io), not here.
  */
 

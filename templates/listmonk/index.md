@@ -39,7 +39,7 @@ faq:
   - q: How do I self-host listmonk?
     a: Pick listmonk in Cloudgate's template list, choose an admin username and press Set up. Cloudgate installs listmonk and its database on your server, creates your admin account and gives it a secure web address. You then sign in at /admin, turn on two-factor sign-in, add your email sending service under Settings and import your subscribers.
   - q: How do I back up self-hosted listmonk?
-    a: "Back up both of its volumes together: the PostgreSQL database (listmonk-data), which holds subscribers, lists, campaigns and settings, and the uploads folder (listmonk-uploads) with the images your emails use. Stop the stack while you copy them so the copy is consistent."
+    a: "Back up both of its volumes together: the PostgreSQL database (listmonk-data), which holds subscribers, lists, campaigns and settings, and the uploads folder (listmonk-uploads) with the images your emails use. In Cloudgate, a whole-stack backup on the stack's Volume backups tab copies both from the same moment to S3-compatible storage on a schedule, stopping the stack for the copy, and Restore puts them back together."
   - q: How do I update self-hosted listmonk safely?
     a: "Back up the PostgreSQL database first, read the release notes, then change both listmonk image tags in the stack's compose file to the new version and deploy. The template runs listmonk's database upgrade on start, and an upgraded database should not be used with an older version, so the backup is your way back."
   - q: Which email sending services work with listmonk?
@@ -70,12 +70,12 @@ afterDeploy:
 
     Back them up together: a database without its uploads has campaigns whose images no longer load. Keep a copy of the stack's **Variables** too, for the database password and your admin login.
 
-    Stop listmonk and its database while you copy the volumes, or back them up with the services stopped. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) covers where to keep the copies and how a restore goes.
+    To copy both volumes from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy because listmonk runs a database. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps.
   upgrade: |
     The template pins an exact listmonk version in its compose file (`listmonk/listmonk:v6.2.0` at the time of writing), in two places: the `listmonk` service and the `listmonk-install` service. To upgrade:
 
     1. Read the [release notes](https://github.com/knadh/listmonk/releases) for every version between yours and the new one. Skip beta and nightly versions; listmonk calls nightlies untested.
-    2. **Back up the database first**, as listmonk's upgrade guide says. Each time the stack starts, the template runs `listmonk --upgrade`, which updates the database for the new version. A database upgraded that way should not be used with an older version, so going back means restoring the backup.
+    2. **Back up the database first**, as listmonk's upgrade guide says: press **Run now** on the stack's whole-stack backup. Each time the stack starts, the template runs `listmonk --upgrade`, which updates the database for the new version. A database upgraded that way should not be used with an older version, so going back means restoring the backup.
     3. Change both image tags in the stack's **Compose file** to the same new version and **Deploy**. Keep a pinned version rather than `latest`.
   import: |
     Bring in subscribers from **Subscribers** → **Import**. Upload a CSV file, or a ZIP with one CSV in it, whose header row is exactly `email,name,attributes`; `attributes` is optional and holds any extra fields as JSON. Choose the lists to add them to, and the mode: **Subscribe**, or **Blocklist** for addresses that must never get mail. The overwrite options decide whether existing subscribers' names, attributes and list status are replaced; listmonk warns that overwriting re-subscribes people who had unsubscribed.
