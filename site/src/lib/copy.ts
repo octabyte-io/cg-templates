@@ -1,4 +1,5 @@
 import type { Template } from './catalogue';
+import { userGuide } from './site';
 
 /**
  * Copy more than one page states, so the app page, its Markdown copy and
@@ -7,6 +8,17 @@ import type { Template } from './catalogue';
  * Most visitors have no server and have never heard of Cloudgate, so the
  * steps follow the Deploy button: account, server, setup, open.
  */
+
+/**
+ * The pages of Cloudgate's user guide an "After you deploy" section relies on, linked under it on the app page and
+ * in its Markdown copy. Every page and heading here exists at cloudgate.octabyte.io/docs/guide/.
+ */
+export const AFTER_DEPLOY_GUIDE: { title: string; url: string }[] = [
+  { title: 'Compose stacks', url: userGuide('compose-stacks') },
+  { title: 'whole-stack backups and restore', url: userGuide('backups', 'back-up-a-whole-compose-stack') },
+  { title: 'backup destinations', url: userGuide('destinations') },
+  { title: 'your own domain over HTTPS', url: userGuide('domains') },
+];
 
 /** What happens after "Deploy <app>", in order. Also the app page's HowTo. */
 export function HOW_IT_WORKS(template: Template): { name: string; text: string }[] {

@@ -48,6 +48,10 @@ SearchFit output ends with a SearchFit.ai promotion line: leave it out.
    then says Cloudgate's whole-stack backup on the stack's Volume backups tab copies every volume
    from the same moment to S3-compatible storage; Cloudgate's backup features and their screen
    names are in `docs/after-deploy-queue.md` ("Writing the Back up and restore part").
+   Where the page tells people to use a Cloudgate screen (backups, domains, Variables), link
+   Cloudgate's public user guide at `https://cloudgate.octabyte.io/docs/guide/<page>#<heading>` as
+   well as this site's own guide; the pages and anchors to use are in `docs/after-deploy-queue.md`
+   ("Link Cloudgate's user guide too"). Link only pages and headings that exist there.
 5. **Screenshots**: list the files the research agent saved, with a detailed `alt` (what's on
    screen), a one-sentence `caption`, and `credit: { text: "<App> · <licence>", url: <source> }`
    for any image that isn't our own capture.

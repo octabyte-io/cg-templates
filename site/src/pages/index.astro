@@ -12,7 +12,7 @@ import Blueprint from '../components/Blueprint.astro';
 import { getTemplate, getTemplates, listNames, openSourceCount, popularSwaps, usedCategories } from '../lib/catalogue';
 import { faqSchema, graph, itemListSchema, websiteSchema } from '../lib/schema';
 import { costAnswer } from '../lib/copy';
-import { cloudgate, href, SITE_DESCRIPTION } from '../lib/site';
+import { cloudgate, href, SITE_DESCRIPTION, userGuide } from '../lib/site';
 
 const templates = getTemplates();
 const total = templates.length;
@@ -252,7 +252,8 @@ const jsonLd = graph(websiteSchema(), itemListSchema(templates, 'Open-source app
       <Faq items={faq} />
       <p class="muted selfhost">
         Prefer to run everything yourself? <a href={cloudgate('self-hosted')}>Install Cloudgate on your own server for free</a>, then
-        deploy any app here from your own console.
+        deploy any app here from your own console. Cloudgate's user guide explains
+        <a href={userGuide('get-started')}>the get-started wizard</a> and <a href={userGuide('templates')}>setting up a template</a>.
       </p>
     </div>
   </section>

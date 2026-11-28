@@ -83,8 +83,8 @@ const afterDeployRules = z.strictObject({
     'is too long: keep the lede to two sentences',
   ),
   signIn: plain('Markdown: the first sign-in, from template.yaml\'s signIn, then what to lock down'),
-  domain: plain('Markdown: one or two lines and a link to /guides/use-your-own-domain/, plus any quirk of this app'),
-  backup: plain('Markdown: what to back up for this app, what to restore together, how the stack\'s whole-stack backup (Volume backups tab) covers it, and a link to /guides/backup-and-restore/ (see docs/after-deploy-queue.md)'),
+  domain: plain('Markdown: one or two lines and a link to /guides/use-your-own-domain/, plus any quirk of this app; link Cloudgate\'s user guide (cloudgate.octabyte.io/docs/guide/) for a screen you name'),
+  backup: plain('Markdown: what to back up for this app, what to restore together, how the stack\'s whole-stack backup (Volume backups tab) covers it, a link to /guides/backup-and-restore/ and links to Cloudgate\'s user guide on backing up and restoring a whole stack (see docs/after-deploy-queue.md)'),
   upgrade: plain('Markdown: what to check before a new version'),
   import: plain('Markdown: how to move data in, only when the app has a real import path').optional(),
   sources: z

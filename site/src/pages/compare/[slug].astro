@@ -16,7 +16,7 @@ import {
   type Comparison,
 } from '../../lib/compare';
 import { breadcrumbSchema, comparisonSchema, faqSchema, graph } from '../../lib/schema';
-import { deployUrl, href } from '../../lib/site';
+import { deployUrl, href, userGuide } from '../../lib/site';
 
 export function getStaticPaths() {
   return comparisons().map((c) => ({ params: { slug: c.slug }, props: { c } }));
@@ -153,6 +153,22 @@ const jsonLd = graph(breadcrumbSchema(trail), comparisonSchema(c), faqSchema(c.f
           </a>
         )}
       </div>
+      <p class="muted measure next">
+        {a.afterDeploy ? (
+          <>
+            Once {a.name} is running, <a href={href(`templates/${a.id}/#after-deploy`)}>the steps after you deploy {a.name}</a> cover
+            sign-in, your own domain and backups.
+          </>
+        ) : (
+          <>
+            Once {a.name} is running, see how to <a href={href('guides/use-your-own-domain/')}>put it on your own domain</a> and{' '}
+            <a href={href('guides/backup-and-restore/')}>back it up</a>.
+          </>
+        )}{' '}
+        Every Cloudgate screen these steps name is in Cloudgate's user guide:{' '}
+        <a href={userGuide('compose-stacks')}>Compose stacks</a>, <a href={userGuide('domains')}>domains</a> and{' '}
+        <a href={userGuide('backups')}>backups</a>.
+      </p>
     </div>
 
     <div class="blk">
@@ -240,6 +256,14 @@ const jsonLd = graph(breadcrumbSchema(trail), comparisonSchema(c), faqSchema(c.f
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 4px;
+  }
+  .next {
+    margin-top: 14px;
+    font-size: 0.875rem;
+  }
+  .next a {
+    color: var(--accent-ink);
+    text-underline-offset: 3px;
   }
   .src,
   .cmpmore {

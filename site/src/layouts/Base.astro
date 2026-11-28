@@ -14,7 +14,7 @@ import CloudgateMark from '../components/CloudgateMark.astro';
 import Palette from '../components/Palette.astro';
 import { alternativesPages, GITHUB_REPO, isSample, usedCategories } from '../lib/catalogue';
 import { withPage, type PageType } from '../lib/schema';
-import { absolute, ASK_GPT_URL, cloudgate, href, SITE_DESCRIPTION, SITE_NAME } from '../lib/site';
+import { absolute, ASK_GPT_URL, cloudgate, href, SITE_DESCRIPTION, SITE_NAME, userGuide } from '../lib/site';
 
 interface Props {
   /**
@@ -249,6 +249,8 @@ const footCategories = usedCategories().slice(0, 4);
               <li><a href={cloudgate('pricing')}>Pricing</a></li>
               <li><a href={cloudgate('self-hosted')}>Self-host Cloudgate</a></li>
               <li><a href={cloudgate('docs')}>Docs</a></li>
+              <li><a href={userGuide('get-started')}>Deploy your first app</a></li>
+              <li><a href={userGuide('backups')}>Backups and restore</a></li>
               <li><a href={GITHUB_REPO}>Templates on GitHub</a></li>
               <li><a href={ASK_GPT_URL} target="_blank" rel="noopener noreferrer nofollow">Ask GPT<span class="visually-hidden"> (opens in a new tab)</span></a></li>
             </ul>

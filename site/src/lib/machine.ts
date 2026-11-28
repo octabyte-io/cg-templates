@@ -1,5 +1,5 @@
 import { EASE_LABEL, isSample, listNames, withSiteLinks, type Template } from './catalogue';
-import { appFaq, HOW_IT_WORKS } from './copy';
+import { AFTER_DEPLOY_GUIDE, appFaq, HOW_IT_WORKS } from './copy';
 import { absolute, deployUrl } from './site';
 import type { Product } from '../products';
 
@@ -85,6 +85,10 @@ export function appMarkdown(template: Template, level = 1): string {
     for (const section of a.afterDeploy.sections) {
       out.push(`${h(2)} ${section.heading}`, '', shiftHeadings(withSiteLinks(section.markdown, absolute()), level + 2), '');
     }
+    out.push(
+      `Every Cloudgate screen named here is in Cloudgate's user guide: ${AFTER_DEPLOY_GUIDE.map((p) => `[${p.title}](${p.url})`).join(', ')}.`,
+      '',
+    );
     out.push(`Sources: ${a.afterDeploy.sources.map((s) => `[${s.title}](${s.url})`).join(', ')}`, '');
   }
 

@@ -8,7 +8,7 @@ import Faq from '../components/Faq.astro';
 import ProductTile from '../components/ProductTile.astro';
 import { alternativesPages, getTemplate, getTemplates, isSample } from '../lib/catalogue';
 import { costAnswer, HOW_IT_WORKS } from '../lib/copy';
-import { absolute, cloudgate, href } from '../lib/site';
+import { absolute, cloudgate, href, userGuide } from '../lib/site';
 import { breadcrumbSchema, faqSchema, graph } from '../lib/schema';
 
 /*
@@ -216,7 +216,7 @@ const howTo = {
           <span class="num">Step 4</span>
           <h3 class="h3">{steps[3].name}</h3>
           <p>{steps[3].text}</p>
-          <p class="aside">Run Cloudgate yourself? In your own console, Cloudgate lists everything it will create first, and nothing happens until you press Apply.</p>
+          <p class="aside">Run Cloudgate yourself? In your own console, Cloudgate lists everything it will create first, and nothing happens until you press Apply. Cloudgate's user guide shows how to <a href={userGuide('templates', 'set-up-a-template')}>set up a template from your own console</a>.</p>
         </div>
         <div class="stage">
           <div class="window" role="img" aria-label={`Example setup screen: the server is ready, passwords are made, ${appName} is starting, and its free web address comes next.`}>
@@ -285,7 +285,8 @@ const howTo = {
     </div>
     <p class="fine">
       Backups, teams and everything else Cloudgate does once your app is running are on
-      <a href={cloudgate('features')}>Cloudgate's features page</a>. Prefer to run it all yourself?
+      <a href={cloudgate('features')}>Cloudgate's features page</a>, and every screen of these four steps is in
+      <a href={userGuide('get-started')}>Cloudgate's guide to the get-started wizard</a>. Prefer to run it all yourself?
       <a href={cloudgate('self-hosted')}>Install Cloudgate on your own server for free</a>.
     </p>
   </section>

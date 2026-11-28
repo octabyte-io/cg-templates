@@ -70,7 +70,7 @@ afterDeploy:
 
     Back them up together: a database without its uploads has campaigns whose images no longer load. Keep a copy of the stack's **Variables** too, for the database password and your admin login.
 
-    To copy both volumes from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy because listmonk runs a database. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps.
+    To copy both volumes from the same moment, open the stack's **Volume backups** tab, choose **Add a backup** and keep **The whole stack**. It copies every volume to your S3-compatible storage on the schedule you set, and stops the stack for the copy because listmonk runs a database. **Restore** on that backup puts every volume back together. [How backups work for apps you run with Cloudgate](/guides/backup-and-restore/) has the steps, and Cloudgate's user guide explains each field in [back up a whole Compose stack](https://cloudgate.octabyte.io/docs/guide/backups#back-up-a-whole-compose-stack) and [restore a moment of a whole-stack backup](https://cloudgate.octabyte.io/docs/guide/backups#restore-a-moment-of-a-whole-stack-backup).
   upgrade: |
     The template pins an exact listmonk version in its compose file (`listmonk/listmonk:v6.2.0` at the time of writing), in two places: the `listmonk` service and the `listmonk-install` service. To upgrade:
 
